@@ -4,6 +4,12 @@ version: 0.1.0
 authors:
   - Paul Smith <paulcsmith0218@gmail.com>
 
+dependencies:
+  lucky_cli:
+    github: luckyframework/cli
+  lucky_migrator:
+    github: luckyframework/migrator
+
 crystal: 0.20.5
 
 license: MIT
