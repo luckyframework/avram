@@ -9,6 +9,11 @@ dependencies:
     github: luckyframework/cli
   lucky_migrator:
     github: luckyframework/migrator
+  db:
+    github: crystal-lang/crystal-db
+  pg:
+    github: will/crystal-pg
+
 
 crystal: 0.20.5
 

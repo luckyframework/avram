@@ -1,4 +1,4 @@
-class CreateBlogPosts::V20170127143149 < LuckyMigrator::Migration::V1
+class CreateUsers::V20170127143149 < LuckyMigrator::Migration::V1
   def migrate
     execute <<-SQL
       CREATE TABLE users (
@@ -6,7 +6,9 @@ class CreateBlogPosts::V20170127143149 < LuckyMigrator::Migration::V1
         name text NOT NULL,
         created_at timestamp NOT NULL,
         updated_at timestamp NOT NULL,
-        age int NOT NULL
+        age int NOT NULL,
+        nickname text,
+        joined_at timestamp NOT NULL
       )
     SQL
   end
