@@ -1,4 +1,4 @@
-# lucky_record
+# LuckyRecord
 
 TODO: Write a description here
 
@@ -9,7 +9,7 @@ Add this to your application's `shard.yml`:
 ```yaml
 dependencies:
   lucky_record:
-    github: [your-github-name]/lucky_record
+    github: luckyframework/record
 ```
 
 ## Usage
@@ -26,7 +26,7 @@ TODO: Write development instructions here
 
 ## Contributing
 
-1. Fork it ( https://github.com/[your-github-name]/lucky_record/fork )
+1. Fork it ( https://github.com/luckyframework/lucky_record/fork )
 2. Create your feature branch (git checkout -b my-new-feature)
 3. Commit your changes (git commit -am 'Add some feature')
 4. Push to the branch (git push origin my-new-feature)
@@ -34,4 +34,4 @@ TODO: Write development instructions here
 
 ## Contributors
 
-- [[your-github-name]](https://github.com/[your-github-name]) Paul Smith - creator, maintainer
+- [paulcsmith](https://github.com/paulcsmith) Paul Smith - creator, maintainer
