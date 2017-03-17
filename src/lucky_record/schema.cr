@@ -18,6 +18,7 @@ class LuckyRecord::Schema
     setup_initialize
     setup_db_mapping
     setup_abstract_row_class({{table_name}})
+    setup_abstract_changeset_class({{table_name}})
     setup_table_name({{table_name}})
   end
 
@@ -67,6 +68,39 @@ class LuckyRecord::Schema
       private def escape_sql(value : Int32)
         value
       end
+    end
+  end
+
+  macro setup_abstract_changeset_class(table_name)
+    abstract class BaseChangeset
+      abstract def call
+
+      @record : {{@type}}?
+      @params : Hash(String, String)
+
+      def initialize(@params)
+      end
+
+      def initialize(@record, @params)
+      end
+
+      def self.new_insert(params)
+        new(params)
+      end
+
+      def self.new_update(to record, with params)
+        new(record, params)
+      end
+
+      {% for field in FIELDS %}
+        def {{field[:name].id}}
+          {{field[:name].id}}_param || @record.try &.{{field[:name].id}}
+        end
+
+        def {{field[:name].id}}_param
+          @params["{{field[:name].id}}"]?
+        end
+      {% end %}
     end
   end
 
