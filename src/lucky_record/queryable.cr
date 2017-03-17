@@ -2,8 +2,10 @@ module LuckyRecord::Queryable
   @limit : Int32 | Nil
   @wheres = {} of Symbol => (String | Int32)
 
-  def self.all
-    new
+  macro included
+    def self.all
+      new
+    end
   end
 
   def where(attrs)
@@ -48,14 +50,18 @@ module LuckyRecord::Queryable
   end
 
   def find(id)
-    run(where({id: id}).limit(1).to_sql).first
+    query(where({id: id}).limit(1).to_sql).first
   end
 
   def first
-    run(limit(1).to_sql).first
+    query(limit(1).to_sql).first
   end
 
-  def run(sql)
+  def to_a
+    query(to_sql)
+  end
+
+  def query(sql)
     LuckyRecord::Repo.run do |db|
       db.query sql do |rs|
         @@schema_class.from_rs(rs)

@@ -5,6 +5,8 @@ authors:
   - Paul Smith <paulcsmith0218@gmail.com>
 
 dependencies:
+  blank:
+    github: kostya/blank
   lucky_cli:
     github: luckyframework/cli
   lucky_migrator:
