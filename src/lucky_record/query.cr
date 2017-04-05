@@ -32,31 +32,33 @@ class LuckyRecord::Query
   end
 
   def where_eq(column, value)
-    @wheres << "WHERE #{column} = #{value}"
+    @wheres << "#{column} = #{value}"
     self
   end
 
   def where_gt(column, value)
-    @wheres << "WHERE #{column} > #{value}"
+    @wheres << "#{column} > #{value}"
     self
   end
 
   def where_gte(column, value)
-    @wheres << "WHERE #{column} >= #{value}"
+    @wheres << "#{column} >= #{value}"
     self
   end
 
   def where_lt(column, value)
-    @wheres << "WHERE #{column} < #{value}"
+    @wheres << "#{column} < #{value}"
     self
   end
 
   def where_lte(column, value)
-    @wheres << "WHERE #{column} <= #{value}"
+    @wheres << "#{column} <= #{value}"
     self
   end
 
   private def wheres_sql
-    @wheres.join(" ")
+    if @wheres.any?
+      "WHERE " + @wheres.join(" AND ")
+    end
   end
 end
