@@ -1,7 +1,7 @@
 class LuckyRecord::Query
   private getter :table
   @limit : Int32?
-  @wheres = [] of String
+  @wheres = [] of LuckyRecord::Where::SqlClause
 
   def initialize(@table : Symbol)
   end
@@ -31,34 +31,14 @@ class LuckyRecord::Query
     end
   end
 
-  def where_eq(column, value)
-    @wheres << "#{column} = #{value}"
-    self
-  end
-
-  def where_gt(column, value)
-    @wheres << "#{column} > #{value}"
-    self
-  end
-
-  def where_gte(column, value)
-    @wheres << "#{column} >= #{value}"
-    self
-  end
-
-  def where_lt(column, value)
-    @wheres << "#{column} < #{value}"
-    self
-  end
-
-  def where_lte(column, value)
-    @wheres << "#{column} <= #{value}"
+  def where(where_clause : LuckyRecord::Where::SqlClause)
+    @wheres << where_clause
     self
   end
 
   private def wheres_sql
     if @wheres.any?
-      "WHERE " + @wheres.join(" AND ")
+      "WHERE " + @wheres.map(&.to_sql).join(" AND ")
     end
   end
 end

@@ -10,34 +10,11 @@ describe "LuckyRecord::Query" do
     query.to_sql.should eq "SELECT * FROM users LIMIT 1"
   end
 
-  it "handles simple where comparison" do
-    query = new_query.where_eq(:name, "'Paul'")
-    query.to_sql.should eq "SELECT * FROM users WHERE name = 'Paul'"
-  end
-
-  it "handles >" do
-    query = new_query.where_gt(:age, 20)
-    query.to_sql.should eq "SELECT * FROM users WHERE age > 20"
-  end
-
-  it "handles >=" do
-    query = new_query.where_gte(:age, 20)
-    query.to_sql.should eq "SELECT * FROM users WHERE age >= 20"
-  end
-
-  it "handles <" do
-    query = new_query.where_lt(:age, 20)
-    query.to_sql.should eq "SELECT * FROM users WHERE age < 20"
-  end
-
-  it "handles <=" do
-    query = new_query.where_lte(:age, 20)
-    query.to_sql.should eq "SELECT * FROM users WHERE age <= 20"
-  end
-
-  it "chains wheres" do
-    query = new_query.where_gte(:age, 20).where_lte(:age, 100)
-    query.to_sql.should eq "SELECT * FROM users WHERE age >= 20 AND age <= 100"
+  it "accepts where clauses" do
+    query = new_query
+      .where(LuckyRecord::Where::Equal.new(:name, "'Paul'"))
+      .where(LuckyRecord::Where::GreaterThan.new(:age, "20"))
+    query.to_sql.should eq "SELECT * FROM users WHERE name = 'Paul' AND age > 20"
   end
 end
 
