@@ -38,11 +38,11 @@ module LuckyRecord::Queryable
     end
   end
 
-  def query_string
+  private def query_string
     to_sql.first
   end
 
-  def query_args
+  private def query_args
     to_sql.skip(1)
   end
 
