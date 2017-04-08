@@ -1,6 +1,5 @@
 module LuckyRecord::Queryable
-  @limit : Int32 | Nil
-  @wheres = {} of Symbol => (String | Int32)
+  @query : LuckyRecord::Query?
 
   macro included
     def self.all
@@ -8,68 +7,50 @@ module LuckyRecord::Queryable
     end
   end
 
-  def where(attrs)
-    @wheres.merge!(attrs.to_h)
+  def where(column, value)
+    query.where(LuckyRecord::Where::Equal.new(column, value.to_s))
     self
   end
 
-  private def wheres_sql
-    if @wheres.empty?
-      ""
-    else
-      " WHERE " + @wheres.map do |key, value|
-        "#{key} = #{escape_sql(value)}"
-      end.join(" AND ")
-    end
-  end
-
-  def limit(limit_number)
-    @limit = limit_number
+  def limit(amount)
+    query.limit(amount)
     self
-  end
-
-  private def limit_sql
-    if @limit
-      " LIMIT #{@limit}"
-    else
-      ""
-    end
-  end
-
-  def limit(limit_number)
-    @limit = limit_number
-    self
-  end
-
-  private def limit_sql
-    if @limit
-      " LIMIT #{@limit}"
-    else
-      ""
-    end
   end
 
   def find(id)
-    query(where({id: id}).limit(1).to_sql).first
+    where(:id, id.to_s).limit(1).first
   end
 
   def first
-    query(limit(1).to_sql).first
+    query.limit(1)
+    exec_query.first
   end
 
   def to_a
-    query(to_sql)
+    exec_query
   end
 
-  def query(sql)
+  private def exec_query
     LuckyRecord::Repo.run do |db|
-      db.query sql do |rs|
+      db.query query_string, query_args do |rs|
         @@schema_class.from_rs(rs)
       end
     end
   end
 
+  def query_string
+    to_sql.first
+  end
+
+  def query_args
+    to_sql.skip(1)
+  end
+
   def to_sql
-    "SELECT * FROM #{@@table_name}" + wheres_sql + limit_sql
+    query.to_sql
+  end
+
+  private def query
+    @query ||= LuckyRecord::Query.new(table: @@table_name)
   end
 end

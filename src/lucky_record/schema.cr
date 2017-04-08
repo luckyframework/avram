@@ -48,8 +48,6 @@ class LuckyRecord::Schema
 
   macro setup_abstract_row_class(table_name)
     abstract class BaseRows < LuckyRecord::Rows
-      include LuckyRecord::Queryable
-
       @@table_name = {{table_name}}
       @@schema_class = {{@type}}
 
@@ -59,20 +57,6 @@ class LuckyRecord::Schema
             {{field[:name]}},
           {% end %}
         ]
-      end
-
-      def destroy_all
-        LuckyRecord::Repo.run do |db|
-          db.exec "TRUNCATE TABLE #{@@table_name}"
-        end
-      end
-
-      private def escape_sql(value : String)
-        PG::EscapeHelper.escape_literal(value)
-      end
-
-      private def escape_sql(value : Int32)
-        value
       end
     end
   end

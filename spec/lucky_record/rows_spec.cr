@@ -18,28 +18,16 @@ describe LuckyRecord::Rows do
   end
 
   describe "#where" do
-    it "filters by each key and value" do
-      sql = UserRows.new.where({first_name: "Paul", last_name: "Smith"}).to_sql
-
-      sql.should eq "SELECT * FROM users WHERE first_name = 'Paul' AND last_name = 'Smith'"
-    end
-
     it "chains wheres" do
-      sql = UserRows.new.where({first_name: "Paul"}).where({last_name: "Smith"}).to_sql
+      sql = UserRows.new.where(:first_name, "Paul").where(:last_name, "Smith").to_sql
 
-      sql.should eq "SELECT * FROM users WHERE first_name = 'Paul' AND last_name = 'Smith'"
-    end
-
-    it "escapes values" do
-      sql = UserRows.new.where({first_name: %(what's your "name")}).to_sql
-
-      sql.should eq %(SELECT * FROM users WHERE first_name = 'what''s your \"name\"')
+      sql.should eq ["SELECT * FROM users WHERE first_name = $1 AND last_name = $2", "Paul", "Smith"]
     end
 
     it "handles int" do
-      sql = UserRows.new.where({id: 1}).to_sql
+      sql = UserRows.new.where(:id, 1).to_sql
 
-      sql.should eq %(SELECT * FROM users WHERE id = 1)
+      sql.should eq ["SELECT * FROM users WHERE id = $1", "1"]
     end
   end
 
@@ -47,7 +35,7 @@ describe LuckyRecord::Rows do
     it "adds a limit clause" do
       sql = UserRows.new.limit(2).to_sql
 
-      sql.should eq %(SELECT * FROM users LIMIT 2)
+      sql.should eq ["SELECT * FROM users LIMIT 2"]
     end
   end
 end
