@@ -1,40 +1,44 @@
 module LuckyRecord::Where
   abstract class SqlClause
-    private getter :column, :value
+    getter :column, :value
 
     def initialize(@column : Symbol, @value : String)
     end
 
-    abstract def to_sql : String
+    abstract def operator : String
+
+    def prepare(prepared_statement_placeholder : String)
+      "#{column} #{operator} #{prepared_statement_placeholder}"
+    end
   end
 
   class Equal < SqlClause
-    def to_sql
-      "#{column} = #{value}"
+    def operator
+      "="
     end
   end
 
   class GreaterThan < SqlClause
-    def to_sql
-      "#{column} > #{value}"
+    def operator
+      ">"
     end
   end
 
   class GreaterThanOrEqualTo < SqlClause
-    def to_sql
-      "#{column} >= #{value}"
+    def operator
+      ">="
     end
   end
 
   class LessThan < SqlClause
-    def to_sql
-      "#{column} < #{value}"
+    def operator
+      "<"
     end
   end
 
   class LessThanOrEqualTo < SqlClause
-    def to_sql
-      "#{column} <= #{value}"
+    def operator
+      "<="
     end
   end
 end
