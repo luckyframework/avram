@@ -162,7 +162,8 @@ class LuckyRecord::Schema
 
       {% for field in FIELDS %}
         def {{field[:name].id}}
-          {{field[:name].id}}_param || @record.try &.{{field[:name].id}}
+          {{ field[:type].id }}.parse_string({{field[:name].id}}_param) ||
+            @record.try &.{{field[:name].id}}
         end
 
         private def {{field[:name].id}}_param

@@ -1,7 +1,7 @@
 require "../spec_helper"
 
 class UserChangeset < User::BaseChangeset
-  allow :name, :nickname
+  allow :name, :nickname, :joined_at
 
   def call
     add_name_error("is blank") if name.try &.blank?
@@ -10,7 +10,19 @@ end
 
 describe "LuckyRecord::Changeset" do
   describe "casting" do
-    pending "it should cast integers, time objects, etc." do
+    it "cast integers, time objects, etc." do
+      now = Time.now
+      changeset = UserChangeset.new_insert({"joined_at" => now.to_s("%FT%X%z")})
+
+      changeset.joined_at.should eq now
+    end
+
+    pending "gracefully handles bad inputs when casting" do
+    end
+  end
+
+  describe "allow" do
+    pending "ignores params that are not allowed" do
     end
   end
 

@@ -11,6 +11,10 @@ class LuckyRecord::Type
   def self.parse(value)
     value
   end
+
+  def self.parse_string(value)
+    value
+  end
 end
 
 class LuckyRecord::StringType < LuckyRecord::Type
@@ -19,6 +23,10 @@ end
 
 class LuckyRecord::TimeType < LuckyRecord::Type
   LuckyRecord::Types.register LuckyRecord::TimeType, Time
+
+  def self.parse_string(value : String)
+    Time.parse(value, pattern: "%FT%X%z")
+  end
 end
 
 class LuckyRecord::Int32Type < LuckyRecord::Type
