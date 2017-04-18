@@ -11,7 +11,7 @@ end
 describe "LuckyRecord::Changeset" do
   describe "casting" do
     it "cast integers, time objects, etc." do
-      now = Time.now
+      now = Time.now.at_beginning_of_minute
       changeset = UserChangeset.new_insert({"joined_at" => now.to_s("%FT%X%z")})
 
       changeset.joined_at.should eq now
@@ -92,7 +92,7 @@ describe "LuckyRecord::Changeset" do
   describe "#new_insert" do
     context "when valid with hash of params" do
       it "casts and inserts into the db, and return true" do
-        params = {"name" => "Paul", "age" => "27", "joined_at" => Time.now.to_s}
+        params = {"name" => "Paul", "age" => "27", "joined_at" => Time.now.to_s("%FT%X%z")}
         changeset = UserChangeset.new_insert(params)
         changeset.performed?.should be_false
 
@@ -106,7 +106,7 @@ describe "LuckyRecord::Changeset" do
 
     context "when valid with named tuple" do
       it "casts and inserts into the db, and return true" do
-        changeset = UserChangeset.new_insert(name: "Paul", age: "27", joined_at: Time.now.to_s)
+        changeset = UserChangeset.new_insert(name: "Paul", age: "27", joined_at: Time.now.to_s("%FT%X%z"))
         changeset.performed?.should be_false
 
         result = changeset.save
@@ -119,7 +119,7 @@ describe "LuckyRecord::Changeset" do
 
     context "invalid" do
       it "does not insert and returns false" do
-        params = {"name" => "", "age" => "27", "joined_at" => Time.now.to_s}
+        params = {"name" => "", "age" => "27", "joined_at" => Time.now.to_s("%FT%X%z")}
         changeset = UserChangeset.new_insert(params)
         changeset.performed?.should be_false
 
