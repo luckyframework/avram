@@ -4,10 +4,12 @@ class LuckyRecord::Insert
   def initialize(@table : Symbol, @params : Params)
   end
 
-  def to_sql
-    sql = [] of String?
-    sql << "insert into #{@table}(#{fields}) values(#{values_placeholders})"
-    sql.concat values
+  def statement
+    "insert into #{@table}(#{fields}) values(#{values_placeholders})"
+  end
+
+  def args
+    @params.values
   end
 
   private def fields
@@ -18,9 +20,5 @@ class LuckyRecord::Insert
     @params.values.map_with_index do |_value, index|
       "$#{index + 1}"
     end.join(", ")
-  end
-
-  private def values
-    @params.values
   end
 end

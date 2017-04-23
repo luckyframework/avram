@@ -7,12 +7,20 @@ class LuckyRecord::Types
   end
 end
 
-class LuckyRecord::Type
+abstract class LuckyRecord::Type
   def self.parse(value)
     value
   end
 
   def self.parse_string(value)
+    value
+  end
+
+  def self.to_db_string(value : Nil)
+    nil
+  end
+
+  def self.to_db_string(value : String)
     value
   end
 end
@@ -27,10 +35,22 @@ class LuckyRecord::TimeType < LuckyRecord::Type
   def self.parse_string(value : String)
     Time.parse(value, pattern: "%FT%X%z")
   end
+
+  def self.to_db_string(value : Time)
+    value.to_s
+  end
 end
 
 class LuckyRecord::Int32Type < LuckyRecord::Type
   LuckyRecord::Types.register LuckyRecord::Int32Type, Int32
+
+  def self.parse_string(value : String)
+    value.to_i
+  end
+
+  def self.to_db_string(value : Int32)
+    value.to_s
+  end
 end
 
 class LuckyRecord::EmailType < LuckyRecord::Type
