@@ -80,7 +80,7 @@ class LuckyRecord::Schema
       private def extract_changes_from_params
         @params.each do |key, value|
           {% for field in FIELDS %}
-            if key == {{field[:name].id.stringify}}
+            if key == {{field[:name].id.stringify}} && {{field[:name].id}}_allowed?
               self.{{field[:name].id}} = value
             end
           {% end %}
@@ -104,6 +104,10 @@ class LuckyRecord::Schema
           def \{{field_name.id}}_param
             super
           end
+
+          def \{{field_name.id}}_allowed?
+            true
+          end
         \{% end %}
       end
 
@@ -126,10 +130,12 @@ class LuckyRecord::Schema
         LuckyRecord::Insert.new(@@table_name, changes)
       end
 
-      private def changes
+      def changes
         _changes = {} of Symbol => String?
         {% for field in FIELDS %}
-          _changes[:{{field[:name].id}}] = {{field[:name].id}}_as_db_string if {{field[:name].id}}_changed?
+          if {{field[:name].id}}_changed?
+            _changes[:{{field[:name].id}}] = {{field[:name].id}}_as_db_string
+          end
         {% end %}
         _changes
       end
@@ -154,6 +160,10 @@ class LuckyRecord::Schema
       {% for field in FIELDS %}
         getter? {{field[:name].id}}_changed : Bool = false
         @{{field[:name].id}} : {{LuckyRecord::Types::TYPE_MAPPINGS[field[:type]]}}?
+
+        def {{field[:name].id}}_allowed?
+          false
+        end
 
         def {{field[:name].id}}=(value)
           {{field[:name].id}}_changed!

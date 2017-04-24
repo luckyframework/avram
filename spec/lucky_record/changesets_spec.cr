@@ -1,11 +1,15 @@
 require "../spec_helper"
 
 class UserChangeset < User::BaseChangeset
-  allow :name, :nickname, :joined_at
+  allow :name, :nickname, :joined_at, :age
 
   def call
     add_name_error("is blank") if name.try &.blank?
   end
+end
+
+class LimitedUserChangeset < User::BaseChangeset
+  allow :name
 end
 
 describe "LuckyRecord::Changeset" do
@@ -22,7 +26,10 @@ describe "LuckyRecord::Changeset" do
   end
 
   describe "allow" do
-    pending "ignores params that are not allowed" do
+    it "ignores params that are not allowed" do
+      changeset = LimitedUserChangeset.new({"name" => "someone", "nickname" => "nothing"})
+      changeset.changes.has_key?(:nickname).should be_false
+      changeset.changes[:name]?.should eq "someone"
     end
   end
 
@@ -101,6 +108,7 @@ describe "LuckyRecord::Changeset" do
         result.should be_true
         changeset.performed?.should be_true
         UserRows.new.first.id.should be_truthy
+        UserRows.new.first.name.should eq "Paul"
       end
     end
 
