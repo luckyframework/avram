@@ -108,6 +108,10 @@ class LuckyRecord::Schema
           def \{{field_name.id}}_allowed?
             true
           end
+
+          def \{{field_name.id}}_field
+            _\{{field_name.id}}_field
+          end
         \{% end %}
       end
 
@@ -163,6 +167,12 @@ class LuckyRecord::Schema
 
         def {{field[:name].id}}_allowed?
           false
+        end
+
+        private def _{{field[:name].id}}_field
+          LuckyRecord::Field({{LuckyRecord::Types::TYPE_MAPPINGS[field[:type]]}}?).new :{{field[:name].id}},
+            {{field[:name].id}},
+            {{field[:name].id}}_errors
         end
 
         def {{field[:name].id}}=(value)

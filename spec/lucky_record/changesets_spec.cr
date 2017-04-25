@@ -92,7 +92,22 @@ describe "LuckyRecord::Changeset" do
   end
 
   describe "fields" do
-    pending "creates a field method for each of the allowed fields" do
+    it "creates a field method for each of the allowed fields" do
+      params = {} of String => String
+      changeset = LimitedUserChangeset.new_insert(params)
+
+      changeset.responds_to?(:name_field).should be_true
+      changeset.responds_to?(:nickname_field).should be_false
+    end
+
+    it "returns a field with the field name, value and errors" do
+      params = {"name" => "Joe"}
+      changeset = UserChangeset.new_insert(params)
+      changeset.add_name_error "wrong"
+
+      changeset.name_field.name.should eq :name
+      changeset.name_field.value.should eq "Joe"
+      changeset.name_field.errors.should eq ["wrong"]
     end
   end
 
