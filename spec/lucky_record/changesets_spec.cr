@@ -1,6 +1,6 @@
 require "../spec_helper"
 
-class UserChangeset < User::BaseChangeset
+private class UserChangeset < User::BaseChangeset
   allow :name, :nickname, :joined_at, :age
 
   def call
@@ -8,7 +8,7 @@ class UserChangeset < User::BaseChangeset
   end
 end
 
-class LimitedUserChangeset < User::BaseChangeset
+private class LimitedUserChangeset < User::BaseChangeset
   allow :name
 end
 
