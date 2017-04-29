@@ -21,7 +21,18 @@ describe "LuckyRecord::Changeset" do
       changeset.joined_at.should eq now
     end
 
-    pending "gracefully handles bad inputs when casting" do
+    it "gracefully handles bad inputs when casting" do
+      changeset = UserChangeset.new_insert({
+        "joined_at" => "this is not a time",
+        "age"       => "not an int",
+      })
+
+      changeset.joined_at_errors.should eq ["is invalid"]
+      changeset.age_errors.should eq ["is invalid"]
+      changeset.age.should be_nil
+      changeset.joined_at.should be_nil
+      changeset.joined_at_param.should eq "this is not a time"
+      changeset.age_param.should eq "not an int"
     end
   end
 

@@ -88,10 +88,12 @@ class LuckyRecord::Schema
       end
 
       def initialize(@record, @params)
+        extract_changes_from_params
       end
 
       def valid? : Bool
         call
+        # TODO: run_auto_generated_validations
         @valid
       end
 
@@ -177,7 +179,12 @@ class LuckyRecord::Schema
 
         def {{field[:name].id}}=(value)
           {{field[:name].id}}_changed!
-          @{{field[:name].id}} = {{ field[:type].id }}.parse_string(value)
+          cast_result = {{ field[:type].id }}.parse_string(value)
+          if cast_result.is_a? LuckyRecord::Type::SuccessfulCast
+            @{{field[:name].id}} = cast_result.value
+          else
+            add_{{field[:name].id}}_error "is invalid"
+          end
         end
 
         def {{field[:name].id}}_changed!
@@ -189,9 +196,7 @@ class LuckyRecord::Schema
         end
 
         def {{field[:name].id}}
-          @{{field[:name].id}} ||
-            {{ field[:type].id }}.parse_string({{field[:name].id}}_param) ||
-            @record.try &.{{field[:name].id}}
+          @{{field[:name].id}} || @record.try &.{{field[:name].id}}
         end
 
         private def {{field[:name].id}}_param
