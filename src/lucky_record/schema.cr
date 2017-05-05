@@ -100,6 +100,10 @@ class LuckyRecord::Schema
         # TODO add default validate_required for non-nilable fields
       end
 
+      def save_failed?
+        !valid? && performed?
+      end
+
       macro allow(*field_names)
         \{% for field_name in field_names %}
           def \{{field_name.id}}

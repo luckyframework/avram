@@ -15,6 +15,26 @@ private class LimitedUserForm < User::BaseForm
 end
 
 describe "LuckyRecord::Form" do
+  describe "save_failed?" do
+    it "is false if the object is invalid and performed an action" do
+      form = UserForm.new_insert(name: "")
+
+      form.save
+
+      form.save_failed?.should be_true
+      form.performed?.should be_true
+      form.valid?.should be_false
+    end
+
+    it "is true if the object is invalid but no action was performed" do
+      form = UserForm.new_insert(name: "")
+
+      form.save_failed?.should be_false
+      form.performed?.should be_false
+      form.valid?.should be_false
+    end
+  end
+
   describe "casting" do
     it "cast integers, time objects, etc." do
       now = Time.now.at_beginning_of_minute
