@@ -19,7 +19,7 @@ class LuckyRecord::Schema
     setup_db_mapping
     setup_getters
     setup_abstract_row_class({{table_name}})
-    setup_abstract_changeset_class({{table_name}})
+    setup_abstract_form_class({{table_name}})
     setup_table_name({{table_name}})
   end
 
@@ -62,8 +62,8 @@ class LuckyRecord::Schema
     end
   end
 
-  macro setup_abstract_changeset_class(table_name)
-    abstract class BaseChangeset
+  macro setup_abstract_form_class(table_name)
+    abstract class BaseForm
       property? performed : Bool = false
 
       @record : {{@type}}?

@@ -129,44 +129,44 @@ also `has_many Tag`. We can preload these associations in one go
 TaskRows.all.preload_tags.preload_comments &.preload_user
 ```
 
-## Inserting and updating schemas with Changesets
+## Inserting and updating schemas with Forms
 
-Another base class is created for you when you create a schema `#{schema name}::BaseChangeset`.
+Another base class is created for you when you create a schema `#{schema name}::BaseForm`.
 
 ```crystal
-class TaskChangeset < Task::BaseChangeset
+class TaskForm < Task::BaseForm
 end
 ```
 
 To make changes to the model we first need to allow them
 
 ```crystal
-class TaskChangeset < Task::BaseChangeset
+class TaskForm < Task::BaseForm
   allow :title, :description
 end
 ```
 
-Now let's try some stuff with changesets
+Now let's try some stuff with forms
 
 ```crystal
-changeset = TaskChangeset.new(title: "Clean room", description: nil)
-changeset.valid? # returns false
-changeset.insert # returns false and does not insert the task
+form = TaskForm.new(title: "Clean room", description: nil)
+form.valid? # returns false
+form.insert # returns false and does not insert the task
 
-changeset.description = "Description"
-changeset.valid? # returns true
-changeset.insert # returns true and inserts the task. Or maybe return the Task || FailedInsert
+form.description = "Description"
+form.valid? # returns true
+form.insert # returns true and inserts the task. Or maybe return the Task || FailedInsert
 ```
 
-As you can see there are some default validations. The `Task::BaseChangeset` has
+As you can see there are some default validations. The `Task::BaseForm` has
 added some `validate_required` validations because those fields are no nullable
 in our schema. We can leave of `completed_at` and it is still valid because we
 mark it as nullable in the schema with `?` in the type.
 
-Let's make our changeset do a bit more
+Let's make our form do a bit more
 
 ```crystal
-class TaskChangeset < Task::BaseChangeset
+class TaskForm < Task::BaseForm
   allow :title, :description
 
   def call
@@ -180,29 +180,29 @@ class TaskChangeset < Task::BaseChangeset
 end
 
 # Now let's see what we get
-changeset = TaskChangeset.new(title: "short", description: "ok")
-changeset.valid?
-changeset.errors = {title: ["needs to be at least 10 characters"]}
-changeset.title = "a bit longer :D"
-changeset.title # "a bit longer :D"
-changeset.insert
-changeset.title = "A bit longer :D" # It capitalizes the title
+form = TaskForm.new(title: "short", description: "ok")
+form.valid?
+form.errors = {title: ["needs to be at least 10 characters"]}
+form.title = "a bit longer :D"
+form.title # "a bit longer :D"
+form.insert
+form.title = "A bit longer :D" # It capitalizes the title
 ```
 
 Let's try updating a record
 
 ```crystal
 task = TaskRows.first # Task(title: "Old title", description: "Old")
-TaskChangeset.new(title: "Updated title").update(task)
+TaskForm.new(title: "Updated title").update(task)
 task = TaskRows.first # Task(title: "Updated title", description: "Old")
 ```
 
-## Advanced changesets
+## Advanced forms
 
-You can inherit from other changesets so your changesets don't get too unwieldy
+You can inherit from other forms so your forms don't get too unwieldy
 
 ```crystal
-class AdminTaskChangeset < TaskChangeset
+class AdminTaskForm < TaskForm
   allow :created_at, :updated_at # These are chained, so you can also set :title and :description still
 
   def call
@@ -215,20 +215,20 @@ class AdminTaskChangeset < TaskChangeset
   end
 end
 
-# Now when you use this changeset you can set `created_at`, `updated_at` and when
+# Now when you use this form you can set `created_at`, `updated_at` and when
 # you insert or update the title will have `" - edit by an admin"` appended.
 
-AdminTaskChangeset.new(title: "Something long", description: "test", created_at: 5.days.ago).insert
+AdminTaskForm.new(title: "Something long", description: "test", created_at: 5.days.ago).insert
 
 TaskRows.last # Task(title: "Something long - edited by an admin", created_at: #{date 4 days ago})
 ```
 
-## Changesets with associations
+## Forms with associations
 
-Let's make a changeset for Comments
+Let's make a form for Comments
 
 ```crystal
-class CommentChangeset < Comment::BaseChangeset
+class CommentForm < Comment::BaseForm
   allow :body
 
   def call
@@ -237,42 +237,42 @@ class CommentChangeset < Comment::BaseChangeset
 end
 ```
 
-Now let's allow setting them through the `TaskChangeset`
+Now let's allow setting them through the `TaskForm`
 
 ```crystal
-class TaskChangeset < Task::BaseChangeset
+class TaskForm < Task::BaseForm
   allow :title, :comments
 
   def call
     description = "some default description"
-    process_assoc comments, with: CommentChangeset
+    process_assoc comments, with: CommentForm
   end
 end
 
 # Now we can do this
 comments = [{body: "this is my comment"}]
-changeset = TaskChangeset.new(title: "Something", comments: comments).insert
-changeset.comments # [Comment(body: "this is my comments")]
+form = TaskForm.new(title: "Something", comments: comments).insert
+form.comments # [Comment(body: "this is my comments")]
 
 # If a comment is invalid
 comments = [{body: "short"}]
-changeset = TaskChangeset.new(title: "Something", comments: comments)
-changeset.valid? # false
-changeset.errors # {comments: [CommentChangeset(errors)]}
+form = TaskForm.new(title: "Something", comments: comments)
+form.valid? # false
+form.errors # {comments: [CommentForm(errors)]}
 
 # So you can do
-changeset.errors[:comments].each do |comment_changeset|
-  p comment_changeset.errors # {body: "is too short"}
+form.errors[:comments].each do |comment_form|
+  p comment_form.errors # {body: "is too short"}
 end
 ```
 
 ## Callbacks
 
-Callbacks only apply to the changeset they're declared in. This makes things
+Callbacks only apply to the form they're declared in. This makes things
 easier to follow, and easier to debug.
 
 ```crystal
-class CommentChangeset < Task::BaseChangeset
+class CommentForm < Task::BaseForm
   def call
     before_commit :touch_parent_task
   end
