@@ -72,17 +72,16 @@ class LuckyRecord::Schema
       @errors = Hash(Symbol, Array(String)).new(Array(String).new)
 
       @@table_name = {{table_name}}
+      @@allowed_param_keys = [] of String
 
       def initialize(@params)
         extract_changes_from_params
       end
 
       private def extract_changes_from_params
-        @params.each do |key, value|
+        allowed_params.each do |key, value|
           {% for field in FIELDS %}
-            if key == {{field[:name].id.stringify}} && {{field[:name].id}}_allowed?
-              self.{{field[:name].id}} = value
-            end
+            set_{{field[:name].id}}_from_param value if key == {{field[:name].id.stringify}}
           {% end %}
         end
       end
@@ -94,7 +93,7 @@ class LuckyRecord::Schema
       def valid? : Bool
         call
         # TODO: run_auto_generated_validations
-        @valid
+        fields.all? &.valid?
       end
 
       def call
@@ -103,25 +102,29 @@ class LuckyRecord::Schema
 
       macro allow(*field_names)
         \{% for field_name in field_names %}
-          def \{{field_name.id}}_param
-            super
+          def \{{field_name.id}}
+            _\{{field_name.id}}
           end
 
-          def \{{field_name.id}}_allowed?
-            true
-          end
-
-          def \{{field_name.id}}_field
-            _\{{field_name.id}}_field
-          end
+          @@allowed_param_keys << "\{{field_name.id}}"
         \{% end %}
+      end
+
+      def changes
+        _changes = {} of Symbol => String?
+        fields.each do |field|
+          if field.changed?
+            _changes[field.name] = field.value.to_s
+          end
+        end
+        _changes
       end
 
       def save : Bool
         @performed = true
 
-        self.created_at = Time.now
-        self.updated_at = Time.now
+        self._created_at.value = Time.now
+        self._updated_at.value = Time.now
         if valid?
           LuckyRecord::Repo.run do |db|
             db.exec insert_sql.statement, insert_sql.args
@@ -134,16 +137,6 @@ class LuckyRecord::Schema
 
       private def insert_sql
         LuckyRecord::Insert.new(@@table_name, changes)
-      end
-
-      def changes
-        _changes = {} of Symbol => String?
-        {% for field in FIELDS %}
-          if {{field[:name].id}}_changed?
-            _changes[:{{field[:name].id}}] = {{field[:name].id}}_as_db_string
-          end
-        {% end %}
-        _changes
       end
 
       def self.new_insert(params)
@@ -164,55 +157,33 @@ class LuckyRecord::Schema
       end
 
       {% for field in FIELDS %}
-        getter? {{field[:name].id}}_changed : Bool = false
-        @{{field[:name].id}} : {{LuckyRecord::Types::TYPE_MAPPINGS[field[:type]]}}?
+        @_{{field[:name].id}} : LuckyRecord::Field({{LuckyRecord::Types::TYPE_MAPPINGS[field[:type]]}}?)?
 
-        def {{field[:name].id}}_allowed?
-          false
+        def _{{field[:name].id}}
+          @_{{field[:name].id}} ||= LuckyRecord::Field({{LuckyRecord::Types::TYPE_MAPPINGS[field[:type]]}}?).new(:{{field[:name].id}}, allowed_params["{{field[:name].id}}"]?, @record.try(&.{{field[:name].id}}))
         end
 
-        private def _{{field[:name].id}}_field
-          LuckyRecord::Field({{LuckyRecord::Types::TYPE_MAPPINGS[field[:type]]}}?).new :{{field[:name].id}},
-            {{field[:name].id}},
-            {{field[:name].id}}_errors
+        def allowed_params
+          @params.select(@@allowed_param_keys)
         end
 
-        def {{field[:name].id}}=(value)
-          {{field[:name].id}}_changed!
+        def set_{{field[:name].id}}_from_param(value)
           cast_result = {{ field[:type].id }}.parse_string(value)
           if cast_result.is_a? LuckyRecord::Type::SuccessfulCast
-            @{{field[:name].id}} = cast_result.value
+            _{{field[:name].id}}.value = cast_result.value
           else
-            add_{{field[:name].id}}_error "is invalid"
+            _{{field[:name].id}}.add_error "is invalid"
           end
         end
-
-        def {{field[:name].id}}_changed!
-          @{{field[:name].id}}_changed = true
-        end
-
-        def {{field[:name].id}}_as_db_string
-          {{ field[:type].id }}.to_db_string {{field[:name].id}}
-        end
-
-        def {{field[:name].id}}
-          @{{field[:name].id}} || @record.try &.{{field[:name].id}}
-        end
-
-        private def {{field[:name].id}}_param
-          @params["{{field[:name].id}}"]?
-        end
-
-        def add_{{field[:name].id}}_error(message)
-          @valid = false
-          @errors[:{{field[:name].id}}]
-          @errors[:{{field[:name].id}}] = (@errors[:{{field[:name].id}}] + [message]).uniq
-        end
-
-        def {{field[:name].id}}_errors
-          @errors[:{{field[:name].id}}]
-        end
       {% end %}
+
+      def fields
+        [
+          {% for field in FIELDS %}
+            _{{field[:name].id}},
+          {% end %}
+        ]
+      end
     end
   end
 

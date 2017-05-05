@@ -4,7 +4,9 @@ private class UserForm < User::BaseForm
   allow :name, :nickname, :joined_at, :age
 
   def call
-    add_name_error("is blank") if name.try &.blank?
+    if name.value.try &.blank?
+      name.add_error "is blank"
+    end
   end
 end
 
@@ -18,7 +20,7 @@ describe "LuckyRecord::Form" do
       now = Time.now.at_beginning_of_minute
       form = UserForm.new_insert({"joined_at" => now.to_s("%FT%X%z")})
 
-      form.joined_at.should eq now
+      form.joined_at.value.should eq now
     end
 
     it "gracefully handles bad inputs when casting" do
@@ -27,12 +29,12 @@ describe "LuckyRecord::Form" do
         "age"       => "not an int",
       })
 
-      form.joined_at_errors.should eq ["is invalid"]
-      form.age_errors.should eq ["is invalid"]
-      form.age.should be_nil
-      form.joined_at.should be_nil
-      form.joined_at_param.should eq "this is not a time"
-      form.age_param.should eq "not an int"
+      form.joined_at.errors.should eq ["is invalid"]
+      form.age.errors.should eq ["is invalid"]
+      form.age.value.should be_nil
+      form.joined_at.value.should be_nil
+      form.joined_at.param.should eq "this is not a time"
+      form.age.param.should eq "not an int"
     end
   end
 
@@ -44,15 +46,15 @@ describe "LuckyRecord::Form" do
     end
   end
 
-  describe "getters" do
-    it "creates a getter for all fields" do
+  describe "settings values from params" do
+    it "sets the values" do
       params = {"name" => "Paul", "nickname" => "Pablito"}
 
       form = UserForm.new_insert(params)
 
-      form.name.should eq "Paul"
-      form.nickname.should eq "Pablito"
-      form.age.should eq nil
+      form.name.value.should eq "Paul"
+      form.nickname.value.should eq "Pablito"
+      form.age.value.should eq nil
     end
 
     it "returns the value from params for updates" do
@@ -61,9 +63,9 @@ describe "LuckyRecord::Form" do
 
       form = UserForm.new_update(to: user, with: params)
 
-      form.name.should eq params["name"]
-      form.nickname.should eq user.nickname
-      form.age.should eq user.age
+      form.name.value.should eq params["name"]
+      form.nickname.value.should eq user.nickname
+      form.age.value.should eq user.age
     end
   end
 
@@ -73,8 +75,8 @@ describe "LuckyRecord::Form" do
 
       form = UserForm.new_insert(params)
 
-      form.name_param.should eq "Paul"
-      form.nickname_param.should eq "Pablito"
+      form.name.param.should eq "Paul"
+      form.nickname.param.should eq "Pablito"
     end
   end
 
@@ -84,41 +86,41 @@ describe "LuckyRecord::Form" do
       form = UserForm.new_insert(params)
       form.valid?.should be_true
 
-      form.add_name_error "is not valid"
+      form.name.add_error "is not valid"
 
       form.valid?.should be_false
-      form.name_errors.should eq ["is not valid"]
-      form.nickname_errors.should eq [] of String
+      form.name.errors.should eq ["is not valid"]
+      form.nickname.errors.should eq [] of String
     end
 
     it "only returns unique errors" do
       params = {"name" => "Paul", "nickname" => "Pablito"}
       form = UserForm.new_insert(params)
 
-      form.add_name_error "is not valid"
-      form.add_name_error "is not valid"
+      form.name.add_error "is not valid"
+      form.name.add_error "is not valid"
 
-      form.name_errors.should eq ["is not valid"]
+      form.name.errors.should eq ["is not valid"]
     end
   end
 
   describe "fields" do
-    it "creates a field method for each of the allowed fields" do
+    it "creates a method for each of the allowed fields" do
       params = {} of String => String
       form = LimitedUserForm.new_insert(params)
 
-      form.responds_to?(:name_field).should be_true
-      form.responds_to?(:nickname_field).should be_false
+      form.responds_to?(:name).should be_true
+      form.responds_to?(:nickname).should be_false
     end
 
     it "returns a field with the field name, value and errors" do
       params = {"name" => "Joe"}
       form = UserForm.new_insert(params)
-      form.add_name_error "wrong"
+      form.name.add_error "wrong"
 
-      form.name_field.name.should eq :name
-      form.name_field.value.should eq "Joe"
-      form.name_field.errors.should eq ["wrong"]
+      form.name.name.should eq :name
+      form.name.value.should eq "Joe"
+      form.name.errors.should eq ["wrong"]
     end
   end
 
