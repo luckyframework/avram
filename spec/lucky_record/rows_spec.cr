@@ -19,23 +19,25 @@ describe LuckyRecord::Rows do
 
   describe "#where" do
     it "chains wheres" do
-      sql = UserRows.new.where(:first_name, "Paul").where(:last_name, "Smith").to_sql
+      query = UserRows.new.where(:first_name, "Paul").where(:last_name, "Smith").query
 
-      sql.should eq ["SELECT * FROM users WHERE first_name = $1 AND last_name = $2", "Paul", "Smith"]
+      query.statement.should eq "SELECT * FROM users WHERE first_name = $1 AND last_name = $2"
+      query.args.should eq ["Paul", "Smith"]
     end
 
     it "handles int" do
-      sql = UserRows.new.where(:id, 1).to_sql
+      query = UserRows.new.where(:id, 1).query
 
-      sql.should eq ["SELECT * FROM users WHERE id = $1", "1"]
+      query.statement.should eq "SELECT * FROM users WHERE id = $1"
+      query.args.should eq ["1"]
     end
   end
 
   describe "#limit" do
     it "adds a limit clause" do
-      sql = UserRows.new.limit(2).to_sql
+      query = UserRows.new.limit(2).query
 
-      sql.should eq ["SELECT * FROM users LIMIT 2"]
+      query.statement.should eq "SELECT * FROM users LIMIT 2"
     end
   end
 end

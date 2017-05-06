@@ -127,6 +127,15 @@ class LuckyRecord::Schema
       def save : Bool
         @performed = true
 
+        record_id = @record.try &.id
+        if record_id
+          update record_id
+        else
+          insert
+        end
+      end
+
+      private def insert
         self._created_at.value = Time.now
         self._updated_at.value = Time.now
         if valid?
@@ -137,6 +146,22 @@ class LuckyRecord::Schema
         else
           false
         end
+      end
+
+      private def update(id)
+        if valid?
+          LuckyRecord::Repo.run do |db|
+            db.exec update_query(id).statement_for_update(changes), update_query(id).args_for_update(changes)
+          end
+          true
+        else
+          false
+        end
+      end
+
+      private def update_query(id)
+        LuckyRecord::Query.new(@@table_name).
+          where(LuckyRecord::Where::Equal.new(:id, id.to_s))
       end
 
       private def insert_sql
@@ -158,6 +183,15 @@ class LuckyRecord::Schema
 
       def self.new_update(to record, with params)
         new(record, params)
+      end
+
+      def self.new_update(to record, **params)
+        params_with_stringified_keys = {} of String => String
+        params.each do |key, value|
+          params_with_stringified_keys[key.to_s] = value
+        end
+
+        new(record, params_with_stringified_keys)
       end
 
       {% for field in FIELDS %}

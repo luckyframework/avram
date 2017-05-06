@@ -187,4 +187,53 @@ describe "LuckyRecord::Form" do
       end
     end
   end
+
+  describe "#new_update" do
+    context "when valid with hash of params" do
+      it "casts and inserts into the db, and return true" do
+        create_user(name: "Paul")
+        user = UserRows.new.first
+        form = UserForm.new_update(user, {"name" => "New Name"})
+
+        result = form.save
+
+        result.should be_true
+        form.performed?.should be_true
+        UserRows.new.first.name.should eq "New Name"
+      end
+    end
+
+    context "when valid with named tuple" do
+      it "casts and updates the db, and return true" do
+        create_user(name: "Paul")
+        user = UserRows.new.first
+        form = UserForm.new_update(user, name: "New Name")
+
+        result = form.save
+
+        result.should be_true
+        form.performed?.should be_true
+        UserRows.new.first.name.should eq "New Name"
+      end
+    end
+
+    context "invalid" do
+      it "does not update and returns false" do
+        create_user(name: "Old Name")
+        user = UserRows.new.first
+        form = UserForm.new_update(user, {"name" => ""})
+
+        result = form.save
+
+        result.should be_false
+        form.performed?.should be_true
+        UserRows.new.first.name.should eq "Old Name"
+      end
+    end
+  end
+end
+
+private def create_user(name)
+  params = {name: name, age: "27", joined_at: Time.now.to_s("%FT%X%z")}
+  UserForm.new_insert(**params).save
 end
