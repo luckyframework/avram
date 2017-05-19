@@ -30,7 +30,7 @@ class LuckyRecord::Schema
   macro setup_initialize
     def initialize(
         {% for field in FIELDS %}
-          @{{field[:name].id}} : {{LuckyRecord::Types::TYPE_MAPPINGS[field[:type]]}}{% if field[:nilable] %}?{% end %},
+          @{{field[:name]}} : {{field[:type]}}::BaseType{% if field[:nilable] %}?{% end %},
         {% end %}
       )
     end
@@ -39,9 +39,9 @@ class LuckyRecord::Schema
   macro setup_db_mapping
     DB.mapping({
       {% for field in FIELDS %}
-        {{field[:name].id}}: {
-          type: {{LuckyRecord::Types::TYPE_MAPPINGS[field[:type]]}},
-          nilable: {{field[:nilable].id}},
+        {{field[:name]}}: {
+          type: {{field[:type]}}::BaseType,
+          nilable: {{field[:nilable]}},
         },
       {% end %}
     })
@@ -81,7 +81,7 @@ class LuckyRecord::Schema
       private def extract_changes_from_params
         allowed_params.each do |key, value|
           {% for field in FIELDS %}
-            set_{{field[:name].id}}_from_param value if key == {{field[:name].id.stringify}}
+            set_{{field[:name]}}_from_param value if key == {{field[:name].stringify}}
           {% end %}
         end
       end
@@ -195,22 +195,22 @@ class LuckyRecord::Schema
       end
 
       {% for field in FIELDS %}
-        @_{{field[:name].id}} : LuckyRecord::Field({{LuckyRecord::Types::TYPE_MAPPINGS[field[:type]]}}?)?
+        @_{{field[:name]}} : LuckyRecord::Field({{field[:type]}}::BaseType?)?
 
-        def _{{field[:name].id}}
-          @_{{field[:name].id}} ||= LuckyRecord::Field({{LuckyRecord::Types::TYPE_MAPPINGS[field[:type]]}}?).new(:{{field[:name].id}}, allowed_params["{{field[:name].id}}"]?, @record.try(&.{{field[:name].id}}))
+        def _{{field[:name]}}
+          @_{{field[:name]}} ||= LuckyRecord::Field({{field[:type]}}::BaseType?).new(:{{field[:name].id}}, allowed_params["{{field[:name]}}"]?, @record.try(&.{{field[:name]}}))
         end
 
         def allowed_params
           @params.select(@@allowed_param_keys)
         end
 
-        def set_{{field[:name].id}}_from_param(value)
-          cast_result = {{ field[:type].id }}.parse_string(value)
+        def set_{{field[:name]}}_from_param(value)
+          cast_result = {{ field[:type] }}.parse_string(value)
           if cast_result.is_a? LuckyRecord::Type::SuccessfulCast
-            _{{field[:name].id}}.value = cast_result.value
+            _{{field[:name]}}.value = cast_result.value
           else
-            _{{field[:name].id}}.add_error "is invalid"
+            _{{field[:name]}}.add_error "is invalid"
           end
         end
       {% end %}
@@ -218,7 +218,7 @@ class LuckyRecord::Schema
       def fields
         [
           {% for field in FIELDS %}
-            _{{field[:name].id}},
+            _{{field[:name]}},
           {% end %}
         ]
       end
@@ -227,8 +227,8 @@ class LuckyRecord::Schema
 
   macro setup_getters
     {% for field in FIELDS %}
-      def {{field[:name].id}}
-        {{ field[:type].id }}.parse @{{field[:name].id}}
+      def {{field[:name]}}
+        {{ field[:type] }}.parse @{{field[:name]}}
       end
     {% end %}
   end
@@ -237,17 +237,8 @@ class LuckyRecord::Schema
     field {{name}}, String
   end
 
-  macro field(name, type, nilable = false)
-    {% type = type.resolve %}
-    {% if type == String %}
-      {% type = LuckyRecord::StringType %}
-    {% end %}
-    {% if type == Time %}
-      {% type = LuckyRecord::TimeType %}
-    {% end %}
-    {% if type == Int32 %}
-      {% type = LuckyRecord::Int32Type %}
-    {% end %}
-    {% FIELDS << {name: name, type: type, nilable: nilable} %}
+  macro field(name, data_type, nilable = false)
+    {% data_type = "LuckyRecord::#{data_type.id}Type".id }
+    {% FIELDS << {name: name.id, type: data_type, nilable: nilable.id} %}
   end
 end

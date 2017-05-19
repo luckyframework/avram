@@ -1,10 +1,5 @@
 class LuckyRecord::Types
   alias DbValue = Int32 | Int64 | String | Bool
-  TYPE_MAPPINGS = {} of String => DbValue
-
-  macro register(type, base_type)
-    {% TYPE_MAPPINGS[type.resolve] = base_type}
-  end
 end
 
 abstract class LuckyRecord::Type
@@ -30,6 +25,7 @@ abstract class LuckyRecord::Type
 
   class SuccessfulCast(T)
     getter :value
+
     def initialize(@value : T)
     end
   end
@@ -39,11 +35,11 @@ abstract class LuckyRecord::Type
 end
 
 class LuckyRecord::StringType < LuckyRecord::Type
-  LuckyRecord::Types.register LuckyRecord::StringType, String
+  alias BaseType = String
 end
 
 class LuckyRecord::TimeType < LuckyRecord::Type
-  LuckyRecord::Types.register LuckyRecord::TimeType, Time
+  alias BaseType = Time
 
   def self.parse_string(value : String)
     SuccessfulCast(Time).new Time.parse(value, pattern: "%FT%X%z")
@@ -61,7 +57,7 @@ class LuckyRecord::TimeType < LuckyRecord::Type
 end
 
 class LuckyRecord::Int32Type < LuckyRecord::Type
-  LuckyRecord::Types.register LuckyRecord::Int32Type, Int32
+  alias BaseType = Int32
 
   def self.parse_string(value : String)
     SuccessfulCast(Int32).new value.to_i
@@ -75,7 +71,7 @@ class LuckyRecord::Int32Type < LuckyRecord::Type
 end
 
 class LuckyRecord::EmailType < LuckyRecord::Type
-  LuckyRecord::Types.register LuckyRecord::EmailType, String
+  alias BaseType = String
 
   def self.parse(value)
     value.to_s.downcase.strip
