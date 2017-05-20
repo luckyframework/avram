@@ -1,9 +1,9 @@
 class User < LuckyRecord::Schema
   table :users do
-    field :name
-    field :age, Int32
-    field :nickname, String, nilable: true
-    field :joined_at, Time
+    field name : String
+    field age : Int32
+    field nickname : String?
+    field joined_at : Time
   end
 end
 

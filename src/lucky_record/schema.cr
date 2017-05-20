@@ -2,9 +2,9 @@ class LuckyRecord::Schema
   macro inherited
     FIELDS = [] of {name: Symbol, type: Object, nilable: Boolean}
 
-    field :id, Int32
-    field :created_at, Time
-    field :updated_at, Time
+    field id : Int32
+    field created_at : Time
+    field updated_at : Time
   end
 
   def_equals @id
@@ -233,12 +233,14 @@ class LuckyRecord::Schema
     {% end %}
   end
 
-  macro field(name)
-    field {{name}}, String
-  end
-
-  macro field(name, data_type, nilable = false)
-    {% data_type = "LuckyRecord::#{data_type.id}Type".id }
-    {% FIELDS << {name: name.id, type: data_type, nilable: nilable.id} %}
+  macro field(type_declaration)
+    {% if type_declaration.type.is_a?(Union) %}
+      {% data_type = "LuckyRecord::#{type_declaration.type.types.first}Type".id }
+      {% nilable = true %}
+    {% else %}
+      {% data_type = "LuckyRecord::#{type_declaration.type}Type".id }
+      {% nilable = false %}
+    {% end %}
+    {% FIELDS << {name: type_declaration.var, type: data_type, nilable: nilable.id} %}
   end
 end

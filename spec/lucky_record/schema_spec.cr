@@ -2,7 +2,7 @@ require "../spec_helper"
 
 private class SchemaWithCustomDataTypes < LuckyRecord::Schema
   table :foo do
-    field :email, Email
+    field email : Email
   end
 end
 
