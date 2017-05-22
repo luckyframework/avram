@@ -2,7 +2,7 @@ module LuckyRecord::Where
   abstract class SqlClause
     getter :column, :value
 
-    def initialize(@column : Symbol, @value : String)
+    def initialize(@column : Symbol | String, @value : String)
     end
 
     abstract def operator : String
@@ -15,6 +15,12 @@ module LuckyRecord::Where
   class Equal < SqlClause
     def operator
       "="
+    end
+  end
+
+  class NotEqual < SqlClause
+    def operator
+      "!="
     end
   end
 

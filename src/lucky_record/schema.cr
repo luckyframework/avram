@@ -48,7 +48,7 @@ class LuckyRecord::Schema
   end
 
   macro setup_abstract_row_class(table_name)
-    abstract class BaseRows < LuckyRecord::Rows
+    class BaseRows < LuckyRecord::Rows
       @@table_name = {{table_name}}
       @@schema_class = {{@type}}
 
@@ -59,11 +59,21 @@ class LuckyRecord::Schema
           {% end %}
         ]
       end
+
+      {% for field in FIELDS %}
+        def {{ field[:name] }}(value)
+          where(:{{ field[:name] }}, value)
+        end
+
+        def {{ field[:name] }}
+          {{ field[:type] }}::Criteria(BaseRows).new(self, :{{ field[:name] }})
+        end
+      {% end %}
     end
   end
 
   macro setup_abstract_form_class(table_name)
-    abstract class BaseForm
+    class BaseForm
       property? performed : Bool = false
 
       @record : {{@type}}?

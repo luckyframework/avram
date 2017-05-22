@@ -6,6 +6,13 @@ private class SchemaWithCustomDataTypes < LuckyRecord::Schema
   end
 end
 
+private class QueryMe < LuckyRecord::Schema
+  table :users do
+    field email : Email
+    field age : Int32
+  end
+end
+
 describe LuckyRecord::Schema do
   it "sets up initializers based on the fields" do
     now = Time.now
@@ -33,5 +40,17 @@ describe LuckyRecord::Schema do
       email: " Foo@bar.com "
 
     user.email.should eq "foo@bar.com"
+  end
+
+  it "sets up simple where_ methods for equality" do
+    query = QueryMe::BaseRows.new.email("foo@bar.com").age(30)
+
+    query.to_sql.should eq ["SELECT * FROM users WHERE email = $1 AND age = $2", "foo@bar.com", "30"]
+  end
+
+  it "sets up advanced criteria methods" do
+    query = QueryMe::BaseRows.new.email.upper.is("foo@bar.com").age.gt(30)
+
+    query.to_sql.should eq ["SELECT * FROM users WHERE UPPER(email) = $1 AND age > $2", "foo@bar.com", "30"]
   end
 end

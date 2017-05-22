@@ -7,6 +7,10 @@ class LuckyRecord::Query
   def initialize(@table : Symbol)
   end
 
+  def to_sql
+    [statement] + args
+  end
+
   def statement
     join_sql [select_sql] + sql_condition_clauses
   end

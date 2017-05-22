@@ -7,6 +7,10 @@ module LuckyRecord::Queryable
     end
   end
 
+  def query
+    @query ||= LuckyRecord::Query.new(table: @@table_name)
+  end
+
   def where(column, value)
     query.where(LuckyRecord::Where::Equal.new(column, value.to_s))
     self
@@ -18,7 +22,7 @@ module LuckyRecord::Queryable
   end
 
   def find(id)
-    where(:id, id.to_s).limit(1).first
+    id(id).limit(1).first
   end
 
   def first
@@ -38,7 +42,15 @@ module LuckyRecord::Queryable
     end
   end
 
-  def query
-    @query ||= LuckyRecord::Query.new(table: @@table_name)
+  private def query_string
+    to_sql.first
+  end
+
+  private def query_args
+    to_sql.skip(1)
+  end
+
+  def to_sql
+    query.to_sql
   end
 end
