@@ -15,8 +15,5 @@ describe LuckyRecord::Insert do
       insert.statement.should eq "insert into users(first_name) values($1) returning *"
       insert.args.should eq [nil]
     end
-
-    pending "inserts with a NamedTuple" do
-    end
   end
 end
