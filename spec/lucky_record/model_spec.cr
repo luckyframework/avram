@@ -42,7 +42,7 @@ describe LuckyRecord::Model do
     user.email.should eq "foo@bar.com"
   end
 
-  it "sets up simple where_ methods for equality" do
+  it "sets up simple methods for equality" do
     query = QueryMe::BaseRows.new.email("foo@bar.com").age(30)
 
     query.to_sql.should eq ["SELECT * FROM users WHERE email = $1 AND age = $2", "foo@bar.com", "30"]
