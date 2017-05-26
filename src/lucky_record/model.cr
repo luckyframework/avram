@@ -75,14 +75,15 @@ class LuckyRecord::Model
   macro setup_abstract_form_class(table_name)
     class BaseForm
       property? performed : Bool = false
+      getter :record
 
       @record : {{@type}}?
       @params : Hash(String, String)
       @valid : Bool = true
-      @errors = Hash(Symbol, Array(String)).new(Array(String).new)
 
       @@table_name = {{table_name}}
       @@allowed_param_keys = [] of String
+      @@schema_class = {{@type}}
 
       def initialize(@params)
         extract_changes_from_params
@@ -108,6 +109,19 @@ class LuckyRecord::Model
 
       def call
         # TODO add default validate_required for non-nilable fields
+      end
+
+      def self.save(params)
+        form = new_insert(params)
+        if form.save
+          yield form, form.record
+        else
+          yield form, nil
+        end
+      end
+
+      def save_succeeded?
+        !save_failed?
       end
 
       def save_failed?
@@ -149,9 +163,12 @@ class LuckyRecord::Model
         self._created_at.value = Time.now
         self._updated_at.value = Time.now
         if valid?
-          LuckyRecord::Repo.run do |db|
-            db.exec insert_sql.statement, insert_sql.args
+          @record = LuckyRecord::Repo.run do |db|
+            db.query insert_sql.statement, insert_sql.args do |rs|
+              @@schema_class.from_rs(rs)
+            end.first
           end
+
           true
         else
           false

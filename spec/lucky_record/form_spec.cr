@@ -4,8 +4,14 @@ private class UserForm < User::BaseForm
   allow :name, :nickname, :joined_at, :age
 
   def call
-    if name.value.try &.blank?
-      name.add_error "is blank"
+    validate_required name, joined_at, age
+  end
+
+  private def validate_required(*fields)
+    fields.each do |field|
+      if field.value.blank?
+        field.add_error "is blank"
+      end
     end
   end
 end
@@ -102,7 +108,7 @@ describe "LuckyRecord::Form" do
 
   describe "errors" do
     it "creates an error method for each of the allowed fields" do
-      params = {"name" => "Paul", "nickname" => "Pablito"}
+      params = {"name" => "Paul", "age" => "30", "joined_at" => now_as_string}
       form = UserForm.new_insert(params)
       form.valid?.should be_true
 
@@ -110,7 +116,7 @@ describe "LuckyRecord::Form" do
 
       form.valid?.should be_false
       form.name.errors.should eq ["is not valid"]
-      form.nickname.errors.should eq [] of String
+      form.age.errors.should eq [] of String
     end
 
     it "only returns unique errors" do
@@ -147,7 +153,7 @@ describe "LuckyRecord::Form" do
   describe "#new_insert" do
     context "when valid with hash of params" do
       it "casts and inserts into the db, and return true" do
-        params = {"name" => "Paul", "age" => "27", "joined_at" => Time.now.to_s("%FT%X%z")}
+        params = {"name" => "Paul", "age" => "27", "joined_at" => now_as_string}
         form = UserForm.new_insert(params)
         form.performed?.should be_false
 
@@ -162,7 +168,7 @@ describe "LuckyRecord::Form" do
 
     context "when valid with named tuple" do
       it "casts and inserts into the db, and return true" do
-        form = UserForm.new_insert(name: "Paul", age: "27", joined_at: Time.now.to_s("%FT%X%z"))
+        form = UserForm.new_insert(name: "Paul", age: "27", joined_at: now_as_string)
         form.performed?.should be_false
 
         result = form.save
@@ -175,7 +181,7 @@ describe "LuckyRecord::Form" do
 
     context "invalid" do
       it "does not insert and returns false" do
-        params = {"name" => "", "age" => "27", "joined_at" => Time.now.to_s("%FT%X%z")}
+        params = {"name" => "", "age" => "27", "joined_at" => now_as_string}
         form = UserForm.new_insert(params)
         form.performed?.should be_false
 
@@ -184,6 +190,28 @@ describe "LuckyRecord::Form" do
         result.should be_false
         form.performed?.should be_true
         UserRows.all.to_a.size.should eq 0
+      end
+    end
+  end
+
+  describe ".save" do
+    context "on success" do
+      it "yields the form and the saved record" do
+        params = {"joined_at" => now_as_string, "name" => "New Name", "age" => "30"}
+        UserForm.save params do |form, record|
+          form.save_succeeded?.should be_true
+          record.is_a?(User).should be_true
+        end
+      end
+    end
+
+    context "on failure" do
+      it "yields the form and nil" do
+        params = {"name" => "", "age" => "30"}
+        UserForm.save params do |form, record|
+          form.save_failed?.should be_true
+          record.should be_nil
+        end
       end
     end
   end
@@ -234,6 +262,10 @@ describe "LuckyRecord::Form" do
 end
 
 private def create_user(name)
-  params = {name: name, age: "27", joined_at: Time.now.to_s("%FT%X%z")}
+  params = {name: name, age: "27", joined_at: now_as_string}
   UserForm.new_insert(**params).save
+end
+
+private def now_as_string
+  Time.now.to_s("%FT%X%z")
 end

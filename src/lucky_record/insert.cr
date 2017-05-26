@@ -5,7 +5,7 @@ class LuckyRecord::Insert
   end
 
   def statement
-    "insert into #{@table}(#{fields}) values(#{values_placeholders})"
+    "insert into #{@table}(#{fields}) values(#{values_placeholders}) returning *"
   end
 
   def args
