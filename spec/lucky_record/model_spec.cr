@@ -1,19 +1,19 @@
 require "../spec_helper"
 
-private class SchemaWithCustomDataTypes < LuckyRecord::Schema
+private class ModelWithCustomDataTypes < LuckyRecord::Model
   table :foo do
     field email : Email
   end
 end
 
-private class QueryMe < LuckyRecord::Schema
+private class QueryMe < LuckyRecord::Model
   table :users do
     field email : Email
     field age : Int32
   end
 end
 
-describe LuckyRecord::Schema do
+describe LuckyRecord::Model do
   it "sets up initializers based on the fields" do
     now = Time.now
 
@@ -34,7 +34,7 @@ describe LuckyRecord::Schema do
   end
 
   it "sets up getters that cast the values" do
-    user = SchemaWithCustomDataTypes.new id: 123,
+    user = ModelWithCustomDataTypes.new id: 123,
       created_at: Time.now,
       updated_at: Time.now,
       email: " Foo@bar.com "

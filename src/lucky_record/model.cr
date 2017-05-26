@@ -1,4 +1,4 @@
-class LuckyRecord::Schema
+class LuckyRecord::Model
   macro inherited
     FIELDS = [] of {name: Symbol, type: Object, nilable: Boolean}
 

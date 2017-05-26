@@ -22,7 +22,7 @@ require "lucky_record"
 ## Making a schema
 
 ```crystal
-class Task < LuckyRecord::Schema
+class Task < LuckyRecord::Model
   # Table is inferred from model name
   # timestamps and id are automatically added
   field title : String
@@ -36,7 +36,7 @@ end
 Add a Comment that belongs to a Task
 
 ```crystal
-class Comment < LuckyRecord::Schema
+class Comment < LuckyRecord::Model
   field body : String
   field rating : Int32 = 0
   belongs_to Task
@@ -46,7 +46,7 @@ end
 Add the comments to the Task schema
 
 ```crystal
-class Task < LuckyRecord::Schema
+class Task < LuckyRecord::Model
   # fields omitted for brevity
   has_many Comment
 end

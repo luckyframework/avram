@@ -1,6 +1,6 @@
 require "../spec_helper"
 
-private class QueryMe < LuckyRecord::Schema
+private class QueryMe < LuckyRecord::Model
   table :users do
     field age : NothingExtra
   end
