@@ -216,6 +216,32 @@ describe "LuckyRecord::Form" do
     end
   end
 
+  describe ".update" do
+    context "on success" do
+      it "yields the form and the updated record" do
+        create_user(name: "Old Name")
+        user = UserRows.new.first
+        params = {"name" => "New Name"}
+        UserForm.update user, with: params do |form, record|
+          form.save_succeeded?.should be_true
+          record.name.should eq "New Name"
+        end
+      end
+    end
+
+    context "on failure" do
+      it "yields the form and nil" do
+        create_user(name: "Old Name")
+        user = UserRows.new.first
+        params = {"name" => ""}
+        UserForm.update user, with: params do |form, record|
+          form.save_failed?.should be_true
+          record.name.should eq "Old Name"
+        end
+      end
+    end
+  end
+
   describe "#new_update" do
     context "when valid with hash of params" do
       it "casts and inserts into the db, and return true" do

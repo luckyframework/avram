@@ -120,6 +120,15 @@ class LuckyRecord::Model
         end
       end
 
+      def self.update(record, with params)
+        form = new_update(record, params)
+        if form.save
+          yield form, form.record.not_nil!
+        else
+          yield form, form.record.not_nil!
+        end
+      end
+
       def save_succeeded?
         !save_failed?
       end
@@ -177,8 +186,10 @@ class LuckyRecord::Model
 
       private def update(id)
         if valid?
-          LuckyRecord::Repo.run do |db|
-            db.exec update_query(id).statement_for_update(changes), update_query(id).args_for_update(changes)
+          @record = LuckyRecord::Repo.run do |db|
+            db.query update_query(id).statement_for_update(changes), update_query(id).args_for_update(changes) do |rs|
+              @@schema_class.from_rs(rs)
+            end.first
           end
           true
         else

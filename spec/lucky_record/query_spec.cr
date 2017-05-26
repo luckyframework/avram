@@ -29,7 +29,7 @@ describe "LuckyRecord::Query" do
         .where(LuckyRecord::Where::Equal.new(:id, "1"))
         .limit(1)
 
-      query.statement_for_update(params).should eq "UPDATE users SET first_name = $1, last_name = $2 WHERE id = $3 LIMIT 1"
+      query.statement_for_update(params).should eq "UPDATE users SET first_name = $1, last_name = $2 WHERE id = $3 LIMIT 1 RETURNING *"
       query.args_for_update(params).should eq ["Paul", "Smith", "1"]
     end
   end
