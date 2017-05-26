@@ -72,6 +72,38 @@ class LuckyRecord::StringType < LuckyRecord::Type
 end
 
 class LuckyRecord::StringType::Criteria(T) < LuckyRecord::Criteria(T)
+  @upper = false
+  @lower = false
+
+  def like(value)
+    rows.query.where(LuckyRecord::Where::Like.new(column, value.to_s))
+    rows
+  end
+
+  def ilike(value)
+    rows.query.where(LuckyRecord::Where::Ilike.new(column, value.to_s))
+    rows
+  end
+
+  def upper
+    @upper = true
+    self
+  end
+
+  def lower
+    @lower = true
+    self
+  end
+
+  def column
+    if @upper
+      "UPPER(#{@column})"
+    elsif @lower
+      "LOWER(#{@column})"
+    else
+      @column
+    end
+  end
 end
 
 class LuckyRecord::TimeType < LuckyRecord::Type
@@ -117,24 +149,7 @@ class LuckyRecord::EmailType < LuckyRecord::Type
   end
 end
 
-class LuckyRecord::EmailType::Criteria(T) < LuckyRecord::Criteria(T)
+class LuckyRecord::EmailType::Criteria(T) < LuckyRecord::StringType::Criteria(T)
   @upper = false
-
-  def upper
-    @upper = true
-    self
-  end
-
-  def is(value)
-    rows.query.where(LuckyRecord::Where::Equal.new(column, value.to_s))
-    rows
-  end
-
-  def column
-    if @upper
-      "UPPER(#{@column})"
-    else
-      @column
-    end
-  end
+  @lower = false
 end

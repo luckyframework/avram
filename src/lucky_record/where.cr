@@ -47,4 +47,16 @@ module LuckyRecord::Where
       "<="
     end
   end
+
+  class Like < SqlClause
+    def operator
+      "LIKE"
+    end
+  end
+
+  class Ilike < SqlClause
+    def operator
+      "ILIKE"
+    end
+  end
 end
