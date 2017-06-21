@@ -53,4 +53,10 @@ describe LuckyRecord::Model do
 
     query.to_sql.should eq ["SELECT * FROM users WHERE UPPER(email) = $1 AND age > $2", "foo@bar.com", "30"]
   end
+
+  it "casts values" do
+    query = QueryMe::BaseQuery.new.email.upper.is(" Foo@bar.com").age.gt(30)
+
+    query.to_sql.should eq ["SELECT * FROM users WHERE UPPER(email) = $1 AND age > $2", "foo@bar.com", "30"]
+  end
 end

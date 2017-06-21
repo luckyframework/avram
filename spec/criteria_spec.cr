@@ -6,7 +6,7 @@ private class QueryMe < LuckyRecord::Model
   end
 end
 
-class LuckyRecord::NothingExtraType < LuckyRecord::Type
+class LuckyRecord::NothingExtraType < LuckyRecord::Int32Type
   alias BaseType = Int32
 
   class Criteria(T, V) < LuckyRecord::Criteria(T, V)

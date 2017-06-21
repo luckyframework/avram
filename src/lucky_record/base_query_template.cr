@@ -20,7 +20,7 @@ class LuckyRecord::BaseQueryTemplate
         end
 
         def {{ field[:name] }}
-          {{ field[:type] }}::Criteria(BaseQuery, {{ field[:type] }}::BaseType).new(self, :{{ field[:name] }})
+          {{ field[:type] }}::Criteria(BaseQuery, {{ field[:type] }}).new(self, :{{ field[:name] }})
         end
       {% end %}
     end
