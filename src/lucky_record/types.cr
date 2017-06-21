@@ -1,35 +1,35 @@
-class LuckyRecord::Criteria(T)
+class LuckyRecord::Criteria(T, V)
   property :rows, :column
 
   def initialize(@rows : T, @column : Symbol)
   end
 
-  def is(value)
+  def is(value : V | String)
     rows.query.where(LuckyRecord::Where::Equal.new(column, value.to_s))
     rows
   end
 
-  def is_not(value)
+  def is_not(value : V | String)
     rows.query.where(LuckyRecord::Where::NotEqual.new(column, value.to_s))
     rows
   end
 
-  def gt(value)
+  def gt(value : V | String)
     rows.query.where(LuckyRecord::Where::GreaterThan.new(column, value.to_s))
     rows
   end
 
-  def gte(value)
+  def gte(value : V | String)
     rows.query.where(LuckyRecord::Where::GreaterThanOrEqualTo.new(column, value.to_s))
     rows
   end
 
-  def lt(value)
+  def lt(value : V | String)
     rows.query.where(LuckyRecord::Where::LessThan.new(column, value.to_s))
     rows
   end
 
-  def lte(value)
+  def lte(value : V | String)
     rows.query.where(LuckyRecord::Where::LessThanOrEqualTo.new(column, value.to_s))
     rows
   end
@@ -71,17 +71,17 @@ class LuckyRecord::StringType < LuckyRecord::Type
   alias BaseType = String
 end
 
-class LuckyRecord::StringType::Criteria(T) < LuckyRecord::Criteria(T)
+class LuckyRecord::StringType::Criteria(T, V) < LuckyRecord::Criteria(T, V)
   @upper = false
   @lower = false
 
-  def like(value)
-    rows.query.where(LuckyRecord::Where::Like.new(column, value.to_s))
+  def like(value : String)
+    rows.query.where(LuckyRecord::Where::Like.new(column, value))
     rows
   end
 
-  def ilike(value)
-    rows.query.where(LuckyRecord::Where::Ilike.new(column, value.to_s))
+  def ilike(value : String)
+    rows.query.where(LuckyRecord::Where::Ilike.new(column, value))
     rows
   end
 
@@ -138,18 +138,18 @@ class LuckyRecord::Int32Type < LuckyRecord::Type
   end
 end
 
-class LuckyRecord::Int32Type::Criteria(T) < LuckyRecord::Criteria(T)
+class LuckyRecord::Int32Type::Criteria(T, V) < LuckyRecord::Criteria(T, V)
 end
 
 class LuckyRecord::EmailType < LuckyRecord::Type
   alias BaseType = String
 
-  def self.parse(value)
-    value.to_s.downcase.strip
+  def self.parse(value : String)
+    value.downcase.strip
   end
 end
 
-class LuckyRecord::EmailType::Criteria(T) < LuckyRecord::StringType::Criteria(T)
+class LuckyRecord::EmailType::Criteria(T, V) < LuckyRecord::StringType::Criteria(T, V)
   @upper = false
   @lower = false
 end

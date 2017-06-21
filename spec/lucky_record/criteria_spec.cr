@@ -9,7 +9,7 @@ end
 class LuckyRecord::NothingExtraType < LuckyRecord::Type
   alias BaseType = Int32
 
-  class Criteria(T) < LuckyRecord::Criteria(T)
+  class Criteria(T, V) < LuckyRecord::Criteria(T, V)
   end
 end
 
