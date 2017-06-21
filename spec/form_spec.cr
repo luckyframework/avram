@@ -1,4 +1,4 @@
-require "../spec_helper"
+require "./spec_helper"
 
 private class UserForm < User::BaseForm
   allow :name, :nickname, :joined_at, :age
