@@ -12,10 +12,6 @@ class LuckyRecord::BaseFormTemplate
       @@allowed_param_keys = [] of String
       @@schema_class = {{ model_type }}
 
-      def initialize(@params)
-        extract_changes_from_params
-      end
-
       private def extract_changes_from_params
         allowed_params.each do |key, value|
           {% for field in fields %}
@@ -24,7 +20,31 @@ class LuckyRecord::BaseFormTemplate
         end
       end
 
+      def initialize(@params)
+        extract_changes_from_params
+      end
+
+      def initialize(**params)
+        params_with_stringified_keys = {} of String => String
+        params.each do |key, value|
+          params_with_stringified_keys[key.to_s] = value
+        end
+
+        @params = params_with_stringified_keys
+        extract_changes_from_params
+      end
+
       def initialize(@record, @params)
+        extract_changes_from_params
+      end
+
+      def initialize(@record, @params)
+        params_with_stringified_keys = {} of String => String
+        params.each do |key, value|
+          params_with_stringified_keys[key.to_s] = value
+        end
+
+        @params = params_with_stringified_keys
         extract_changes_from_params
       end
 
@@ -39,7 +59,7 @@ class LuckyRecord::BaseFormTemplate
       end
 
       def self.save(params)
-        form = new_insert(params)
+        form = new(params)
         if form.save
           yield form, form.record
         else
@@ -48,7 +68,7 @@ class LuckyRecord::BaseFormTemplate
       end
 
       def self.update(record, with params)
-        form = new_update(record, params)
+        form = new(record, params)
         if form.save
           yield form, form.record.not_nil!
         else
@@ -133,10 +153,6 @@ class LuckyRecord::BaseFormTemplate
         LuckyRecord::Insert.new(@@table_name, changes)
       end
 
-      def self.new_insert(params)
-        new(params)
-      end
-
       def self.new_insert(**params)
         params_with_stringified_keys = {} of String => String
         params.each do |key, value|
@@ -144,10 +160,6 @@ class LuckyRecord::BaseFormTemplate
         end
 
         new(params_with_stringified_keys)
-      end
-
-      def self.new_update(to record, with params)
-        new(record, params)
       end
 
       def self.new_update(to record, **params)
