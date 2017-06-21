@@ -18,7 +18,7 @@ class LuckyRecord::Model
     setup_initialize
     setup_db_mapping
     setup_getters
-    setup_abstract_row_class({{table_name}})
+    setup_base_query_class({{table_name}})
     setup_abstract_form_class({{table_name}})
     setup_table_name({{table_name}})
   end
@@ -47,31 +47,8 @@ class LuckyRecord::Model
     })
   end
 
-  macro setup_abstract_row_class(table_name)
-    class BaseRows < LuckyRecord::Rows
-      include LuckyRecord::Queryable({{@type}})
-
-      @@table_name = {{table_name}}
-      @@schema_class = {{@type}}
-
-      def field_names
-        [
-          {% for field in FIELDS %}
-            {{field[:name]}},
-          {% end %}
-        ]
-      end
-
-      {% for field in FIELDS %}
-        def {{ field[:name] }}(value)
-          where(:{{ field[:name] }}, value)
-        end
-
-        def {{ field[:name] }}
-          {{ field[:type] }}::Criteria(BaseRows).new(self, :{{ field[:name] }})
-        end
-      {% end %}
-    end
+  macro setup_base_query_class(table_name)
+    LuckyRecord::BaseQueryTemplate.setup({{ @type }}, {{ FIELDS }}, {{ table_name }})
   end
 
   macro setup_abstract_form_class(table_name)
