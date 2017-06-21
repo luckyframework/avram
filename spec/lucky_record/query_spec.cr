@@ -1,40 +1,54 @@
 require "../spec_helper"
 
-describe "LuckyRecord::Query" do
-  it "selects all" do
-    new_query.statement.should eq "SELECT * FROM users"
-    new_query.args.should eq [] of String
+describe LuckyRecord::Query do
+  describe "#first" do
+    it "gets the first row from the database" do
+      insert_a_user
+      UserRows.new.first.name.should eq "Paul"
+    end
   end
 
-  it "can be limited" do
-    query = new_query.limit(1)
-    query.statement.should eq "SELECT * FROM users LIMIT 1"
-    query.args.should eq [] of String
+  describe "#find" do
+    it "gets the record with the given id" do
+      insert_a_user
+      user = UserRows.new.first
+
+      UserRows.new.find(user.id).should eq user
+    end
   end
 
-  it "accepts where clauses and limits" do
-    query = new_query
-      .where(LuckyRecord::Where::Equal.new(:name, "Paul"))
-      .where(LuckyRecord::Where::GreaterThan.new(:age, "20"))
-      .limit(1)
-    query.statement.should eq "SELECT * FROM users WHERE name = $1 AND age > $2 LIMIT 1"
-    query.args.should eq ["Paul", "20"]
+  describe "#where" do
+    it "chains wheres" do
+      query = UserRows.new.where(:first_name, "Paul").where(:last_name, "Smith").query
+
+      query.statement.should eq "SELECT * FROM users WHERE first_name = $1 AND last_name = $2"
+      query.args.should eq ["Paul", "Smith"]
+    end
+
+    it "handles int" do
+      query = UserRows.new.where(:id, 1).query
+
+      query.statement.should eq "SELECT * FROM users WHERE id = $1"
+      query.args.should eq ["1"]
+    end
   end
 
-  describe "updating" do
-    it "inserts with a hash of String" do
-      params = {:first_name => "Paul", :last_name => "Smith"}
-      query = LuckyRecord::Query
-        .new(table: :users)
-        .where(LuckyRecord::Where::Equal.new(:id, "1"))
-        .limit(1)
+  describe "#limit" do
+    it "adds a limit clause" do
+      query = UserRows.new.limit(2).query
 
-      query.statement_for_update(params).should eq "UPDATE users SET first_name = $1, last_name = $2 WHERE id = $3 LIMIT 1 RETURNING *"
-      query.args_for_update(params).should eq ["Paul", "Smith", "1"]
+      query.statement.should eq "SELECT * FROM users LIMIT 2"
     end
   end
 end
 
-private def new_query
-  LuckyRecord::Query.new(table: :users)
+private def insert_a_user
+  LuckyRecord::Repo.run do |db|
+    db.exec "INSERT INTO users(name, created_at, updated_at, age, joined_at) VALUES ($1, $2, $3, $4, $5)",
+      "Paul",
+      Time.now,
+      Time.now,
+      34,
+      Time.now
+  end
 end

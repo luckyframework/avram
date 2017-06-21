@@ -1,7 +1,12 @@
+<<<<<<< HEAD
 module LuckyRecord::Queryable(T)
   include Enumerable(T)
 
   @query : LuckyRecord::Query?
+=======
+module LuckyRecord::Queryable
+  @query : LuckyRecord::QueryBuilder?
+>>>>>>> Rename Query -> QueryBuilder
 
   macro included
     def self.all
@@ -10,7 +15,7 @@ module LuckyRecord::Queryable(T)
   end
 
   def query
-    @query ||= LuckyRecord::Query.new(table: @@table_name)
+    @query ||= LuckyRecord::QueryBuilder.new(table: @@table_name)
   end
 
   def where(column, value)

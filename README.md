@@ -55,11 +55,11 @@ end
 ## Basic queries
 
 When you create a schema, some abstract base classes are also created. One of
-these is `#{schema name}::BaseRows`
+these is `#{schema name}::BaseQuery`
 
 ```crystal
-# Inherit from the automatically generated Task::BaseRows class
-class TaskRows < Task::BaseRows
+# Inherit from the automatically generated Task::BaseQuery class
+class TaskRows < Task::BaseQuery
 end
 ```
 
@@ -85,7 +85,7 @@ TaskRows.all.where &.completed_at > 5.days.ago
 TaskRows.all.where_comments &.rating > 4
 
 # It's often best to extract queries to the row object
-class TaskRows < Task::BaseRows
+class TaskRows < Task::BaseQuery
   def highly_rated
     where_comments &.rating > 4
   end
@@ -99,7 +99,7 @@ TaskRows.all.highly_rated
 You can add query scopes by adding instance methods to your Rows objects
 
 ```crystal
-class TaskRows < Task::BaseRows
+class TaskRows < Task::BaseQuery
   def completed
     where &.completed_at != nil
   end

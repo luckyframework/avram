@@ -52,5 +52,5 @@ describe LuckyRecord::Criteria do
 end
 
 private def age
-  QueryMe::BaseRows.new.age
+  QueryMe::BaseQuery.new.age
 end

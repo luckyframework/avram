@@ -7,5 +7,5 @@ class User < LuckyRecord::Model
   end
 end
 
-class UserRows < User::BaseRows
+class UserRows < User::BaseQuery
 end

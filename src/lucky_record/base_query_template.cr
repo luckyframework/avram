@@ -1,6 +1,6 @@
 class LuckyRecord::BaseQueryTemplate
   macro setup(model_type, fields, table_name)
-    class BaseRows < LuckyRecord::Rows
+    class BaseQuery < LuckyRecord::Query
       include LuckyRecord::Queryable({{ model_type }})
 
       @@table_name = {{ table_name }}
@@ -20,7 +20,7 @@ class LuckyRecord::BaseQueryTemplate
         end
 
         def {{ field[:name] }}
-          {{ field[:type] }}::Criteria(BaseRows, {{ field[:type] }}::BaseType).new(self, :{{ field[:name] }})
+          {{ field[:type] }}::Criteria(BaseQuery, {{ field[:type] }}::BaseType).new(self, :{{ field[:name] }})
         end
       {% end %}
     end

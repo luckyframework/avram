@@ -43,13 +43,13 @@ describe LuckyRecord::Model do
   end
 
   it "sets up simple methods for equality" do
-    query = QueryMe::BaseRows.new.email("foo@bar.com").age(30)
+    query = QueryMe::BaseQuery.new.email("foo@bar.com").age(30)
 
     query.to_sql.should eq ["SELECT * FROM users WHERE email = $1 AND age = $2", "foo@bar.com", "30"]
   end
 
   it "sets up advanced criteria methods" do
-    query = QueryMe::BaseRows.new.email.upper.is("foo@bar.com").age.gt(30)
+    query = QueryMe::BaseQuery.new.email.upper.is("foo@bar.com").age.gt(30)
 
     query.to_sql.should eq ["SELECT * FROM users WHERE UPPER(email) = $1 AND age > $2", "foo@bar.com", "30"]
   end

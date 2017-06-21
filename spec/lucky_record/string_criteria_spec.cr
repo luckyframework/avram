@@ -33,5 +33,5 @@ describe LuckyRecord::StringType::Criteria do
 end
 
 private def name
-  QueryMe::BaseRows.new.name
+  QueryMe::BaseQuery.new.name
 end
