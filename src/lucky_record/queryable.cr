@@ -1,4 +1,6 @@
-module LuckyRecord::Queryable
+module LuckyRecord::Queryable(T)
+  include Enumerable(T)
+
   @query : LuckyRecord::Query?
 
   macro included
@@ -30,7 +32,13 @@ module LuckyRecord::Queryable
     exec_query.first
   end
 
-  def to_a
+  def each
+    results.each do |result|
+      yield result
+    end
+  end
+
+  def results
     exec_query
   end
 

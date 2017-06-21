@@ -1,6 +1,4 @@
 abstract class LuckyRecord::Rows
-  include LuckyRecord::Queryable
-
   def destroy_all
     LuckyRecord::Repo.run do |db|
       db.exec "TRUNCATE TABLE #{@@table_name}"

@@ -49,6 +49,8 @@ class LuckyRecord::Model
 
   macro setup_abstract_row_class(table_name)
     class BaseRows < LuckyRecord::Rows
+      include LuckyRecord::Queryable({{@type}})
+
       @@table_name = {{table_name}}
       @@schema_class = {{@type}}
 
