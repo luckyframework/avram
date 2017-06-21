@@ -161,8 +161,8 @@ describe "LuckyRecord::Form" do
 
         result.should be_true
         form.performed?.should be_true
-        UserRows.new.first.id.should be_truthy
-        UserRows.new.first.name.should eq "Paul"
+        UserQuery.new.first.id.should be_truthy
+        UserQuery.new.first.name.should eq "Paul"
       end
     end
 
@@ -175,7 +175,7 @@ describe "LuckyRecord::Form" do
 
         result.should be_true
         form.performed?.should be_true
-        UserRows.new.first.id.should be_truthy
+        UserQuery.new.first.id.should be_truthy
       end
     end
 
@@ -189,7 +189,7 @@ describe "LuckyRecord::Form" do
 
         result.should be_false
         form.performed?.should be_true
-        UserRows.all.to_a.size.should eq 0
+        UserQuery.all.to_a.size.should eq 0
       end
     end
   end
@@ -220,7 +220,7 @@ describe "LuckyRecord::Form" do
     context "on success" do
       it "yields the form and the updated record" do
         create_user(name: "Old Name")
-        user = UserRows.new.first
+        user = UserQuery.new.first
         params = {"name" => "New Name"}
         UserForm.update user, with: params do |form, record|
           form.save_succeeded?.should be_true
@@ -232,7 +232,7 @@ describe "LuckyRecord::Form" do
     context "on failure" do
       it "yields the form and nil" do
         create_user(name: "Old Name")
-        user = UserRows.new.first
+        user = UserQuery.new.first
         params = {"name" => ""}
         UserForm.update user, with: params do |form, record|
           form.save_failed?.should be_true
@@ -246,42 +246,42 @@ describe "LuckyRecord::Form" do
     context "when valid with hash of params" do
       it "casts and inserts into the db, and return true" do
         create_user(name: "Paul")
-        user = UserRows.new.first
+        user = UserQuery.new.first
         form = UserForm.new_update(user, {"name" => "New Name"})
 
         result = form.save
 
         result.should be_true
         form.performed?.should be_true
-        UserRows.new.first.name.should eq "New Name"
+        UserQuery.new.first.name.should eq "New Name"
       end
     end
 
     context "when valid with named tuple" do
       it "casts and updates the db, and return true" do
         create_user(name: "Paul")
-        user = UserRows.new.first
+        user = UserQuery.new.first
         form = UserForm.new_update(user, name: "New Name")
 
         result = form.save
 
         result.should be_true
         form.performed?.should be_true
-        UserRows.new.first.name.should eq "New Name"
+        UserQuery.new.first.name.should eq "New Name"
       end
     end
 
     context "invalid" do
       it "does not update and returns false" do
         create_user(name: "Old Name")
-        user = UserRows.new.first
+        user = UserQuery.new.first
         form = UserForm.new_update(user, {"name" => ""})
 
         result = form.save
 
         result.should be_false
         form.performed?.should be_true
-        UserRows.new.first.name.should eq "Old Name"
+        UserQuery.new.first.name.should eq "Old Name"
       end
     end
   end

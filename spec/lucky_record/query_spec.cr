@@ -4,29 +4,29 @@ describe LuckyRecord::Query do
   describe "#first" do
     it "gets the first row from the database" do
       insert_a_user
-      UserRows.new.first.name.should eq "Paul"
+      UserQuery.new.first.name.should eq "Paul"
     end
   end
 
   describe "#find" do
     it "gets the record with the given id" do
       insert_a_user
-      user = UserRows.new.first
+      user = UserQuery.new.first
 
-      UserRows.new.find(user.id).should eq user
+      UserQuery.new.find(user.id).should eq user
     end
   end
 
   describe "#where" do
     it "chains wheres" do
-      query = UserRows.new.where(:first_name, "Paul").where(:last_name, "Smith").query
+      query = UserQuery.new.where(:first_name, "Paul").where(:last_name, "Smith").query
 
       query.statement.should eq "SELECT * FROM users WHERE first_name = $1 AND last_name = $2"
       query.args.should eq ["Paul", "Smith"]
     end
 
     it "handles int" do
-      query = UserRows.new.where(:id, 1).query
+      query = UserQuery.new.where(:id, 1).query
 
       query.statement.should eq "SELECT * FROM users WHERE id = $1"
       query.args.should eq ["1"]
@@ -35,7 +35,7 @@ describe LuckyRecord::Query do
 
   describe "#limit" do
     it "adds a limit clause" do
-      query = UserRows.new.limit(2).query
+      query = UserQuery.new.limit(2).query
 
       query.statement.should eq "SELECT * FROM users LIMIT 2"
     end

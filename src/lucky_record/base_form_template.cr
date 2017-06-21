@@ -125,7 +125,7 @@ class LuckyRecord::BaseFormTemplate
       end
 
       private def update_query(id)
-        LuckyRecord::Query.new(@@table_name).
+        LuckyRecord::QueryBuilder.new(@@table_name).
           where(LuckyRecord::Where::Equal.new(:id, id.to_s))
       end
 

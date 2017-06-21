@@ -1,3 +1,5 @@
+require "./queryable"
+
 abstract class LuckyRecord::Query
   def destroy_all
     LuckyRecord::Repo.run do |db|
