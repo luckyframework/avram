@@ -7,6 +7,10 @@ class LuckyRecord::Int32Type < LuckyRecord::Type
     FailedCast.new
   end
 
+  def self.cast(value : Int32)
+    SuccessfulCast(Int32).new(value)
+  end
+
   def self.serialize(value : Int32)
     value.to_s
   end

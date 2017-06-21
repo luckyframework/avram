@@ -1,13 +1,13 @@
 abstract class LuckyRecord::Type
   def self.deserialize(value)
-    value
+    cast(value).as(SuccessfulCast).value
   end
 
   def self.cast(value : Nil)
     SuccessfulCast(Nil).new(nil)
   end
 
-  def self.cast(value)
+  def self.cast(value : String)
     SuccessfulCast(String).new(value)
   end
 
