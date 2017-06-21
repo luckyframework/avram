@@ -19,6 +19,11 @@ abstract class LuckyRecord::Type
     value
   end
 
+  def self.cast_and_serialize(value)
+    casted_value = cast(value).as(SuccessfulCast).value
+    serialize(casted_value)
+  end
+
   class SuccessfulCast(T)
     getter :value
 
