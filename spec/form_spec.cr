@@ -41,6 +41,17 @@ describe "LuckyRecord::Form" do
     end
   end
 
+  describe "initializer" do
+    it "works with a record and named args" do
+      create_user(name: "Old Name")
+      user = UserQuery.new.first
+
+      form = UserForm.new(user, name: "New Name")
+
+      form.name.value.should eq "New Name"
+    end
+  end
+
   describe "casting" do
     it "cast integers, time objects, etc." do
       now = Time.now.at_beginning_of_minute

@@ -12,6 +12,32 @@ class LuckyRecord::BaseFormTemplate
       @@allowed_param_keys = [] of String
       @@schema_class = {{ model_type }}
 
+      def initialize(@params : Hash(String, String))
+        extract_changes_from_params
+      end
+
+      def initialize(**params)
+        @params = named_tuple_to_params(params)
+        extract_changes_from_params
+      end
+
+      def initialize(@record, @params)
+        extract_changes_from_params
+      end
+
+      def initialize(@record, **params)
+        @params = named_tuple_to_params(params)
+        extract_changes_from_params
+      end
+
+      private def named_tuple_to_params(named_tuple)
+        params_with_stringified_keys = {} of String => String
+        named_tuple.each do |key, value|
+          params_with_stringified_keys[key.to_s] = value
+        end
+        params_with_stringified_keys
+      end
+
       private def extract_changes_from_params
         allowed_params.each do |key, value|
           {% for field in fields %}
@@ -20,33 +46,6 @@ class LuckyRecord::BaseFormTemplate
         end
       end
 
-      def initialize(@params)
-        extract_changes_from_params
-      end
-
-      def initialize(**params)
-        params_with_stringified_keys = {} of String => String
-        params.each do |key, value|
-          params_with_stringified_keys[key.to_s] = value
-        end
-
-        @params = params_with_stringified_keys
-        extract_changes_from_params
-      end
-
-      def initialize(@record, @params)
-        extract_changes_from_params
-      end
-
-      def initialize(@record, @params)
-        params_with_stringified_keys = {} of String => String
-        params.each do |key, value|
-          params_with_stringified_keys[key.to_s] = value
-        end
-
-        @params = params_with_stringified_keys
-        extract_changes_from_params
-      end
 
       def valid? : Bool
         call
