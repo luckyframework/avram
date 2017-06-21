@@ -58,7 +58,7 @@ class LuckyRecord::Model
   macro setup_getters
     {% for field in FIELDS %}
       def {{field[:name]}}
-        {{ field[:type] }}.parse @{{field[:name]}}
+        {{ field[:type] }}.deserialize @{{field[:name]}}
       end
     {% end %}
   end

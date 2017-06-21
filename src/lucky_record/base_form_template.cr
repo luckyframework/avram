@@ -171,7 +171,7 @@ class LuckyRecord::BaseFormTemplate
         end
 
         def set_{{field[:name]}}_from_param(value)
-          cast_result = {{ field[:type] }}.parse_string(value)
+          cast_result = {{ field[:type] }}.cast(value)
           if cast_result.is_a? LuckyRecord::Type::SuccessfulCast
             _{{field[:name]}}.value = cast_result.value
           else
