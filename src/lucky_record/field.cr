@@ -1,6 +1,6 @@
 class LuckyRecord::Field(T)
+  property :param
   getter :name
-  getter :param
   getter :value
   getter :form_name
   @errors = [] of String
