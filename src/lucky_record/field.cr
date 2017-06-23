@@ -2,10 +2,11 @@ class LuckyRecord::Field(T)
   getter :name
   getter :param
   getter :value
+  getter :form_name
   @errors = [] of String
   @changed = false
 
-  def initialize(@name : Symbol, @param : String?, @value : T)
+  def initialize(@name : Symbol, @param : String?, @value : T, @form_name : String)
   end
 
   def add_error(message : String)

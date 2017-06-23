@@ -29,21 +29,16 @@ private class TestValidationUser
     validate_inclusions_of name, in: ["Paul", "Pablo"]
   end
 
-  def name
-    @_name ||= LuckyRecord::Field(String).new(:name, param: "", value: @name)
+  macro field(type, name)
+    def {{ name }}
+      @_{{ name }} ||= LuckyRecord::Field({{ type }}).new(:{{ name }}, param: "", value: @{{ name }}, form_name: "blank")
+    end
   end
 
-  def name_confirmation
-    @_name_confirmation ||= LuckyRecord::Field(String).new(:name_confirmation, param: "", value: @name_confirmation)
-  end
-
-  def age
-    @_age ||= LuckyRecord::Field(Int32?).new(:age, param: "", value: @age)
-  end
-
-  def terms
-    @_terms ||= LuckyRecord::Field(Bool).new(:terms, param: "", value: @terms)
-  end
+  field String, name
+  field String, name_confirmation
+  field Int32?, age
+  field Bool, terms
 end
 
 describe LuckyRecord::Validations do
