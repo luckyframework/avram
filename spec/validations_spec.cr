@@ -25,6 +25,10 @@ private class TestValidationUser
     validate_confirmation_of name
   end
 
+  def run_inclusion_validations
+    validate_inclusions_of name, in: ["Paul", "Pablo"]
+  end
+
   def name
     @_name ||= LuckyRecord::Field(String).new(:name, param: "", value: @name)
   end
@@ -79,6 +83,25 @@ describe LuckyRecord::Validations do
 
       validate(name: "Paul", name_confirmation: "Paul") do |user|
         user.run_confirmation_validations
+        user.name.errors.empty?.should be_true
+      end
+    end
+  end
+
+  describe "validate_inclusion_of" do
+    it "validates" do
+      validate(name: "Not Paul") do |user|
+        user.run_inclusion_validations
+        user.name.errors.should eq ["is invalid"]
+      end
+
+      validate(name: "Paul") do |user|
+        user.run_inclusion_validations
+        user.name.errors.empty?.should be_true
+      end
+
+      validate(name: "Pablo") do |user|
+        user.run_inclusion_validations
         user.name.errors.empty?.should be_true
       end
     end

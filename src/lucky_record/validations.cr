@@ -18,4 +18,10 @@ module LuckyRecord::Validations
       {{ field_name }}.add_error "must match"
     end
   end
+
+  private def validate_inclusions_of(field, in allowed_values)
+    if !allowed_values.includes? field.value
+      field.add_error "is invalid"
+    end
+  end
 end
