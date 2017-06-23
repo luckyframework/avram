@@ -12,4 +12,10 @@ module LuckyRecord::Validations
       field.add_error "must be accepted"
     end
   end
+
+  macro validate_confirmation_of(field_name)
+    if {{ field_name.id }}.value != {{ field_name.id }}_confirmation.value
+      {{ field_name }}.add_error "must match"
+    end
+  end
 end

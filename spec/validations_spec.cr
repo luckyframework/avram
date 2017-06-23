@@ -4,9 +4,15 @@ private class TestValidationUser
   include LuckyRecord::Validations
   @_age : LuckyRecord::Field(Int32?)?
   @_name : LuckyRecord::Field(String)?
+  @_name_confirmation : LuckyRecord::Field(String)?
   @_terms : LuckyRecord::Field(Bool)?
 
-  def initialize(@name : String = "", @age : Int32? = nil, @terms : Bool = false)
+  @name : String
+  @name_confirmation : String
+  @age : Int32?
+  @terms : Bool
+
+  def initialize(@name = "", @name_confirmation = "", @age = nil, @terms = false)
   end
 
   def validate
@@ -15,8 +21,16 @@ private class TestValidationUser
     self
   end
 
+  def run_confirmation_validations
+    validate_confirmation_of name
+  end
+
   def name
     @_name ||= LuckyRecord::Field(String).new(:name, param: "", value: @name)
+  end
+
+  def name_confirmation
+    @_name_confirmation ||= LuckyRecord::Field(String).new(:name_confirmation, param: "", value: @name_confirmation)
   end
 
   def age
@@ -52,6 +66,20 @@ describe LuckyRecord::Validations do
 
       validate(terms: true) do |user|
         user.terms.errors.empty?.should be_true
+      end
+    end
+  end
+
+  describe "validate_confirmation_of" do
+    it "validates the fields match" do
+      validate(name: "Paul", name_confirmation: "Pablo") do |user|
+        user.run_confirmation_validations
+        user.name.errors.should eq ["must match"]
+      end
+
+      validate(name: "Paul", name_confirmation: "Paul") do |user|
+        user.run_confirmation_validations
+        user.name.errors.empty?.should be_true
       end
     end
   end
