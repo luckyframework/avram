@@ -6,14 +6,6 @@ private class UserForm < User::BaseForm
   def call
     validate_required name, joined_at, age
   end
-
-  private def validate_required(*fields)
-    fields.each do |field|
-      if field.value.blank?
-        field.add_error "is blank"
-      end
-    end
-  end
 end
 
 private class LimitedUserForm < User::BaseForm

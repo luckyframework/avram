@@ -1,4 +1,8 @@
+require "./validations"
+
 abstract class LuckyRecord::Form(T)
+  include LuckyRecord::Validations
+
   macro inherited
     @valid : Bool = true
     @performed : Bool = false
