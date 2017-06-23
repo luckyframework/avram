@@ -5,17 +5,22 @@ abstract class LuckyRecord::Form(T)
 
     @@allowed_param_keys = [] of String
     @@schema_class = T
+
+    def form_name
+      {{ @type.name.underscore.stringify }}
+    end
   end
 
   property? performed : Bool = false
   getter :record
 
   @record : T?
-  @params : Hash(String, String)
+  @params : LuckyRecord::Params
 
   abstract def table_name
   abstract def fields
   abstract def call
+  abstract def form_name
 
   macro add_fields(fields)
     private def extract_changes_from_params
@@ -34,7 +39,7 @@ abstract class LuckyRecord::Form(T)
       end
 
       def allowed_params
-        @params.select(@@allowed_param_keys)
+        @params.nested!(form_name).select(@@allowed_param_keys)
       end
 
       def set_{{ field[:name] }}_from_param(value)
@@ -56,7 +61,8 @@ abstract class LuckyRecord::Form(T)
     end
   end
 
-  def initialize(@params : Hash(String, String))
+  def initialize(params : Hash(String, String) | LuckyRecord::Paramable)
+    @params = ensure_paramable(params)
     extract_changes_from_params
   end
 
@@ -65,7 +71,8 @@ abstract class LuckyRecord::Form(T)
     extract_changes_from_params
   end
 
-  def initialize(@record, @params)
+  def initialize(@record, params : Hash(String, String) | LuckyRecord::Paramable)
+    @params = ensure_paramable(params)
     extract_changes_from_params
   end
 
@@ -79,7 +86,15 @@ abstract class LuckyRecord::Form(T)
     named_tuple.each do |key, value|
       params_with_stringified_keys[key.to_s] = value
     end
-    params_with_stringified_keys
+    LuckyRecord::Params.new params_with_stringified_keys
+  end
+
+  private def ensure_paramable(params)
+    if params.is_a? LuckyRecord::Paramable
+      params
+    else
+      LuckyRecord::Params.new(params)
+    end
   end
 
   def valid? : Bool
