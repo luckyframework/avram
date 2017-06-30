@@ -9,6 +9,10 @@ class LuckyRecord::Model
 
   def_equals @id
 
+  def to_param
+    id.to_s
+  end
+
   macro table(table_name)
     {{yield}}
     setup {{table_name}}

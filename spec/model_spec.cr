@@ -33,6 +33,20 @@ describe LuckyRecord::Model do
     user.nickname.should eq "nick"
   end
 
+  it "can be used for params" do
+    now = Time.now
+
+    user = User.new id: 123,
+      name: "Name",
+      age: 24,
+      joined_at: now,
+      created_at: now,
+      updated_at: now,
+      nickname: "nick"
+
+    user.to_param.should eq "123"
+  end
+
   it "sets up getters that cast the values" do
     user = ModelWithCustomDataTypes.new id: 123,
       created_at: Time.now,
