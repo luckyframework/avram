@@ -19,7 +19,7 @@ abstract class LuckyRecord::Form(T)
   getter :record
 
   @record : T?
-  @params : LuckyRecord::Params
+  @params : LuckyRecord::Paramable
 
   abstract def table_name
   abstract def fields
