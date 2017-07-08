@@ -13,6 +13,10 @@ private class LimitedUserForm < User::BaseForm
 end
 
 describe "LuckyRecord::Form" do
+  it "generates the correct form_name" do
+    LimitedUserForm.new.form_name.should eq "limited_user"
+  end
+
   describe "save_failed?" do
     it "is false if the object is invalid and performed an action" do
       form = UserForm.new(name: "")

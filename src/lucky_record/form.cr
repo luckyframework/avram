@@ -10,9 +10,6 @@ abstract class LuckyRecord::Form(T)
     @@allowed_param_keys = [] of String
     @@schema_class = T
 
-    def form_name
-      {{ @type.name.underscore.stringify }}
-    end
   end
 
   property? performed : Bool = false
@@ -24,7 +21,10 @@ abstract class LuckyRecord::Form(T)
   abstract def table_name
   abstract def fields
   abstract def call
-  abstract def form_name
+
+  def form_name
+    self.class.name.underscore.gsub("_form", "")
+  end
 
   macro add_fields(fields)
     private def extract_changes_from_params
