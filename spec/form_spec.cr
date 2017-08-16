@@ -77,6 +77,14 @@ describe "LuckyRecord::Form" do
       form.changes.has_key?(:nickname).should be_false
       form.changes[:name]?.should eq "someone"
     end
+
+    it "returns a LuckyRecord::AllowedField" do
+      form = LimitedUserForm.new({"name" => "someone", "nickname" => "nothing"})
+      form.nickname.value.should be_nil
+      form.nickname.is_a?(LuckyRecord::Field).should be_true
+      form.name.value.should eq "someone"
+      form.name.is_a?(LuckyRecord::AllowedField).should be_true
+    end
   end
 
   describe "settings values from params" do
@@ -143,7 +151,7 @@ describe "LuckyRecord::Form" do
       form = LimitedUserForm.new(params)
 
       form.responds_to?(:name).should be_true
-      form.responds_to?(:nickname).should be_false
+      form.responds_to?(:nickname).should be_true
     end
 
     it "returns a field with the field name, value and errors" do

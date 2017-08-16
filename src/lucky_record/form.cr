@@ -38,7 +38,11 @@ abstract class LuckyRecord::Form(T)
     {% for field in fields %}
       @_{{ field[:name] }} : LuckyRecord::Field({{ field[:type] }}::BaseType?)?
 
-      def _{{ field[:name] }}
+      def {{ field[:name] }}
+        _{{ field[:name] }}
+      end
+
+      private def _{{ field[:name] }}
         @_{{ field[:name] }} ||= LuckyRecord::Field({{ field[:type] }}::BaseType?).new(
           name: :{{ field[:name].id }},
           param: allowed_params["{{ field[:name] }}"]?,
@@ -63,7 +67,7 @@ abstract class LuckyRecord::Form(T)
     def fields
       [
         {% for field in fields %}
-          _{{ field[:name] }},
+          {{ field[:name] }},
         {% end %}
       ]
     end
@@ -140,7 +144,7 @@ abstract class LuckyRecord::Form(T)
   macro allow(*field_names)
     {% for field_name in field_names %}
       def {{ field_name.id }}
-        _{{ field_name.id }}
+        LuckyRecord::AllowedField.new _{{ field_name.id }}
       end
 
       @@allowed_param_keys << "{{ field_name.id }}"
@@ -169,8 +173,8 @@ abstract class LuckyRecord::Form(T)
   end
 
   private def insert
-    self._created_at.value = Time.now
-    self._updated_at.value = Time.now
+    self.created_at.value = Time.now
+    self.updated_at.value = Time.now
     if valid?
       @record = LuckyRecord::Repo.run do |db|
         db.query insert_sql.statement, insert_sql.args do |rs|
