@@ -13,10 +13,10 @@ abstract class LuckyRecord::Form(T)
   end
 
   property? performed : Bool = false
-  getter :record
 
   @record : T?
   @params : LuckyRecord::Paramable
+  getter :record, :params
 
   abstract def table_name
   abstract def fields
