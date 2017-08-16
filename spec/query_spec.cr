@@ -40,6 +40,14 @@ describe LuckyRecord::Query do
       query.statement.should eq "SELECT * FROM users LIMIT 2"
     end
   end
+
+  describe "#order_by" do
+    it "adds an order clause" do
+      query = UserQuery.new.order_by(:name, :asc).query
+
+      query.statement.should eq "SELECT * FROM users ORDER BY name ASC"
+    end
+  end
 end
 
 private def insert_a_user

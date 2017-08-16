@@ -4,6 +4,16 @@ class LuckyRecord::Criteria(T, V)
   def initialize(@rows : T, @column : Symbol)
   end
 
+  def desc_order
+    rows.query.order_by(column, :desc)
+    rows
+  end
+
+  def asc_order
+    rows.query.order_by(column, :asc)
+    rows
+  end
+
   def is(value)
     rows.query.where(LuckyRecord::Where::Equal.new(column, V.cast_and_serialize(value)))
     rows

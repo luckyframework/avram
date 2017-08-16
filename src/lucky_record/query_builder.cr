@@ -2,7 +2,13 @@ class LuckyRecord::QueryBuilder
   getter :table
   @limit : Int32?
   @wheres = [] of LuckyRecord::Where::SqlClause
+  @orders = {
+    asc:  [] of Symbol | String,
+    desc: [] of Symbol | String,
+  }
   @prepared_statement_placeholder = 0
+
+  VALID_DIRECTIONS = [:asc, :desc]
 
   def initialize(@table : Symbol)
   end
@@ -40,12 +46,33 @@ class LuckyRecord::QueryBuilder
   end
 
   private def sql_condition_clauses
-    [wheres_sql, limit_sql]
+    [wheres_sql, limit_sql, order_sql]
   end
 
   def limit(amount)
     @limit = amount
     self
+  end
+
+  def order_by(column, direction : Symbol)
+    raise "Direction must be :asc or :desc, got #{direction}" unless VALID_DIRECTIONS.includes?(direction)
+    @orders[direction] << column
+    self
+  end
+
+  def order_sql
+    if ordered?
+      "ORDER BY " + @orders.map do |direction, columns|
+        next if columns.empty?
+        "#{columns.join(", ")} #{direction.to_s.upcase}"
+      end.reject(&.nil?).join(", ")
+    end
+  end
+
+  private def ordered?
+    @orders.values.any? do |columns|
+      !columns.empty?
+    end
   end
 
   private def select_sql

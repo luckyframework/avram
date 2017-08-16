@@ -73,4 +73,10 @@ describe LuckyRecord::Model do
 
     query.to_sql.should eq ["SELECT * FROM users WHERE UPPER(email) = $1 AND age > $2", "foo@bar.com", "30"]
   end
+
+  it "lets you order by columns" do
+    query = QueryMe::BaseQuery.new.age.asc_order.email.desc_order
+
+    query.to_sql.should eq ["SELECT * FROM users ORDER BY age ASC, email DESC"]
+  end
 end

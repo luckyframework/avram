@@ -21,6 +21,19 @@ describe "LuckyRecord::QueryBuilder" do
     query.args.should eq ["Paul", "20"]
   end
 
+  it "can be ordered" do
+    query = new_query
+      .order_by(:name, :asc)
+      .order_by(:birthday, :asc)
+      .order_by(:email, :desc)
+    query.statement.should eq "SELECT * FROM users ORDER BY name, birthday ASC, email DESC"
+    query.args.should eq [] of String
+
+    query = new_query
+      .order_by(:name, :asc)
+    query.statement.should eq "SELECT * FROM users ORDER BY name ASC"
+  end
+
   describe "updating" do
     it "inserts with a hash of String" do
       params = {:first_name => "Paul", :last_name => "Smith"}
