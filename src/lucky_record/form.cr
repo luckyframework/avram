@@ -26,6 +26,17 @@ abstract class LuckyRecord::Form(T)
     self.class.name.underscore.gsub("_form", "")
   end
 
+  def errors
+    fields.reduce({} of Symbol => Array(String)) do |errors_hash, field|
+      if field.errors.empty?
+        errors_hash
+      else
+        errors_hash[field.name] = field.errors
+        errors_hash
+      end
+    end
+  end
+
   macro add_fields(fields)
     private def extract_changes_from_params
       allowed_params.each do |key, value|

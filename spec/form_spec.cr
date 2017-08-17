@@ -35,6 +35,20 @@ describe "LuckyRecord::Form" do
     form.body.errors.size.should eq 0
   end
 
+  describe "#errors" do
+    it "includes errors for all form fields" do
+      form = UserForm.new
+
+      form.valid?
+
+      form.errors.should eq({
+        :name      => ["is required"],
+        :age       => ["is required"],
+        :joined_at => ["is required"],
+      })
+    end
+  end
+
   describe "save_failed?" do
     it "is false if the object is invalid and performed an action" do
       form = UserForm.new(name: "")
