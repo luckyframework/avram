@@ -12,9 +12,27 @@ private class LimitedUserForm < User::BaseForm
   allow :name
 end
 
+private class TaskForm < Task::BaseForm
+end
+
 describe "LuckyRecord::Form" do
   it "generates the correct form_name" do
     LimitedUserForm.new.form_name.should eq "limited_user"
+  end
+
+  it "add required_fields method" do
+    form = TaskForm.new
+    form.required_fields.should eq({form.title})
+  end
+
+  it "automatically runs validations for required fields" do
+    form = TaskForm.new
+
+    form.valid?
+
+    form.valid?.should be_false
+    form.title.errors.size.should eq 1
+    form.body.errors.size.should eq 0
   end
 
   describe "save_failed?" do
