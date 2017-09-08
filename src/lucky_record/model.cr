@@ -18,6 +18,12 @@ class LuckyRecord::Model
     setup {{table_name}}
   end
 
+  def delete
+    LuckyRecord::Repo.run do |db|
+      db.exec "DELETE FROM #{@@table_name} WHERE id = #{id}"
+    end
+  end
+
   macro setup(table_name)
     setup_initialize
     setup_db_mapping

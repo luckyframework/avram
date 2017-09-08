@@ -81,18 +81,11 @@ describe LuckyRecord::Model do
   end
 
   it "can be deleted" do
-    params = {"joined_at" => now_as_string, "name" => "New Name", "age" => "30"}
-    user = User::BaseForm.save params do |form, user|
-      if user
-        user.delete
-        User::BaseQuery.all.count.should eq 0
-      else
-        raise "Record did not save: #{form.errors.join(", ")}"
-      end
-    end
-  end
-end
+    create_user
+    user = UserQuery.new.first
 
-private def now_as_string
-  Time.now.to_s("%FT%X%z")
+    user.delete
+
+    User::BaseQuery.all.size.should eq 0
+  end
 end

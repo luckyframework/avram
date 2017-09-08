@@ -245,12 +245,3 @@ describe "LuckyRecord::Form" do
     end
   end
 end
-
-private def create_user(name)
-  params = {name: name, age: "27", joined_at: now_as_string}
-  UserForm.new(**params).save
-end
-
-private def now_as_string
-  Time.now.to_s("%FT%X%z")
-end
