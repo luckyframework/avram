@@ -79,4 +79,20 @@ describe LuckyRecord::Model do
 
     query.to_sql.should eq ["SELECT * FROM users ORDER BY age ASC, email DESC"]
   end
+
+  it "can be deleted" do
+    params = {"joined_at" => now_as_string, "name" => "New Name", "age" => "30"}
+    user = User::BaseForm.save params do |form, user|
+      if user
+        user.delete
+        User::BaseQuery.all.count.should eq 0
+      else
+        raise "Record did not save: #{form.errors.join(", ")}"
+      end
+    end
+  end
+end
+
+private def now_as_string
+  Time.now.to_s("%FT%X%z")
 end
