@@ -1,5 +1,4 @@
 class LuckyRecord::Field(T)
-  property :param
   getter :name
   getter :value
   getter :form_name
@@ -7,6 +6,10 @@ class LuckyRecord::Field(T)
   @changed = false
 
   def initialize(@name : Symbol, @param : String?, @value : T, @form_name : String)
+  end
+
+  def param
+    @param || value.to_s
   end
 
   def add_error(message : String)

@@ -151,6 +151,14 @@ describe "LuckyRecord::Form" do
       form.name.param.should eq "Paul"
       form.nickname.param.should eq "Pablito"
     end
+
+    it "uses the value if param is empty" do
+      user = UserBox.build
+
+      form = UserForm.new(user, {} of String => String)
+
+      form.name.param.should eq user.name
+    end
   end
 
   describe "errors" do
