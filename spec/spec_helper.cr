@@ -2,7 +2,12 @@ require "spec"
 require "../src/lucky_record"
 require "./support/*"
 
-LuckyRecord::Repo.db_name = "lucky_record_test"
+LuckyRecord::Repo.configure do
+  settings.url = LuckyRecord::PostgresURL.build(
+    database: "lucky_record_test",
+    hostname: "localhost"
+  )
+end
 
 Spec.after_each do
   UserQuery.new.destroy_all
