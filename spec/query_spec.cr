@@ -1,6 +1,20 @@
 require "./spec_helper"
 
+private class ChainedQuery < User::BaseQuery
+  def young
+    age.lte(18)
+  end
+
+  def named(value)
+    name(value)
+  end
+end
+
 describe LuckyRecord::Query do
+  it "can chain scope methods" do
+    ChainedQuery.new.young.named("Paul")
+  end
+
   describe "#first" do
     it "gets the first row from the database" do
       insert_a_user

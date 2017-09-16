@@ -14,13 +14,21 @@ class LuckyRecord::BaseQueryTemplate
         ]
       end
 
+      macro generate_criteria_method(query_class, name, type)
+        def \{{ name }}
+          \{{ type }}::Criteria(\{{ query_class }}, \{{ type }}).new(self, :\{{ name }})
+        end
+      end
+
       {% for field in fields %}
         def {{ field[:name] }}(value)
           where(:{{ field[:name] }}, value)
         end
 
-        def {{ field[:name] }}
-          {{ field[:type] }}::Criteria(BaseQuery, {{ field[:type] }}).new(self, :{{ field[:name] }})
+        generate_criteria_method(BaseQuery, {{ field[:name] }}, {{ field[:type] }})
+
+        macro inherited
+          generate_criteria_method(\{{ @type.name }}, {{ field[:name] }}, {{ field[:type] }})
         end
       {% end %}
     end
