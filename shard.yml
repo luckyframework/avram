@@ -9,8 +9,6 @@ dependencies:
     github: kostya/blank
   lucky_cli:
     github: luckyframework/cli
-  lucky_migrator:
-    github: luckyframework/migrator
   db:
     github: crystal-lang/crystal-db
   pg:
