@@ -1,8 +1,5 @@
 # LuckyRecord
 
-This is a WIP. Most of the code is not yet written, this is just a guide for how
-I think things will look
-
 This project is still new. Guides will be posted when things are more complete.
 
 ## Installation
