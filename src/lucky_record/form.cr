@@ -20,7 +20,7 @@ abstract class LuckyRecord::Form(T)
 
   abstract def table_name
   abstract def fields
-  abstract def call
+  abstract def prepare
 
   def form_name
     self.class.name.underscore.gsub("_form", "")
@@ -135,8 +135,7 @@ abstract class LuckyRecord::Form(T)
   end
 
   def valid? : Bool
-    call
-    # TODO: run_auto_generated_validations
+    prepare
     after_validate
     fields.all? &.valid?
   end

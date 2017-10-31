@@ -3,7 +3,7 @@ require "./spec_helper"
 private class UserForm < User::BaseForm
   allow :name, :nickname, :joined_at, :age
 
-  def call
+  def prepare
     validate_required name, joined_at, age
   end
 end

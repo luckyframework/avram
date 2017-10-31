@@ -5,8 +5,7 @@ class LuckyRecord::BaseFormTemplate
         {{ table_name }}
       end
 
-      def call
-        # TODO add default validate_required for non-nilable fields
+      def prepare
       end
 
       add_fields({{ fields }})
