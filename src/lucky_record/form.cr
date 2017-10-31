@@ -93,7 +93,7 @@ abstract class LuckyRecord::Form(T)
       }
     end
 
-    def after_validate
+    def after_prepare
       validate_required *required_fields
     end
   end
@@ -136,11 +136,11 @@ abstract class LuckyRecord::Form(T)
 
   def valid? : Bool
     prepare
-    after_validate
+    after_prepare
     fields.all? &.valid?
   end
 
-  abstract def after_validate
+  abstract def after_prepare
 
   def self.save(params)
     form = new(params)
