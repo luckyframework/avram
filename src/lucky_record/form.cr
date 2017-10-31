@@ -1,7 +1,9 @@
 require "./validations"
+require "./needy_initializer"
 
 abstract class LuckyRecord::Form(T)
   include LuckyRecord::Validations
+  include LuckyRecord::NeedyInitializer
 
   macro inherited
     @valid : Bool = true
@@ -9,7 +11,6 @@ abstract class LuckyRecord::Form(T)
 
     @@allowed_param_keys = [] of String
     @@schema_class = T
-
   end
 
   property? performed : Bool = false
@@ -98,26 +99,6 @@ abstract class LuckyRecord::Form(T)
     end
   end
 
-  def initialize(params : Hash(String, String) | LuckyRecord::Paramable)
-    @params = ensure_paramable(params)
-    extract_changes_from_params
-  end
-
-  def initialize(**params)
-    @params = named_tuple_to_params(params)
-    extract_changes_from_params
-  end
-
-  def initialize(@record, params : Hash(String, String) | LuckyRecord::Paramable)
-    @params = ensure_paramable(params)
-    extract_changes_from_params
-  end
-
-  def initialize(@record, **params)
-    @params = named_tuple_to_params(params)
-    extract_changes_from_params
-  end
-
   private def named_tuple_to_params(named_tuple)
     params_with_stringified_keys = {} of String => String
     named_tuple.each do |key, value|
@@ -141,24 +122,6 @@ abstract class LuckyRecord::Form(T)
   end
 
   abstract def after_prepare
-
-  def self.save(params)
-    form = new(params)
-    if form.save
-      yield form, form.record
-    else
-      yield form, nil
-    end
-  end
-
-  def self.update(record, with params)
-    form = new(record, params)
-    if form.save
-      yield form, form.record.not_nil!
-    else
-      yield form, form.record.not_nil!
-    end
-  end
 
   def save_succeeded?
     !save_failed?
