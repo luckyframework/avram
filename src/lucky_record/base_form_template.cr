@@ -5,9 +5,6 @@ class LuckyRecord::BaseFormTemplate
         {{ table_name }}
       end
 
-      def prepare
-      end
-
       add_fields({{ fields }})
     end
   end

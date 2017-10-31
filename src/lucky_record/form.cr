@@ -21,7 +21,6 @@ abstract class LuckyRecord::Form(T)
 
   abstract def table_name
   abstract def fields
-  abstract def prepare
 
   def form_name
     self.class.name.underscore.gsub("_form", "")
