@@ -23,6 +23,8 @@ describe "LuckyRecord::Form needs" do
 
     form = NeedsForm.new(params, created_by: "Jane")
     form.created_by.should eq("Jane")
+    form = NeedsForm.new(user, params, created_by: "Jane")
+    form.created_by.should eq("Jane")
     NeedsForm.save(params, foo: "bar", created_by: "Jane") do |form, _record|
       form.created_by.should eq("Jane")
       form.foo.should eq("bar")
