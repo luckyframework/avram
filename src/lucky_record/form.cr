@@ -62,7 +62,11 @@ abstract class LuckyRecord::Form(T)
       end
 
       def allowed_params
-        @params.nested!(form_name).select(@@allowed_param_keys)
+        new_params = {} of String => String
+        @params.nested!(form_name).each do |key, value|
+          new_params[key] = value
+        end
+        new_params.select(@@allowed_param_keys)
       end
 
       def set_{{ field[:name] }}_from_param(value)
