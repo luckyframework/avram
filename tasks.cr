@@ -16,6 +16,17 @@ class Db::Reset < LuckyCli::Task
   end
 end
 
-LuckyMigrator::Runner.db_name = "lucky_record_test"
+database = "lucky_record_test"
+
+LuckyRecord::Repo.configure do
+  settings.url = LuckyRecord::PostgresURL.build(
+    hostname: "localhost",
+    database: database
+  )
+end
+
+LuckyMigrator::Runner.configure do
+  settings.database = database
+end
 
 LuckyCli::Runner.run

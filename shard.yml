@@ -16,6 +16,11 @@ dependencies:
   habitat:
     github: luckyframework/habitat
 
+development_dependencies:
+  lucky_migrator:
+    github: luckyframework/migrator
+    version: ~> 0.2.3
+    
 crystal: 0.21.1
 
 license: MIT
