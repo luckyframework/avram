@@ -27,6 +27,7 @@ class LuckyRecord::Model
   end
 
   macro setup(table_name)
+    {% table_name = table_name.id %}
     setup_initialize
     setup_db_mapping
     setup_getters
@@ -36,7 +37,7 @@ class LuckyRecord::Model
   end
 
   macro setup_table_name(table_name)
-    @@table_name = {{table_name}}
+    @@table_name = :{{table_name}}
   end
 
   macro setup_initialize

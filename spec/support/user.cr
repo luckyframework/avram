@@ -1,5 +1,5 @@
 class User < LuckyRecord::Model
-  table :users do
+  table users do
     field name : String
     field age : Int32
     field nickname : String?

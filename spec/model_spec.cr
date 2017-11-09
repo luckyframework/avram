@@ -7,7 +7,7 @@ private class ModelWithCustomDataTypes < LuckyRecord::Model
 end
 
 private class QueryMe < LuckyRecord::Model
-  table :users do
+  table users do
     field email : Email
     field age : Int32
   end

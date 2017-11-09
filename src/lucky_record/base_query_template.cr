@@ -3,7 +3,7 @@ class LuckyRecord::BaseQueryTemplate
     class BaseQuery < LuckyRecord::Query
       include LuckyRecord::Queryable({{ model_type }})
 
-      @@table_name = {{ table_name }}
+      @@table_name = :{{ table_name }}
       @@schema_class = {{ model_type }}
 
       def field_names

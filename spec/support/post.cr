@@ -1,7 +1,7 @@
 require "./comment"
 
 class Post < LuckyRecord::Model
-  table :posts do
+  table posts do
     field title : String
     has_many comments : Comment
   end
