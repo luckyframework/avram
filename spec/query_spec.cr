@@ -29,6 +29,24 @@ describe LuckyRecord::Query do
 
       UserQuery.new.find(user.id).should eq user
     end
+
+    it "raises RecordNotFound if no record is found with the given id (Int32)" do
+      expect_raises(LuckyRecord::RecordNotFoundError, "") do
+        UserQuery.new.find(1)
+      end
+    end
+
+    it "raises RecordNotFound if no record is found with the given id (String)" do
+      expect_raises(LuckyRecord::RecordNotFoundError, "") do
+        UserQuery.new.find("1")
+      end
+    end
+
+    it "raises PQ::PQError if no record is found with letter-only id (String)" do
+      expect_raises(PQ::PQError, "") do
+        UserQuery.new.find("id")
+      end
+    end
   end
 
   describe "#where" do
