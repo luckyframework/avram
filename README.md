@@ -26,6 +26,14 @@ require "lucky_record"
 4. Push to the branch (git push origin my-new-feature)
 5. Create a new Pull Request
 
+## Testing
+
+To run the tests:
+
+* Install Postgres: ([macOS](https://postgresapp.com)/[Others](https://wiki.postgresql.org/wiki/Detailed_installation_guides))
+* Migrate the database using `crystal tasks.cr db.reset`
+* Run the tests with `crystal spec`
+
 ## Contributors
 
 - [paulcsmith](https://github.com/paulcsmith) Paul Smith - creator, maintainer
