@@ -227,6 +227,32 @@ describe "LuckyRecord::Form" do
     end
   end
 
+  describe ".save!" do
+    context "on success" do
+      it "saves and returns the record" do
+        params = {"joined_at" => now_as_string, "name" => "New Name", "age" => "30"}
+
+        record = UserForm.save!(params)
+
+        record.is_a?(User).should be_true
+        record.name.should eq "New Name"
+      end
+    end
+
+    context "on failure" do
+      it "raises an exception" do
+        params = {"name" => "", "age" => "30"}
+
+        expect_raises(
+          LuckyRecord::InvalidFormError(UserForm),
+          /Invalid UserForm. Could not save/
+        ) do
+          UserForm.save!(params)
+        end
+      end
+    end
+  end
+
   describe ".update" do
     context "on success" do
       it "yields the form and the updated record" do
@@ -248,6 +274,36 @@ describe "LuckyRecord::Form" do
         UserForm.update user, with: params do |form, record|
           form.save_failed?.should be_true
           record.name.should eq "Old Name"
+        end
+      end
+    end
+  end
+
+  describe ".update!" do
+    context "on success" do
+      it "updates and returns the record" do
+        create_user(name: "Old Name")
+        user = UserQuery.new.first
+        params = {"name" => "New Name"}
+
+        record = UserForm.update! user, with: params
+
+        record.is_a?(User).should be_true
+        record.name.should eq "New Name"
+      end
+    end
+
+    context "on failure" do
+      it "raises an exception" do
+        create_user(name: "Old Name")
+        user = UserQuery.new.first
+        params = {"name" => ""}
+
+        expect_raises(
+          LuckyRecord::InvalidFormError(UserForm),
+          /Invalid UserForm. Could not save/
+        ) do
+          UserForm.update! user, with: params
         end
       end
     end

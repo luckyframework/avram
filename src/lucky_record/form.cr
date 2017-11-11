@@ -167,6 +167,18 @@ abstract class LuckyRecord::Form(T)
     end
   end
 
+  def save! : T
+    if save
+      record.not_nil!
+    else
+      raise LuckyRecord::InvalidFormError.new(form_name: typeof(self).to_s, form_object: self)
+    end
+  end
+
+  def update! : T
+    save!
+  end
+
   private def insert_or_update
     if record_id
       update record_id
