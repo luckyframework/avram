@@ -4,6 +4,7 @@ require "./needy_initializer"
 abstract class LuckyRecord::Form(T)
   include LuckyRecord::Validations
   include LuckyRecord::NeedyInitializer
+  include LuckyRecord::AllowVirtual
 
   macro inherited
     @valid : Bool = true
