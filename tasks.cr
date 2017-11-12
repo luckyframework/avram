@@ -19,10 +19,14 @@ end
 database = "lucky_record_test"
 
 LuckyRecord::Repo.configure do
-  settings.url = LuckyRecord::PostgresURL.build(
-    hostname: "localhost",
-    database: database
-  )
+  if ENV["DATABASE_URL"]?
+    settings.url = ENV["DATABASE_URL"]
+  else
+    settings.url = LuckyRecord::PostgresURL.build(
+      database: "lucky_record_test",
+      hostname: "localhost"
+    )
+  end
 end
 
 LuckyMigrator::Runner.configure do
