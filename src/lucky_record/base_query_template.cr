@@ -16,7 +16,7 @@ class LuckyRecord::BaseQueryTemplate
 
       macro generate_criteria_method(query_class, name, type)
         def \{{ name }}
-          \{{ type }}::Criteria(\{{ query_class }}, \{{ type }}).new(self, :\{{ name }})
+          \{{ type }}::Lucky::Criteria(\{{ query_class }}, \{{ type }}).new(self, :\{{ name }})
         end
       end
 

@@ -48,14 +48,14 @@ abstract class LuckyRecord::Form(T)
     end
 
     {% for field in fields %}
-      @_{{ field[:name] }} : LuckyRecord::Field({{ field[:type] }}::BaseType?)?
+      @_{{ field[:name] }} : LuckyRecord::Field({{ field[:type] }}?)?
 
       def {{ field[:name] }}
         _{{ field[:name] }}
       end
 
       private def _{{ field[:name] }}
-        @_{{ field[:name] }} ||= LuckyRecord::Field({{ field[:type] }}::BaseType?).new(
+        @_{{ field[:name] }} ||= LuckyRecord::Field({{ field[:type] }}?).new(
           name: :{{ field[:name].id }},
           param: allowed_params["{{ field[:name] }}"]?,
           value: @record.try(&.{{ field[:name] }}),
@@ -71,9 +71,9 @@ abstract class LuckyRecord::Form(T)
       end
 
       def set_{{ field[:name] }}_from_param(value)
-        cast_result = {{ field[:type] }}.cast(value)
-        if cast_result.is_a? LuckyRecord::Type::SuccessfulCast
-          {{ field[:name] }}.value = cast_result.value
+        parse_result = {{ field[:type] }}::Lucky.parse(value)
+        if parse_result.is_a? LuckyRecord::Type::SuccessfulCast
+          {{ field[:name] }}.value = parse_result.value
         else
           {{ field[:name] }}.add_error "is invalid"
         end

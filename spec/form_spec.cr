@@ -80,15 +80,15 @@ describe "LuckyRecord::Form" do
     end
   end
 
-  describe "casting" do
-    it "cast integers, time objects, etc." do
+  describe "parsing" do
+    it "parse integers, time objects, etc." do
       now = Time.now.at_beginning_of_minute
       form = UserForm.new({"joined_at" => now.to_s("%FT%X%z")})
 
       form.joined_at.value.should eq now
     end
 
-    it "gracefully handles bad inputs when casting" do
+    it "gracefully handles bad inputs when parsing" do
       form = UserForm.new({
         "joined_at" => "this is not a time",
         "age"       => "not an int",

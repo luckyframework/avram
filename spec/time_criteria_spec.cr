@@ -6,7 +6,7 @@ private class QueryMe < LuckyRecord::Model
   end
 end
 
-describe LuckyRecord::TimeType::Criteria do
+describe Time::Lucky::Criteria do
   describe "is" do
     it "=" do
       now = Time.now

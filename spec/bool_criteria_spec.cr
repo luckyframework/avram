@@ -6,7 +6,7 @@ private class QueryMe < LuckyRecord::Model
   end
 end
 
-describe LuckyRecord::BoolType::Criteria do
+describe Bool::Lucky::Criteria do
   describe "is" do
     it "=" do
       admin.is(true).to_sql.should eq ["SELECT * FROM users WHERE admin = $1", "true"]

@@ -6,7 +6,7 @@ private class QueryMe < LuckyRecord::Model
   end
 end
 
-describe LuckyRecord::StringType::Criteria do
+describe String::Lucky::Criteria do
   describe "like" do
     it "uses LIKE" do
       name.like("elon").to_sql.should eq ["SELECT * FROM users WHERE name LIKE $1", "elon"]

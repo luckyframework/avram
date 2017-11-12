@@ -2,14 +2,7 @@ require "./spec_helper"
 
 private class QueryMe < LuckyRecord::Model
   table users do
-    field age : NothingExtra
-  end
-end
-
-class LuckyRecord::NothingExtraType < LuckyRecord::Int32Type
-  alias BaseType = Int32
-
-  class Criteria(T, V) < LuckyRecord::Criteria(T, V)
+    field age : Int32
   end
 end
 
