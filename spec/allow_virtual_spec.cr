@@ -1,7 +1,8 @@
 require "./spec_helper"
 
 private class VirtualForm < User::BaseForm
-  allow_virtual password_confirmation
+  allow_virtual password_confirmation : String?
+  allow_virtual terms_of_service : Bool?
 
   def prepare
     password_confirmation.value = "reset"
@@ -28,6 +29,20 @@ describe "allow_virtual in forms" do
 
     form.prepare
     form.password_confirmation.value.should eq "reset"
+  end
+
+  it "parses the value using the given type" do
+    form = form({"terms_of_service" => "1"})
+    form.terms_of_service.value.should be_true
+
+    form = form({"terms_of_service" => "0"})
+    form.terms_of_service.value.should be_false
+  end
+
+  it "gracefully handles invalid params" do
+    form = form({"terms_of_service" => "not a boolean"})
+    form.terms_of_service.value.should be_nil
+    form.terms_of_service.errors.first.should eq "is invalid"
   end
 end
 
