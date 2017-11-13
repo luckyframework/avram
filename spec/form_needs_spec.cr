@@ -2,7 +2,8 @@ require "./spec_helper"
 
 private class NeedsForm < User::BaseForm
   needs created_by : String
-  needs foo : String = "bar"
+  needs nilable_value : String?
+  needs optional : String = "bar"
 
   def prepare
     setup_required_fields
@@ -16,20 +17,29 @@ private class NeedsForm < User::BaseForm
 end
 
 describe "LuckyRecord::Form needs" do
+  it "does not change the default initializer" do
+    params = {"name" => "Paul"}
+    create_user
+    user = UserQuery.new.first
+
+    form = NeedsForm.new(params)
+    form.created_by.should be_nil
+    form = NeedsForm.new(user, params)
+    form.created_by.should be_nil
+  end
+
   it "sets up a method arg for save and update" do
     params = {"name" => "Paul"}
     create_user
     user = UserQuery.new.first
 
-    form = NeedsForm.new(params, created_by: "Jane")
-    form.created_by.should eq("Jane")
-    form = NeedsForm.new(user, params, created_by: "Jane")
-    form.created_by.should eq("Jane")
-    NeedsForm.save(params, foo: "bar", created_by: "Jane") do |form, _record|
+    NeedsForm.save(params, nilable_value: "not nil", optional: "bar", created_by: "Jane") do |form, _record|
+      form.nilable_value.should eq("not nil")
       form.created_by.should eq("Jane")
-      form.foo.should eq("bar")
+      form.optional.should eq("bar")
     end
-    NeedsForm.update(user, params, created_by: "Jane") do |form, _record|
+    NeedsForm.update(user, params, nilable_value: nil, created_by: "Jane") do |form, _record|
+      form.nilable_value.should be_nil
       form.created_by.should eq("Jane")
     end
   end
