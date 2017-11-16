@@ -1,11 +1,15 @@
 class LuckyRecord::Repo
+  @@db : DB::Database? = nil
+
   Habitat.create do
     setting url : String
   end
 
   def self.run
-    DB.open(settings.url) do |db|
-      yield db
-    end
+    yield db
+  end
+
+  def self.db
+    @@db ||= DB.open(settings.url)
   end
 end
