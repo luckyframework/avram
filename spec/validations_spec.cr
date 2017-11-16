@@ -26,7 +26,7 @@ private class TestValidationUser
   end
 
   def run_inclusion_validations
-    validate_inclusions_of name, in: ["Paul", "Pablo"]
+    validate_inclusion_of name, in: ["Paul", "Pablo"]
   end
 
   macro field(type, name)

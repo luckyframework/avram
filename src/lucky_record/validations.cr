@@ -19,7 +19,7 @@ module LuckyRecord::Validations
     end
   end
 
-  private def validate_inclusions_of(field, in allowed_values)
+  private def validate_inclusion_of(field, in allowed_values)
     if !allowed_values.includes? field.value
       field.add_error "is invalid"
     end
