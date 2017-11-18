@@ -40,7 +40,7 @@ describe "LuckyRecord::Form needs" do
     create_user
     user = UserQuery.new.first
 
-    NeedsForm.save(params, nilable_value: "not nil", optional: "bar", created_by: "Jane") do |form, _record|
+    NeedsForm.create(params, nilable_value: "not nil", optional: "bar", created_by: "Jane") do |form, _record|
       form.nilable_value.should eq("not nil")
       form.created_by.should eq("Jane")
       form.optional.should eq("bar")
@@ -56,7 +56,7 @@ describe "LuckyRecord::Form needs" do
     create_user
     user = UserQuery.new.first
 
-    NeedsWithOnOptionForm.save(params, created_by: "Bob") do |form, _record|
+    NeedsWithOnOptionForm.create(params, created_by: "Bob") do |form, _record|
       form.created_by.should eq("Bob")
       form.updated_by.should be_nil
     end

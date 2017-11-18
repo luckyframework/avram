@@ -54,7 +54,7 @@ module LuckyRecord::NeedyInitializer
   end
 
   macro generate_save_methods
-    def self.save(
+    def self.create(
         params,
         {% for type_declaration in NEEDS_ON_CREATE %}
           {{ type_declaration }},
@@ -73,7 +73,7 @@ module LuckyRecord::NeedyInitializer
       end
     end
 
-    def self.save!(
+    def self.create!(
         params,
         {% for type_declaration in NEEDS_ON_CREATE %}
           {{ type_declaration }},
