@@ -6,6 +6,7 @@ class LuckyRecord::QueryBuilder
     asc:  [] of Symbol | String,
     desc: [] of Symbol | String,
   }
+  @selections : String = "*"
   @prepared_statement_placeholder = 0
 
   VALID_DIRECTIONS = [:asc, :desc]
@@ -69,6 +70,11 @@ class LuckyRecord::QueryBuilder
     end
   end
 
+  def count
+    @selections = "COUNT(*)"
+    self
+  end
+
   private def ordered?
     @orders.values.any? do |columns|
       !columns.empty?
@@ -76,7 +82,7 @@ class LuckyRecord::QueryBuilder
   end
 
   private def select_sql
-    "SELECT * FROM #{table}"
+    "SELECT #{@selections} FROM #{table}"
   end
 
   private def limit_sql

@@ -37,6 +37,11 @@ module LuckyRecord::Queryable(T)
     exec_query.first
   end
 
+  def count : Int64
+    query.count
+    exec_scalar.as(Int64)
+  end
+
   def each
     results.each do |result|
       yield result
@@ -52,6 +57,12 @@ module LuckyRecord::Queryable(T)
       db.query query.statement, query.args do |rs|
         @@schema_class.from_rs(rs)
       end
+    end
+  end
+
+  private def exec_scalar
+    LuckyRecord::Repo.run do |db|
+      db.scalar query.statement
     end
   end
 

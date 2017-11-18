@@ -46,6 +46,15 @@ describe "LuckyRecord::QueryBuilder" do
       query.args_for_update(params).should eq ["Paul", "Smith", "1"]
     end
   end
+
+  it "can be counted" do
+    query = LuckyRecord::QueryBuilder
+      .new(table: :users)
+      .count
+
+    query.statement.should eq "SELECT COUNT(*) FROM users"
+    query.args.should eq [] of String
+  end
 end
 
 private def new_query

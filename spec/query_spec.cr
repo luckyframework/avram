@@ -80,6 +80,17 @@ describe LuckyRecord::Query do
       query.statement.should eq "SELECT * FROM users ORDER BY name ASC"
     end
   end
+
+  describe "#count" do
+    it "returns the number of database rows" do
+      count = UserQuery.new.count
+      count.should eq 0
+
+      insert_a_user
+      count = UserQuery.new.count
+      count.should eq 1
+    end
+  end
 end
 
 private def insert_a_user
