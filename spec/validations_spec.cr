@@ -1,24 +1,49 @@
 require "./spec_helper"
 
+private class CallableMessage
+  include LuckyRecord::CallableErrorMessage
+  def initialize(@name = "")
+  end
+
+  def call(name, value)
+    "#{@name} says: #{name} of '#{value}' is invalid"
+  end
+end
+
 private class TestValidationUser
   include LuckyRecord::Validations
   @_age : LuckyRecord::Field(Int32?)?
   @_name : LuckyRecord::Field(String)?
+  @_city : LuckyRecord::Field(String)?
+  @_state : LuckyRecord::Field(String)?
   @_name_confirmation : LuckyRecord::Field(String)?
   @_terms : LuckyRecord::Field(Bool)?
 
   @name : String
   @name_confirmation : String
+  @city : String
+  @state : String
   @age : Int32?
   @terms : Bool
 
-  def initialize(@name = "", @name_confirmation = "", @age = nil, @terms = false)
+  def initialize(@name = "", @name_confirmation = "", @age = nil, @terms = false, @city = "", @state = "")
   end
 
   def validate
     validate_required name, age
     validate_acceptance_of terms
     self
+  end
+
+  def run_validations_with_message
+    validate_required city, state, message: "ugh"
+    validate_inclusion_of state, in: ["CA, NY"], message: "that one's not allowed"
+    validate_confirmation_of name, with: name_confirmation, message: "name confirmation must match"
+  end
+
+  def run_validations_with_message_callables
+    validate_required city, state, message: ->(field_name : String, field_value : String){ "#{field_name} required message from Proc" }
+    validate_inclusion_of state, in: ["CA, NY"], message: CallableMessage.new(@name)
   end
 
   def run_confirmation_validations
@@ -37,6 +62,8 @@ private class TestValidationUser
 
   field String, name
   field String, name_confirmation
+  field String, city
+  field String, state
   field Int32?, age
   field Bool, terms
 end
@@ -53,6 +80,40 @@ describe LuckyRecord::Validations do
     it "adds no errors if things are present" do
       validate(name: "Paul") do |user|
         user.name.errors.empty?.should be_true
+      end
+    end
+  end
+
+  describe "validates with custom messages" do
+    it "validates custom message for validates_required" do
+      validate(city: "", state: "") do |user|
+        user.run_validations_with_message
+        user.city.errors.should contain "ugh"
+        user.state.errors.should contain "ugh"
+      end
+    end
+
+    it "validates custom message for validate_inclusion_of" do
+      validate(state: "") do |user|
+        user.run_validations_with_message
+        user.state.errors.should contain "that one's not allowed"
+      end
+    end
+
+    it "validates custom message for validate_inclusion_of" do
+      validate(name: "Paul") do |user|
+        user.run_validations_with_message
+        user.name.errors.empty?.should be_true
+        user.name_confirmation.errors.should contain "name confirmation must match"
+      end
+    end
+
+    it "validates custom messages from callables" do
+      validate(name: "Paul", city: "", state: "") do |user|
+        user.run_validations_with_message_callables
+        user.city.errors.should contain "city required message from Proc"
+        user.state.errors.should contain "state required message from Proc"
+        user.state.errors.should contain "Paul says: state of '' is invalid"
       end
     end
   end
