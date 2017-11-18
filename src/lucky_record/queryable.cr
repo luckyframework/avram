@@ -55,14 +55,6 @@ module LuckyRecord::Queryable(T)
     end
   end
 
-  private def query_string
-    to_sql.first
-  end
-
-  private def query_args
-    to_sql.skip(1)
-  end
-
   def to_sql
     query.to_sql
   end
