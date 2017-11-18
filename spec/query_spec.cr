@@ -53,14 +53,14 @@ describe LuckyRecord::Query do
     it "chains wheres" do
       query = UserQuery.new.where(:first_name, "Paul").where(:last_name, "Smith").query
 
-      query.statement.should eq "SELECT * FROM users WHERE first_name = $1 AND last_name = $2"
+      query.statement.should eq "SELECT #{User::COLUMNS} FROM users WHERE first_name = $1 AND last_name = $2"
       query.args.should eq ["Paul", "Smith"]
     end
 
     it "handles int" do
       query = UserQuery.new.where(:id, 1).query
 
-      query.statement.should eq "SELECT * FROM users WHERE id = $1"
+      query.statement.should eq "SELECT #{User::COLUMNS} FROM users WHERE id = $1"
       query.args.should eq ["1"]
     end
   end
@@ -69,7 +69,7 @@ describe LuckyRecord::Query do
     it "adds a limit clause" do
       query = UserQuery.new.limit(2).query
 
-      query.statement.should eq "SELECT * FROM users LIMIT 2"
+      query.statement.should eq "SELECT #{User::COLUMNS} FROM users LIMIT 2"
     end
   end
 
@@ -77,7 +77,7 @@ describe LuckyRecord::Query do
     it "adds an order clause" do
       query = UserQuery.new.order_by(:name, :asc).query
 
-      query.statement.should eq "SELECT * FROM users ORDER BY name ASC"
+      query.statement.should eq "SELECT #{User::COLUMNS} FROM users ORDER BY name ASC"
     end
   end
 

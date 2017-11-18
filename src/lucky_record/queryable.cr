@@ -11,6 +11,7 @@ module LuckyRecord::Queryable(T)
 
   def query
     @query ||= LuckyRecord::QueryBuilder.new(table: @@table_name)
+      .select(@@schema_class.column_names)
   end
 
   def where(column, value)

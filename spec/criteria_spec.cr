@@ -1,6 +1,8 @@
 require "./spec_helper"
 
 private class QueryMe < LuckyRecord::Model
+  COLUMNS = "users.id, users.created_at, users.updated_at, users.age"
+
   table users do
     field age : Int32
   end
@@ -9,37 +11,37 @@ end
 describe LuckyRecord::Criteria do
   describe "is" do
     it "uses =" do
-      age.is(30).to_sql.should eq ["SELECT * FROM users WHERE age = $1", "30"]
+      age.is(30).to_sql.should eq ["SELECT #{QueryMe::COLUMNS} FROM users WHERE age = $1", "30"]
     end
   end
 
   describe "is_not" do
     it "uses !=" do
-      age.is_not(30).to_sql.should eq ["SELECT * FROM users WHERE age != $1", "30"]
+      age.is_not(30).to_sql.should eq ["SELECT #{QueryMe::COLUMNS} FROM users WHERE age != $1", "30"]
     end
   end
 
   describe "gt" do
     it "uses >" do
-      age.gt("30").to_sql.should eq ["SELECT * FROM users WHERE age > $1", "30"]
+      age.gt("30").to_sql.should eq ["SELECT #{QueryMe::COLUMNS} FROM users WHERE age > $1", "30"]
     end
   end
 
   describe "gte" do
     it "uses >=" do
-      age.gte("30").to_sql.should eq ["SELECT * FROM users WHERE age >= $1", "30"]
+      age.gte("30").to_sql.should eq ["SELECT #{QueryMe::COLUMNS} FROM users WHERE age >= $1", "30"]
     end
   end
 
   describe "lt" do
     it "uses <" do
-      age.lt("30").to_sql.should eq ["SELECT * FROM users WHERE age < $1", "30"]
+      age.lt("30").to_sql.should eq ["SELECT #{QueryMe::COLUMNS} FROM users WHERE age < $1", "30"]
     end
   end
 
   describe "lte" do
     it "uses <=" do
-      age.lte("30").to_sql.should eq ["SELECT * FROM users WHERE age <= $1", "30"]
+      age.lte("30").to_sql.should eq ["SELECT #{QueryMe::COLUMNS} FROM users WHERE age <= $1", "30"]
     end
   end
 end

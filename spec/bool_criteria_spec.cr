@@ -1,6 +1,8 @@
 require "./spec_helper"
 
 private class QueryMe < LuckyRecord::Model
+  COLUMNS = "users.id, users.created_at, users.updated_at, users.admin"
+
   table users do
     field admin : Bool
   end
@@ -9,8 +11,8 @@ end
 describe Bool::Lucky::Criteria do
   describe "is" do
     it "=" do
-      admin.is(true).to_sql.should eq ["SELECT * FROM users WHERE admin = $1", "true"]
-      admin.is(false).to_sql.should eq ["SELECT * FROM users WHERE admin = $1", "false"]
+      admin.is(true).to_sql.should eq ["SELECT #{QueryMe::COLUMNS} FROM users WHERE admin = $1", "true"]
+      admin.is(false).to_sql.should eq ["SELECT #{QueryMe::COLUMNS} FROM users WHERE admin = $1", "false"]
     end
   end
 end

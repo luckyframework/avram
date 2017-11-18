@@ -10,7 +10,7 @@ describe Time::Lucky::Criteria do
   describe "is" do
     it "=" do
       now = Time.now
-      activated_at.is(now).to_sql.should eq ["SELECT * FROM users WHERE activated_at = $1", now.to_s]
+      activated_at.is(now).to_sql.should eq ["SELECT users.id, users.created_at, users.updated_at, users.activated_at FROM users WHERE activated_at = $1", now.to_s]
     end
   end
 end

@@ -75,6 +75,13 @@ class LuckyRecord::QueryBuilder
     self
   end
 
+  def select(selection : Array(Symbol))
+    @selections = selection
+      .map { |column| "#{@table}.#{column}"}
+      .join(", ")
+    self
+  end
+
   private def ordered?
     @orders.values.any? do |columns|
       !columns.empty?

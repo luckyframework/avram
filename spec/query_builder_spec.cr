@@ -55,6 +55,16 @@ describe "LuckyRecord::QueryBuilder" do
     query.statement.should eq "SELECT COUNT(*) FROM users"
     query.args.should eq [] of String
   end
+
+  describe "#select" do
+    it "specifies columns to be selected" do
+      query = LuckyRecord::QueryBuilder
+        .new(table: :users)
+        .select([:name, :age])
+
+      query.statement.should eq "SELECT users.name, users.age FROM users"
+    end
+  end
 end
 
 private def new_query

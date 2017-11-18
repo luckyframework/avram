@@ -1,6 +1,8 @@
 require "./spec_helper"
 
 private class QueryMe < LuckyRecord::Model
+  COLUMNS = "users.id, users.created_at, users.updated_at, users.email, users.age"
+
   table users do
     field email : CustomEmail
     field age : Int32
@@ -55,25 +57,25 @@ describe LuckyRecord::Model do
   it "sets up simple methods for equality" do
     query = QueryMe::BaseQuery.new.email("foo@bar.com").age(30)
 
-    query.to_sql.should eq ["SELECT * FROM users WHERE email = $1 AND age = $2", "foo@bar.com", "30"]
+    query.to_sql.should eq ["SELECT #{QueryMe::COLUMNS} FROM users WHERE email = $1 AND age = $2", "foo@bar.com", "30"]
   end
 
   it "sets up advanced criteria methods" do
     query = QueryMe::BaseQuery.new.email.upper.is("foo@bar.com").age.gt(30)
 
-    query.to_sql.should eq ["SELECT * FROM users WHERE UPPER(email) = $1 AND age > $2", "foo@bar.com", "30"]
+    query.to_sql.should eq ["SELECT #{QueryMe::COLUMNS} FROM users WHERE UPPER(email) = $1 AND age > $2", "foo@bar.com", "30"]
   end
 
   it "parses values" do
     query = QueryMe::BaseQuery.new.email.upper.is(" Foo@bar.com").age.gt(30)
 
-    query.to_sql.should eq ["SELECT * FROM users WHERE UPPER(email) = $1 AND age > $2", "foo@bar.com", "30"]
+    query.to_sql.should eq ["SELECT #{QueryMe::COLUMNS} FROM users WHERE UPPER(email) = $1 AND age > $2", "foo@bar.com", "30"]
   end
 
   it "lets you order by columns" do
     query = QueryMe::BaseQuery.new.age.asc_order.email.desc_order
 
-    query.to_sql.should eq ["SELECT * FROM users ORDER BY age ASC, email DESC"]
+    query.to_sql.should eq ["SELECT #{QueryMe::COLUMNS} FROM users ORDER BY age ASC, email DESC"]
   end
 
   it "can be deleted" do
@@ -83,5 +85,11 @@ describe LuckyRecord::Model do
     user.delete
 
     User::BaseQuery.all.size.should eq 0
+  end
+
+  describe ".column_names" do
+    it "returns list of mapped fields" do
+      QueryMe.column_names.should eq [:id, :created_at, :updated_at, :email, :age]
+    end
   end
 end
