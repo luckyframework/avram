@@ -13,9 +13,9 @@ module LuckyRecord::Validations
     end
   end
 
-  macro validate_confirmation_of(field_name)
-    if {{ field_name.id }}.value != {{ field_name.id }}_confirmation.value
-      {{ field_name }}.add_error "must match"
+  private def validate_confirmation_of(field, with confirmation_field)
+    if field.value != confirmation_field.value
+      confirmation_field.add_error "must match"
     end
   end
 

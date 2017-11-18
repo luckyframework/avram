@@ -22,7 +22,7 @@ private class TestValidationUser
   end
 
   def run_confirmation_validations
-    validate_confirmation_of name
+    validate_confirmation_of name, with: name_confirmation
   end
 
   def run_inclusion_validations
@@ -73,7 +73,7 @@ describe LuckyRecord::Validations do
     it "validates the fields match" do
       validate(name: "Paul", name_confirmation: "Pablo") do |user|
         user.run_confirmation_validations
-        user.name.errors.should eq ["must match"]
+        user.name_confirmation.errors.should eq ["must match"]
       end
 
       validate(name: "Paul", name_confirmation: "Paul") do |user|
