@@ -3,7 +3,7 @@ class LuckyRecord::Params
 
   @hash : Hash(String, String)
 
-  def initialize(@hash = Hash(String, String))
+  def initialize(@hash = {} of String => String)
   end
 
   def nested(key)
