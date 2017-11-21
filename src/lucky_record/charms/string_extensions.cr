@@ -15,14 +15,12 @@ class String
       @upper = false
       @lower = false
 
-      def like(value : String)
-        rows.query.where(LuckyRecord::Where::Like.new(column, value))
-        rows
+      def like(value : String) : T
+        add_clause(LuckyRecord::Where::Like.new(column, value))
       end
 
-      def ilike(value : String)
-        rows.query.where(LuckyRecord::Where::Ilike.new(column, value))
-        rows
+      def ilike(value : String) : T
+        add_clause(LuckyRecord::Where::Ilike.new(column, value))
       end
 
       def upper

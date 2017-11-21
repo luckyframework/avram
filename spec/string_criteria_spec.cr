@@ -32,6 +32,20 @@ describe String::Lucky::Criteria do
       name.upper.is("elon").to_sql.should eq ["SELECT #{QueryMe::COLUMNS} FROM users WHERE UPPER(name) = $1", "elon"]
     end
   end
+
+  describe "not" do
+    describe "with chained criteria" do
+      it "negates the following criteria" do
+        name.not.like("pete").to_sql.should eq ["SELECT #{QueryMe::COLUMNS} FROM users WHERE name NOT LIKE $1", "pete"]
+        name.not.ilike("pete").to_sql.should eq ["SELECT #{QueryMe::COLUMNS} FROM users WHERE name NOT ILIKE $1", "pete"]
+      end
+
+      it "resets after having negated once" do
+        name.not.like("pete").name.is("sarah").to_sql.should eq ["SELECT #{QueryMe::COLUMNS} FROM users WHERE name NOT LIKE $1 AND name = $2", "pete", "sarah"]
+        name.not.ilike("pete").name.is("sarah").to_sql.should eq ["SELECT #{QueryMe::COLUMNS} FROM users WHERE name NOT ILIKE $1 AND name = $2", "pete", "sarah"]
+      end
+    end
+  end
 end
 
 private def name

@@ -91,15 +91,49 @@ describe LuckyRecord::Query do
       count.should eq 1
     end
   end
+
+  describe "#not with an argument" do
+    it "negates the given where condition as 'equal'" do
+      insert_a_user(name: "Paul")
+
+      results = UserQuery.new.name.not("not existing").results
+      results.should eq UserQuery.new.results
+
+      results = UserQuery.new.name.not("Paul").results
+      results.should eq [] of User
+
+      insert_a_user(name: "Alex")
+      insert_a_user(name: "Sarah")
+      results = UserQuery.new.name.lower.not("alex").results
+      results.map(&.name).should eq ["Paul", "Sarah"]
+    end
+  end
+
+  describe "#not with no arguments" do
+    it "negates any previous condition" do
+      insert_a_user
+
+      results = UserQuery.new.name.not.is("Paul").results
+      results.should eq [] of User
+    end
+
+    it "can be used with operators" do
+      insert_a_user(name: "Joyce", age: 33)
+      insert_a_user(name: "Jil", age: 34)
+
+      results = UserQuery.new.age.not.gt(33).results
+      results.map(&.name).should eq ["Joyce"]
+    end
+  end
 end
 
-private def insert_a_user
+private def insert_a_user(name = "Paul", age = 34)
   LuckyRecord::Repo.run do |db|
     db.exec "INSERT INTO users(name, created_at, updated_at, age, joined_at) VALUES ($1, $2, $3, $4, $5)",
-      "Paul",
+      name,
       Time.now,
       Time.now,
-      34,
+      age,
       Time.now
   end
 end
