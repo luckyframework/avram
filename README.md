@@ -9,7 +9,7 @@ Add this to your application's `shard.yml`:
 ```yaml
 dependencies:
   lucky_record:
-    github: luckyframework/record
+    github: luckyframework/lucky_record
 ```
 
 ## Usage
