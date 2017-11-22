@@ -8,7 +8,7 @@ dependencies:
   blank:
     github: kostya/blank
   lucky_cli:
-    github: luckyframework/cli
+    github: luckyframework/lucky_cli
   db:
     github: crystal-lang/crystal-db
   pg:
@@ -18,9 +18,9 @@ dependencies:
 
 development_dependencies:
   lucky_migrator:
-    github: luckyframework/migrator
+    github: luckyframework/lucky_migrator
     version: ~> 0.2.3
-    
+
 crystal: 0.21.1
 
 license: MIT
