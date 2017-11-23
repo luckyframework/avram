@@ -17,4 +17,8 @@ class LuckyRecord::VirtualForm
   def form_name
     self.class.name.underscore.gsub("_form", "")
   end
+
+  def valid?
+    virtual_fields.all? &.valid?
+  end
 end

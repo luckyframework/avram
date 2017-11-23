@@ -1,15 +1,13 @@
 module LuckyRecord::AllowVirtual
-  def allowed_virtual_fields
-    [] of AllowedField(Nil)
-  end
-
-  macro setup_default_allowed_virtual_fields
-    {% if !@type.methods.map(&.name).includes?(:allowed_virtual_fields.id) %}
-      def allowed_virtual_fields
+  macro ensure_base_virtual_fields_method_is_present
+    {% if !@type.methods.map(&.name).includes?(:virtual_fields.id) %}
+      def virtual_fields
         [] of LuckyRecord::AllowedField(Nil)
       end
     {% end %}
   end
+
+  ensure_base_virtual_fields_method_is_present
 
   macro allow_virtual(type_declaration)
     {% if type_declaration.type.is_a?(Union) %}
@@ -20,9 +18,9 @@ module LuckyRecord::AllowVirtual
     {% name = type_declaration.var %}
     @_{{ name }} : LuckyRecord::Field({{ type }}?)?
 
-    setup_default_allowed_virtual_fields
+    ensure_base_virtual_fields_method_is_present
 
-    def allowed_virtual_fields
+    def virtual_fields
       previous_def + [{{ name }}]
     end
 

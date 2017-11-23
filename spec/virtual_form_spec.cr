@@ -41,7 +41,11 @@ describe LuckyRecord::VirtualForm do
     params = LuckyRecord::Params.new({"name" => ""})
     virtual_form = TestVirtualForm.new(params)
     virtual_form.name.errors.should eq [] of String
+    virtual_form.valid?.should be_true
+
     virtual_form.validate
+
     virtual_form.name.errors.should eq ["is required"]
+    virtual_form.valid?.should be_false
   end
 end

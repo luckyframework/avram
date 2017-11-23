@@ -21,7 +21,7 @@ describe "allow_virtual in forms" do
   end
 
   it "generates a list of allowed_fields" do
-    form.allowed_virtual_fields.map(&.name).should eq [:password_confirmation, :terms_of_service]
+    form.virtual_fields.map(&.name).should eq [:password_confirmation, :terms_of_service]
   end
 
   it "sets the param and value basd on the passed in params" do
