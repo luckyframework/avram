@@ -1,11 +1,15 @@
 require "./spec_helper"
 
-private class VirtualForm < User::BaseForm
+private class VirtualForm < Post::BaseForm
   allow_virtual password_confirmation : String
   allow_virtual terms_of_service : Bool
 
   def prepare
     password_confirmation.value = "reset"
+  end
+
+  def setup_required_database_fields
+    title.value = "Title"
   end
 end
 
@@ -14,6 +18,10 @@ describe "allow_virtual in forms" do
     form.password_confirmation.should be_a(LuckyRecord::AllowedField(String?))
     form.password_confirmation.name.should eq(:password_confirmation)
     form.password_confirmation.form_name.should eq("virtual")
+  end
+
+  it "generates a list of allowed_fields" do
+    form.allowed_virtual_fields.map(&.name).should eq [:password_confirmation, :terms_of_service]
   end
 
   it "sets the param and value basd on the passed in params" do
@@ -43,6 +51,12 @@ describe "allow_virtual in forms" do
     form = form({"terms_of_service" => "not a boolean"})
     form.terms_of_service.value.should be_nil
     form.terms_of_service.errors.first.should eq "is invalid"
+  end
+
+  it "includes field errors when calling Form#valid?" do
+    form = form({"terms_of_service" => "not a boolean"})
+    form.setup_required_database_fields
+    form.valid?.should be_false
   end
 end
 

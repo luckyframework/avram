@@ -81,11 +81,11 @@ abstract class LuckyRecord::Form(T)
     {% end %}
 
     def fields
-      {
+      database_fields = [
         {% for field in fields %}
           {{ field[:name] }},
         {% end %}
-      }
+      ] + allowed_virtual_fields
     end
 
     def required_fields
