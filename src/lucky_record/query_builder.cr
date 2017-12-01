@@ -1,6 +1,7 @@
 class LuckyRecord::QueryBuilder
   getter :table
   @limit : Int32?
+  @offset : Int32?
   @wheres = [] of LuckyRecord::Where::SqlClause
   @orders = {
     asc:  [] of Symbol | String,
@@ -47,11 +48,15 @@ class LuckyRecord::QueryBuilder
   end
 
   private def sql_condition_clauses
-    [wheres_sql, limit_sql, order_sql]
+    [wheres_sql, limit_sql, offset_sql, order_sql]
   end
 
   def limit(amount)
     @limit = amount
+    self
+  end
+
+  def offset(@offset)
     self
   end
 
@@ -77,7 +82,7 @@ class LuckyRecord::QueryBuilder
 
   def select(selection : Array(Symbol))
     @selections = selection
-      .map { |column| "#{@table}.#{column}"}
+      .map { |column| "#{@table}.#{column}" }
       .join(", ")
     self
   end
@@ -95,6 +100,12 @@ class LuckyRecord::QueryBuilder
   private def limit_sql
     if @limit
       "LIMIT #{@limit}"
+    end
+  end
+
+  private def offset_sql
+    if @offset
+      "OFFSET #{@offset}"
     end
   end
 

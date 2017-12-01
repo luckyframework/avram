@@ -10,7 +10,8 @@ module LuckyRecord::Queryable(T)
   end
 
   def query
-    @query ||= LuckyRecord::QueryBuilder.new(table: @@table_name)
+    @query ||= LuckyRecord::QueryBuilder
+      .new(table: @@table_name)
       .select(@@schema_class.column_names)
   end
 
@@ -26,6 +27,11 @@ module LuckyRecord::Queryable(T)
 
   def limit(amount)
     query.limit(amount)
+    self
+  end
+
+  def offset(amount)
+    query.offset(amount)
     self
   end
 

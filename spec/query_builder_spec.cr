@@ -12,6 +12,12 @@ describe "LuckyRecord::QueryBuilder" do
     query.args.should eq [] of String
   end
 
+  it "can be offset" do
+    query = new_query.offset(1)
+    query.statement.should eq "SELECT * FROM users OFFSET 1"
+    query.args.should eq [] of String
+  end
+
   it "accepts where clauses and limits" do
     query = new_query
       .where(LuckyRecord::Where::Equal.new(:name, "Paul"))

@@ -73,6 +73,14 @@ describe LuckyRecord::Query do
     end
   end
 
+  describe "#offset" do
+    it "adds an offset clause" do
+      query = UserQuery.new.offset(2).query
+
+      query.statement.should eq "SELECT #{User::COLUMNS} FROM users OFFSET 2"
+    end
+  end
+
   describe "#order_by" do
     it "adds an order clause" do
       query = UserQuery.new.order_by(:name, :asc).query
