@@ -19,5 +19,7 @@ describe LuckyRecord::Where do
     should_negate(LuckyRecord::Where::NotLike, LuckyRecord::Where::Like)
     should_negate(LuckyRecord::Where::Ilike, LuckyRecord::Where::NotIlike)
     should_negate(LuckyRecord::Where::NotIlike, LuckyRecord::Where::Ilike)
+    should_negate(LuckyRecord::Where::In, LuckyRecord::Where::NotIn)
+    should_negate(LuckyRecord::Where::NotIn, LuckyRecord::Where::In)
   end
 end

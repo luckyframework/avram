@@ -133,6 +133,23 @@ describe LuckyRecord::Query do
       results.map(&.name).should eq ["Joyce"]
     end
   end
+
+  describe "#in" do
+    it "gets records with ids in an array" do
+      insert_a_user(name: "Mikias")
+      user = UserQuery.new.first
+
+      results = UserQuery.new.id.in([user.id])
+      results.map(&.name).should eq ["Mikias"]
+    end
+
+    it "gets records with name not in an array" do
+      insert_a_user(name: "Mikias")
+
+      results = UserQuery.new.name.not.in(["Mikias"])
+      results.map(&.name).should eq [] of String
+    end
+  end
 end
 
 private def insert_a_user(name = "Paul", age = 34)
