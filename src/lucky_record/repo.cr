@@ -3,6 +3,7 @@ class LuckyRecord::Repo
 
   Habitat.create do
     setting url : String
+    setting lazy_load_enabled : Bool = true
   end
 
   def self.run

@@ -243,11 +243,29 @@ describe "LuckyRecord::Form" do
       it "raises an exception" do
         params = {"name" => "", "age" => "30"}
 
-        expect_raises(
-          LuckyRecord::InvalidFormError(UserForm),
-          /Invalid UserForm. Could not save/) do
+        expect_raises LuckyRecord::InvalidFormError(UserForm) do
           UserForm.create!(params)
         end
+      end
+    end
+  end
+
+  describe "updating with no changes" do
+    it "works when there are no changes" do
+      create_user(name: "Old Name")
+      user = UserQuery.new.first
+      params = {} of String => String
+      UserForm.update user, with: params do |form, record|
+        form.save_succeeded?.should be_true
+      end
+    end
+
+    it "returns true when there are no changes" do
+      create_user(name: "Old Name")
+      user = UserQuery.new.first
+      params = {} of String => String
+      UserForm.new(user).tap do |form|
+        form.save.should be_true
       end
     end
   end
@@ -298,9 +316,7 @@ describe "LuckyRecord::Form" do
         user = UserQuery.new.first
         params = {"name" => ""}
 
-        expect_raises(
-          LuckyRecord::InvalidFormError(UserForm),
-          /Invalid UserForm. Could not save/) do
+        expect_raises LuckyRecord::InvalidFormError(UserForm) do
           UserForm.update! user, with: params
         end
       end

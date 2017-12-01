@@ -162,13 +162,13 @@ abstract class LuckyRecord::Form(T)
   def save : Bool
     @performed = true
 
-    if valid?
+    if valid? && changes.any?
       before_save
       insert_or_update
       after_save(record.not_nil!)
       true
     else
-      false
+      valid? && changes.empty?
     end
   end
 
@@ -176,7 +176,7 @@ abstract class LuckyRecord::Form(T)
     if save
       record.not_nil!
     else
-      raise LuckyRecord::InvalidFormError.new(form_name: typeof(self).to_s, form_object: self)
+      raise LuckyRecord::InvalidFormError(typeof(self)).new(form: self)
     end
   end
 
