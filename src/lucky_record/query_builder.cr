@@ -48,7 +48,7 @@ class LuckyRecord::QueryBuilder
   end
 
   private def sql_condition_clauses
-    [wheres_sql, limit_sql, offset_sql, order_sql]
+    [wheres_sql, order_sql, limit_sql, offset_sql]
   end
 
   def limit(amount)
@@ -70,6 +70,7 @@ class LuckyRecord::QueryBuilder
     if ordered?
       "ORDER BY " + @orders.map do |direction, columns|
         next if columns.empty?
+        columns = columns.map { |column| "#{table}.#{column}" }
         "#{columns.join(", ")} #{direction.to_s.upcase}"
       end.reject(&.nil?).join(", ")
     end

@@ -67,9 +67,19 @@ describe LuckyRecord::Query do
 
   describe "#limit" do
     it "adds a limit clause" do
-      query = UserQuery.new.limit(2).query
+      queryable = UserQuery.new.limit(2)
 
-      query.statement.should eq "SELECT #{User::COLUMNS} FROM users LIMIT 2"
+      queryable.query.statement.should eq "SELECT #{User::COLUMNS} FROM users LIMIT 2"
+    end
+
+    it "works while chaining" do
+      insert_a_user
+      insert_a_user
+      users = UserQuery.new.name.desc_order.limit(1)
+
+      users.query.statement.should eq "SELECT #{User::COLUMNS} FROM users ORDER BY users.name DESC LIMIT 1"
+
+      users.results.size.should eq(1)
     end
   end
 
@@ -85,7 +95,7 @@ describe LuckyRecord::Query do
     it "adds an order clause" do
       query = UserQuery.new.order_by(:name, :asc).query
 
-      query.statement.should eq "SELECT #{User::COLUMNS} FROM users ORDER BY name ASC"
+      query.statement.should eq "SELECT #{User::COLUMNS} FROM users ORDER BY users.name ASC"
     end
   end
 

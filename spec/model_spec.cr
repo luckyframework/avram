@@ -75,7 +75,7 @@ describe LuckyRecord::Model do
   it "lets you order by columns" do
     query = QueryMe::BaseQuery.new.age.asc_order.email.desc_order
 
-    query.to_sql.should eq ["SELECT #{QueryMe::COLUMNS} FROM users ORDER BY age ASC, email DESC"]
+    query.to_sql.should eq ["SELECT #{QueryMe::COLUMNS} FROM users ORDER BY users.age ASC, users.email DESC"]
   end
 
   it "can be deleted" do

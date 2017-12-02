@@ -32,12 +32,12 @@ describe "LuckyRecord::QueryBuilder" do
       .order_by(:name, :asc)
       .order_by(:birthday, :asc)
       .order_by(:email, :desc)
-    query.statement.should eq "SELECT * FROM users ORDER BY name, birthday ASC, email DESC"
+    query.statement.should eq "SELECT * FROM users ORDER BY users.name, users.birthday ASC, users.email DESC"
     query.args.should eq [] of String
 
     query = new_query
       .order_by(:name, :asc)
-    query.statement.should eq "SELECT * FROM users ORDER BY name ASC"
+    query.statement.should eq "SELECT * FROM users ORDER BY users.name ASC"
   end
 
   describe "updating" do
