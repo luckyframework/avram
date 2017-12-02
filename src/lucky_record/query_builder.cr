@@ -78,7 +78,12 @@ class LuckyRecord::QueryBuilder
 
   def count
     @selections = "COUNT(*)"
+    reset_order
     self
+  end
+
+  private def reset_order
+    @orders.values.each(&.clear)
   end
 
   def select(selection : Array(Symbol))

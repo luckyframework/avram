@@ -108,6 +108,23 @@ describe LuckyRecord::Query do
       count = UserQuery.new.count
       count.should eq 1
     end
+
+    it "works with ORDER BY by removing the ordering" do
+      insert_a_user
+
+      query = UserQuery.new.name.desc_order
+
+      query.count.should eq 1
+    end
+
+    it "works with chained where" do
+      insert_a_user(age: 30)
+      insert_a_user(age: 31)
+
+      query = UserQuery.new.age.gte(31)
+
+      query.count.should eq 1
+    end
   end
 
   describe "#not with an argument" do
