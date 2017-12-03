@@ -1,6 +1,6 @@
 require "spec"
 require "../src/lucky_record"
-require "./support/*"
+require "./support/**"
 
 LuckyRecord::Repo.configure do
   if ENV["DATABASE_URL"]?

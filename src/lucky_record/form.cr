@@ -198,8 +198,11 @@ abstract class LuckyRecord::Form(T)
 
   # Default callbacks
   def prepare; end
+
   def after_prepare; end
+
   def before_save; end
+
   def after_save(_record : T); end
 
   private def insert
