@@ -14,7 +14,7 @@ LuckyRecord::Repo.configure do
 end
 
 Spec.after_each do
-  UserQuery.new.destroy_all
+  LuckyRecord::Repo.truncate
 end
 
 private class UserForm < User::BaseForm
