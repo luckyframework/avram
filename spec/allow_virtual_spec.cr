@@ -58,6 +58,13 @@ describe "allow_virtual in forms" do
     form.setup_required_database_fields
     form.valid?.should be_false
   end
+
+  it "can still save to the database" do
+    params = {"password_confirmation" => "password", "terms_of_service" => "1"}
+    form = form(params)
+    form.setup_required_database_fields
+    form.save.should eq true
+  end
 end
 
 private def form(attrs = {} of String => String)
