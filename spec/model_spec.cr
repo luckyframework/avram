@@ -9,6 +9,11 @@ private class QueryMe < LuckyRecord::Model
   end
 end
 
+private class EmptyModelCompilesOk < LuckyRecord::Model
+  table no_fields do
+  end
+end
+
 describe LuckyRecord::Model do
   it "sets up initializers based on the fields" do
     now = Time.now
