@@ -20,9 +20,18 @@ class LuckyRecord::Field(T)
     message_string = message.call(@name.to_s, @value.to_s)
     add_error(message_string)
   end
-  
+
   def errors
     @errors.uniq
+  end
+
+  def value
+    value = @value
+    if value.is_a?(String) && value.blank?
+      nil
+    else
+      value
+    end
   end
 
   def valid?
