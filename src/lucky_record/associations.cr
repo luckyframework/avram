@@ -1,6 +1,9 @@
 module LuckyRecord::Associations
   macro has_many(type_declaration)
     {% assoc_name = type_declaration.var }
+
+    association table_name: :{{ assoc_name }}
+
     {% model = type_declaration.type %}
     def {{ assoc_name.id }}
       {{ model }}::BaseQuery.new.{{ @type.name.underscore }}_id(id)
@@ -19,6 +22,8 @@ module LuckyRecord::Associations
     {% end %}
 
     field {{ assoc_name.id }}_id : Int32{% if nilable %}?{% end %}
+
+    association table_name: :{{ model.resolve.constant(:TABLE_NAME).id }}, foreign_key: :id
 
     def {{ assoc_name.id }}
       {{ assoc_name.id }}_id.try do |value|

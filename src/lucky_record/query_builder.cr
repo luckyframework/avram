@@ -3,6 +3,7 @@ class LuckyRecord::QueryBuilder
   @limit : Int32?
   @offset : Int32?
   @wheres = [] of LuckyRecord::Where::SqlClause
+  @joins = [] of LuckyRecord::Join::SqlClause
   @orders = {
     asc:  [] of Symbol | String,
     desc: [] of Symbol | String,
@@ -48,7 +49,7 @@ class LuckyRecord::QueryBuilder
   end
 
   private def sql_condition_clauses
-    [wheres_sql, order_sql, limit_sql, offset_sql]
+    [joins_sql, wheres_sql, order_sql, limit_sql, offset_sql]
   end
 
   def limit(amount)
@@ -113,6 +114,15 @@ class LuckyRecord::QueryBuilder
     if @offset
       "OFFSET #{@offset}"
     end
+  end
+
+  def join(join_clause : LuckyRecord::Join::SqlClause)
+    @joins << join_clause
+    self
+  end
+
+  private def joins_sql
+    @joins.map(&.to_sql).join(" ")
   end
 
   def where(where_clause : LuckyRecord::Where::SqlClause)

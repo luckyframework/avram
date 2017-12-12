@@ -71,6 +71,15 @@ describe "LuckyRecord::QueryBuilder" do
       query.statement.should eq "SELECT users.name, users.age FROM users"
     end
   end
+
+  it "can be joined" do
+    query = LuckyRecord::QueryBuilder
+      .new(table: :users)
+      .join(LuckyRecord::Join::Inner.new(:users, :posts))
+      .limit(1)
+
+    query.statement.should eq "SELECT * FROM users INNER JOIN posts ON users.id = posts.user_id LIMIT 1"
+  end
 end
 
 private def new_query

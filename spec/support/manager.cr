@@ -1,4 +1,4 @@
-require "./post"
+require "./employee"
 
 class Manager < LuckyRecord::Model
   table managers do

@@ -1,5 +1,5 @@
 class LuckyRecord::BaseQueryTemplate
-  macro setup(model_type, fields, table_name)
+  macro setup(model_type, fields, associations, table_name)
     class BaseQuery < LuckyRecord::Query
       include LuckyRecord::Queryable({{ model_type }})
 
@@ -29,6 +29,20 @@ class LuckyRecord::BaseQueryTemplate
 
         macro inherited
           generate_criteria_method(\{{ @type.name }}, {{ field[:name] }}, {{ field[:type] }})
+        end
+      {% end %}
+
+      {% for assoc in associations %}
+        def join_{{ assoc[:name] }}
+          inner_join_{{ assoc[:name] }}
+        end
+
+        def inner_join_{{ assoc[:name] }}
+          join(LuckyRecord::Join::Inner.new(@@table_name, :{{ assoc[:name] }}, foreign_key: {{ assoc[:foreign_key] }}))
+        end
+
+        def left_join_{{ assoc[:name] }}
+          join(LuckyRecord::Join::Inner.new(@@table_name, :{{ assoc[:name] }}, foreign_key: {{ assoc[:foreign_key] }}))
         end
       {% end %}
     end

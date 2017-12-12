@@ -183,6 +183,30 @@ describe LuckyRecord::Query do
       results.map(&.name).should eq [] of String
     end
   end
+
+  describe "#join methods for associations" do
+    it "inner join on belongs to" do
+      post = PostBox.save
+      comment = CommentBox.new.post_id(post.id).save!
+
+      query = Comment::BaseQuery.new.join_posts
+      query.to_sql.should eq ["SELECT comments.id, comments.created_at, comments.updated_at, comments.body, comments.post_id FROM comments INNER JOIN posts ON comments.id = posts.id"]
+
+      result = query.first
+      result.post.should eq post
+    end
+
+    it "inner join on has many" do
+      post = PostBox.save
+      comment = CommentBox.new.post_id(post.id).save!
+
+      query = Post::BaseQuery.new.join_comments
+      query.to_sql.should eq ["SELECT posts.id, posts.created_at, posts.updated_at, posts.title FROM posts INNER JOIN comments ON posts.id = comments.post_id"]
+
+      result = query.first
+      result.comments.first.should eq comment
+    end
+  end
 end
 
 private def insert_a_user(name = "Paul", age = 34)

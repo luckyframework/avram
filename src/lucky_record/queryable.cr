@@ -15,6 +15,12 @@ module LuckyRecord::Queryable(T)
       .select(@@schema_class.column_names)
   end
 
+
+  def join(join_clause : LuckyRecord::Join::SqlClause)
+    query.join(join_clause)
+    self
+  end
+
   def where(column, value)
     query.where(LuckyRecord::Where::Equal.new(column, value.to_s))
     self
