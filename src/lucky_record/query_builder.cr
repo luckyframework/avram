@@ -67,6 +67,14 @@ class LuckyRecord::QueryBuilder
     self
   end
 
+  def reverse_order
+    @orders = {
+      asc: @orders[:desc],
+      desc: @orders[:asc],
+    }
+    self
+  end
+
   def order_sql
     if ordered?
       "ORDER BY " + @orders.map do |direction, columns|
@@ -94,9 +102,9 @@ class LuckyRecord::QueryBuilder
     self
   end
 
-  private def ordered?
+  def ordered?
     @orders.values.any? do |columns|
-      !columns.empty?
+      columns.any?
     end
   end
 

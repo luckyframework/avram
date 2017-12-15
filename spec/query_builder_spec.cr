@@ -80,6 +80,52 @@ describe "LuckyRecord::QueryBuilder" do
 
     query.statement.should eq "SELECT * FROM users INNER JOIN posts ON users.id = posts.user_id LIMIT 1"
   end
+
+  describe "#reverse_order" do
+    it "reverses the order of the query" do
+      query = LuckyRecord::QueryBuilder
+        .new(table: :users)
+        .order_by(:id, :asc)
+        .reverse_order
+
+      query.statement.should eq "SELECT * FROM users ORDER BY users.id DESC"
+    end
+
+    it "reverses both directions" do
+      query = LuckyRecord::QueryBuilder
+        .new(table: :users)
+        .order_by(:id, :asc)
+        .order_by(:name, :desc)
+        .reverse_order
+
+      query.statement.should eq "SELECT * FROM users ORDER BY users.name ASC, users.id DESC"
+    end
+
+    it "does nothing if there is no order" do
+      query = LuckyRecord::QueryBuilder
+        .new(table: :users)
+        .reverse_order
+
+      query.statement.should eq "SELECT * FROM users"
+    end
+  end
+
+  describe "#ordered" do
+    it "returns true if the query is ordered" do
+      query = LuckyRecord::QueryBuilder
+        .new(table: :users)
+        .order_by(:id, :asc)
+
+      query.ordered?.should eq true
+    end
+
+    it "returns false if the query is not ordered" do
+      query = LuckyRecord::QueryBuilder
+        .new(table: :users)
+
+      query.ordered?.should eq false
+    end
+  end
 end
 
 private def new_query

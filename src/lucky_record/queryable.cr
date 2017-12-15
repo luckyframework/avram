@@ -50,6 +50,11 @@ module LuckyRecord::Queryable(T)
     exec_query.first? || raise RecordNotFoundError.new(model: @@table_name, query: :first)
   end
 
+  def last
+    ordered_query.reverse_order.limit(1)
+    exec_query.first? || raise RecordNotFoundError.new(model: @@table_name, query: :last)
+  end
+
   def count : Int64
     query.count
     exec_scalar.as(Int64)
@@ -76,6 +81,14 @@ module LuckyRecord::Queryable(T)
   private def exec_scalar
     LuckyRecord::Repo.run do |db|
       db.scalar query.statement, query.args
+    end
+  end
+
+  private def ordered_query
+    if query.ordered?
+      query
+    else
+      query.order_by(:id, :asc)
     end
   end
 

@@ -17,13 +17,38 @@ describe LuckyRecord::Query do
 
   describe "#first" do
     it "gets the first row from the database" do
-      insert_a_user
-      UserQuery.new.first.name.should eq "Paul"
+      insert_a_user("First")
+      insert_a_user("Last")
+
+      UserQuery.new.first.name.should eq "First"
     end
 
     it "raises RecordNotFound if no record is found" do
       expect_raises(LuckyRecord::RecordNotFoundError) do
         UserQuery.new.first
+      end
+    end
+  end
+
+  describe "#last" do
+    it "gets the last row from the database" do
+      insert_a_user("First")
+      insert_a_user("Last")
+
+      UserQuery.new.last.name.should eq "Last"
+    end
+
+    it "reverses the order of ordered queries" do
+      insert_a_user("Alpha")
+      insert_a_user("Charlie")
+      insert_a_user("Bravo")
+
+      UserQuery.new.order_by(:name, :desc).last.name.should eq "Alpha"
+    end
+
+    it "raises RecordNotFound if no record is found" do
+      expect_raises(LuckyRecord::RecordNotFoundError) do
+        UserQuery.new.last
       end
     end
   end
