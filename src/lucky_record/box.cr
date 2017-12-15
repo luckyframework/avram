@@ -9,7 +9,7 @@ abstract class LuckyRecord::Box
 
   macro method_missing(call)
     form.{{ call.name }}.value = {{ call.args.first }}
-    form
+    self
   end
 
   def self.save

@@ -1,4 +1,10 @@
 class UserBox < BaseBox
+  def initialize
+    name "Paul Smith"
+    joined_at Time.now
+    age 18
+  end
+
   def build_model
     User.new(
       id: 123,

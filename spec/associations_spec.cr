@@ -3,7 +3,7 @@ require "./spec_helper"
 describe LuckyRecord::Model do
   it "gets the related records" do
     post = PostBox.save
-    comment = CommentBox.new.post_id(post.id).save!
+    comment = CommentBox.new.post_id(post.id).save
 
     post = Post::BaseQuery.new.find(post.id)
 
@@ -13,7 +13,7 @@ describe LuckyRecord::Model do
 
   it "gets the related records for nilable association that exists" do
     manager = ManagerBox.save
-    employee = EmployeeBox.new.manager_id(manager.id).save!
+    employee = EmployeeBox.new.manager_id(manager.id).save
 
     manager = Manager::BaseQuery.new.find(manager.id)
 

@@ -17,8 +17,8 @@ describe LuckyRecord::Query do
 
   describe "#first" do
     it "gets the first row from the database" do
-      insert_a_user("First")
-      insert_a_user("Last")
+      UserBox.new.name("First").save
+      UserBox.new.name("Last").save
 
       UserQuery.new.first.name.should eq "First"
     end
@@ -32,16 +32,16 @@ describe LuckyRecord::Query do
 
   describe "#last" do
     it "gets the last row from the database" do
-      insert_a_user("First")
-      insert_a_user("Last")
+      UserBox.new.name("First").save
+      UserBox.new.name("Last").save
 
       UserQuery.new.last.name.should eq "Last"
     end
 
     it "reverses the order of ordered queries" do
-      insert_a_user("Alpha")
-      insert_a_user("Charlie")
-      insert_a_user("Bravo")
+      UserBox.new.name("Alpha").save
+      UserBox.new.name("Charlie").save
+      UserBox.new.name("Bravo").save
 
       UserQuery.new.order_by(:name, :desc).last.name.should eq "Alpha"
     end
@@ -55,7 +55,7 @@ describe LuckyRecord::Query do
 
   describe "#find" do
     it "gets the record with the given id" do
-      insert_a_user
+      UserBox.save
       user = UserQuery.new.first
 
       UserQuery.new.find(user.id).should eq user
@@ -104,8 +104,8 @@ describe LuckyRecord::Query do
     end
 
     it "works while chaining" do
-      insert_a_user
-      insert_a_user
+      UserBox.save
+      UserBox.save
       users = UserQuery.new.name.desc_order.limit(1)
 
       users.query.statement.should eq "SELECT #{User::COLUMNS} FROM users ORDER BY users.name DESC LIMIT 1"
@@ -135,13 +135,13 @@ describe LuckyRecord::Query do
       count = UserQuery.new.count
       count.should eq 0
 
-      insert_a_user
+      UserBox.save
       count = UserQuery.new.count
       count.should eq 1
     end
 
     it "works with ORDER BY by removing the ordering" do
-      insert_a_user
+      UserBox.save
 
       query = UserQuery.new.name.desc_order
 
@@ -149,8 +149,8 @@ describe LuckyRecord::Query do
     end
 
     it "works with chained where" do
-      insert_a_user(age: 30)
-      insert_a_user(age: 31)
+      UserBox.new.age(30).save
+      UserBox.new.age(31).save
 
       query = UserQuery.new.age.gte(31)
 
@@ -160,7 +160,7 @@ describe LuckyRecord::Query do
 
   describe "#not with an argument" do
     it "negates the given where condition as 'equal'" do
-      insert_a_user(name: "Paul")
+      UserBox.new.name("Paul").save
 
       results = UserQuery.new.name.not("not existing").results
       results.should eq UserQuery.new.results
@@ -168,8 +168,8 @@ describe LuckyRecord::Query do
       results = UserQuery.new.name.not("Paul").results
       results.should eq [] of User
 
-      insert_a_user(name: "Alex")
-      insert_a_user(name: "Sarah")
+      UserBox.new.name("Alex").save
+      UserBox.new.name("Sarah").save
       results = UserQuery.new.name.lower.not("alex").results
       results.map(&.name).should eq ["Paul", "Sarah"]
     end
@@ -177,15 +177,15 @@ describe LuckyRecord::Query do
 
   describe "#not with no arguments" do
     it "negates any previous condition" do
-      insert_a_user
+      UserBox.new.name("Paul").save
 
       results = UserQuery.new.name.not.is("Paul").results
       results.should eq [] of User
     end
 
     it "can be used with operators" do
-      insert_a_user(name: "Joyce", age: 33)
-      insert_a_user(name: "Jil", age: 34)
+      UserBox.new.age(33).name("Joyce").save
+      UserBox.new.age(34).name("Jil").save
 
       results = UserQuery.new.age.not.gt(33).results
       results.map(&.name).should eq ["Joyce"]
@@ -194,7 +194,7 @@ describe LuckyRecord::Query do
 
   describe "#in" do
     it "gets records with ids in an array" do
-      insert_a_user(name: "Mikias")
+      UserBox.new.name("Mikias").save
       user = UserQuery.new.first
 
       results = UserQuery.new.id.in([user.id])
@@ -202,7 +202,7 @@ describe LuckyRecord::Query do
     end
 
     it "gets records with name not in an array" do
-      insert_a_user(name: "Mikias")
+      UserBox.new.name("Mikias")
 
       results = UserQuery.new.name.not.in(["Mikias"])
       results.map(&.name).should eq [] of String
@@ -212,7 +212,7 @@ describe LuckyRecord::Query do
   describe "#join methods for associations" do
     it "inner join on belongs to" do
       post = PostBox.save
-      comment = CommentBox.new.post_id(post.id).save!
+      comment = CommentBox.new.post_id(post.id).save
 
       query = Comment::BaseQuery.new.join_posts
       query.to_sql.should eq ["SELECT comments.id, comments.created_at, comments.updated_at, comments.body, comments.post_id FROM comments INNER JOIN posts ON comments.id = posts.id"]
@@ -223,7 +223,7 @@ describe LuckyRecord::Query do
 
     it "inner join on has many" do
       post = PostBox.save
-      comment = CommentBox.new.post_id(post.id).save!
+      comment = CommentBox.new.post_id(post.id).save
 
       query = Post::BaseQuery.new.join_comments
       query.to_sql.should eq ["SELECT posts.id, posts.created_at, posts.updated_at, posts.title FROM posts INNER JOIN comments ON posts.id = comments.post_id"]
@@ -231,16 +231,5 @@ describe LuckyRecord::Query do
       result = query.first
       result.comments.first.should eq comment
     end
-  end
-end
-
-private def insert_a_user(name = "Paul", age = 34)
-  LuckyRecord::Repo.run do |db|
-    db.exec "INSERT INTO users(name, created_at, updated_at, age, joined_at) VALUES ($1, $2, $3, $4, $5)",
-      name,
-      Time.now,
-      Time.now,
-      age,
-      Time.now
   end
 end
