@@ -9,6 +9,34 @@ private class QueryMe < LuckyRecord::Model
   end
 end
 
+private class ModelWithMissingButSimilarlyNamedColumn < LuckyRecord::Model
+  table users do
+    field mickname : String
+  end
+end
+
+private class ModelWithOptionalFieldOnRequiredColumn < LuckyRecord::Model
+  table users do
+    field name : String?
+  end
+end
+
+private class ModelWithRequiredFieldOnOptionalColumn < LuckyRecord::Model
+  table users do
+    field nickname : String
+  end
+end
+
+private class MissingTable < LuckyRecord::Model
+  table definitely_a_missing_table do
+  end
+end
+
+private class MissingButSimilarlyNamedTable < LuckyRecord::Model
+  table uusers do
+  end
+end
+
 private class EmptyModelCompilesOk < LuckyRecord::Model
   table no_fields do
   end
@@ -95,6 +123,55 @@ describe LuckyRecord::Model do
   describe ".column_names" do
     it "returns list of mapped fields" do
       QueryMe.column_names.should eq [:id, :created_at, :updated_at, :email, :age]
+    end
+  end
+
+  describe ".ensure_correct_field_mappings" do
+    it "raises on missing table" do
+      missing_table = MissingTable.new(1, Time.new, Time.new)
+      expect_raises Exception, "The table 'definitely_a_missing_table' was not found." do
+        missing_table.ensure_correct_field_mappings!
+      end
+    end
+
+    it "raises on a missing but similarly named table" do
+      missing_table = MissingButSimilarlyNamedTable.new(1, Time.new, Time.new)
+      expect_raises Exception, "The table 'uusers' was not found. Did you mean users?" do
+        missing_table.ensure_correct_field_mappings!
+      end
+    end
+
+    it "raises on fields with missing columns" do
+      now = Time.now
+      user = ModelWithMissingButSimilarlyNamedColumn.new id: 1,
+        created_at: now,
+        updated_at: now,
+        mickname: "missing"
+      expect_raises Exception, "The table 'users' does not have a 'mickname' column. Did you mean nickname?" do
+        user.ensure_correct_field_mappings!
+      end
+    end
+
+    it "raises on nilable fields with required columns" do
+      now = Time.now
+      user = ModelWithOptionalFieldOnRequiredColumn.new id: 1,
+        created_at: now,
+        updated_at: now,
+        name: "Mikias"
+      expect_raises Exception, "'name' is marked as nilable (name : String?), but the database column does not allow nils." do
+        user.ensure_correct_field_mappings!
+      end
+    end
+
+    it "raises on required fields with nilable columns" do
+      now = Time.now
+      user = ModelWithRequiredFieldOnOptionalColumn.new id: 1,
+        created_at: now,
+        updated_at: now,
+        nickname: "Miki"
+      expect_raises Exception, "'nickname' is marked as required (nickname : String), but the database column allows nils." do
+        user.ensure_correct_field_mappings!
+      end
     end
   end
 end
