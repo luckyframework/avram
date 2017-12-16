@@ -3,15 +3,33 @@ module LuckyRecord::Associations
     LuckyRecord::Repo.settings.lazy_load_enabled
   end
 
-  macro has_many(type_declaration)
+  macro has_many(type_declaration, foreign_key = nil)
     {% assoc_name = type_declaration.var %}
 
     association table_name: :{{ assoc_name }}
 
     {% model = type_declaration.type %}
-    {% foreign_key = "#{@type.name.underscore}_id".id %}
+
+    {% unless foreign_key %}
+      {% foreign_key = "#{@type.name.underscore}_id".id %}
+    {% end %}
+
+    {% foreign_key = foreign_key.id %}
+
     @_preloaded_{{ assoc_name }} : Array({{ model }})?
     setter _preloaded_{{ assoc_name }}
+
+    def {{ assoc_name.id }} : Array({{ model }})
+      @_preloaded_{{ assoc_name }} \
+      || lazy_load_{{ assoc_name }} \
+      || raise LuckyRecord::LazyLoadError.new {{ @type.name.stringify }}, {{ assoc_name.stringify }}
+    end
+
+    private def lazy_load_{{ assoc_name }} : Array({{ model }})?
+      if lazy_load_enabled?
+        {{ model }}::BaseQuery.new.{{ foreign_key }}(id).results
+      end
+    end
 
     class BaseQuery < LuckyRecord::Query
       def preload_{{ assoc_name }}
@@ -27,16 +45,6 @@ module LuckyRecord::Associations
           end
         end
         self
-      end
-    end
-
-    def {{ assoc_name.id }} : Array({{ model }})
-      @_preloaded_{{ assoc_name }} || lazy_load_{{ assoc_name }} || raise LuckyRecord::LazyLoadError.new {{ @type.name.stringify }}, {{ assoc_name.stringify }}
-    end
-
-    private def lazy_load_{{ assoc_name }} : Array({{ model }})?
-      if lazy_load_enabled?
-        {{ model }}::BaseQuery.new.{{ foreign_key }}(id).results
       end
     end
   end
