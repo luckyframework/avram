@@ -1,6 +1,6 @@
 module LuckyRecord::Associations
   macro has_many(type_declaration)
-    {% assoc_name = type_declaration.var }
+    {% assoc_name = type_declaration.var %}
 
     association table_name: :{{ assoc_name }}
 
@@ -11,7 +11,7 @@ module LuckyRecord::Associations
   end
 
   macro belongs_to(type_declaration)
-    {% assoc_name = type_declaration.var }
+    {% assoc_name = type_declaration.var %}
 
     {% if type_declaration.type.is_a?(Union) %}
       {% model = type_declaration.type.types.first %}
