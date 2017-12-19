@@ -2,6 +2,7 @@ require "./spec_helper"
 
 private class CallableMessage
   include LuckyRecord::CallableErrorMessage
+
   def initialize(@name = "")
   end
 
@@ -17,14 +18,14 @@ private class TestValidationUser
   @_city : LuckyRecord::Field(String)?
   @_state : LuckyRecord::Field(String)?
   @_name_confirmation : LuckyRecord::Field(String)?
-  @_terms : LuckyRecord::Field(Bool)?
+  @_terms : LuckyRecord::Field(Bool?)?
 
   @name : String
   @name_confirmation : String
   @city : String
   @state : String
   @age : Int32?
-  @terms : Bool
+  @terms : Bool?
 
   def initialize(@name = "", @name_confirmation = "", @age = nil, @terms = false, @city = "", @state = "")
   end
@@ -42,7 +43,7 @@ private class TestValidationUser
   end
 
   def run_validations_with_message_callables
-    validate_required city, state, message: ->(field_name : String, field_value : String){ "#{field_name} required message from Proc" }
+    validate_required city, state, message: ->(field_name : String, field_value : String) { "#{field_name} required message from Proc" }
     validate_inclusion_of state, in: ["CA, NY"], message: CallableMessage.new(@name)
   end
 
@@ -65,7 +66,7 @@ private class TestValidationUser
   field String, city
   field String, state
   field Int32?, age
-  field Bool, terms
+  field Bool?, terms
 end
 
 describe LuckyRecord::Validations do
