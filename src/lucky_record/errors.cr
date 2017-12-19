@@ -25,4 +25,11 @@ module LuckyRecord
       super "Invalid #{form_name}. Could not save #{@form_object}"
     end
   end
+
+  # Raised when an unimplemented or deprecated query is made.
+  class UnsupportedQueryError < LuckyRecordError
+    def initialize(message : String)
+      super message
+    end
+  end
 end

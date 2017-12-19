@@ -186,6 +186,16 @@ describe LuckyRecord::Query do
 
       query.count.should eq 1
     end
+
+    it "raises when used with offset or limit" do
+      expect_raises(LuckyRecord::UnsupportedQueryError) do
+        UserQuery.new.limit(1).count
+      end
+
+      expect_raises(LuckyRecord::UnsupportedQueryError) do
+        UserQuery.new.offset(1).count
+      end
+    end
   end
 
   describe "#not with an argument" do
