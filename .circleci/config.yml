@@ -16,6 +16,9 @@ jobs:
           name: "Install dependencies"
           command: crystal deps
       - run:
+          name: "Check formatting"
+          command: crystal tool format src spec --check
+      - run:
           name: "Migrate database"
           command: crystal tasks.cr -- db.migrate
       - run:
