@@ -69,7 +69,7 @@ class LuckyRecord::QueryBuilder
 
   def reverse_order
     @orders = {
-      asc: @orders[:desc],
+      asc:  @orders[:desc],
       desc: @orders[:asc],
     }
     self

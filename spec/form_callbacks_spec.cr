@@ -49,7 +49,7 @@ describe "LuckyRecord::Form callbacks" do
       "prepare",
       "after_prepare",
       "before_save",
-      "after_save"
+      "after_save",
     ])
   end
 end

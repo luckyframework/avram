@@ -21,19 +21,19 @@ describe LuckyRecord::Join do
 
   it "allows custom to and from columns" do
     LuckyRecord::Join::Inner.new(:users, :posts, primary_key: :uid, foreign_key: :author_id)
-      .to_sql
-      .should eq "INNER JOIN posts ON users.uid = posts.author_id"
+                            .to_sql
+                            .should eq "INNER JOIN posts ON users.uid = posts.author_id"
   end
 
   it "allows different boolean comparisons" do
     LuckyRecord::Join::Inner.new(:users, :posts, comparison: "<@", foreign_key: :commenter_ids)
-      .to_sql
-      .should eq "INNER JOIN posts ON users.id <@ posts.commenter_ids"
+                            .to_sql
+                            .should eq "INNER JOIN posts ON users.id <@ posts.commenter_ids"
   end
 
   it "allows joining using related columns" do
     LuckyRecord::Join::Inner.new(:employees, :managers, using: [:company_id, :department_id])
-      .to_sql
-      .should eq "INNER JOIN managers USING (company_id, department_id)"
+                            .to_sql
+                            .should eq "INNER JOIN managers USING (company_id, department_id)"
   end
 end

@@ -245,8 +245,7 @@ describe "LuckyRecord::Form" do
 
         expect_raises(
           LuckyRecord::InvalidFormError(UserForm),
-          /Invalid UserForm. Could not save/
-        ) do
+          /Invalid UserForm. Could not save/) do
           UserForm.create!(params)
         end
       end
@@ -301,8 +300,7 @@ describe "LuckyRecord::Form" do
 
         expect_raises(
           LuckyRecord::InvalidFormError(UserForm),
-          /Invalid UserForm. Could not save/
-        ) do
+          /Invalid UserForm. Could not save/) do
           UserForm.update! user, with: params
         end
       end
