@@ -30,6 +30,21 @@ describe LuckyRecord::Query do
     end
   end
 
+  describe "#first?" do
+    it "gets the first row from the database" do
+      UserBox.new.name("First").save
+      UserBox.new.name("Last").save
+
+      user = UserQuery.new.first?
+      user.should_not be_nil
+      user.not_nil!.name.should eq "First"
+    end
+
+    it "returns nil if no record found" do
+      UserQuery.new.first?.should be_nil
+    end
+  end
+
   describe "#last" do
     it "gets the last row from the database" do
       UserBox.new.name("First").save
@@ -50,6 +65,21 @@ describe LuckyRecord::Query do
       expect_raises(LuckyRecord::RecordNotFoundError) do
         UserQuery.new.last
       end
+    end
+  end
+
+  describe "#last?" do
+    it "gets the last row from the database" do
+      UserBox.new.name("First").save
+      UserBox.new.name("Last").save
+
+      last = UserQuery.new.last?
+      last.should_not be_nil
+      last && last.name.should eq "Last"
+    end
+
+    it "returns nil if last record is not found" do
+      UserQuery.new.last?.should be_nil
     end
   end
 

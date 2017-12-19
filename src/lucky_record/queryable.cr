@@ -45,14 +45,22 @@ module LuckyRecord::Queryable(T)
     id(id).limit(1).first? || raise RecordNotFoundError.new(model: @@table_name, id: id.to_s)
   end
 
-  def first
+  def first?
     query.limit(1)
-    exec_query.first? || raise RecordNotFoundError.new(model: @@table_name, query: :first)
+    exec_query.first?
+  end
+
+  def first
+    first? || raise RecordNotFoundError.new(model: @@table_name, query: :first)
+  end
+
+  def last?
+    ordered_query.reverse_order.limit(1)
+    exec_query.first?
   end
 
   def last
-    ordered_query.reverse_order.limit(1)
-    exec_query.first? || raise RecordNotFoundError.new(model: @@table_name, query: :last)
+    last? || raise RecordNotFoundError.new(model: @@table_name, query: :last)
   end
 
   def count : Int64
