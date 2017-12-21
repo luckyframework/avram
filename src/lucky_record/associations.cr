@@ -10,6 +10,31 @@ module LuckyRecord::Associations
     end
   end
 
+  macro has_one(type_declaration, foreign_key = nil)
+    {% assoc_name = type_declaration.var %}
+
+    {% if type_declaration.type.is_a?(Union) %}
+      {% model = type_declaration.type.types.first %}
+      {% nilable = true %}
+    {% else %}
+      {% model = type_declaration.type %}
+      {% nilable = false %}
+    {% end %}
+
+    association table_name: :{{ model }}, foreign_key: {{ foreign_key }}
+
+    def {{ assoc_name.id }}
+      query = {{ model }}::BaseQuery.new
+      {% if foreign_key %}
+        query.{{ foreign_key.id }}(id)
+      {% else %}
+        query.{{ @type.name.underscore }}_id(id)
+      {% end %}
+
+      query.first{% if nilable %}?{% end %}
+    end
+  end
+
   macro belongs_to(type_declaration)
     {% assoc_name = type_declaration.var %}
 
