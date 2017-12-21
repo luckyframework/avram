@@ -3,6 +3,8 @@ class LuckyRecord::QueryBuilder
   @limit : Int32?
   @offset : Int32?
   @wheres = [] of LuckyRecord::Where::SqlClause
+  @raw_wheres = [] of LuckyRecord::Where::Raw
+  @wheres_sql : String?
   @joins = [] of LuckyRecord::Join::SqlClause
   @orders = {
     asc:  [] of Symbol | String,
@@ -141,9 +143,21 @@ class LuckyRecord::QueryBuilder
     self
   end
 
+  def raw_where(where_clause : LuckyRecord::Where::Raw)
+    @raw_wheres << where_clause
+    self
+  end
+
   private def wheres_sql
-    if @wheres.any?
-      "WHERE " + @wheres.map(&.prepare(next_prepared_statement_placeholder)).join(" AND ")
+    @wheres_sql ||= joined_wheres_queries
+  end
+
+  private def joined_wheres_queries
+    if @wheres.any? || @raw_wheres.any?
+      statements = @wheres.map(&.prepare(next_prepared_statement_placeholder))
+      statements += @raw_wheres.map(&.to_sql)
+
+      "WHERE " + statements.join(" AND ")
     end
   end
 

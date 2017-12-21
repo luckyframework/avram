@@ -124,6 +124,22 @@ describe LuckyRecord::Query do
       query.statement.should eq "SELECT #{User::COLUMNS} FROM users WHERE id = $1"
       query.args.should eq ["1"]
     end
+
+    it "accepts raw sql with bindings and chains with itself" do
+      user = UserBox.new.name("Mikias Abera").age(26).nickname("miki").save
+      users = UserQuery.new.where("name = ? AND age = ?", "Mikias Abera", 26).where(:nickname, "miki")
+
+      users.query.statement.should eq "SELECT #{User::COLUMNS} FROM users WHERE nickname = $1 AND name = 'Mikias Abera' AND age = 26"
+
+      users.query.args.should eq ["miki"]
+      users.results.should eq [user]
+    end
+
+    it "raises when number of bind variables don't match bindings" do
+      expect_raises Exception, "wrong number of bind variables (2 for 1)" do
+        UserQuery.new.where("name = ?", "bound", "extra")
+      end
+    end
   end
 
   describe "#limit" do

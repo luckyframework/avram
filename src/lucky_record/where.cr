@@ -140,4 +140,36 @@ module LuckyRecord::Where
       "#{column} #{operator} (#{prepared_statement_placeholder})"
     end
   end
+
+  class Raw
+    @clause : String
+
+    def initialize(statement : String, *bind_vars)
+      ensure_enough_bind_variables_for!(statement, *bind_vars)
+      @clause = build_clause(statement, *bind_vars)
+    end
+
+    def to_sql
+      @clause
+    end
+
+    private def ensure_enough_bind_variables_for!(statement, *bind_vars)
+      bindings = statement.chars.select(&.== '?')
+      if bindings.size != bind_vars.size
+        raise "wrong number of bind variables (#{bind_vars.size} for #{bindings.size}) in #{statement}"
+      end
+    end
+
+    private def build_clause(statement, *bind_vars)
+      bind_vars.each do |arg|
+        if arg.is_a?(String) || arg.is_a?(Slice(UInt8))
+          escaped = PG::EscapeHelper.escape_literal(arg)
+        else
+          escaped = arg
+        end
+        statement = statement.sub('?', escaped)
+      end
+      statement
+    end
+  end
 end

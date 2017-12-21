@@ -20,8 +20,13 @@ module LuckyRecord::Queryable(T)
     self
   end
 
-  def where(column, value)
+  def where(column : Symbol, value)
     query.where(LuckyRecord::Where::Equal.new(column, value.to_s))
+    self
+  end
+
+  def where(statement : String, *bind_vars)
+    query.raw_where(LuckyRecord::Where::Raw.new(statement, *bind_vars))
     self
   end
 

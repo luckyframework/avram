@@ -27,6 +27,15 @@ describe "LuckyRecord::QueryBuilder" do
     query.args.should eq ["Paul", "20"]
   end
 
+  it "accepts raw where clauses" do
+    query = new_query
+      .raw_where(LuckyRecord::Where::Raw.new("name = ?", "Mikias"))
+      .raw_where(LuckyRecord::Where::Raw.new("age > ?", 26))
+      .limit(1)
+    query.statement.should eq "SELECT * FROM users WHERE name = 'Mikias' AND age > 26 LIMIT 1"
+    query.args.empty?.should be_true
+  end
+
   it "can be ordered" do
     query = new_query
       .order_by(:name, :asc)
