@@ -37,3 +37,4 @@ To run the tests:
 ## Contributors
 
 - [paulcsmith](https://github.com/paulcsmith) Paul Smith - creator, maintainer
+- [mikeeus](https://github.com/mikeeus) Mikias Abera - contributor
