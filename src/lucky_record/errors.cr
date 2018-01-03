@@ -24,7 +24,7 @@ module LuckyRecord
     end
   end
 
-  # Raised when using the save! or update! methods on a form when it does not have the proper attributes
+  # Raised when using the create! or update! methods on a form when it does not have the proper attributes
   class InvalidFormError(T) < LuckyRecordError
     getter form
 
