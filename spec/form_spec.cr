@@ -218,7 +218,7 @@ describe "LuckyRecord::Form" do
       it "yields the form and the saved record" do
         params = {"joined_at" => now_as_string, "name" => "New Name", "age" => "30"}
         UserForm.create params do |form, record|
-          form.save_succeeded?.should be_true
+          form.saved?.should be_true
           record.is_a?(User).should be_true
         end
       end
@@ -264,7 +264,7 @@ describe "LuckyRecord::Form" do
       user = UserQuery.new.first
       params = {} of String => String
       UserForm.update user, with: params do |form, record|
-        form.save_succeeded?.should be_true
+        form.saved?.should be_true
       end
     end
 
@@ -285,7 +285,7 @@ describe "LuckyRecord::Form" do
         user = UserQuery.new.first
         params = {"name" => "New Name"}
         UserForm.update user, with: params do |form, record|
-          form.save_succeeded?.should be_true
+          form.saved?.should be_true
           record.name.should eq "New Name"
         end
       end

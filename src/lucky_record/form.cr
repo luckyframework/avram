@@ -131,7 +131,7 @@ abstract class LuckyRecord::Form(T)
 
   abstract def after_prepare
 
-  def save_succeeded?
+  def saved?
     !save_failed?
   end
 
