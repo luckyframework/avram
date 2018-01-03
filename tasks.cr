@@ -12,7 +12,7 @@ class Db::Reset < LuckyCli::Task
   end
 
   private def run(command)
-    Process.run(command, shell: true, output: true, error: true)
+    Process.run(command, shell: true, output: STDOUT, error: STDERR)
   end
 end
 
