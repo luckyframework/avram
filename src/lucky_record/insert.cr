@@ -1,11 +1,21 @@
 class LuckyRecord::Insert
   alias Params = Hash(Symbol, String) | Hash(Symbol, String?) | Hash(Symbol, Nil)
 
-  def initialize(@table : Symbol, @params : Params)
+  def initialize(@table : Symbol, @params : Params, @column_names : Array(Symbol) = [] of Symbol)
   end
 
   def statement
-    "insert into #{@table}(#{fields}) values(#{values_placeholders}) returning *"
+    "insert into #{@table}(#{fields}) values(#{values_placeholders}) returning #{returning}"
+  end
+
+  private def returning : String
+    if @column_names.empty?
+      "*"
+    else
+      @column_names
+        .map { |column| "#{@table}.#{column}" }
+        .join(", ")
+    end
   end
 
   def args

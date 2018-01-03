@@ -230,10 +230,11 @@ abstract class LuckyRecord::Form(T)
   private def update_query(id)
     LuckyRecord::QueryBuilder
       .new(table_name)
+      .select(@@schema_class.column_names)
       .where(LuckyRecord::Where::Equal.new(:id, id.to_s))
   end
 
   private def insert_sql
-    LuckyRecord::Insert.new(table_name, changes)
+    LuckyRecord::Insert.new(table_name, changes, @@schema_class.column_names)
   end
 end
