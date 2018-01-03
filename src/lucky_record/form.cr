@@ -210,8 +210,8 @@ abstract class LuckyRecord::Form(T)
   def after_save(_record : T); end
 
   private def insert
-    self.created_at.value = Time.now
-    self.updated_at.value = Time.now
+    self.created_at.value = Time.utc_now
+    self.updated_at.value = Time.utc_now
     @record = LuckyRecord::Repo.run do |db|
       db.query insert_sql.statement, insert_sql.args do |rs|
         @@schema_class.from_rs(rs)

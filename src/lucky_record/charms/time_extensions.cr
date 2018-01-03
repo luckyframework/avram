@@ -8,7 +8,7 @@ struct Time
     end
 
     def self.parse(value : String)
-      SuccessfulCast(Time).new Time.parse(value, pattern: "%FT%X%z")
+      SuccessfulCast(Time).new Time.parse(value, "%FT%X%z").to_utc
     rescue Time::Format::Error
       FailedCast.new
     end

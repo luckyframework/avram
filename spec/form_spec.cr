@@ -90,10 +90,11 @@ describe "LuckyRecord::Form" do
 
   describe "parsing" do
     it "parse integers, time objects, etc." do
-      now = Time.now.at_beginning_of_minute
-      form = UserForm.new({"joined_at" => now.to_s("%FT%X%z")})
+      time = 1.day.ago.at_beginning_of_minute
+      form = UserForm.new({"joined_at" => time.to_s("%FT%X%z")})
 
-      form.joined_at.value.should eq now
+      form.joined_at.value.should eq time
+      form.joined_at.value.not_nil!.utc?.should be_true
     end
 
     it "gracefully handles bad inputs when parsing" do
