@@ -282,7 +282,7 @@ describe LuckyRecord::Query do
       comment = CommentBox.new.post_id(post.id).save
 
       query = Post::BaseQuery.new.join_comments
-      query.to_sql.should eq ["SELECT posts.id, posts.created_at, posts.updated_at, posts.title FROM posts INNER JOIN comments ON posts.id = comments.post_id"]
+      query.to_sql.should eq ["SELECT posts.id, posts.created_at, posts.updated_at, posts.title, posts.published_at FROM posts INNER JOIN comments ON posts.id = comments.post_id"]
 
       result = query.first
       result.comments.first.should eq comment
