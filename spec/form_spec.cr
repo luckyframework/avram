@@ -35,6 +35,14 @@ describe "LuckyRecord::Form" do
     form.body.errors.size.should eq 0
   end
 
+  it "treats nil changes as nil and not an empty string" do
+    form = UserForm.new
+    form.name.value = nil
+
+    form.changes.has_key?(:name).should be_true
+    form.changes[:name].should be_nil
+  end
+
   describe "#errors" do
     it "includes errors for all form fields" do
       form = UserForm.new

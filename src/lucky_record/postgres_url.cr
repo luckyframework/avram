@@ -2,11 +2,12 @@ class LuckyRecord::PostgresURL
   getter database, username, password, hostname, port
 
   def initialize(
-                 @database : String,
-                 @hostname : String,
-                 @username : String = "",
-                 @password : String = "",
-                 @port : String = "")
+    @database : String,
+    @hostname : String,
+    @username : String = "",
+    @password : String = "",
+    @port : String = ""
+  )
   end
 
   def self.build(**args)

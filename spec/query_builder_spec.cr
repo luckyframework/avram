@@ -51,14 +51,14 @@ describe "LuckyRecord::QueryBuilder" do
 
   describe "updating" do
     it "inserts with a hash of String" do
-      params = {:first_name => "Paul", :last_name => "Smith"}
+      params = {:first_name => "Paul", :last_name => nil}
       query = LuckyRecord::QueryBuilder
         .new(table: :users)
         .where(LuckyRecord::Where::Equal.new(:id, "1"))
         .limit(1)
 
       query.statement_for_update(params).should eq "UPDATE users SET first_name = $1, last_name = $2 WHERE id = $3 LIMIT 1 RETURNING *"
-      query.args_for_update(params).should eq ["Paul", "Smith", "1"]
+      query.args_for_update(params).should eq ["Paul", nil, "1"]
     end
   end
 

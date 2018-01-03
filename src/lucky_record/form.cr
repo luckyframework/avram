@@ -153,7 +153,11 @@ abstract class LuckyRecord::Form(T)
     _changes = {} of Symbol => String?
     database_fields.each do |field|
       if field.changed?
-        _changes[field.name] = field.value.to_s
+        _changes[field.name] = if field.value.nil?
+                                 nil
+                               else
+                                 field.value.to_s
+                               end
       end
     end
     _changes
