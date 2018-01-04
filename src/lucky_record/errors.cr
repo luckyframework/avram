@@ -5,6 +5,10 @@ module LuckyRecord
   class LuckyRecordError < Exception
   end
 
+  # Raise to rollback a transaction.
+  class Rollback < LuckyRecordError
+  end
+
   # Raised when trying to access a record that was not preloaded and lazy load
   # is disabled.
   class LazyLoadError < LuckyRecordError

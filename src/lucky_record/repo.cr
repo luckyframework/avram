@@ -1,5 +1,8 @@
 class LuckyRecord::Repo
+  alias FiberId = UInt64
+
   @@db : DB::Database? = nil
+  private class_getter transactions = {} of FiberId => DB::Transaction
 
   Habitat.create do
     setting url : String
@@ -7,15 +10,46 @@ class LuckyRecord::Repo
   end
 
   def self.run
-    yield db
+    yield current_transaction.try(&.connection) || db
   end
 
   def self.db
     @@db ||= DB.open(settings.url)
   end
 
+  def self.current_transaction : DB::Transaction?
+    transactions[Fiber.current.object_id]?
+  end
+
   def self.truncate
     DatabaseCleaner.new.truncate
+  end
+
+  # Rollback the current transaction
+  def self.rollback
+    raise LuckyRecord::Rollback.new
+  end
+
+  def self.transaction : Bool
+    if current_transaction
+      yield
+    else
+      wrap_in_transaction do
+        yield
+      end
+    end
+  end
+
+  def self.wrap_in_transaction
+    db.transaction do |tx|
+      transactions[Fiber.current.object_id] ||= tx
+      yield
+    end
+    true
+  rescue e : LuckyRecord::Rollback
+    false
+  ensure
+    transactions.delete(Fiber.current.object_id)
   end
 
   def self.table_names

@@ -21,6 +21,6 @@ development_dependencies:
     github: luckyframework/lucky_migrator
     version: ~> 0.4.0
 
-crystal: 0.21.1
+crystal: 0.24.1
 
 license: MIT

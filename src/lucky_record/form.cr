@@ -6,15 +6,21 @@ abstract class LuckyRecord::Form(T)
   include LuckyRecord::NeedyInitializer
   include LuckyRecord::AllowVirtual
 
+  enum SaveStatus
+    Saved
+    SaveFailed
+    Unperformed
+  end
+
   macro inherited
     @valid : Bool = true
-    @performed : Bool = false
+    @save_status = SaveStatus::Unperformed
 
     @@allowed_param_keys = [] of String
     @@schema_class = T
   end
 
-  property? performed : Bool = false
+  property save_status
 
   @record : T?
   @params : LuckyRecord::Paramable
@@ -132,11 +138,11 @@ abstract class LuckyRecord::Form(T)
   abstract def after_prepare
 
   def saved?
-    !save_failed?
+    save_status == SaveStatus::Saved
   end
 
   def save_failed?
-    !valid? && performed?
+    save_status == SaveStatus::SaveFailed
   end
 
   macro allow(*field_names)
@@ -164,13 +170,23 @@ abstract class LuckyRecord::Form(T)
   end
 
   def save : Bool
-    @performed = true
-
-    if valid? && changes.any?
-      before_save
-      insert_or_update
-      after_save(record.not_nil!)
+    if perform_save
+      self.save_status = SaveStatus::Saved
       true
+    else
+      self.save_status = SaveStatus::SaveFailed
+      false
+    end
+  end
+
+  private def perform_save : Bool
+    if valid? && changes.any?
+      LuckyRecord::Repo.transaction do
+        before_save
+        insert_or_update
+        after_save(record.not_nil!)
+        true
+      end
     else
       valid? && changes.empty?
     end
@@ -209,21 +225,21 @@ abstract class LuckyRecord::Form(T)
 
   def after_save(_record : T); end
 
-  private def insert
+  private def insert : T
     self.created_at.value = Time.utc_now
     self.updated_at.value = Time.utc_now
     @record = LuckyRecord::Repo.run do |db|
       db.query insert_sql.statement, insert_sql.args do |rs|
-        @@schema_class.from_rs(rs)
-      end.first
+        @record = @@schema_class.from_rs(rs).first
+      end
     end
   end
 
-  private def update(id)
+  private def update(id) : T
     @record = LuckyRecord::Repo.run do |db|
       db.query update_query(id).statement_for_update(changes), update_query(id).args_for_update(changes) do |rs|
-        @@schema_class.from_rs(rs)
-      end.first
+        @record = @@schema_class.from_rs(rs).first
+      end
     end
   end
 
