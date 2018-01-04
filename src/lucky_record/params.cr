@@ -14,11 +14,11 @@ class LuckyRecord::Params
     @hash
   end
 
-  def get(key)
+  def get?(key)
     @hash[key]?
   end
 
-  def get!(key)
+  def get(key)
     @hash[key]
   end
 end
