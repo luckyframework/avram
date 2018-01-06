@@ -60,6 +60,18 @@ abstract class LuckyRecord::Form(T)
         _{{ field[:name] }}
       end
 
+      def {{ field[:name] }}=(_value)
+        \{% raise <<-ERROR
+          Can't set a field value with '{{field[:name]}} = '
+
+          Try this...
+
+            ▸ Use '.value' to set the value: '{{field[:name]}}.value = '
+
+          ERROR
+          %}
+      end
+
       private def _{{ field[:name] }}
         @_{{ field[:name] }} ||= LuckyRecord::Field({{ field[:type] }}?).new(
           name: :{{ field[:name].id }},
