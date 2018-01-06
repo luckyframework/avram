@@ -4,7 +4,7 @@ private class QueryMe < LuckyRecord::Model
   COLUMNS = "users.id, users.created_at, users.updated_at, users.admin"
 
   table users do
-    field admin : Bool
+    column admin : Bool
   end
 end
 

@@ -4,26 +4,26 @@ private class QueryMe < LuckyRecord::Model
   COLUMNS = "users.id, users.created_at, users.updated_at, users.email, users.age"
 
   table users do
-    field email : CustomEmail
-    field age : Int32
+    column email : CustomEmail
+    column age : Int32
   end
 end
 
 private class ModelWithMissingButSimilarlyNamedColumn < LuckyRecord::Model
   table users do
-    field mickname : String
+    column mickname : String
   end
 end
 
 private class ModelWithOptionalFieldOnRequiredColumn < LuckyRecord::Model
   table users do
-    field name : String?
+    column name : String?
   end
 end
 
 private class ModelWithRequiredFieldOnOptionalColumn < LuckyRecord::Model
   table users do
-    field nickname : String
+    column nickname : String
   end
 end
 

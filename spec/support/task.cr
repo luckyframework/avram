@@ -1,6 +1,6 @@
 class Task < LuckyRecord::Model
   table tasks do
-    field title : String
-    field body : String?
+    column title : String
+    column body : String?
   end
 end

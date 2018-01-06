@@ -2,7 +2,7 @@ require "./spec_helper"
 
 private class QueryMe < LuckyRecord::Model
   table users do
-    field activated_at : Time
+    column activated_at : Time
   end
 end
 

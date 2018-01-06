@@ -4,7 +4,7 @@ private class QueryMe < LuckyRecord::Model
   COLUMNS = "users.id, users.created_at, users.updated_at, users.age"
 
   table users do
-    field age : Int32
+    column age : Int32
   end
 end
 

@@ -55,18 +55,18 @@ private class TestValidationUser
     validate_inclusion_of name, in: ["Paul", "Pablo"]
   end
 
-  macro field(type, name)
+  macro column(type, name)
     def {{ name }}
       @_{{ name }} ||= LuckyRecord::Field({{ type }}).new(:{{ name }}, param: "", value: @{{ name }}, form_name: "blank")
     end
   end
 
-  field String, name
-  field String, name_confirmation
-  field String, city
-  field String, state
-  field Int32?, age
-  field Bool?, terms
+  column String, name
+  column String, name_confirmation
+  column String, city
+  column String, state
+  column Int32?, age
+  column Bool?, terms
 end
 
 describe LuckyRecord::Validations do

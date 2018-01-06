@@ -112,7 +112,7 @@ module LuckyRecord::Associations
       {% nilable = false %}
     {% end %}
 
-    field {{ assoc_name.id }}_id : Int32{% if nilable %}?{% end %}
+    column {{ assoc_name.id }}_id : Int32{% if nilable %}?{% end %}
 
     association table_name: :{{ model.resolve.constant(:TABLE_NAME).id }}, foreign_key: :id
 

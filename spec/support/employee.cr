@@ -2,7 +2,7 @@ require "./manager"
 
 class Employee < LuckyRecord::Model
   table employees do
-    field name : String
+    column name : String
     belongs_to manager : Manager?
   end
 end
