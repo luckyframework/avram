@@ -215,7 +215,7 @@ describe "LuckyRecord::Form" do
     end
   end
 
-  describe ".save" do
+  describe ".create" do
     context "on success" do
       it "yields the form and the saved record" do
         params = {"joined_at" => now_as_string, "name" => "New Name", "age" => "30"}

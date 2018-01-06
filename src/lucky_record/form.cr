@@ -44,6 +44,18 @@ abstract class LuckyRecord::Form(T)
     end
   end
 
+  def self.save(*args, **named_args, &block)
+    {% raise <<-ERROR
+      Forms do not have a 'save' method.
+
+      Try this...
+
+        ▸ Use 'create' to create a brand new record.
+        ▸ Use 'update' to update an existing record.
+
+      ERROR %}
+  end
+
   macro add_fields(fields)
     private def extract_changes_from_params
       allowed_params.each do |key, value|
