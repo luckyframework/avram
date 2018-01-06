@@ -40,7 +40,7 @@ module LuckyRecord::AllowVirtual
     end
 
     private def {{ name }}_param
-      params.nested!(form_name)["{{ name }}"]?
+      params.nested(form_name)["{{ name }}"]?
     end
 
     def set_{{ name }}_from_param(field : LuckyRecord::Field)
