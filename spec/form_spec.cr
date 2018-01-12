@@ -15,6 +15,12 @@ end
 private class TaskForm < Task::BaseForm
 end
 
+private class ValidFormWithoutParams < Post::BaseForm
+  def prepare
+    title.value = "My Title"
+  end
+end
+
 describe "LuckyRecord::Form" do
   it "generates the correct form_name" do
     LimitedUserForm.new.form_name.should eq "limited_user"
@@ -216,6 +222,13 @@ describe "LuckyRecord::Form" do
   end
 
   describe ".create" do
+    it "can create without params" do
+      ValidFormWithoutParams.create do |form, record|
+        form.saved?.should be_true
+        record.is_a?(Post).should be_true
+      end
+    end
+
     context "on success" do
       it "yields the form and the saved record" do
         params = {"joined_at" => now_as_string, "name" => "New Name", "age" => "30"}
@@ -237,7 +250,12 @@ describe "LuckyRecord::Form" do
     end
   end
 
-  describe ".save!" do
+  describe ".create!" do
+    it "can create without params" do
+      post = ValidFormWithoutParams.create!
+      post.title.should eq("My Title")
+    end
+
     context "on success" do
       it "saves and returns the record" do
         params = {"joined_at" => now_as_string, "name" => "New Name", "age" => "30"}
@@ -281,6 +299,14 @@ describe "LuckyRecord::Form" do
   end
 
   describe ".update" do
+    it "can create without params" do
+      post = PostBox.new.title("Original Title").save
+      ValidFormWithoutParams.update(post) do |form, record|
+        form.saved?.should be_true
+        record.title.should eq "My Title"
+      end
+    end
+
     context "on success" do
       it "yields the form and the updated record" do
         create_user(name: "Old Name")
@@ -307,6 +333,12 @@ describe "LuckyRecord::Form" do
   end
 
   describe ".update!" do
+    it "can create without params" do
+      post = PostBox.new.title("Original Title").save
+      post = ValidFormWithoutParams.update!(post)
+      post.title.should eq "My Title"
+    end
+
     context "on success" do
       it "updates and returns the record" do
         create_user(name: "Old Name")

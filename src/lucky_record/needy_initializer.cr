@@ -55,14 +55,28 @@ module LuckyRecord::NeedyInitializer
 
   macro generate_save_methods
     def self.create(
-        params,
-        {% for type_declaration in NEEDS_ON_CREATE %}
-          {{ type_declaration }},
-        {% end %}
-      )
-      form = new(
-        params
-      )
+      params,
+      {% for type_declaration in NEEDS_ON_CREATE %}
+        {{ type_declaration }},
+      {% end %}
+    )
+      form = new(params)
+      {% for type_declaration in NEEDS_ON_CREATE %}
+        form.{{ type_declaration.var }} = {{ type_declaration.var }}
+      {% end %}
+      if form.save
+        yield form, form.record
+      else
+        yield form, nil
+      end
+    end
+
+    def self.create(
+      {% for type_declaration in NEEDS_ON_CREATE %}
+        {{ type_declaration }},
+      {% end %}
+    )
+      form = new(LuckyRecord::Params.new)
       {% for type_declaration in NEEDS_ON_CREATE %}
         form.{{ type_declaration.var }} = {{ type_declaration.var }}
       {% end %}
@@ -74,14 +88,24 @@ module LuckyRecord::NeedyInitializer
     end
 
     def self.create!(
-        params,
-        {% for type_declaration in NEEDS_ON_CREATE %}
-          {{ type_declaration }},
-        {% end %}
-      )
-      form = new(
-        params
-      )
+      params,
+      {% for type_declaration in NEEDS_ON_CREATE %}
+        {{ type_declaration }},
+      {% end %}
+    )
+      form = new(params)
+      {% for type_declaration in NEEDS_ON_CREATE %}
+        form.{{ type_declaration.var }} = {{ type_declaration.var }}
+      {% end %}
+      form.save!
+    end
+
+    def self.create!(
+      {% for type_declaration in NEEDS_ON_CREATE %}
+        {{ type_declaration }},
+      {% end %}
+    )
+      form = new(LuckyRecord::Params.new)
       {% for type_declaration in NEEDS_ON_CREATE %}
         form.{{ type_declaration.var }} = {{ type_declaration.var }}
       {% end %}
@@ -107,6 +131,42 @@ module LuckyRecord::NeedyInitializer
       else
         yield form, form.record.not_nil!
       end
+    end
+
+    def self.update(
+        record,
+        {% for type_declaration in NEEDS_ON_UPDATE %}
+          {{ type_declaration }},
+        {% end %}
+      )
+      form = new(
+        record,
+        LuckyRecord::Params.new
+      )
+      {% for type_declaration in NEEDS_ON_UPDATE %}
+        form.{{ type_declaration.var }} = {{ type_declaration.var }}
+      {% end %}
+      if form.save
+        yield form, form.record.not_nil!
+      else
+        yield form, form.record.not_nil!
+      end
+    end
+
+    def self.update!(
+        record,
+        {% for type_declaration in NEEDS_ON_UPDATE %}
+          {{ type_declaration }},
+        {% end %}
+      )
+      form = new(
+        record,
+        LuckyRecord::Params.new
+      )
+      {% for type_declaration in NEEDS_ON_UPDATE %}
+        form.{{ type_declaration.var }} = {{ type_declaration.var }}
+      {% end %}
+      form.update!
     end
 
     def self.update!(
