@@ -21,21 +21,25 @@ end
 private class NeedsWithOnOptionForm < Needs::BaseForm
   needs created_by : String, on: :create
   needs updated_by : String, on: :update
+  needs saved_by : String, on: :save
 end
 
 describe "LuckyRecord::Form needs" do
-  it "does not change the default initializer" do
+  it "doesn't change the initializer if an 'on' option is used'" do
     params = {"name" => "Paul"}
-    create_user
-    user = UserQuery.new.first
+    user = UserBox.save
 
-    form = NeedsForm.new(params)
+    form = NeedsWithOnOptionForm.new(params)
     form.created_by.should be_nil
-    form = NeedsForm.new(user, params)
+    form.updated_by.should be_nil
+    form.saved_by.should be_nil
+    form = NeedsWithOnOptionForm.new(user, params)
     form.created_by.should be_nil
+    form.updated_by.should be_nil
+    form.saved_by.should be_nil
   end
 
-  it "sets up a method arg for save and update" do
+  it "sets up a method arg for save, update, and new" do
     params = {"name" => "Paul"}
     create_user
     user = UserQuery.new.first
@@ -49,18 +53,20 @@ describe "LuckyRecord::Form needs" do
       form.nilable_value.should be_nil
       form.created_by.should eq("Jane")
     end
+
+    NeedsForm.new(params, nilable_value: nil, created_by: "Jane")
   end
 
-  it "can have needs for just create or update" do
+  it "can have needs for just save, create or update" do
     params = {"name" => "Paul"}
     create_user
     user = UserQuery.new.first
 
-    NeedsWithOnOptionForm.create(params, created_by: "Bob") do |form, _record|
+    NeedsWithOnOptionForm.create(params, saved_by: "Me", created_by: "Bob") do |form, _record|
       form.created_by.should eq("Bob")
       form.updated_by.should be_nil
     end
-    NeedsWithOnOptionForm.update(user, params, updated_by: "Laura") do |form, _record|
+    NeedsWithOnOptionForm.update(user, params, saved_by: "Me", updated_by: "Laura") do |form, _record|
       form.created_by.should be_nil
       form.updated_by.should eq("Laura")
     end
