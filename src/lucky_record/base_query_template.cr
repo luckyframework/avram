@@ -16,13 +16,14 @@ class LuckyRecord::BaseQueryTemplate
 
       macro generate_criteria_method(query_class, name, type)
         def \{{ name }}
-          \{{ type }}::Lucky::Criteria(\{{ query_class }}, \{{ type }}).new(self, :\{{ name }})
+          column_name = "#{@@table_name}.\{{ name }}"
+          \{{ type }}::Lucky::Criteria(\{{ query_class }}, \{{ type }}).new(self, "#{@@table_name}.\{{ name }}")
         end
       end
 
       {% for field in fields %}
         def {{ field[:name] }}(value)
-          where(:{{ field[:name] }}, value)
+          {{ field[:name] }}.is(value)
         end
 
         generate_criteria_method(BaseQuery, {{ field[:name] }}, {{ field[:type] }})
@@ -43,6 +44,13 @@ class LuckyRecord::BaseQueryTemplate
 
         def left_join_{{ assoc[:name] }}
           join(LuckyRecord::Join::Inner.new(@@table_name, :{{ assoc[:name] }}, foreign_key: {{ assoc[:foreign_key] }}))
+        end
+
+        def {{ assoc[:name] }}
+          {{ assoc[:type] }}::BaseQuery.new_with_existing_query(query).tap do |assoc_query|
+            yield assoc_query
+          end
+          self
         end
       {% end %}
     end

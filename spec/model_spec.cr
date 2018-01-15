@@ -90,19 +90,19 @@ describe LuckyRecord::Model do
   it "sets up simple methods for equality" do
     query = QueryMe::BaseQuery.new.email("foo@bar.com").age(30)
 
-    query.to_sql.should eq ["SELECT #{QueryMe::COLUMNS} FROM users WHERE email = $1 AND age = $2", "foo@bar.com", "30"]
+    query.to_sql.should eq ["SELECT #{QueryMe::COLUMNS} FROM users WHERE users.email = $1 AND users.age = $2", "foo@bar.com", "30"]
   end
 
   it "sets up advanced criteria methods" do
     query = QueryMe::BaseQuery.new.email.upper.is("foo@bar.com").age.gt(30)
 
-    query.to_sql.should eq ["SELECT #{QueryMe::COLUMNS} FROM users WHERE UPPER(email) = $1 AND age > $2", "foo@bar.com", "30"]
+    query.to_sql.should eq ["SELECT #{QueryMe::COLUMNS} FROM users WHERE UPPER(users.email) = $1 AND users.age > $2", "foo@bar.com", "30"]
   end
 
   it "parses values" do
     query = QueryMe::BaseQuery.new.email.upper.is(" Foo@bar.com").age.gt(30)
 
-    query.to_sql.should eq ["SELECT #{QueryMe::COLUMNS} FROM users WHERE UPPER(email) = $1 AND age > $2", "foo@bar.com", "30"]
+    query.to_sql.should eq ["SELECT #{QueryMe::COLUMNS} FROM users WHERE UPPER(users.email) = $1 AND users.age > $2", "foo@bar.com", "30"]
   end
 
   it "lets you order by columns" do

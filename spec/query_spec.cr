@@ -104,7 +104,7 @@ describe LuckyRecord::Query do
     end
 
     it "raises PQ::PQError if no record is found with letter-only id (String)" do
-      expect_raises(PQ::PQError, "") do
+      expect_raises(Exception, "FailedCast") do
         UserQuery.new.find("id")
       end
     end
@@ -172,7 +172,7 @@ describe LuckyRecord::Query do
     it "adds an order clause" do
       query = UserQuery.new.order_by(:name, :asc).query
 
-      query.statement.should eq "SELECT #{User::COLUMNS} FROM users ORDER BY users.name ASC"
+      query.statement.should eq "SELECT #{User::COLUMNS} FROM users ORDER BY name ASC"
     end
   end
 

@@ -2,7 +2,7 @@ class LuckyRecord::Criteria(T, V)
   property :rows, :column
   @negate_next_criteria : Bool
 
-  def initialize(@rows : T, @column : Symbol)
+  def initialize(@rows : T, @column : Symbol | String)
     @negate_next_criteria = false
   end
 

@@ -6,7 +6,7 @@ module LuckyRecord::Associations
   macro has_many(type_declaration, foreign_key = nil)
     {% assoc_name = type_declaration.var %}
 
-    association table_name: :{{ assoc_name }}
+    association table_name: :{{ assoc_name }}, type: {{ type_declaration.type }}
 
     {% model = type_declaration.type %}
 
@@ -66,7 +66,7 @@ module LuckyRecord::Associations
 
     {% foreign_key = foreign_key.id %}
 
-    association table_name: :{{ model }}, foreign_key: {{ foreign_key }}
+    association table_name: :{{ type_declaration.var }}, type: {{ model }}, foreign_key: {{ foreign_key }}
 
     @_{{ assoc_name }}_preloaded : Bool = false
     getter? _{{ assoc_name }}_preloaded
@@ -122,7 +122,7 @@ module LuckyRecord::Associations
 
     column {{ assoc_name.id }}_id : Int32{% if nilable %}?{% end %}
 
-    association table_name: :{{ model.resolve.constant(:TABLE_NAME).id }}, foreign_key: :id
+    association table_name: :{{ model.resolve.constant(:TABLE_NAME).id }}, type: {{ model }}, foreign_key: :id
 
     def {{ assoc_name.id }} : {{ model }}{% if nilable %}?{% end %}
       if _{{ assoc_name }}_preloaded?

@@ -41,12 +41,12 @@ describe "LuckyRecord::QueryBuilder" do
       .order_by(:name, :asc)
       .order_by(:birthday, :asc)
       .order_by(:email, :desc)
-    query.statement.should eq "SELECT * FROM users ORDER BY users.name, users.birthday ASC, users.email DESC"
+    query.statement.should eq "SELECT * FROM users ORDER BY name, birthday ASC, email DESC"
     query.args.should eq [] of String
 
     query = new_query
       .order_by(:name, :asc)
-    query.statement.should eq "SELECT * FROM users ORDER BY users.name ASC"
+    query.statement.should eq "SELECT * FROM users ORDER BY name ASC"
   end
 
   describe "updating" do
@@ -97,7 +97,7 @@ describe "LuckyRecord::QueryBuilder" do
         .order_by(:id, :asc)
         .reverse_order
 
-      query.statement.should eq "SELECT * FROM users ORDER BY users.id DESC"
+      query.statement.should eq "SELECT * FROM users ORDER BY id DESC"
     end
 
     it "reverses both directions" do
@@ -107,7 +107,11 @@ describe "LuckyRecord::QueryBuilder" do
         .order_by(:name, :desc)
         .reverse_order
 
-      query.statement.should eq "SELECT * FROM users ORDER BY users.name ASC, users.id DESC"
+      query.statement.should eq "SELECT * FROM users ORDER BY name ASC, id DESC"
+
+      LuckyRecord::Repo.run do |db|
+        db.exec query.statement
+      end
     end
 
     it "does nothing if there is no order" do

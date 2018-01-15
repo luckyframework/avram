@@ -2,6 +2,15 @@ module LuckyRecord::Queryable(T)
   include Enumerable(T)
 
   @query : LuckyRecord::QueryBuilder?
+  setter query
+
+  macro included
+    def self.new_with_existing_query(query : LuckyRecord::QueryBuilder)
+      new.tap do |queryable|
+        queryable.query = query
+      end
+    end
+  end
 
   macro included
     def self.all

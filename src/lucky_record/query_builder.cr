@@ -91,7 +91,6 @@ class LuckyRecord::QueryBuilder
     if ordered?
       "ORDER BY " + @orders.map do |direction, columns|
         next if columns.empty?
-        columns = columns.map { |column| "#{table}.#{column}" }
         "#{columns.join(", ")} #{direction.to_s.upcase}"
       end.reject(&.nil?).join(", ")
     end
