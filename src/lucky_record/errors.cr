@@ -28,6 +28,13 @@ module LuckyRecord
     end
   end
 
+  # Raised when a validation is expecting an impossible constraint
+  class ImpossibleValidation < LuckyRecordError
+    def initialize(field : Symbol, message = "an impossible validation")
+      super "Validation for #{field} can never satisfy #{message}"
+    end
+  end
+
   # Raised when using the create! or update! methods on a form when it does not have the proper attributes
   class InvalidFormError(T) < LuckyRecordError
     getter form

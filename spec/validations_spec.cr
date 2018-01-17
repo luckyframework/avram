@@ -55,6 +55,26 @@ private class TestValidationUser
     validate_inclusion_of name, in: ["Paul", "Pablo"]
   end
 
+  def run_exact_size_validation
+    validate_size_of name, is: 2
+  end
+
+  def run_minimum_size_validation
+    validate_size_of name, min: 2
+  end
+
+  def run_maximum_size_validation
+    validate_size_of name, max: 4
+  end
+
+  def run_range_size_validation
+    validate_size_of name, min: 2, max: 5
+  end
+
+  def run_impossible_size_validation
+    validate_size_of name, min: 4, max: 1
+  end
+
   macro column(type, name)
     def {{ name }}
       @_{{ name }} ||= LuckyRecord::Field({{ type }}).new(:{{ name }}, param: "", value: @{{ name }}, form_name: "blank")
@@ -160,6 +180,38 @@ describe LuckyRecord::Validations do
       validate(name: "Pablo") do |user|
         user.run_inclusion_validations
         user.name.errors.empty?.should be_true
+      end
+    end
+  end
+
+  describe "validate_size_of" do
+    it "validates" do
+      validate(name: "P") do |user|
+        user.run_exact_size_validation
+        user.name.errors.should eq ["is invalid"]
+      end
+
+      validate(name: "P") do |user|
+        user.run_minimum_size_validation
+        user.name.errors.should eq ["is too short"]
+      end
+
+      validate(name: "Pablo") do |user|
+        user.run_maximum_size_validation
+        user.name.errors.should eq ["is too long"]
+      end
+
+      validate(name: "Paul") do |user|
+        user.run_range_size_validation
+        user.name.errors.should eq [] of String
+      end
+    end
+
+    it "raises an error for an impossible condition" do
+      validate(name: "Paul") do |user|
+        expect_raises(LuckyRecord::ImpossibleValidation) do
+          user.run_impossible_size_validation
+        end
       end
     end
   end
