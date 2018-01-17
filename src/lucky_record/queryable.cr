@@ -10,11 +10,29 @@ module LuckyRecord::Queryable(T)
         queryable.query = query
       end
     end
-  end
 
-  macro included
     def self.all
       new
+    end
+
+    def self.find(id)
+      new.find(id)
+    end
+
+    def self.first
+      new.first
+    end
+
+    def self.first?
+      new.first?
+    end
+
+    def self.last
+      new.last
+    end
+
+    def self.last?
+      new.last?
     end
   end
 

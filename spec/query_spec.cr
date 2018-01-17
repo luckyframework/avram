@@ -15,6 +15,21 @@ describe LuckyRecord::Query do
     ChainedQuery.new.young.named("Paul")
   end
 
+  describe ".first" do
+    it "gets the first row from the database" do
+      UserBox.new.name("First").save
+      UserBox.new.name("Last").save
+
+      UserQuery.first.name.should eq "First"
+    end
+
+    it "raises RecordNotFound if no record is found" do
+      expect_raises(LuckyRecord::RecordNotFoundError) do
+        UserQuery.first
+      end
+    end
+  end
+
   describe "#first" do
     it "gets the first row from the database" do
       UserBox.new.name("First").save
@@ -30,6 +45,21 @@ describe LuckyRecord::Query do
     end
   end
 
+  describe ".first?" do
+    it "gets the first row from the database" do
+      UserBox.new.name("First").save
+      UserBox.new.name("Last").save
+
+      user = UserQuery.first?
+      user.should_not be_nil
+      user.not_nil!.name.should eq "First"
+    end
+
+    it "returns nil if no record found" do
+      UserQuery.first?.should be_nil
+    end
+  end
+
   describe "#first?" do
     it "gets the first row from the database" do
       UserBox.new.name("First").save
@@ -42,6 +72,21 @@ describe LuckyRecord::Query do
 
     it "returns nil if no record found" do
       UserQuery.new.first?.should be_nil
+    end
+  end
+
+  describe ".last" do
+    it "gets the last row from the database" do
+      UserBox.new.name("First").save
+      UserBox.new.name("Last").save
+
+      UserQuery.last.name.should eq "Last"
+    end
+
+    it "raises RecordNotFound if no record is found" do
+      expect_raises(LuckyRecord::RecordNotFoundError) do
+        UserQuery.last
+      end
     end
   end
 
@@ -68,6 +113,21 @@ describe LuckyRecord::Query do
     end
   end
 
+  describe ".last?" do
+    it "gets the last row from the database" do
+      UserBox.new.name("First").save
+      UserBox.new.name("Last").save
+
+      last = UserQuery.last?
+      last.should_not be_nil
+      last && last.name.should eq "Last"
+    end
+
+    it "returns nil if last record is not found" do
+      UserQuery.last?.should be_nil
+    end
+  end
+
   describe "#last?" do
     it "gets the last row from the database" do
       UserBox.new.name("First").save
@@ -80,6 +140,33 @@ describe LuckyRecord::Query do
 
     it "returns nil if last record is not found" do
       UserQuery.new.last?.should be_nil
+    end
+  end
+
+  describe ".find" do
+    it "gets the record with the given id" do
+      UserBox.save
+      user = UserQuery.first
+
+      UserQuery.find(user.id).should eq user
+    end
+
+    it "raises RecordNotFound if no record is found with the given id (Int32)" do
+      expect_raises(LuckyRecord::RecordNotFoundError) do
+        UserQuery.find(1)
+      end
+    end
+
+    it "raises RecordNotFound if no record is found with the given id (String)" do
+      expect_raises(LuckyRecord::RecordNotFoundError) do
+        UserQuery.find("1")
+      end
+    end
+
+    it "raises PQ::PQError if no record is found with letter-only id (String)" do
+      expect_raises(Exception, "FailedCast") do
+        UserQuery.find("id")
+      end
     end
   end
 
