@@ -47,6 +47,17 @@ describe LuckyRecord::Model do
     end
   end
 
+  describe "has_many through" do
+    it "joins the two associations" do
+      tag = TagBox.save
+      post = PostBox.save
+      _different_tag = TagBox.save
+      TaggingBox.new.tag_id(tag.id).post_id(post.id).save
+
+      post.tags.should eq [tag]
+    end
+  end
+
   describe "has_one" do
     context "missing association" do
       it "raises if association is not nilable" do

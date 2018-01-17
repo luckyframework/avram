@@ -73,6 +73,22 @@ describe "Preloading" do
     end
   end
 
+  it "preloads has_many through" do
+    with_lazy_load(enabled: false) do
+      tag = TagBox.save
+      _unused_tag = TagBox.save
+      post = PostBox.save
+      other_post = PostBox.save
+      TaggingBox.new.tag_id(tag.id).post_id(post.id).save
+      TaggingBox.new.tag_id(tag.id).post_id(other_post.id).save
+
+      post_tags = Post::BaseQuery.new.preload_tags.results.first.tags
+
+      post_tags.size.should eq(1)
+      post_tags.should eq([tag])
+    end
+  end
+
   it "works with nested preloads" do
     with_lazy_load(enabled: false) do
       post = PostBox.save

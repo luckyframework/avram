@@ -3,7 +3,7 @@ module LuckyRecord::Associations
     LuckyRecord::Repo.settings.lazy_load_enabled
   end
 
-  macro has_many(type_declaration, foreign_key = nil)
+  macro has_many(type_declaration, through = nil, foreign_key = nil)
     {% assoc_name = type_declaration.var %}
 
     association table_name: :{{ assoc_name }}, type: {{ type_declaration.type }}
@@ -27,7 +27,21 @@ module LuckyRecord::Associations
 
     private def lazy_load_{{ assoc_name }} : Array({{ model }})?
       if lazy_load_enabled?
-        {{ model }}::BaseQuery.new.{{ foreign_key }}(id).results
+        {% if through %}
+          {{ model }}::BaseQuery
+            .new
+            .join_{{ through.id }}
+            .{{ through.id }} do |through_query|
+              through_query.{{ foreign_key.id }}(id)
+            end
+            .preload_{{ through.id }}
+            .results
+        {% else %}
+          {{ model }}::BaseQuery
+            .new
+            .{{ foreign_key }}(id)
+            .results
+        {% end %}
       end
     end
 
@@ -39,7 +53,26 @@ module LuckyRecord::Associations
       def preload(preload_query : {{ model }}::BaseQuery)
         add_preload do |records|
           ids = records.map(&.id)
-          {{ assoc_name }} = preload_query.{{ foreign_key }}.in(ids).results.group_by(&.{{ foreign_key }})
+          {% if through %}
+            all_{{ assoc_name }} = preload_query
+              .join_{{ through.id }}
+              .{{ through.id }} do |through_query|
+                through_query.{{ foreign_key.id }}.in(ids)
+              end
+              .preload_{{ through.id }}
+              .distinct
+            {{ assoc_name }} = {} of Int32 => Array(Tag)
+            all_{{ assoc_name }}.each do |item|
+              item.{{ through.id }}.each do |item_through|
+                {{ assoc_name }}[item_through.{{ foreign_key }}] ||= Array({{ model }}).new
+                {{ assoc_name }}[item_through.{{ foreign_key }}] << item
+              end
+            end
+          {% else %}
+            {{ assoc_name }} = preload_query
+              .{{ foreign_key }}.in(ids)
+              .results.group_by(&.{{ foreign_key }})
+          {% end %}
           records.each do |record|
             record._preloaded_{{ assoc_name }} = {{ assoc_name }}[record.id]? || [] of {{ model }}
           end

@@ -1,4 +1,6 @@
 abstract class BaseBox < LuckyRecord::Box
+  SEQUENCES = {} of String => Int32
+
   def self.build
     new.build
   end
@@ -9,5 +11,11 @@ abstract class BaseBox < LuckyRecord::Box
 
   def build_pair
     [build, build]
+  end
+
+  def sequence(value : String) : String
+    SEQUENCES[value] ||= 0
+    SEQUENCES[value] += 1
+    "#{value}-#{SEQUENCES[value]}"
   end
 end
