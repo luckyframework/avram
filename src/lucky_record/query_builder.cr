@@ -12,6 +12,7 @@ class LuckyRecord::QueryBuilder
   }
   @selections : String = "*"
   @prepared_statement_placeholder = 0
+  @distinct : Bool = false
 
   VALID_DIRECTIONS = [:asc, :desc]
 
@@ -62,6 +63,11 @@ class LuckyRecord::QueryBuilder
 
   private def sql_condition_clauses
     [joins_sql, wheres_sql, order_sql, limit_sql, offset_sql]
+  end
+
+  def distinct
+    @distinct = true
+    self
   end
 
   def limit(amount)
@@ -123,7 +129,13 @@ class LuckyRecord::QueryBuilder
   end
 
   private def select_sql
-    "SELECT #{@selections} FROM #{table}"
+    String.build do |sql|
+      sql << "SELECT "
+      sql << "DISTINCT " if @distinct
+      sql << @selections
+      sql << " FROM "
+      sql << table
+    end
   end
 
   private def limit_sql

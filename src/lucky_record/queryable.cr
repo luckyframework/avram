@@ -42,6 +42,11 @@ module LuckyRecord::Queryable(T)
       .select(@@schema_class.column_names)
   end
 
+  def distinct
+    query.distinct
+    self
+  end
+
   def join(join_clause : LuckyRecord::Join::SqlClause)
     query.join(join_clause)
     self

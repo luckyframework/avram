@@ -15,6 +15,13 @@ describe LuckyRecord::Query do
     ChainedQuery.new.young.named("Paul")
   end
 
+  it "can select distinct" do
+    query = UserQuery.new.distinct.query
+
+    query.statement.should eq "SELECT DISTINCT #{User::COLUMNS} FROM users"
+    query.args.should eq [] of String
+  end
+
   describe ".first" do
     it "gets the first row from the database" do
       UserBox.new.name("First").save
