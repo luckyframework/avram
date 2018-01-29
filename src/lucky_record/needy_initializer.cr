@@ -243,9 +243,8 @@ module LuckyRecord::NeedyInitializer
         {% for type_declaration in NEEDS_ON_INITIALIZE %}
           @{{ type_declaration }},
         {% end %}
-        **params,
       )
-      @params = named_tuple_to_params(params)
+      @params = LuckyRecord::Params.new
       extract_changes_from_params
     end
 
@@ -265,9 +264,8 @@ module LuckyRecord::NeedyInitializer
         {% for type_declaration in NEEDS_ON_INITIALIZE %}
           @{{ type_declaration }},
         {% end %}
-        **params,
       )
-      @params = named_tuple_to_params(params)
+      @params = LuckyRecord::Params.new
       extract_changes_from_params
     end
   end

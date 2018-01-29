@@ -25,9 +25,8 @@ private class UserForm < User::BaseForm
   end
 end
 
-def create_user(name = "Default Name")
-  params = {name: name, age: "27", joined_at: now_as_string}
-  UserForm.new(**params).save
+def create_user(name = "Default Name") : User
+  UserBox.new.name(name).age(27).joined_at(Time.now).save
 end
 
 def now_as_string

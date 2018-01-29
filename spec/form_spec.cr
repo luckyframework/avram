@@ -65,7 +65,8 @@ describe "LuckyRecord::Form" do
 
   describe "save_failed?" do
     it "is true if the object is invalid and performed an action" do
-      form = UserForm.new(name: "")
+      params = LuckyRecord::Params.new(name: "")
+      form = UserForm.new(params)
 
       form.save
 
@@ -75,7 +76,8 @@ describe "LuckyRecord::Form" do
     end
 
     it "is false if the object is not marked as saved but no action was performed" do
-      form = UserForm.new(name: "")
+      params = LuckyRecord::Params.new(name: "")
+      form = UserForm.new(params)
 
       form.save_failed?.should be_false
       form.save_status.should eq(LuckyRecord::Form::SaveStatus::Unperformed)
@@ -87,9 +89,10 @@ describe "LuckyRecord::Form" do
   describe "initializer" do
     it "works with a record and named args" do
       create_user(name: "Old Name")
+      params = LuckyRecord::Params.new(name: "New Name")
       user = UserQuery.new.first
 
-      form = UserForm.new(user, name: "New Name")
+      form = UserForm.new(user, params)
 
       form.name.value.should eq "New Name"
     end

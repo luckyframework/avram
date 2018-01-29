@@ -137,14 +137,6 @@ abstract class LuckyRecord::Form(T)
     end
   end
 
-  private def named_tuple_to_params(named_tuple)
-    params_with_stringified_keys = {} of String => String
-    named_tuple.each do |key, value|
-      params_with_stringified_keys[key.to_s] = value
-    end
-    LuckyRecord::Params.new params_with_stringified_keys
-  end
-
   private def ensure_paramable(params)
     if params.is_a? LuckyRecord::Paramable
       params
