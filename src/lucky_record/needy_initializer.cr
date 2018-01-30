@@ -62,170 +62,105 @@ module LuckyRecord::NeedyInitializer
     end
   end
 
+  macro generate_create(with_params, with_bang)
+    def self.create{% if with_bang %}!{% end %}(
+      {% if with_params %}params,{% end %}
+      {% for type_declaration in (NEEDS_ON_CREATE + NEEDS_ON_INITIALIZE) %}
+        {{ type_declaration }},
+      {% end %}
+      {% if @type.constant :FIELDS %}
+        {% for field in FIELDS %}
+          {{ field[:name] }} : {{ field[:type] }} | Nothing{% if field[:nilable] %} | Nil{% end %} = Nothing.new,
+        {% end %}
+      {% end %}
+    )
+      form = new(
+        {% if with_params %}params,{% end %}
+        {% for type_declaration in NEEDS_ON_INITIALIZE %}
+          {{ type_declaration.var }},
+        {% end %}
+      )
+      {% for type_declaration in NEEDS_ON_CREATE %}
+        form.{{ type_declaration.var }} = {{ type_declaration.var }}
+      {% end %}
+
+      {% if @type.constant :FIELDS %}
+        {% for field in FIELDS %}
+          unless {{ field[:name] }}.is_a? Nothing
+            form.{{ field[:name] }}.value = {{ field[:name] }}
+          end
+        {% end %}
+      {% end %}
+
+      {% if with_bang %}
+        form.save!
+      {% else %}
+        if form.save
+          yield form, form.record
+        else
+          yield form, nil
+        end
+      {% end %}
+    end
+  end
+
+  macro generate_update(with_params, with_bang)
+    def self.update{% if with_bang %}!{% end %}(
+        record,
+        {% if with_params %}with params,{% end %}
+        {% for type_declaration in (NEEDS_ON_UPDATE + NEEDS_ON_INITIALIZE) %}
+          {{ type_declaration }},
+        {% end %}
+        {% if @type.constant :FIELDS %}
+          {% for field in FIELDS %}
+            {{ field[:name] }} : {{ field[:type] }} | Nothing{% if field[:nilable] %} | Nil{% end %} = Nothing.new,
+          {% end %}
+        {% end %}
+      )
+      form = new(
+        record,
+        {% if with_params %}params,{% end %}
+        {% for type_declaration in NEEDS_ON_INITIALIZE %}
+          {{ type_declaration.var }},
+        {% end %}
+      )
+      {% for type_declaration in NEEDS_ON_UPDATE %}
+        form.{{ type_declaration.var }} = {{ type_declaration.var }}
+      {% end %}
+
+      {% if @type.constant :FIELDS %}
+        {% for field in FIELDS %}
+          unless {{ field[:name] }}.is_a? Nothing
+            form.{{ field[:name] }}.value = {{ field[:name] }}
+          end
+        {% end %}
+      {% end %}
+
+      {% if with_bang %}
+        form.update!
+      {% else %}
+        if form.save
+          yield form, form.record.not_nil!
+        else
+          yield form, form.record.not_nil!
+        end
+      {% end %}
+    end
+  end
+
   macro generate_save_methods
-    def self.create(
-      params,
-      {% for type_declaration in (NEEDS_ON_CREATE + NEEDS_ON_INITIALIZE) %}
-        {{ type_declaration }},
-      {% end %}
-    )
-      form = new(
-        params,
-        {% for type_declaration in NEEDS_ON_INITIALIZE %}
-          {{ type_declaration.var }},
-        {% end %}
-      )
-      {% for type_declaration in NEEDS_ON_CREATE %}
-        form.{{ type_declaration.var }} = {{ type_declaration.var }}
-      {% end %}
-      if form.save
-        yield form, form.record
-      else
-        yield form, nil
-      end
-    end
+    generate_create(with_params: true, with_bang: false)
+    generate_create(with_params: true, with_bang: true)
+    generate_create(with_params: false, with_bang: true)
+    generate_create(with_params: false, with_bang: false)
 
-    def self.create(
-      {% for type_declaration in (NEEDS_ON_CREATE + NEEDS_ON_INITIALIZE) %}
-        {{ type_declaration }},
-      {% end %}
-    )
-      form = new(
-        LuckyRecord::Params.new,
-        {% for type_declaration in NEEDS_ON_CREATE %}
-          {{ type_declaration.var }},
-        {% end %}
-      )
-      {% for type_declaration in NEEDS_ON_CREATE %}
-        form.{{ type_declaration.var }} = {{ type_declaration.var }}
-      {% end %}
-      if form.save
-        yield form, form.record
-      else
-        yield form, nil
-      end
-    end
+    generate_update(with_params: true, with_bang: false)
+    generate_update(with_params: true, with_bang: true)
+    generate_update(with_params: false, with_bang: true)
+    generate_update(with_params: false, with_bang: false)
+  end
 
-    def self.create!(
-      params,
-      {% for type_declaration in (NEEDS_ON_CREATE + NEEDS_ON_INITIALIZE) %}
-        {{ type_declaration }},
-      {% end %}
-    )
-      form = new(
-        params,
-        {% for type_declaration in NEEDS_ON_INITIALIZE %}
-          {{ type_declaration.var }},
-        {% end %}
-      )
-      {% for type_declaration in NEEDS_ON_CREATE %}
-        form.{{ type_declaration.var }} = {{ type_declaration.var }}
-      {% end %}
-      form.save!
-    end
-
-    def self.create!(
-      {% for type_declaration in (NEEDS_ON_CREATE + NEEDS_ON_INITIALIZE) %}
-        {{ type_declaration }},
-      {% end %}
-    )
-      form = new(
-        LuckyRecord::Params.new,
-        {% for type_declaration in NEEDS_ON_INITIALIZE %}
-          {{ type_declaration.var }},
-        {% end %}
-      )
-      {% for type_declaration in NEEDS_ON_CREATE %}
-        form.{{ type_declaration.var }} = {{ type_declaration.var }}
-      {% end %}
-      form.save!
-    end
-
-    def self.update(
-        record,
-        with params,
-        {% for type_declaration in (NEEDS_ON_UPDATE + NEEDS_ON_INITIALIZE) %}
-          {{ type_declaration }},
-        {% end %}
-      )
-      form = new(
-        record,
-        params,
-        {% for type_declaration in NEEDS_ON_INITIALIZE %}
-          {{ type_declaration.var }},
-        {% end %}
-      )
-      {% for type_declaration in NEEDS_ON_UPDATE %}
-        form.{{ type_declaration.var }} = {{ type_declaration.var }}
-      {% end %}
-      if form.save
-        yield form, form.record.not_nil!
-      else
-        yield form, form.record.not_nil!
-      end
-    end
-
-    def self.update(
-        record,
-        {% for type_declaration in (NEEDS_ON_UPDATE + NEEDS_ON_INITIALIZE) %}
-          {{ type_declaration }},
-        {% end %}
-      )
-      form = new(
-        record,
-        LuckyRecord::Params.new,
-        {% for type_declaration in NEEDS_ON_INITIALIZE %}
-          {{ type_declaration.var }},
-        {% end %}
-      )
-      {% for type_declaration in NEEDS_ON_UPDATE %}
-        form.{{ type_declaration.var }} = {{ type_declaration.var }}
-      {% end %}
-      if form.save
-        yield form, form.record.not_nil!
-      else
-        yield form, form.record.not_nil!
-      end
-    end
-
-    def self.update!(
-        record,
-        {% for type_declaration in (NEEDS_ON_UPDATE + NEEDS_ON_INITIALIZE) %}
-          {{ type_declaration }},
-        {% end %}
-      )
-      form = new(
-        record,
-        LuckyRecord::Params.new,
-        {% for type_declaration in NEEDS_ON_INITIALIZE %}
-          {{ type_declaration.var }},
-        {% end %}
-      )
-      {% for type_declaration in NEEDS_ON_UPDATE %}
-        form.{{ type_declaration.var }} = {{ type_declaration.var }}
-      {% end %}
-      form.update!
-    end
-
-    def self.update!(
-        record,
-        with params,
-        {% for type_declaration in (NEEDS_ON_UPDATE + NEEDS_ON_INITIALIZE) %}
-          {{ type_declaration }},
-        {% end %}
-      )
-      form = new(
-        record,
-        params,
-        {% for type_declaration in NEEDS_ON_INITIALIZE %}
-          {{ type_declaration.var }},
-        {% end %}
-      )
-      {% for type_declaration in NEEDS_ON_UPDATE %}
-        form.{{ type_declaration.var }} = {{ type_declaration.var }}
-      {% end %}
-      form.update!
-    end
+  class Nothing
   end
 
   macro generate_initializer

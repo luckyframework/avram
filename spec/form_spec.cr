@@ -31,6 +31,35 @@ describe "LuckyRecord::Form" do
     form.required_fields.should eq({form.title})
   end
 
+  it "set params if passed in" do
+    now = Time.utc_now.at_beginning_of_minute
+    user = UserForm.create!(name: "Dan", age: 34, joined_at: now)
+    user.name.should eq "Dan"
+    user.age.should eq 34
+    user.joined_at.should eq now
+
+    UserForm.create(name: "Dan", age: 34, joined_at: now) do |form, user|
+      user = user.not_nil!
+      user.name.should eq "Dan"
+      user.age.should eq 34
+      user.joined_at.should eq now
+    end
+
+    user = UserBox.new.name("New").age(20).joined_at(Time.now).save
+    joined_at = 1.day.ago.at_beginning_of_minute.to_utc
+    UserForm.update(user, name: "New", age: 20, joined_at: joined_at) do |form, user|
+      user.name.should eq "New"
+      user.age.should eq 20
+      user.joined_at.should eq joined_at
+    end
+
+    user = UserBox.new.name("New").age(20).joined_at(Time.now).save
+    user = UserForm.update!(user, name: "New", age: 20, joined_at: joined_at)
+    user.name.should eq "New"
+    user.age.should eq 20
+    user.joined_at.should eq joined_at
+  end
+
   it "automatically runs validations for required fields" do
     form = TaskForm.new
 

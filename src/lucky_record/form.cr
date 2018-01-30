@@ -57,6 +57,8 @@ abstract class LuckyRecord::Form(T)
   end
 
   macro add_fields(fields)
+    FIELDS = {{ fields }}
+
     private def extract_changes_from_params
       allowed_params.each do |key, value|
         {% for field in fields %}
