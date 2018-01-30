@@ -88,7 +88,7 @@ describe "LuckyRecord::Form" do
 
   describe "initializer" do
     it "works with a record and named args" do
-      create_user(name: "Old Name")
+      UserBox.new.name("Old Name").save
       params = LuckyRecord::Params.new(name: "New Name")
       user = UserQuery.new.first
 
@@ -283,7 +283,7 @@ describe "LuckyRecord::Form" do
 
   describe "updating with no changes" do
     it "works when there are no changes" do
-      create_user(name: "Old Name")
+      UserBox.new.name("Old Name").save
       user = UserQuery.new.first
       params = {} of String => String
       UserForm.update user, with: params do |form, record|
@@ -292,7 +292,7 @@ describe "LuckyRecord::Form" do
     end
 
     it "returns true when there are no changes" do
-      create_user(name: "Old Name")
+      UserBox.new.name("Old Name").save
       user = UserQuery.new.first
       params = {} of String => String
       UserForm.new(user).tap do |form|
@@ -312,7 +312,7 @@ describe "LuckyRecord::Form" do
 
     context "on success" do
       it "yields the form and the updated record" do
-        create_user(name: "Old Name")
+        UserBox.new.name("Old Name").save
         user = UserQuery.new.first
         params = {"name" => "New Name"}
         UserForm.update user, with: params do |form, record|
@@ -324,7 +324,7 @@ describe "LuckyRecord::Form" do
 
     context "on failure" do
       it "yields the form and nil" do
-        create_user(name: "Old Name")
+        UserBox.new.name("Old Name").save
         user = UserQuery.new.first
         params = {"name" => ""}
         UserForm.update user, with: params do |form, record|
@@ -344,7 +344,7 @@ describe "LuckyRecord::Form" do
 
     context "on success" do
       it "updates and returns the record" do
-        create_user(name: "Old Name")
+        UserBox.new.name("Old Name").save
         user = UserQuery.new.first
         params = {"name" => "New Name"}
 
@@ -357,7 +357,7 @@ describe "LuckyRecord::Form" do
 
     context "on failure" do
       it "raises an exception" do
-        create_user(name: "Old Name")
+        UserBox.new.name("Old Name").save
         user = UserQuery.new.first
         params = {"name" => ""}
 
@@ -367,4 +367,8 @@ describe "LuckyRecord::Form" do
       end
     end
   end
+end
+
+private def now_as_string
+  Time.now.to_s("%FT%X%z")
 end

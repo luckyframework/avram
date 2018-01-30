@@ -41,7 +41,7 @@ describe "LuckyRecord::Form needs" do
 
   it "sets up a method arg for save, update, and new" do
     params = {"name" => "Paul"}
-    create_user
+    UserBox.save
     user = UserQuery.new.first
 
     NeedsForm.create(params, nilable_value: "not nil", optional: "bar", created_by: "Jane") do |form, _record|
@@ -59,7 +59,7 @@ describe "LuckyRecord::Form needs" do
 
   it "can have needs for just save, create or update" do
     params = {"name" => "Paul"}
-    create_user
+    UserBox.save
     user = UserQuery.new.first
 
     NeedsWithOnOptionForm.create(params, saved_by: "Me", created_by: "Bob") do |form, _record|

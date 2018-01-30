@@ -16,19 +16,3 @@ end
 Spec.after_each do
   LuckyRecord::Repo.truncate
 end
-
-private class UserForm < User::BaseForm
-  allow :name, :nickname, :joined_at, :age
-
-  def prepare
-    validate_required name, joined_at, age
-  end
-end
-
-def create_user(name = "Default Name") : User
-  UserBox.new.name(name).age(27).joined_at(Time.now).save
-end
-
-def now_as_string
-  Time.now.to_s("%FT%X%z")
-end
