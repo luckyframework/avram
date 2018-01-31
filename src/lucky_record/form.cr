@@ -1,9 +1,9 @@
 require "./validations"
-require "./needy_initializer"
+require "./needy_initializer_and_save_methods"
 
 abstract class LuckyRecord::Form(T)
   include LuckyRecord::Validations
-  include LuckyRecord::NeedyInitializer
+  include LuckyRecord::NeedyInitializerAndSaveMethods
   include LuckyRecord::AllowVirtual
 
   enum SaveStatus

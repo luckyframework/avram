@@ -1,4 +1,4 @@
-module LuckyRecord::NeedyInitializer
+module LuckyRecord::NeedyInitializerAndSaveMethods
   macro included
     NEEDS_ON_CREATE = [] of Nil
     NEEDS_ON_UPDATE = [] of Nil
