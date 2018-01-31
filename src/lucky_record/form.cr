@@ -165,11 +165,24 @@ abstract class LuckyRecord::Form(T)
 
   macro allow(*field_names)
     {% for field_name in field_names %}
-      def {{ field_name.id }}
-        LuckyRecord::AllowedField.new _{{ field_name.id }}
-      end
+      {% if FIELDS.any? { |field| field[:name].id == field_name.id } %}
+        def {{ field_name.id }}
+          LuckyRecord::AllowedField.new _{{ field_name.id }}
+        end
 
-      @@allowed_param_keys << "{{ field_name.id }}"
+        @@allowed_param_keys << "{{ field_name.id }}"
+      {% else %}
+        {% raise <<-ERROR
+          Can't allow '#{field_name}' because the column has not been defined on the model.
+
+          Try this...
+
+            ▸ Make sure you spelled the column correctly.
+            ▸ Add the column to the model if it doesn't exist.
+            ▸ Use 'allow_virtual' if you want a field that is not saved to the database.
+
+          ERROR %}
+      {% end %}
     {% end %}
   end
 
