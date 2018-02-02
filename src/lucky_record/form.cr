@@ -165,6 +165,27 @@ abstract class LuckyRecord::Form(T)
 
   macro allow(*field_names)
     {% for field_name in field_names %}
+      {% if field_name.is_a?(TypeDeclaration) %}
+        {% raise <<-ERROR
+          Must use a Symbol or a bare word in 'allow'. Instead, got: #{field_name}
+
+          Try this...
+
+            ▸ allow #{field_name.var}
+
+          ERROR %}
+      {% end %}
+      {% unless field_name.is_a?(SymbolLiteral) || field_name.is_a?(Call) %}
+        {% raise <<-ERROR
+          Must use a Symbol or a bare word in 'allow'. Instead, got: #{field_name}
+
+          Try this...
+
+            ▸ Use a bare word (recommended): 'allow name'
+            ▸ Use a Symbol: 'allow :name'
+
+          ERROR %}
+      {% end %}
       {% if FIELDS.any? { |field| field[:name].id == field_name.id } %}
         def {{ field_name.id }}
           LuckyRecord::AllowedField.new _{{ field_name.id }}
