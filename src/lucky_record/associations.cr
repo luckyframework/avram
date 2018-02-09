@@ -4,6 +4,9 @@ module LuckyRecord::Associations
   end
 
   macro has_many(type_declaration, through = nil, foreign_key = nil)
+    {% if !through.is_a?(NilLiteral) && !through.is_a?(SymbolLiteral) %}
+      {% through.raise "The association name for 'through' must be a Symbol. Instead, got: #{through}" %}
+    {% end %}
     {% assoc_name = type_declaration.var %}
 
     association table_name: :{{ assoc_name }}, type: {{ type_declaration.type }}
