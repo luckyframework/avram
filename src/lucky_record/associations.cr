@@ -64,7 +64,7 @@ module LuckyRecord::Associations
               end
               .preload_{{ through.id }}
               .distinct
-            {{ assoc_name }} = {} of Int32 => Array(Tag)
+            {{ assoc_name }} = {} of Int32 => Array({{ model }})
             all_{{ assoc_name }}.each do |item|
               item.{{ through.id }}.each do |item_through|
                 {{ assoc_name }}[item_through.{{ foreign_key }}] ||= Array({{ model }}).new
