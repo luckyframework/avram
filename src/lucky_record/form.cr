@@ -30,7 +30,11 @@ abstract class LuckyRecord::Form(T)
   abstract def fields
 
   def form_name
-    self.class.name.underscore.gsub("_form", "")
+    self.class.form_name
+  end
+
+  def self.form_name
+    self.name.underscore.gsub("_form", "")
   end
 
   def errors

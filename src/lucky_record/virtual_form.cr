@@ -15,7 +15,11 @@ class LuckyRecord::VirtualForm
   end
 
   def form_name
-    self.class.name.underscore.gsub("_form", "")
+    self.class.form_name
+  end
+
+  def self.form_name
+    self.name.underscore.gsub("_form", "")
   end
 
   def valid?

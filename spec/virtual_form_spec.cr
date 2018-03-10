@@ -12,6 +12,7 @@ end
 describe LuckyRecord::VirtualForm do
   it "sets a form_name" do
     TestVirtualForm.new.form_name.should eq "test_virtual"
+    TestVirtualForm.form_name.should eq "test_virtual"
   end
 
   it "sets up initializers for params and no params" do

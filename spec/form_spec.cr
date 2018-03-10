@@ -24,6 +24,7 @@ end
 describe "LuckyRecord::Form" do
   it "generates the correct form_name" do
     LimitedUserForm.new.form_name.should eq "limited_user"
+    LimitedUserForm.form_name.should eq "limited_user"
   end
 
   it "add required_fields method" do
