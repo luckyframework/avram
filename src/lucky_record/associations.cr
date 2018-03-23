@@ -24,28 +24,36 @@ module LuckyRecord::Associations
 
     def {{ assoc_name.id }} : Array({{ model }})
       @_preloaded_{{ assoc_name }} \
-      || lazy_load_{{ assoc_name }} \
+      || maybe_lazy_load_{{ assoc_name }} \
       || raise LuckyRecord::LazyLoadError.new {{ @type.name.stringify }}, {{ assoc_name.stringify }}
     end
 
-    private def lazy_load_{{ assoc_name }} : Array({{ model }})?
+    def {{ assoc_name.id }}! : Array({{ model }})
+      @_preloaded_{{ assoc_name }} || lazy_load_{{ assoc_name }}
+    end
+
+    private def maybe_lazy_load_{{ assoc_name }}  : Array({{ model }})?
       if lazy_load_enabled?
-        {% if through %}
-          {{ model }}::BaseQuery
-            .new
-            .join_{{ through.id }}
-            .{{ through.id }} do |through_query|
-              through_query.{{ foreign_key.id }}(id)
-            end
-            .preload_{{ through.id }}
-            .results
-        {% else %}
-          {{ model }}::BaseQuery
-            .new
-            .{{ foreign_key }}(id)
-            .results
-        {% end %}
+        lazy_load_{{ assoc_name }}
       end
+    end
+
+    private def lazy_load_{{ assoc_name }} : Array({{ model }})
+      {% if through %}
+        {{ model }}::BaseQuery
+          .new
+          .join_{{ through.id }}
+          .{{ through.id }} do |through_query|
+            through_query.{{ foreign_key.id }}(id)
+          end
+          .preload_{{ through.id }}
+          .results
+      {% else %}
+        {{ model }}::BaseQuery
+          .new
+          .{{ foreign_key }}(id)
+          .results
+      {% end %}
     end
 
     class BaseQuery < LuckyRecord::Query
@@ -113,10 +121,18 @@ module LuckyRecord::Associations
       @_preloaded_{{ assoc_name }} = record
     end
 
+    def {{ assoc_name.id }}! : {{ model }}{% if nilable %}?{% end %}
+      get_{{ assoc_name.id }}(allow_lazy: true)
+    end
+
     def {{ assoc_name.id }} : {{ model }}{% if nilable %}?{% end %}
+      get_{{ assoc_name.id }}
+    end
+
+    private def get_{{ assoc_name.id }}(allow_lazy : Bool = false) : {{ model }}{% if nilable %}?{% end %}
       if _{{ assoc_name }}_preloaded?
         @_preloaded_{{ assoc_name }}{% unless nilable %}.not_nil!{% end %}
-      elsif lazy_load_enabled?
+      elsif lazy_load_enabled? || allow_lazy
         query = {{ model }}::BaseQuery.new
         query.{{ foreign_key.id }}(id)
 
@@ -160,10 +176,18 @@ module LuckyRecord::Associations
 
     association table_name: :{{ model.resolve.constant(:TABLE_NAME).id }}, type: {{ model }}, foreign_key: :id
 
+    def {{ assoc_name.id }}! : {{ model }}{% if nilable %}?{% end %}
+      get_{{ assoc_name.id }}(allow_lazy: true)
+    end
+
     def {{ assoc_name.id }} : {{ model }}{% if nilable %}?{% end %}
+      get_{{ assoc_name.id }}
+    end
+
+    private def get_{{ assoc_name.id }}(allow_lazy : Bool = false) : {{ model }}{% if nilable %}?{% end %}
       if _{{ assoc_name }}_preloaded?
         @_preloaded_{{ assoc_name }}{% unless nilable %}.not_nil!{% end %}
-      elsif lazy_load_enabled?
+      elsif lazy_load_enabled? || allow_lazy
         {{ foreign_key }}.try do |value|
           {{ model }}::BaseQuery.new.find(value)
         end

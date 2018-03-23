@@ -1,5 +1,7 @@
 require "./spec_helper"
 
+include LazyLoadHelpers
+
 describe "Preloading" do
   it "can disable lazy loading" do
     with_lazy_load(enabled: false) do
@@ -160,19 +162,5 @@ describe "Preloading" do
     posts = Post::BaseQuery.new
 
     posts.results.first.comments.should eq([comment])
-  end
-end
-
-private def with_lazy_load(enabled)
-  begin
-    LuckyRecord::Repo.configure do
-      settings.lazy_load_enabled = enabled
-    end
-
-    yield
-  ensure
-    LuckyRecord::Repo.configure do
-      settings.lazy_load_enabled = true
-    end
   end
 end
