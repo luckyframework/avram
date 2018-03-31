@@ -48,4 +48,38 @@ module LuckyRecord::Validations
       field.add_error "is too long"
     end
   end
+
+  private def validate_uniqueness_of(
+    field : LuckyRecord::Field | LuckyRecord::AllowedField,
+    query : LuckyRecord::Criteria,
+    message : String = "is already taken"
+  )
+    field.value.try do |value|
+      if query.is(value).first?
+        field.add_error message
+      end
+    end
+  end
+
+  private def validate_uniqueness_of(
+    field : LuckyRecord::Field | LuckyRecord::AllowedField,
+    message : String = "is already taken"
+  )
+    field.value.try do |value|
+      if build_validation_query(field.name, field.value).first?
+        field.add_error message
+      end
+    end
+  end
+
+  # Must be included in the macro to get access to the generic T class
+  # in forms that save to the database.
+  #
+  # VirtualForms will also have access to this, but will fail if you try to use
+  # if because there is no T (model class).
+  macro included
+    private def build_validation_query(column_name, value) : T::BaseQuery
+      T::BaseQuery.new.where(column_name, value)
+    end
+  end
 end

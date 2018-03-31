@@ -11,6 +11,15 @@ private class CallableMessage
   end
 end
 
+class UniquenessWithDatabaseBackedForm < User::BaseForm
+  allow name
+
+  def prepare
+    validate_uniqueness_of name
+    validate_uniqueness_of nickname, query: UserQuery.new.nickname.lower
+  end
+end
+
 private class TestValidationUser
   include LuckyRecord::Validations
   @_age : LuckyRecord::Field(Int32?)?
@@ -40,6 +49,7 @@ private class TestValidationUser
     validate_required city, state, message: "ugh"
     validate_inclusion_of state, in: ["CA, NY"], message: "that one's not allowed"
     validate_confirmation_of name, with: name_confirmation, message: "name confirmation must match"
+    validate_uniqueness_of name, query: UserQuery.new.name, message: "cannot be used"
   end
 
   def run_validations_with_message_callables
@@ -105,12 +115,34 @@ describe LuckyRecord::Validations do
     end
   end
 
+  describe "validate_uniqueness_of" do
+    it "validates that a record is unique with a query or without one" do
+      existing_user = UserBox.new.name("Sally").nickname("Sal").save
+      form = UniquenessWithDatabaseBackedForm.new
+      form.name.value = existing_user.name
+      form.nickname.value = existing_user.nickname.not_nil!.downcase
+
+      form.prepare
+
+      form.name.errors.should contain "is already taken"
+      form.nickname.errors.should contain "is already taken"
+    end
+  end
+
   describe "validates with custom messages" do
     it "validates custom message for validates_required" do
       validate(city: "", state: "") do |user|
         user.run_validations_with_message
         user.city.errors.should contain "ugh"
         user.state.errors.should contain "ugh"
+      end
+    end
+
+    it "validates custom message for validate_uniqueness_of" do
+      existing_user = UserBox.save
+      validate(name: existing_user.name) do |user|
+        user.run_validations_with_message
+        user.name.errors.should contain "cannot be used"
       end
     end
 
