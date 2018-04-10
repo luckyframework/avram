@@ -4,6 +4,24 @@ private class CallbacksForm < Post::BaseForm
   @callbacks_that_ran = [] of String
   getter callbacks_that_ran
 
+  before_save :run_before_save
+  before_save run_before_save_again
+
+  before_create :run_before_create
+  before_create run_before_create_again
+
+  before_update :run_before_update
+  before_update :run_before_update_again
+
+  after_save :run_after_save
+  after_save run_after_save_again
+
+  after_create :run_after_create
+  after_create run_after_create_again
+
+  after_update :run_after_update
+  after_update :run_after_update_again
+
   def prepare
     setup_required_fields
     mark_callback "prepare"
@@ -13,12 +31,52 @@ private class CallbacksForm < Post::BaseForm
     mark_callback "after_prepare"
   end
 
-  def before_save
+  def run_before_save
     mark_callback "before_save"
   end
 
-  def after_save(post : Post)
+  def run_before_save_again
+    mark_callback "before_save_again"
+  end
+
+  def run_after_save(post : Post)
     mark_callback "after_save"
+  end
+
+  def run_after_save_again(post : Post)
+    mark_callback "after_save_again"
+  end
+
+  def run_before_create
+    mark_callback "before_create"
+  end
+
+  def run_before_create_again
+    mark_callback "before_create_again"
+  end
+
+  def run_after_create(post : Post)
+    mark_callback "after_create"
+  end
+
+  def run_after_create_again(post : Post)
+    mark_callback "after_create_again"
+  end
+
+  def run_before_update
+    mark_callback "before_update"
+  end
+
+  def run_before_update_again
+    mark_callback "before_update_again"
+  end
+
+  def run_after_update(post : Post)
+    mark_callback "after_update"
+  end
+
+  def run_after_update_again(post : Post)
+    mark_callback "after_update_again"
   end
 
   private def mark_callback(callback_name)
@@ -39,7 +97,7 @@ describe "LuckyRecord::Form callbacks" do
     form.callbacks_that_ran.should eq(["prepare", "after_prepare"])
   end
 
-  it "runs all callbacks when saving" do
+  it "runs all callbacks except *_update when creating" do
     form = CallbacksForm.new
     form.callbacks_that_ran.should eq([] of String)
 
@@ -49,7 +107,34 @@ describe "LuckyRecord::Form callbacks" do
       "prepare",
       "after_prepare",
       "before_save",
+      "before_save_again",
+      "before_create",
+      "before_create_again",
       "after_save",
+      "after_save_again",
+      "after_create",
+      "after_create_again",
+    ])
+  end
+
+  it "runs all callbacks except *_update when creating" do
+    post = PostBox.save
+    form = CallbacksForm.new(post)
+    form.callbacks_that_ran.should eq([] of String)
+
+    form.save
+
+    form.callbacks_that_ran.should eq([
+      "prepare",
+      "after_prepare",
+      "before_save",
+      "before_save_again",
+      "before_update",
+      "before_update_again",
+      "after_save",
+      "after_save_again",
+      "after_update",
+      "after_update_again",
     ])
   end
 end

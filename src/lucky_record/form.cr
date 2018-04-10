@@ -1,10 +1,12 @@
 require "./validations"
+require "./callbacks"
 require "./needy_initializer_and_save_methods"
 
 abstract class LuckyRecord::Form(T)
   include LuckyRecord::Validations
   include LuckyRecord::NeedyInitializerAndSaveMethods
   include LuckyRecord::AllowVirtual
+  include LuckyRecord::Callbacks
 
   enum SaveStatus
     Saved
@@ -238,9 +240,23 @@ abstract class LuckyRecord::Form(T)
   private def perform_save : Bool
     if valid? && changes.any?
       LuckyRecord::Repo.transaction do
+        is_update = persisted?
         before_save
+        if is_update
+          before_update
+        else
+          before_create
+        end
+
         insert_or_update
-        after_save(record.not_nil!)
+        saved_record = record.not_nil!
+        after_save(saved_record)
+
+        if is_update
+          after_update(saved_record)
+        else
+          after_create(saved_record)
+        end
         true
       end
     else
@@ -260,8 +276,12 @@ abstract class LuckyRecord::Form(T)
     save!
   end
 
+  def persisted? : Bool
+    !!record_id
+  end
+
   private def insert_or_update
-    if record_id
+    if persisted?
       update record_id
     else
       insert
@@ -280,6 +300,14 @@ abstract class LuckyRecord::Form(T)
   def before_save; end
 
   def after_save(_record : T); end
+
+  def before_create; end
+
+  def after_create(_record : T); end
+
+  def before_update; end
+
+  def after_update(_record : T); end
 
   private def insert : T
     self.created_at.value = Time.utc_now
