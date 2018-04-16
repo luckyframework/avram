@@ -1,6 +1,6 @@
 require "./field"
 
-class LuckyRecord::AllowedField(T)
+class LuckyRecord::FillableField(T)
   forward_missing_to @field
 
   def initialize(@field : LuckyRecord::Field(T))

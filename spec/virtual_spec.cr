@@ -14,13 +14,13 @@ private class VirtualForm < Post::BaseForm
 end
 
 describe "virtual in forms" do
-  it "is an AllowedField" do
-    form.password_confirmation.should be_a(LuckyRecord::AllowedField(String?))
+  it "is an FillableField" do
+    form.password_confirmation.should be_a(LuckyRecord::FillableField(String?))
     form.password_confirmation.name.should eq(:password_confirmation)
     form.password_confirmation.form_name.should eq("virtual")
   end
 
-  it "generates a list of allowed_fields" do
+  it "generates a list of fillable_fields" do
     form.virtual_fields.map(&.name).should eq [:password_confirmation, :terms_of_service]
   end
 

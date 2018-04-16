@@ -1,7 +1,7 @@
 require "./spec_helper"
 
 private class UserForm < User::BaseForm
-  allow :name, :nickname, :joined_at, :age
+  fillable :name, :nickname, :joined_at, :age
 
   def prepare
     validate_required name, joined_at, age
@@ -9,7 +9,7 @@ private class UserForm < User::BaseForm
 end
 
 private class LimitedUserForm < User::BaseForm
-  allow :name
+  fillable :name
 end
 
 private class TaskForm < Task::BaseForm
@@ -152,19 +152,19 @@ describe "LuckyRecord::Form" do
     end
   end
 
-  describe "allow" do
-    it "ignores params that are not allowed" do
+  describe "fillable" do
+    it "ignores params that are not fillable" do
       form = LimitedUserForm.new({"name" => "someone", "nickname" => "nothing"})
       form.changes.has_key?(:nickname).should be_false
       form.changes[:name]?.should eq "someone"
     end
 
-    it "returns a LuckyRecord::AllowedField" do
+    it "returns a LuckyRecord::FillableField" do
       form = LimitedUserForm.new({"name" => "someone", "nickname" => "nothing"})
       form.nickname.value.should be_nil
       form.nickname.is_a?(LuckyRecord::Field).should be_true
       form.name.value.should eq "someone"
-      form.name.is_a?(LuckyRecord::AllowedField).should be_true
+      form.name.is_a?(LuckyRecord::FillableField).should be_true
     end
   end
 
@@ -192,7 +192,7 @@ describe "LuckyRecord::Form" do
   end
 
   describe "params" do
-    it "creates a param method for each of the allowed fields" do
+    it "creates a param method for each of the fillable fields" do
       params = {"name" => "Paul", "nickname" => "Pablito"}
 
       form = UserForm.new(params)
@@ -211,7 +211,7 @@ describe "LuckyRecord::Form" do
   end
 
   describe "errors" do
-    it "creates an error method for each of the allowed fields" do
+    it "creates an error method for each of the fillable fields" do
       params = {"name" => "Paul", "age" => "30", "joined_at" => now_as_string}
       form = UserForm.new(params)
       form.valid?.should be_true
@@ -235,7 +235,7 @@ describe "LuckyRecord::Form" do
   end
 
   describe "fields" do
-    it "creates a method for each of the allowed fields" do
+    it "creates a method for each of the fillable fields" do
       params = {} of String => String
       form = LimitedUserForm.new(params)
 

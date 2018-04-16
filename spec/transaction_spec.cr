@@ -1,7 +1,7 @@
 require "./spec_helper"
 
 private class PostTransactionForm < Post::BaseForm
-  allow title
+  fillable title
   needs rollback_after_save : Bool
 
   def after_save(_user)
@@ -12,7 +12,7 @@ private class PostTransactionForm < Post::BaseForm
 end
 
 private class BadForm < Post::BaseForm
-  allow title
+  fillable title
 
   def after_save(_user)
     raise "Sad face"

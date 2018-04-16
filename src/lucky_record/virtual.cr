@@ -2,7 +2,7 @@ module LuckyRecord::Virtual
   macro ensure_base_virtual_fields_method_is_present
     {% if !@type.methods.map(&.name).includes?(:virtual_fields.id) %}
       def virtual_fields
-        [] of LuckyRecord::AllowedField(Nil)
+        [] of LuckyRecord::FillableField(Nil)
       end
     {% end %}
   end
@@ -29,7 +29,7 @@ module LuckyRecord::Virtual
     end
 
     def {{ name }}
-      LuckyRecord::AllowedField({{ type }}?).new(_{{ name }})
+      LuckyRecord::FillableField({{ type }}?).new(_{{ name }})
     end
 
     private def _{{ name }}

@@ -9,7 +9,7 @@ module LuckyRecord::Validations
     end
   end
 
-  private def validate_acceptance_of(field : AllowedField(Bool?) | Field(Bool?), message = "must be accepted")
+  private def validate_acceptance_of(field : FillableField(Bool?) | Field(Bool?), message = "must be accepted")
     if field.value == false
       field.add_error message
     end
@@ -50,7 +50,7 @@ module LuckyRecord::Validations
   end
 
   private def validate_uniqueness_of(
-    field : LuckyRecord::Field | LuckyRecord::AllowedField,
+    field : LuckyRecord::Field | LuckyRecord::FillableField,
     query : LuckyRecord::Criteria,
     message : String = "is already taken"
   )
@@ -62,7 +62,7 @@ module LuckyRecord::Validations
   end
 
   private def validate_uniqueness_of(
-    field : LuckyRecord::Field | LuckyRecord::AllowedField,
+    field : LuckyRecord::Field | LuckyRecord::FillableField,
     message : String = "is already taken"
   )
     field.value.try do |value|

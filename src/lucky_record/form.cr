@@ -19,7 +19,7 @@ abstract class LuckyRecord::Form(T)
     @valid : Bool = true
     @save_status = SaveStatus::Unperformed
 
-    @@allowed_param_keys = [] of String
+    @@fillable_param_keys = [] of String
     @@schema_class = T
   end
 
@@ -67,7 +67,7 @@ abstract class LuckyRecord::Form(T)
     FIELDS = {{ fields }}
 
     private def extract_changes_from_params
-      allowed_params.each do |key, value|
+      fillable_params.each do |key, value|
         {% for field in fields %}
           set_{{ field[:name] }}_from_param value if key == {{ field[:name].stringify }}
         {% end %}
@@ -96,17 +96,17 @@ abstract class LuckyRecord::Form(T)
       private def _{{ field[:name] }}
         @_{{ field[:name] }} ||= LuckyRecord::Field({{ field[:type] }}?).new(
           name: :{{ field[:name].id }},
-          param: allowed_params["{{ field[:name] }}"]?,
+          param: fillable_params["{{ field[:name] }}"]?,
           value: @record.try(&.{{ field[:name] }}),
           form_name: form_name)
       end
 
-      def allowed_params
+      def fillable_params
         new_params = {} of String => String
         @params.nested(form_name).each do |key, value|
           new_params[key] = value
         end
-        new_params.select(@@allowed_param_keys)
+        new_params.select(@@fillable_param_keys)
       end
 
       def set_{{ field[:name] }}_from_param(value)
@@ -170,38 +170,38 @@ abstract class LuckyRecord::Form(T)
     save_status == SaveStatus::SaveFailed
   end
 
-  macro allow(*field_names)
+  macro fillable(*field_names)
     {% for field_name in field_names %}
       {% if field_name.is_a?(TypeDeclaration) %}
         {% raise <<-ERROR
-          Must use a Symbol or a bare word in 'allow'. Instead, got: #{field_name}
+          Must use a Symbol or a bare word in 'fillable'. Instead, got: #{field_name}
 
           Try this...
 
-            ▸ allow #{field_name.var}
+            ▸ fillable #{field_name.var}
 
           ERROR %}
       {% end %}
       {% unless field_name.is_a?(SymbolLiteral) || field_name.is_a?(Call) %}
         {% raise <<-ERROR
-          Must use a Symbol or a bare word in 'allow'. Instead, got: #{field_name}
+          Must use a Symbol or a bare word in 'fillable'. Instead, got: #{field_name}
 
           Try this...
 
-            ▸ Use a bare word (recommended): 'allow name'
-            ▸ Use a Symbol: 'allow :name'
+            ▸ Use a bare word (recommended): 'fillable name'
+            ▸ Use a Symbol: 'fillable :name'
 
           ERROR %}
       {% end %}
       {% if FIELDS.any? { |field| field[:name].id == field_name.id } %}
         def {{ field_name.id }}
-          LuckyRecord::AllowedField.new _{{ field_name.id }}
+          LuckyRecord::FillableField.new _{{ field_name.id }}
         end
 
-        @@allowed_param_keys << "{{ field_name.id }}"
+        @@fillable_param_keys << "{{ field_name.id }}"
       {% else %}
         {% raise <<-ERROR
-          Can't allow '#{field_name}' because the column has not been defined on the model.
+          Can't make '#{field_name}' fillable because the column has not been defined on the model.
 
           Try this...
 

@@ -12,7 +12,7 @@ private class CallableMessage
 end
 
 class UniquenessWithDatabaseBackedForm < User::BaseForm
-  allow name
+  fillable name
 
   def prepare
     validate_uniqueness_of name
