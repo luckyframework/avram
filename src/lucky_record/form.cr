@@ -170,6 +170,10 @@ abstract class LuckyRecord::Form(T)
     save_status == SaveStatus::SaveFailed
   end
 
+  macro allow(*args)
+    {% raise "'allow' has been renamed to 'fillable'" %}
+  end
+
   macro fillable(*field_names)
     {% for field_name in field_names %}
       {% if field_name.is_a?(TypeDeclaration) %}
