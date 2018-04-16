@@ -9,6 +9,10 @@ module LuckyRecord::Virtual
 
   ensure_base_virtual_fields_method_is_present
 
+  macro allow_virtual(*args, **named_args)
+    {% raise "'allow_virtual' has been renamed to 'virtual'" %}
+  end
+
   macro virtual(type_declaration)
     {% if type_declaration.type.is_a?(Union) %}
       {% raise "virtual must use just one type" %}
