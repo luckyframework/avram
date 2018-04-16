@@ -1,4 +1,4 @@
-module LuckyRecord::AllowVirtual
+module LuckyRecord::Virtual
   macro ensure_base_virtual_fields_method_is_present
     {% if !@type.methods.map(&.name).includes?(:virtual_fields.id) %}
       def virtual_fields
@@ -9,9 +9,9 @@ module LuckyRecord::AllowVirtual
 
   ensure_base_virtual_fields_method_is_present
 
-  macro allow_virtual(type_declaration)
+  macro virtual(type_declaration)
     {% if type_declaration.type.is_a?(Union) %}
-      {% raise "allow_virtual must use just one type" %}
+      {% raise "virtual must use just one type" %}
     {% end %}
 
     {% type = type_declaration.type %}

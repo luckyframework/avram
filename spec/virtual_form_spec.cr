@@ -1,8 +1,8 @@
 require "./spec_helper"
 
 private class TestVirtualForm < LuckyRecord::VirtualForm
-  allow_virtual name : String
-  allow_virtual age : Int32
+  virtual name : String
+  virtual age : Int32
 
   def validate
     validate_required name

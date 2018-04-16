@@ -1,7 +1,7 @@
-require "./allow_virtual"
+require "./virtual"
 
 class LuckyRecord::VirtualForm
-  include LuckyRecord::AllowVirtual
+  include LuckyRecord::Virtual
   include LuckyRecord::Validations
 
   @params : LuckyRecord::Paramable

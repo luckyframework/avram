@@ -1,8 +1,8 @@
 require "./spec_helper"
 
 private class VirtualForm < Post::BaseForm
-  allow_virtual password_confirmation : String
-  allow_virtual terms_of_service : Bool
+  virtual password_confirmation : String
+  virtual terms_of_service : Bool
 
   def prepare
     password_confirmation.value = "reset"
@@ -13,7 +13,7 @@ private class VirtualForm < Post::BaseForm
   end
 end
 
-describe "allow_virtual in forms" do
+describe "virtual in forms" do
   it "is an AllowedField" do
     form.password_confirmation.should be_a(LuckyRecord::AllowedField(String?))
     form.password_confirmation.name.should eq(:password_confirmation)

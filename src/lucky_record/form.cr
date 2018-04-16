@@ -1,11 +1,12 @@
 require "./validations"
 require "./callbacks"
 require "./needy_initializer_and_save_methods"
+require "./virtual"
 
 abstract class LuckyRecord::Form(T)
   include LuckyRecord::Validations
   include LuckyRecord::NeedyInitializerAndSaveMethods
-  include LuckyRecord::AllowVirtual
+  include LuckyRecord::Virtual
   include LuckyRecord::Callbacks
 
   enum SaveStatus
@@ -206,7 +207,7 @@ abstract class LuckyRecord::Form(T)
 
             ▸ Make sure you spelled the column correctly.
             ▸ Add the column to the model if it doesn't exist.
-            ▸ Use 'allow_virtual' if you want a field that is not saved to the database.
+            ▸ Use 'virtual' if you want a field that is not saved to the database.
 
           ERROR %}
       {% end %}
