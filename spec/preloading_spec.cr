@@ -18,7 +18,7 @@ describe "Preloading" do
   it "preloads has_one" do
     with_lazy_load(enabled: false) do
       admin = AdminBox.create
-      sign_in_credential = SignInCredentialBox.new.user_id(admin.id).create
+      sign_in_credential = SignInCredentialBox.create &.user_id(admin.id)
 
       admin = Admin::BaseQuery.new.preload_sign_in_credential
 
@@ -29,7 +29,7 @@ describe "Preloading" do
   it "preloads has_one with custom query and nested preload" do
     with_lazy_load(enabled: false) do
       user = UserBox.create
-      sign_in_credential = SignInCredentialBox.new.user_id(user.id).create
+      sign_in_credential = SignInCredentialBox.create &.user_id(user.id)
 
       user = User::BaseQuery.new.preload(
         SignInCredential::BaseQuery.new.preload_user
@@ -54,7 +54,7 @@ describe "Preloading" do
   it "preloads has_many" do
     with_lazy_load(enabled: false) do
       post = PostBox.create
-      comment = CommentBox.new.post_id(post.id).create
+      comment = CommentBox.create &.post_id(post.id)
 
       posts = Post::BaseQuery.new.preload_comments
 
@@ -65,7 +65,7 @@ describe "Preloading" do
   it "preloads has_many with custom query" do
     with_lazy_load(enabled: false) do
       post = PostBox.create
-      comment = CommentBox.new.post_id(post.id).create
+      comment = CommentBox.create &.post_id(post.id)
 
       posts = Post::BaseQuery.new.preload(
         Comment::BaseQuery.new.id.not(comment.id)
@@ -81,8 +81,8 @@ describe "Preloading" do
       _unused_tag = TagBox.create
       post = PostBox.create
       other_post = PostBox.create
-      TaggingBox.new.tag_id(tag.id).post_id(post.id).create
-      TaggingBox.new.tag_id(tag.id).post_id(other_post.id).create
+      TaggingBox.create &.tag_id(tag.id).post_id(post.id)
+      TaggingBox.create &.tag_id(tag.id).post_id(other_post.id)
 
       post_tags = Post::BaseQuery.new.preload_tags.results.first.tags
 
@@ -94,7 +94,7 @@ describe "Preloading" do
   it "works with nested preloads" do
     with_lazy_load(enabled: false) do
       post = PostBox.create
-      comment = CommentBox.new.post_id(post.id).create
+      comment = CommentBox.create &.post_id(post.id)
 
       posts = Post::BaseQuery.new.preload(
         Comment::BaseQuery.new.preload_post
@@ -117,7 +117,7 @@ describe "Preloading" do
   it "preloads belongs_to" do
     with_lazy_load(enabled: false) do
       post = PostBox.create
-      comment = CommentBox.new.post_id(post.id).create
+      comment = CommentBox.create &.post_id(post.id)
 
       comments = Comment::BaseQuery.new.preload_post
 
@@ -145,7 +145,7 @@ describe "Preloading" do
   it "uses preloaded records if available, even if lazy load is enabled" do
     with_lazy_load(enabled: true) do
       post = PostBox.create
-      comment = CommentBox.new.post_id(post.id).create
+      comment = CommentBox.create &.post_id(post.id)
 
       posts = Post::BaseQuery.new.preload(
         Comment::BaseQuery.new.id.not(comment.id)
@@ -157,7 +157,7 @@ describe "Preloading" do
 
   it "lazy loads if nothing is preloaded" do
     post = PostBox.create
-    comment = CommentBox.new.post_id(post.id).create
+    comment = CommentBox.create &.post_id(post.id)
 
     posts = Post::BaseQuery.new
 

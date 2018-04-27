@@ -24,6 +24,10 @@ abstract class LuckyRecord::Box
     new.create
   end
 
+  def self.create
+    yield(new).create
+  end
+
   def create
     form.save!
   end
