@@ -118,7 +118,7 @@ describe "LuckyRecord::Form callbacks" do
   end
 
   it "runs all callbacks except *_update when creating" do
-    post = PostBox.save
+    post = PostBox.create
     form = CallbacksForm.new(post)
     form.callbacks_that_ran.should eq([] of String)
 

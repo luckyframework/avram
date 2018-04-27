@@ -112,7 +112,7 @@ describe LuckyRecord::Model do
   end
 
   it "can be deleted" do
-    UserBox.save
+    UserBox.create
     user = UserQuery.new.first
 
     user.delete

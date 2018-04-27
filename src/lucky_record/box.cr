@@ -12,15 +12,23 @@ abstract class LuckyRecord::Box
     self
   end
 
-  def self.save
-    new.save
+  def save
+    self.class.save
   end
 
-  def save
+  def self.save
+    {% raise "'Box.save' has been renamed to 'Box.create' to match 'Form.create'" %}
+  end
+
+  def self.create
+    new.create
+  end
+
+  def create
     form.save!
   end
 
-  def self.save_pair
-    2.times { new.save }
+  def self.create_pair
+    2.times { new.create }
   end
 end

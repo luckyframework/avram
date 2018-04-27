@@ -12,8 +12,8 @@ end
 describe LuckyRecord::Model do
   describe "has_many" do
     it "gets the related records" do
-      post = PostBox.save
-      comment = CommentBox.new.post_id(post.id).save
+      post = PostBox.create
+      comment = CommentBox.new.post_id(post.id).create
 
       post = Post::BaseQuery.new.find(post.id)
 
@@ -22,8 +22,8 @@ describe LuckyRecord::Model do
     end
 
     it "gets the related records for nilable association that exists" do
-      manager = ManagerBox.save
-      employee = EmployeeBox.new.manager_id(manager.id).save
+      manager = ManagerBox.create
+      employee = EmployeeBox.new.manager_id(manager.id).create
 
       manager = Manager::BaseQuery.new.find(manager.id)
 
@@ -32,14 +32,14 @@ describe LuckyRecord::Model do
     end
 
     it "returns nil for nilable association that doesn't exist" do
-      employee = EmployeeBox.new.save
+      employee = EmployeeBox.create
       employee.manager.should eq nil
     end
 
     it "accepts a foreign_key" do
-      user = UserBox.save
-      cred_1 = SignInCredentialBox.new.user_id(user.id).save
-      cred_2 = SignInCredentialBox.new.user_id(user.id).save
+      user = UserBox.create
+      cred_1 = SignInCredentialBox.new.user_id(user.id).create
+      cred_2 = SignInCredentialBox.new.user_id(user.id).create
 
       key_holder = KeyHolderQuery.new.first
 
@@ -49,10 +49,10 @@ describe LuckyRecord::Model do
 
   describe "has_many through" do
     it "joins the two associations" do
-      tag = TagBox.save
-      post = PostBox.save
-      _different_tag = TagBox.save
-      TaggingBox.new.tag_id(tag.id).post_id(post.id).save
+      tag = TagBox.create
+      post = PostBox.create
+      _different_tag = TagBox.create
+      TaggingBox.new.tag_id(tag.id).post_id(post.id).create
 
       post.tags.should eq [tag]
     end
@@ -61,22 +61,22 @@ describe LuckyRecord::Model do
   describe "has_one" do
     context "missing association" do
       it "raises if association is not nilable" do
-        credentialed = AdminBox.save
+        credentialed = AdminBox.create
         expect_raises Exception, "Could not find first record in sign_in_credentials" do
           credentialed.sign_in_credential
         end
       end
 
       it "returns nil if association is nilable" do
-        possibly_credentialed = UserBox.save
+        possibly_credentialed = UserBox.create
         possibly_credentialed.sign_in_credential.should be_nil
       end
     end
 
     context "existing association" do
       it "returns associated model" do
-        user = UserBox.save
-        credentials = SignInCredentialBox.new.user_id(user.id).save
+        user = UserBox.create
+        credentials = SignInCredentialBox.new.user_id(user.id).create
         user.sign_in_credential.should eq credentials
       end
     end

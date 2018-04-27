@@ -23,8 +23,8 @@ describe "LuckyRecord::Form" do
   describe "wrapping multiple saves in a transaction" do
     it "rolls them all back" do
       LuckyRecord::Repo.transaction do
-        UserBox.save
-        PostBox.save
+        UserBox.create
+        PostBox.create
         LuckyRecord::Repo.rollback
       end
 
@@ -36,7 +36,7 @@ describe "LuckyRecord::Form" do
   describe "updating" do
     it "runs in a transaction" do
       params = {"title" => "New Title"}
-      post = PostBox.new.title("Old Title").save
+      post = PostBox.new.title("Old Title").create
       Post::BaseQuery.new.first.title.should eq "Old Title"
 
       PostTransactionForm.update(post, params, rollback_after_save: true) do |form, post|

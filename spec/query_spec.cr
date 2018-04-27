@@ -24,8 +24,8 @@ describe LuckyRecord::Query do
 
   describe ".first" do
     it "gets the first row from the database" do
-      UserBox.new.name("First").save
-      UserBox.new.name("Last").save
+      UserBox.new.name("First").create
+      UserBox.new.name("Last").create
 
       UserQuery.first.name.should eq "First"
     end
@@ -39,8 +39,8 @@ describe LuckyRecord::Query do
 
   describe "#first" do
     it "gets the first row from the database" do
-      UserBox.new.name("First").save
-      UserBox.new.name("Last").save
+      UserBox.new.name("First").create
+      UserBox.new.name("Last").create
 
       UserQuery.new.first.name.should eq "First"
     end
@@ -54,8 +54,8 @@ describe LuckyRecord::Query do
 
   describe ".first?" do
     it "gets the first row from the database" do
-      UserBox.new.name("First").save
-      UserBox.new.name("Last").save
+      UserBox.new.name("First").create
+      UserBox.new.name("Last").create
 
       user = UserQuery.first?
       user.should_not be_nil
@@ -69,8 +69,8 @@ describe LuckyRecord::Query do
 
   describe "#first?" do
     it "gets the first row from the database" do
-      UserBox.new.name("First").save
-      UserBox.new.name("Last").save
+      UserBox.new.name("First").create
+      UserBox.new.name("Last").create
 
       user = UserQuery.new.first?
       user.should_not be_nil
@@ -84,8 +84,8 @@ describe LuckyRecord::Query do
 
   describe ".last" do
     it "gets the last row from the database" do
-      UserBox.new.name("First").save
-      UserBox.new.name("Last").save
+      UserBox.new.name("First").create
+      UserBox.new.name("Last").create
 
       UserQuery.last.name.should eq "Last"
     end
@@ -99,16 +99,16 @@ describe LuckyRecord::Query do
 
   describe "#last" do
     it "gets the last row from the database" do
-      UserBox.new.name("First").save
-      UserBox.new.name("Last").save
+      UserBox.new.name("First").create
+      UserBox.new.name("Last").create
 
       UserQuery.new.last.name.should eq "Last"
     end
 
     it "reverses the order of ordered queries" do
-      UserBox.new.name("Alpha").save
-      UserBox.new.name("Charlie").save
-      UserBox.new.name("Bravo").save
+      UserBox.new.name("Alpha").create
+      UserBox.new.name("Charlie").create
+      UserBox.new.name("Bravo").create
 
       UserQuery.new.order_by(:name, :desc).last.name.should eq "Alpha"
     end
@@ -122,8 +122,8 @@ describe LuckyRecord::Query do
 
   describe ".last?" do
     it "gets the last row from the database" do
-      UserBox.new.name("First").save
-      UserBox.new.name("Last").save
+      UserBox.new.name("First").create
+      UserBox.new.name("Last").create
 
       last = UserQuery.last?
       last.should_not be_nil
@@ -137,8 +137,8 @@ describe LuckyRecord::Query do
 
   describe "#last?" do
     it "gets the last row from the database" do
-      UserBox.new.name("First").save
-      UserBox.new.name("Last").save
+      UserBox.new.name("First").create
+      UserBox.new.name("Last").create
 
       last = UserQuery.new.last?
       last.should_not be_nil
@@ -152,7 +152,7 @@ describe LuckyRecord::Query do
 
   describe ".find" do
     it "gets the record with the given id" do
-      UserBox.save
+      UserBox.create
       user = UserQuery.first
 
       UserQuery.find(user.id).should eq user
@@ -179,7 +179,7 @@ describe LuckyRecord::Query do
 
   describe "#find" do
     it "gets the record with the given id" do
-      UserBox.save
+      UserBox.create
       user = UserQuery.new.first
 
       UserQuery.new.find(user.id).should eq user
@@ -220,7 +220,7 @@ describe LuckyRecord::Query do
     end
 
     it "accepts raw sql with bindings and chains with itself" do
-      user = UserBox.new.name("Mikias Abera").age(26).nickname("miki").save
+      user = UserBox.new.name("Mikias Abera").age(26).nickname("miki").create
       users = UserQuery.new.where("name = ? AND age = ?", "Mikias Abera", 26).where(:nickname, "miki")
 
       users.query.statement.should eq "SELECT #{User::COLUMNS} FROM users WHERE nickname = $1 AND name = 'Mikias Abera' AND age = 26"
@@ -244,8 +244,8 @@ describe LuckyRecord::Query do
     end
 
     it "works while chaining" do
-      UserBox.save
-      UserBox.save
+      UserBox.create
+      UserBox.create
       users = UserQuery.new.name.desc_order.limit(1)
 
       users.query.statement.should eq "SELECT #{User::COLUMNS} FROM users ORDER BY users.name DESC LIMIT 1"
@@ -275,13 +275,13 @@ describe LuckyRecord::Query do
       count = UserQuery.new.count
       count.should eq 0
 
-      UserBox.save
+      UserBox.create
       count = UserQuery.new.count
       count.should eq 1
     end
 
     it "works with ORDER BY by removing the ordering" do
-      UserBox.save
+      UserBox.create
 
       query = UserQuery.new.name.desc_order
 
@@ -289,8 +289,8 @@ describe LuckyRecord::Query do
     end
 
     it "works with chained where" do
-      UserBox.new.age(30).save
-      UserBox.new.age(31).save
+      UserBox.new.age(30).create
+      UserBox.new.age(31).create
 
       query = UserQuery.new.age.gte(31)
 
@@ -310,7 +310,7 @@ describe LuckyRecord::Query do
 
   describe "#not with an argument" do
     it "negates the given where condition as 'equal'" do
-      UserBox.new.name("Paul").save
+      UserBox.new.name("Paul").create
 
       results = UserQuery.new.name.not("not existing").results
       results.should eq UserQuery.new.results
@@ -318,8 +318,8 @@ describe LuckyRecord::Query do
       results = UserQuery.new.name.not("Paul").results
       results.should eq [] of User
 
-      UserBox.new.name("Alex").save
-      UserBox.new.name("Sarah").save
+      UserBox.new.name("Alex").create
+      UserBox.new.name("Sarah").create
       results = UserQuery.new.name.lower.not("alex").results
       results.map(&.name).should eq ["Paul", "Sarah"]
     end
@@ -327,15 +327,15 @@ describe LuckyRecord::Query do
 
   describe "#not with no arguments" do
     it "negates any previous condition" do
-      UserBox.new.name("Paul").save
+      UserBox.new.name("Paul").create
 
       results = UserQuery.new.name.not.is("Paul").results
       results.should eq [] of User
     end
 
     it "can be used with operators" do
-      UserBox.new.age(33).name("Joyce").save
-      UserBox.new.age(34).name("Jil").save
+      UserBox.new.age(33).name("Joyce").create
+      UserBox.new.age(34).name("Jil").create
 
       results = UserQuery.new.age.not.gt(33).results
       results.map(&.name).should eq ["Joyce"]
@@ -344,7 +344,7 @@ describe LuckyRecord::Query do
 
   describe "#in" do
     it "gets records with ids in an array" do
-      UserBox.new.name("Mikias").save
+      UserBox.new.name("Mikias").create
       user = UserQuery.new.first
 
       results = UserQuery.new.id.in([user.id])
@@ -361,8 +361,8 @@ describe LuckyRecord::Query do
 
   describe "#join methods for associations" do
     it "inner join on belongs to" do
-      post = PostBox.save
-      comment = CommentBox.new.post_id(post.id).save
+      post = PostBox.create
+      comment = CommentBox.new.post_id(post.id).create
 
       query = Comment::BaseQuery.new.join_posts
       query.to_sql.should eq ["SELECT comments.id, comments.created_at, comments.updated_at, comments.body, comments.post_id FROM comments INNER JOIN posts ON comments.id = posts.id"]
@@ -372,8 +372,8 @@ describe LuckyRecord::Query do
     end
 
     it "inner join on has many" do
-      post = PostBox.save
-      comment = CommentBox.new.post_id(post.id).save
+      post = PostBox.create
+      comment = CommentBox.new.post_id(post.id).create
 
       query = Post::BaseQuery.new.join_comments
       query.to_sql.should eq ["SELECT posts.id, posts.created_at, posts.updated_at, posts.title, posts.published_at FROM posts INNER JOIN comments ON posts.id = comments.post_id"]

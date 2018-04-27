@@ -117,7 +117,7 @@ describe LuckyRecord::Validations do
 
   describe "validate_uniqueness_of" do
     it "validates that a record is unique with a query or without one" do
-      existing_user = UserBox.new.name("Sally").nickname("Sal").save
+      existing_user = UserBox.new.name("Sally").nickname("Sal").create
       form = UniquenessWithDatabaseBackedForm.new
       form.name.value = existing_user.name
       form.nickname.value = existing_user.nickname.not_nil!.downcase
@@ -139,7 +139,7 @@ describe LuckyRecord::Validations do
     end
 
     it "validates custom message for validate_uniqueness_of" do
-      existing_user = UserBox.save
+      existing_user = UserBox.create
       validate(name: existing_user.name) do |user|
         user.run_validations_with_message
         user.name.errors.should contain "cannot be used"

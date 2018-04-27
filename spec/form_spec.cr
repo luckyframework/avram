@@ -46,7 +46,7 @@ describe "LuckyRecord::Form" do
       user.joined_at.should eq now
     end
 
-    user = UserBox.new.name("New").age(20).joined_at(Time.now).save
+    user = UserBox.new.name("New").age(20).joined_at(Time.now).create
     joined_at = 1.day.ago.at_beginning_of_minute.to_utc
     UserForm.update(user, name: "New", age: 20, joined_at: joined_at) do |form, user|
       user.name.should eq "New"
@@ -54,7 +54,7 @@ describe "LuckyRecord::Form" do
       user.joined_at.should eq joined_at
     end
 
-    user = UserBox.new.name("New").age(20).joined_at(Time.now).save
+    user = UserBox.new.name("New").age(20).joined_at(Time.now).create
     user = UserForm.update!(user, name: "New", age: 20, joined_at: joined_at)
     user.name.should eq "New"
     user.age.should eq 20
@@ -118,7 +118,7 @@ describe "LuckyRecord::Form" do
 
   describe "initializer" do
     it "works with a record and named args" do
-      UserBox.new.name("Old Name").save
+      UserBox.new.name("Old Name").create
       params = LuckyRecord::Params.new(name: "New Name")
       user = UserQuery.new.first
 
@@ -313,7 +313,7 @@ describe "LuckyRecord::Form" do
 
   describe "updating with no changes" do
     it "works when there are no changes" do
-      UserBox.new.name("Old Name").save
+      UserBox.new.name("Old Name").create
       user = UserQuery.new.first
       params = {} of String => String
       UserForm.update user, with: params do |form, record|
@@ -322,7 +322,7 @@ describe "LuckyRecord::Form" do
     end
 
     it "returns true when there are no changes" do
-      UserBox.new.name("Old Name").save
+      UserBox.new.name("Old Name").create
       user = UserQuery.new.first
       params = {} of String => String
       UserForm.new(user).tap do |form|
@@ -333,7 +333,7 @@ describe "LuckyRecord::Form" do
 
   describe ".update" do
     it "can create without params" do
-      post = PostBox.new.title("Original Title").save
+      post = PostBox.new.title("Original Title").create
       ValidFormWithoutParams.update(post) do |form, record|
         form.saved?.should be_true
         record.title.should eq "My Title"
@@ -342,7 +342,7 @@ describe "LuckyRecord::Form" do
 
     context "on success" do
       it "yields the form and the updated record" do
-        UserBox.new.name("Old Name").save
+        UserBox.new.name("Old Name").create
         user = UserQuery.new.first
         params = {"name" => "New Name"}
         UserForm.update user, with: params do |form, record|
@@ -354,7 +354,7 @@ describe "LuckyRecord::Form" do
 
     context "on failure" do
       it "yields the form and nil" do
-        UserBox.new.name("Old Name").save
+        UserBox.new.name("Old Name").create
         user = UserQuery.new.first
         params = {"name" => ""}
         UserForm.update user, with: params do |form, record|
@@ -367,14 +367,14 @@ describe "LuckyRecord::Form" do
 
   describe ".update!" do
     it "can create without params" do
-      post = PostBox.new.title("Original Title").save
+      post = PostBox.new.title("Original Title").create
       post = ValidFormWithoutParams.update!(post)
       post.title.should eq "My Title"
     end
 
     context "on success" do
       it "updates and returns the record" do
-        UserBox.new.name("Old Name").save
+        UserBox.new.name("Old Name").create
         user = UserQuery.new.first
         params = {"name" => "New Name"}
 
@@ -387,7 +387,7 @@ describe "LuckyRecord::Form" do
 
     context "on failure" do
       it "raises an exception" do
-        UserBox.new.name("Old Name").save
+        UserBox.new.name("Old Name").create
         user = UserQuery.new.first
         params = {"name" => ""}
 

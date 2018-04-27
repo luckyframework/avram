@@ -5,7 +5,7 @@ include LazyLoadHelpers
 describe "Preloading" do
   it "can disable lazy loading" do
     with_lazy_load(enabled: false) do
-      post = PostBox.save
+      post = PostBox.create
 
       posts = Post::BaseQuery.new
 
@@ -17,8 +17,8 @@ describe "Preloading" do
 
   it "preloads has_one" do
     with_lazy_load(enabled: false) do
-      admin = AdminBox.save
-      sign_in_credential = SignInCredentialBox.new.user_id(admin.id).save
+      admin = AdminBox.create
+      sign_in_credential = SignInCredentialBox.new.user_id(admin.id).create
 
       admin = Admin::BaseQuery.new.preload_sign_in_credential
 
@@ -28,8 +28,8 @@ describe "Preloading" do
 
   it "preloads has_one with custom query and nested preload" do
     with_lazy_load(enabled: false) do
-      user = UserBox.save
-      sign_in_credential = SignInCredentialBox.new.user_id(user.id).save
+      user = UserBox.create
+      sign_in_credential = SignInCredentialBox.new.user_id(user.id).create
 
       user = User::BaseQuery.new.preload(
         SignInCredential::BaseQuery.new.preload_user
@@ -41,11 +41,11 @@ describe "Preloading" do
 
   it "preloads optional has_one" do
     with_lazy_load(enabled: false) do
-      user = UserBox.save
+      user = UserBox.create
       user = User::BaseQuery.new.preload_sign_in_credential.first
       user.sign_in_credential.should be_nil
 
-      sign_in_credential = SignInCredentialBox.new.user_id(user.id).save
+      sign_in_credential = SignInCredentialBox.new.user_id(user.id).create
       user = User::BaseQuery.new.preload_sign_in_credential.first
       user.sign_in_credential.should eq sign_in_credential
     end
@@ -53,8 +53,8 @@ describe "Preloading" do
 
   it "preloads has_many" do
     with_lazy_load(enabled: false) do
-      post = PostBox.save
-      comment = CommentBox.new.post_id(post.id).save
+      post = PostBox.create
+      comment = CommentBox.new.post_id(post.id).create
 
       posts = Post::BaseQuery.new.preload_comments
 
@@ -64,8 +64,8 @@ describe "Preloading" do
 
   it "preloads has_many with custom query" do
     with_lazy_load(enabled: false) do
-      post = PostBox.save
-      comment = CommentBox.new.post_id(post.id).save
+      post = PostBox.create
+      comment = CommentBox.new.post_id(post.id).create
 
       posts = Post::BaseQuery.new.preload(
         Comment::BaseQuery.new.id.not(comment.id)
@@ -77,12 +77,12 @@ describe "Preloading" do
 
   it "preloads has_many through" do
     with_lazy_load(enabled: false) do
-      tag = TagBox.save
-      _unused_tag = TagBox.save
-      post = PostBox.save
-      other_post = PostBox.save
-      TaggingBox.new.tag_id(tag.id).post_id(post.id).save
-      TaggingBox.new.tag_id(tag.id).post_id(other_post.id).save
+      tag = TagBox.create
+      _unused_tag = TagBox.create
+      post = PostBox.create
+      other_post = PostBox.create
+      TaggingBox.new.tag_id(tag.id).post_id(post.id).create
+      TaggingBox.new.tag_id(tag.id).post_id(other_post.id).create
 
       post_tags = Post::BaseQuery.new.preload_tags.results.first.tags
 
@@ -93,8 +93,8 @@ describe "Preloading" do
 
   it "works with nested preloads" do
     with_lazy_load(enabled: false) do
-      post = PostBox.save
-      comment = CommentBox.new.post_id(post.id).save
+      post = PostBox.create
+      comment = CommentBox.new.post_id(post.id).create
 
       posts = Post::BaseQuery.new.preload(
         Comment::BaseQuery.new.preload_post
@@ -106,7 +106,7 @@ describe "Preloading" do
 
   it "uses an empty array if there are no associated records" do
     with_lazy_load(enabled: false) do
-      post = PostBox.save
+      post = PostBox.create
 
       posts = Post::BaseQuery.new.preload_comments
 
@@ -116,8 +116,8 @@ describe "Preloading" do
 
   it "preloads belongs_to" do
     with_lazy_load(enabled: false) do
-      post = PostBox.save
-      comment = CommentBox.new.post_id(post.id).save
+      post = PostBox.create
+      comment = CommentBox.new.post_id(post.id).create
 
       comments = Comment::BaseQuery.new.preload_post
 
@@ -127,8 +127,8 @@ describe "Preloading" do
 
   it "preloads optional belongs_to" do
     with_lazy_load(enabled: false) do
-      employee = EmployeeBox.save
-      manager = ManagerBox.save
+      employee = EmployeeBox.create
+      manager = ManagerBox.create
 
       employees = Employee::BaseQuery.new.preload_manager
       employees.first.manager.should be_nil
@@ -144,8 +144,8 @@ describe "Preloading" do
 
   it "uses preloaded records if available, even if lazy load is enabled" do
     with_lazy_load(enabled: true) do
-      post = PostBox.save
-      comment = CommentBox.new.post_id(post.id).save
+      post = PostBox.create
+      comment = CommentBox.new.post_id(post.id).create
 
       posts = Post::BaseQuery.new.preload(
         Comment::BaseQuery.new.id.not(comment.id)
@@ -156,8 +156,8 @@ describe "Preloading" do
   end
 
   it "lazy loads if nothing is preloaded" do
-    post = PostBox.save
-    comment = CommentBox.new.post_id(post.id).save
+    post = PostBox.create
+    comment = CommentBox.new.post_id(post.id).create
 
     posts = Post::BaseQuery.new
 
