@@ -53,7 +53,7 @@ class LuckyRecord::Repo
   end
 
   def self.table_names
-    tables_with_schema(excluding: "schema_migrations")
+    tables_with_schema(excluding: "migrations")
   end
 
   def self.tables_with_schema(excluding : String)
