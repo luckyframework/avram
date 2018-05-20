@@ -10,6 +10,18 @@ struct Int32
   end
 end
 
+struct Int64
+  def blank?
+    nil?
+  end
+end
+
+struct Float64
+  def blank?
+    nil?
+  end
+end
+
 struct Nil
   def blank?
     nil?

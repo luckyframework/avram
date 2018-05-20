@@ -1,21 +1,14 @@
 class CreateUsers::V20170127143149 < LuckyMigrator::Migration::V1
   def migrate
-    execute <<-SQL
-      CREATE TABLE users (
-        id serial PRIMARY KEY,
-        name text NOT NULL,
-        created_at timestamp NOT NULL,
-        updated_at timestamp NOT NULL,
-        age int NOT NULL,
-        nickname text,
-        joined_at timestamp NOT NULL
-      )
-    SQL
+    create :users do
+      add name : String
+      add nickname : String?
+      add age : Int32
+      add joined_at : Time
+    end
   end
 
   def rollback
-    execute <<-SQL
-      DROP TABLE users
-    SQL
+    drop :users
   end
 end

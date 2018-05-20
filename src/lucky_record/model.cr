@@ -58,15 +58,31 @@ class LuckyRecord::Model
     end
   end
 
+  # Setup [database mapping](http://crystal-lang.github.io/crystal-db/api/0.5.0/DB.html#mapping%28properties%2Cstrict%3Dtrue%29-macro) for the model's fields.
+  #
+  # NOTE: LuckyMigrator saves `Float` columns as numeric which need to be
+  # converted from [PG::Numeric](https://github.com/will/crystal-pg/blob/master/src/pg/numeric.cr) back to `Float64` using a `convertor`
+  # class.
   macro setup_db_mapping
     DB.mapping({
       {% for field in FIELDS %}
         {{field[:name]}}: {
-          type: {{field[:type]}}::Lucky::ColumnType,
+          {% if field[:type] == Float64.id %}
+            type: PG::Numeric,
+            convertor: Float64Convertor,
+          {% else %}
+            type: {{field[:type]}}::Lucky::ColumnType,
+          {% end %}
           nilable: {{field[:nilable]}},
         },
       {% end %}
     })
+  end
+
+  module Float64Converter
+    def self.from_rs(rs)
+      rs.read(PG::Numeric).to_f
+    end
   end
 
   macro setup_base_query_class(table_name)
