@@ -7,6 +7,10 @@ module LuckyRecord::Virtual
     {% end %}
   end
 
+  macro included
+    VIRTUAL_FIELDS = [] of Nil
+  end
+
   ensure_base_virtual_fields_method_is_present
 
   macro allow_virtual(*args, **named_args)
@@ -17,6 +21,8 @@ module LuckyRecord::Virtual
     {% if type_declaration.type.is_a?(Union) %}
       {% raise "virtual must use just one type" %}
     {% end %}
+
+    {% VIRTUAL_FIELDS << type_declaration %}
 
     {% type = type_declaration.type %}
     {% name = type_declaration.var %}

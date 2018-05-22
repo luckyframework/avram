@@ -73,6 +73,9 @@ module LuckyRecord::NeedyInitializerAndSaveMethods
           {{ field[:name] }} : {{ field[:type] }} | Nothing{% if field[:nilable] %} | Nil{% end %} = Nothing.new,
         {% end %}
       {% end %}
+      {% for field in VIRTUAL_FIELDS %}
+        {{ field.var }} : {{ field.type }} | Nothing = Nothing.new,
+      {% end %}
     )
       form = new(
         {% if with_params %}params,{% end %}
@@ -115,6 +118,9 @@ module LuckyRecord::NeedyInitializerAndSaveMethods
           {% for field in FIELDS %}
             {{ field[:name] }} : {{ field[:type] }} | Nothing{% if field[:nilable] %} | Nil{% end %} = Nothing.new,
           {% end %}
+        {% end %}
+        {% for field in VIRTUAL_FIELDS %}
+          {{ field.var }} : {{ field.type }} | Nothing = Nothing.new,
         {% end %}
       )
       form = new(

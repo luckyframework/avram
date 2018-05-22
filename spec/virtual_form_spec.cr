@@ -9,7 +9,22 @@ private class TestVirtualForm < LuckyRecord::VirtualForm
   end
 end
 
+private class UserWithVirtual < User::BaseForm
+  virtual password : String
+end
+
 describe LuckyRecord::VirtualForm do
+  it "has create/update args for virtual fields" do
+    UserWithVirtual.create(password: "p@ssword") do |form, _user|
+      form.password.value = "p@ssword"
+    end
+
+    user = UserBox.create
+    UserWithVirtual.update(user, password: "p@ssword") do |form, _user|
+      form.password.value = "p@ssword"
+    end
+  end
+
   it "sets a form_name" do
     TestVirtualForm.new.form_name.should eq "test_virtual"
     TestVirtualForm.form_name.should eq "test_virtual"
