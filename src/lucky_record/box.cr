@@ -12,10 +12,6 @@ abstract class LuckyRecord::Box
     self
   end
 
-  def save
-    self.class.save
-  end
-
   def self.save
     {% raise "'Box.save' has been renamed to 'Box.create' to match 'Form.create'" %}
   end

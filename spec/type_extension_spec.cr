@@ -14,12 +14,12 @@ end
 
 describe "TypeExtensions" do
   it "should work in boxes" do
-    CompanyBox.save
+    CompanyBox.create
     company = CompanyQuery.new.first
     company.sales.should eq Int64::MAX
     company.earnings.should eq 1.0
 
-    company2 = CompanyBox.new.sales(10_i64).earnings(2.0).save
+    company2 = CompanyBox.create &.sales(10_i64).earnings(2.0)
     company2.sales.should eq 10_i64
     company2.earnings.should eq 2.0
   end
@@ -31,7 +31,7 @@ describe "TypeExtensions" do
   end
 
   it "Int64 and Float64 should allow querying with Int32" do
-    CompanyBox.new.sales(10_i64).earnings(1.0).save
+    CompanyBox.create &.sales(10_i64).earnings(1.0)
     using_sales = CompanyQuery.new.sales(10).first
     using_sales.sales.should eq 10_i64
 
