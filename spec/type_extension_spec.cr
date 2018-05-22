@@ -4,7 +4,7 @@ class CompanyQuery < Company::BaseQuery
 end
 
 class CompanyForm < Company::BaseForm
-  allow :sales, :earnings
+  fillable :sales, :earnings
 
   def prepare
     validate_required sales
