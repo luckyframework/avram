@@ -60,7 +60,8 @@ abstract class LuckyRecord::Form(T)
         ▸ Use 'create' to create a brand new record.
         ▸ Use 'update' to update an existing record.
 
-      ERROR %}
+      ERROR
+    %}
   end
 
   macro add_fields(fields)
@@ -184,7 +185,8 @@ abstract class LuckyRecord::Form(T)
 
             ▸ fillable #{field_name.var}
 
-          ERROR %}
+          ERROR
+        %}
       {% end %}
       {% unless field_name.is_a?(SymbolLiteral) || field_name.is_a?(Call) %}
         {% raise <<-ERROR
@@ -195,7 +197,8 @@ abstract class LuckyRecord::Form(T)
             ▸ Use a bare word (recommended): 'fillable name'
             ▸ Use a Symbol: 'fillable :name'
 
-          ERROR %}
+          ERROR
+        %}
       {% end %}
       {% if FIELDS.any? { |field| field[:name].id == field_name.id } %}
         def {{ field_name.id }}
@@ -213,7 +216,8 @@ abstract class LuckyRecord::Form(T)
             ▸ Add the column to the model if it doesn't exist.
             ▸ Use 'virtual' if you want a field that is not saved to the database.
 
-          ERROR %}
+          ERROR
+        %}
       {% end %}
     {% end %}
   end
