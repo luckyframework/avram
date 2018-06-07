@@ -10,7 +10,7 @@ module LuckyRecord::Validations
   end
 
   private def validate_acceptance_of(field : FillableField(Bool?) | Field(Bool?), message = "must be accepted")
-    if field.value == false
+    if field.value != true
       field.add_error message
     end
   end

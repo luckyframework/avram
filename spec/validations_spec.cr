@@ -177,6 +177,10 @@ describe LuckyRecord::Validations do
         user.terms.errors.should eq ["must be accepted"]
       end
 
+      validate(terms: nil) do |user|
+        user.terms.errors.should eq ["must be accepted"]
+      end
+
       validate(terms: true) do |user|
         user.terms.errors.empty?.should be_true
       end
