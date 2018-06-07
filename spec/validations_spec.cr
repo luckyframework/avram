@@ -45,6 +45,10 @@ private class TestValidationUser
     self
   end
 
+  def run_validate_required_when_value_is_false
+    validate_required terms
+  end
+
   def run_validations_with_message
     validate_required city, state, message: "ugh"
     validate_inclusion_of state, in: ["CA, NY"], message: "that one's not allowed"
@@ -111,6 +115,20 @@ describe LuckyRecord::Validations do
     it "adds no errors if things are present" do
       validate(name: "Paul") do |user|
         user.name.errors.empty?.should be_true
+      end
+    end
+
+    it "adds no error if the value is 'false'" do
+      validate(terms: false) do |user|
+        user.terms.reset_errors
+        user.run_validate_required_when_value_is_false
+        user.terms.errors.empty?.should be_true
+      end
+
+      validate(terms: nil) do |user|
+        user.terms.reset_errors
+        user.run_validate_required_when_value_is_false
+        user.terms.errors.should contain "is required"
       end
     end
   end

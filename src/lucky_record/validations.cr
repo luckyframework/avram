@@ -3,7 +3,7 @@ require "./validations/**"
 module LuckyRecord::Validations
   private def validate_required(*fields, message = "is required")
     fields.each do |field|
-      if field.value.blank?
+      if field.value.blank? && field.value != false
         field.add_error message
       end
     end

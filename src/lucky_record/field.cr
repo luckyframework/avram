@@ -21,6 +21,10 @@ class LuckyRecord::Field(T)
     add_error(message_string)
   end
 
+  def reset_errors
+    @errors = [] of String
+  end
+
   def errors
     @errors.uniq
   end
