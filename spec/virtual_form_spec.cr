@@ -13,6 +13,14 @@ private class UserWithVirtual < User::BaseForm
   virtual password : String
 end
 
+private class CanUseSameVirtualFieldTwiceInModelBackedForm < User::BaseForm
+  virtual password : String
+end
+
+private class CanUseSameVirtualFieldTwiceInVirtualForm < LuckyRecord::VirtualForm
+  virtual name : String
+end
+
 describe LuckyRecord::VirtualForm do
   it "has create/update args for virtual fields" do
     UserWithVirtual.create(password: "p@ssword") do |form, _user|

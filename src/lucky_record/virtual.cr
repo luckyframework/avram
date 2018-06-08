@@ -9,6 +9,27 @@ module LuckyRecord::Virtual
 
   macro included
     VIRTUAL_FIELDS = [] of Nil
+
+    macro inherited
+      inherit_virtual_fields
+    end
+  end
+
+  macro inherit_virtual_fields
+    \{% if !@type.constant(:VIRTUAL_FIELDS) %}
+      VIRTUAL_FIELDS = [] of Nil
+    \{% end %}
+
+
+    \{% if !@type.ancestors.first.abstract? %}
+      \{% for field in @type.ancestors.first.constant :VIRTUAL_FIELDS %}
+        \{% VIRTUAL_FIELDS << type_declaration %}
+      \{% end %}
+    \{% end %}
+
+    macro inherited
+      inherit_virtual_fields
+    end
   end
 
   ensure_base_virtual_fields_method_is_present
