@@ -5,8 +5,8 @@ class CreateTaggings::V20180115194734 < LuckyMigrator::Migration::V1
     end
 
     create :taggings do
-      belongs_to Tag, on_delete: :cascade
-      belongs_to Post, on_delete: :cascade
+      add_belongs_to tag : Tag, on_delete: :cascade
+      add_belongs_to post : Post, on_delete: :cascade
     end
   end
 
