@@ -15,6 +15,7 @@ dependencies:
     github: crystal-lang/crystal-db
   pg:
     github: will/crystal-pg
+    version: ~> 0.15
   habitat:
     github: luckyframework/habitat
 

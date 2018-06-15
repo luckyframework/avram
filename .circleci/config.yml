@@ -14,7 +14,7 @@ jobs:
       - checkout
       - run:
           name: "Install dependencies"
-          command: crystal deps
+          command: shards install
       - run:
           name: "Check formatting"
           command: crystal tool format src spec --check
