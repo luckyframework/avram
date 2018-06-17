@@ -333,6 +333,7 @@ abstract class LuckyRecord::Form(T)
   end
 
   private def update(id) : T
+    self.updated_at.value = Time.utc_now
     @record = LuckyRecord::Repo.run do |db|
       db.query update_query(id).statement_for_update(changes), update_query(id).args_for_update(changes) do |rs|
         @record = @@schema_class.from_rs(rs).first
