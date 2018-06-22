@@ -67,6 +67,11 @@ module LuckyRecord::Queryable(T)
     self
   end
 
+  def none
+    query.where(LuckyRecord::Where::Equal.new("1", "0"))
+    self
+  end
+
   def limit(amount)
     query.limit(amount)
     self

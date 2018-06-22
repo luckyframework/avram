@@ -270,6 +270,16 @@ describe LuckyRecord::Query do
     end
   end
 
+  describe "#none" do
+    it "returns 0 records" do
+      UserBox.create
+
+      query = UserQuery.new.none
+
+      query.results.size.should eq 0
+    end
+  end
+
   describe "#select_min" do
     it "returns the minimum" do
       UserBox.create &.age(2)
