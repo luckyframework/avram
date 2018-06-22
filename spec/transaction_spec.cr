@@ -26,7 +26,7 @@ describe "LuckyRecord::Form" do
         UserBox.create
         PostBox.create
         LuckyRecord::Repo.rollback
-      end
+      end.should be_false
 
       UserQuery.new.count.to_i.should eq(0)
       Post::BaseQuery.new.count.to_i.should eq(0)

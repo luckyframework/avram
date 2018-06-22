@@ -1,13 +1,17 @@
 require "./validations"
 require "./callbacks"
+require "./nested_form"
 require "./needy_initializer_and_save_methods"
 require "./virtual"
+require "./mark_as_failed"
 
 abstract class LuckyRecord::Form(T)
   include LuckyRecord::Validations
   include LuckyRecord::NeedyInitializerAndSaveMethods
   include LuckyRecord::Virtual
   include LuckyRecord::Callbacks
+  include LuckyRecord::NestedForm
+  include LuckyRecord::MarkAsFailed
 
   enum SaveStatus
     Saved
@@ -241,7 +245,7 @@ abstract class LuckyRecord::Form(T)
       self.save_status = SaveStatus::Saved
       true
     else
-      self.save_status = SaveStatus::SaveFailed
+      mark_as_failed
       false
     end
   end
