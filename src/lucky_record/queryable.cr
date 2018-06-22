@@ -132,7 +132,7 @@ module LuckyRecord::Queryable(T)
     end
   end
 
-  private def exec_scalar
+  def exec_scalar
     LuckyRecord::Repo.run do |db|
       db.scalar query.statement, query.args
     end

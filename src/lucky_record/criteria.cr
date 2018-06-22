@@ -50,6 +50,26 @@ class LuckyRecord::Criteria(T, V)
     add_clause(LuckyRecord::Where::LessThanOrEqualTo.new(column, V::Lucky.to_db!(value)))
   end
 
+  def select_min : V
+    rows.query.select_min(column)
+    rows.exec_scalar.as(V)
+  end
+
+  def select_max : V
+    rows.query.select_max(column)
+    rows.exec_scalar.as(V)
+  end
+
+  def select_average : Float
+    rows.query.select_average(column)
+    rows.exec_scalar.as(PG::Numeric).to_f
+  end
+
+  def select_sum : Int64
+    rows.query.select_sum(column)
+    rows.exec_scalar.as(Int64)
+  end
+
   def in(values)
     values = values.map { |value| V::Lucky.to_db!(value) }
     add_clause(LuckyRecord::Where::In.new(column, values))

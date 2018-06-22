@@ -1,4 +1,5 @@
 class LuckyRecord::QueryBuilder
+  alias ColumnName = Symbol | String
   getter :table
   @limit : Int32?
   @offset : Int32?
@@ -103,12 +104,46 @@ class LuckyRecord::QueryBuilder
   end
 
   def select_count
-    if @limit || @offset
-      raise LuckyRecord::UnsupportedQueryError.new("Counting with limit or offset is not supported yet. Try calling 'results.size' on your query to count using Crystal instead of the database.")
-    end
-    @selections = "COUNT(*)"
+    add_aggregate "COUNT(*)"
+  end
+
+  def select_min(column : ColumnName)
+    add_aggregate "MIN(#{column})"
+  end
+
+  def select_max(column : ColumnName)
+    add_aggregate "MAX(#{column})"
+  end
+
+  def select_average(column : ColumnName)
+    add_aggregate "AVG(#{column})"
+  end
+
+  def select_sum(column : ColumnName)
+    add_aggregate "SUM(#{column})"
+  end
+
+  private def add_aggregate(sql : String)
+    raise_if_query_has_unsupported_statements
+    @selections = sql
     reset_order
     self
+  end
+
+  private def raise_if_query_has_unsupported_statements
+    if has_unsupported_clauses?
+      raise LuckyRecord::UnsupportedQueryError.new(<<-ERROR
+        Can't use aggregates (count, min, etc.) with limit or offset.
+
+        Try calling 'results' on your query and use the Array and Enumerable
+        methods in Crystal instead of using the database.
+        ERROR
+      )
+    end
+  end
+
+  private def has_unsupported_clauses?
+    @limit || @offset
   end
 
   private def reset_order

@@ -77,6 +77,56 @@ describe "LuckyRecord::QueryBuilder" do
     query.args.should eq [] of String
   end
 
+  it "raises for aggregates with unsupported statements" do
+    raises_unsupported_query &.limit(1).select_min(:age)
+    raises_unsupported_query &.offset(1).select_min(:age)
+
+    raises_unsupported_query &.limit(1).select_max(:age)
+    raises_unsupported_query &.offset(1).select_max(:age)
+
+    raises_unsupported_query &.limit(1).select_sum(:age)
+    raises_unsupported_query &.offset(1).select_sum(:age)
+
+    raises_unsupported_query &.limit(1).select_average(:age)
+    raises_unsupported_query &.offset(1).select_average(:age)
+  end
+
+  it "can get the min" do
+    query = LuckyRecord::QueryBuilder
+      .new(table: :users)
+      .select_min(:age)
+
+    query.statement.should eq "SELECT MIN(age) FROM users"
+    query.args.should eq [] of String
+  end
+
+  it "can get the max" do
+    query = LuckyRecord::QueryBuilder
+      .new(table: :users)
+      .select_max(:age)
+
+    query.statement.should eq "SELECT MAX(age) FROM users"
+    query.args.should eq [] of String
+  end
+
+  it "can get the average" do
+    query = LuckyRecord::QueryBuilder
+      .new(table: :users)
+      .select_average(:age)
+
+    query.statement.should eq "SELECT AVG(age) FROM users"
+    query.args.should eq [] of String
+  end
+
+  it "can sum a column" do
+    query = LuckyRecord::QueryBuilder
+      .new(table: :users)
+      .select_sum(:age)
+
+    query.statement.should eq "SELECT SUM(age) FROM users"
+    query.args.should eq [] of String
+  end
+
   describe "#select" do
     it "specifies columns to be selected" do
       query = LuckyRecord::QueryBuilder
@@ -149,4 +199,10 @@ end
 
 private def new_query
   LuckyRecord::QueryBuilder.new(table: :users)
+end
+
+private def raises_unsupported_query
+  expect_raises LuckyRecord::UnsupportedQueryError do
+    yield LuckyRecord::QueryBuilder.new(table: :users)
+  end
 end

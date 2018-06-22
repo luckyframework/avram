@@ -270,6 +270,78 @@ describe LuckyRecord::Query do
     end
   end
 
+  describe "#select_min" do
+    it "returns the minimum" do
+      UserBox.create &.age(2)
+      UserBox.create &.age(1)
+      UserBox.create &.age(3)
+      min = UserQuery.new.age.select_min
+      min.should eq 1
+    end
+
+    it "works with chained where clauses" do
+      UserBox.create &.age(2)
+      UserBox.create &.age(1)
+      UserBox.create &.age(3)
+      min = UserQuery.new.age.gte(2).age.select_min
+      min.should eq 2
+    end
+  end
+
+  describe "#select_max" do
+    it "returns the maximum" do
+      UserBox.create &.age(2)
+      UserBox.create &.age(1)
+      UserBox.create &.age(3)
+      max = UserQuery.new.age.select_max
+      max.should eq 3
+    end
+
+    it "works with chained where clauses" do
+      UserBox.create &.age(2)
+      UserBox.create &.age(1)
+      UserBox.create &.age(3)
+      max = UserQuery.new.age.lte(2).age.select_max
+      max.should eq 2
+    end
+  end
+
+  describe "#select_average" do
+    it "returns the average" do
+      UserBox.create &.age(2)
+      UserBox.create &.age(1)
+      UserBox.create &.age(3)
+      average = UserQuery.new.age.select_average
+      average.should eq 2.0
+    end
+
+    it "works with chained where clauses" do
+      UserBox.create &.age(2)
+      UserBox.create &.age(1)
+      UserBox.create &.age(3)
+      average = UserQuery.new.age.gte(2).age.select_average
+      average.should eq 2.5
+    end
+  end
+
+  describe "#select_sum" do
+    it "returns the sum" do
+      UserBox.create &.age(2)
+      UserBox.create &.age(1)
+      UserBox.create &.age(3)
+      sum = UserQuery.new.age.select_sum
+      sum.should eq 6
+    end
+
+    it "works with chained where clauses" do
+      UserBox.create &.age(2)
+      UserBox.create &.age(1)
+      UserBox.create &.age(3)
+      sum = UserQuery.new.age.gte(2).age.select_sum
+      sum.should eq 5
+    end
+  end
+
   describe "#select_count" do
     it "returns the number of database rows" do
       count = UserQuery.new.select_count
