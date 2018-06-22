@@ -31,7 +31,7 @@ describe "TypeExtensions" do
   end
 
   it "Int64 and Float64 should allow querying with Int32" do
-    CompanyBox.create &.sales(10_i64).earnings(1.0)
+    CompanyBox.create &.sales(10).earnings(1.0)
     using_sales = CompanyQuery.new.sales(10).first
     using_sales.sales.should eq 10_i64
 

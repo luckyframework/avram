@@ -3,13 +3,19 @@ abstract class LuckyRecord::Box
 
   macro inherited
     {% unless @type.abstract? %}
-      @form : {{ @type.name.gsub(/Box/, "::BaseForm").id }} = {{ @type.name.gsub(/Box/, "::BaseForm").id }}.new
+      {% form = @type.name.gsub(/Box/, "::BaseForm").id %}
+      @form : {{ form }} = {{ form }}.new
+      setup_field_shortcuts({{ form }})
     {% end %}
   end
 
-  macro method_missing(call)
-    form.{{ call.name }}.value = {{ call.args.first }}
-    self
+  macro setup_field_shortcuts(form)
+    {% for field in form.resolve.constant(:FIELDS) %}
+      def {{ field[:name] }}(value : {{ field[:type] }}{% if field[:nilable] %}?{% end %})
+        form.{{ field[:name] }}.value = value
+        self
+      end
+    {% end %}
   end
 
   def self.save
