@@ -71,7 +71,7 @@ describe "LuckyRecord::QueryBuilder" do
   it "can be counted" do
     query = LuckyRecord::QueryBuilder
       .new(table: :users)
-      .count
+      .select_count
 
     query.statement.should eq "SELECT COUNT(*) FROM users"
     query.args.should eq [] of String

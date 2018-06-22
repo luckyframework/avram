@@ -270,13 +270,13 @@ describe LuckyRecord::Query do
     end
   end
 
-  describe "#count" do
+  describe "#select_count" do
     it "returns the number of database rows" do
-      count = UserQuery.new.count
+      count = UserQuery.new.select_count
       count.should eq 0
 
       UserBox.create
-      count = UserQuery.new.count
+      count = UserQuery.new.select_count
       count.should eq 1
     end
 
@@ -285,7 +285,7 @@ describe LuckyRecord::Query do
 
       query = UserQuery.new.name.desc_order
 
-      query.count.should eq 1
+      query.select_count.should eq 1
     end
 
     it "works with chained where" do
@@ -294,16 +294,16 @@ describe LuckyRecord::Query do
 
       query = UserQuery.new.age.gte(31)
 
-      query.count.should eq 1
+      query.select_count.should eq 1
     end
 
     it "raises when used with offset or limit" do
       expect_raises(LuckyRecord::UnsupportedQueryError) do
-        UserQuery.new.limit(1).count
+        UserQuery.new.limit(1).select_count
       end
 
       expect_raises(LuckyRecord::UnsupportedQueryError) do
-        UserQuery.new.offset(1).count
+        UserQuery.new.offset(1).select_count
       end
     end
   end

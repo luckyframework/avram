@@ -28,8 +28,8 @@ describe "LuckyRecord::Form" do
         LuckyRecord::Repo.rollback
       end.should be_false
 
-      UserQuery.new.count.to_i.should eq(0)
-      Post::BaseQuery.new.count.to_i.should eq(0)
+      UserQuery.new.select_count.to_i.should eq(0)
+      Post::BaseQuery.new.select_count.to_i.should eq(0)
     end
   end
 
@@ -55,13 +55,13 @@ describe "LuckyRecord::Form" do
     it "runs in a transaction" do
       params = {"title" => "New Title"}
       PostTransactionForm.create(params, rollback_after_save: true) do |form, post|
-        Post::BaseQuery.new.count.to_i.should eq(0)
+        Post::BaseQuery.new.select_count.to_i.should eq(0)
         post.should be_nil
         form.saved?.should be_false
       end
 
       PostTransactionForm.create(params, rollback_after_save: false) do |form, post|
-        Post::BaseQuery.new.count.to_i.should eq(1)
+        Post::BaseQuery.new.select_count.to_i.should eq(1)
         post.should_not be_nil
         form.saved?.should be_true
       end
@@ -76,7 +76,7 @@ describe "LuckyRecord::Form" do
           raise "This should not be executed"
         end
       end
-      Post::BaseQuery.new.count.to_i.should eq(0)
+      Post::BaseQuery.new.select_count.to_i.should eq(0)
     end
   end
 end

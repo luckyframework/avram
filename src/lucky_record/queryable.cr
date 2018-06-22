@@ -99,8 +99,8 @@ module LuckyRecord::Queryable(T)
     last? || raise RecordNotFoundError.new(model: @@table_name, query: :last)
   end
 
-  def count : Int64
-    query.count
+  def select_count : Int64
+    query.select_count
     exec_scalar.as(Int64)
   end
 
