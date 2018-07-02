@@ -42,6 +42,13 @@ private class EmptyModelCompilesOk < LuckyRecord::Model
   end
 end
 
+private class InferredTableNameModel < LuckyRecord::Model
+  COLUMNS = "inferred_table_name_models.id, inferred_table_name_models.created_at, inferred_table_name_models.updated_at"
+
+  table do
+  end
+end
+
 describe LuckyRecord::Model do
   it "sets up initializers based on the fields" do
     now = Time.now
@@ -188,5 +195,10 @@ describe LuckyRecord::Model do
       item = LineItemQuery.new.first
       item.id.to_s.should match(uuid_regexp)
     end
+  end
+
+  it "can infer the table name when omitted" do
+    query = InferredTableNameModel::BaseQuery.all
+    query.to_sql.should eq ["SELECT #{InferredTableNameModel::COLUMNS} FROM inferred_table_name_models"]
   end
 end
