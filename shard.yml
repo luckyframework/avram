@@ -22,6 +22,6 @@ dependencies:
 development_dependencies:
   lucky_migrator:
     github: luckyframework/lucky_migrator
-    version: ~> 0.6.0
+    branch: master
 
 license: MIT

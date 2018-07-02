@@ -81,4 +81,31 @@ describe LuckyRecord::Model do
       end
     end
   end
+
+  context "uuid backed models" do
+    describe "has_one" do
+      it "returns associated model" do
+        item = LineItemBox.create
+        price = PriceBox.new.line_item_id(item.id).create
+        item.price.should eq price
+      end
+    end
+
+    describe "belongs_to" do
+      it "returns associated model" do
+        item = LineItemBox.create
+        price = PriceBox.new.line_item_id(item.id).create
+        price.line_item.should eq item
+      end
+    end
+
+    describe "has_many" do
+      it "gets the related records" do
+        item = LineItemBox.create
+        scan = ScanBox.new.line_item_id(item.id).create
+
+        LineItemQuery.new.find(item.id).scans.should eq [scan]
+      end
+    end
+  end
 end

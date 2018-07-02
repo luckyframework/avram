@@ -68,7 +68,7 @@ abstract class LuckyRecord::Form(T)
     %}
   end
 
-  macro add_fields(fields)
+  macro add_fields(primary_key_type, fields)
     FIELDS = {{ fields }}
 
     private def extract_changes_from_params
@@ -148,6 +148,10 @@ abstract class LuckyRecord::Form(T)
 
     def after_prepare
       validate_required *required_fields
+
+      {% if primary_key_type == :uuid %}
+        id.value ||= UUID.random()
+      {% end %}
     end
   end
 

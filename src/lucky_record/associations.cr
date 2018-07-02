@@ -172,7 +172,9 @@ module LuckyRecord::Associations
       {% nilable = false %}
     {% end %}
 
-    column {{ assoc_name.id }}_id : Int32{% if nilable %}?{% end %}
+    {% owner_id_type = model.resolve.constant(:PRIMARY_KEY_TYPE_CLASS) %}
+
+    column {{ assoc_name.id }}_id : {{ owner_id_type }}{% if nilable %}?{% end %}
 
     association table_name: :{{ model.resolve.constant(:TABLE_NAME).id }}, type: {{ model }}, foreign_key: :id
 
@@ -212,7 +214,7 @@ module LuckyRecord::Associations
 
       def preload(preload_query : {{ model }}::BaseQuery)
         add_preload do |records|
-          ids = [] of Int32
+          ids = [] of {{ model.resolve.constant(:PRIMARY_KEY_TYPE_CLASS) }}
           records.each do |record|
             record.{{ foreign_key }}.try do |id|
               ids << id

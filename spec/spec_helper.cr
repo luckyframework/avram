@@ -13,6 +13,6 @@ LuckyRecord::Repo.configure do
   end
 end
 
-Spec.after_each do
+Spec.before_each do
   LuckyRecord::Repo.truncate
 end
