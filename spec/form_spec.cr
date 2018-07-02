@@ -262,6 +262,16 @@ describe "LuckyRecord::Form" do
       end
     end
 
+    it "allows overriding updated_at and created_at on create" do
+      user = UserBox.new
+        .created_at(Time.new(2018, 1, 1, 10, 20, 30))
+        .updated_at(Time.new(2018, 1, 1, 20, 30, 40))
+        .create
+
+      user.created_at.should eq Time.new(2018, 1, 1, 10, 20, 30)
+      user.updated_at.should eq Time.new(2018, 1, 1, 20, 30, 40)
+    end
+
     context "on success" do
       it "yields the form and the saved record" do
         params = {"joined_at" => now_as_string, "name" => "New Name", "age" => "30"}
@@ -348,6 +358,15 @@ describe "LuckyRecord::Form" do
         UserForm.update user, with: params do |form, record|
           form.saved?.should be_true
           record.name.should eq "New Name"
+        end
+      end
+
+      it "updates updated_at" do
+        user = UserBox.new.updated_at(1.day.ago).create
+        params = {"name" => "New Name"}
+        UserForm.update user, with: params do |form, record|
+          form.saved?.should be_true
+          record.updated_at.should be > 1.second.ago
         end
       end
     end
