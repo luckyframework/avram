@@ -79,7 +79,11 @@ module LuckyRecord::Validations
   # if because there is no T (model class).
   macro included
     private def build_validation_query(column_name, value) : T::BaseQuery
-      T::BaseQuery.new.where(column_name, value)
+      query = T::BaseQuery.new.where(column_name, value)
+      record.try(&.id).try do |id|
+        query = query.id.not(id)
+      end
+      query
     end
   end
 end

@@ -134,7 +134,7 @@ describe LuckyRecord::Validations do
   end
 
   describe "validate_uniqueness_of" do
-    it "validates that a record is unique with a query or without one" do
+    it "validates that a new record is unique with a query or without one" do
       existing_user = UserBox.new.name("Sally").nickname("Sal").create
       form = UniquenessWithDatabaseBackedForm.new
       form.name.value = existing_user.name
@@ -144,6 +144,16 @@ describe LuckyRecord::Validations do
 
       form.name.errors.should contain "is already taken"
       form.nickname.errors.should contain "is already taken"
+    end
+
+    it "ignores the existing record on update" do
+      existing_user = UserBox.new.name("Sally").create
+      form = UniquenessWithDatabaseBackedForm.new(existing_user)
+      form.name.value = existing_user.name
+
+      form.prepare
+
+      form.name.errors.should_not contain "is already taken"
     end
   end
 

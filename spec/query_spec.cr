@@ -1,6 +1,6 @@
 require "./spec_helper"
 
-private class ChainedQuery < User::BaseQuery
+class ChainedQuery < User::BaseQuery
   def young
     age.lte(18)
   end
