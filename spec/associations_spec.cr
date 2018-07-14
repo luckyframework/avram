@@ -1,14 +1,5 @@
 require "./spec_helper"
 
-class KeyHolder < LuckyRecord::Model
-  table users do
-    has_many sign_in_credentials : SignInCredential, foreign_key: :user_id
-  end
-end
-
-class KeyHolderQuery < KeyHolder::BaseQuery
-end
-
 describe LuckyRecord::Model do
   describe "has_many" do
     it "gets the related records" do
@@ -100,6 +91,15 @@ describe LuckyRecord::Model do
     end
 
     describe "has_many" do
+      it "gets the related records" do
+        item = LineItemBox.create
+        scan = ScanBox.new.line_item_id(item.id).create
+
+        LineItemQuery.new.find(item.id).scans.should eq [scan]
+      end
+    end
+
+    describe "has_many through a join table" do
       it "gets the related records" do
         item = LineItemBox.create
         scan = ScanBox.new.line_item_id(item.id).create

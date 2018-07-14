@@ -91,6 +91,22 @@ describe "Preloading" do
     end
   end
 
+  it "preloads has_many through with uuids" do
+    with_lazy_load(enabled: false) do
+      item = LineItemBox.create
+      other_item = LineItemBox.create
+      product = ProductBox.create
+      _unused_product = ProductBox.create
+      LineItemProductBox.create &.line_item_id(item.id).product_id(product.id)
+      LineItemProductBox.create &.line_item_id(other_item.id).product_id(product.id)
+
+      item_products = LineItemQuery.new.preload_products.results.first.products
+
+      item_products.size.should eq(1)
+      item_products.should eq([product])
+    end
+  end
+
   it "preloads uuid backed has_many" do
     with_lazy_load(enabled: false) do
       item = LineItemBox.create
