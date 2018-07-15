@@ -8,6 +8,18 @@ class LuckyRecord::Field(T)
   def initialize(@name : Symbol, @param : String?, @value : T, @form_name : String)
   end
 
+  @_fillable : LuckyRecord::FillableField(T)?
+
+  def fillable
+    @_fillable ||= begin
+      LuckyRecord::FillableField.new(name: @name, param: @param, value: @value, form_name: @form_name).tap do |field|
+        errors.each do |error|
+          field.add_error error
+        end
+      end
+    end
+  end
+
   def param
     @param || value.to_s
   end

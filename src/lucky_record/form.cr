@@ -210,7 +210,7 @@ abstract class LuckyRecord::Form(T)
       {% end %}
       {% if FIELDS.any? { |field| field[:name].id == field_name.id } %}
         def {{ field_name.id }}
-          LuckyRecord::FillableField.new _{{ field_name.id }}
+          _{{ field_name.id }}.fillable
         end
 
         @@fillable_param_keys << "{{ field_name.id }}"

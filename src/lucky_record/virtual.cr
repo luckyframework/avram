@@ -56,7 +56,7 @@ module LuckyRecord::Virtual
     end
 
     def {{ name }}
-      LuckyRecord::FillableField({{ type }}?).new(_{{ name }})
+      _{{ name }}.fillable
     end
 
     private def _{{ name }}
