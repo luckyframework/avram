@@ -114,8 +114,8 @@ abstract class LuckyRecord::Form(T)
         new_params.select(@@fillable_param_keys)
       end
 
-      def set_{{ field[:name] }}_from_param(value)
-        parse_result = {{ field[:type] }}::Lucky.parse(value)
+      def set_{{ field[:name] }}_from_param(_value)
+        parse_result = {{ field[:type] }}::Lucky.parse(_value)
         if parse_result.is_a? LuckyRecord::Type::SuccessfulCast
           {{ field[:name] }}.value = parse_result.value
         else

@@ -25,6 +25,16 @@ private class LineItemForm < LineItem::BaseForm
   fillable :name
 end
 
+private class ValueColumnModel < LuckyRecord::Model
+  table :value_column_model do
+    column value : String
+  end
+end
+
+private class ValueColumnModelForm < ValueColumnModel::BaseForm
+  fillable value
+end
+
 describe "LuckyRecord::Form" do
   it "generates the correct form_name" do
     LimitedUserForm.new.form_name.should eq "limited_user"
@@ -342,6 +352,10 @@ describe "LuckyRecord::Form" do
         )
         LineItemQuery.new.id("a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11").select_count.should eq 1
       end
+    end
+
+    it "can handle a field named 'value'" do
+      ValueColumnModelForm.new({"value" => "value"}).value.value.should eq "value"
     end
   end
 
