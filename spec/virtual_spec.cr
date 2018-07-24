@@ -16,7 +16,6 @@ end
 describe "virtual in forms" do
   it "is a FillableField" do
     form.password_confirmation.should be_a(LuckyRecord::FillableField(String?))
-    form.password_confirmation.should be_a(LuckyRecord::Fillable)
     form.password_confirmation.name.should eq(:password_confirmation)
     form.password_confirmation.form_name.should eq("virtual")
   end

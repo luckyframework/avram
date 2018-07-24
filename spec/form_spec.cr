@@ -179,7 +179,6 @@ describe "LuckyRecord::Form" do
       form.nickname.is_a?(LuckyRecord::Field).should be_true
       form.name.value.should eq "someone"
       form.name.is_a?(LuckyRecord::FillableField).should be_true
-      form.name.is_a?(LuckyRecord::Fillable).should be_true
     end
   end
 
