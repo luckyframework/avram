@@ -1,6 +1,6 @@
 module LuckyRecord::SchemaEnforcer
   macro add_schema_enforcer_methods_for(table_name, fields)
-    def ensure_correct_field_mappings!
+    def self.ensure_correct_field_mappings!
       fields = [
         {% for field in fields %}
           { name: :{{field[:name]}}, nilable: {{ field[:nilable] }}, type: {{ field[:type] }} },

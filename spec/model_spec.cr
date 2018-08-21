@@ -135,49 +135,32 @@ describe LuckyRecord::Model do
 
   describe ".ensure_correct_field_mappings" do
     it "raises on missing table" do
-      missing_table = MissingTable.new(1, Time.new, Time.new)
       expect_raises Exception, "The table 'definitely_a_missing_table' was not found." do
-        missing_table.ensure_correct_field_mappings!
+        MissingTable.ensure_correct_field_mappings!
       end
     end
 
     it "raises on a missing but similarly named table" do
-      missing_table = MissingButSimilarlyNamedTable.new(1, Time.new, Time.new)
       expect_raises Exception, "The table 'uusers' was not found. Did you mean users?" do
-        missing_table.ensure_correct_field_mappings!
+        MissingButSimilarlyNamedTable.ensure_correct_field_mappings!
       end
     end
 
     it "raises on fields with missing columns" do
-      now = Time.now
-      user = ModelWithMissingButSimilarlyNamedColumn.new id: 1,
-        created_at: now,
-        updated_at: now,
-        mickname: "missing"
       expect_raises Exception, "The table 'users' does not have a 'mickname' column. Did you mean nickname?" do
-        user.ensure_correct_field_mappings!
+        ModelWithMissingButSimilarlyNamedColumn.ensure_correct_field_mappings!
       end
     end
 
     it "raises on nilable fields with required columns" do
-      now = Time.now
-      user = ModelWithOptionalFieldOnRequiredColumn.new id: 1,
-        created_at: now,
-        updated_at: now,
-        name: "Mikias"
       expect_raises Exception, "'name' is marked as nilable (name : String?), but the database column does not allow nils." do
-        user.ensure_correct_field_mappings!
+        ModelWithOptionalFieldOnRequiredColumn.ensure_correct_field_mappings!
       end
     end
 
     it "raises on required fields with nilable columns" do
-      now = Time.now
-      user = ModelWithRequiredFieldOnOptionalColumn.new id: 1,
-        created_at: now,
-        updated_at: now,
-        nickname: "Miki"
       expect_raises Exception, "'nickname' is marked as required (nickname : String), but the database column allows nils." do
-        user.ensure_correct_field_mappings!
+        ModelWithRequiredFieldOnOptionalColumn.ensure_correct_field_mappings!
       end
     end
   end
