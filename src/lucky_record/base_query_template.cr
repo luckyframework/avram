@@ -38,13 +38,21 @@ class LuckyRecord::BaseQueryTemplate
           inner_join_{{ assoc[:name] }}
         end
 
-        def inner_join_{{ assoc[:name] }}
-          join(LuckyRecord::Join::Inner.new(@@table_name, :{{ assoc[:name] }}, foreign_key: {{ assoc[:foreign_key] }}))
-        end
+        {% for join_type in ["Inner", "Left"] %}
+          def {{ join_type.downcase.id }}_join_{{ assoc[:name] }}
+            {% if assoc[:relationship_type] == :belongs_to %}
+              join(LuckyRecord::Join::{{ join_type.id }}.new(@@table_name, :{{ assoc[:name] }}, {{ assoc[:foreign_key] }}, :id))
+            {% elsif assoc[:through] %}
+              {{ join_type.downcase.id }}_join_{{ assoc[:through].id }}
+              {{ assoc[:through].id }} do |join_query|
+                join_query.{{ join_type.downcase.id }}_join_{{ assoc[:name] }}
+              end
+            {% else %}
+              join(LuckyRecord::Join::{{ join_type.id }}.new(@@table_name, :{{ assoc[:name] }}, foreign_key: {{ assoc[:foreign_key] }}))
+            {% end %}
+          end
+        {% end %}
 
-        def left_join_{{ assoc[:name] }}
-          join(LuckyRecord::Join::Inner.new(@@table_name, :{{ assoc[:name] }}, foreign_key: {{ assoc[:foreign_key] }}))
-        end
 
         def {{ assoc[:name] }}
           {{ assoc[:type] }}::BaseQuery.new_with_existing_query(query).tap do |assoc_query|

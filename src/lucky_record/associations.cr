@@ -69,7 +69,7 @@ module LuckyRecord::Associations
 
     association table_name: :{{ model.resolve.constant(:TABLE_NAME).id }},
                 type: {{ model }},
-                foreign_key: :id,
+                foreign_key: :{{ foreign_key }},
                 relationship_type: :belongs_to
 
     define_belongs_to_private_assoc_getter({{ assoc_name }}, {{ model }}, {{ foreign_key }}, {{ nilable }})

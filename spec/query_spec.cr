@@ -447,7 +447,7 @@ describe LuckyRecord::Query do
       comment = CommentBox.new.post_id(post.id).create
 
       query = Comment::BaseQuery.new.join_posts
-      query.to_sql.should eq ["SELECT comments.id, comments.created_at, comments.updated_at, comments.body, comments.post_id FROM comments INNER JOIN posts ON comments.id = posts.id"]
+      query.to_sql.should eq ["SELECT comments.id, comments.created_at, comments.updated_at, comments.body, comments.post_id FROM comments INNER JOIN posts ON comments.post_id = posts.id"]
 
       result = query.first
       result.post.should eq post
@@ -462,6 +462,50 @@ describe LuckyRecord::Query do
 
       result = query.first
       result.comments.first.should eq comment
+    end
+
+    it "multiple inner joins on has many through" do
+      post = PostBox.create
+      tag = TagBox.create
+      tagging = TaggingBox.new.post_id(post.id).tag_id(tag.id).create
+
+      query = Post::BaseQuery.new.join_tags
+      query.to_sql.should eq ["SELECT posts.id, posts.created_at, posts.updated_at, posts.title, posts.published_at FROM posts INNER JOIN taggings ON posts.id = taggings.post_id INNER JOIN tags ON taggings.tag_id = tags.id"]
+
+      result = query.first
+      result.tags.first.should eq tag
+    end
+  end
+
+  describe "#left_join methods for associations" do
+    it "left join on belongs to" do
+      employee = EmployeeBox.create
+
+      query = Employee::BaseQuery.new.left_join_managers
+      query.to_sql.should eq ["SELECT employees.id, employees.created_at, employees.updated_at, employees.name, employees.manager_id FROM employees LEFT JOIN managers ON employees.manager_id = managers.id"]
+
+      result = query.first
+      result.should eq employee
+    end
+
+    it "left join on has many" do
+      post = PostBox.create
+
+      query = Post::BaseQuery.new.left_join_comments
+      query.to_sql.should eq ["SELECT posts.id, posts.created_at, posts.updated_at, posts.title, posts.published_at FROM posts LEFT JOIN comments ON posts.id = comments.post_id"]
+
+      result = query.first
+      result.should eq post
+    end
+
+    it "multiple left joins on has many through" do
+      post = PostBox.create
+
+      query = Post::BaseQuery.new.left_join_tags
+      query.to_sql.should eq ["SELECT posts.id, posts.created_at, posts.updated_at, posts.title, posts.published_at FROM posts LEFT JOIN taggings ON posts.id = taggings.post_id LEFT JOIN tags ON taggings.tag_id = tags.id"]
+
+      result = query.first
+      result.should eq post
     end
   end
 end
