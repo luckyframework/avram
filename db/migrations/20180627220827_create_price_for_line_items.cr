@@ -1,4 +1,4 @@
-class CreatePriceForLineItems::V20180627220827 < LuckyMigrator::Migration::V1
+class CreatePriceForLineItems::V20180627220827 < LuckyRecord::Migrator::Migration::V1
   def migrate
     execute <<-SQL
       CREATE TABLE prices (

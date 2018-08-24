@@ -81,7 +81,7 @@ class LuckyRecord::Model
 
   # Setup [database mapping](http://crystal-lang.github.io/crystal-db/api/0.5.0/DB.html#mapping%28properties%2Cstrict%3Dtrue%29-macro) for the model's fields.
   #
-  # NOTE: LuckyMigrator saves `Float` columns as numeric which need to be
+  # NOTE: LuckyRecord::Migrator saves `Float` columns as numeric which need to be
   # converted from [PG::Numeric](https://github.com/will/crystal-pg/blob/master/src/pg/numeric.cr) back to `Float64` using a `convertor`
   # class.
   macro setup_db_mapping

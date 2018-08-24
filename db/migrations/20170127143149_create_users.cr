@@ -1,4 +1,4 @@
-class CreateUsers::V20170127143149 < LuckyMigrator::Migration::V1
+class CreateUsers::V20170127143149 < LuckyRecord::Migrator::Migration::V1
   def migrate
     create :users do
       add name : String

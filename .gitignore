@@ -1,6 +1,7 @@
 /docs/
 /lib/
-/bin/
+/bin/lucky
+/bin/gen.migration*
 /.shards/
 
 # Libraries don't need dependency lock

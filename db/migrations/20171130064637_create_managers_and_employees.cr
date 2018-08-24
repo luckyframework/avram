@@ -1,4 +1,4 @@
-class CreateManagersAndEmployees::V20171130064637 < LuckyMigrator::Migration::V1
+class CreateManagersAndEmployees::V20171130064637 < LuckyRecord::Migrator::Migration::V1
   def migrate
     create :managers do
       add name : String

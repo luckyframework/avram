@@ -1,4 +1,4 @@
-class CreateBusinesses::V20180612221318 < LuckyMigrator::Migration::V1
+class CreateBusinesses::V20180612221318 < LuckyRecord::Migrator::Migration::V1
   def migrate
     create :businesses do
       add name : String

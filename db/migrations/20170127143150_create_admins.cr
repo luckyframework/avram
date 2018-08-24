@@ -1,4 +1,4 @@
-class CreateAdmins::V20170127143150 < LuckyMigrator::Migration::V1
+class CreateAdmins::V20170127143150 < LuckyRecord::Migrator::Migration::V1
   def migrate
     create :admins do
       add name : String

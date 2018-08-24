@@ -1,1 +1,22 @@
 language: crystal
+crystal:
+  - latest
+  - nightly
+services:
+  - postgresql
+install:
+  - shards install
+matrix:
+  allow_failures:
+    - crystal: nightly
+script:
+  - crystal tasks.cr -- db.migrate
+  - crystal tasks.cr -- db.rollback_all
+  - crystal tasks.cr -- db.migrate.one
+  - crystal tasks.cr -- db.migrate
+  - crystal tasks.cr -- gen.migration TestMigration
+  - crystal spec
+  - crystal tool format spec src --check
+  - shards build
+notifications:
+  email: false

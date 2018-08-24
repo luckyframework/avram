@@ -1,4 +1,4 @@
-class CreateTaggings::V20180115194734 < LuckyMigrator::Migration::V1
+class CreateTaggings::V20180115194734 < LuckyRecord::Migrator::Migration::V1
   def migrate
     create :tags do
       add name : String

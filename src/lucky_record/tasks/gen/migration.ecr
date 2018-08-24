@@ -1,0 +1,24 @@
+class <%= migration_class_name %> < LuckyRecord::Migrator::Migration::V1
+  def migrate
+    <%- if formatted_migrate_contents -%>
+    <%= formatted_migrate_contents %>
+    <%- else -%>
+    # create :things do
+    #   add title : String
+    #   add description : String?
+    # end
+
+    # Run custom SQL with execute
+    #
+    # execute "CREATE UNIQUE INDEX things_title_index ON things (title);"
+    <%- end -%>
+  end
+
+  def rollback
+    <%- if formatted_rollback_contents -%>
+    <%= formatted_rollback_contents %>
+    <%- else -%>
+    # drop :things
+    <%- end -%>
+  end
+end

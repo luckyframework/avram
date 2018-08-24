@@ -1,4 +1,4 @@
-class CreateLineItemsProducts::V20180628193336 < LuckyMigrator::Migration::V1
+class CreateLineItemsProducts::V20180628193336 < LuckyRecord::Migrator::Migration::V1
   def migrate
     execute <<-SQL
       CREATE TABLE line_items_products (

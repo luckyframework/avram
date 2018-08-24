@@ -1,4 +1,4 @@
-class CreateSignInCredentials::V20170127143151 < LuckyMigrator::Migration::V1
+class CreateSignInCredentials::V20170127143151 < LuckyRecord::Migrator::Migration::V1
   def migrate
     create :sign_in_credentials do
       add user_id : Int32
