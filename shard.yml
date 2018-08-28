@@ -1,7 +1,7 @@
 name: lucky_record
-version: 0.6.0
+version: 0.6.1
 
-crystal: 0.25.0
+crystal: 0.26.1
 
 authors:
   - Paul Smith <paulcsmith0218@gmail.com>
