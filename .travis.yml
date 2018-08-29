@@ -10,6 +10,7 @@ matrix:
   allow_failures:
     - crystal: nightly
 script:
+  - crystal tasks.cr -- db.create
   - crystal tasks.cr -- db.migrate
   - crystal tasks.cr -- db.rollback_all
   - crystal tasks.cr -- db.migrate.one
