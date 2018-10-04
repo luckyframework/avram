@@ -1,10 +1,11 @@
 require "./spec_helper"
 
 private class QueryMe < Avram::Model
-  COLUMNS = "users.id, users.created_at, users.updated_at, users.age"
+  COLUMNS = "users.id, users.created_at, users.updated_at, users.age, users.nickname"
 
   table users do
     column age : Int32
+    column nickname : String?
   end
 end
 
@@ -15,9 +16,29 @@ describe Avram::Criteria do
     end
   end
 
+  describe "is?" do
+    it "uses =" do
+      age.is?(30).to_sql.should eq ["SELECT #{QueryMe::COLUMNS} FROM users WHERE users.age = $1", "30"]
+    end
+
+    it "uses 'IS NULL' for comparisons to nil" do
+      nickname.is?(nil).to_sql.should eq ["SELECT #{QueryMe::COLUMNS} FROM users WHERE users.nickname IS NULL"]
+    end
+  end
+
   describe "is_not" do
     it "uses !=" do
       age.is_not(30).to_sql.should eq ["SELECT #{QueryMe::COLUMNS} FROM users WHERE users.age != $1", "30"]
+    end
+  end
+
+  describe "is_not?" do
+    it "uses !=" do
+      age.is_not?(30).to_sql.should eq ["SELECT #{QueryMe::COLUMNS} FROM users WHERE users.age != $1", "30"]
+    end
+
+    it "uses 'IS NOT NULL' for comparisons to nil" do
+      nickname.is_not?(nil).to_sql.should eq ["SELECT #{QueryMe::COLUMNS} FROM users WHERE users.nickname IS NOT NULL"]
     end
   end
 
@@ -66,4 +87,8 @@ end
 
 private def age
   QueryMe::BaseQuery.new.age
+end
+
+private def nickname
+  QueryMe::BaseQuery.new.nickname
 end
