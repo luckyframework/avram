@@ -17,7 +17,7 @@ class Avram::Criteria(T, V)
   end
 
   def is(_value : Nil)
-    {{ raise "Use `is?` instead of `is` if trying to check against nillable value." }}
+    {{ raise "Use `is?` instead of `is` if trying to check against a nilable value." }}
   end
 
   def is(value)
@@ -48,7 +48,7 @@ class Avram::Criteria(T, V)
   end
 
   def is_not(_value : Nil)
-    {{ raise "Use `is_not?` instead of `is_not` if trying to check against nillable value." }}
+    {{ raise "Use `is_not?` instead of `is_not` if trying to check against a nilable value." }}
   end
 
   def is_not?(value) : T
