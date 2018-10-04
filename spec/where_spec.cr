@@ -1,9 +1,15 @@
 require "./spec_helper"
 
 macro should_negate(original_where, expected_negated_where)
-  clause = {{original_where}}.new("column", "value").negated
+  {% if original_where.resolve < Avram::Where::ComparativeSqlClause %}
+    clause = {{original_where}}.new("column", "value").negated
+  {% else %}
+    clause = {{original_where}}.new("column").negated
+  {% end %}
   clause.column.should eq "column"
-  clause.value.should eq "value"
+  {% if original_where.resolve < Avram::Where::ComparativeSqlClause %}
+    clause.value.should eq "value"
+  {% end %}
   clause.should be_a({{expected_negated_where}})
 end
 
@@ -21,5 +27,6 @@ describe Avram::Where do
     should_negate(Avram::Where::NotIlike, Avram::Where::Ilike)
     should_negate(Avram::Where::In, Avram::Where::NotIn)
     should_negate(Avram::Where::NotIn, Avram::Where::In)
+    should_negate(Avram::Where::Null, Avram::Where::NotNull)
   end
 end

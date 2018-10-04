@@ -221,7 +221,13 @@ class Avram::QueryBuilder
 
   private def joined_wheres_queries
     if @wheres.any? || @raw_wheres.any?
-      statements = @wheres.map(&.prepare(next_prepared_statement_placeholder))
+      statements = @wheres.map do |sql_clause|
+        if sql_clause.is_a?(Avram::Where::ComparativeSqlClause)
+          sql_clause.prepare(next_prepared_statement_placeholder)
+        else
+          sql_clause.prepare
+        end
+      end
       statements += @raw_wheres.map(&.to_sql)
 
       "WHERE " + statements.join(" AND ")
@@ -229,7 +235,9 @@ class Avram::QueryBuilder
   end
 
   private def prepared_statement_values
-    @wheres.map(&.value)
+    @wheres.compact_map do |sql_clause|
+      sql_clause.value if sql_clause.is_a?(Avram::Where::ComparativeSqlClause)
+    end
   end
 
   private def next_prepared_statement_placeholder
