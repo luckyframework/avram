@@ -3,22 +3,23 @@ class Avram::QueryBuilder
   getter :table
   @limit : Int32?
   @offset : Int32?
-  @wheres = [] of Avram::Where::SqlClause
-  @raw_wheres = [] of Avram::Where::Raw
-  @wheres_sql : String?
+  @prepared_statement_generator : Avram::PreparedStatementGenerator = Avram::PreparedStatementGenerator.new
+  @wheres_builder : Avram::WheresBuilder
   @joins = [] of Avram::Join::SqlClause
   @orders = {
     asc:  [] of Symbol | String,
     desc: [] of Symbol | String,
   }
   @selections : String = "*"
-  @prepared_statement_placeholder = 0
   @distinct : Bool = false
   @distinct_on : String | Symbol | Nil = nil
+
+  delegate prepared_statement_values, to: @wheres_builder
 
   VALID_DIRECTIONS = [:asc, :desc]
 
   def initialize(@table : Symbol)
+    @wheres_builder = Avram::WheresBuilder.new(@prepared_statement_generator)
   end
 
   def to_sql
@@ -52,7 +53,7 @@ class Avram::QueryBuilder
 
   private def set_sql_clause(params)
     "SET " + params.map do |key, value|
-      "#{key} = #{next_prepared_statement_placeholder}"
+      "#{key} = #{@prepared_statement_generator.next}"
     end.join(", ")
   end
 
@@ -204,47 +205,26 @@ class Avram::QueryBuilder
     self
   end
 
+  def or(&block : Avram::WheresBuilder -> Avram::WheresBuilder)
+    @wheres_builder.or(&block)
+    self
+  end
+
   private def joins_sql
     @joins.map(&.to_sql).join(" ")
   end
 
   def where(where_clause : Avram::Where::SqlClause)
-    @wheres << where_clause
+    @wheres_builder.where(where_clause)
     self
   end
 
   def raw_where(where_clause : Avram::Where::Raw)
-    @raw_wheres << where_clause
+    @wheres_builder.where(where_clause)
     self
   end
 
   private def wheres_sql
-    @wheres_sql ||= joined_wheres_queries
-  end
-
-  private def joined_wheres_queries
-    if @wheres.any? || @raw_wheres.any?
-      statements = @wheres.map do |sql_clause|
-        if sql_clause.is_a?(Avram::Where::NullSqlClause)
-          sql_clause.prepare
-        else
-          sql_clause.prepare(next_prepared_statement_placeholder)
-        end
-      end
-      statements += @raw_wheres.map(&.to_sql)
-
-      "WHERE " + statements.join(" AND ")
-    end
-  end
-
-  private def prepared_statement_values
-    @wheres.uniq.compact_map do |sql_clause|
-      sql_clause.value unless sql_clause.is_a?(Avram::Where::NullSqlClause)
-    end
-  end
-
-  private def next_prepared_statement_placeholder
-    @prepared_statement_placeholder += 1
-    "$#{@prepared_statement_placeholder}"
+    @wheres_builder.to_sql
   end
 end

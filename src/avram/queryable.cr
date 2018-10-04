@@ -139,6 +139,9 @@ module Avram::Queryable(T)
         @@schema_class.from_rs(rs)
       end
     end
+  rescue e
+    puts query.statement, query.args
+    raise e
   end
 
   def exec_scalar

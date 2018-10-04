@@ -28,6 +28,15 @@ describe "Avram::QueryBuilder" do
     query.args.should eq ["Paul", "20"]
   end
 
+  it "joins conditions of where clauses correctly" do
+    query = new_query
+      .where(Avram::Where::Equal.new(:name, "Paul"))
+      .or(&.where(Avram::Where::GreaterThan.new(:age, "20")).where(Avram::Where::Null.new(:nickname)))
+      .limit(1)
+    query.statement.should eq "SELECT * FROM users WHERE name = $1 OR (age > $2 AND nickname IS NULL) LIMIT 1"
+    query.args.should eq ["Paul", "20"]
+  end
+
   it "accepts raw where clauses" do
     query = new_query
       .raw_where(Avram::Where::Raw.new("name = ?", "Mikias"))
@@ -141,6 +150,16 @@ describe "Avram::QueryBuilder" do
         .select([:name, :age])
 
       query.statement.should eq "SELECT users.name, users.age FROM users"
+    end
+  end
+
+  describe "#or" do
+    it "raises an error if called upon a query without conditions" do
+      expect_raises Avram::InvalidQueryError do
+        query = new_query
+          .or(&.where(Avram::Where::GreaterThan.new(:age, "20")).where(Avram::Where::Null.new(:nickname)))
+          .limit(1)
+      end
     end
   end
 

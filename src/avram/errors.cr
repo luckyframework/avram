@@ -60,6 +60,13 @@ module Avram
     end
   end
 
+  # Raised when a nonsensical query is made.
+  class InvalidQueryError < AvramError
+    def initialize(message : String)
+      super message
+    end
+  end
+
   class ConnectionError < AvramError
     def initialize(connection_details : URI)
       error = String.build do |message|

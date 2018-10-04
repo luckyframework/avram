@@ -1,7 +1,21 @@
 module Avram::Where
+  enum Conjunction
+    And
+    Or
+
+    def to_s
+      case self
+      when Conjunction::And
+        "AND"
+      when Conjunction::Or
+        "OR"
+      end
+    end
+  end
+
   abstract class SqlClause
     getter :column
-    getter :value
+    property conjunction : Conjunction = Conjunction::And
 
     def initialize(@column : Symbol | String, @value : String | Array(String) | Array(Int32))
     end
@@ -9,8 +23,8 @@ module Avram::Where
     abstract def operator : String
     abstract def negated : SqlClause
 
-    def prepare(prepared_statement_placeholder : String)
-      "#{column} #{operator} #{prepared_statement_placeholder}"
+    def prepare(prepared_statement_generator)
+      "#{column} #{operator} #{prepared_statement_generator.next}"
     end
   end
 
@@ -46,6 +60,8 @@ module Avram::Where
   end
 
   class Equal < SqlClause
+    getter :value
+
     def operator
       "="
     end
@@ -56,6 +72,8 @@ module Avram::Where
   end
 
   class NotEqual < SqlClause
+    getter :value
+
     def operator
       "!="
     end
@@ -66,6 +84,8 @@ module Avram::Where
   end
 
   class GreaterThan < SqlClause
+    getter :value
+
     def operator
       ">"
     end
@@ -76,6 +96,8 @@ module Avram::Where
   end
 
   class GreaterThanOrEqualTo < SqlClause
+    getter :value
+
     def operator
       ">="
     end
@@ -86,6 +108,8 @@ module Avram::Where
   end
 
   class LessThan < SqlClause
+    getter :value
+
     def operator
       "<"
     end
@@ -96,6 +120,8 @@ module Avram::Where
   end
 
   class LessThanOrEqualTo < SqlClause
+    getter :value
+
     def operator
       "<="
     end
@@ -106,6 +132,8 @@ module Avram::Where
   end
 
   class Like < SqlClause
+    getter :value
+
     def operator
       "LIKE"
     end
@@ -116,6 +144,8 @@ module Avram::Where
   end
 
   class Ilike < SqlClause
+    getter :value
+
     def operator
       "ILIKE"
     end
@@ -126,6 +156,8 @@ module Avram::Where
   end
 
   class NotLike < SqlClause
+    getter :value
+
     def operator
       "NOT LIKE"
     end
@@ -136,6 +168,8 @@ module Avram::Where
   end
 
   class NotIlike < SqlClause
+    getter :value
+
     def operator
       "NOT ILIKE"
     end
@@ -146,6 +180,8 @@ module Avram::Where
   end
 
   class In < SqlClause
+    getter :value
+
     def operator
       "= ANY"
     end
@@ -154,12 +190,14 @@ module Avram::Where
       NotIn.new(@column, @value)
     end
 
-    def prepare(prepared_statement_placeholder : String)
-      "#{column} #{operator} (#{prepared_statement_placeholder})"
+    def prepare(prepared_statement_generator)
+      "#{column} #{operator} (#{prepared_statement_generator.next})"
     end
   end
 
   class NotIn < SqlClause
+    getter :value
+
     def operator
       "!= ALL"
     end
@@ -168,13 +206,14 @@ module Avram::Where
       In.new(@column, @value)
     end
 
-    def prepare(prepared_statement_placeholder : String)
-      "#{column} #{operator} (#{prepared_statement_placeholder})"
+    def prepare(prepared_statement_generator)
+      "#{column} #{operator} (#{prepared_statement_generator.next})"
     end
   end
 
   class Raw
     @clause : String
+    property conjunction : Conjunction = Conjunction::And
 
     def initialize(statement : String, *bind_vars)
       ensure_enough_bind_variables_for!(statement, *bind_vars)
