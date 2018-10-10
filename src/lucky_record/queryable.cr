@@ -47,6 +47,12 @@ module LuckyRecord::Queryable(T)
     self
   end
 
+  def distinct_on(&block)
+    criteria = yield self
+    criteria.distinct_on
+    self
+  end
+
   def join(join_clause : LuckyRecord::Join::SqlClause)
     query.join(join_clause)
     self

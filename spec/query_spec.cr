@@ -22,6 +22,25 @@ describe LuckyRecord::Query do
     query.args.should eq [] of String
   end
 
+  it "can select distinct on a specific column" do
+    UserBox.new.name("Purcell").age(22).create
+    UserBox.new.name("Purcell").age(84).create
+    UserBox.new.name("Griffiths").age(55).create
+    UserBox.new.name("Griffiths").age(75).create
+    queryable = UserQuery.new.distinct_on(&.name).order_by(:name, :asc).order_by(:age, :asc)
+    query = queryable.query
+
+    query.statement.should eq "SELECT DISTINCT ON (users.name) #{User::COLUMNS} FROM users ORDER BY name, age ASC"
+    query.args.should eq [] of String
+    results = queryable.results
+    first = results.first
+    second = results.last
+    first.name.should eq "Griffiths"
+    first.age.should eq 55
+    second.name.should eq "Purcell"
+    second.age.should eq 22
+  end
+
   describe ".first" do
     it "gets the first row from the database" do
       UserBox.new.name("First").create

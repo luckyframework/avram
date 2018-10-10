@@ -55,6 +55,12 @@ describe "LuckyRecord::QueryBuilder" do
     query.args.should eq [] of String
   end
 
+  it "can select distinct on a specific column" do
+    query = new_query.distinct_on(:name)
+    query.statement.should eq "SELECT DISTINCT ON (name) * FROM users"
+    query.args.should eq [] of String
+  end
+
   describe "updating" do
     it "inserts with a hash of String" do
       params = {:first_name => "Paul", :last_name => nil}

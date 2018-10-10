@@ -75,6 +75,11 @@ class LuckyRecord::Criteria(T, V)
     add_clause(LuckyRecord::Where::In.new(column, values))
   end
 
+  def distinct_on
+    rows.query.distinct_on(column)
+    rows
+  end
+
   private def add_clause(sql_clause)
     sql_clause = build_sql_clause(sql_clause)
     rows.query.where(sql_clause)
