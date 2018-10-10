@@ -1,35 +1,34 @@
 module Avram::Where
   abstract class SqlClause
     getter :column
-
-    def initialize(@column : Symbol | String)
-    end
-
-    abstract def operator : String
-    abstract def negated : SqlClause
-
-    def prepare
-      "#{column} #{operator}"
-    end
-  end
-
-  abstract class ComparativeSqlClause < SqlClause
     getter :value
 
     def initialize(@column : Symbol | String, @value : String | Array(String) | Array(Int32))
     end
 
     abstract def operator : String
-    abstract def negated : ComparativeSqlClause
+    abstract def negated : SqlClause
 
     def prepare(prepared_statement_placeholder : String)
       "#{column} #{operator} #{prepared_statement_placeholder}"
     end
   end
 
-  class Null < SqlClause
+  abstract class NullSqlClause < SqlClause
+    @value = "NULL"
+
+    def initialize(@column : Symbol | String)
+    end
+
+    def prepare
+      "#{column} #{operator} #{@value}"
+    end
+  end
+
+
+  class Null < NullSqlClause
     def operator
-      "IS NULL"
+      "IS"
     end
 
     def negated : NotNull
@@ -37,9 +36,9 @@ module Avram::Where
     end
   end
 
-  class NotNull < SqlClause
+  class NotNull < NullSqlClause
     def operator
-      "IS NOT NULL"
+      "IS NOT"
     end
 
     def negated : Null
@@ -47,7 +46,7 @@ module Avram::Where
     end
   end
 
-  class Equal < ComparativeSqlClause
+  class Equal < SqlClause
     def operator
       "="
     end
@@ -57,7 +56,7 @@ module Avram::Where
     end
   end
 
-  class NotEqual < ComparativeSqlClause
+  class NotEqual < SqlClause
     def operator
       "!="
     end
@@ -67,7 +66,7 @@ module Avram::Where
     end
   end
 
-  class GreaterThan < ComparativeSqlClause
+  class GreaterThan < SqlClause
     def operator
       ">"
     end
@@ -77,7 +76,7 @@ module Avram::Where
     end
   end
 
-  class GreaterThanOrEqualTo < ComparativeSqlClause
+  class GreaterThanOrEqualTo < SqlClause
     def operator
       ">="
     end
@@ -87,7 +86,7 @@ module Avram::Where
     end
   end
 
-  class LessThan < ComparativeSqlClause
+  class LessThan < SqlClause
     def operator
       "<"
     end
@@ -97,7 +96,7 @@ module Avram::Where
     end
   end
 
-  class LessThanOrEqualTo < ComparativeSqlClause
+  class LessThanOrEqualTo < SqlClause
     def operator
       "<="
     end
@@ -107,7 +106,7 @@ module Avram::Where
     end
   end
 
-  class Like < ComparativeSqlClause
+  class Like < SqlClause
     def operator
       "LIKE"
     end
@@ -117,7 +116,7 @@ module Avram::Where
     end
   end
 
-  class Ilike < ComparativeSqlClause
+  class Ilike < SqlClause
     def operator
       "ILIKE"
     end
@@ -127,7 +126,7 @@ module Avram::Where
     end
   end
 
-  class NotLike < ComparativeSqlClause
+  class NotLike < SqlClause
     def operator
       "NOT LIKE"
     end
@@ -137,7 +136,7 @@ module Avram::Where
     end
   end
 
-  class NotIlike < ComparativeSqlClause
+  class NotIlike < SqlClause
     def operator
       "NOT ILIKE"
     end
@@ -147,7 +146,7 @@ module Avram::Where
     end
   end
 
-  class In < ComparativeSqlClause
+  class In < SqlClause
     def operator
       "= ANY"
     end
@@ -161,7 +160,7 @@ module Avram::Where
     end
   end
 
-  class NotIn < ComparativeSqlClause
+  class NotIn < SqlClause
     def operator
       "!= ALL"
     end
