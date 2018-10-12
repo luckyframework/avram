@@ -3,6 +3,8 @@ require "./spec_helper"
 private class VirtualForm < Post::BaseForm
   virtual password_confirmation : String
   virtual terms_of_service : Bool
+  virtual best_kind_of_bear : String = "black bear"
+  virtual default_is_false : Bool = false
 
   def prepare
     password_confirmation.value = "reset"
@@ -21,7 +23,25 @@ describe "virtual in forms" do
   end
 
   it "generates a list of fillable_fields" do
-    form.virtual_fields.map(&.name).should eq [:password_confirmation, :terms_of_service]
+    form.virtual_fields.map(&.name).should eq [:password_confirmation,
+                                               :terms_of_service,
+                                               :best_kind_of_bear,
+                                               :default_is_false]
+  end
+
+  it "sets a default value of nil if another one is not given" do
+    form.password_confirmation.value.should be_nil
+    form.terms_of_service.value.should be_nil
+  end
+
+  it "assigns the default value to a field if one is set and no param is given" do
+    form.best_kind_of_bear.value.should eq "black bear"
+    form.default_is_false.value.should be_false
+  end
+
+  it "overrides the default value with a param if one is given" do
+    form({"best_kind_of_bear" => "brown bear"}).best_kind_of_bear.value.should eq "brown bear"
+    form({"best_kind_of_bear" => ""}).best_kind_of_bear.value.should be_nil
   end
 
   it "sets the param and value basd on the passed in params" do
