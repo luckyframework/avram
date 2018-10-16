@@ -5,6 +5,7 @@ class CreateUsers::V20170127143149 < LuckyRecord::Migrator::Migration::V1
       add nickname : String?
       add age : Int32
       add joined_at : Time
+      add average_score : Float64?
     end
   end
 

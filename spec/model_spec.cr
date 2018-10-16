@@ -59,7 +59,8 @@ describe LuckyRecord::Model do
       joined_at: now,
       created_at: now,
       updated_at: now,
-      nickname: "nick"
+      nickname: "nick",
+      average_score: nil
 
     user.name.should eq "Name"
     user.age.should eq 24
@@ -78,7 +79,8 @@ describe LuckyRecord::Model do
       joined_at: now,
       created_at: now,
       updated_at: now,
-      nickname: "nick"
+      nickname: "nick",
+      average_score: nil
 
     user.to_param.should eq "123"
   end

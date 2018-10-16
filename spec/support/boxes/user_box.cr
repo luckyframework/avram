@@ -13,7 +13,8 @@ class UserBox < BaseBox
       joined_at: Time.now,
       age: 18,
       name: "Paul Smith",
-      nickname: nil
+      nickname: nil,
+      average_score: nil
     )
   end
 end
