@@ -1,3 +1,3 @@
-require "lucky_inflector"
+require "wordsmith"
 
-print LuckyInflector::Inflector.pluralize(ARGV[0]).underscore
+print Wordsmith::Inflector.pluralize(ARGV[0]).underscore

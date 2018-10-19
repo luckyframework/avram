@@ -1,5 +1,5 @@
 require "lucky_cli"
-require "lucky_inflector"
+require "wordsmith"
 require "habitat"
 require "./lucky_record/criteria"
 require "./lucky_record/type"

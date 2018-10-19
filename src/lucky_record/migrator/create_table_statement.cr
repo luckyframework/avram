@@ -125,7 +125,7 @@ class LuckyRecord::Migrator::CreateTableStatement
     {% end %}
 
     {% foreign_key_name = type_declaration.var + "_id" %}
-    %table_name = {{ references }} || LuckyInflector::Inflector.pluralize({{ underscored_class }})
+    %table_name = {{ references }} || Wordsmith::Inflector.pluralize({{ underscored_class }})
     add_column(:{{ foreign_key_name }}, {{ foreign_key_type.id }}.db_type, {{ optional }}, reference: %table_name, on_delete: {{ on_delete }})
     add_index :{{ foreign_key_name }}
   end

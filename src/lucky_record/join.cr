@@ -1,4 +1,4 @@
-require "lucky_inflector"
+require "wordsmith"
 
 module LuckyRecord::Join
   abstract class SqlClause
@@ -26,7 +26,7 @@ module LuckyRecord::Join
     end
 
     def default_foreign_key
-      LuckyInflector::Inflector.singularize(@from) + "_id"
+      Wordsmith::Inflector.singularize(@from) + "_id"
     end
   end
 

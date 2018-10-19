@@ -13,7 +13,7 @@ class LuckyRecord::Migrator::CreateForeignKeyStatement
   end
 
   def build
-    foreign_key = @column || LuckyInflector::Inflector.singularize(@to.to_s) + "_id"
+    foreign_key = @column || Wordsmith::Inflector.singularize(@to.to_s) + "_id"
     String.build do |index|
       index << "ALTER TABLE"
       index << " #{@from}"

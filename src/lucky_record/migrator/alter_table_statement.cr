@@ -67,7 +67,7 @@ class LuckyRecord::Migrator::AlterTableStatement
     {% end %}
 
     {% foreign_key_name = type_declaration.var + "_id" %}
-    %table_name = {{ references }} || LuckyInflector::Inflector.pluralize({{ underscored_class }})
+    %table_name = {{ references }} || Wordsmith::Inflector.pluralize({{ underscored_class }})
 
     add_index :{{ foreign_key_name }}
     add_column :{{ foreign_key_name }},
