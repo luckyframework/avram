@@ -5,44 +5,48 @@ include CleanupHelper
 describe "Generating migrations" do
   it "can generate a migration with custom name" do
     with_cleanup do
-      ARGV.push("Should Ignore This Name")
+      Gen::Migration.silence_output do
+        ARGV.push("Should Ignore This Name")
 
-      Gen::Migration.new.call("Custom")
+        Gen::Migration.new.call("Custom")
 
-      should_generate_migration named: "custom.cr"
+        should_generate_migration named: "custom.cr"
+      end
     end
   end
 
   it "can generate a migration with custom name and contents" do
     with_cleanup do
-      migrate_contents = <<-CONTENTS
-      create :users do
-        add name : String
-      end
-      CONTENTS
-      rollback_contents = <<-CONTENTS
-      drop :users
-      CONTENTS
+      Gen::Migration.silence_output do
+        migrate_contents = <<-CONTENTS
+        create :users do
+          add name : String
+        end
+        CONTENTS
+        rollback_contents = <<-CONTENTS
+        drop :users
+        CONTENTS
 
-      LuckyRecord::Migrator::MigrationGenerator.new(
-        "CreateUsers",
-        migrate_contents: migrate_contents,
-        rollback_contents: rollback_contents
-      ).generate(_version: "123")
+        LuckyRecord::Migrator::MigrationGenerator.new(
+          "CreateUsers",
+          migrate_contents: migrate_contents,
+          rollback_contents: rollback_contents
+        ).generate(_version: "123")
 
-      File.read("./db/migrations/123_create_users.cr").should contain <<-MIGRATION
-      class CreateUsers::V123 < LuckyRecord::Migrator::Migration::V1
-        def migrate
-          create :users do
-            add name : String
+        File.read("./db/migrations/123_create_users.cr").should contain <<-MIGRATION
+        class CreateUsers::V123 < LuckyRecord::Migrator::Migration::V1
+          def migrate
+            create :users do
+              add name : String
+            end
+          end
+
+          def rollback
+            drop :users
           end
         end
-
-        def rollback
-          drop :users
-        end
+        MIGRATION
       end
-      MIGRATION
     end
   end
 end

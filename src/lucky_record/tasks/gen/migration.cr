@@ -23,7 +23,11 @@ class LuckyRecord::Migrator::MigrationGenerator
     ensure_camelcase_name
     make_migrations_folder_if_missing
     File.write(file_path, contents)
-    puts "Created #{migration_class_name.colorize(:green)} in .#{relative_file_path.colorize(:green)}"
+    io.puts "Created #{migration_class_name.colorize(:green)} in .#{relative_file_path.colorize(:green)}"
+  end
+
+  private def io
+    Gen::Migration.settings.io
   end
 
   def formatted_migrate_contents : String?
@@ -89,6 +93,16 @@ end
 
 class Gen::Migration < LuckyCli::Task
   banner "Generate a new migration"
+
+  Habitat.create do
+    setting io : IO = STDOUT
+  end
+
+  def self.silence_output
+    temp_config(io: IO::Memory.new) do
+      yield
+    end
+  end
 
   def call(name : String? = nil)
     LuckyRecord::Migrator.run do
