@@ -1,7 +1,7 @@
 name: lucky_record
-version: 0.6.0
+version: 0.7.0-rc1
 
-crystal: 0.25.0
+crystal: 0.27
 
 targets:
   gen.migration:
@@ -15,6 +15,7 @@ dependencies:
     github: kostya/blank
   lucky_cli:
     github: luckyframework/lucky_cli
+    tag: v0.12.0-rc1
   db:
     github: crystal-lang/crystal-db
   pg:
