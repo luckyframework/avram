@@ -1,5 +1,5 @@
 name: lucky_record
-version: 0.7.0-rc1
+version: 0.7.0
 
 crystal: 0.27
 
@@ -15,7 +15,7 @@ dependencies:
     github: kostya/blank
   lucky_cli:
     github: luckyframework/lucky_cli
-    tag: v0.12.0-rc1
+    version: ~> 0.12
   db:
     github: crystal-lang/crystal-db
   pg:
