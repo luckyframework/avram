@@ -109,7 +109,7 @@ module LuckyRecord::NeedyInitializerAndSaveMethods
 
   macro generate_update(with_params, with_bang)
     def self.update{% if with_bang %}!{% end %}(
-        record,
+        record : T,
         {% if with_params %}with params,{% end %}
         {% for type_declaration in (NEEDS_ON_UPDATE + NEEDS_ON_INITIALIZE) %}
           {{ type_declaration }},
@@ -190,7 +190,7 @@ module LuckyRecord::NeedyInitializerAndSaveMethods
     end
 
     def initialize(
-        @record,
+        @record : T,
         params : Hash(String, String) | LuckyRecord::Paramable,
         {% for type_declaration in NEEDS_ON_INITIALIZE %}
           @{{ type_declaration }},
@@ -201,7 +201,7 @@ module LuckyRecord::NeedyInitializerAndSaveMethods
     end
 
     def initialize(
-        @record,
+        @record : T,
         {% for type_declaration in NEEDS_ON_INITIALIZE %}
           @{{ type_declaration }},
         {% end %}
