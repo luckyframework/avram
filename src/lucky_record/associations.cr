@@ -131,10 +131,10 @@ module LuckyRecord::Associations
   private macro define_belongs_to_base_query(assoc_name, model, foreign_key)
     class BaseQuery < LuckyRecord::Query
       def preload_{{ assoc_name }}
-        preload({{ model }}::BaseQuery.new)
+        preload_{{ assoc_name }}({{ model }}::BaseQuery.new)
       end
 
-      def preload(preload_query : {{ model }}::BaseQuery)
+      def preload_{{ assoc_name }}(preload_query : {{ model }}::BaseQuery)
         add_preload do |records|
           ids = [] of {{ model.resolve.constant(:PRIMARY_KEY_TYPE_CLASS) }}
           records.each do |record|
