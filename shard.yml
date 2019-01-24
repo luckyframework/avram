@@ -4,7 +4,7 @@ version: 0.7.0
 crystal: 0.27
 
 targets:
-  gen.migration:
+  lucky.gen.migration:
     main: src/precompiled_tasks/gen/migration.cr
 
 authors:
@@ -29,9 +29,6 @@ dependencies:
     version: ~> 0.2
 
 scripts:
-  postinstall: |
-    shards build
-    mkdir -p ../../bin/lucky/gen
-    cp $(pwd)/bin/gen.migration $(pwd)/../../bin/lucky/gen/migration
+  postinstall: shards build
 
 license: MIT
