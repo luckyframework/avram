@@ -4,7 +4,7 @@ require "./config/database"
 require "./db/migrations/*"
 
 class Db::Reset < LuckyCli::Task
-  banner "Drop, creates and migrates the database"
+  summary "Drop, creates and migrates the database"
 
   def call
     run("lucky db.drop")

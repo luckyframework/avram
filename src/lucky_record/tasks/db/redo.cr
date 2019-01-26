@@ -1,7 +1,7 @@
 require "colorize"
 
 class Db::Redo < LuckyCli::Task
-  banner "Rollback then run the last migration"
+  summary "Rollback then run the last migration"
 
   def call
     Db::Rollback.new.call

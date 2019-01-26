@@ -92,7 +92,7 @@ class LuckyRecord::Migrator::MigrationGenerator
 end
 
 class Gen::Migration < LuckyCli::Task
-  banner "Generate a new migration"
+  summary "Generate a new migration"
 
   Habitat.create do
     setting io : IO = STDOUT

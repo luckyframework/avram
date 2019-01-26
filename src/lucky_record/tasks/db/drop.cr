@@ -1,7 +1,7 @@
 require "colorize"
 
 class Db::Drop < LuckyCli::Task
-  banner "Drop the database"
+  summary "Drop the database"
 
   def call
     LuckyRecord::Migrator.run do

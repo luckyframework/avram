@@ -15,7 +15,7 @@ dependencies:
     github: kostya/blank
   lucky_cli:
     github: luckyframework/lucky_cli
-    version: ~> 0.12
+    branch: master
   db:
     github: crystal-lang/crystal-db
   pg:

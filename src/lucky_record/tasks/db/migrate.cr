@@ -1,7 +1,7 @@
 require "colorize"
 
 class Db::Migrate < LuckyCli::Task
-  banner "Migrate the database"
+  summary "Migrate the database"
 
   def initialize(@quiet : Bool = false)
   end

@@ -1,5 +1,5 @@
 class Db::Create < LuckyCli::Task
-  banner "Create the database"
+  summary "Create the database"
 
   def initialize(@quiet : Bool = false)
   end

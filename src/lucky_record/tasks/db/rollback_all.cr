@@ -1,7 +1,7 @@
 require "colorize"
 
 class Db::RollbackAll < LuckyCli::Task
-  banner "Rollback all migrations"
+  summary "Rollback all migrations"
 
   def call
     LuckyRecord::Migrator.run do
