@@ -1,0 +1,29 @@
+#! /bin/bash
+
+# Exit if any subcommand fails
+set -e
+set -o pipefail
+
+docker-compose up -d
+
+COMPOSE="docker-compose exec app"
+
+printf "\nRunning tasks\n\n"
+$COMPOSE lucky db.drop
+$COMPOSE lucky db.create
+$COMPOSE lucky db.migrate
+$COMPOSE lucky db.rollback_all
+$COMPOSE lucky db.migrate.one
+$COMPOSE lucky db.migrate
+
+printf "\nRunning specs\n\n"
+$COMPOSE crystal spec
+
+printf "\nChecking code formatting\n\n"
+if ! $COMPOSE crystal tool format --check src spec config > /dev/null; then
+  printf "\nCode is not formatted.\n"
+  printf "\nFormat the code with: docker-compose run --rm app crystal tool format src spec config\n\n"
+  exit 1
+fi
+
+docker-compose down
