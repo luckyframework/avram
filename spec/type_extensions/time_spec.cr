@@ -7,7 +7,7 @@ describe "Time column type" do
 
       result = Time::Lucky.parse(time)
 
-      result.should be_a(LuckyRecord::Type::SuccessfulCast(Time))
+      result.should be_a(Avram::Type::SuccessfulCast(Time))
     end
 
     it "casts a Time successfully" do
@@ -23,7 +23,7 @@ describe "Time column type" do
 
       result = Time::Lucky.parse("oh no")
 
-      result.should be_a(LuckyRecord::Type::FailedCast)
+      result.should be_a(Avram::Type::FailedCast)
     end
   end
 end

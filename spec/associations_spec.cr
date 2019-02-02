@@ -1,6 +1,6 @@
 require "./spec_helper"
 
-describe LuckyRecord::Model do
+describe Avram::Model do
   describe "has_many" do
     it "gets the related records" do
       post = PostBox.create

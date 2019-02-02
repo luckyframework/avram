@@ -25,7 +25,7 @@ private class LineItemForm < LineItem::BaseForm
   fillable :name
 end
 
-private class ValueColumnModel < LuckyRecord::Model
+private class ValueColumnModel < Avram::Model
   table :value_column_model do
     column value : String
   end
@@ -35,7 +35,7 @@ private class ValueColumnModelForm < ValueColumnModel::BaseForm
   fillable value
 end
 
-describe "LuckyRecord::Form" do
+describe "Avram::Form" do
   it "generates the correct form_name" do
     LimitedUserForm.new.form_name.should eq "limited_user"
     LimitedUserForm.form_name.should eq "limited_user"
@@ -109,22 +109,22 @@ describe "LuckyRecord::Form" do
 
   describe "save_failed?" do
     it "is true if the object is invalid and performed an action" do
-      params = LuckyRecord::Params.new(name: "")
+      params = Avram::Params.new(name: "")
       form = UserForm.new(params)
 
       form.save
 
       form.save_failed?.should be_true
-      form.save_status.should eq(LuckyRecord::Form::SaveStatus::SaveFailed)
+      form.save_status.should eq(Avram::Form::SaveStatus::SaveFailed)
       form.valid?.should be_false
     end
 
     it "is false if the object is not marked as saved but no action was performed" do
-      params = LuckyRecord::Params.new(name: "")
+      params = Avram::Params.new(name: "")
       form = UserForm.new(params)
 
       form.save_failed?.should be_false
-      form.save_status.should eq(LuckyRecord::Form::SaveStatus::Unperformed)
+      form.save_status.should eq(Avram::Form::SaveStatus::Unperformed)
       form.saved?.should be_false
       form.valid?.should be_false
     end
@@ -133,7 +133,7 @@ describe "LuckyRecord::Form" do
   describe "initializer" do
     it "works with a record and named args" do
       UserBox.new.name("Old Name").create
-      params = LuckyRecord::Params.new(name: "New Name")
+      params = Avram::Params.new(name: "New Name")
       user = UserQuery.new.first
 
       form = UserForm.new(user, params)
@@ -173,12 +173,12 @@ describe "LuckyRecord::Form" do
       form.changes[:name]?.should eq "someone"
     end
 
-    it "returns a LuckyRecord::FillableField" do
+    it "returns a Avram::FillableField" do
       form = LimitedUserForm.new({"name" => "someone", "nickname" => "nothing"})
       form.nickname.value.should be_nil
-      form.nickname.is_a?(LuckyRecord::Field).should be_true
+      form.nickname.is_a?(Avram::Field).should be_true
       form.name.value.should eq "someone"
-      form.name.is_a?(LuckyRecord::FillableField).should be_true
+      form.name.is_a?(Avram::FillableField).should be_true
     end
   end
 
@@ -338,7 +338,7 @@ describe "LuckyRecord::Form" do
       it "raises an exception" do
         params = {"name" => "", "age" => "30"}
 
-        expect_raises LuckyRecord::InvalidFormError(UserForm) do
+        expect_raises Avram::InvalidFormError(UserForm) do
           UserForm.create!(params)
         end
       end
@@ -458,7 +458,7 @@ describe "LuckyRecord::Form" do
         user = UserQuery.new.first
         params = {"name" => ""}
 
-        expect_raises LuckyRecord::InvalidFormError(UserForm) do
+        expect_raises Avram::InvalidFormError(UserForm) do
           UserForm.update! user, with: params
         end
       end

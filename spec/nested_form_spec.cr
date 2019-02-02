@@ -15,7 +15,7 @@ private class BusinessForm < Business::BaseForm
 end
 
 private class NestedParams
-  include LuckyRecord::Paramable
+  include Avram::Paramable
 
   @business : Hash(String, String) = {} of String => String
   @email_address : Hash(String, String) = {} of String => String
@@ -49,7 +49,7 @@ private class NestedParams
   end
 end
 
-describe "LuckyRecord::Form with nested form" do
+describe "Avram::Form with nested form" do
   context "when not all forms are valid" do
     it "does not save either" do
       params = NestedParams.new business: {"name" => "Fubar"},

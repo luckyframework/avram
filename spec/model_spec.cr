@@ -1,6 +1,6 @@
 require "./spec_helper"
 
-private class QueryMe < LuckyRecord::Model
+private class QueryMe < Avram::Model
   COLUMNS = "users.id, users.created_at, users.updated_at, users.email, users.age"
 
   table users do
@@ -9,47 +9,47 @@ private class QueryMe < LuckyRecord::Model
   end
 end
 
-private class ModelWithMissingButSimilarlyNamedColumn < LuckyRecord::Model
+private class ModelWithMissingButSimilarlyNamedColumn < Avram::Model
   table users do
     column mickname : String
   end
 end
 
-private class ModelWithOptionalFieldOnRequiredColumn < LuckyRecord::Model
+private class ModelWithOptionalFieldOnRequiredColumn < Avram::Model
   table users do
     column name : String?
   end
 end
 
-private class ModelWithRequiredFieldOnOptionalColumn < LuckyRecord::Model
+private class ModelWithRequiredFieldOnOptionalColumn < Avram::Model
   table users do
     column nickname : String
   end
 end
 
-private class MissingTable < LuckyRecord::Model
+private class MissingTable < Avram::Model
   table definitely_a_missing_table do
   end
 end
 
-private class MissingButSimilarlyNamedTable < LuckyRecord::Model
+private class MissingButSimilarlyNamedTable < Avram::Model
   table uusers do
   end
 end
 
-private class EmptyModelCompilesOk < LuckyRecord::Model
+private class EmptyModelCompilesOk < Avram::Model
   table no_fields do
   end
 end
 
-private class InferredTableNameModel < LuckyRecord::Model
+private class InferredTableNameModel < Avram::Model
   COLUMNS = "inferred_table_name_models.id, inferred_table_name_models.created_at, inferred_table_name_models.updated_at"
 
   table do
   end
 end
 
-describe LuckyRecord::Model do
+describe Avram::Model do
   it "sets up initializers based on the fields" do
     now = Time.now
 

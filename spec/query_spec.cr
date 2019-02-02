@@ -10,7 +10,7 @@ class ChainedQuery < User::BaseQuery
   end
 end
 
-describe LuckyRecord::Query do
+describe Avram::Query do
   it "can chain scope methods" do
     ChainedQuery.new.young.named("Paul")
   end
@@ -50,7 +50,7 @@ describe LuckyRecord::Query do
     end
 
     it "raises RecordNotFound if no record is found" do
-      expect_raises(LuckyRecord::RecordNotFoundError) do
+      expect_raises(Avram::RecordNotFoundError) do
         UserQuery.first
       end
     end
@@ -65,7 +65,7 @@ describe LuckyRecord::Query do
     end
 
     it "raises RecordNotFound if no record is found" do
-      expect_raises(LuckyRecord::RecordNotFoundError) do
+      expect_raises(Avram::RecordNotFoundError) do
         UserQuery.new.first
       end
     end
@@ -110,7 +110,7 @@ describe LuckyRecord::Query do
     end
 
     it "raises RecordNotFound if no record is found" do
-      expect_raises(LuckyRecord::RecordNotFoundError) do
+      expect_raises(Avram::RecordNotFoundError) do
         UserQuery.last
       end
     end
@@ -133,7 +133,7 @@ describe LuckyRecord::Query do
     end
 
     it "raises RecordNotFound if no record is found" do
-      expect_raises(LuckyRecord::RecordNotFoundError) do
+      expect_raises(Avram::RecordNotFoundError) do
         UserQuery.new.last
       end
     end
@@ -178,13 +178,13 @@ describe LuckyRecord::Query do
     end
 
     it "raises RecordNotFound if no record is found with the given id (Int32)" do
-      expect_raises(LuckyRecord::RecordNotFoundError) do
+      expect_raises(Avram::RecordNotFoundError) do
         UserQuery.find(1)
       end
     end
 
     it "raises RecordNotFound if no record is found with the given id (String)" do
-      expect_raises(LuckyRecord::RecordNotFoundError) do
+      expect_raises(Avram::RecordNotFoundError) do
         UserQuery.find("1")
       end
     end
@@ -205,13 +205,13 @@ describe LuckyRecord::Query do
     end
 
     it "raises RecordNotFound if no record is found with the given id (Int32)" do
-      expect_raises(LuckyRecord::RecordNotFoundError) do
+      expect_raises(Avram::RecordNotFoundError) do
         UserQuery.new.find(1)
       end
     end
 
     it "raises RecordNotFound if no record is found with the given id (String)" do
-      expect_raises(LuckyRecord::RecordNotFoundError) do
+      expect_raises(Avram::RecordNotFoundError) do
         UserQuery.new.find("1")
       end
     end
@@ -399,11 +399,11 @@ describe LuckyRecord::Query do
     end
 
     it "raises when used with offset or limit" do
-      expect_raises(LuckyRecord::UnsupportedQueryError) do
+      expect_raises(Avram::UnsupportedQueryError) do
         UserQuery.new.limit(1).select_count
       end
 
-      expect_raises(LuckyRecord::UnsupportedQueryError) do
+      expect_raises(Avram::UnsupportedQueryError) do
         UserQuery.new.offset(1).select_count
       end
     end

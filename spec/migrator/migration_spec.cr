@@ -1,6 +1,6 @@
 require "../spec_helper"
 
-class MigrationThatPartiallyWorks::V999 < LuckyRecord::Migrator::Migration::V1
+class MigrationThatPartiallyWorks::V999 < Avram::Migrator::Migration::V1
   def migrate
     create :fake_things do
       add foo : String
@@ -15,7 +15,7 @@ class MigrationThatPartiallyWorks::V999 < LuckyRecord::Migrator::Migration::V1
   end
 end
 
-class MigrationWithOrderDependentExecute::V998 < LuckyRecord::Migrator::Migration::V1
+class MigrationWithOrderDependentExecute::V998 < Avram::Migrator::Migration::V1
   def migrate
     execute "CREATE TABLE execution_order ();"
 
@@ -31,13 +31,13 @@ class MigrationWithOrderDependentExecute::V998 < LuckyRecord::Migrator::Migratio
   end
 end
 
-describe LuckyRecord::Migrator::Migration::V1 do
+describe Avram::Migrator::Migration::V1 do
   it "executes statements in a transaction" do
     expect_raises Exception, %(relation "table_does_not_exist" does not exist) do
       MigrationThatPartiallyWorks::V999.new.up
     end
 
-    exists = LuckyRecord::Repo.run do |db|
+    exists = Avram::Repo.run do |db|
       db.query_one? "SELECT EXISTS (SELECT 1 FROM pg_tables WHERE tablename = 'fake_things');", as: Bool
     end
     exists.should be_false
@@ -65,5 +65,5 @@ private def get_column_names(table_name)
     AND table_name = '#{table_name}'
   SQL
 
-  LuckyRecord::Repo.run { |db| db.query_all statement, as: String }
+  Avram::Repo.run { |db| db.query_all statement, as: String }
 end

@@ -1,5 +1,5 @@
 require "lucky_cli"
-require "./src/lucky_record"
+require "./src/avram"
 require "./config/database"
 require "./db/migrations/*"
 

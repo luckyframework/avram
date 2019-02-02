@@ -27,14 +27,14 @@ describe "Generating migrations" do
         drop :users
         CONTENTS
 
-        LuckyRecord::Migrator::MigrationGenerator.new(
+        Avram::Migrator::MigrationGenerator.new(
           "CreateUsers",
           migrate_contents: migrate_contents,
           rollback_contents: rollback_contents
         ).generate(_version: "123")
 
         File.read("./db/migrations/123_create_users.cr").should contain <<-MIGRATION
-        class CreateUsers::V123 < LuckyRecord::Migrator::Migration::V1
+        class CreateUsers::V123 < Avram::Migrator::Migration::V1
           def migrate
             create :users do
               add name : String

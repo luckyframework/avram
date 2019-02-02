@@ -1,4 +1,4 @@
-class Tag < LuckyRecord::Model
+class Tag < Avram::Model
   table :tags do
     column name : String
     has_many taggings : Tagging

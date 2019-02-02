@@ -1,7 +1,7 @@
 require "./spec_helper"
 
 private class CallableMessage
-  include LuckyRecord::CallableErrorMessage
+  include Avram::CallableErrorMessage
 
   def initialize(@name = "")
   end
@@ -21,13 +21,13 @@ class UniquenessWithDatabaseBackedForm < User::BaseForm
 end
 
 private class TestValidationUser
-  include LuckyRecord::Validations
-  @_age : LuckyRecord::Field(Int32?)?
-  @_name : LuckyRecord::Field(String)?
-  @_city : LuckyRecord::Field(String)?
-  @_state : LuckyRecord::Field(String)?
-  @_name_confirmation : LuckyRecord::Field(String)?
-  @_terms : LuckyRecord::Field(Bool?)?
+  include Avram::Validations
+  @_age : Avram::Field(Int32?)?
+  @_name : Avram::Field(String)?
+  @_city : Avram::Field(String)?
+  @_state : Avram::Field(String)?
+  @_name_confirmation : Avram::Field(String)?
+  @_terms : Avram::Field(Bool?)?
 
   @name : String
   @name_confirmation : String
@@ -91,7 +91,7 @@ private class TestValidationUser
 
   macro column(type, name)
     def {{ name }}
-      @_{{ name }} ||= LuckyRecord::Field({{ type }}).new(:{{ name }}, param: "", value: @{{ name }}, form_name: "blank")
+      @_{{ name }} ||= Avram::Field({{ type }}).new(:{{ name }}, param: "", value: @{{ name }}, form_name: "blank")
     end
   end
 
@@ -103,7 +103,7 @@ private class TestValidationUser
   column Bool?, terms
 end
 
-describe LuckyRecord::Validations do
+describe Avram::Validations do
   describe "validate_required" do
     it "validates multiple fields" do
       validate(name: "", age: nil) do |user|
@@ -273,7 +273,7 @@ describe LuckyRecord::Validations do
 
     it "raises an error for an impossible condition" do
       validate(name: "Paul") do |user|
-        expect_raises(LuckyRecord::ImpossibleValidation) do
+        expect_raises(Avram::ImpossibleValidation) do
           user.run_impossible_size_validation
         end
       end

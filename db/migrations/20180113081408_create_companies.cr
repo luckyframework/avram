@@ -1,4 +1,4 @@
-class CreateCompanies::V20180113081408 < LuckyRecord::Migrator::Migration::V1
+class CreateCompanies::V20180113081408 < Avram::Migrator::Migration::V1
   def migrate
     create :companies do
       add sales : Int64

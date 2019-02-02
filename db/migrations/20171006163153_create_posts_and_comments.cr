@@ -1,4 +1,4 @@
-class CreatePostsAndComments::V20171006163153 < LuckyRecord::Migrator::Migration::V1
+class CreatePostsAndComments::V20171006163153 < Avram::Migrator::Migration::V1
   def migrate
     create :posts do
       add title : String

@@ -1,8 +1,8 @@
 require "../spec_helper"
 
-describe LuckyRecord::Migrator::CreateTableStatement do
+describe Avram::Migrator::CreateTableStatement do
   it "can create tables with no user defined columns" do
-    built = LuckyRecord::Migrator::CreateTableStatement.new(:users).build do
+    built = Avram::Migrator::CreateTableStatement.new(:users).build do
     end
 
     built.statements.size.should eq 1
@@ -15,7 +15,7 @@ describe LuckyRecord::Migrator::CreateTableStatement do
   end
 
   it "can create tables" do
-    built = LuckyRecord::Migrator::CreateTableStatement.new(:users).build do
+    built = Avram::Migrator::CreateTableStatement.new(:users).build do
       add name : String
       add age : Int32
       add completed : Bool
@@ -42,7 +42,7 @@ describe LuckyRecord::Migrator::CreateTableStatement do
   end
 
   it "can create tables with uuid primary keys" do
-    built = LuckyRecord::Migrator::CreateTableStatement.new(:users, LuckyRecord::Migrator::PrimaryKeyType::UUID).build do
+    built = Avram::Migrator::CreateTableStatement.new(:users, Avram::Migrator::PrimaryKeyType::UUID).build do
       add name : String
     end
 
@@ -57,7 +57,7 @@ describe LuckyRecord::Migrator::CreateTableStatement do
   end
 
   it "sets default values" do
-    built = LuckyRecord::Migrator::CreateTableStatement.new(:users).build do
+    built = Avram::Migrator::CreateTableStatement.new(:users).build do
       add name : String, default: "name"
       add email : String?, default: "optional"
       add age : Int32, default: 1
@@ -87,7 +87,7 @@ describe LuckyRecord::Migrator::CreateTableStatement do
 
   describe "indices" do
     it "can create tables with indices" do
-      built = LuckyRecord::Migrator::CreateTableStatement.new(:users).build do
+      built = Avram::Migrator::CreateTableStatement.new(:users).build do
         add name : String, index: true
         add age : Int32, unique: true
         add email : String
@@ -112,7 +112,7 @@ describe LuckyRecord::Migrator::CreateTableStatement do
 
     it "raises error on columns with non allowed index types" do
       expect_raises Exception, "index type 'gist' not supported" do
-        LuckyRecord::Migrator::CreateTableStatement.new(:users).build do
+        Avram::Migrator::CreateTableStatement.new(:users).build do
           add email : String, index: true, using: :gist
         end
       end
@@ -120,7 +120,7 @@ describe LuckyRecord::Migrator::CreateTableStatement do
 
     it "raises error when index already exists" do
       expect_raises Exception, "index on users.email already exists" do
-        LuckyRecord::Migrator::CreateTableStatement.new(:users).build do
+        Avram::Migrator::CreateTableStatement.new(:users).build do
           add email : String, index: true
           add_index :email, unique: true
         end
@@ -130,12 +130,12 @@ describe LuckyRecord::Migrator::CreateTableStatement do
 
   describe "associations" do
     it "can create associations" do
-      built = LuckyRecord::Migrator::CreateTableStatement.new(:comments).build do
+      built = Avram::Migrator::CreateTableStatement.new(:comments).build do
         add_belongs_to user : User, on_delete: :cascade
         add_belongs_to post : Post?, on_delete: :restrict
         add_belongs_to category_label : CategoryLabel, on_delete: :nullify, references: :custom_table
         add_belongs_to employee : User, on_delete: :cascade
-        add_belongs_to line_item : LineItem, on_delete: :cascade, foreign_key_type: LuckyRecord::Migrator::PrimaryKeyType::UUID
+        add_belongs_to line_item : LineItem, on_delete: :cascade, foreign_key_type: Avram::Migrator::PrimaryKeyType::UUID
       end
 
       built.statements.first.should eq <<-SQL
@@ -159,7 +159,7 @@ describe LuckyRecord::Migrator::CreateTableStatement do
 
     it "raises error when on_delete strategy is invalid or nil" do
       expect_raises Exception, "on_delete: :cascad is not supported. Please use :do_nothing, :cascade, :restrict, or :nullify" do
-        LuckyRecord::Migrator::CreateTableStatement.new(:users).build do
+        Avram::Migrator::CreateTableStatement.new(:users).build do
           add_belongs_to user : User, on_delete: :cascad
         end
       end

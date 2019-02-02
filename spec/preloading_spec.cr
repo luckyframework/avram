@@ -9,7 +9,7 @@ describe "Preloading" do
 
       posts = Post::BaseQuery.new
 
-      expect_raises LuckyRecord::LazyLoadError do
+      expect_raises Avram::LazyLoadError do
         posts.first.comments
       end
     end

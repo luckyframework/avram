@@ -1,4 +1,4 @@
-abstract class BaseBox < LuckyRecord::Box
+abstract class BaseBox < Avram::Box
   SEQUENCES = {} of String => Int32
 
   def self.build

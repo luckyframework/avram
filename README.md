@@ -1,4 +1,4 @@
-# LuckyRecord
+# Avram
 
 This project is still new. Guides will be posted when things are more complete.
 
@@ -8,22 +8,22 @@ Add this to your application's `shard.yml`:
 
 ```yaml
 dependencies:
-  lucky_record:
-    github: luckyframework/lucky_record
+  avram:
+    github: luckyframework/avram
 ```
 
 ## Usage
 
 ```crystal
-require "lucky_record"
+require "avram"
 ```
 
 ## Contributing
 
-1. Fork it ( https://github.com/luckyframework/lucky_record/fork )
+1. Fork it ( https://github.com/luckyframework/avram/fork )
 2. Create your feature branch (git checkout -b my-new-feature)
 3. Make your changes
-4. Run `./bin/test` to run the specs, build shards, and check formatting 
+4. Run `./bin/test` to run the specs, build shards, and check formatting
 5. Commit your changes (git commit -am 'Add some feature')
 6. Push to the branch (git push origin my-new-feature)
 7. Create a new Pull Request

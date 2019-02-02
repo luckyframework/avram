@@ -1,7 +1,7 @@
-database = "lucky_record_dev"
+database = "avram_dev"
 
-LuckyRecord::Repo.configure do |settings|
-  settings.url = ENV["DATABASE_URL"]? || LuckyRecord::PostgresURL.build(
+Avram::Repo.configure do |settings|
+  settings.url = ENV["DATABASE_URL"]? || Avram::PostgresURL.build(
     hostname: "localhost",
     database: database
   )

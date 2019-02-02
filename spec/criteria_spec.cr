@@ -1,6 +1,6 @@
 require "./spec_helper"
 
-private class QueryMe < LuckyRecord::Model
+private class QueryMe < Avram::Model
   COLUMNS = "users.id, users.created_at, users.updated_at, users.age"
 
   table users do
@@ -8,7 +8,7 @@ private class QueryMe < LuckyRecord::Model
   end
 end
 
-describe LuckyRecord::Criteria do
+describe Avram::Criteria do
   describe "is" do
     it "uses =" do
       age.is(30).to_sql.should eq ["SELECT #{QueryMe::COLUMNS} FROM users WHERE users.age = $1", "30"]

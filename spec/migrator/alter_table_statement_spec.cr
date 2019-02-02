@@ -1,8 +1,8 @@
 require "../spec_helper"
 
-describe LuckyRecord::Migrator::AlterTableStatement do
+describe Avram::Migrator::AlterTableStatement do
   it "can alter tables with defaults, indices and options" do
-    built = LuckyRecord::Migrator::AlterTableStatement.new(:users).build do
+    built = Avram::Migrator::AlterTableStatement.new(:users).build do
       add name : String?
       add email : String, fill_existing_with: "noreply@lucky.com"
       add nickname : String, fill_existing_with: :nothing
@@ -44,12 +44,12 @@ describe LuckyRecord::Migrator::AlterTableStatement do
 
   describe "associations" do
     it "can create associations" do
-      built = LuckyRecord::Migrator::AlterTableStatement.new(:comments).build do
+      built = Avram::Migrator::AlterTableStatement.new(:comments).build do
         add_belongs_to user : User, on_delete: :cascade
         add_belongs_to post : Post?, on_delete: :restrict
         add_belongs_to category_label : CategoryLabel, on_delete: :nullify, references: :custom_table
         add_belongs_to employee : User, on_delete: :cascade
-        add_belongs_to line_item : LineItem, on_delete: :cascade, foreign_key_type: LuckyRecord::Migrator::PrimaryKeyType::UUID
+        add_belongs_to line_item : LineItem, on_delete: :cascade, foreign_key_type: Avram::Migrator::PrimaryKeyType::UUID
       end
 
       built.statements.first.should eq <<-SQL
@@ -70,7 +70,7 @@ describe LuckyRecord::Migrator::AlterTableStatement do
 
     it "raises error when on_delete strategy is invalid or nil" do
       expect_raises Exception, "on_delete: :cascad is not supported. Please use :do_nothing, :cascade, :restrict, or :nullify" do
-        LuckyRecord::Migrator::AlterTableStatement.new(:users).build do
+        Avram::Migrator::AlterTableStatement.new(:users).build do
           add_belongs_to user : User, on_delete: :cascad
         end
       end

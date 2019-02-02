@@ -1,6 +1,6 @@
 require "./spec_helper"
 
-private class TestVirtualForm < LuckyRecord::VirtualForm
+private class TestVirtualForm < Avram::VirtualForm
   virtual name : String
   virtual age : Int32
 
@@ -17,11 +17,11 @@ private class CanUseSameVirtualFieldTwiceInModelBackedForm < User::BaseForm
   virtual password : String
 end
 
-private class CanUseSameVirtualFieldTwiceInVirtualForm < LuckyRecord::VirtualForm
+private class CanUseSameVirtualFieldTwiceInVirtualForm < Avram::VirtualForm
   virtual name : String
 end
 
-describe LuckyRecord::VirtualForm do
+describe Avram::VirtualForm do
   it "has create/update args for virtual fields" do
     UserWithVirtual.create(password: "p@ssword") do |form, _user|
       form.password.value = "p@ssword"
@@ -44,25 +44,25 @@ describe LuckyRecord::VirtualForm do
     virtual_form.name.value = "Megan"
     virtual_form.name.value.should eq("Megan")
 
-    params = LuckyRecord::Params.new({"name" => "Jordan"})
+    params = Avram::Params.new({"name" => "Jordan"})
     virtual_form = TestVirtualForm.new(params)
     virtual_form.name.value.should eq("Jordan")
   end
 
   it "parses params" do
-    params = LuckyRecord::Params.new({"age" => "45"})
+    params = Avram::Params.new({"age" => "45"})
     virtual_form = TestVirtualForm.new(params)
     virtual_form.age.value.should eq 45
     virtual_form.age.errors.should eq [] of String
 
-    params = LuckyRecord::Params.new({"age" => "not an int"})
+    params = Avram::Params.new({"age" => "not an int"})
     virtual_form = TestVirtualForm.new(params)
     virtual_form.age.value.should be_nil
     virtual_form.age.errors.should eq ["is invalid"]
   end
 
   it "includes validations" do
-    params = LuckyRecord::Params.new({"name" => ""})
+    params = Avram::Params.new({"name" => ""})
     virtual_form = TestVirtualForm.new(params)
     virtual_form.name.errors.should eq [] of String
     virtual_form.valid?.should be_true
