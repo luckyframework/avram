@@ -1,0 +1,37 @@
+version: "3"
+
+services:
+  db:
+    image: postgres:11.1-alpine
+    environment:
+      POSTGRES_USER: lucky
+      POSTGRES_PASSWORD: developer
+    volumes:
+      - db:/var/lib/postgresql
+    networks:
+      - internal
+    ports:
+      - 5432
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      SHARDS_CACHE_PATH: /data/.shards
+      DB_HOST: db
+      DB_USERNAME: lucky
+      DB_PASSWORD: developer
+    volumes:
+      - .:/data
+    command: sleep infinity
+    depends_on:
+      - db
+    networks:
+      - internal
+
+volumes:
+  db:
+
+networks:
+  internal:

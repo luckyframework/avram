@@ -2,6 +2,7 @@
 /lib/
 /bin/lucky
 /bin/gen.migration*
+/db/migrations/
 /.shards/
 
 # Libraries don't need dependency lock

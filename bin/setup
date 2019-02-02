@@ -1,8 +1,0 @@
-#! /bin/sh
-
-set -e
-
-shards update
-lucky db.drop
-lucky db.create
-lucky db.migrate
