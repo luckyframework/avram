@@ -7,19 +7,19 @@ macro should_negate(original_where, expected_negated_where)
   clause.should be_a({{expected_negated_where}})
 end
 
-describe LuckyRecord::Where do
+describe Avram::Where do
   it "can be negated" do
-    should_negate(LuckyRecord::Where::Equal, LuckyRecord::Where::NotEqual)
-    should_negate(LuckyRecord::Where::NotEqual, LuckyRecord::Where::Equal)
-    should_negate(LuckyRecord::Where::GreaterThan, LuckyRecord::Where::LessThanOrEqualTo)
-    should_negate(LuckyRecord::Where::GreaterThanOrEqualTo, LuckyRecord::Where::LessThan)
-    should_negate(LuckyRecord::Where::LessThan, LuckyRecord::Where::GreaterThanOrEqualTo)
-    should_negate(LuckyRecord::Where::LessThanOrEqualTo, LuckyRecord::Where::GreaterThan)
-    should_negate(LuckyRecord::Where::Like, LuckyRecord::Where::NotLike)
-    should_negate(LuckyRecord::Where::NotLike, LuckyRecord::Where::Like)
-    should_negate(LuckyRecord::Where::Ilike, LuckyRecord::Where::NotIlike)
-    should_negate(LuckyRecord::Where::NotIlike, LuckyRecord::Where::Ilike)
-    should_negate(LuckyRecord::Where::In, LuckyRecord::Where::NotIn)
-    should_negate(LuckyRecord::Where::NotIn, LuckyRecord::Where::In)
+    should_negate(Avram::Where::Equal, Avram::Where::NotEqual)
+    should_negate(Avram::Where::NotEqual, Avram::Where::Equal)
+    should_negate(Avram::Where::GreaterThan, Avram::Where::LessThanOrEqualTo)
+    should_negate(Avram::Where::GreaterThanOrEqualTo, Avram::Where::LessThan)
+    should_negate(Avram::Where::LessThan, Avram::Where::GreaterThanOrEqualTo)
+    should_negate(Avram::Where::LessThanOrEqualTo, Avram::Where::GreaterThan)
+    should_negate(Avram::Where::Like, Avram::Where::NotLike)
+    should_negate(Avram::Where::NotLike, Avram::Where::Like)
+    should_negate(Avram::Where::Ilike, Avram::Where::NotIlike)
+    should_negate(Avram::Where::NotIlike, Avram::Where::Ilike)
+    should_negate(Avram::Where::In, Avram::Where::NotIn)
+    should_negate(Avram::Where::NotIn, Avram::Where::In)
   end
 end

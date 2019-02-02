@@ -1,8 +1,8 @@
 require "spec"
-require "../src/lucky_record"
+require "../src/avram"
 require "./support/**"
 require "../config/database"
 
 Spec.before_each do
-  LuckyRecord::Repo.truncate
+  Avram::Repo.truncate
 end

@@ -1,4 +1,4 @@
-class CreateScansForLineItems::V20180627231023 < LuckyRecord::Migrator::Migration::V1
+class CreateScansForLineItems::V20180627231023 < Avram::Migrator::Migration::V1
   def migrate
     execute <<-SQL
       CREATE TABLE scans (

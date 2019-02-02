@@ -1,6 +1,6 @@
 require "./spec_helper"
 
-private class QueryMe < LuckyRecord::Model
+private class QueryMe < Avram::Model
   COLUMNS = "users.id, users.created_at, users.updated_at, users.admin"
 
   table users do

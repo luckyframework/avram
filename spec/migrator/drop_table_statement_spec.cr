@@ -1,8 +1,8 @@
 require "../spec_helper"
 
-describe LuckyRecord::Migrator::DropTableStatement do
+describe Avram::Migrator::DropTableStatement do
   it "can drop table" do
-    statement = LuckyRecord::Migrator::DropTableStatement.new(:users).build
+    statement = Avram::Migrator::DropTableStatement.new(:users).build
 
     statement.should eq "DROP TABLE users"
   end

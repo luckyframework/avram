@@ -1,4 +1,4 @@
-class Business < LuckyRecord::Model
+class Business < Avram::Model
   table businesses do
     column name : String
     has_one tax_id : TaxId
@@ -6,14 +6,14 @@ class Business < LuckyRecord::Model
   end
 end
 
-class TaxId < LuckyRecord::Model
+class TaxId < Avram::Model
   table tax_ids do
     column number : Int32
     belongs_to business : Business
   end
 end
 
-class EmailAddress < LuckyRecord::Model
+class EmailAddress < Avram::Model
   table email_addresses do
     column address : String
     belongs_to business : Business?

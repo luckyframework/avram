@@ -10,11 +10,11 @@ describe "UUID column type" do
     it "casts a string successfully" do
       uuid = UUID.new("a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11")
       UUID::Lucky.parse("a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11")
-        .should be_a(LuckyRecord::Type::SuccessfulCast(UUID))
+        .should be_a(Avram::Type::SuccessfulCast(UUID))
     end
 
     it "cannot cast a non-uuid string" do
-      UUID::Lucky.parse("not a uuid").should be_a(LuckyRecord::Type::FailedCast)
+      UUID::Lucky.parse("not a uuid").should be_a(Avram::Type::FailedCast)
     end
   end
 

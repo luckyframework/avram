@@ -24,7 +24,7 @@ private class NeedsWithOnOptionForm < Needs::BaseForm
   needs saved_by : String, on: :save
 end
 
-describe "LuckyRecord::Form needs" do
+describe "Avram::Form needs" do
   it "doesn't change the initializer if an 'on' option is used'" do
     params = {"name" => "Paul"}
     user = UserBox.create

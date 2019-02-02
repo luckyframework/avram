@@ -1,6 +1,6 @@
 require "./spec_helper"
 
-private class QueryMe < LuckyRecord::Model
+private class QueryMe < Avram::Model
   table users do
     column activated_at : Time
   end

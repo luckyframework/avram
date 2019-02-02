@@ -1,3 +1,3 @@
-require "../../lucky_record"
+require "../../avram"
 
 Gen::Migration.new.call

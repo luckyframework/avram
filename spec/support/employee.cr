@@ -1,6 +1,6 @@
 require "./manager"
 
-class Employee < LuckyRecord::Model
+class Employee < Avram::Model
   table employees do
     column name : String
     belongs_to manager : Manager?

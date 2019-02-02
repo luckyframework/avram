@@ -17,7 +17,7 @@ Here are some ways *you* can contribute:
 * by closing [issues][]
 * by reviewing patches
 
-[issues]: https://github.com/luckyframework/lucky_record/issues
+[issues]: https://github.com/luckyframework/avram/issues
 
 ## Submitting an Issue
 
@@ -52,7 +52,7 @@ already been submitted.
   asking for help. We love helping!
 * Please don't update the Gem version.
 
-[repo]: https://github.com/luckyframework/lucky_record/tree/master
+[repo]: https://github.com/luckyframework/avram/tree/master
 [fork]: https://help.github.com/articles/fork-a-repo/
 [branch]: https://help.github.com/articles/creating-and-deleting-branches-within-your-repository/
 [pr]: https://help.github.com/articles/using-pull-requests/

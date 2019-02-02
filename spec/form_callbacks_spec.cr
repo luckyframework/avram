@@ -88,7 +88,7 @@ private class CallbacksForm < Post::BaseForm
   end
 end
 
-describe "LuckyRecord::Form callbacks" do
+describe "Avram::Form callbacks" do
   it "does not run the save callbacks if just validating" do
     form = CallbacksForm.new
     form.callbacks_that_ran.should eq([] of String)

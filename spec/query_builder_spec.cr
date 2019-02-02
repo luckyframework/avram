@@ -1,6 +1,6 @@
 require "./spec_helper"
 
-describe "LuckyRecord::QueryBuilder" do
+describe "Avram::QueryBuilder" do
   it "selects all" do
     new_query.statement.should eq "SELECT * FROM users"
     new_query.args.should eq [] of String
@@ -20,8 +20,8 @@ describe "LuckyRecord::QueryBuilder" do
 
   it "accepts where clauses and limits" do
     query = new_query
-      .where(LuckyRecord::Where::Equal.new(:name, "Paul"))
-      .where(LuckyRecord::Where::GreaterThan.new(:age, "20"))
+      .where(Avram::Where::Equal.new(:name, "Paul"))
+      .where(Avram::Where::GreaterThan.new(:age, "20"))
       .limit(1)
     query.statement.should eq "SELECT * FROM users WHERE name = $1 AND age > $2 LIMIT 1"
     query.args.should eq ["Paul", "20"]
@@ -29,8 +29,8 @@ describe "LuckyRecord::QueryBuilder" do
 
   it "accepts raw where clauses" do
     query = new_query
-      .raw_where(LuckyRecord::Where::Raw.new("name = ?", "Mikias"))
-      .raw_where(LuckyRecord::Where::Raw.new("age > ?", 26))
+      .raw_where(Avram::Where::Raw.new("name = ?", "Mikias"))
+      .raw_where(Avram::Where::Raw.new("age > ?", 26))
       .limit(1)
     query.statement.should eq "SELECT * FROM users WHERE name = 'Mikias' AND age > 26 LIMIT 1"
     query.args.empty?.should be_true
@@ -64,9 +64,9 @@ describe "LuckyRecord::QueryBuilder" do
   describe "updating" do
     it "inserts with a hash of String" do
       params = {:first_name => "Paul", :last_name => nil}
-      query = LuckyRecord::QueryBuilder
+      query = Avram::QueryBuilder
         .new(table: :users)
-        .where(LuckyRecord::Where::Equal.new(:id, "1"))
+        .where(Avram::Where::Equal.new(:id, "1"))
         .limit(1)
 
       query.statement_for_update(params).should eq "UPDATE users SET first_name = $1, last_name = $2 WHERE id = $3 LIMIT 1 RETURNING *"
@@ -75,7 +75,7 @@ describe "LuckyRecord::QueryBuilder" do
   end
 
   it "can be counted" do
-    query = LuckyRecord::QueryBuilder
+    query = Avram::QueryBuilder
       .new(table: :users)
       .select_count
 
@@ -98,7 +98,7 @@ describe "LuckyRecord::QueryBuilder" do
   end
 
   it "can get the min" do
-    query = LuckyRecord::QueryBuilder
+    query = Avram::QueryBuilder
       .new(table: :users)
       .select_min(:age)
 
@@ -107,7 +107,7 @@ describe "LuckyRecord::QueryBuilder" do
   end
 
   it "can get the max" do
-    query = LuckyRecord::QueryBuilder
+    query = Avram::QueryBuilder
       .new(table: :users)
       .select_max(:age)
 
@@ -116,7 +116,7 @@ describe "LuckyRecord::QueryBuilder" do
   end
 
   it "can get the average" do
-    query = LuckyRecord::QueryBuilder
+    query = Avram::QueryBuilder
       .new(table: :users)
       .select_average(:age)
 
@@ -125,7 +125,7 @@ describe "LuckyRecord::QueryBuilder" do
   end
 
   it "can sum a column" do
-    query = LuckyRecord::QueryBuilder
+    query = Avram::QueryBuilder
       .new(table: :users)
       .select_sum(:age)
 
@@ -135,7 +135,7 @@ describe "LuckyRecord::QueryBuilder" do
 
   describe "#select" do
     it "specifies columns to be selected" do
-      query = LuckyRecord::QueryBuilder
+      query = Avram::QueryBuilder
         .new(table: :users)
         .select([:name, :age])
 
@@ -144,9 +144,9 @@ describe "LuckyRecord::QueryBuilder" do
   end
 
   it "can be joined" do
-    query = LuckyRecord::QueryBuilder
+    query = Avram::QueryBuilder
       .new(table: :users)
-      .join(LuckyRecord::Join::Inner.new(:users, :posts))
+      .join(Avram::Join::Inner.new(:users, :posts))
       .limit(1)
 
     query.statement.should eq "SELECT * FROM users INNER JOIN posts ON users.id = posts.user_id LIMIT 1"
@@ -154,7 +154,7 @@ describe "LuckyRecord::QueryBuilder" do
 
   describe "#reverse_order" do
     it "reverses the order of the query" do
-      query = LuckyRecord::QueryBuilder
+      query = Avram::QueryBuilder
         .new(table: :users)
         .order_by(:id, :asc)
         .reverse_order
@@ -163,7 +163,7 @@ describe "LuckyRecord::QueryBuilder" do
     end
 
     it "reverses both directions" do
-      query = LuckyRecord::QueryBuilder
+      query = Avram::QueryBuilder
         .new(table: :users)
         .order_by(:id, :asc)
         .order_by(:name, :desc)
@@ -171,13 +171,13 @@ describe "LuckyRecord::QueryBuilder" do
 
       query.statement.should eq "SELECT * FROM users ORDER BY name ASC, id DESC"
 
-      LuckyRecord::Repo.run do |db|
+      Avram::Repo.run do |db|
         db.exec query.statement
       end
     end
 
     it "does nothing if there is no order" do
-      query = LuckyRecord::QueryBuilder
+      query = Avram::QueryBuilder
         .new(table: :users)
         .reverse_order
 
@@ -187,7 +187,7 @@ describe "LuckyRecord::QueryBuilder" do
 
   describe "#ordered" do
     it "returns true if the query is ordered" do
-      query = LuckyRecord::QueryBuilder
+      query = Avram::QueryBuilder
         .new(table: :users)
         .order_by(:id, :asc)
 
@@ -195,7 +195,7 @@ describe "LuckyRecord::QueryBuilder" do
     end
 
     it "returns false if the query is not ordered" do
-      query = LuckyRecord::QueryBuilder
+      query = Avram::QueryBuilder
         .new(table: :users)
 
       query.ordered?.should eq false
@@ -204,11 +204,11 @@ describe "LuckyRecord::QueryBuilder" do
 end
 
 private def new_query
-  LuckyRecord::QueryBuilder.new(table: :users)
+  Avram::QueryBuilder.new(table: :users)
 end
 
 private def raises_unsupported_query
-  expect_raises LuckyRecord::UnsupportedQueryError do
-    yield LuckyRecord::QueryBuilder.new(table: :users)
+  expect_raises Avram::UnsupportedQueryError do
+    yield Avram::QueryBuilder.new(table: :users)
   end
 end

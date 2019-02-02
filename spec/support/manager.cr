@@ -1,6 +1,6 @@
 require "./employee"
 
-class Manager < LuckyRecord::Model
+class Manager < Avram::Model
   table managers do
     column name : String
     has_many employees : Employee

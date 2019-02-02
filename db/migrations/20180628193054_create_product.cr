@@ -1,4 +1,4 @@
-class CreateProduct::V20180628193054 < LuckyRecord::Migrator::Migration::V1
+class CreateProduct::V20180628193054 < Avram::Migrator::Migration::V1
   def migrate
     create :products, primary_key_type: :uuid
   end

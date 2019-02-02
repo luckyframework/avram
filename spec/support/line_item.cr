@@ -1,4 +1,4 @@
-class LineItem < LuckyRecord::Model
+class LineItem < Avram::Model
   table :line_items, primary_key_type: :uuid do
     column name : String
     has_one price : Price?

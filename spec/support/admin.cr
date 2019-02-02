@@ -1,6 +1,6 @@
 require "./sign_in_credential"
 
-class Admin < LuckyRecord::Model
+class Admin < Avram::Model
   COLUMNS = "admins.id, admins.created_at, admins.updated_at, admins.name"
 
   table admins do

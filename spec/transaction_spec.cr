@@ -6,7 +6,7 @@ private class PostTransactionForm < Post::BaseForm
 
   def after_save(_user)
     if rollback_after_save
-      LuckyRecord::Repo.rollback
+      Avram::Repo.rollback
     end
   end
 end
@@ -19,13 +19,13 @@ private class BadForm < Post::BaseForm
   end
 end
 
-describe "LuckyRecord::Form" do
+describe "Avram::Form" do
   describe "wrapping multiple saves in a transaction" do
     it "rolls them all back" do
-      LuckyRecord::Repo.transaction do
+      Avram::Repo.transaction do
         UserBox.create
         PostBox.create
-        LuckyRecord::Repo.rollback
+        Avram::Repo.rollback
       end.should be_false
 
       UserQuery.new.select_count.to_i.should eq(0)

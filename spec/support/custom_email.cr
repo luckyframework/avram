@@ -16,7 +16,7 @@ class CustomEmail
 
   module Lucky
     alias ColumnType = String
-    include LuckyRecord::Type
+    include Avram::Type
 
     def parse(value : CustomEmail)
       SuccessfulCast(CustomEmail).new(value)
