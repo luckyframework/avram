@@ -55,7 +55,7 @@ module Avram::Validations
     message : String = "is already taken"
   )
     field.value.try do |value|
-      if query.is(value).first?
+      if query.eq(value).first?
         field.add_error message
       end
     end

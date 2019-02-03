@@ -430,7 +430,7 @@ describe Avram::Query do
     it "negates any previous condition" do
       UserBox.new.name("Paul").create
 
-      results = UserQuery.new.name.not.is("Paul").results
+      results = UserQuery.new.name.not.eq("Paul").results
       results.should eq [] of User
     end
 

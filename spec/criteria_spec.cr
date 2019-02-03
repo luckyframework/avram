@@ -10,35 +10,19 @@ private class QueryMe < Avram::Model
 end
 
 describe Avram::Criteria do
-  describe "is" do
+  describe "eq" do
     it "uses =" do
-      age.is(30).to_sql.should eq ["SELECT #{QueryMe::COLUMNS} FROM users WHERE users.age = $1", "30"]
+      age.eq(30).to_sql.should eq ["SELECT #{QueryMe::COLUMNS} FROM users WHERE users.age = $1", "30"]
     end
   end
 
-  describe "is?" do
+  describe "nilable_eq" do
     it "uses =" do
-      age.is?(30).to_sql.should eq ["SELECT #{QueryMe::COLUMNS} FROM users WHERE users.age = $1", "30"]
+      age.nilable_eq(30).to_sql.should eq ["SELECT #{QueryMe::COLUMNS} FROM users WHERE users.age = $1", "30"]
     end
 
     it "uses 'IS NULL' for comparisons to nil" do
-      nickname.is?(nil).to_sql.should eq ["SELECT #{QueryMe::COLUMNS} FROM users WHERE users.nickname IS NULL"]
-    end
-  end
-
-  describe "is_not" do
-    it "uses !=" do
-      age.is_not(30).to_sql.should eq ["SELECT #{QueryMe::COLUMNS} FROM users WHERE users.age != $1", "30"]
-    end
-  end
-
-  describe "is_not?" do
-    it "uses !=" do
-      age.is_not?(30).to_sql.should eq ["SELECT #{QueryMe::COLUMNS} FROM users WHERE users.age != $1", "30"]
-    end
-
-    it "uses 'IS NOT NULL' for comparisons to nil" do
-      nickname.is_not?(nil).to_sql.should eq ["SELECT #{QueryMe::COLUMNS} FROM users WHERE users.nickname IS NOT NULL"]
+      nickname.nilable_eq(nil).to_sql.should eq ["SELECT #{QueryMe::COLUMNS} FROM users WHERE users.nickname IS NULL"]
     end
   end
 
@@ -79,7 +63,7 @@ describe Avram::Criteria do
       end
 
       it "resets after having negated once" do
-        age.not.gt("3").age.is("20").to_sql.should eq ["SELECT #{QueryMe::COLUMNS} FROM users WHERE users.age <= $1 AND users.age = $2", "3", "20"]
+        age.not.gt("3").age.eq("20").to_sql.should eq ["SELECT #{QueryMe::COLUMNS} FROM users WHERE users.age <= $1 AND users.age = $2", "3", "20"]
       end
     end
   end

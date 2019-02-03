@@ -103,13 +103,13 @@ describe Avram::Model do
   end
 
   it "sets up advanced criteria methods" do
-    query = QueryMe::BaseQuery.new.email.upper.is("foo@bar.com").age.gt(30)
+    query = QueryMe::BaseQuery.new.email.upper.eq("foo@bar.com").age.gt(30)
 
     query.to_sql.should eq ["SELECT #{QueryMe::COLUMNS} FROM users WHERE UPPER(users.email) = $1 AND users.age > $2", "foo@bar.com", "30"]
   end
 
   it "parses values" do
-    query = QueryMe::BaseQuery.new.email.upper.is(" Foo@bar.com").age.gt(30)
+    query = QueryMe::BaseQuery.new.email.upper.eq(" Foo@bar.com").age.gt(30)
 
     query.to_sql.should eq ["SELECT #{QueryMe::COLUMNS} FROM users WHERE UPPER(users.email) = $1 AND users.age > $2", "foo@bar.com", "30"]
   end
