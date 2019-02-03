@@ -34,10 +34,6 @@ class Avram::Criteria(T, V)
     rows
   end
 
-  def not(value) : T
-    not.eq(value)
-  end
-
   def not : Avram::Criteria
     @negate_next_criteria = true
     self

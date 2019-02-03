@@ -51,20 +51,12 @@ describe Avram::Criteria do
   end
 
   describe "not" do
-    describe "without chained criteria" do
-      it "negates to not equal" do
-        age.not("30").to_sql.should eq ["SELECT #{QueryMe::COLUMNS} FROM users WHERE users.age != $1", "30"]
-      end
+    it "negates the following criteria" do
+      age.not.gt("3").to_sql.should eq ["SELECT #{QueryMe::COLUMNS} FROM users WHERE users.age <= $1", "3"]
     end
 
-    describe "with chained criteria" do
-      it "negates the following criteria" do
-        age.not.gt("3").to_sql.should eq ["SELECT #{QueryMe::COLUMNS} FROM users WHERE users.age <= $1", "3"]
-      end
-
-      it "resets after having negated once" do
-        age.not.gt("3").age.eq("20").to_sql.should eq ["SELECT #{QueryMe::COLUMNS} FROM users WHERE users.age <= $1 AND users.age = $2", "3", "20"]
-      end
+    it "resets after having negated once" do
+      age.not.gt("3").age.eq("20").to_sql.should eq ["SELECT #{QueryMe::COLUMNS} FROM users WHERE users.age <= $1 AND users.age = $2", "3", "20"]
     end
   end
 end

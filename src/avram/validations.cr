@@ -81,7 +81,7 @@ module Avram::Validations
     private def build_validation_query(column_name, value) : T::BaseQuery
       query = T::BaseQuery.new.where(column_name, value)
       record.try(&.id).try do |id|
-        query = query.id.not(id)
+        query = query.id.not.eq(id)
       end
       query
     end
