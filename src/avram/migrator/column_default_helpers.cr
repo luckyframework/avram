@@ -1,5 +1,5 @@
 module Avram::Migrator::ColumnDefaultHelpers
-  alias ColumnDefaultType = String | Time | Int32 | Int64 | Float32 | Float64 | Bool | Symbol
+  alias ColumnDefaultType = Object
 
   def value_to_string(type : String.class | Time.class, value : String | Time)
     "'#{value}'"
@@ -43,5 +43,9 @@ module Avram::Migrator::ColumnDefaultHelpers
 
   def default_value(type : Time.class, default : Symbol)
     " DEFAULT #{value_to_string(type, default)}"
+  end
+
+  def default_value(type : JSON::Any.class, default)
+    " DEFAULT '#{default.to_json.gsub(/'/, "''")}'"
   end
 end

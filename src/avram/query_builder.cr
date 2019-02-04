@@ -39,10 +39,13 @@ class Avram::QueryBuilder
 
   private def param_values(params)
     params.values.map do |value|
-      if value.nil?
+      case value
+      when Nil
         nil
-      else
+      when String, UUID
         value.to_s
+      else
+        value.to_json
       end
     end
   end

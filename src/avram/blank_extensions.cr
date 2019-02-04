@@ -27,3 +27,9 @@ struct Nil
     nil?
   end
 end
+
+struct JSON::Any
+  def blank?
+    nil?
+  end
+end

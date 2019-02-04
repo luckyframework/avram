@@ -1,5 +1,5 @@
 module Avram::Migrator::ColumnTypeOptionHelpers
-  alias ColumnType = String.class | Time.class | Int32.class | Int64.class | Bool.class | Float.class | UUID.class
+  alias ColumnType = String.class | Time.class | Int32.class | Int64.class | Bool.class | Float.class | UUID.class | JSON::Any.class
 
   def column_type(type : String.class)
     "text"
@@ -31,5 +31,9 @@ module Avram::Migrator::ColumnTypeOptionHelpers
 
   def column_type(type : UUID.class)
     "uuid"
+  end
+
+  def column_type(type : JSON::Any.class)
+    "jsonb"
   end
 end
