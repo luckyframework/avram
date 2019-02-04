@@ -2,6 +2,12 @@
 
 This project is still new. Guides will be posted when things are more complete.
 
+### Why Avram?
+
+The name comes from [Henriette Avram](https://en.wikipedia.org/wiki/Henriette_Avram).
+
+> Henriette Davidson Avram (October 7, 1919 – April 22, 2006) was a computer programmer and systems analyst who developed the MARC format (Machine Readable Cataloging), the international data standard for bibliographic and holdings information in libraries.
+
 ## Installation
 
 Add this to your application's `shard.yml`:
