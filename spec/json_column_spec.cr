@@ -13,8 +13,8 @@ describe "JSON Columns" do
     blob = BlobQuery.new.first
     blob.doc.should eq JSON::Any.new({"foo" => JSON::Any.new("bar")})
 
-    blob2 = BlobBox.new.doc(JSON::Any.new(42)).create
-    blob2.doc.should eq JSON::Any.new(42)
+    blob2 = BlobBox.new.doc(JSON::Any.new(42_i64)).create
+    blob2.doc.should eq JSON::Any.new(42_i64)
   end
   it "should be nullable" do
     blob = BlobBox.new.doc(nil).create
@@ -24,10 +24,10 @@ describe "JSON Columns" do
   it "should convert scalars and save forms" do
     form1 = BlobForm.new
     form1.set_doc_from_param(42)
-    form1.doc.value.should eq JSON::Any.new(42)
+    form1.doc.value.should eq JSON::Any.new(42_i64)
     form1.save!
     blob1 = BlobQuery.new.last
-    blob1.doc.should eq JSON::Any.new(42)
+    blob1.doc.should eq JSON::Any.new(42_i64)
 
     form2 = BlobForm.new
     form2.set_doc_from_param("hey")
