@@ -23,7 +23,7 @@ class Avram::BaseQueryTemplate
 
       {% for field in fields %}
         def {{ field[:name] }}(value)
-          {{ field[:name] }}.is(value)
+          {{ field[:name] }}.eq(value)
         end
 
         generate_criteria_method(BaseQuery, {{ field[:name] }}, {{ field[:type] }})

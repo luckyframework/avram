@@ -413,15 +413,15 @@ describe Avram::Query do
     it "negates the given where condition as 'equal'" do
       UserBox.new.name("Paul").create
 
-      results = UserQuery.new.name.not("not existing").results
+      results = UserQuery.new.name.not.eq("not existing").results
       results.should eq UserQuery.new.results
 
-      results = UserQuery.new.name.not("Paul").results
+      results = UserQuery.new.name.not.eq("Paul").results
       results.should eq [] of User
 
       UserBox.new.name("Alex").create
       UserBox.new.name("Sarah").create
-      results = UserQuery.new.name.lower.not("alex").results
+      results = UserQuery.new.name.lower.not.eq("alex").results
       results.map(&.name).should eq ["Paul", "Sarah"]
     end
   end
@@ -430,7 +430,7 @@ describe Avram::Query do
     it "negates any previous condition" do
       UserBox.new.name("Paul").create
 
-      results = UserQuery.new.name.not.is("Paul").results
+      results = UserQuery.new.name.not.eq("Paul").results
       results.should eq [] of User
     end
 

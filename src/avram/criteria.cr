@@ -16,22 +16,27 @@ class Avram::Criteria(T, V)
     rows
   end
 
-  def is(value)
+  def eq(_value : Nil)
+    {{ raise "Use `nilable_eq` instead of `eq` if trying to check against a nilable value." }}
+  end
+
+  def eq(value)
     add_clause(Avram::Where::Equal.new(column, V::Lucky.to_db!(value)))
     rows
   end
 
-  def not(value) : T
-    is_not(value)
+  def nilable_eq(_value : Nil)
+    add_clause(Avram::Where::Null.new(column))
+    rows
+  end
+
+  def nilable_eq(value)
+    eq(value)
   end
 
   def not : Avram::Criteria
     @negate_next_criteria = true
     self
-  end
-
-  def is_not(value) : T
-    add_clause(Avram::Where::NotEqual.new(column, V::Lucky.to_db!(value)))
   end
 
   def gt(value) : T

@@ -11,8 +11,8 @@ end
 describe Bool::Lucky::Criteria do
   describe "is" do
     it "=" do
-      admin.is(true).to_sql.should eq ["SELECT #{QueryMe::COLUMNS} FROM users WHERE users.admin = $1", "true"]
-      admin.is(false).to_sql.should eq ["SELECT #{QueryMe::COLUMNS} FROM users WHERE users.admin = $1", "false"]
+      admin.eq(true).to_sql.should eq ["SELECT #{QueryMe::COLUMNS} FROM users WHERE users.admin = $1", "true"]
+      admin.eq(false).to_sql.should eq ["SELECT #{QueryMe::COLUMNS} FROM users WHERE users.admin = $1", "false"]
     end
   end
 end

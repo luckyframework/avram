@@ -1,6 +1,7 @@
 module Avram::Where
   abstract class SqlClause
-    getter :column, :value
+    getter :column
+    getter :value
 
     def initialize(@column : Symbol | String, @value : String | Array(String) | Array(Int32))
     end
@@ -10,6 +11,37 @@ module Avram::Where
 
     def prepare(prepared_statement_placeholder : String)
       "#{column} #{operator} #{prepared_statement_placeholder}"
+    end
+  end
+
+  abstract class NullSqlClause < SqlClause
+    @value = "NULL"
+
+    def initialize(@column : Symbol | String)
+    end
+
+    def prepare
+      "#{column} #{operator} #{@value}"
+    end
+  end
+
+  class Null < NullSqlClause
+    def operator
+      "IS"
+    end
+
+    def negated : NotNull
+      NotNull.new(@column)
+    end
+  end
+
+  class NotNull < NullSqlClause
+    def operator
+      "IS NOT"
+    end
+
+    def negated : Null
+      Null.new(@column)
     end
   end
 

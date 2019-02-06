@@ -68,7 +68,7 @@ describe "Preloading" do
       comment = CommentBox.create &.post_id(post.id)
 
       posts = Post::BaseQuery.new.preload(
-        Comment::BaseQuery.new.id.not(comment.id)
+        Comment::BaseQuery.new.id.not.eq(comment.id)
       )
 
       posts.results.first.comments.should eq([] of Comment)
@@ -182,7 +182,7 @@ describe "Preloading" do
       comment = CommentBox.create &.post_id(post.id)
 
       posts = Post::BaseQuery.new.preload(
-        Comment::BaseQuery.new.id.not(comment.id)
+        Comment::BaseQuery.new.id.not.eq(comment.id)
       )
 
       posts.results.first.comments.should eq([] of Comment)

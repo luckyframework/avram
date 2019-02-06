@@ -15,7 +15,7 @@ describe "Query associations" do
       .post_id(post_with_matching_comment.id)
       .create
 
-    posts = Post::BaseQuery.new.join_comments.comments(&.body.is("matching"))
+    posts = Post::BaseQuery.new.join_comments.comments(&.body.eq("matching"))
     posts.results.should eq([post_with_matching_comment])
 
     posts = Post::BaseQuery.new.join_comments.comments(&.body("matching"))
