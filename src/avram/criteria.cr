@@ -21,7 +21,8 @@ class Avram::Criteria(T, V)
   end
 
   def eq(value)
-    nilable_eq(value)
+    add_clause(Avram::Where::Equal.new(column, V::Lucky.to_db!(value)))
+    rows
   end
 
   def nilable_eq(_value : Nil)
@@ -30,8 +31,7 @@ class Avram::Criteria(T, V)
   end
 
   def nilable_eq(value)
-    add_clause(Avram::Where::Equal.new(column, V::Lucky.to_db!(value)))
-    rows
+    eq(value)
   end
 
   def not : Avram::Criteria
