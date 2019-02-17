@@ -197,4 +197,11 @@ describe "Preloading" do
 
     posts.results.first.comments.should eq([comment])
   end
+
+  it "can look at a collection of records with a preload" do
+    EmployeeBox.create
+    employees = Employee::BaseQuery.new.preload_manager
+
+    employees.includes?(employees.first)
+  end
 end
