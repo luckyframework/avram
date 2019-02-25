@@ -7,6 +7,7 @@ class Avram::Repo
   Habitat.create do
     setting url : String
     setting lazy_load_enabled : Bool = true
+    setting logger : Dexter::Logger = Dexter::Logger.new(nil)
   end
 
   def self.run

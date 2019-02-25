@@ -27,6 +27,9 @@ dependencies:
   wordsmith:
     github: luckyframework/wordsmith
     version: ~> 0.2
+  dexter:
+    github: luckyframework/dexter
+    version: ~> 0.1
 
 scripts:
   postinstall: shards build

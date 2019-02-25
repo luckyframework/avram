@@ -44,6 +44,13 @@ abstract class Avram::Form(T)
     self.name.underscore.gsub("_form", "")
   end
 
+  def log_failed_save
+    Avram.logger.warn({
+      failed_to_save:    self.class.name.to_s,
+      validation_errors: errors.to_s,
+    })
+  end
+
   def errors
     fields.reduce({} of Symbol => Array(String)) do |errors_hash, field|
       if field.errors.empty?
