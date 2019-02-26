@@ -101,6 +101,7 @@ module Avram::NeedyInitializerAndSaveMethods
         if form.save
           yield form, form.record
         else
+          form.log_failed_save
           yield form, nil
         end
       {% end %}
@@ -148,6 +149,7 @@ module Avram::NeedyInitializerAndSaveMethods
         if form.save
           yield form, form.record.not_nil!
         else
+          form.log_failed_save
           yield form, form.record.not_nil!
         end
       {% end %}
