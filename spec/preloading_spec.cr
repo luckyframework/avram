@@ -184,6 +184,39 @@ describe "Preloading" do
     end
   end
 
+  context "getting results for preloads multiple times" do
+    it "does not fail for belongs_to" do
+      employee = EmployeeBox.create
+      employees = Employee::BaseQuery.new.preload_manager
+
+      2.times { employees.results }
+    end
+
+    it "does not fail for has_many" do
+      post = PostBox.create
+
+      posts = Post::BaseQuery.new.preload_comments
+
+      2.times { posts.results }
+    end
+
+    it "does not fail for has_one" do
+      admin = AdminBox.create
+
+      admin = Admin::BaseQuery.new.preload_sign_in_credential
+
+      2.times { admin.results }
+    end
+
+    it "does not fail for has_many through" do
+      post = PostBox.create
+
+      posts = Post::BaseQuery.new.preload_tags
+
+      2.times { posts.results }
+    end
+  end
+
   it "preloads uuid belongs_to" do
     item = LineItemBox.create
     price = PriceBox.new.line_item_id(item.id).create
