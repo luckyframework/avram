@@ -1,7 +1,6 @@
 /docs/
 /lib/
-/bin/lucky
-/bin/gen.migration*
+/bin/
 /db/migrations/
 /.shards/
 
