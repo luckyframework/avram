@@ -142,7 +142,7 @@ module Avram::Associations
               ids << id
             end
           end
-          {{ assoc_name }} = preload_query.id.in(ids).results.group_by(&.id)
+          {{ assoc_name }} = preload_query.dup.id.in(ids).results.group_by(&.id)
           records.each do |record|
             if (id = record.{{ foreign_key }})
               record.set_preloaded_{{ assoc_name }} {{ assoc_name }}[id]?.try(&.first?)
@@ -165,7 +165,7 @@ module Avram::Associations
       def preload_{{ assoc_name }}(preload_query : {{ model }}::BaseQuery)
         add_preload do |records|
           ids = records.map(&.id)
-          {{ assoc_name }} = preload_query.{{ foreign_key }}.in(ids).results.group_by(&.{{ foreign_key }})
+          {{ assoc_name }} = preload_query.dup.{{ foreign_key }}.in(ids).results.group_by(&.{{ foreign_key }})
           records.each do |record|
             record.set_preloaded_{{ assoc_name }} {{ assoc_name }}[record.id]?.try(&.first?)
           end
@@ -186,6 +186,7 @@ module Avram::Associations
           ids = records.map(&.id)
           {% if through %}
             all_{{ assoc_name }} = preload_query
+              .dup
               .join_{{ through.id }}
               .{{ through.id }} do |through_query|
                 through_query.{{ foreign_key.id }}.in(ids)
@@ -204,6 +205,7 @@ module Avram::Associations
             end
           {% else %}
             {{ assoc_name }} = preload_query
+              .dup
               .{{ foreign_key }}.in(ids)
               .results.group_by(&.{{ foreign_key }})
           {% end %}
