@@ -62,6 +62,21 @@ describe "Preloading" do
     end
   end
 
+  it "preserves additional criteria when used after adding a preload" do
+    with_lazy_load(enabled: false) do
+      post = PostBox.create
+      another_post = PostBox.create
+      comment = CommentBox.create &.post_id(post.id)
+      _should_not_be_preloaded = CommentBox.create &.post_id(another_post.id)
+
+      posts = Post::BaseQuery.new.preload_comments.limit(1)
+
+      results = posts.results
+      results.size.should eq(1)
+      results.first.comments.should eq([comment])
+    end
+  end
+
   it "preloads has_many with custom query" do
     with_lazy_load(enabled: false) do
       post = PostBox.create
