@@ -31,7 +31,7 @@ describe "Preloading" do
       user = UserBox.create
       sign_in_credential = SignInCredentialBox.create &.user_id(user.id)
 
-      user = User::BaseQuery.new.preload(
+      user = User::BaseQuery.new.preload_sign_in_credential(
         SignInCredential::BaseQuery.new.preload_user
       ).first
 
@@ -82,7 +82,7 @@ describe "Preloading" do
       post = PostBox.create
       comment = CommentBox.create &.post_id(post.id)
 
-      posts = Post::BaseQuery.new.preload(
+      posts = Post::BaseQuery.new.preload_comments(
         Comment::BaseQuery.new.id.not.eq(comment.id)
       )
 
@@ -138,7 +138,7 @@ describe "Preloading" do
       post = PostBox.create
       comment = CommentBox.create &.post_id(post.id)
 
-      posts = Post::BaseQuery.new.preload(
+      posts = Post::BaseQuery.new.preload_comments(
         Comment::BaseQuery.new.preload_post
       )
 
@@ -196,7 +196,7 @@ describe "Preloading" do
       post = PostBox.create
       comment = CommentBox.create &.post_id(post.id)
 
-      posts = Post::BaseQuery.new.preload(
+      posts = Post::BaseQuery.new.preload_comments(
         Comment::BaseQuery.new.id.not.eq(comment.id)
       )
 

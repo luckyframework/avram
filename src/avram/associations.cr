@@ -159,10 +159,10 @@ module Avram::Associations
   private macro define_has_one_base_query(assoc_name, model, foreign_key)
     class BaseQuery < Avram::Query
       def preload_{{ assoc_name }}
-        preload({{ model }}::BaseQuery.new)
+        preload_{{ assoc_name }}({{ model }}::BaseQuery.new)
       end
 
-      def preload(preload_query : {{ model }}::BaseQuery)
+      def preload_{{ assoc_name }}(preload_query : {{ model }}::BaseQuery)
         add_preload do |records|
           ids = records.map(&.id)
           {{ assoc_name }} = preload_query.{{ foreign_key }}.in(ids).results.group_by(&.{{ foreign_key }})
@@ -178,10 +178,10 @@ module Avram::Associations
   private macro define_has_many_base_query(assoc_name, model, foreign_key, through)
     class BaseQuery < Avram::Query
       def preload_{{ assoc_name }}
-        preload({{ model }}::BaseQuery.new)
+        preload_{{ assoc_name }}({{ model }}::BaseQuery.new)
       end
 
-      def preload(preload_query : {{ model }}::BaseQuery)
+      def preload_{{ assoc_name }}(preload_query : {{ model }}::BaseQuery)
         add_preload do |records|
           ids = records.map(&.id)
           {% if through %}
