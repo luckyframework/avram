@@ -192,10 +192,14 @@ module Avram::Queryable(T)
     @preloads << block
   end
 
+  # @_results : Array(T)?
+
   def results : Array(T)
+    # @_results ||= begin
     exec_query.tap do |records|
       preloads.each(&.call(records))
     end
+    # end
   end
 
   private def exec_query
