@@ -1,7 +1,7 @@
 language: minimal
 before_install:
-  - scripts/setup
+  - script/setup
 script:
-  - scripts/test
+  - script/test
 notifications:
   email: false
