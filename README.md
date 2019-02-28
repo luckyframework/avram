@@ -1,6 +1,5 @@
 # Avram
 
-This project is still new. Guides will be posted when things are more complete.
 
 ### Why Avram?
 
