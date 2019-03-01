@@ -42,7 +42,7 @@ describe "Avram::QueryBuilder" do
       .order_by(:name, :asc)
       .order_by(:birthday, :asc)
       .order_by(:email, :desc)
-    query.statement.should eq "SELECT * FROM users ORDER BY name, birthday ASC, email DESC"
+    query.statement.should eq "SELECT * FROM users ORDER BY name ASC, birthday ASC, email DESC"
     query.args.should eq [] of String
 
     query = new_query
