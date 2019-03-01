@@ -32,9 +32,6 @@ dependencies:
     version: ~> 0.1
 
 scripts:
-  postinstall: |
-    shards build
-    mkdir -p ../../bin
-    cp -r $(pwd)/bin $(pwd)/../..
+  postinstall: script/precompile_tasks
 
 license: MIT
