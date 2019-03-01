@@ -30,7 +30,7 @@ describe Avram::Query do
     queryable = UserQuery.new.distinct_on(&.name).order_by(:name, :asc).order_by(:age, :asc)
     query = queryable.query
 
-    query.statement.should eq "SELECT DISTINCT ON (users.name) #{User::COLUMNS} FROM users ORDER BY name, age ASC"
+    query.statement.should eq "SELECT DISTINCT ON (users.name) #{User::COLUMNS} FROM users ORDER BY name ASC, age ASC"
     query.args.should eq [] of String
     results = queryable.results
     first = results.first
