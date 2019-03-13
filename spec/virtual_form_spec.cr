@@ -72,4 +72,11 @@ describe Avram::VirtualForm do
     virtual_form.name.errors.should eq ["is required"]
     virtual_form.valid?.should be_false
   end
+
+  describe "#fields" do
+    it "equals `virtual_fields`" do
+      virtual_form = TestVirtualForm.new
+      virtual_form.virtual_fields.should eq(virtual_form.fields)
+    end
+  end
 end

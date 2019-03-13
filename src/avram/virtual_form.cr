@@ -25,4 +25,8 @@ class Avram::VirtualForm
   def valid?
     virtual_fields.all? &.valid?
   end
+
+  def fields
+    virtual_fields
+  end
 end
