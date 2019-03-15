@@ -9,4 +9,6 @@ module Avram::FormErrors
       end
     end
   end
+
+  abstract def fields
 end
