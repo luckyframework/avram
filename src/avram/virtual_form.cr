@@ -1,8 +1,10 @@
 require "./virtual"
+require "./form_errors"
 
 class Avram::VirtualForm
   include Avram::Virtual
   include Avram::Validations
+  include Avram::FormErrors
 
   @params : Avram::Paramable
   getter params

@@ -9,6 +9,22 @@ private class TestVirtualForm < Avram::VirtualForm
   end
 end
 
+private class TestVirtualFormWithMultipleValidations < Avram::VirtualForm
+  virtual name : String
+  virtual age : Int32
+
+  def validate
+    validate_required name
+    validate_old_enough age
+  end
+
+  private def validate_old_enough(age_field)
+    if (age = age_field.value) && age < 21
+      age_field.add_error "is not old enough"
+    end
+  end
+end
+
 private class UserWithVirtual < User::BaseForm
   virtual password : String
 end
@@ -77,6 +93,20 @@ describe Avram::VirtualForm do
     it "equals `virtual_fields`" do
       virtual_form = TestVirtualForm.new
       virtual_form.virtual_fields.should eq(virtual_form.fields)
+    end
+  end
+
+  describe "#errors" do
+    it "includes errors for all form fields" do
+      params = Avram::Params.new({"name" => "", "age" => "20"})
+      form = TestVirtualFormWithMultipleValidations.new(params)
+
+      form.validate
+
+      form.errors.should eq({
+        :name      => ["is required"],
+        :age       => ["is not old enough"]
+      })
     end
   end
 end
