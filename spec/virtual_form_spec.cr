@@ -104,8 +104,8 @@ describe Avram::VirtualForm do
       form.validate
 
       form.errors.should eq({
-        :name      => ["is required"],
-        :age       => ["is not old enough"]
+        :name => ["is required"],
+        :age  => ["is not old enough"],
       })
     end
   end
