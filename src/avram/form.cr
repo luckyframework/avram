@@ -4,6 +4,7 @@ require "./nested_form"
 require "./needy_initializer_and_save_methods"
 require "./virtual"
 require "./mark_as_failed"
+require "./form_errors"
 
 abstract class Avram::Form(T)
   include Avram::Validations
@@ -12,6 +13,7 @@ abstract class Avram::Form(T)
   include Avram::Callbacks
   include Avram::NestedForm
   include Avram::MarkAsFailed
+  include Avram::FormErrors
 
   enum SaveStatus
     Saved
@@ -55,17 +57,6 @@ abstract class Avram::Form(T)
     errors.map do |field_name, messages|
       "#{field_name} #{messages.join(", ")}"
     end.join(". ")
-  end
-
-  def errors
-    fields.reduce({} of Symbol => Array(String)) do |errors_hash, field|
-      if field.errors.empty?
-        errors_hash
-      else
-        errors_hash[field.name] = field.errors
-        errors_hash
-      end
-    end
   end
 
   def self.save(*args, **named_args, &block)
