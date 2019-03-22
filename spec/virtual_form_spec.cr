@@ -37,6 +37,10 @@ private class CanUseSameVirtualFieldTwiceInVirtualForm < Avram::VirtualForm
   virtual name : String
 end
 
+private class ParamKeyForm < Avram::VirtualForm
+  param_key :custom_param
+end
+
 describe Avram::VirtualForm do
   it "has create/update args for virtual fields" do
     UserWithVirtual.create(password: "p@ssword") do |form, _user|
@@ -52,6 +56,11 @@ describe Avram::VirtualForm do
   it "sets a form_name" do
     TestVirtualForm.new.form_name.should eq "test_virtual"
     TestVirtualForm.form_name.should eq "test_virtual"
+  end
+
+  it "allows overriding the form_name" do
+    ParamKeyForm.new.form_name.should eq "custom_param"
+    ParamKeyForm.form_name.should eq "custom_param"
   end
 
   it "sets up initializers for params and no params" do
