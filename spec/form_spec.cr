@@ -35,7 +35,16 @@ private class ValueColumnModelForm < ValueColumnModel::BaseForm
   fillable value
 end
 
+private class ParamKeyForm < ValueColumnModel::BaseForm
+  param_key :custom_param
+end
+
 describe "Avram::Form" do
+  it "allows overriding the form_name" do
+    ParamKeyForm.new.form_name.should eq "custom_param"
+    ParamKeyForm.form_name.should eq "custom_param"
+  end
+
   it "generates the correct form_name" do
     LimitedUserForm.new.form_name.should eq "limited_user"
     LimitedUserForm.form_name.should eq "limited_user"

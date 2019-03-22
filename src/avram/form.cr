@@ -5,6 +5,7 @@ require "./needy_initializer_and_save_methods"
 require "./virtual"
 require "./mark_as_failed"
 require "./form_errors"
+require "./param_key_override"
 
 abstract class Avram::Form(T)
   include Avram::Validations
@@ -14,6 +15,7 @@ abstract class Avram::Form(T)
   include Avram::NestedForm
   include Avram::MarkAsFailed
   include Avram::FormErrors
+  include Avram::ParamKeyOverride
 
   enum SaveStatus
     Saved
