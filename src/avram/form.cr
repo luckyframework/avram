@@ -6,6 +6,7 @@ require "./virtual"
 require "./mark_as_failed"
 require "./form_errors"
 require "./param_key_override"
+require "./inherit_fields"
 
 abstract class Avram::Form(T)
   include Avram::Validations
@@ -16,6 +17,7 @@ abstract class Avram::Form(T)
   include Avram::MarkAsFailed
   include Avram::FormErrors
   include Avram::ParamKeyOverride
+  include Avram::InheritFields
 
   enum SaveStatus
     Saved
@@ -75,7 +77,9 @@ abstract class Avram::Form(T)
   end
 
   macro add_fields(primary_key_type, fields)
-    FIELDS = {{ fields }}
+    {% for field in fields %}
+      {% FIELDS << field %}
+    {% end %}
 
     private def extract_changes_from_params
       fillable_params.each do |key, value|

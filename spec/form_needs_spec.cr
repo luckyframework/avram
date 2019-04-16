@@ -6,9 +6,9 @@ class Needs::BaseForm < User::BaseForm
   end
 
   private def setup_required_fields
-    name.value = "Joe"
-    age.value = 62
-    joined_at.value = Time.now
+    name.value ||= "Joe"
+    age.value ||= 62
+    joined_at.value ||= Time.now
   end
 end
 
@@ -55,6 +55,16 @@ describe "Avram::Form needs" do
     end
 
     NeedsForm.new(params, nilable_value: nil, created_by: "Jane")
+  end
+
+  it "also generates args for other fields" do
+    NeedsForm.create(name: "Jane", nilable_value: "not nil", optional: "bar", created_by: "Jane") do |form, _record|
+      # Problem seems to be that params override passed in val
+      form.name.value.should eq("Jane")
+      form.nilable_value.should eq("not nil")
+      form.created_by.should eq("Jane")
+      form.optional.should eq("bar")
+    end
   end
 
   it "can have needs for just save, create or update" do
