@@ -57,7 +57,7 @@ describe "Avram::Form needs" do
     NeedsForm.new(params, nilable_value: nil, created_by: "Jane")
   end
 
-  it "also generates args for other fields" do
+  it "also generates named args for other fields" do
     NeedsForm.create(name: "Jane", nilable_value: "not nil", optional: "bar", created_by: "Jane") do |form, _record|
       # Problem seems to be that params override passed in val
       form.name.value.should eq("Jane")

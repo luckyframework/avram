@@ -5,7 +5,7 @@ module Avram::NeedyInitializerAndSaveMethods
     NEEDS_ON_INITIALIZE = [] of Nil
 
     macro inherited
-      inherit_page_settings
+      inherit_needs
     end
 
     generate_initializer
@@ -33,7 +33,7 @@ module Avram::NeedyInitializerAndSaveMethods
     property {{ type_declaration.var }}
   end
 
-  macro inherit_page_settings
+  macro inherit_needs
     \{% if !@type.constant(:NEEDS_ON_CREATE) %}
       NEEDS_ON_CREATE = [] of Nil
       NEEDS_ON_UPDATE = [] of Nil
@@ -53,7 +53,7 @@ module Avram::NeedyInitializerAndSaveMethods
     \{% end %}
 
     macro inherited
-      inherit_page_settings
+      inherit_needs
     end
 
     macro finished
