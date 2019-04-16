@@ -69,7 +69,7 @@ module Avram::NeedyInitializerAndSaveMethods
         {{ type_declaration }},
       {% end %}
       {% if @type.constant :FIELDS %}
-        {% for field in FIELDS %}
+        {% for field in FIELDS.uniq %}
           {{ field[:name] }} : {{ field[:type] }} | Nothing{% if field[:nilable] %} | Nil{% end %} = Nothing.new,
         {% end %}
       {% end %}
@@ -88,7 +88,7 @@ module Avram::NeedyInitializerAndSaveMethods
       {% end %}
 
       {% if @type.constant :FIELDS %}
-        {% for field in FIELDS %}
+        {% for field in FIELDS.uniq %}
           unless {{ field[:name] }}.is_a? Nothing
             form.{{ field[:name] }}.value = {{ field[:name] }}
           end
@@ -116,7 +116,7 @@ module Avram::NeedyInitializerAndSaveMethods
           {{ type_declaration }},
         {% end %}
         {% if @type.constant :FIELDS %}
-          {% for field in FIELDS %}
+          {% for field in FIELDS.uniq %}
             {{ field[:name] }} : {{ field[:type] }} | Nothing{% if field[:nilable] %} | Nil{% end %} = Nothing.new,
           {% end %}
         {% end %}
@@ -136,7 +136,7 @@ module Avram::NeedyInitializerAndSaveMethods
       {% end %}
 
       {% if @type.constant :FIELDS %}
-        {% for field in FIELDS %}
+        {% for field in FIELDS.uniq %}
           unless {{ field[:name] }}.is_a? Nothing
             form.{{ field[:name] }}.value = {{ field[:name] }}
           end
