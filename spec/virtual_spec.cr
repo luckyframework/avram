@@ -85,6 +85,18 @@ describe "virtual in forms" do
     form.setup_required_database_fields
     form.save.should eq true
   end
+
+  it "sets named args for virtual fields, leaves other empty" do
+    VirtualForm.create(title: "My Title", best_kind_of_bear: "brown bear") do |form, post|
+      form.best_kind_of_bear.value.should eq("brown bear")
+      form.terms_of_service.value.should be_nil
+      post.should_not be_nil
+
+      VirtualForm.update(post.not_nil!, best_kind_of_bear: "koala bear") do |form, post|
+        form.best_kind_of_bear.value.should eq("koala bear")
+      end
+    end
+  end
 end
 
 private def form(attrs = {} of String => String)
