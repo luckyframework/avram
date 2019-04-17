@@ -95,6 +95,12 @@ module Avram::NeedyInitializerAndSaveMethods
         {% end %}
       {% end %}
 
+      {% for field in VIRTUAL_FIELDS %}
+        unless {{ field.var }}.is_a? Nothing
+          form.{{ field.var }}.value = {{ field.var }}
+        end
+      {% end %}
+
       {% if with_bang %}
         form.save!
       {% else %}
@@ -141,6 +147,12 @@ module Avram::NeedyInitializerAndSaveMethods
             form.{{ field[:name] }}.value = {{ field[:name] }}
           end
         {% end %}
+      {% end %}
+
+      {% for field in VIRTUAL_FIELDS %}
+        unless {{ field.var }}.is_a? Nothing
+          form.{{ field.var }}.value = {{ field.var }}
+        end
       {% end %}
 
       {% if with_bang %}
