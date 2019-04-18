@@ -295,7 +295,7 @@ abstract class Avram::Form(T)
     if save
       record.not_nil!
     else
-      raise Avram::InvalidFormError(typeof(self)).new(form: self)
+      raise Avram::InvalidFormError.new(form: self)
     end
   end
 

@@ -36,18 +36,19 @@ module Avram
   end
 
   # Raised when using the create! or update! methods on a form when it does not have the proper attributes
-  class InvalidFormError(T) < AvramError
-    getter form
+  class InvalidFormError < AvramError
+    getter form_errors : Hash(Symbol, Array(String))
 
-    def initialize(@form : T)
+    def initialize(form)
       message = String.build do |message|
         message << "Could not save #{form.class.name}."
         message << "\n"
         message << "\n"
-        @form.errors.each do |field_name, errors|
+        form.errors.each do |field_name, errors|
           message << "  ▸ #{field_name}: #{errors.join(", ")}\n"
         end
       end
+      @form_errors = form.errors
       super message
     end
   end

@@ -356,7 +356,7 @@ describe "Avram::Form" do
       it "raises an exception" do
         params = {"name" => "", "age" => "30"}
 
-        expect_raises Avram::InvalidFormError(UserForm) do
+        expect_raises Avram::InvalidFormError do
           UserForm.create!(params)
         end
       end
@@ -487,7 +487,7 @@ describe "Avram::Form" do
         user = UserQuery.new.first
         params = {"name" => ""}
 
-        expect_raises Avram::InvalidFormError(UserForm) do
+        expect_raises Avram::InvalidFormError do
           UserForm.update! user, with: params
         end
       end
