@@ -116,7 +116,7 @@ class Avram::Migrator::Runner
   def rollback_one
     setup_migration_tracking_tables
     if migrated_migrations.empty?
-      puts "Did nothing. No migration to roll back.".colorize(:green)
+      puts "Did not roll anything back because the database has no migrations.".colorize(:green)
     else
       migrated_migrations.last.new.down
     end
@@ -146,7 +146,7 @@ class Avram::Migrator::Runner
     setup_migration_tracking_tables
     if pending_migrations.empty?
       unless @quiet
-        puts "Did nothing. No pending migrations.".colorize(:green)
+        puts "Did not migrate anything because there are no pending migrations.".colorize(:green)
       end
     else
       yield
