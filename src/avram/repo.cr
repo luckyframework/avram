@@ -15,7 +15,7 @@ class Avram::Repo
   end
 
   def self.db
-    @@db ||= DB.open(settings.url)
+    @@db ||= Connection.open(settings.url)
   end
 
   def self.current_transaction : DB::Transaction?

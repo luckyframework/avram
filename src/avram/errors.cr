@@ -59,4 +59,22 @@ module Avram
       super message
     end
   end
+
+  class ConnectionError < AvramError
+    def initialize(connection_details : URI)
+      error = String.build do |message|
+        message << "Failed to connect to databse '#{connection_details.path.try(&.[1..-1])}' with username '#{connection_details.user}'.\n"
+        message << "Try this..."
+        message << '\n'
+        message << '\n'
+        message << "  ▸ Check connection settings in 'config/database.cr'\n"
+        message << "  ▸ Be sure the database exists (lucky db.create)\n"
+        message << "  ▸ Check that you have access to connect to #{connection_details.host} on port #{connection_details.port}\n"
+        if connection_details.password.blank?
+          message << "  ▸ You didn't supply a password, did you mean to?\n"
+        end
+      end
+      super error
+    end
+  end
 end
