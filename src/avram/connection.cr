@@ -9,11 +9,9 @@ class Avram::Connection
   end
 
   def try_connection!
-    begin
-      DB.open(@connection_string)
-    rescue DB::ConnectionRefused
-      raise ConnectionError.new(connection_uri)
-    end
+    DB.open(@connection_string)
+  rescue DB::ConnectionRefused
+    raise ConnectionError.new(connection_uri)
   end
 
   private def connection_uri
