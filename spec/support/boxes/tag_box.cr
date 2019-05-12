@@ -1,5 +1,5 @@
 class TagBox < BaseBox
   def initialize
-    name sequence("tag")
+    name sequence("name")
   end
 end

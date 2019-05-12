@@ -1,6 +1,8 @@
 abstract class Avram::Box
   getter form
 
+  SEQUENCES = {} of String => Int32
+
   macro inherited
     {% unless @type.abstract? %}
       {% form = @type.name.gsub(/Box/, "::BaseForm").id %}
@@ -36,5 +38,23 @@ abstract class Avram::Box
 
   def self.create_pair
     2.times { new.create }
+  end
+
+  # Returns a value with a number to use for unique values.
+  #
+  # Usage:
+  #
+  # ```crystal
+  # class UserBox < Avram::Box
+  #   def initialize
+  #     username sequence("username")            # => username-1, username-2, etc.
+  #     email "#{sequence("email")}@example.com" # => email-1@example.com, email-2@example.com, etc.
+  #   end
+  # end
+  # ```
+  def sequence(value : String) : String
+    SEQUENCES[value] ||= 0
+    SEQUENCES[value] += 1
+    "#{value}-#{SEQUENCES[value]}"
   end
 end
