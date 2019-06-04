@@ -12,7 +12,7 @@ describe Avram::Migrator::AlterTableStatement do
       add completed : Bool, default: false
       add joined_at : Time, default: :now
       add updated_at : Time, fill_existing_with: :now
-      add future_time : Time, default: Time.new
+      add future_time : Time, default: Time.local
       remove :old_field
       remove_belongs_to :employee
     end
@@ -29,7 +29,7 @@ describe Avram::Migrator::AlterTableStatement do
       ADD completed boolean NOT NULL DEFAULT false,
       ADD joined_at timestamptz NOT NULL DEFAULT NOW(),
       ADD updated_at timestamptz,
-      ADD future_time timestamptz NOT NULL DEFAULT '#{Time.new.to_utc}',
+      ADD future_time timestamptz NOT NULL DEFAULT '#{Time.local.to_utc}',
       DROP old_field,
       DROP employee_id
     SQL

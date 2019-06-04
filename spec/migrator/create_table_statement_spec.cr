@@ -65,7 +65,7 @@ describe Avram::Migrator::CreateTableStatement do
       add amount_paid : Float, default: 1.0
       add completed : Bool, default: false
       add joined_at : Time, default: :now
-      add future_time : Time, default: Time.new
+      add future_time : Time, default: Time.local
     end
 
     built.statements.size.should eq 1
@@ -81,7 +81,7 @@ describe Avram::Migrator::CreateTableStatement do
       amount_paid decimal NOT NULL DEFAULT 1.0,
       completed boolean NOT NULL DEFAULT false,
       joined_at timestamptz NOT NULL DEFAULT NOW(),
-      future_time timestamptz NOT NULL DEFAULT '#{Time.new.to_utc}');
+      future_time timestamptz NOT NULL DEFAULT '#{Time.local.to_utc}');
     SQL
   end
 

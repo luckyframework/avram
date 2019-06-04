@@ -51,7 +51,7 @@ end
 
 describe Avram::Model do
   it "sets up initializers based on the fields" do
-    now = Time.now
+    now = Time.utc
 
     user = User.new id: 123,
       name: "Name",
@@ -71,7 +71,7 @@ describe Avram::Model do
   end
 
   it "can be used for params" do
-    now = Time.now
+    now = Time.utc
 
     user = User.new id: 123,
       name: "Name",
@@ -87,8 +87,8 @@ describe Avram::Model do
 
   it "sets up getters that parse the values" do
     user = QueryMe.new id: 123,
-      created_at: Time.now,
-      updated_at: Time.now,
+      created_at: Time.utc,
+      updated_at: Time.utc,
       age: 30,
       email: " Foo@bar.com "
 
@@ -170,7 +170,7 @@ describe Avram::Model do
   describe "models with uuids" do
     it "sets up initializers accepting uuid strings" do
       uuid = UUID.new("a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11")
-      LineItem.new(uuid.to_s, Time.now, Time.now, "hello")
+      LineItem.new(uuid.to_s, Time.utc, Time.utc, "hello")
     end
 
     it "can be saved" do
