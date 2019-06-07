@@ -8,7 +8,7 @@ class Needs::BaseForm < User::BaseForm
   private def setup_required_fields
     name.value ||= "Joe"
     age.value ||= 62
-    joined_at.value ||= Time.now
+    joined_at.value ||= Time.utc
   end
 end
 

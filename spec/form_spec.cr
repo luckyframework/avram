@@ -56,7 +56,7 @@ describe "Avram::Form" do
   end
 
   it "set params if passed in" do
-    now = Time.utc_now.at_beginning_of_minute
+    now = Time.utc.at_beginning_of_minute
     user = UserForm.create!(name: "Dan", age: 34, joined_at: now)
     user.name.should eq "Dan"
     user.age.should eq 34
@@ -69,7 +69,7 @@ describe "Avram::Form" do
       user.joined_at.should eq now
     end
 
-    user = UserBox.new.name("New").age(20).joined_at(Time.now).create
+    user = UserBox.new.name("New").age(20).joined_at(Time.utc).create
     joined_at = 1.day.ago.at_beginning_of_minute.to_utc
     UserForm.update(user, name: "New", age: 20, joined_at: joined_at) do |form, user|
       user.name.should eq "New"
@@ -77,7 +77,7 @@ describe "Avram::Form" do
       user.joined_at.should eq joined_at
     end
 
-    user = UserBox.new.name("New").age(20).joined_at(Time.now).create
+    user = UserBox.new.name("New").age(20).joined_at(Time.utc).create
     user = UserForm.update!(user, name: "New", age: 20, joined_at: joined_at)
     user.name.should eq "New"
     user.age.should eq 20
@@ -287,12 +287,12 @@ describe "Avram::Form" do
 
     it "allows overriding updated_at and created_at on create" do
       user = UserBox.new
-        .created_at(Time.new(2018, 1, 1, 10, 20, 30))
-        .updated_at(Time.new(2018, 1, 1, 20, 30, 40))
+        .created_at(Time.utc(2018, 1, 1, 10, 20, 30))
+        .updated_at(Time.utc(2018, 1, 1, 20, 30, 40))
         .create
 
-      user.created_at.should eq Time.new(2018, 1, 1, 10, 20, 30)
-      user.updated_at.should eq Time.new(2018, 1, 1, 20, 30, 40)
+      user.created_at.should eq Time.utc(2018, 1, 1, 10, 20, 30)
+      user.updated_at.should eq Time.utc(2018, 1, 1, 20, 30, 40)
     end
 
     context "on success" do
@@ -496,5 +496,5 @@ describe "Avram::Form" do
 end
 
 private def now_as_string
-  Time.now.to_s("%FT%X%z")
+  Time.utc.to_s("%FT%X%z")
 end

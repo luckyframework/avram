@@ -337,8 +337,8 @@ abstract class Avram::Form(T)
   def after_update(_record : T); end
 
   private def insert : T
-    self.created_at.value ||= Time.utc_now
-    self.updated_at.value ||= Time.utc_now
+    self.created_at.value ||= Time.utc
+    self.updated_at.value ||= Time.utc
     @record = Avram::Repo.run do |db|
       db.query insert_sql.statement, insert_sql.args do |rs|
         @record = @@schema_class.from_rs(rs).first
@@ -347,7 +347,7 @@ abstract class Avram::Form(T)
   end
 
   private def update(id) : T
-    self.updated_at.value = Time.utc_now
+    self.updated_at.value = Time.utc
     @record = Avram::Repo.run do |db|
       db.query update_query(id).statement_for_update(changes), update_query(id).args_for_update(changes) do |rs|
         @record = @@schema_class.from_rs(rs).first
