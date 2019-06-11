@@ -18,7 +18,9 @@ describe Avram::Criteria do
 
   describe "nilable_eq" do
     it "uses =" do
-      age.nilable_eq(30).to_sql.should eq ["SELECT #{QueryMe::COLUMNS} FROM users WHERE users.age = $1", "30"]
+      # Need to do this so that we get a nilable type
+      nilable_age = 30.as(Int32?)
+      age.nilable_eq(nilable_age).to_sql.should eq ["SELECT #{QueryMe::COLUMNS} FROM users WHERE users.age = $1", "30"]
     end
 
     it "uses 'IS NULL' for comparisons to nil" do
