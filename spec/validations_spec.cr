@@ -22,12 +22,12 @@ end
 
 private class TestValidationUser
   include Avram::Validations
-  @_age : Avram::Field(Int32?)?
-  @_name : Avram::Field(String)?
-  @_city : Avram::Field(String)?
-  @_state : Avram::Field(String)?
-  @_name_confirmation : Avram::Field(String)?
-  @_terms : Avram::Field(Bool?)?
+  @_age : Avram::Attribute(Int32?)?
+  @_name : Avram::Attribute(String)?
+  @_city : Avram::Attribute(String)?
+  @_state : Avram::Attribute(String)?
+  @_name_confirmation : Avram::Attribute(String)?
+  @_terms : Avram::Attribute(Bool?)?
 
   @name : String
   @name_confirmation : String
@@ -57,7 +57,7 @@ private class TestValidationUser
   end
 
   def run_validations_with_message_callables
-    validate_required city, state, message: ->(field_name : String, field_value : String) { "#{field_name} required message from Proc" }
+    validate_required city, state, message: ->(attribute_name : String, attribute_value : String) { "#{attribute_name} required message from Proc" }
     validate_inclusion_of state, in: ["CA, NY"], message: CallableMessage.new(@name)
   end
 
@@ -91,7 +91,7 @@ private class TestValidationUser
 
   macro column(type, name)
     def {{ name }}
-      @_{{ name }} ||= Avram::Field({{ type }}).new(:{{ name }}, param: "", value: @{{ name }}, form_name: "blank")
+      @_{{ name }} ||= Avram::Attribute({{ type }}).new(:{{ name }}, param: "", value: @{{ name }}, form_name: "blank")
     end
   end
 
@@ -105,7 +105,7 @@ end
 
 describe Avram::Validations do
   describe "validate_required" do
-    it "validates multiple fields" do
+    it "validates multiple attributes" do
       validate(name: "", age: nil) do |user|
         user.name.errors.should eq ["is required"]
         user.age.errors.should eq ["is required"]
@@ -200,7 +200,7 @@ describe Avram::Validations do
   end
 
   describe "validate_acceptance_of" do
-    it "validates the field is true" do
+    it "validates the attribute value is true" do
       validate(terms: false) do |user|
         user.terms.errors.should eq ["must be accepted"]
       end
@@ -216,7 +216,7 @@ describe Avram::Validations do
   end
 
   describe "validate_confirmation_of" do
-    it "validates the fields match" do
+    it "validates the attribute values match" do
       validate(name: "Paul", name_confirmation: "Pablo") do |user|
         user.run_confirmation_validations
         user.name_confirmation.errors.should eq ["must match"]

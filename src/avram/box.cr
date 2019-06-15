@@ -7,14 +7,14 @@ abstract class Avram::Box
     {% unless @type.abstract? %}
       {% form = @type.name.gsub(/Box/, "::SaveOperation").id %}
       @form : {{ form }} = {{ form }}.new
-      setup_field_shortcuts({{ form }})
+      setup_attribute_shortcuts({{ form }})
     {% end %}
   end
 
-  macro setup_field_shortcuts(form)
-    {% for field in form.resolve.constant(:FIELDS) %}
-      def {{ field[:name] }}(value : {{ field[:type] }}{% if field[:nilable] %}?{% end %})
-        form.{{ field[:name] }}.value = value
+  macro setup_attribute_shortcuts(form)
+    {% for attribute in form.resolve.constant(:ATTRIBUTES) %}
+      def {{ attribute[:name] }}(value : {{ attribute[:type] }}{% if attribute[:nilable] %}?{% end %})
+        form.{{ attribute[:name] }}.value = value
         self
       end
     {% end %}

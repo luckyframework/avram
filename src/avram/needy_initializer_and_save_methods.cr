@@ -68,13 +68,13 @@ module Avram::NeedyInitializerAndSaveMethods
       {% for type_declaration in (NEEDS_ON_CREATE + NEEDS_ON_INITIALIZE) %}
         {{ type_declaration }},
       {% end %}
-      {% if @type.constant :FIELDS %}
-        {% for field in FIELDS.uniq %}
-          {{ field[:name] }} : {{ field[:type] }} | Nothing{% if field[:nilable] %} | Nil{% end %} = Nothing.new,
+      {% if @type.constant :ATTRIBUTES %}
+        {% for attribute in ATTRIBUTES.uniq %}
+          {{ attribute[:name] }} : {{ attribute[:type] }} | Nothing{% if attribute[:nilable] %} | Nil{% end %} = Nothing.new,
         {% end %}
       {% end %}
-      {% for field in VIRTUAL_FIELDS %}
-        {{ field.var }} : {{ field.type }} | Nothing = Nothing.new,
+      {% for attribute in VIRTUAL_ATTRIBUTES %}
+        {{ attribute.var }} : {{ attribute.type }} | Nothing = Nothing.new,
       {% end %}
     )
       form = new(
@@ -87,17 +87,17 @@ module Avram::NeedyInitializerAndSaveMethods
         form.{{ type_declaration.var }} = {{ type_declaration.var }}
       {% end %}
 
-      {% if @type.constant :FIELDS %}
-        {% for field in FIELDS.uniq %}
-          unless {{ field[:name] }}.is_a? Nothing
-            form.{{ field[:name] }}.value = {{ field[:name] }}
+      {% if @type.constant :ATTRIBUTES %}
+        {% for attribute in ATTRIBUTES.uniq %}
+          unless {{ attribute[:name] }}.is_a? Nothing
+            form.{{ attribute[:name] }}.value = {{ attribute[:name] }}
           end
         {% end %}
       {% end %}
 
-      {% for field in VIRTUAL_FIELDS %}
-        unless {{ field.var }}.is_a? Nothing
-          form.{{ field.var }}.value = {{ field.var }}
+      {% for attribute in VIRTUAL_ATTRIBUTES %}
+        unless {{ attribute.var }}.is_a? Nothing
+          form.{{ attribute.var }}.value = {{ attribute.var }}
         end
       {% end %}
 
@@ -121,13 +121,13 @@ module Avram::NeedyInitializerAndSaveMethods
         {% for type_declaration in (NEEDS_ON_UPDATE + NEEDS_ON_INITIALIZE) %}
           {{ type_declaration }},
         {% end %}
-        {% if @type.constant :FIELDS %}
-          {% for field in FIELDS.uniq %}
-            {{ field[:name] }} : {{ field[:type] }} | Nothing{% if field[:nilable] %} | Nil{% end %} = Nothing.new,
+        {% if @type.constant :ATTRIBUTES %}
+          {% for attribute in ATTRIBUTES.uniq %}
+            {{ attribute[:name] }} : {{ attribute[:type] }} | Nothing{% if attribute[:nilable] %} | Nil{% end %} = Nothing.new,
           {% end %}
         {% end %}
-        {% for field in VIRTUAL_FIELDS %}
-          {{ field.var }} : {{ field.type }} | Nothing = Nothing.new,
+        {% for attribute in VIRTUAL_ATTRIBUTES %}
+          {{ attribute.var }} : {{ attribute.type }} | Nothing = Nothing.new,
         {% end %}
       )
       form = new(
@@ -141,17 +141,17 @@ module Avram::NeedyInitializerAndSaveMethods
         form.{{ type_declaration.var }} = {{ type_declaration.var }}
       {% end %}
 
-      {% if @type.constant :FIELDS %}
-        {% for field in FIELDS.uniq %}
-          unless {{ field[:name] }}.is_a? Nothing
-            form.{{ field[:name] }}.value = {{ field[:name] }}
+      {% if @type.constant :ATTRIBUTES %}
+        {% for attribute in ATTRIBUTES.uniq %}
+          unless {{ attribute[:name] }}.is_a? Nothing
+            form.{{ attribute[:name] }}.value = {{ attribute[:name] }}
           end
         {% end %}
       {% end %}
 
-      {% for field in VIRTUAL_FIELDS %}
-        unless {{ field.var }}.is_a? Nothing
-          form.{{ field.var }}.value = {{ field.var }}
+      {% for attribute in VIRTUAL_ATTRIBUTES %}
+        unless {{ attribute.var }}.is_a? Nothing
+          form.{{ attribute.var }}.value = {{ attribute.var }}
         end
       {% end %}
 

@@ -27,10 +27,10 @@ class Avram::VirtualOperation
   end
 
   def valid?
-    virtual_fields.all? &.valid?
+    virtual_attributes.all? &.valid?
   end
 
-  def fields
-    virtual_fields
+  def attributes
+    virtual_attributes
   end
 end

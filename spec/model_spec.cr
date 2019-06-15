@@ -1,7 +1,7 @@
 require "./spec_helper"
 
 private class QueryMe < Avram::Model
-  COLUMNS = "users.id, users.created_at, users.updated_at, users.email, users.age"
+  COLUMN_SQL = "users.id, users.created_at, users.updated_at, users.email, users.age"
 
   table users do
     column email : CustomEmail
@@ -15,13 +15,13 @@ private class ModelWithMissingButSimilarlyNamedColumn < Avram::Model
   end
 end
 
-private class ModelWithOptionalFieldOnRequiredColumn < Avram::Model
+private class ModelWithOptionalAttributeOnRequiredColumn < Avram::Model
   table users do
     column name : String?
   end
 end
 
-private class ModelWithRequiredFieldOnOptionalColumn < Avram::Model
+private class ModelWithRequiredAttributeOnOptionalColumn < Avram::Model
   table users do
     column nickname : String
   end
@@ -43,14 +43,14 @@ private class EmptyModelCompilesOk < Avram::Model
 end
 
 private class InferredTableNameModel < Avram::Model
-  COLUMNS = "inferred_table_name_models.id, inferred_table_name_models.created_at, inferred_table_name_models.updated_at"
+  COLUMN_SQL = "inferred_table_name_models.id, inferred_table_name_models.created_at, inferred_table_name_models.updated_at"
 
   table do
   end
 end
 
 describe Avram::Model do
-  it "sets up initializers based on the fields" do
+  it "sets up initializers based on the columns" do
     now = Time.utc
 
     user = User.new id: 123,
@@ -99,25 +99,25 @@ describe Avram::Model do
   it "sets up simple methods for equality" do
     query = QueryMe::BaseQuery.new.email("foo@bar.com").age(30)
 
-    query.to_sql.should eq ["SELECT #{QueryMe::COLUMNS} FROM users WHERE users.email = $1 AND users.age = $2", "foo@bar.com", "30"]
+    query.to_sql.should eq ["SELECT #{QueryMe::COLUMN_SQL} FROM users WHERE users.email = $1 AND users.age = $2", "foo@bar.com", "30"]
   end
 
   it "sets up advanced criteria methods" do
     query = QueryMe::BaseQuery.new.email.upper.eq("foo@bar.com").age.gt(30)
 
-    query.to_sql.should eq ["SELECT #{QueryMe::COLUMNS} FROM users WHERE UPPER(users.email) = $1 AND users.age > $2", "foo@bar.com", "30"]
+    query.to_sql.should eq ["SELECT #{QueryMe::COLUMN_SQL} FROM users WHERE UPPER(users.email) = $1 AND users.age > $2", "foo@bar.com", "30"]
   end
 
   it "parses values" do
     query = QueryMe::BaseQuery.new.email.upper.eq(" Foo@bar.com").age.gt(30)
 
-    query.to_sql.should eq ["SELECT #{QueryMe::COLUMNS} FROM users WHERE UPPER(users.email) = $1 AND users.age > $2", "foo@bar.com", "30"]
+    query.to_sql.should eq ["SELECT #{QueryMe::COLUMN_SQL} FROM users WHERE UPPER(users.email) = $1 AND users.age > $2", "foo@bar.com", "30"]
   end
 
   it "lets you order by columns" do
     query = QueryMe::BaseQuery.new.age.asc_order.email.desc_order
 
-    query.to_sql.should eq ["SELECT #{QueryMe::COLUMNS} FROM users ORDER BY users.age ASC, users.email DESC"]
+    query.to_sql.should eq ["SELECT #{QueryMe::COLUMN_SQL} FROM users ORDER BY users.age ASC, users.email DESC"]
   end
 
   it "can be deleted" do
@@ -130,39 +130,39 @@ describe Avram::Model do
   end
 
   describe ".column_names" do
-    it "returns list of mapped fields" do
+    it "returns list of mapped columns" do
       QueryMe.column_names.should eq [:id, :created_at, :updated_at, :email, :age]
     end
   end
 
-  describe ".ensure_correct_field_mappings" do
+  describe ".ensure_correct_column_mappings" do
     it "raises on missing table" do
       expect_raises Exception, "The table 'definitely_a_missing_table' was not found." do
-        MissingTable.ensure_correct_field_mappings!
+        MissingTable.ensure_correct_column_mappings!
       end
     end
 
     it "raises on a missing but similarly named table" do
       expect_raises Exception, "The table 'uusers' was not found. Did you mean users?" do
-        MissingButSimilarlyNamedTable.ensure_correct_field_mappings!
+        MissingButSimilarlyNamedTable.ensure_correct_column_mappings!
       end
     end
 
-    it "raises on fields with missing columns" do
+    it "raises on tables with missing columns" do
       expect_raises Exception, "The table 'users' does not have a 'mickname' column. Did you mean nickname?" do
-        ModelWithMissingButSimilarlyNamedColumn.ensure_correct_field_mappings!
+        ModelWithMissingButSimilarlyNamedColumn.ensure_correct_column_mappings!
       end
     end
 
-    it "raises on nilable fields with required columns" do
+    it "raises on nilable column with required columns" do
       expect_raises Exception, "'name' is marked as nilable (name : String?), but the database column does not allow nils." do
-        ModelWithOptionalFieldOnRequiredColumn.ensure_correct_field_mappings!
+        ModelWithOptionalAttributeOnRequiredColumn.ensure_correct_column_mappings!
       end
     end
 
-    it "raises on required fields with nilable columns" do
+    it "raises on required columns with nilable columns" do
       expect_raises Exception, "'nickname' is marked as required (nickname : String), but the database column allows nils." do
-        ModelWithRequiredFieldOnOptionalColumn.ensure_correct_field_mappings!
+        ModelWithRequiredAttributeOnOptionalColumn.ensure_correct_column_mappings!
       end
     end
   end
@@ -184,6 +184,6 @@ describe Avram::Model do
 
   it "can infer the table name when omitted" do
     query = InferredTableNameModel::BaseQuery.all
-    query.to_sql.should eq ["SELECT #{InferredTableNameModel::COLUMNS} FROM inferred_table_name_models"]
+    query.to_sql.should eq ["SELECT #{InferredTableNameModel::COLUMN_SQL} FROM inferred_table_name_models"]
   end
 end

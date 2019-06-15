@@ -14,7 +14,7 @@ describe Avram::Migrator::AlterTableStatement do
       add updated_at : Time, fill_existing_with: :now
       add future_time : Time, default: Time.local
       add new_id : UUID, default: UUID.new("46d9b2f0-0718-4d4c-a5a1-5af81d5b11e0")
-      remove :old_field
+      remove :old_column
       remove_belongs_to :employee
     end
 
@@ -32,7 +32,7 @@ describe Avram::Migrator::AlterTableStatement do
       ADD updated_at timestamptz,
       ADD future_time timestamptz NOT NULL DEFAULT '#{Time.local.to_utc}',
       ADD new_id uuid NOT NULL DEFAULT '46d9b2f0-0718-4d4c-a5a1-5af81d5b11e0',
-      DROP old_field,
+      DROP old_column,
       DROP employee_id
     SQL
 
