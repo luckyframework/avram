@@ -10,23 +10,23 @@ private class VirtualOperation < Post::SaveOperation
     password_confirmation.value = "reset"
   end
 
-  def setup_required_database_fields
+  def setup_required_database_columns
     title.value = "Title"
   end
 end
 
 describe "virtual in forms" do
-  it "is a FillableField" do
-    form.password_confirmation.should be_a(Avram::FillableField(String?))
+  it "is a FillableAttribute" do
+    form.password_confirmation.should be_a(Avram::FillableAttribute(String?))
     form.password_confirmation.name.should eq(:password_confirmation)
     form.password_confirmation.form_name.should eq("virtual")
   end
 
-  it "generates a list of fillable_fields" do
-    form.virtual_fields.map(&.name).should eq [:password_confirmation,
-                                               :terms_of_service,
-                                               :best_kind_of_bear,
-                                               :default_is_false]
+  it "generates a list of fillable_attributes" do
+    form.virtual_attributes.map(&.name).should eq [:password_confirmation,
+                                                   :terms_of_service,
+                                                   :best_kind_of_bear,
+                                                   :default_is_false]
   end
 
   it "sets a default value of nil if another one is not given" do
@@ -34,7 +34,7 @@ describe "virtual in forms" do
     form.terms_of_service.value.should be_nil
   end
 
-  it "assigns the default value to a field if one is set and no param is given" do
+  it "assigns the default value to an attribute if one is set and no param is given" do
     form.best_kind_of_bear.value.should eq "black bear"
     form.default_is_false.value.should be_false
   end
@@ -51,7 +51,7 @@ describe "virtual in forms" do
     form.password_confirmation.param.should eq "password"
   end
 
-  it "is memoized so you can change the field in `prepare`" do
+  it "is memoized so you can change the attribute in `prepare`" do
     form = form({"password_confirmation" => "password"})
     form.password_confirmation.value.should eq "password"
 
@@ -73,20 +73,20 @@ describe "virtual in forms" do
     form.terms_of_service.errors.first.should eq "is invalid"
   end
 
-  it "includes field errors when calling SaveOperation#valid?" do
+  it "includes attribute errors when calling SaveOperation#valid?" do
     form = form({"terms_of_service" => "not a boolean"})
-    form.setup_required_database_fields
+    form.setup_required_database_columns
     form.valid?.should be_false
   end
 
   it "can still save to the database" do
     params = {"password_confirmation" => "password", "terms_of_service" => "1"}
     form = form(params)
-    form.setup_required_database_fields
+    form.setup_required_database_columns
     form.save.should eq true
   end
 
-  it "sets named args for virtual fields, leaves other empty" do
+  it "sets named args for virtual attributes, leaves other empty" do
     VirtualOperation.create(title: "My Title", best_kind_of_bear: "brown bear") do |form, post|
       form.best_kind_of_bear.value.should eq("brown bear")
       form.terms_of_service.value.should be_nil

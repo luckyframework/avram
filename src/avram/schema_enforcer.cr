@@ -1,14 +1,14 @@
 module Avram::SchemaEnforcer
-  macro add_schema_enforcer_methods_for(table_name, fields)
-    def self.ensure_correct_field_mappings!
-      fields = [
-        {% for field in fields %}
-          { name: :{{field[:name]}}, nilable: {{ field[:nilable] }}, type: {{ field[:type] }} },
+  macro add_schema_enforcer_methods_for(table_name, attributes)
+    def self.ensure_correct_column_mappings!
+      attributes = [
+        {% for attribute in attributes %}
+          { name: :{{attribute[:name]}}, nilable: {{ attribute[:nilable] }}, type: {{ attribute[:type] }} },
         {% end %}
       ]
 
       EnsureExistingTable.new(:{{table_name}}).ensure_exists!
-      EnsureMatchingColumns.new(:{{table_name}}).ensure_matches! fields
+      EnsureMatchingColumns.new(:{{table_name}}).ensure_matches! attributes
     end
   end
 
@@ -40,8 +40,8 @@ module Avram::SchemaEnforcer
   class EnsureMatchingColumns
     @columns_map = Hash(String, Bool).new
     @missing_columns = [] of String
-    @optional_field_errors = [] of String
-    @required_field_errors = [] of String
+    @optional_attribute_errors = [] of String
+    @required_attribute_errors = [] of String
 
     def initialize(@table_name : Symbol)
       columns = Avram::Repo.table_columns(table_name)
@@ -50,38 +50,38 @@ module Avram::SchemaEnforcer
       end
     end
 
-    def ensure_matches!(fields)
-      fields.each do |field|
-        check_column_matches field
+    def ensure_matches!(attributes)
+      attributes.each do |attribute|
+        check_column_matches attribute
       end
 
       if matching_error?
-        message = @missing_columns + @optional_field_errors + @required_field_errors
+        message = @missing_columns + @optional_attribute_errors + @required_attribute_errors
 
         raise message.join("\n\n")
       end
     end
 
-    private def check_column_matches(field)
-      unless @columns_map.has_key? field[:name].to_s
-        @missing_columns << missing_field_error(@table_name, @columns_map.keys, field)
+    private def check_column_matches(attribute)
+      unless @columns_map.has_key? attribute[:name].to_s
+        @missing_columns << missing_attribute_error(@table_name, @columns_map.keys, attribute)
         return
       end
 
-      if !field[:nilable] && @columns_map[field[:name].to_s]
-        @required_field_errors << required_field_error(@table_name, field)
-      elsif field[:nilable] && !@columns_map[field[:name].to_s]
-        @optional_field_errors << optional_field_error(@table_name, field)
+      if !attribute[:nilable] && @columns_map[attribute[:name].to_s]
+        @required_attribute_errors << required_attribute_error(@table_name, attribute)
+      elsif attribute[:nilable] && !@columns_map[attribute[:name].to_s]
+        @optional_attribute_errors << optional_attribute_error(@table_name, attribute)
       end
     end
 
     private def matching_error?
-      @missing_columns.any? || @optional_field_errors.any? || @required_field_errors.any?
+      @missing_columns.any? || @optional_attribute_errors.any? || @required_attribute_errors.any?
     end
 
-    private def missing_field_error(table_name, column_names, missing_field)
-      message = "The table '#{table_name}' does not have a '#{missing_field[:name]}' column."
-      best_match = Levenshtein::Finder.find missing_field[:name].to_s, column_names, tolerance: 4
+    private def missing_attribute_error(table_name, column_names, missing_attribute)
+      message = "The table '#{table_name}' does not have a '#{missing_attribute[:name]}' column."
+      best_match = Levenshtein::Finder.find missing_attribute[:name].to_s, column_names, tolerance: 4
 
       if best_match
         message += " Did you mean #{best_match}?"
@@ -90,25 +90,25 @@ module Avram::SchemaEnforcer
       end
     end
 
-    private def optional_field_error(table_name, field)
+    private def optional_attribute_error(table_name, attribute)
       <<-ERROR
-      '#{field[:name]}' is marked as nilable (#{field[:name]} : #{field[:type]}?), but the database column does not allow nils.
+      '#{attribute[:name]}' is marked as nilable (#{attribute[:name]} : #{attribute[:type]}?), but the database column does not allow nils.
 
       Try this...
 
-        * Mark '#{field[:name]}' as non-nilable in your model: #{field[:name]} : #{field[:type]}
-        * Or, change the column in a migration to allow nils: make_optional :#{table_name}, :#{field[:name]}
+        * Mark '#{attribute[:name]}' as non-nilable in your model: #{attribute[:name]} : #{attribute[:type]}
+        * Or, change the column in a migration to allow nils: make_optional :#{table_name}, :#{attribute[:name]}
       ERROR
     end
 
-    private def required_field_error(table_name, field)
+    private def required_attribute_error(table_name, attribute)
       <<-ERROR
-      '#{field[:name]}' is marked as required (#{field[:name]} : #{field[:type]}), but the database column allows nils.
+      '#{attribute[:name]}' is marked as required (#{attribute[:name]} : #{attribute[:type]}), but the database column allows nils.
 
       Try this...
 
-        * Mark '#{field[:name]}' as nilable in your model: #{field[:name]} : #{field[:type]}?
-        * Or, change the column in a migration to be required: make_required :#{table_name}, :#{field[:name]}
+        * Mark '#{attribute[:name]}' as nilable in your model: #{attribute[:name]} : #{attribute[:type]}?
+        * Or, change the column in a migration to be required: make_required :#{table_name}, :#{attribute[:name]}
       ERROR
     end
   end

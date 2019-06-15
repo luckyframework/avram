@@ -1,7 +1,7 @@
 require "./sign_in_credential"
 
 class Admin < Avram::Model
-  COLUMNS = "admins.id, admins.created_at, admins.updated_at, admins.name"
+  COLUMN_SQL = "admins.id, admins.created_at, admins.updated_at, admins.name"
 
   table admins do
     column name : String

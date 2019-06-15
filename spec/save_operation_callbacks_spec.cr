@@ -23,7 +23,7 @@ private class CallbacksSaveOperation < Post::SaveOperation
   after_update :run_after_update_again
 
   def prepare
-    setup_required_fields
+    setup_required_attributes
     mark_callback "prepare"
   end
 
@@ -83,7 +83,7 @@ private class CallbacksSaveOperation < Post::SaveOperation
     callbacks_that_ran << callback_name
   end
 
-  private def setup_required_fields
+  private def setup_required_attributes
     title.value = "Title"
   end
 end

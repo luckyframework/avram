@@ -1,73 +1,73 @@
 require "./validations/**"
 
 module Avram::Validations
-  private def validate_required(*fields, message = "is required")
-    fields.each do |field|
-      if field.value.blank? && field.value != false
-        field.add_error message
+  private def validate_required(*attributes, message = "is required")
+    attributes.each do |attribute|
+      if attribute.value.blank? && attribute.value != false
+        attribute.add_error message
       end
     end
   end
 
-  private def validate_acceptance_of(field : Field(Bool?), message = "must be accepted")
-    if field.value != true
-      field.add_error message
+  private def validate_acceptance_of(attribute : Attribute(Bool?), message = "must be accepted")
+    if attribute.value != true
+      attribute.add_error message
     end
   end
 
-  private def validate_confirmation_of(field, with confirmation_field, message = "must match")
-    if field.value != confirmation_field.value
-      confirmation_field.add_error message
+  private def validate_confirmation_of(attribute, with confirmation_attribute, message = "must match")
+    if attribute.value != confirmation_attribute.value
+      confirmation_attribute.add_error message
     end
   end
 
-  private def validate_inclusion_of(field, in allowed_values, message = "is invalid")
-    if !allowed_values.includes? field.value
-      field.add_error message
+  private def validate_inclusion_of(attribute, in allowed_values, message = "is invalid")
+    if !allowed_values.includes? attribute.value
+      attribute.add_error message
     end
   end
 
-  private def validate_size_of(field, *, is exact_size, message = "is invalid")
-    if field.value.to_s.size != exact_size
-      field.add_error message
+  private def validate_size_of(attribute, *, is exact_size, message = "is invalid")
+    if attribute.value.to_s.size != exact_size
+      attribute.add_error message
     end
   end
 
-  private def validate_size_of(field, min = nil, max = nil)
+  private def validate_size_of(attribute, min = nil, max = nil)
     if !min.nil? && !max.nil? && min > max
-      raise ImpossibleValidation.new(field: field.name, message: "size greater than #{min} but less than #{max}")
+      raise ImpossibleValidation.new(attribute: attribute.name, message: "size greater than #{min} but less than #{max}")
     end
 
-    size = field.value.to_s.size
+    size = attribute.value.to_s.size
 
     if !min.nil? && size < min
-      field.add_error "is too short"
+      attribute.add_error "is too short"
     end
 
     if !max.nil? && size > max
-      field.add_error "is too long"
+      attribute.add_error "is too long"
     end
   end
 
   private def validate_uniqueness_of(
-    field : Avram::Field,
+    attribute : Avram::Attribute,
     query : Avram::Criteria,
     message : String = "is already taken"
   )
-    field.value.try do |value|
+    attribute.value.try do |value|
       if query.eq(value).first?
-        field.add_error message
+        attribute.add_error message
       end
     end
   end
 
   private def validate_uniqueness_of(
-    field : Avram::Field,
+    attribute : Avram::Attribute,
     message : String = "is already taken"
   )
-    field.value.try do |value|
-      if build_validation_query(field.name, field.value).first?
-        field.add_error message
+    attribute.value.try do |value|
+      if build_validation_query(attribute.name, attribute.value).first?
+        attribute.add_error message
       end
     end
   end

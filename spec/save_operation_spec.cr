@@ -50,9 +50,9 @@ describe "Avram::SaveOperation" do
     SaveLimitedUser.form_name.should eq "limited_user"
   end
 
-  it "add required_fields method" do
+  it "add required_attributes method" do
     form = SaveTask.new
-    form.required_fields.should eq({form.title})
+    form.required_attributes.should eq({form.title})
   end
 
   it "set params if passed in" do
@@ -84,7 +84,7 @@ describe "Avram::SaveOperation" do
     user.joined_at.should eq joined_at
   end
 
-  it "automatically runs validations for required fields" do
+  it "automatically runs validations for required attributes" do
     form = SaveTask.new
 
     form.valid?
@@ -103,7 +103,7 @@ describe "Avram::SaveOperation" do
   end
 
   describe "#errors" do
-    it "includes errors for all form fields" do
+    it "includes errors for all form attributes" do
       form = SaveUser.new
 
       form.valid?
@@ -182,12 +182,12 @@ describe "Avram::SaveOperation" do
       form.changes[:name]?.should eq "someone"
     end
 
-    it "returns a Avram::FillableField" do
+    it "returns a Avram::FillableAttribute" do
       form = SaveLimitedUser.new({"name" => "someone", "nickname" => "nothing"})
       form.nickname.value.should be_nil
-      form.nickname.is_a?(Avram::Field).should be_true
+      form.nickname.is_a?(Avram::Attribute).should be_true
       form.name.value.should eq "someone"
-      form.name.is_a?(Avram::FillableField).should be_true
+      form.name.is_a?(Avram::FillableAttribute).should be_true
     end
   end
 
@@ -215,7 +215,7 @@ describe "Avram::SaveOperation" do
   end
 
   describe "params" do
-    it "creates a param method for each of the fillable fields" do
+    it "creates a param method for each of the fillable attributes" do
       params = {"name" => "Paul", "nickname" => "Pablito"}
 
       form = SaveUser.new(params)
@@ -234,7 +234,7 @@ describe "Avram::SaveOperation" do
   end
 
   describe "errors" do
-    it "creates an error method for each of the fillable fields" do
+    it "creates an error method for each of the fillable attributes" do
       params = {"name" => "Paul", "age" => "30", "joined_at" => now_as_string}
       form = SaveUser.new(params)
       form.valid?.should be_true
@@ -257,8 +257,8 @@ describe "Avram::SaveOperation" do
     end
   end
 
-  describe "fields" do
-    it "creates a method for each of the fillable fields" do
+  describe "attributes" do
+    it "creates a method for each of the fillable attributes" do
       params = {} of String => String
       form = SaveLimitedUser.new(params)
 
@@ -266,7 +266,7 @@ describe "Avram::SaveOperation" do
       form.responds_to?(:nickname).should be_true
     end
 
-    it "returns a field with the field name, value and errors" do
+    it "returns an attribute with the attribute name, value and errors" do
       params = {"name" => "Joe"}
       form = SaveUser.new(params)
       form.name.add_error "wrong"
@@ -372,7 +372,7 @@ describe "Avram::SaveOperation" do
       end
     end
 
-    it "can handle a field named 'value'" do
+    it "can handle an attribute named 'value'" do
       ValueColumnModelSaveOperation.new({"value" => "value"}).value.value.should eq "value"
     end
   end

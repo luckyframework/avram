@@ -18,9 +18,9 @@ private class TestVirtualOperationWithMultipleValidations < Avram::VirtualOperat
     validate_old_enough age
   end
 
-  private def validate_old_enough(age_field)
-    if (age = age_field.value) && age < 21
-      age_field.add_error "is not old enough"
+  private def validate_old_enough(age_attribute)
+    if (age = age_attribute.value) && age < 21
+      age_attribute.add_error "is not old enough"
     end
   end
 end
@@ -29,11 +29,11 @@ private class UserWithVirtual < User::SaveOperation
   virtual password : String
 end
 
-private class CanUseSameVirtualFieldTwiceInModelBackedSaveOperation < User::SaveOperation
+private class CanUseSameVirtualAttributeTwiceInModelBackedSaveOperation < User::SaveOperation
   virtual password : String
 end
 
-private class CanUseSameVirtualFieldTwiceInVirtualOperation < Avram::VirtualOperation
+private class CanUseSameVirtualAttributeTwiceInVirtualOperation < Avram::VirtualOperation
   virtual name : String
 end
 
@@ -42,7 +42,7 @@ private class ParamKeySaveOperation < Avram::VirtualOperation
 end
 
 describe Avram::VirtualOperation do
-  it "has create/update args for virtual fields" do
+  it "has create/update args for virtual attributes" do
     UserWithVirtual.create(password: "p@ssword") do |form, _user|
       form.password.value = "p@ssword"
     end
@@ -98,15 +98,15 @@ describe Avram::VirtualOperation do
     virtual_form.valid?.should be_false
   end
 
-  describe "#fields" do
-    it "equals `virtual_fields`" do
+  describe "#attributes" do
+    it "equals `virtual_attributes`" do
       virtual_form = TestVirtualOperation.new
-      virtual_form.virtual_fields.should eq(virtual_form.fields)
+      virtual_form.virtual_attributes.should eq(virtual_form.attributes)
     end
   end
 
   describe "#errors" do
-    it "includes errors for all form fields" do
+    it "includes errors for all attributes" do
       params = Avram::Params.new({"name" => "", "age" => "20"})
       form = TestVirtualOperationWithMultipleValidations.new(params)
 

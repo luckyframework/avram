@@ -1,4 +1,4 @@
-class Avram::Field(T)
+class Avram::Attribute(T)
   getter :name
   getter :value
   getter :form_name
@@ -8,13 +8,13 @@ class Avram::Field(T)
   def initialize(@name : Symbol, @param : String?, @value : T, @form_name : String)
   end
 
-  @_fillable : Avram::FillableField(T)?
+  @_fillable : Avram::FillableAttribute(T)?
 
   def fillable
     @_fillable ||= begin
-      Avram::FillableField.new(name: @name, param: @param, value: @value, form_name: @form_name).tap do |field|
+      Avram::FillableAttribute.new(name: @name, param: @param, value: @value, form_name: @form_name).tap do |attribute|
         errors.each do |error|
-          field.add_error error
+          attribute.add_error error
         end
       end
     end

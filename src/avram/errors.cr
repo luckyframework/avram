@@ -30,8 +30,8 @@ module Avram
 
   # Raised when a validation is expecting an impossible constraint
   class ImpossibleValidation < AvramError
-    def initialize(field : Symbol, message = "an impossible validation")
-      super "Validation for #{field} can never satisfy #{message}"
+    def initialize(attribute : Symbol, message = "an impossible validation")
+      super "Validation for #{attribute} can never satisfy #{message}"
     end
   end
 
@@ -44,8 +44,8 @@ module Avram
         message << "Could not save #{form.class.name}."
         message << "\n"
         message << "\n"
-        form.errors.each do |field_name, errors|
-          message << "  ▸ #{field_name}: #{errors.join(", ")}\n"
+        form.errors.each do |attribute_name, errors|
+          message << "  ▸ #{attribute_name}: #{errors.join(", ")}\n"
         end
       end
       @save_operation_errors = form.errors

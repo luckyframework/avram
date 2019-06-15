@@ -94,7 +94,7 @@ class Avram::Migrator::AlterTableStatement
       {% if default == nil && fill_existing_with == nil %}
         {% raise <<-ERROR
 
-          You must provide a default value or use fill_existing_with when adding a required field to an existing table.
+          You must provide a default value or use fill_existing_with when adding a required column to an existing table.
 
           Try one of these...
 

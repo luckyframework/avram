@@ -1,5 +1,5 @@
 class Avram::SaveOperationTemplate
-  macro setup(model_type, fields, table_name, primary_key_type)
+  macro setup(model_type, columns, table_name, primary_key_type)
     class BaseForm
       macro inherited
         \{% raise "BaseForm has been renamed to SaveOperation. Please inherit from #{model_type}::SaveOperation." %}
@@ -15,7 +15,7 @@ class Avram::SaveOperationTemplate
         :{{ table_name }}
       end
 
-      add_fields({{ primary_key_type }}, {{ fields }})
+      add_column_attributes({{ primary_key_type }}, {{ columns }})
     end
   end
 end

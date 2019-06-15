@@ -2,10 +2,10 @@ require "./spec_helper"
 
 class Needs::SaveOperation < User::SaveOperation
   def prepare
-    setup_required_fields
+    setup_required_attributes
   end
 
-  private def setup_required_fields
+  private def setup_required_attributes
     name.value ||= "Joe"
     age.value ||= 62
     joined_at.value ||= Time.utc
@@ -57,7 +57,7 @@ describe "Avram::SaveOperation needs" do
     NeedsSaveOperation.new(params, nilable_value: nil, created_by: "Jane")
   end
 
-  it "also generates named args for other fields" do
+  it "also generates named args for other attributes" do
     NeedsSaveOperation.create(name: "Jane", nilable_value: "not nil", optional: "bar", created_by: "Jane") do |form, _record|
       # Problem seems to be that params override passed in val
       form.name.value.should eq("Jane")
