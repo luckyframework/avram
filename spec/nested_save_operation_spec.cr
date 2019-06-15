@@ -1,16 +1,16 @@
 require "./spec_helper"
 
 private class SaveBusiness < Business::SaveOperation
-  fillable name
+  permit_columns name
   has_one save_email_address : SaveEmailAddress
   has_one save_tax_id : SaveTaxId
 
   class SaveEmailAddress < EmailAddress::SaveOperation
-    fillable address
+    permit_columns address
   end
 
   class SaveTaxId < TaxId::SaveOperation
-    fillable number
+    permit_columns number
   end
 end
 

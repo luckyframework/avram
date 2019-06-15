@@ -16,13 +16,13 @@ private class VirtualOperation < Post::SaveOperation
 end
 
 describe "virtual in forms" do
-  it "is a FillableAttribute" do
-    form.password_confirmation.should be_a(Avram::FillableAttribute(String?))
+  it "is a PermittedAttribute" do
+    form.password_confirmation.should be_a(Avram::PermittedAttribute(String?))
     form.password_confirmation.name.should eq(:password_confirmation)
     form.password_confirmation.form_name.should eq("virtual")
   end
 
-  it "generates a list of fillable_attributes" do
+  it "generates a list of virtual_attributes" do
     form.virtual_attributes.map(&.name).should eq [:password_confirmation,
                                                    :terms_of_service,
                                                    :best_kind_of_bear,

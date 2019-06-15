@@ -8,11 +8,11 @@ class Avram::Attribute(T)
   def initialize(@name : Symbol, @param : String?, @value : T, @form_name : String)
   end
 
-  @_fillable : Avram::FillableAttribute(T)?
+  @_permitted : Avram::PermittedAttribute(T)?
 
-  def fillable
-    @_fillable ||= begin
-      Avram::FillableAttribute.new(name: @name, param: @param, value: @value, form_name: @form_name).tap do |attribute|
+  def permitted
+    @_permitted ||= begin
+      Avram::PermittedAttribute.new(name: @name, param: @param, value: @value, form_name: @form_name).tap do |attribute|
         errors.each do |error|
           attribute.add_error error
         end

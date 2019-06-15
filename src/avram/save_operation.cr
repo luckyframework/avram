@@ -31,7 +31,7 @@ abstract class Avram::SaveOperation(T)
     @valid : Bool = true
     @save_status = SaveStatus::Unperformed
 
-    @@fillable_param_keys = [] of String
+    @@permitted_param_keys = [] of String
     @@schema_class = T
   end
 
@@ -76,7 +76,7 @@ abstract class Avram::SaveOperation(T)
     {% end %}
 
     private def extract_changes_from_params
-      fillable_params.each do |key, value|
+      permitted_params.each do |key, value|
         {% for attribute in attributes %}
           set_{{ attribute[:name] }}_from_param value if key == {{ attribute[:name].stringify }}
         {% end %}
@@ -105,17 +105,17 @@ abstract class Avram::SaveOperation(T)
       private def _{{ attribute[:name] }}
         @_{{ attribute[:name] }} ||= Avram::Attribute({{ attribute[:type] }}?).new(
           name: :{{ attribute[:name].id }},
-          param: fillable_params["{{ attribute[:name] }}"]?,
+          param: permitted_params["{{ attribute[:name] }}"]?,
           value: @record.try(&.{{ attribute[:name] }}),
           form_name: form_name)
       end
 
-      def fillable_params
+      def permitted_params
         new_params = {} of String => String
         @params.nested(form_name).each do |key, value|
           new_params[key] = value
         end
-        new_params.select(@@fillable_param_keys)
+        new_params.select(@@permitted_param_keys)
       end
 
       def set_{{ attribute[:name] }}_from_param(_value)
@@ -183,44 +183,44 @@ abstract class Avram::SaveOperation(T)
     save_status == SaveStatus::SaveFailed
   end
 
-  macro allow(*args)
-    {% raise "'allow' has been renamed to 'fillable'" %}
+  macro fillable(*args)
+    {% raise "'fillable' has been renamed to 'permit_columns'" %}
   end
 
-  macro fillable(*attribute_names)
+  macro permit_columns(*attribute_names)
     {% for attribute_name in attribute_names %}
       {% if attribute_name.is_a?(TypeDeclaration) %}
         {% raise <<-ERROR
-          Must use a Symbol or a bare word in 'fillable'. Instead, got: #{attribute_name}
+          Must use a Symbol or a bare word in 'permit_columns'. Instead, got: #{attribute_name}
 
           Try this...
 
-            ▸ fillable #{attribute_name.var}
+            ▸ permit_columns #{attribute_name.var}
 
           ERROR
         %}
       {% end %}
       {% unless attribute_name.is_a?(SymbolLiteral) || attribute_name.is_a?(Call) %}
         {% raise <<-ERROR
-          Must use a Symbol or a bare word in 'fillable'. Instead, got: #{attribute_name}
+          Must use a Symbol or a bare word in 'permit_columns'. Instead, got: #{attribute_name}
 
           Try this...
 
-            ▸ Use a bare word (recommended): 'fillable name'
-            ▸ Use a Symbol: 'fillable :name'
+            ▸ Use a bare word (recommended): 'permit_columns name'
+            ▸ Use a Symbol: 'permit_columns :name'
 
           ERROR
         %}
       {% end %}
       {% if ATTRIBUTES.any? { |attribute| attribute[:name].id == attribute_name.id } %}
         def {{ attribute_name.id }}
-          _{{ attribute_name.id }}.fillable
+          _{{ attribute_name.id }}.permitted
         end
 
-        @@fillable_param_keys << "{{ attribute_name.id }}"
+        @@permitted_param_keys << "{{ attribute_name.id }}"
       {% else %}
         {% raise <<-ERROR
-          Can't make '#{attribute_name}' fillable because the column has not been defined on the model.
+          Can't permit '#{attribute_name}' because the column has not been defined on the model.
 
           Try this...
 
