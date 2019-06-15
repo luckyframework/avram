@@ -1,4 +1,4 @@
-module Avram::FormErrors
+module Avram::SaveOperationErrors
   def errors : Hash(Symbol, Array(String))
     fields.reduce({} of Symbol => Array(String)) do |errors_hash, field|
       if field.errors.empty?

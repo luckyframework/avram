@@ -1,6 +1,6 @@
 require "./spec_helper"
 
-private class VirtualForm < Post::BaseForm
+private class VirtualOperation < Post::SaveOperation
   virtual password_confirmation : String
   virtual terms_of_service : Bool
   virtual best_kind_of_bear : String = "black bear"
@@ -73,7 +73,7 @@ describe "virtual in forms" do
     form.terms_of_service.errors.first.should eq "is invalid"
   end
 
-  it "includes field errors when calling Form#valid?" do
+  it "includes field errors when calling SaveOperation#valid?" do
     form = form({"terms_of_service" => "not a boolean"})
     form.setup_required_database_fields
     form.valid?.should be_false
@@ -87,12 +87,12 @@ describe "virtual in forms" do
   end
 
   it "sets named args for virtual fields, leaves other empty" do
-    VirtualForm.create(title: "My Title", best_kind_of_bear: "brown bear") do |form, post|
+    VirtualOperation.create(title: "My Title", best_kind_of_bear: "brown bear") do |form, post|
       form.best_kind_of_bear.value.should eq("brown bear")
       form.terms_of_service.value.should be_nil
       post.should_not be_nil
 
-      VirtualForm.update(post.not_nil!, best_kind_of_bear: "koala bear") do |form, post|
+      VirtualOperation.update(post.not_nil!, best_kind_of_bear: "koala bear") do |form, post|
         form.best_kind_of_bear.value.should eq("koala bear")
       end
     end
@@ -100,5 +100,5 @@ describe "virtual in forms" do
 end
 
 private def form(attrs = {} of String => String)
-  VirtualForm.new(attrs)
+  VirtualOperation.new(attrs)
 end

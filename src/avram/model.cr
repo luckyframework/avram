@@ -111,7 +111,7 @@ class Avram::Model
   end
 
   macro setup_base_form_class(table_name, primary_key_type)
-    Avram::BaseFormTemplate.setup({{ @type }}, {{ FIELDS }}, {{ table_name }}, {{ primary_key_type }})
+    Avram::SaveOperationTemplate.setup({{ @type }}, {{ FIELDS }}, {{ table_name }}, {{ primary_key_type }})
   end
 
   macro setup_getters

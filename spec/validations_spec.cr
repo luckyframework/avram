@@ -11,7 +11,7 @@ private class CallableMessage
   end
 end
 
-class UniquenessWithDatabaseBackedForm < User::BaseForm
+class UniquenessWithDatabaseBackedSaveOperation < User::SaveOperation
   fillable name
 
   def prepare
@@ -136,7 +136,7 @@ describe Avram::Validations do
   describe "validate_uniqueness_of" do
     it "validates that a new record is unique with a query or without one" do
       existing_user = UserBox.new.name("Sally").nickname("Sal").create
-      form = UniquenessWithDatabaseBackedForm.new
+      form = UniquenessWithDatabaseBackedSaveOperation.new
       form.name.value = existing_user.name
       form.nickname.value = existing_user.nickname.not_nil!.downcase
 
@@ -148,7 +148,7 @@ describe Avram::Validations do
 
     it "ignores the existing record on update" do
       existing_user = UserBox.new.name("Sally").create
-      form = UniquenessWithDatabaseBackedForm.new(existing_user)
+      form = UniquenessWithDatabaseBackedSaveOperation.new(existing_user)
       form.name.value = existing_user.name
 
       form.prepare
