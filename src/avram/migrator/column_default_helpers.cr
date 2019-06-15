@@ -1,5 +1,5 @@
 module Avram::Migrator::ColumnDefaultHelpers
-  alias ColumnDefaultType = Object
+  alias ColumnDefaultType = String | Time | Int32 | Int64 | Float32 | Float64 | Bool | Symbol | JSON::Any
 
   def value_to_string(type : String.class | Time.class, value : String | Time)
     "'#{value}'"

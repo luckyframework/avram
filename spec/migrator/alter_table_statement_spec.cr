@@ -10,7 +10,7 @@ describe Avram::Migrator::AlterTableStatement do
       add num : Int64, default: 1, index: true
       add amount_paid : Float, default: 1.0, precision: 10, scale: 5
       add completed : Bool, default: false
-      add meta : JSON::Any, default: {"default" => "value'"}
+      add meta : JSON::Any, default: JSON::Any.new({"default" => JSON::Any.new("value")})
       add joined_at : Time, default: :now
       add updated_at : Time, fill_existing_with: :now
       add future_time : Time, default: Time.new
@@ -28,7 +28,7 @@ describe Avram::Migrator::AlterTableStatement do
       ADD num bigint NOT NULL DEFAULT 1,
       ADD amount_paid decimal(10,5) NOT NULL DEFAULT 1.0,
       ADD completed boolean NOT NULL DEFAULT false,
-      ADD meta jsonb NOT NULL DEFAULT '{"default":"value''"}',
+      ADD meta jsonb NOT NULL DEFAULT '{"default":"value"}',
       ADD joined_at timestamptz NOT NULL DEFAULT NOW(),
       ADD updated_at timestamptz,
       ADD future_time timestamptz NOT NULL DEFAULT '#{Time.new.to_utc}',

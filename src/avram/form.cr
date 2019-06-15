@@ -246,10 +246,10 @@ abstract class Avram::Form(T)
 
   private def cast_value(value : Object)
     case value
-    when String, UUID
-      value.to_s
-    else
+    when JSON::Any
       value.to_json
+    else
+      value.to_s
     end
   end
 

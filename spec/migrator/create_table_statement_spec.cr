@@ -66,7 +66,7 @@ describe Avram::Migrator::CreateTableStatement do
       add num : Int64, default: 1
       add amount_paid : Float, default: 1.0
       add completed : Bool, default: false
-      add meta : JSON::Any, default: {} of String => String
+      add meta : JSON::Any, default: JSON::Any.new(Hash(String, JSON::Any).new)
       add joined_at : Time, default: :now
       add future_time : Time, default: Time.new
     end
