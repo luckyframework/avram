@@ -2,7 +2,7 @@ module Avram::Virtual
   macro ensure_base_virtual_attributes_method_is_present
     {% if !@type.methods.map(&.name).includes?(:virtual_attributes.id) %}
       def virtual_attributes
-        [] of Avram::FillableAttribute(Nil)
+        [] of Avram::PermittedAttribute(Nil)
       end
     {% end %}
   end
@@ -63,7 +63,7 @@ module Avram::Virtual
     end
 
     def {{ name }}
-      _{{ name }}.fillable
+      _{{ name }}.permitted
     end
 
     private def _{{ name }}

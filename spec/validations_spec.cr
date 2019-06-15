@@ -12,7 +12,7 @@ private class CallableMessage
 end
 
 class UniquenessWithDatabaseBackedSaveOperation < User::SaveOperation
-  fillable name
+  permit_columns name
 
   def prepare
     validate_uniqueness_of name

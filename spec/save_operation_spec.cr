@@ -1,7 +1,7 @@
 require "./spec_helper"
 
 private class SaveUser < User::SaveOperation
-  fillable :name, :nickname, :joined_at, :age
+  permit_columns :name, :nickname, :joined_at, :age
 
   def prepare
     validate_required name, joined_at, age
@@ -9,7 +9,7 @@ private class SaveUser < User::SaveOperation
 end
 
 private class SaveLimitedUser < User::SaveOperation
-  fillable :name
+  permit_columns :name
 end
 
 private class SaveTask < Task::SaveOperation
@@ -22,7 +22,7 @@ private class ValidSaveOperationWithoutParams < Post::SaveOperation
 end
 
 private class SaveLineItem < LineItem::SaveOperation
-  fillable :name
+  permit_columns :name
 end
 
 private class ValueColumnModel < Avram::Model
@@ -32,7 +32,7 @@ private class ValueColumnModel < Avram::Model
 end
 
 private class ValueColumnModelSaveOperation < ValueColumnModel::SaveOperation
-  fillable value
+  permit_columns value
 end
 
 private class ParamKeySaveOperation < ValueColumnModel::SaveOperation
@@ -175,19 +175,19 @@ describe "Avram::SaveOperation" do
     end
   end
 
-  describe "fillable" do
-    it "ignores params that are not fillable" do
+  describe "permit_columns" do
+    it "ignores params that are not permitted" do
       form = SaveLimitedUser.new({"name" => "someone", "nickname" => "nothing"})
       form.changes.has_key?(:nickname).should be_false
       form.changes[:name]?.should eq "someone"
     end
 
-    it "returns a Avram::FillableAttribute" do
+    it "returns a Avram::PermittedAttribute" do
       form = SaveLimitedUser.new({"name" => "someone", "nickname" => "nothing"})
       form.nickname.value.should be_nil
       form.nickname.is_a?(Avram::Attribute).should be_true
       form.name.value.should eq "someone"
-      form.name.is_a?(Avram::FillableAttribute).should be_true
+      form.name.is_a?(Avram::PermittedAttribute).should be_true
     end
   end
 
@@ -215,7 +215,7 @@ describe "Avram::SaveOperation" do
   end
 
   describe "params" do
-    it "creates a param method for each of the fillable attributes" do
+    it "creates a param method for each of the permit_columns attributes" do
       params = {"name" => "Paul", "nickname" => "Pablito"}
 
       form = SaveUser.new(params)
@@ -234,7 +234,7 @@ describe "Avram::SaveOperation" do
   end
 
   describe "errors" do
-    it "creates an error method for each of the fillable attributes" do
+    it "creates an error method for each of the permit_columns attributes" do
       params = {"name" => "Paul", "age" => "30", "joined_at" => now_as_string}
       form = SaveUser.new(params)
       form.valid?.should be_true
@@ -258,7 +258,7 @@ describe "Avram::SaveOperation" do
   end
 
   describe "attributes" do
-    it "creates a method for each of the fillable attributes" do
+    it "creates a method for each of the permit_columns attributes" do
       params = {} of String => String
       form = SaveLimitedUser.new(params)
 

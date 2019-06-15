@@ -4,7 +4,7 @@ class CompanyQuery < Company::BaseQuery
 end
 
 class SaveCompany < Company::SaveOperation
-  fillable :sales, :earnings
+  permit_columns :sales, :earnings
 
   def prepare
     validate_required sales

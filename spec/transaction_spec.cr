@@ -1,7 +1,7 @@
 require "./spec_helper"
 
 private class PostTransactionSaveOperation < Post::SaveOperation
-  fillable title
+  permit_columns title
   needs rollback_after_save : Bool
 
   def after_save(_user)
@@ -12,7 +12,7 @@ private class PostTransactionSaveOperation < Post::SaveOperation
 end
 
 private class BadSaveOperation < Post::SaveOperation
-  fillable title
+  permit_columns title
 
   def after_save(_user)
     raise "Sad face"
