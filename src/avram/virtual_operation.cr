@@ -3,6 +3,12 @@ require "./save_operation_errors"
 require "./param_key_override"
 require "./form_name"
 
+class Avram::VirtualForm
+  macro inherited
+    {% raise "Avram::VirtualForm has been renamed to Avram::VirtualOperation. Please inherit from Avram::VirtualOperation." %}
+  end
+end
+
 class Avram::VirtualOperation
   include Avram::Virtual
   include Avram::Validations
