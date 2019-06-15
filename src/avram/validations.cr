@@ -75,7 +75,7 @@ module Avram::Validations
   # Must be included in the macro to get access to the generic T class
   # in forms that save to the database.
   #
-  # VirtualForms will also have access to this, but will fail if you try to use
+  # VirtualOperations will also have access to this, but will fail if you try to use
   # if because there is no T (model class).
   macro included
     private def build_validation_query(column_name, value) : T::BaseQuery

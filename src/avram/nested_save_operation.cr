@@ -1,4 +1,4 @@
-module Avram::NestedForm
+module Avram::NestedSaveOperation
   macro has_one(type_declaration)
     {% name = type_declaration.var %}
     {% type = type_declaration.type %}
@@ -14,26 +14,26 @@ module Avram::NestedForm
       {{ name }}.{{ @type.constant(:FOREIGN_KEY).id }}.value = record.id
 
       if !{{ name }}.save
-        mark_nested_forms_as_failed
+        mark_nested_save_operations_as_failed
         Avram::Repo.rollback
       end
     end
 
-    def nested_forms
-      {% if @type.methods.map(&.name).includes?(:nested_forms.id) %}
+    def nested_save_operations
+      {% if @type.methods.map(&.name).includes?(:nested_save_operations.id) %}
         previous_def +
       {% end %}
       [{{ name }}]
     end
   end
 
-  def mark_nested_forms_as_failed
-    nested_forms.each do |f|
+  def mark_nested_save_operations_as_failed
+    nested_save_operations.each do |f|
       f.mark_as_failed
     end
   end
 
-  def nested_forms
+  def nested_save_operations
     [] of Avram::MarkAsFailed
   end
 end

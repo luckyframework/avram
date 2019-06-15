@@ -1,12 +1,14 @@
 require "./virtual"
-require "./form_errors"
+require "./save_operation_errors"
 require "./param_key_override"
+require "./form_name"
 
-class Avram::VirtualForm
+class Avram::VirtualOperation
   include Avram::Virtual
   include Avram::Validations
-  include Avram::FormErrors
+  include Avram::SaveOperationErrors
   include Avram::ParamKeyOverride
+  include Avram::FormName
 
   @params : Avram::Paramable
   getter params
@@ -16,14 +18,6 @@ class Avram::VirtualForm
 
   def initialize
     @params = Avram::Params.new
-  end
-
-  def form_name
-    self.class.form_name
-  end
-
-  def self.form_name
-    self.name.underscore.gsub("_form", "")
   end
 
   def valid?

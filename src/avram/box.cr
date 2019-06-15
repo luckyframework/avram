@@ -5,7 +5,7 @@ abstract class Avram::Box
 
   macro inherited
     {% unless @type.abstract? %}
-      {% form = @type.name.gsub(/Box/, "::BaseForm").id %}
+      {% form = @type.name.gsub(/Box/, "::SaveOperation").id %}
       @form : {{ form }} = {{ form }}.new
       setup_field_shortcuts({{ form }})
     {% end %}
@@ -21,7 +21,7 @@ abstract class Avram::Box
   end
 
   def self.save
-    {% raise "'Box.save' has been renamed to 'Box.create' to match 'Form.create'" %}
+    {% raise "'Box.save' has been renamed to 'Box.create' to match 'SaveOperation.create'" %}
   end
 
   def self.create

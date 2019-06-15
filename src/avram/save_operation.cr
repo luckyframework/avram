@@ -1,23 +1,25 @@
 require "./validations"
 require "./callbacks"
-require "./nested_form"
+require "./nested_save_operation"
 require "./needy_initializer_and_save_methods"
 require "./virtual"
 require "./mark_as_failed"
-require "./form_errors"
+require "./form_name"
+require "./save_operation_errors"
 require "./param_key_override"
 require "./inherit_fields"
 
-abstract class Avram::Form(T)
+abstract class Avram::SaveOperation(T)
   include Avram::Validations
   include Avram::NeedyInitializerAndSaveMethods
   include Avram::Virtual
   include Avram::Callbacks
-  include Avram::NestedForm
+  include Avram::NestedSaveOperation
   include Avram::MarkAsFailed
-  include Avram::FormErrors
+  include Avram::SaveOperationErrors
   include Avram::ParamKeyOverride
   include Avram::InheritFields
+  include Avram::FormName
 
   enum SaveStatus
     Saved
@@ -42,14 +44,6 @@ abstract class Avram::Form(T)
   abstract def table_name
   abstract def fields
 
-  def form_name
-    self.class.form_name
-  end
-
-  def self.form_name
-    self.name.underscore.gsub("_form", "")
-  end
-
   def log_failed_save
     Avram.logger.warn({
       failed_to_save:    self.class.name.to_s,
@@ -65,7 +59,7 @@ abstract class Avram::Form(T)
 
   def self.save(*args, **named_args, &block)
     {% raise <<-ERROR
-      Forms do not have a 'save' method.
+      SaveOperations do not have a 'save' method.
 
       Try this...
 
@@ -295,7 +289,7 @@ abstract class Avram::Form(T)
     if save
       record.not_nil!
     else
-      raise Avram::InvalidFormError.new(form: self)
+      raise Avram::InvalidSaveOperationError.new(form: self)
     end
   end
 
