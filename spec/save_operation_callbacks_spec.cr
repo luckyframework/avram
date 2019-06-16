@@ -1,6 +1,6 @@
 require "./spec_helper"
 
-private class CallbacksForm < Post::BaseForm
+private class CallbacksSaveOperation < Post::SaveOperation
   @callbacks_that_ran = [] of String
   getter callbacks_that_ran
 
@@ -23,7 +23,7 @@ private class CallbacksForm < Post::BaseForm
   after_update :run_after_update_again
 
   def prepare
-    setup_required_fields
+    setup_required_attributes
     mark_callback "prepare"
   end
 
@@ -83,14 +83,14 @@ private class CallbacksForm < Post::BaseForm
     callbacks_that_ran << callback_name
   end
 
-  private def setup_required_fields
+  private def setup_required_attributes
     title.value = "Title"
   end
 end
 
-describe "Avram::Form callbacks" do
+describe "Avram::SaveOperation callbacks" do
   it "does not run the save callbacks if just validating" do
-    form = CallbacksForm.new
+    form = CallbacksSaveOperation.new
     form.callbacks_that_ran.should eq([] of String)
 
     form.valid?
@@ -98,7 +98,7 @@ describe "Avram::Form callbacks" do
   end
 
   it "runs all callbacks except *_update when creating" do
-    form = CallbacksForm.new
+    form = CallbacksSaveOperation.new
     form.callbacks_that_ran.should eq([] of String)
 
     form.save
@@ -119,7 +119,7 @@ describe "Avram::Form callbacks" do
 
   it "runs all callbacks except *_update when creating" do
     post = PostBox.create
-    form = CallbacksForm.new(post)
+    form = CallbacksSaveOperation.new(post)
     form.callbacks_that_ran.should eq([] of String)
 
     form.save

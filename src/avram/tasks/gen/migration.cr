@@ -83,7 +83,7 @@ class Avram::Migrator::MigrationGenerator
   end
 
   private def version
-    @_version ||= Time.now.to_s("%Y%m%d%H%M%S")
+    @_version ||= Time.utc.to_s("%Y%m%d%H%M%S")
   end
 
   private def contents

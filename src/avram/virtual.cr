@@ -1,38 +1,38 @@
 module Avram::Virtual
-  macro ensure_base_virtual_fields_method_is_present
-    {% if !@type.methods.map(&.name).includes?(:virtual_fields.id) %}
-      def virtual_fields
-        [] of Avram::FillableField(Nil)
+  macro ensure_base_virtual_attributes_method_is_present
+    {% if !@type.methods.map(&.name).includes?(:virtual_attributes.id) %}
+      def virtual_attributes
+        [] of Avram::PermittedAttribute(Nil)
       end
     {% end %}
   end
 
   macro included
-    VIRTUAL_FIELDS = [] of Nil
+    VIRTUAL_ATTRIBUTES = [] of Nil
 
     macro inherited
-      inherit_virtual_fields
+      inherit_virtual_attributes
     end
   end
 
-  macro inherit_virtual_fields
-    \{% if !@type.constant(:VIRTUAL_FIELDS) %}
-      VIRTUAL_FIELDS = [] of Nil
+  macro inherit_virtual_attributes
+    \{% if !@type.constant(:VIRTUAL_ATTRIBUTES) %}
+      VIRTUAL_ATTRIBUTES = [] of Nil
     \{% end %}
 
 
     \{% if !@type.ancestors.first.abstract? %}
-      \{% for field in @type.ancestors.first.constant :VIRTUAL_FIELDS %}
-        \{% VIRTUAL_FIELDS << type_declaration %}
+      \{% for attribute in @type.ancestors.first.constant :VIRTUAL_ATTRIBUTES %}
+        \{% VIRTUAL_ATTRIBUTES << type_declaration %}
       \{% end %}
     \{% end %}
 
     macro inherited
-      inherit_virtual_fields
+      inherit_virtual_attributes
     end
   end
 
-  ensure_base_virtual_fields_method_is_present
+  ensure_base_virtual_attributes_method_is_present
 
   macro allow_virtual(*args, **named_args)
     {% raise "'allow_virtual' has been renamed to 'virtual'" %}
@@ -43,7 +43,7 @@ module Avram::Virtual
       {% raise "virtual must use just one type" %}
     {% end %}
 
-    {% VIRTUAL_FIELDS << type_declaration %}
+    {% VIRTUAL_ATTRIBUTES << type_declaration %}
 
     {% type = type_declaration.type %}
     {% name = type_declaration.var %}
@@ -54,27 +54,27 @@ module Avram::Virtual
                         type_declaration.value
                       end
     %}
-    @_{{ name }} : Avram::Field({{ type }}?)?
+    @_{{ name }} : Avram::Attribute({{ type }}?)?
 
-    ensure_base_virtual_fields_method_is_present
+    ensure_base_virtual_attributes_method_is_present
 
-    def virtual_fields
+    def virtual_attributes
       previous_def + [{{ name }}]
     end
 
     def {{ name }}
-      _{{ name }}.fillable
+      _{{ name }}.permitted
     end
 
     private def _{{ name }}
-      @_{{ name }} ||= Avram::Field({{ type }}?).new(
+      @_{{ name }} ||= Avram::Attribute({{ type }}?).new(
         name: :{{ name }},
         param: {{ name }}_param,
         value: {{ default_value }},
         form_name: form_name
-      ).tap do |field|
+      ).tap do |attribute|
         if {{ name }}_param_given?
-          set_{{ name }}_from_param(field)
+          set_{{ name }}_from_param(attribute)
         end
       end
     end
@@ -87,12 +87,12 @@ module Avram::Virtual
       params.nested(form_name).has_key?("{{ name }}")
     end
 
-    def set_{{ name }}_from_param(field : Avram::Field)
+    def set_{{ name }}_from_param(attribute : Avram::Attribute)
       parse_result = {{ type }}::Lucky.parse({{ name }}_param)
       if parse_result.is_a? Avram::Type::SuccessfulCast
-        field.value = parse_result.value
+        attribute.value = parse_result.value
       else
-        field.add_error "is invalid"
+        attribute.add_error "is invalid"
       end
     end
   end

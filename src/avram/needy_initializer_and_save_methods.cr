@@ -5,7 +5,7 @@ module Avram::NeedyInitializerAndSaveMethods
     NEEDS_ON_INITIALIZE = [] of Nil
 
     macro inherited
-      inherit_page_settings
+      inherit_needs
     end
 
     generate_initializer
@@ -33,7 +33,7 @@ module Avram::NeedyInitializerAndSaveMethods
     property {{ type_declaration.var }}
   end
 
-  macro inherit_page_settings
+  macro inherit_needs
     \{% if !@type.constant(:NEEDS_ON_CREATE) %}
       NEEDS_ON_CREATE = [] of Nil
       NEEDS_ON_UPDATE = [] of Nil
@@ -53,7 +53,7 @@ module Avram::NeedyInitializerAndSaveMethods
     \{% end %}
 
     macro inherited
-      inherit_page_settings
+      inherit_needs
     end
 
     macro finished
@@ -68,13 +68,13 @@ module Avram::NeedyInitializerAndSaveMethods
       {% for type_declaration in (NEEDS_ON_CREATE + NEEDS_ON_INITIALIZE) %}
         {{ type_declaration }},
       {% end %}
-      {% if @type.constant :FIELDS %}
-        {% for field in FIELDS %}
-          {{ field[:name] }} : {{ field[:type] }} | Nothing{% if field[:nilable] %} | Nil{% end %} = Nothing.new,
+      {% if @type.constant :ATTRIBUTES %}
+        {% for attribute in ATTRIBUTES.uniq %}
+          {{ attribute[:name] }} : {{ attribute[:type] }} | Nothing{% if attribute[:nilable] %} | Nil{% end %} = Nothing.new,
         {% end %}
       {% end %}
-      {% for field in VIRTUAL_FIELDS %}
-        {{ field.var }} : {{ field.type }} | Nothing = Nothing.new,
+      {% for attribute in VIRTUAL_ATTRIBUTES %}
+        {{ attribute.var }} : {{ attribute.type }} | Nothing = Nothing.new,
       {% end %}
     )
       form = new(
@@ -87,12 +87,18 @@ module Avram::NeedyInitializerAndSaveMethods
         form.{{ type_declaration.var }} = {{ type_declaration.var }}
       {% end %}
 
-      {% if @type.constant :FIELDS %}
-        {% for field in FIELDS %}
-          unless {{ field[:name] }}.is_a? Nothing
-            form.{{ field[:name] }}.value = {{ field[:name] }}
+      {% if @type.constant :ATTRIBUTES %}
+        {% for attribute in ATTRIBUTES.uniq %}
+          unless {{ attribute[:name] }}.is_a? Nothing
+            form.{{ attribute[:name] }}.value = {{ attribute[:name] }}
           end
         {% end %}
+      {% end %}
+
+      {% for attribute in VIRTUAL_ATTRIBUTES %}
+        unless {{ attribute.var }}.is_a? Nothing
+          form.{{ attribute.var }}.value = {{ attribute.var }}
+        end
       {% end %}
 
       {% if with_bang %}
@@ -101,6 +107,7 @@ module Avram::NeedyInitializerAndSaveMethods
         if form.save
           yield form, form.record
         else
+          form.log_failed_save
           yield form, nil
         end
       {% end %}
@@ -114,13 +121,13 @@ module Avram::NeedyInitializerAndSaveMethods
         {% for type_declaration in (NEEDS_ON_UPDATE + NEEDS_ON_INITIALIZE) %}
           {{ type_declaration }},
         {% end %}
-        {% if @type.constant :FIELDS %}
-          {% for field in FIELDS %}
-            {{ field[:name] }} : {{ field[:type] }} | Nothing{% if field[:nilable] %} | Nil{% end %} = Nothing.new,
+        {% if @type.constant :ATTRIBUTES %}
+          {% for attribute in ATTRIBUTES.uniq %}
+            {{ attribute[:name] }} : {{ attribute[:type] }} | Nothing{% if attribute[:nilable] %} | Nil{% end %} = Nothing.new,
           {% end %}
         {% end %}
-        {% for field in VIRTUAL_FIELDS %}
-          {{ field.var }} : {{ field.type }} | Nothing = Nothing.new,
+        {% for attribute in VIRTUAL_ATTRIBUTES %}
+          {{ attribute.var }} : {{ attribute.type }} | Nothing = Nothing.new,
         {% end %}
       )
       form = new(
@@ -134,12 +141,18 @@ module Avram::NeedyInitializerAndSaveMethods
         form.{{ type_declaration.var }} = {{ type_declaration.var }}
       {% end %}
 
-      {% if @type.constant :FIELDS %}
-        {% for field in FIELDS %}
-          unless {{ field[:name] }}.is_a? Nothing
-            form.{{ field[:name] }}.value = {{ field[:name] }}
+      {% if @type.constant :ATTRIBUTES %}
+        {% for attribute in ATTRIBUTES.uniq %}
+          unless {{ attribute[:name] }}.is_a? Nothing
+            form.{{ attribute[:name] }}.value = {{ attribute[:name] }}
           end
         {% end %}
+      {% end %}
+
+      {% for attribute in VIRTUAL_ATTRIBUTES %}
+        unless {{ attribute.var }}.is_a? Nothing
+          form.{{ attribute.var }}.value = {{ attribute.var }}
+        end
       {% end %}
 
       {% if with_bang %}
@@ -148,6 +161,7 @@ module Avram::NeedyInitializerAndSaveMethods
         if form.save
           yield form, form.record.not_nil!
         else
+          form.log_failed_save
           yield form, form.record.not_nil!
         end
       {% end %}

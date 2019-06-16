@@ -1,28 +1,28 @@
 require "./spec_helper"
 
-private class UserForm < User::BaseForm
-  fillable :name, :nickname, :joined_at, :age
+private class SaveUser < User::SaveOperation
+  permit_columns :name, :nickname, :joined_at, :age
 
   def prepare
     validate_required name, joined_at, age
   end
 end
 
-private class LimitedUserForm < User::BaseForm
-  fillable :name
+private class SaveLimitedUser < User::SaveOperation
+  permit_columns :name
 end
 
-private class TaskForm < Task::BaseForm
+private class SaveTask < Task::SaveOperation
 end
 
-private class ValidFormWithoutParams < Post::BaseForm
+private class ValidSaveOperationWithoutParams < Post::SaveOperation
   def prepare
     title.value = "My Title"
   end
 end
 
-private class LineItemForm < LineItem::BaseForm
-  fillable :name
+private class SaveLineItem < LineItem::SaveOperation
+  permit_columns :name
 end
 
 private class ValueColumnModel < Avram::Model
@@ -31,52 +31,61 @@ private class ValueColumnModel < Avram::Model
   end
 end
 
-private class ValueColumnModelForm < ValueColumnModel::BaseForm
-  fillable value
+private class ValueColumnModelSaveOperation < ValueColumnModel::SaveOperation
+  permit_columns value
 end
 
-describe "Avram::Form" do
-  it "generates the correct form_name" do
-    LimitedUserForm.new.form_name.should eq "limited_user"
-    LimitedUserForm.form_name.should eq "limited_user"
+private class ParamKeySaveOperation < ValueColumnModel::SaveOperation
+  param_key :custom_param
+end
+
+describe "Avram::SaveOperation" do
+  it "allows overriding the form_name" do
+    ParamKeySaveOperation.new.form_name.should eq "custom_param"
+    ParamKeySaveOperation.form_name.should eq "custom_param"
   end
 
-  it "add required_fields method" do
-    form = TaskForm.new
-    form.required_fields.should eq({form.title})
+  it "generates the correct form_name" do
+    SaveLimitedUser.new.form_name.should eq "limited_user"
+    SaveLimitedUser.form_name.should eq "limited_user"
+  end
+
+  it "add required_attributes method" do
+    form = SaveTask.new
+    form.required_attributes.should eq({form.title})
   end
 
   it "set params if passed in" do
-    now = Time.utc_now.at_beginning_of_minute
-    user = UserForm.create!(name: "Dan", age: 34, joined_at: now)
+    now = Time.utc.at_beginning_of_minute
+    user = SaveUser.create!(name: "Dan", age: 34, joined_at: now)
     user.name.should eq "Dan"
     user.age.should eq 34
     user.joined_at.should eq now
 
-    UserForm.create(name: "Dan", age: 34, joined_at: now) do |form, user|
+    SaveUser.create(name: "Dan", age: 34, joined_at: now) do |form, user|
       user = user.not_nil!
       user.name.should eq "Dan"
       user.age.should eq 34
       user.joined_at.should eq now
     end
 
-    user = UserBox.new.name("New").age(20).joined_at(Time.now).create
+    user = UserBox.new.name("New").age(20).joined_at(Time.utc).create
     joined_at = 1.day.ago.at_beginning_of_minute.to_utc
-    UserForm.update(user, name: "New", age: 20, joined_at: joined_at) do |form, user|
+    SaveUser.update(user, name: "New", age: 20, joined_at: joined_at) do |form, user|
       user.name.should eq "New"
       user.age.should eq 20
       user.joined_at.should eq joined_at
     end
 
-    user = UserBox.new.name("New").age(20).joined_at(Time.now).create
-    user = UserForm.update!(user, name: "New", age: 20, joined_at: joined_at)
+    user = UserBox.new.name("New").age(20).joined_at(Time.utc).create
+    user = SaveUser.update!(user, name: "New", age: 20, joined_at: joined_at)
     user.name.should eq "New"
     user.age.should eq 20
     user.joined_at.should eq joined_at
   end
 
-  it "automatically runs validations for required fields" do
-    form = TaskForm.new
+  it "automatically runs validations for required attributes" do
+    form = SaveTask.new
 
     form.valid?
 
@@ -86,7 +95,7 @@ describe "Avram::Form" do
   end
 
   it "treats nil changes as nil and not an empty string" do
-    form = UserForm.new
+    form = SaveUser.new
     form.name.value = nil
 
     form.changes.has_key?(:name).should be_true
@@ -94,8 +103,8 @@ describe "Avram::Form" do
   end
 
   describe "#errors" do
-    it "includes errors for all form fields" do
-      form = UserForm.new
+    it "includes errors for all form attributes" do
+      form = SaveUser.new
 
       form.valid?
 
@@ -110,21 +119,21 @@ describe "Avram::Form" do
   describe "save_failed?" do
     it "is true if the object is invalid and performed an action" do
       params = Avram::Params.new(name: "")
-      form = UserForm.new(params)
+      form = SaveUser.new(params)
 
       form.save
 
       form.save_failed?.should be_true
-      form.save_status.should eq(Avram::Form::SaveStatus::SaveFailed)
+      form.save_status.should eq(Avram::SaveOperation::SaveStatus::SaveFailed)
       form.valid?.should be_false
     end
 
     it "is false if the object is not marked as saved but no action was performed" do
       params = Avram::Params.new(name: "")
-      form = UserForm.new(params)
+      form = SaveUser.new(params)
 
       form.save_failed?.should be_false
-      form.save_status.should eq(Avram::Form::SaveStatus::Unperformed)
+      form.save_status.should eq(Avram::SaveOperation::SaveStatus::Unperformed)
       form.saved?.should be_false
       form.valid?.should be_false
     end
@@ -136,7 +145,7 @@ describe "Avram::Form" do
       params = Avram::Params.new(name: "New Name")
       user = UserQuery.new.first
 
-      form = UserForm.new(user, params)
+      form = SaveUser.new(user, params)
 
       form.name.value.should eq "New Name"
     end
@@ -145,14 +154,14 @@ describe "Avram::Form" do
   describe "parsing" do
     it "parse integers, time objects, etc." do
       time = 1.day.ago.at_beginning_of_minute
-      form = UserForm.new({"joined_at" => time.to_s("%FT%X%z")})
+      form = SaveUser.new({"joined_at" => time.to_s("%FT%X%z")})
 
       form.joined_at.value.should eq time
       form.joined_at.value.not_nil!.utc?.should be_true
     end
 
     it "gracefully handles bad inputs when parsing" do
-      form = UserForm.new({
+      form = SaveUser.new({
         "joined_at" => "this is not a time",
         "age"       => "not an int",
       })
@@ -166,19 +175,19 @@ describe "Avram::Form" do
     end
   end
 
-  describe "fillable" do
-    it "ignores params that are not fillable" do
-      form = LimitedUserForm.new({"name" => "someone", "nickname" => "nothing"})
+  describe "permit_columns" do
+    it "ignores params that are not permitted" do
+      form = SaveLimitedUser.new({"name" => "someone", "nickname" => "nothing"})
       form.changes.has_key?(:nickname).should be_false
       form.changes[:name]?.should eq "someone"
     end
 
-    it "returns a Avram::FillableField" do
-      form = LimitedUserForm.new({"name" => "someone", "nickname" => "nothing"})
+    it "returns a Avram::PermittedAttribute" do
+      form = SaveLimitedUser.new({"name" => "someone", "nickname" => "nothing"})
       form.nickname.value.should be_nil
-      form.nickname.is_a?(Avram::Field).should be_true
+      form.nickname.is_a?(Avram::Attribute).should be_true
       form.name.value.should eq "someone"
-      form.name.is_a?(Avram::FillableField).should be_true
+      form.name.is_a?(Avram::PermittedAttribute).should be_true
     end
   end
 
@@ -186,7 +195,7 @@ describe "Avram::Form" do
     it "sets the values" do
       params = {"name" => "Paul", "nickname" => "Pablito"}
 
-      form = UserForm.new(params)
+      form = SaveUser.new(params)
 
       form.name.value.should eq "Paul"
       form.nickname.value.should eq "Pablito"
@@ -197,7 +206,7 @@ describe "Avram::Form" do
       user = UserBox.build
       params = {"name" => "New Name From Params"}
 
-      form = UserForm.new(user, params)
+      form = SaveUser.new(user, params)
 
       form.name.value.should eq params["name"]
       form.nickname.value.should eq user.nickname
@@ -206,10 +215,10 @@ describe "Avram::Form" do
   end
 
   describe "params" do
-    it "creates a param method for each of the fillable fields" do
+    it "creates a param method for each of the permit_columns attributes" do
       params = {"name" => "Paul", "nickname" => "Pablito"}
 
-      form = UserForm.new(params)
+      form = SaveUser.new(params)
 
       form.name.param.should eq "Paul"
       form.nickname.param.should eq "Pablito"
@@ -218,16 +227,16 @@ describe "Avram::Form" do
     it "uses the value if param is empty" do
       user = UserBox.build
 
-      form = UserForm.new(user, {} of String => String)
+      form = SaveUser.new(user, {} of String => String)
 
       form.name.param.should eq user.name
     end
   end
 
   describe "errors" do
-    it "creates an error method for each of the fillable fields" do
+    it "creates an error method for each of the permit_columns attributes" do
       params = {"name" => "Paul", "age" => "30", "joined_at" => now_as_string}
-      form = UserForm.new(params)
+      form = SaveUser.new(params)
       form.valid?.should be_true
 
       form.name.add_error "is not valid"
@@ -239,7 +248,7 @@ describe "Avram::Form" do
 
     it "only returns unique errors" do
       params = {"name" => "Paul", "nickname" => "Pablito"}
-      form = UserForm.new(params)
+      form = SaveUser.new(params)
 
       form.name.add_error "is not valid"
       form.name.add_error "is not valid"
@@ -248,18 +257,18 @@ describe "Avram::Form" do
     end
   end
 
-  describe "fields" do
-    it "creates a method for each of the fillable fields" do
+  describe "attributes" do
+    it "creates a method for each of the permit_columns attributes" do
       params = {} of String => String
-      form = LimitedUserForm.new(params)
+      form = SaveLimitedUser.new(params)
 
       form.responds_to?(:name).should be_true
       form.responds_to?(:nickname).should be_true
     end
 
-    it "returns a field with the field name, value and errors" do
+    it "returns an attribute with the attribute name, value and errors" do
       params = {"name" => "Joe"}
-      form = UserForm.new(params)
+      form = SaveUser.new(params)
       form.name.add_error "wrong"
 
       form.name.name.should eq :name
@@ -270,7 +279,7 @@ describe "Avram::Form" do
 
   describe ".create" do
     it "can create without params" do
-      ValidFormWithoutParams.create do |form, record|
+      ValidSaveOperationWithoutParams.create do |form, record|
         form.saved?.should be_true
         record.is_a?(Post).should be_true
       end
@@ -278,18 +287,18 @@ describe "Avram::Form" do
 
     it "allows overriding updated_at and created_at on create" do
       user = UserBox.new
-        .created_at(Time.new(2018, 1, 1, 10, 20, 30))
-        .updated_at(Time.new(2018, 1, 1, 20, 30, 40))
+        .created_at(Time.utc(2018, 1, 1, 10, 20, 30))
+        .updated_at(Time.utc(2018, 1, 1, 20, 30, 40))
         .create
 
-      user.created_at.should eq Time.new(2018, 1, 1, 10, 20, 30)
-      user.updated_at.should eq Time.new(2018, 1, 1, 20, 30, 40)
+      user.created_at.should eq Time.utc(2018, 1, 1, 10, 20, 30)
+      user.updated_at.should eq Time.utc(2018, 1, 1, 20, 30, 40)
     end
 
     context "on success" do
       it "yields the form and the saved record" do
         params = {"joined_at" => now_as_string, "name" => "New Name", "age" => "30"}
-        UserForm.create params do |form, record|
+        SaveUser.create params do |form, record|
           form.saved?.should be_true
           record.is_a?(User).should be_true
         end
@@ -299,9 +308,18 @@ describe "Avram::Form" do
     context "on failure" do
       it "yields the form and nil" do
         params = {"name" => "", "age" => "30"}
-        UserForm.create params do |form, record|
+        SaveUser.create params do |form, record|
           form.save_failed?.should be_true
           record.should be_nil
+        end
+      end
+
+      it "logs the failure if a logger is set" do
+        log_io = IO::Memory.new
+        logger = Dexter::Logger.new(log_io)
+        Avram::Repo.temp_config(logger: logger) do |settings|
+          SaveUser.create(name: "", age: 30) { |form, record| :unused }
+          log_io.to_s.should contain(%("failed_to_save":"SaveUser","validation_errors":"name is required. joined_at is required"))
         end
       end
     end
@@ -309,7 +327,7 @@ describe "Avram::Form" do
     context "with a uuid backed model" do
       it "can create with params" do
         params = {"name" => "A fancy hat"}
-        LineItemForm.create params do |form, record|
+        SaveLineItem.create params do |form, record|
           form.saved?.should be_true
           record.should be_a(LineItem)
         end
@@ -319,7 +337,7 @@ describe "Avram::Form" do
 
   describe ".create!" do
     it "can create without params" do
-      post = ValidFormWithoutParams.create!
+      post = ValidSaveOperationWithoutParams.create!
       post.title.should eq("My Title")
     end
 
@@ -327,7 +345,7 @@ describe "Avram::Form" do
       it "saves and returns the record" do
         params = {"joined_at" => now_as_string, "name" => "New Name", "age" => "30"}
 
-        record = UserForm.create!(params)
+        record = SaveUser.create!(params)
 
         record.is_a?(User).should be_true
         record.name.should eq "New Name"
@@ -338,15 +356,15 @@ describe "Avram::Form" do
       it "raises an exception" do
         params = {"name" => "", "age" => "30"}
 
-        expect_raises Avram::InvalidFormError(UserForm) do
-          UserForm.create!(params)
+        expect_raises Avram::InvalidSaveOperationError do
+          SaveUser.create!(params)
         end
       end
     end
 
     context "with a uuid backed model" do
       it "can manually set a uuid" do
-        LineItemForm.create!(
+        SaveLineItem.create!(
           id: UUID.new("a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11"),
           name: "A fancy hat"
         )
@@ -354,8 +372,8 @@ describe "Avram::Form" do
       end
     end
 
-    it "can handle a field named 'value'" do
-      ValueColumnModelForm.new({"value" => "value"}).value.value.should eq "value"
+    it "can handle an attribute named 'value'" do
+      ValueColumnModelSaveOperation.new({"value" => "value"}).value.value.should eq "value"
     end
   end
 
@@ -364,7 +382,7 @@ describe "Avram::Form" do
       UserBox.new.name("Old Name").create
       user = UserQuery.new.first
       params = {} of String => String
-      UserForm.update user, with: params do |form, record|
+      SaveUser.update user, with: params do |form, record|
         form.saved?.should be_true
       end
     end
@@ -373,7 +391,7 @@ describe "Avram::Form" do
       UserBox.new.name("Old Name").create
       user = UserQuery.new.first
       params = {} of String => String
-      UserForm.new(user).tap do |form|
+      SaveUser.new(user).tap do |form|
         form.save.should be_true
       end
     end
@@ -382,7 +400,7 @@ describe "Avram::Form" do
   describe ".update" do
     it "can create without params" do
       post = PostBox.new.title("Original Title").create
-      ValidFormWithoutParams.update(post) do |form, record|
+      ValidSaveOperationWithoutParams.update(post) do |form, record|
         form.saved?.should be_true
         record.title.should eq "My Title"
       end
@@ -393,7 +411,7 @@ describe "Avram::Form" do
         UserBox.new.name("Old Name").create
         user = UserQuery.new.first
         params = {"name" => "New Name"}
-        UserForm.update user, with: params do |form, record|
+        SaveUser.update user, with: params do |form, record|
           form.saved?.should be_true
           record.name.should eq "New Name"
         end
@@ -402,7 +420,7 @@ describe "Avram::Form" do
       it "updates updated_at" do
         user = UserBox.new.updated_at(1.day.ago).create
         params = {"name" => "New Name"}
-        UserForm.update user, with: params do |form, record|
+        SaveUser.update user, with: params do |form, record|
           form.saved?.should be_true
           record.updated_at.should be > 1.second.ago
         end
@@ -414,9 +432,20 @@ describe "Avram::Form" do
         UserBox.new.name("Old Name").create
         user = UserQuery.new.first
         params = {"name" => ""}
-        UserForm.update user, with: params do |form, record|
+        SaveUser.update user, with: params do |form, record|
           form.save_failed?.should be_true
           record.name.should eq "Old Name"
+        end
+      end
+
+      it "logs the failure" do
+        UserBox.new.name("Old Name").create
+        user = UserQuery.new.first
+        log_io = IO::Memory.new
+        logger = Dexter::Logger.new(log_io)
+        Avram::Repo.temp_config(logger: logger) do |settings|
+          SaveUser.update(user, name: "") { |form, record| :unused }
+          log_io.to_s.should contain(%("failed_to_save":"SaveUser","validation_errors":"name is required"))
         end
       end
     end
@@ -424,7 +453,7 @@ describe "Avram::Form" do
     context "with a uuid backed model" do
       it "doesn't generate a new uuid" do
         line_item = LineItemBox.create
-        LineItemForm.update(line_item, {"name" => "Another pair of shoes"}) do |form, record|
+        SaveLineItem.update(line_item, {"name" => "Another pair of shoes"}) do |form, record|
           form.saved?.should be_true
           record.id.should eq line_item.id
         end
@@ -435,7 +464,7 @@ describe "Avram::Form" do
   describe ".update!" do
     it "can create without params" do
       post = PostBox.new.title("Original Title").create
-      post = ValidFormWithoutParams.update!(post)
+      post = ValidSaveOperationWithoutParams.update!(post)
       post.title.should eq "My Title"
     end
 
@@ -445,7 +474,7 @@ describe "Avram::Form" do
         user = UserQuery.new.first
         params = {"name" => "New Name"}
 
-        record = UserForm.update! user, with: params
+        record = SaveUser.update! user, with: params
 
         record.is_a?(User).should be_true
         record.name.should eq "New Name"
@@ -458,8 +487,8 @@ describe "Avram::Form" do
         user = UserQuery.new.first
         params = {"name" => ""}
 
-        expect_raises Avram::InvalidFormError(UserForm) do
-          UserForm.update! user, with: params
+        expect_raises Avram::InvalidSaveOperationError do
+          SaveUser.update! user, with: params
         end
       end
     end
@@ -467,5 +496,5 @@ describe "Avram::Form" do
 end
 
 private def now_as_string
-  Time.now.to_s("%FT%X%z")
+  Time.utc.to_s("%FT%X%z")
 end

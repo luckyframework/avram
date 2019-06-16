@@ -68,7 +68,7 @@ describe Avram::Migrator::CreateTableStatement do
       add completed : Bool, default: false
       add meta : JSON::Any, default: JSON::Any.new(Hash(String, JSON::Any).new)
       add joined_at : Time, default: :now
-      add future_time : Time, default: Time.new
+      add future_time : Time, default: Time.local
     end
 
     built.statements.size.should eq 1
@@ -85,7 +85,7 @@ describe Avram::Migrator::CreateTableStatement do
       completed boolean NOT NULL DEFAULT false,
       meta jsonb NOT NULL DEFAULT '{}',
       joined_at timestamptz NOT NULL DEFAULT NOW(),
-      future_time timestamptz NOT NULL DEFAULT '#{Time.new.to_utc}');
+      future_time timestamptz NOT NULL DEFAULT '#{Time.local.to_utc}');
     SQL
   end
 

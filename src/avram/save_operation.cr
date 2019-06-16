@@ -1,17 +1,25 @@
 require "./validations"
 require "./callbacks"
-require "./nested_form"
+require "./nested_save_operation"
 require "./needy_initializer_and_save_methods"
 require "./virtual"
 require "./mark_as_failed"
+require "./form_name"
+require "./save_operation_errors"
+require "./param_key_override"
+require "./inherit_attributes"
 
-abstract class Avram::Form(T)
+abstract class Avram::SaveOperation(T)
   include Avram::Validations
   include Avram::NeedyInitializerAndSaveMethods
   include Avram::Virtual
   include Avram::Callbacks
-  include Avram::NestedForm
+  include Avram::NestedSaveOperation
   include Avram::MarkAsFailed
+  include Avram::SaveOperationErrors
+  include Avram::ParamKeyOverride
+  include Avram::InheritAttributess
+  include Avram::FormName
 
   enum SaveStatus
     Saved
@@ -23,7 +31,7 @@ abstract class Avram::Form(T)
     @valid : Bool = true
     @save_status = SaveStatus::Unperformed
 
-    @@fillable_param_keys = [] of String
+    @@permitted_param_keys = [] of String
     @@schema_class = T
   end
 
@@ -34,30 +42,24 @@ abstract class Avram::Form(T)
   getter :record, :params
 
   abstract def table_name
-  abstract def fields
+  abstract def attributes
 
-  def form_name
-    self.class.form_name
+  def log_failed_save
+    Avram.logger.warn({
+      failed_to_save:    self.class.name.to_s,
+      validation_errors: error_messages_as_string,
+    })
   end
 
-  def self.form_name
-    self.name.underscore.gsub("_form", "")
-  end
-
-  def errors
-    fields.reduce({} of Symbol => Array(String)) do |errors_hash, field|
-      if field.errors.empty?
-        errors_hash
-      else
-        errors_hash[field.name] = field.errors
-        errors_hash
-      end
-    end
+  private def error_messages_as_string
+    errors.map do |attribute_name, messages|
+      "#{attribute_name} #{messages.join(", ")}"
+    end.join(". ")
   end
 
   def self.save(*args, **named_args, &block)
     {% raise <<-ERROR
-      Forms do not have a 'save' method.
+      SaveOperations do not have a 'save' method.
 
       Try this...
 
@@ -68,86 +70,88 @@ abstract class Avram::Form(T)
     %}
   end
 
-  macro add_fields(primary_key_type, fields)
-    FIELDS = {{ fields }}
+  macro add_column_attributes(primary_key_type, attributes)
+    {% for attribute in attributes %}
+      {% ATTRIBUTES << attribute %}
+    {% end %}
 
     private def extract_changes_from_params
-      fillable_params.each do |key, value|
-        {% for field in fields %}
-          set_{{ field[:name] }}_from_param value if key == {{ field[:name].stringify }}
+      permitted_params.each do |key, value|
+        {% for attribute in attributes %}
+          set_{{ attribute[:name] }}_from_param value if key == {{ attribute[:name].stringify }}
         {% end %}
       end
     end
 
-    {% for field in fields %}
-      @_{{ field[:name] }} : Avram::Field({{ field[:type] }}?)?
+    {% for attribute in attributes %}
+      @_{{ attribute[:name] }} : Avram::Attribute({{ attribute[:type] }}?)?
 
-      def {{ field[:name] }}
-        _{{ field[:name] }}
+      def {{ attribute[:name] }}
+        _{{ attribute[:name] }}
       end
 
-      def {{ field[:name] }}=(_value)
+      def {{ attribute[:name] }}=(_value)
         \{% raise <<-ERROR
-          Can't set a field value with '{{field[:name]}} = '
+          Can't set an attribute value with '{{attribute[:name]}} = '
 
           Try this...
 
-            ▸ Use '.value' to set the value: '{{field[:name]}}.value = '
+            ▸ Use '.value' to set the value: '{{attribute[:name]}}.value = '
 
           ERROR
           %}
       end
 
-      private def _{{ field[:name] }}
-        @_{{ field[:name] }} ||= Avram::Field({{ field[:type] }}?).new(
-          name: :{{ field[:name].id }},
-          param: fillable_params["{{ field[:name] }}"]?,
-          value: @record.try(&.{{ field[:name] }}),
+      private def _{{ attribute[:name] }}
+        @_{{ attribute[:name] }} ||= Avram::Attribute({{ attribute[:type] }}?).new(
+          name: :{{ attribute[:name].id }},
+          param: permitted_params["{{ attribute[:name] }}"]?,
+          value: @record.try(&.{{ attribute[:name] }}),
           form_name: form_name)
       end
 
-      def fillable_params
+      def permitted_params
         new_params = {} of String => String
         @params.nested(form_name).each do |key, value|
           new_params[key] = value
         end
-        new_params.select(@@fillable_param_keys)
+        new_params.select(@@permitted_param_keys)
       end
 
-      def set_{{ field[:name] }}_from_param(_value)
-        parse_result = {{ field[:type] }}::Lucky.parse(_value)
+      def set_{{ attribute[:name] }}_from_param(_value)
+        parse_result = {{ attribute[:type] }}::Lucky.parse(_value)
         if parse_result.is_a? Avram::Type::SuccessfulCast
-          {{ field[:name] }}.value = parse_result.value
+          {{ attribute[:name] }}.value = parse_result.value
         else
-          {{ field[:name] }}.add_error "is invalid"
+          {{ attribute[:name] }}.add_error "is invalid"
         end
       end
     {% end %}
 
-    def fields
-      database_fields + virtual_fields
+    def attributes
+      column_attributes + virtual_attributes
     end
 
-    private def database_fields
+    private def column_attributes
       [
-        {% for field in fields %}
-          {{ field[:name] }},
+        {% for attribute in attributes %}
+          {{ attribute[:name] }},
         {% end %}
       ]
     end
 
-    def required_fields
+    def required_attributes
       Tuple.new(
-        {% for field in fields %}
-          {% if !field[:nilable] && !field[:autogenerated] %}
-            {{ field[:name] }},
+        {% for attribute in attributes %}
+          {% if !attribute[:nilable] && !attribute[:autogenerated] %}
+            {{ attribute[:name] }},
           {% end %}
         {% end %}
       )
     end
 
     def after_prepare
-      validate_required *required_fields
+      validate_required *required_attributes
 
       {% if primary_key_type == :uuid %}
         id.value ||= UUID.random()
@@ -166,7 +170,7 @@ abstract class Avram::Form(T)
   def valid? : Bool
     prepare
     after_prepare
-    fields.all? &.valid?
+    attributes.all? &.valid?
   end
 
   abstract def after_prepare
@@ -179,50 +183,50 @@ abstract class Avram::Form(T)
     save_status == SaveStatus::SaveFailed
   end
 
-  macro allow(*args)
-    {% raise "'allow' has been renamed to 'fillable'" %}
+  macro fillable(*args)
+    {% raise "'fillable' has been renamed to 'permit_columns'" %}
   end
 
-  macro fillable(*field_names)
-    {% for field_name in field_names %}
-      {% if field_name.is_a?(TypeDeclaration) %}
+  macro permit_columns(*attribute_names)
+    {% for attribute_name in attribute_names %}
+      {% if attribute_name.is_a?(TypeDeclaration) %}
         {% raise <<-ERROR
-          Must use a Symbol or a bare word in 'fillable'. Instead, got: #{field_name}
+          Must use a Symbol or a bare word in 'permit_columns'. Instead, got: #{attribute_name}
 
           Try this...
 
-            ▸ fillable #{field_name.var}
+            ▸ permit_columns #{attribute_name.var}
 
           ERROR
         %}
       {% end %}
-      {% unless field_name.is_a?(SymbolLiteral) || field_name.is_a?(Call) %}
+      {% unless attribute_name.is_a?(SymbolLiteral) || attribute_name.is_a?(Call) %}
         {% raise <<-ERROR
-          Must use a Symbol or a bare word in 'fillable'. Instead, got: #{field_name}
+          Must use a Symbol or a bare word in 'permit_columns'. Instead, got: #{attribute_name}
 
           Try this...
 
-            ▸ Use a bare word (recommended): 'fillable name'
-            ▸ Use a Symbol: 'fillable :name'
+            ▸ Use a bare word (recommended): 'permit_columns name'
+            ▸ Use a Symbol: 'permit_columns :name'
 
           ERROR
         %}
       {% end %}
-      {% if FIELDS.any? { |field| field[:name].id == field_name.id } %}
-        def {{ field_name.id }}
-          _{{ field_name.id }}.fillable
+      {% if ATTRIBUTES.any? { |attribute| attribute[:name].id == attribute_name.id } %}
+        def {{ attribute_name.id }}
+          _{{ attribute_name.id }}.permitted
         end
 
-        @@fillable_param_keys << "{{ field_name.id }}"
+        @@permitted_param_keys << "{{ attribute_name.id }}"
       {% else %}
         {% raise <<-ERROR
-          Can't make '#{field_name}' fillable because the column has not been defined on the model.
+          Can't permit '#{attribute_name}' because the column has not been defined on the model.
 
           Try this...
 
             ▸ Make sure you spelled the column correctly.
             ▸ Add the column to the model if it doesn't exist.
-            ▸ Use 'virtual' if you want a field that is not saved to the database.
+            ▸ Use 'virtual' if you want an attribute that is not saved to the database.
 
           ERROR
         %}
@@ -232,9 +236,9 @@ abstract class Avram::Form(T)
 
   def changes
     _changes = {} of Symbol => String?
-    database_fields.each do |field|
-      if field.changed?
-        _changes[field.name] = cast_value(field.value)
+    column_attributes.each do |attribute|
+      if attribute.changed?
+        _changes[attribute.name] = cast_value(attribute.value)
       end
     end
     _changes
@@ -294,7 +298,7 @@ abstract class Avram::Form(T)
     if save
       record.not_nil!
     else
-      raise Avram::InvalidFormError(typeof(self)).new(form: self)
+      raise Avram::InvalidSaveOperationError.new(form: self)
     end
   end
 
@@ -336,8 +340,8 @@ abstract class Avram::Form(T)
   def after_update(_record : T); end
 
   private def insert : T
-    self.created_at.value ||= Time.utc_now
-    self.updated_at.value ||= Time.utc_now
+    self.created_at.value ||= Time.utc
+    self.updated_at.value ||= Time.utc
     @record = Avram::Repo.run do |db|
       db.query insert_sql.statement, insert_sql.args do |rs|
         @record = @@schema_class.from_rs(rs).first
@@ -346,7 +350,7 @@ abstract class Avram::Form(T)
   end
 
   private def update(id) : T
-    self.updated_at.value = Time.utc_now
+    self.updated_at.value = Time.utc
     @record = Avram::Repo.run do |db|
       db.query update_query(id).statement_for_update(changes), update_query(id).args_for_update(changes) do |rs|
         @record = @@schema_class.from_rs(rs).first

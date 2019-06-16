@@ -22,8 +22,9 @@ describe "Avram::QueryBuilder" do
     query = new_query
       .where(Avram::Where::Equal.new(:name, "Paul"))
       .where(Avram::Where::GreaterThan.new(:age, "20"))
+      .where(Avram::Where::Null.new(:nickname))
       .limit(1)
-    query.statement.should eq "SELECT * FROM users WHERE name = $1 AND age > $2 LIMIT 1"
+    query.statement.should eq "SELECT * FROM users WHERE name = $1 AND age > $2 AND nickname IS NULL LIMIT 1"
     query.args.should eq ["Paul", "20"]
   end
 
@@ -41,7 +42,7 @@ describe "Avram::QueryBuilder" do
       .order_by(:name, :asc)
       .order_by(:birthday, :asc)
       .order_by(:email, :desc)
-    query.statement.should eq "SELECT * FROM users ORDER BY name, birthday ASC, email DESC"
+    query.statement.should eq "SELECT * FROM users ORDER BY name ASC, birthday ASC, email DESC"
     query.args.should eq [] of String
 
     query = new_query

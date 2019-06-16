@@ -3,8 +3,8 @@ require "./spec_helper.cr"
 class CompanyQuery < Company::BaseQuery
 end
 
-class CompanyForm < Company::BaseForm
-  fillable :sales, :earnings
+class SaveCompany < Company::SaveOperation
+  permit_columns :sales, :earnings
 
   def prepare
     validate_required sales
@@ -25,7 +25,7 @@ describe "TypeExtensions" do
   end
 
   it "should convert params and save forms" do
-    form = CompanyForm.new({"sales" => "10", "earnings" => "10"})
+    form = SaveCompany.new({"sales" => "10", "earnings" => "10"})
     form.sales.value.should eq 10_i64
     form.earnings.value.should eq 10.0
   end

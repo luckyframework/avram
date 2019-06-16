@@ -18,7 +18,7 @@ describe Avram::Query do
   it "can select distinct" do
     query = UserQuery.new.distinct.query
 
-    query.statement.should eq "SELECT DISTINCT #{User::COLUMNS} FROM users"
+    query.statement.should eq "SELECT DISTINCT #{User::COLUMN_SQL} FROM users"
     query.args.should eq [] of String
   end
 
@@ -30,7 +30,7 @@ describe Avram::Query do
     queryable = UserQuery.new.distinct_on(&.name).order_by(:name, :asc).order_by(:age, :asc)
     query = queryable.query
 
-    query.statement.should eq "SELECT DISTINCT ON (users.name) #{User::COLUMNS} FROM users ORDER BY name, age ASC"
+    query.statement.should eq "SELECT DISTINCT ON (users.name) #{User::COLUMN_SQL} FROM users ORDER BY name ASC, age ASC"
     query.args.should eq [] of String
     results = queryable.results
     first = results.first
@@ -227,14 +227,14 @@ describe Avram::Query do
     it "chains wheres" do
       query = UserQuery.new.where(:first_name, "Paul").where(:last_name, "Smith").query
 
-      query.statement.should eq "SELECT #{User::COLUMNS} FROM users WHERE first_name = $1 AND last_name = $2"
+      query.statement.should eq "SELECT #{User::COLUMN_SQL} FROM users WHERE first_name = $1 AND last_name = $2"
       query.args.should eq ["Paul", "Smith"]
     end
 
     it "handles int" do
       query = UserQuery.new.where(:id, 1).query
 
-      query.statement.should eq "SELECT #{User::COLUMNS} FROM users WHERE id = $1"
+      query.statement.should eq "SELECT #{User::COLUMN_SQL} FROM users WHERE id = $1"
       query.args.should eq ["1"]
     end
 
@@ -242,7 +242,7 @@ describe Avram::Query do
       user = UserBox.new.name("Mikias Abera").age(26).nickname("miki").create
       users = UserQuery.new.where("name = ? AND age = ?", "Mikias Abera", 26).where(:nickname, "miki")
 
-      users.query.statement.should eq "SELECT #{User::COLUMNS} FROM users WHERE nickname = $1 AND name = 'Mikias Abera' AND age = 26"
+      users.query.statement.should eq "SELECT #{User::COLUMN_SQL} FROM users WHERE nickname = $1 AND name = 'Mikias Abera' AND age = 26"
 
       users.query.args.should eq ["miki"]
       users.results.should eq [user]
@@ -259,7 +259,7 @@ describe Avram::Query do
     it "adds a limit clause" do
       queryable = UserQuery.new.limit(2)
 
-      queryable.query.statement.should eq "SELECT #{User::COLUMNS} FROM users LIMIT 2"
+      queryable.query.statement.should eq "SELECT #{User::COLUMN_SQL} FROM users LIMIT 2"
     end
 
     it "works while chaining" do
@@ -267,7 +267,7 @@ describe Avram::Query do
       UserBox.create
       users = UserQuery.new.name.desc_order.limit(1)
 
-      users.query.statement.should eq "SELECT #{User::COLUMNS} FROM users ORDER BY users.name DESC LIMIT 1"
+      users.query.statement.should eq "SELECT #{User::COLUMN_SQL} FROM users ORDER BY users.name DESC LIMIT 1"
 
       users.results.size.should eq(1)
     end
@@ -277,7 +277,7 @@ describe Avram::Query do
     it "adds an offset clause" do
       query = UserQuery.new.offset(2).query
 
-      query.statement.should eq "SELECT #{User::COLUMNS} FROM users OFFSET 2"
+      query.statement.should eq "SELECT #{User::COLUMN_SQL} FROM users OFFSET 2"
     end
   end
 
@@ -285,7 +285,7 @@ describe Avram::Query do
     it "adds an order clause" do
       query = UserQuery.new.order_by(:name, :asc).query
 
-      query.statement.should eq "SELECT #{User::COLUMNS} FROM users ORDER BY name ASC"
+      query.statement.should eq "SELECT #{User::COLUMN_SQL} FROM users ORDER BY name ASC"
     end
   end
 
@@ -413,15 +413,15 @@ describe Avram::Query do
     it "negates the given where condition as 'equal'" do
       UserBox.new.name("Paul").create
 
-      results = UserQuery.new.name.not("not existing").results
+      results = UserQuery.new.name.not.eq("not existing").results
       results.should eq UserQuery.new.results
 
-      results = UserQuery.new.name.not("Paul").results
+      results = UserQuery.new.name.not.eq("Paul").results
       results.should eq [] of User
 
       UserBox.new.name("Alex").create
       UserBox.new.name("Sarah").create
-      results = UserQuery.new.name.lower.not("alex").results
+      results = UserQuery.new.name.lower.not.eq("alex").results
       results.map(&.name).should eq ["Paul", "Sarah"]
     end
   end
@@ -430,7 +430,7 @@ describe Avram::Query do
     it "negates any previous condition" do
       UserBox.new.name("Paul").create
 
-      results = UserQuery.new.name.not.is("Paul").results
+      results = UserQuery.new.name.not.eq("Paul").results
       results.should eq [] of User
     end
 

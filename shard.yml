@@ -1,7 +1,7 @@
 name: avram
-version: 0.8.0
+version: 0.10.0
 
-crystal: 0.27
+crystal: 0.27.2
 
 targets:
   lucky.gen.migration:
@@ -15,7 +15,7 @@ dependencies:
     github: kostya/blank
   lucky_cli:
     github: luckyframework/lucky_cli
-    branch: master
+    version: ~> 0.13
   db:
     github: crystal-lang/crystal-db
   pg:
@@ -23,12 +23,15 @@ dependencies:
     version: ~> 0.15
   habitat:
     github: luckyframework/habitat
-    version: ~> 0.4.0
+    version: ~> 0.4
   wordsmith:
     github: luckyframework/wordsmith
     version: ~> 0.2
+  dexter:
+    github: luckyframework/dexter
+    version: ~> 0.1
 
 scripts:
-  postinstall: shards build
+  postinstall: script/precompile_tasks
 
 license: MIT

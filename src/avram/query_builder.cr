@@ -111,7 +111,7 @@ class Avram::QueryBuilder
     if ordered?
       "ORDER BY " + @orders.map do |direction, columns|
         next if columns.empty?
-        "#{columns.join(", ")} #{direction.to_s.upcase}"
+        "#{columns.join(" #{direction.to_s.upcase}, ")} #{direction.to_s.upcase}"
       end.reject(&.nil?).join(", ")
     end
   end
@@ -224,7 +224,13 @@ class Avram::QueryBuilder
 
   private def joined_wheres_queries
     if @wheres.any? || @raw_wheres.any?
-      statements = @wheres.map(&.prepare(next_prepared_statement_placeholder))
+      statements = @wheres.map do |sql_clause|
+        if sql_clause.is_a?(Avram::Where::NullSqlClause)
+          sql_clause.prepare
+        else
+          sql_clause.prepare(next_prepared_statement_placeholder)
+        end
+      end
       statements += @raw_wheres.map(&.to_sql)
 
       "WHERE " + statements.join(" AND ")
@@ -232,7 +238,9 @@ class Avram::QueryBuilder
   end
 
   private def prepared_statement_values
-    @wheres.map(&.value)
+    @wheres.uniq.compact_map do |sql_clause|
+      sql_clause.value unless sql_clause.is_a?(Avram::Where::NullSqlClause)
+    end
   end
 
   private def next_prepared_statement_placeholder

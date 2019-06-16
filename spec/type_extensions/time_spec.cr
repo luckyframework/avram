@@ -3,7 +3,7 @@ require "../spec_helper"
 describe "Time column type" do
   describe ".parse" do
     it "casts an ISO8601 String successfully" do
-      time = Time.new.to_s("%FT%X%z")
+      time = Time.local.to_s("%FT%X%z")
 
       result = Time::Lucky.parse(time)
 
@@ -11,7 +11,7 @@ describe "Time column type" do
     end
 
     it "casts a Time successfully" do
-      time = Time.new
+      time = Time.local
 
       result = Time::Lucky.parse(time)
 
@@ -19,8 +19,6 @@ describe "Time column type" do
     end
 
     it "can't cast an invalid value" do
-      time = Time.new
-
       result = Time::Lucky.parse("oh no")
 
       result.should be_a(Avram::Type::FailedCast)

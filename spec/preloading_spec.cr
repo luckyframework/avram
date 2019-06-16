@@ -31,7 +31,7 @@ describe "Preloading" do
       user = UserBox.create
       sign_in_credential = SignInCredentialBox.create &.user_id(user.id)
 
-      user = User::BaseQuery.new.preload(
+      user = User::BaseQuery.new.preload_sign_in_credential(
         SignInCredential::BaseQuery.new.preload_user
       ).first
 
@@ -62,13 +62,28 @@ describe "Preloading" do
     end
   end
 
+  it "preserves additional criteria when used after adding a preload" do
+    with_lazy_load(enabled: false) do
+      post = PostBox.create
+      another_post = PostBox.create
+      comment = CommentBox.create &.post_id(post.id)
+      _should_not_be_preloaded = CommentBox.create &.post_id(another_post.id)
+
+      posts = Post::BaseQuery.new.preload_comments.limit(1)
+
+      results = posts.results
+      results.size.should eq(1)
+      results.first.comments.should eq([comment])
+    end
+  end
+
   it "preloads has_many with custom query" do
     with_lazy_load(enabled: false) do
       post = PostBox.create
       comment = CommentBox.create &.post_id(post.id)
 
-      posts = Post::BaseQuery.new.preload(
-        Comment::BaseQuery.new.id.not(comment.id)
+      posts = Post::BaseQuery.new.preload_comments(
+        Comment::BaseQuery.new.id.not.eq(comment.id)
       )
 
       posts.results.first.comments.should eq([] of Comment)
@@ -123,7 +138,7 @@ describe "Preloading" do
       post = PostBox.create
       comment = CommentBox.create &.post_id(post.id)
 
-      posts = Post::BaseQuery.new.preload(
+      posts = Post::BaseQuery.new.preload_comments(
         Comment::BaseQuery.new.preload_post
       )
 
@@ -160,12 +175,45 @@ describe "Preloading" do
       employees = Employee::BaseQuery.new.preload_manager
       employees.first.manager.should be_nil
 
-      Employee::BaseForm.new(employee).tap do |form|
+      Employee::SaveOperation.new(employee).tap do |form|
         form.manager_id.value = manager.id
         form.update!
       end
       employees = Employee::BaseQuery.new.preload_manager
       employees.first.manager.should eq(manager)
+    end
+  end
+
+  context "getting results for preloads multiple times" do
+    it "does not fail for belongs_to" do
+      employee = EmployeeBox.create
+      employees = Employee::BaseQuery.new.preload_manager
+
+      2.times { employees.results }
+    end
+
+    it "does not fail for has_many" do
+      post = PostBox.create
+
+      posts = Post::BaseQuery.new.preload_comments
+
+      2.times { posts.results }
+    end
+
+    it "does not fail for has_one" do
+      admin = AdminBox.create
+
+      admin = Admin::BaseQuery.new.preload_sign_in_credential
+
+      2.times { admin.results }
+    end
+
+    it "does not fail for has_many through" do
+      post = PostBox.create
+
+      posts = Post::BaseQuery.new.preload_tags
+
+      2.times { posts.results }
     end
   end
 
@@ -181,8 +229,8 @@ describe "Preloading" do
       post = PostBox.create
       comment = CommentBox.create &.post_id(post.id)
 
-      posts = Post::BaseQuery.new.preload(
-        Comment::BaseQuery.new.id.not(comment.id)
+      posts = Post::BaseQuery.new.preload_comments(
+        Comment::BaseQuery.new.id.not.eq(comment.id)
       )
 
       posts.results.first.comments.should eq([] of Comment)
