@@ -42,10 +42,10 @@ class Avram::QueryBuilder
       case value
       when Nil
         nil
-      when String, UUID
-        value.to_s
-      else
+      when JSON::Any
         value.to_json
+      else
+        value.to_s
       end
     end
   end
