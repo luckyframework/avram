@@ -39,8 +39,11 @@ class Avram::QueryBuilder
 
   private def param_values(params)
     params.values.map do |value|
-      if value.nil?
+      case value
+      when Nil
         nil
+      when JSON::Any
+        value.to_json
       else
         value.to_s
       end

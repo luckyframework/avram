@@ -22,6 +22,7 @@ describe Avram::Migrator::CreateTableStatement do
       add joined_at : Time
       add amount_paid : Float, precision: 10, scale: 2
       add email : String?
+      add meta : JSON::Any?
       add reference : UUID
     end
 
@@ -37,6 +38,7 @@ describe Avram::Migrator::CreateTableStatement do
       joined_at timestamptz NOT NULL,
       amount_paid decimal(10,2) NOT NULL,
       email text,
+      meta jsonb,
       reference uuid NOT NULL);
     SQL
   end
@@ -64,6 +66,7 @@ describe Avram::Migrator::CreateTableStatement do
       add num : Int64, default: 1
       add amount_paid : Float, default: 1.0
       add completed : Bool, default: false
+      add meta : JSON::Any, default: JSON::Any.new(Hash(String, JSON::Any).new)
       add joined_at : Time, default: :now
       add future_time : Time, default: Time.local
     end
@@ -80,6 +83,7 @@ describe Avram::Migrator::CreateTableStatement do
       num bigint NOT NULL DEFAULT 1,
       amount_paid decimal NOT NULL DEFAULT 1.0,
       completed boolean NOT NULL DEFAULT false,
+      meta jsonb NOT NULL DEFAULT '{}',
       joined_at timestamptz NOT NULL DEFAULT NOW(),
       future_time timestamptz NOT NULL DEFAULT '#{Time.local.to_utc}');
     SQL

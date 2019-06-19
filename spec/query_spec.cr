@@ -10,6 +10,16 @@ class ChainedQuery < User::BaseQuery
   end
 end
 
+class JSONQuery < Blob::BaseQuery
+  def static_foo
+    doc(JSON::Any.new({"foo" => JSON::Any.new("bar")}))
+  end
+
+  def foo_with_value(value : String)
+    doc(JSON::Any.new({"foo" => JSON::Any.new(value)}))
+  end
+end
+
 describe Avram::Query do
   it "can chain scope methods" do
     ChainedQuery.new.young.named("Paul")
@@ -525,6 +535,30 @@ describe Avram::Query do
 
       result = query.first
       result.should eq post
+    end
+  end
+
+  context "when querying jsonb" do
+    describe "simple where query" do
+      it "returns 1 result" do
+        blob = BlobBox.new.doc(JSON::Any.new({"foo" => JSON::Any.new("bar")})).create
+
+        query = JSONQuery.new.static_foo
+        query.to_sql.should eq ["SELECT blobs.id, blobs.created_at, blobs.updated_at, blobs.doc FROM blobs WHERE blobs.doc = $1", "{\"foo\":\"bar\"}"]
+        result = query.first
+        result.should eq blob
+
+        query2 = JSONQuery.new.foo_with_value("bar")
+        query2.to_sql.should eq ["SELECT blobs.id, blobs.created_at, blobs.updated_at, blobs.doc FROM blobs WHERE blobs.doc = $1", "{\"foo\":\"bar\"}"]
+        result = query2.first
+        result.should eq blob
+
+        query3 = JSONQuery.new.foo_with_value("baz")
+        query3.to_sql.should eq ["SELECT blobs.id, blobs.created_at, blobs.updated_at, blobs.doc FROM blobs WHERE blobs.doc = $1", "{\"foo\":\"baz\"}"]
+        expect_raises(Avram::RecordNotFoundError) do
+          query3.first
+        end
+      end
     end
   end
 end

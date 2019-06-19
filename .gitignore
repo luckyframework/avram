@@ -1,6 +1,6 @@
 /docs/
 /lib/
-/bin/
+/bin/*
 /db/migrations/
 /.shards/
 

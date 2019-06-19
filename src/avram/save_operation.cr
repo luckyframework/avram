@@ -238,14 +238,23 @@ abstract class Avram::SaveOperation(T)
     _changes = {} of Symbol => String?
     column_attributes.each do |attribute|
       if attribute.changed?
-        _changes[attribute.name] = if attribute.value.nil?
-                                     nil
-                                   else
-                                     attribute.value.to_s
-                                   end
+        _changes[attribute.name] = cast_value(attribute.value)
       end
     end
     _changes
+  end
+
+  private def cast_value(value : Nil)
+    nil
+  end
+
+  private def cast_value(value : Object)
+    case value
+    when JSON::Any
+      value.to_json
+    else
+      value.to_s
+    end
   end
 
   def save : Bool
