@@ -1,8 +1,9 @@
 module Avram::SchemaEnforcer
-  macro add_schema_enforcer_methods_for(table_name, attributes)
+  macro setup(table_name, columns, *args, **named_args)
+    include Avram::SchemaEnforcer
     def self.ensure_correct_column_mappings!
       attributes = [
-        {% for attribute in attributes %}
+        {% for attribute in columns %}
           { name: :{{attribute[:name]}}, nilable: {{ attribute[:nilable] }}, type: {{ attribute[:type] }} },
         {% end %}
       ]

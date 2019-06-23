@@ -1,14 +1,14 @@
 class Avram::SaveOperationTemplate
-  macro setup(model_type, columns, table_name, primary_key_type)
-    class BaseForm
+  macro setup(type, columns, table_name, primary_key_type, *args, **named_args)
+    class ::{{ type }}::BaseForm
       macro inherited
-        \{% raise "BaseForm has been renamed to SaveOperation. Please inherit from #{model_type}::SaveOperation." %}
+        \{% raise "BaseForm has been renamed to SaveOperation. Please inherit from #{type}::SaveOperation." %}
       end
     end
 
-    class SaveOperation < Avram::SaveOperation({{ model_type }})
+    class ::{{ type }}::SaveOperation < Avram::SaveOperation({{ type }})
       macro inherited
-        FOREIGN_KEY = "{{ model_type.stringify.underscore.id }}_id"
+        FOREIGN_KEY = "{{ type.stringify.underscore.id }}_id"
       end
 
       def table_name
