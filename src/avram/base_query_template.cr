@@ -1,18 +1,10 @@
 class Avram::BaseQueryTemplate
-  macro setup(model_type, attributes, associations, table_name)
-    class BaseQuery < Avram::Query
-      include Avram::Queryable({{ model_type }})
+  macro setup(type, columns, associations, table_name, *args, **named_args)
+    class ::{{ type }}::BaseQuery < Avram::Query
+      include Avram::Queryable({{ type }})
 
       @@table_name = :{{ table_name }}
-      @@schema_class = {{ model_type }}
-
-      def attribute_names
-        [
-          {% for attribute in attributes %}
-            {{attribute[:name]}},
-          {% end %}
-        ]
-      end
+      @@schema_class = {{ type }}
 
       macro generate_criteria_method(query_class, name, type)
         def \{{ name }}
@@ -21,15 +13,15 @@ class Avram::BaseQueryTemplate
         end
       end
 
-      {% for attribute in attributes %}
-        def {{ attribute[:name] }}(value)
-          {{ attribute[:name] }}.eq(value)
+      {% for column in columns %}
+        def {{ column[:name] }}(value)
+          {{ column[:name] }}.eq(value)
         end
 
-        generate_criteria_method(BaseQuery, {{ attribute[:name] }}, {{ attribute[:type] }})
+        generate_criteria_method(BaseQuery, {{ column[:name] }}, {{ column[:type] }})
 
         macro inherited
-          generate_criteria_method(\{{ @type.name }}, {{ attribute[:name] }}, {{ attribute[:type] }})
+          generate_criteria_method(\{{ @type.name }}, {{ column[:name] }}, {{ column[:type] }})
         end
       {% end %}
 
