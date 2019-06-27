@@ -1,7 +1,6 @@
 /docs/
 /lib/
 /bin/*
-/db/migrations/
 /.shards/
 
 # Libraries don't need dependency lock

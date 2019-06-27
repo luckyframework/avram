@@ -19,11 +19,10 @@ describe Avram::Migrator::AlterTableStatement do
       remove_belongs_to :employee
     end
 
-    built.statements.size.should eq 7
     built.statements.first.should eq <<-SQL
     ALTER TABLE users
       ADD name text,
-      ADD email text,
+      ADD email text NOT NULL,
       ADD nickname text NOT NULL,
       ADD age int NOT NULL DEFAULT 1,
       ADD num bigint NOT NULL DEFAULT 1,
@@ -31,13 +30,14 @@ describe Avram::Migrator::AlterTableStatement do
       ADD completed boolean NOT NULL DEFAULT false,
       ADD meta jsonb NOT NULL DEFAULT '{"default":"value"}',
       ADD joined_at timestamptz NOT NULL DEFAULT NOW(),
-      ADD updated_at timestamptz,
+      ADD updated_at timestamptz NOT NULL,
       ADD future_time timestamptz NOT NULL DEFAULT '#{Time.local.to_utc}',
       ADD new_id uuid NOT NULL DEFAULT '46d9b2f0-0718-4d4c-a5a1-5af81d5b11e0',
       DROP old_column,
       DROP employee_id
     SQL
 
+    built.statements.size.should eq 7
     built.statements[1].should eq "CREATE UNIQUE INDEX users_age_index ON users USING btree (age);"
     built.statements[2].should eq "CREATE INDEX users_num_index ON users USING btree (num);"
     built.statements[3].should eq "UPDATE users SET email = 'noreply@lucky.com';"
@@ -53,7 +53,7 @@ describe Avram::Migrator::AlterTableStatement do
         add_belongs_to post : Post?, on_delete: :restrict
         add_belongs_to category_label : CategoryLabel, on_delete: :nullify, references: :custom_table
         add_belongs_to employee : User, on_delete: :cascade
-        add_belongs_to line_item : LineItem, on_delete: :cascade, foreign_key_type: Avram::Migrator::PrimaryKeyType::UUID
+        add_belongs_to line_item : LineItem, on_delete: :cascade, foreign_key_type: UUID
       end
 
       built.statements.first.should eq <<-SQL

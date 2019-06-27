@@ -139,7 +139,7 @@ describe Avram::Migrator::CreateTableStatement do
         add_belongs_to post : Post?, on_delete: :restrict
         add_belongs_to category_label : CategoryLabel, on_delete: :nullify, references: :custom_table
         add_belongs_to employee : User, on_delete: :cascade
-        add_belongs_to line_item : LineItem, on_delete: :cascade, foreign_key_type: Avram::Migrator::PrimaryKeyType::UUID
+        add_belongs_to line_item : LineItem, on_delete: :cascade, foreign_key_type: UUID
       end
 
       built.statements.first.should eq <<-SQL
