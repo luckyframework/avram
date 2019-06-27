@@ -93,7 +93,7 @@ module Avram::Queryable(T)
   end
 
   def first?
-    query.limit(1)
+    ordered_query.limit(1)
     results.first?
   end
 
