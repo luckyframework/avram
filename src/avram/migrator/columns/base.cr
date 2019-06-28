@@ -35,16 +35,15 @@ abstract class Avram::Migrator::Columns::Base
       row << " "
       row << column_type
       row << null_fragment
-      row << default_value unless default.nil?
-      row << references_clause unless references.nil?
+      row << default_fragment unless default.nil?
+      row << references_fragment unless references.nil?
     end
   end
 
   abstract def column_type : String
-  abstract def formatted_default : String
 
-  private def default_value
-    " DEFAULT #{formatted_default}"
+  private def default_fragment
+    " DEFAULT #{PG::EscapeHelper.escape_literal(default.to_s)}"
   end
 
   private def null_fragment
@@ -55,7 +54,7 @@ abstract class Avram::Migrator::Columns::Base
     end
   end
 
-  private def references_clause : String
+  private def references_fragment : String
     Avram::Migrator::BuildReferenceClause.new(references, on_delete).build
   end
 end

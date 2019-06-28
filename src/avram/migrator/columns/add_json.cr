@@ -11,8 +11,8 @@ module Avram::Migrator::Columns
       "jsonb"
     end
 
-    def formatted_default
-      "'#{default.to_json.gsub(/'/, "''")}'"
+    def default
+      super.to_json
     end
   end
 end
