@@ -7,8 +7,6 @@
 # # => "ALTER TABLE comments ADD CONSTRAINT comments_author_id_fk FOREIGN KEY (author_id) REFERENCES users (uid) ON DELETE CASCADE;"
 # ```
 class Avram::Migrator::CreateForeignKeyStatement
-  include ReferencesHelper
-
   def initialize(@from : Symbol, @to : Symbol, @on_delete : Symbol, @column : Symbol? = nil, @primary_key = :id)
   end
 
@@ -19,17 +17,8 @@ class Avram::Migrator::CreateForeignKeyStatement
       index << " #{@from}"
       index << " ADD CONSTRAINT #{@from}_#{foreign_key}_fk"
       index << " FOREIGN KEY (#{foreign_key})"
-      index << " REFERENCES #{@to} (#{@primary_key})"
-      index << on_delete_strategy(@on_delete)
+      index << BuildReferenceFragment.new("#{@to} (#{@primary_key})", @on_delete).build
       index << ";"
-    end
-  end
-
-  def on_delete_strategy(strategy : Symbol)
-    if strategy == :do_nothing
-      return ""
-    else
-      return " ON DELETE " + on_delete_sql(strategy)
     end
   end
 end
