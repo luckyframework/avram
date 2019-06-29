@@ -1,11 +1,7 @@
-require "./references_helper"
 require "./index_statement_helpers"
 
 class Avram::Migrator::CreateTableStatement
   include Avram::Migrator::IndexStatementHelpers
-  include Avram::Migrator::ColumnDefaultHelpers
-  include Avram::Migrator::ColumnTypeOptionHelpers
-  include Avram::Migrator::ReferencesHelper
 
   private getter rows = [] of String
 
@@ -77,42 +73,30 @@ class Avram::Migrator::CreateTableStatement
     SQL
   end
 
-  # Generates raw sql from a type declaration and options passed in as named
-  # variables.
-  macro add(type_declaration, index = false, using = :btree, unique = false, default = nil, **type_options)
-    {% options = type_options.empty? ? nil : type_options %}
-
+  macro add(type_declaration, default = nil, index = false, unique = false, using = :btree, **type_options)
     {% if type_declaration.type.is_a?(Union) %}
-      add_column :{{ type_declaration.var }}, {{ type_declaration.type.types.first }}, optional: true, default: {{ default }}, options: {{ options }}
+      {% type = type_declaration.type.types.first %}
+      {% nilable = true %}
     {% else %}
-      add_column :{{ type_declaration.var }}, {{ type_declaration.type }}, default: {{ default }}, options: {{ options }}
+      {% type = type_declaration.type %}
+      {% nilable = false %}
     {% end %}
+
+    rows << Avram::Migrator::Columns::{{ type }}Column.new(
+      name: {{ type_declaration.var.stringify }},
+      nilable: {{ nilable }},
+      default: {{ default }},
+      {{ **type_options }}
+    )
+    .build_add_statement_for_create
 
     {% if index || unique %}
       add_index :{{ type_declaration.var }}, using: {{ using }}, unique: {{ unique }}
     {% end %}
   end
 
-  def add_column(name, type : ColumnType, optional = false, reference = nil, on_delete = :do_nothing, default : ColumnDefaultType? = nil, options : NamedTuple? = nil)
-    if options
-      column_type_with_options = column_type(type, **options)
-    else
-      column_type_with_options = column_type(type)
-    end
-
-    rows << String.build do |row|
-      row << "  "
-      row << name.to_s
-      row << " "
-      row << column_type_with_options
-      row << null_fragment(optional)
-      row << default_value(type, default) unless default.nil?
-      row << references(reference, on_delete)
-    end
-  end
-
   # Adds a references column and index given a model class and references option.
-  macro add_belongs_to(type_declaration, on_delete, references = nil, foreign_key_type = Avram::Migrator::PrimaryKeyType::Serial)
+  macro add_belongs_to(type_declaration, on_delete, references = nil, foreign_key_type = Int32)
     {% unless type_declaration.is_a?(TypeDeclaration) %}
       {% raise "add_belongs_to expected a type declaration like 'user : User', instead got: '#{type_declaration}'" %}
     {% end %}
@@ -126,20 +110,20 @@ class Avram::Migrator::CreateTableStatement
 
     {% foreign_key_name = type_declaration.var + "_id" %}
     %table_name = {{ references }} || Wordsmith::Inflector.pluralize({{ underscored_class }})
-    add_column(:{{ foreign_key_name }}, {{ foreign_key_type.id }}.db_type, {{ optional }}, reference: %table_name, on_delete: {{ on_delete }})
+
+    rows << Avram::Migrator::Columns::{{ foreign_key_type }}Column.new(
+      name: {{ foreign_key_name.stringify }},
+      nilable: {{ optional }},
+      default: nil,
+    )
+    .set_references(references: %table_name.to_s, on_delete: {{ on_delete }})
+    .build_add_statement_for_create
+
     add_index :{{ foreign_key_name }}
   end
 
   macro add_belongs_to(_type_declaration, references = nil)
     {% raise "Must use 'on_delete' when creating an add_belongs_to association.
       Example: add_belongs_to user : User, on_delete: :cascade" %}
-  end
-
-  def null_fragment(optional)
-    if optional
-      ""
-    else
-      " NOT NULL"
-    end
   end
 end

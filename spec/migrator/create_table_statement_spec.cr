@@ -79,10 +79,10 @@ describe Avram::Migrator::CreateTableStatement do
       updated_at timestamptz NOT NULL,
       name text NOT NULL DEFAULT 'name',
       email text DEFAULT 'optional',
-      age int NOT NULL DEFAULT 1,
-      num bigint NOT NULL DEFAULT 1,
-      amount_paid decimal NOT NULL DEFAULT 1.0,
-      completed boolean NOT NULL DEFAULT false,
+      age int NOT NULL DEFAULT '1',
+      num bigint NOT NULL DEFAULT '1',
+      amount_paid decimal NOT NULL DEFAULT '1.0',
+      completed boolean NOT NULL DEFAULT 'false',
       meta jsonb NOT NULL DEFAULT '{}',
       joined_at timestamptz NOT NULL DEFAULT NOW(),
       future_time timestamptz NOT NULL DEFAULT '#{Time.local.to_utc}');
@@ -139,7 +139,7 @@ describe Avram::Migrator::CreateTableStatement do
         add_belongs_to post : Post?, on_delete: :restrict
         add_belongs_to category_label : CategoryLabel, on_delete: :nullify, references: :custom_table
         add_belongs_to employee : User, on_delete: :cascade
-        add_belongs_to line_item : LineItem, on_delete: :cascade, foreign_key_type: Avram::Migrator::PrimaryKeyType::UUID
+        add_belongs_to line_item : LineItem, on_delete: :cascade, foreign_key_type: UUID
       end
 
       built.statements.first.should eq <<-SQL
