@@ -1,7 +1,7 @@
 class TestDefaults::V20180802180357 < Avram::Migrator::Migration::V1
   def migrate
     create :test_defaults do
-      primary_key id : Int32
+      primary_key id : Int64
       add_timestamps
       add greeting : String, default: "Hello there!"
       add drafted_at : Time, default: :now

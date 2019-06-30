@@ -144,10 +144,10 @@ describe Avram::Migrator::CreateTableStatement do
 
       built.statements.first.should eq <<-SQL
       CREATE TABLE comments (
-        user_id int NOT NULL REFERENCES users ON DELETE CASCADE,
-        post_id int REFERENCES posts ON DELETE RESTRICT,
-        category_label_id int NOT NULL REFERENCES custom_table ON DELETE SET NULL,
-        employee_id int NOT NULL REFERENCES users ON DELETE CASCADE,
+        user_id bigint NOT NULL REFERENCES users ON DELETE CASCADE,
+        post_id bigint REFERENCES posts ON DELETE RESTRICT,
+        category_label_id bigint NOT NULL REFERENCES custom_table ON DELETE SET NULL,
+        employee_id bigint NOT NULL REFERENCES users ON DELETE CASCADE,
         line_item_id uuid NOT NULL REFERENCES line_items ON DELETE CASCADE);
       SQL
 

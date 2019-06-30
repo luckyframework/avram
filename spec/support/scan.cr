@@ -1,5 +1,9 @@
 class Scan < Avram::Model
+  skip_default_columns
+
   table :scans do
+    primary_key id : Int32
+    timestamps
     column scanned_at : Time
     belongs_to line_item : LineItem
   end

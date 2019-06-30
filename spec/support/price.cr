@@ -1,7 +1,11 @@
 require "./line_item"
 
 class Price < Avram::Model
-  table :prices, primary_key_type: :uuid do
+  skip_default_columns
+
+  table :prices do
+    primary_key id : UUID
+    timestamps
     column in_cents : Int32
     belongs_to line_item : LineItem
   end

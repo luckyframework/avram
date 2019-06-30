@@ -97,7 +97,7 @@ class Avram::Migrator::CreateTableStatement
   end
 
   # Adds a references column and index given a model class and references option.
-  macro add_belongs_to(type_declaration, on_delete, references = nil, foreign_key_type = Int32)
+  macro add_belongs_to(type_declaration, on_delete, references = nil, foreign_key_type = Int64)
     {% unless type_declaration.is_a?(TypeDeclaration) %}
       {% raise "add_belongs_to expected a type declaration like 'user : User', instead got: '#{type_declaration}'" %}
     {% end %}
