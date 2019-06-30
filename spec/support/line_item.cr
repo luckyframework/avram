@@ -1,5 +1,9 @@
 class LineItem < Avram::Model
-  table :line_items, primary_key_type: :uuid do
+  skip_default_columns
+
+  table :line_items do
+    primary_key id : UUID
+    timestamps
     column name : String
     has_one price : Price?
     has_many scans : Scan
