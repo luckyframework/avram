@@ -4,7 +4,14 @@ module Avram::Join
   abstract class SqlClause
     getter :from, :to, :from_column, :to_column
 
-    def initialize(@from : Symbol, @to : Symbol, @primary_key : Symbol? = nil, @foreign_key : Symbol? = nil, @comparison : String? = "=", @using : Array(Symbol) = [] of Symbol)
+    def initialize(
+      @from : Symbol,
+      @to : Symbol,
+      @primary_key : Symbol? = nil,
+      @foreign_key : Symbol? = nil,
+      @comparison : String? = "=",
+      @using : Array(Symbol) = [] of Symbol
+    )
     end
 
     abstract def join_type : String

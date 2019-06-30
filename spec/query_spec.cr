@@ -104,7 +104,7 @@ describe Avram::Query do
       user = (user_query = UserQuery.new).first?
       user.should_not be_nil
       user.not_nil!.name.should eq "First"
-      user_query.query.statement.should eq "SELECT #{User::COLUMN_SQL} FROM users ORDER BY id ASC LIMIT 1"
+      user_query.query.statement.should eq "SELECT #{User::COLUMN_SQL} FROM users ORDER BY users.id ASC LIMIT 1"
     end
 
     it "returns nil if no record found" do
@@ -173,7 +173,7 @@ describe Avram::Query do
       last = (user_query = UserQuery.new).last?
       last.should_not be_nil
       last && last.name.should eq "Last"
-      user_query.query.statement.should eq "SELECT #{User::COLUMN_SQL} FROM users ORDER BY id DESC LIMIT 1"
+      user_query.query.statement.should eq "SELECT #{User::COLUMN_SQL} FROM users ORDER BY users.id DESC LIMIT 1"
     end
 
     it "returns nil if last record is not found" do
@@ -478,7 +478,7 @@ describe Avram::Query do
       comment = CommentBox.new.post_id(post.id).create
 
       query = Comment::BaseQuery.new.join_posts
-      query.to_sql.should eq ["SELECT comments.id, comments.created_at, comments.updated_at, comments.body, comments.post_id FROM comments INNER JOIN posts ON comments.post_id = posts.id"]
+      query.to_sql.should eq ["SELECT comments.custom_id, comments.created_at, comments.updated_at, comments.body, comments.post_id FROM comments INNER JOIN posts ON comments.post_id = posts.custom_id"]
 
       result = query.first
       result.post.should eq post
@@ -489,7 +489,7 @@ describe Avram::Query do
       comment = CommentBox.new.post_id(post.id).create
 
       query = Post::BaseQuery.new.join_comments
-      query.to_sql.should eq ["SELECT posts.id, posts.created_at, posts.updated_at, posts.title, posts.published_at FROM posts INNER JOIN comments ON posts.id = comments.post_id"]
+      query.to_sql.should eq ["SELECT posts.custom_id, posts.created_at, posts.updated_at, posts.title, posts.published_at FROM posts INNER JOIN comments ON posts.custom_id = comments.post_id"]
 
       result = query.first
       result.comments.first.should eq comment
@@ -501,7 +501,7 @@ describe Avram::Query do
       tagging = TaggingBox.new.post_id(post.id).tag_id(tag.id).create
 
       query = Post::BaseQuery.new.join_tags
-      query.to_sql.should eq ["SELECT posts.id, posts.created_at, posts.updated_at, posts.title, posts.published_at FROM posts INNER JOIN taggings ON posts.id = taggings.post_id INNER JOIN tags ON taggings.tag_id = tags.id"]
+      query.to_sql.should eq ["SELECT posts.custom_id, posts.created_at, posts.updated_at, posts.title, posts.published_at FROM posts INNER JOIN taggings ON posts.custom_id = taggings.post_id INNER JOIN tags ON taggings.tag_id = tags.custom_id"]
 
       result = query.first
       result.tags.first.should eq tag
@@ -523,7 +523,7 @@ describe Avram::Query do
       post = PostBox.create
 
       query = Post::BaseQuery.new.left_join_comments
-      query.to_sql.should eq ["SELECT posts.id, posts.created_at, posts.updated_at, posts.title, posts.published_at FROM posts LEFT JOIN comments ON posts.id = comments.post_id"]
+      query.to_sql.should eq ["SELECT posts.custom_id, posts.created_at, posts.updated_at, posts.title, posts.published_at FROM posts LEFT JOIN comments ON posts.custom_id = comments.post_id"]
 
       result = query.first
       result.should eq post
@@ -533,7 +533,7 @@ describe Avram::Query do
       post = PostBox.create
 
       query = Post::BaseQuery.new.left_join_tags
-      query.to_sql.should eq ["SELECT posts.id, posts.created_at, posts.updated_at, posts.title, posts.published_at FROM posts LEFT JOIN taggings ON posts.id = taggings.post_id LEFT JOIN tags ON taggings.tag_id = tags.id"]
+      query.to_sql.should eq ["SELECT posts.custom_id, posts.created_at, posts.updated_at, posts.title, posts.published_at FROM posts LEFT JOIN taggings ON posts.custom_id = taggings.post_id LEFT JOIN tags ON taggings.tag_id = tags.custom_id"]
 
       result = query.first
       result.should eq post

@@ -1,6 +1,8 @@
 module Avram::Queryable(T)
   include Enumerable(T)
 
+  abstract def id
+
   @query : Avram::QueryBuilder?
   setter query
 
@@ -151,7 +153,7 @@ module Avram::Queryable(T)
     if query.ordered?
       query
     else
-      query.order_by(:id, :asc)
+      id.asc_order.query
     end
   end
 
