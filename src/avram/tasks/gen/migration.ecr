@@ -4,6 +4,9 @@ class <%= migration_class_name %> < Avram::Migrator::Migration::V1
     <%= formatted_migrate_contents %>
     <%- else -%>
     # create :things do
+    #   primary_key id : Int64
+    #   add_timestamps
+    #
     #   add title : String
     #   add description : String?
     # end

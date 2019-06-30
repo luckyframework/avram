@@ -7,15 +7,14 @@ describe Avram::Migrator::CreateTableStatement do
 
     built.statements.size.should eq 1
     built.statements.first.should eq <<-SQL
-    CREATE TABLE users (
-      id serial PRIMARY KEY,
-      created_at timestamptz NOT NULL,
-      updated_at timestamptz NOT NULL);
+    CREATE TABLE users (\n);
     SQL
   end
 
   it "can create tables" do
     built = Avram::Migrator::CreateTableStatement.new(:users).build do
+      primary_key id : Int32
+      add_timestamps
       add name : String
       add age : Int32
       add completed : Bool
@@ -43,18 +42,25 @@ describe Avram::Migrator::CreateTableStatement do
     SQL
   end
 
-  it "can create tables with uuid primary keys" do
-    built = Avram::Migrator::CreateTableStatement.new(:users, Avram::Migrator::PrimaryKeyType::UUID).build do
-      add name : String
+  it "can create tables with other primary keys" do
+    built = Avram::Migrator::CreateTableStatement.new(:users).build do
+      primary_key id : UUID
     end
 
     built.statements.size.should eq 1
     built.statements.first.should eq <<-SQL
     CREATE TABLE users (
-      id uuid PRIMARY KEY,
-      created_at timestamptz NOT NULL,
-      updated_at timestamptz NOT NULL,
-      name text NOT NULL);
+      id uuid PRIMARY KEY);
+    SQL
+
+    built = Avram::Migrator::CreateTableStatement.new(:users).build do
+      primary_key custom_id_name : Int64
+    end
+
+    built.statements.size.should eq 1
+    built.statements.first.should eq <<-SQL
+    CREATE TABLE users (
+      custom_id_name bigserial PRIMARY KEY);
     SQL
   end
 
@@ -74,9 +80,6 @@ describe Avram::Migrator::CreateTableStatement do
     built.statements.size.should eq 1
     built.statements.first.should eq <<-SQL
     CREATE TABLE users (
-      id serial PRIMARY KEY,
-      created_at timestamptz NOT NULL,
-      updated_at timestamptz NOT NULL,
       name text NOT NULL DEFAULT 'name',
       email text DEFAULT 'optional',
       age int NOT NULL DEFAULT '1',
@@ -102,9 +105,6 @@ describe Avram::Migrator::CreateTableStatement do
       built.statements.size.should eq 4
       built.statements.first.should eq <<-SQL
       CREATE TABLE users (
-        id serial PRIMARY KEY,
-        created_at timestamptz NOT NULL,
-        updated_at timestamptz NOT NULL,
         name text NOT NULL,
         age int NOT NULL,
         email text NOT NULL);
@@ -144,9 +144,6 @@ describe Avram::Migrator::CreateTableStatement do
 
       built.statements.first.should eq <<-SQL
       CREATE TABLE comments (
-        id serial PRIMARY KEY,
-        created_at timestamptz NOT NULL,
-        updated_at timestamptz NOT NULL,
         user_id int NOT NULL REFERENCES users ON DELETE CASCADE,
         post_id int REFERENCES posts ON DELETE RESTRICT,
         category_label_id int NOT NULL REFERENCES custom_table ON DELETE SET NULL,

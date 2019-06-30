@@ -1,15 +1,21 @@
 class CreateBusinesses::V20180612221318 < Avram::Migrator::Migration::V1
   def migrate
     create :businesses do
+      primary_key id : Int32
+      add_timestamps
       add name : String
     end
 
     create :tax_ids do
+      primary_key id : Int32
+      add_timestamps
       add number : Int32
       add_belongs_to business : Business, on_delete: :cascade
     end
 
     create :email_addresses do
+      primary_key id : Int32
+      add_timestamps
       add address : String
       add_belongs_to business : Business?, on_delete: :cascade
     end
