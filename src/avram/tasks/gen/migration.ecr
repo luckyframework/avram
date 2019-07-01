@@ -3,7 +3,10 @@ class <%= migration_class_name %> < Avram::Migrator::Migration::V1
     <%- if formatted_migrate_contents -%>
     <%= formatted_migrate_contents %>
     <%- else -%>
-    # create :things do
+    # Read more on migrations
+    # https://www.luckyframework.org/guides/database/migrations
+    #
+    # create table_for(Thing) do
     #   add title : String
     #   add description : String?
     # end
