@@ -52,15 +52,13 @@ class Avram::Model
   end
 
   macro table(table_name = nil)
-    {% unless table_name %}
-      {% table_name = table_for(@type) %}
-    {% end %}
+    %table_name = {{ table_name }} || table_for({{ @type }})
 
     default_columns
 
     {{ yield }}
 
-    setup({{table_name}})
+    setup(%table_name)
     {% MACRO_CHECKS[:setup_complete] = true %}
   end
 
