@@ -1,7 +1,7 @@
 require "./user"
 
 class SignInCredential < Avram::Model
-  table :sign_in_credentials do
+  table do
     belongs_to user : User
   end
 end

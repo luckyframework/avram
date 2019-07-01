@@ -1,5 +1,5 @@
 class Tag < Avram::Model
-  table :tags do
+  table do
     column name : String
     has_many taggings : Tagging
   end

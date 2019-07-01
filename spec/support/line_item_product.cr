@@ -4,7 +4,7 @@ require "./product"
 class LineItemProduct < Avram::Model
   skip_default_columns
 
-  table :line_items_products do
+  table do
     primary_key id : UUID
     timestamps
     belongs_to line_item : LineItem
