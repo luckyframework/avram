@@ -153,7 +153,7 @@ abstract class Avram::SaveOperation(T)
     def after_prepare
       validate_required *required_attributes
 
-      {% if primary_key_type == :uuid %}
+      {% if primary_key_type.id == UUID.id %}
         id.value ||= UUID.random()
       {% end %}
     end

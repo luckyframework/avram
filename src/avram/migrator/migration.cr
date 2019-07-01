@@ -96,6 +96,16 @@ abstract class Avram::Migrator::Migration::V1
         yield tx
       end
     end
+  rescue e : PQ::PQError
+    raise <<-ERROR
+    There was a problem running this statement:
+
+      #{statements.join("\n")}
+
+    Problem:
+
+      #{e.message}
+    ERROR
   end
 
   def reset_prepared_statements

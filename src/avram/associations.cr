@@ -15,7 +15,8 @@ module Avram::Associations
 
     {% foreign_key = foreign_key.id %}
 
-    association table_name: :{{ assoc_name }},
+    association \
+      table_name: :{{ assoc_name }},
       type: {{ type_declaration.type }},
       foreign_key: :{{ foreign_key }},
       through: {{ through }},
@@ -43,7 +44,11 @@ module Avram::Associations
 
     {% foreign_key = foreign_key.id %}
 
-    association table_name: :{{ type_declaration.var }}, type: {{ model }}, foreign_key: {{ foreign_key }}, relationship_type: :has_one
+    association \
+      table_name: :{{ type_declaration.var }},
+      type: {{ model }},
+      foreign_key: {{ foreign_key }},
+      relationship_type: :has_one
 
     define_public_preloaded_getters({{ assoc_name }}, {{ model }}, {{ nilable }})
     define_preloaded_setter({{ assoc_name }}, {{ model }})
@@ -63,14 +68,13 @@ module Avram::Associations
       {% nilable = false %}
     {% end %}
 
-    {% owner_id_type = model.resolve.constant(:PRIMARY_KEY_TYPE_CLASS) %}
+    column {{ assoc_name.id }}_id : {{ model }}::PrimaryKeyType{% if nilable %}?{% end %}
 
-    column {{ assoc_name.id }}_id : {{ owner_id_type }}{% if nilable %}?{% end %}
-
-    association table_name: :{{ model.resolve.constant(:TABLE_NAME).id }},
-                type: {{ model }},
-                foreign_key: :{{ foreign_key }},
-                relationship_type: :belongs_to
+    association \
+      table_name: :{{ model.resolve.constant(:TABLE_NAME).id }},
+      type: {{ model }},
+      foreign_key: :{{ foreign_key }},
+      relationship_type: :belongs_to
 
     define_belongs_to_private_assoc_getter({{ assoc_name }}, {{ model }}, {{ foreign_key }}, {{ nilable }})
     define_public_preloaded_getters({{ assoc_name }}, {{ model }}, {{ nilable }})
@@ -136,7 +140,7 @@ module Avram::Associations
 
       def preload_{{ assoc_name }}(preload_query : {{ model }}::BaseQuery)
         add_preload do |records|
-          ids = [] of {{ model.resolve.constant(:PRIMARY_KEY_TYPE_CLASS) }}
+          ids = [] of {{ model }}::PrimaryKeyType
           records.each do |record|
             record.{{ foreign_key }}.try do |id|
               ids << id
@@ -194,9 +198,7 @@ module Avram::Associations
               .preload_{{ through.id }}
               .distinct
 
-            {% owner_id_type = model.resolve.constant(:PRIMARY_KEY_TYPE_CLASS) %}
-
-            {{ assoc_name }} = {} of {{ owner_id_type }} => Array({{ model }})
+            {{ assoc_name }} = {} of {{ model }}::PrimaryKeyType => Array({{ model }})
             all_{{ assoc_name }}.each do |item|
               item.{{ through.id }}.each do |item_through|
                 {{ assoc_name }}[item_through.{{ foreign_key }}] ||= Array({{ model }}).new

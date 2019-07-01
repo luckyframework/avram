@@ -7,7 +7,7 @@ class UserBox < BaseBox
 
   def build_model
     User.new(
-      id: 123,
+      id: 123_i64,
       created_at: Time.utc,
       updated_at: Time.utc,
       joined_at: Time.utc,

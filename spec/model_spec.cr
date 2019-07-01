@@ -53,7 +53,7 @@ describe Avram::Model do
   it "sets up initializers based on the columns" do
     now = Time.utc
 
-    user = User.new id: 123,
+    user = User.new id: 123_i64,
       name: "Name",
       age: 24,
       joined_at: now,
@@ -73,7 +73,7 @@ describe Avram::Model do
   it "can be used for params" do
     now = Time.utc
 
-    user = User.new id: 123,
+    user = User.new id: 123_i64,
       name: "Name",
       age: 24,
       joined_at: now,
@@ -86,7 +86,7 @@ describe Avram::Model do
   end
 
   it "sets up getters that parse the values" do
-    user = QueryMe.new id: 123,
+    user = QueryMe.new id: 123_i64,
       created_at: Time.utc,
       updated_at: Time.utc,
       age: 30,

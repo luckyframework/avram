@@ -4,8 +4,8 @@ module Avram::Migrator::StatementHelpers
   include Avram::Migrator::IndexStatementHelpers
   include Avram::TableFor
 
-  macro create(table_name, primary_key_type = Avram::Migrator::PrimaryKeyType::Serial)
-    statements = Avram::Migrator::CreateTableStatement.new({{ table_name }}, {{ primary_key_type }}).build do
+  macro create(table_name)
+    statements = Avram::Migrator::CreateTableStatement.new({{ table_name }}).build do
       {{ yield }}
     end.statements
 

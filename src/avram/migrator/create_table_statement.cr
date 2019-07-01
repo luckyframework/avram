@@ -5,7 +5,7 @@ class Avram::Migrator::CreateTableStatement
 
   private getter rows = [] of String
 
-  def initialize(@table_name : Symbol, @primary_key_type : PrimaryKeyType = PrimaryKeyType::Serial)
+  def initialize(@table_name : Symbol)
   end
 
   # Accepts a block to build a table and indices using `add` and `add_index` methods.
@@ -52,25 +52,26 @@ class Avram::Migrator::CreateTableStatement
   private def table_statement
     String.build do |statement|
       statement << initial_table_statement
-      statement << ",\n" unless rows.empty?
-
       statement << rows.join(",\n")
       statement << ");"
     end
   end
 
   private def initial_table_statement
-    id_column_type = if @primary_key_type == PrimaryKeyType::UUID
-                       "uuid"
-                     else
-                       "serial"
-                     end
     <<-SQL
-    CREATE TABLE #{@table_name} (
-      id #{id_column_type} PRIMARY KEY,
-      created_at timestamptz NOT NULL,
-      updated_at timestamptz NOT NULL
+    CREATE TABLE #{@table_name} (\n
     SQL
+  end
+
+  macro primary_key(type_declaration)
+    rows << Avram::Migrator::Columns::PrimaryKeys::{{ type_declaration.type }}PrimaryKey
+      .new(name: {{ type_declaration.var.stringify }})
+      .build
+  end
+
+  macro add_timestamps
+    add created_at : Time
+    add updated_at : Time
   end
 
   macro add(type_declaration, default = nil, index = false, unique = false, using = :btree, **type_options)
@@ -96,7 +97,7 @@ class Avram::Migrator::CreateTableStatement
   end
 
   # Adds a references column and index given a model class and references option.
-  macro add_belongs_to(type_declaration, on_delete, references = nil, foreign_key_type = Int32)
+  macro add_belongs_to(type_declaration, on_delete, references = nil, foreign_key_type = Int64)
     {% unless type_declaration.is_a?(TypeDeclaration) %}
       {% raise "add_belongs_to expected a type declaration like 'user : User', instead got: '#{type_declaration}'" %}
     {% end %}

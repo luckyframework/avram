@@ -7,6 +7,9 @@ class <%= migration_class_name %> < Avram::Migrator::Migration::V1
     # https://www.luckyframework.org/guides/database/migrations
     #
     # create table_for(Thing) do
+    #   primary_key id : Int64
+    #   add_timestamps
+    #
     #   add title : String
     #   add description : String?
     # end
