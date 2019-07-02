@@ -42,7 +42,7 @@ class Avram::BaseQueryTemplate
           inner_join_{{ assoc[:name] }}
         end
 
-        {% for join_type in ["Inner", "Left"] %}
+        {% for join_type in ["Inner", "Left", "Right", "Full"] %}
           def {{ join_type.downcase.id }}_join_{{ assoc[:name] }}
             {% if assoc[:relationship_type] == :belongs_to %}
               join(
