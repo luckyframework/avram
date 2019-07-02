@@ -38,4 +38,10 @@ describe "TypeExtensions" do
     using_earnings = CompanyQuery.new.earnings(1).first
     using_earnings.earnings.should eq 1.0
   end
+
+  it "Int16 should allow querying with Int32" do
+    MenuOptionBox.create &.title("test").option_value(4_i16)
+    opt = MenuOptionQuery.new.option_value(4).first
+    opt.option_value.should eq 4_i16
+  end
 end

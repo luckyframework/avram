@@ -563,4 +563,14 @@ describe Avram::Query do
       end
     end
   end
+
+  # describe "int16 queries" do
+  #  it "will query a value with Int16" do
+  #    opt = MenuOptionBox.create
+
+  #    menu_option = MenuOptionQuery.new.value(1).first?
+
+  #    opt.id.should eq menu_option.id
+  #  end
+  # end
 end
