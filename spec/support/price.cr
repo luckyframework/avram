@@ -3,7 +3,7 @@ require "./line_item"
 class Price < Avram::Model
   skip_default_columns
 
-  table :prices do
+  table do
     primary_key id : UUID
     timestamps
     column in_cents : Int32

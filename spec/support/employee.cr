@@ -1,7 +1,7 @@
 require "./manager"
 
 class Employee < Avram::Model
-  table employees do
+  table do
     column name : String
     belongs_to manager : Manager?
   end

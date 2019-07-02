@@ -1,7 +1,7 @@
 class LineItem < Avram::Model
   skip_default_columns
 
-  table :line_items do
+  table do
     primary_key id : UUID
     timestamps
     column name : String
