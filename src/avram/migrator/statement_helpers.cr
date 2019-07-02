@@ -2,6 +2,7 @@ require "./index_statement_helpers"
 
 module Avram::Migrator::StatementHelpers
   include Avram::Migrator::IndexStatementHelpers
+  include Avram::TableFor
 
   macro create(table_name)
     statements = Avram::Migrator::CreateTableStatement.new({{ table_name }}).build do

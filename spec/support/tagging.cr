@@ -1,5 +1,5 @@
 class Tagging < Avram::Model
-  table :taggings do
+  table do
     belongs_to tag : Tag
     belongs_to post : Post
   end
