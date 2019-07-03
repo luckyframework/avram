@@ -1,5 +1,5 @@
 class Blob < Avram::Model
-  table blobs do
+  table do
     column doc : JSON::Any?
   end
 end

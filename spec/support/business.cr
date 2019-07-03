@@ -1,5 +1,5 @@
 class Business < Avram::Model
-  table businesses do
+  table do
     column name : String
     has_one tax_id : TaxId
     has_one email_address : EmailAddress
@@ -7,14 +7,14 @@ class Business < Avram::Model
 end
 
 class TaxId < Avram::Model
-  table tax_ids do
+  table do
     column number : Int32
     belongs_to business : Business
   end
 end
 
 class EmailAddress < Avram::Model
-  table email_addresses do
+  table do
     column address : String
     belongs_to business : Business?
   end

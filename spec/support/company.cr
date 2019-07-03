@@ -1,5 +1,5 @@
 class Company < Avram::Model
-  table companies do
+  table do
     column sales : Int64
     column earnings : Float64
   end

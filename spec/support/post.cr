@@ -3,7 +3,7 @@ require "./comment"
 class Post < Avram::Model
   skip_default_columns
 
-  table posts do
+  table do
     primary_key custom_id : Int64
     timestamps
 

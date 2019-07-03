@@ -3,42 +3,42 @@ require "./spec_helper"
 private class QueryMe < Avram::Model
   COLUMN_SQL = "users.id, users.created_at, users.updated_at, users.email, users.age"
 
-  table users do
+  table :users do
     column email : CustomEmail
     column age : Int32
   end
 end
 
 private class ModelWithMissingButSimilarlyNamedColumn < Avram::Model
-  table users do
+  table :users do
     column mickname : String
   end
 end
 
 private class ModelWithOptionalAttributeOnRequiredColumn < Avram::Model
-  table users do
+  table :users do
     column name : String?
   end
 end
 
 private class ModelWithRequiredAttributeOnOptionalColumn < Avram::Model
-  table users do
+  table :users do
     column nickname : String
   end
 end
 
 private class MissingTable < Avram::Model
-  table definitely_a_missing_table do
+  table :definitely_a_missing_table do
   end
 end
 
 private class MissingButSimilarlyNamedTable < Avram::Model
-  table uusers do
+  table :uusers do
   end
 end
 
 private class EmptyModelCompilesOk < Avram::Model
-  table no_fields do
+  table :no_fields do
   end
 end
 

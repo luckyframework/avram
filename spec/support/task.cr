@@ -1,5 +1,5 @@
 class Task < Avram::Model
-  table tasks do
+  table do
     column title : String
     column body : String?
   end
