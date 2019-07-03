@@ -568,7 +568,7 @@ describe Avram::Query do
     it "truncates the table" do
       10.times { UserBox.create }
       UserQuery.new.select_count.should eq 10
-      UserQuery.new.truncate
+      UserQuery.truncate
       UserQuery.new.select_count.should eq 0
     end
   end
