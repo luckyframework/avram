@@ -1,5 +1,3 @@
-require "./sign_in_credential"
-
 class User < Avram::Model
   COLUMN_SQL = "users.id, users.created_at, users.updated_at, users.name, users.age, users.nickname, users.joined_at, users.average_score"
 

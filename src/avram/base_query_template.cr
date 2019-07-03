@@ -38,17 +38,17 @@ class Avram::BaseQueryTemplate
       {% end %}
 
       {% for assoc in associations %}
-        def join_{{ assoc[:name] }}
-          inner_join_{{ assoc[:name] }}
+        def join_{{ assoc[:table_name] }}
+          inner_join_{{ assoc[:table_name] }}
         end
 
         {% for join_type in ["Inner", "Left", "Right", "Full"] %}
-          def {{ join_type.downcase.id }}_join_{{ assoc[:name] }}
+          def {{ join_type.downcase.id }}_join_{{ assoc[:table_name] }}
             {% if assoc[:relationship_type] == :belongs_to %}
               join(
                 Avram::Join::{{ join_type.id }}.new(
                   from: @@table_name,
-                  to: :{{ assoc[:name] }},
+                  to: :{{ assoc[:table_name] }},
                   primary_key: {{ assoc[:foreign_key] }},
                   foreign_key: primary_key_name
                 )
@@ -56,13 +56,13 @@ class Avram::BaseQueryTemplate
             {% elsif assoc[:through] %}
               {{ join_type.downcase.id }}_join_{{ assoc[:through].id }}
               {{ assoc[:through].id }} do |join_query|
-                join_query.{{ join_type.downcase.id }}_join_{{ assoc[:name] }}
+                join_query.{{ join_type.downcase.id }}_join_{{ assoc[:table_name] }}
               end
             {% else %}
               join(
                 Avram::Join::{{ join_type.id }}.new(
                   from: @@table_name,
-                  to: :{{ assoc[:name] }},
+                  to: :{{ assoc[:table_name] }},
                   foreign_key: {{ assoc[:foreign_key] }},
                   primary_key: primary_key_name
                 )
@@ -72,7 +72,7 @@ class Avram::BaseQueryTemplate
         {% end %}
 
 
-        def {{ assoc[:name] }}
+        def {{ assoc[:table_name] }}
           {{ assoc[:type] }}::BaseQuery.new_with_existing_query(query).tap do |assoc_query|
             yield assoc_query
           end

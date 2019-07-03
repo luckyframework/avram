@@ -1,5 +1,3 @@
-require "./user"
-
 class SignInCredential < Avram::Model
   table do
     belongs_to user : User

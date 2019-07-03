@@ -1,5 +1,3 @@
-require "./manager"
-
 class Employee < Avram::Model
   table do
     column name : String

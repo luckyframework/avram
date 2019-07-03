@@ -88,6 +88,12 @@ describe Avram::Model do
         price = PriceBox.new.line_item_id(item.id).create
         price.line_item.should eq item
       end
+
+      it "returns associated model when using 'table' and 'foreign_key'" do
+        post = PostWithCustomTable::SaveOperation.create!(title: "foo")
+        comment = CommentForCustomPost::SaveOperation.create!(body: "bar", post_id: post.id)
+        comment.post_with_custom_table.should eq(post)
+      end
     end
 
     describe "has_many" do
