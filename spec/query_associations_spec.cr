@@ -8,11 +8,12 @@ describe "Query associations" do
       .body("matching")
       .post_id(post_with_matching_comment.id)
       .create
+
     post_without_matching_comment = PostBox.create
     CommentBox
       .new
       .body("not-matching")
-      .post_id(post_with_matching_comment.id)
+      .post_id(post_without_matching_comment.id)
       .create
 
     posts = Post::BaseQuery.new.join_comments.comments(&.body.eq("matching"))
@@ -29,11 +30,12 @@ describe "Query associations" do
       .body("matching")
       .post_id(post_with_matching_comment.id)
       .create
+
     post_without_matching_comment = PostBox.create
     CommentBox
       .new
       .body("not-matching")
-      .post_id(post_with_matching_comment.id)
+      .post_id(post_without_matching_comment.id)
       .create
 
     posts = Post::BaseQuery.new.inner_join_comments.comments(&.body.eq("matching"))
@@ -48,11 +50,12 @@ describe "Query associations" do
       .body("matching")
       .post_id(post_with_matching_comment.id)
       .create
+
     post_without_matching_comment = PostBox.create
     CommentBox
       .new
       .body("not-matching")
-      .post_id(post_with_matching_comment.id)
+      .post_id(post_without_matching_comment.id)
       .create
 
     posts = Post::BaseQuery.new.left_join_comments.comments(&.body.eq("matching"))
@@ -67,11 +70,12 @@ describe "Query associations" do
       .body("matching")
       .post_id(post_with_matching_comment.id)
       .create
+
     post_without_matching_comment = PostBox.create
     CommentBox
       .new
       .body("not-matching")
-      .post_id(post_with_matching_comment.id)
+      .post_id(post_without_matching_comment.id)
       .create
 
     posts = Post::BaseQuery.new.right_join_comments.comments(&.body.eq("matching"))
@@ -86,11 +90,12 @@ describe "Query associations" do
       .body("matching")
       .post_id(post_with_matching_comment.id)
       .create
+
     post_without_matching_comment = PostBox.create
     CommentBox
       .new
       .body("not-matching")
-      .post_id(post_with_matching_comment.id)
+      .post_id(post_without_matching_comment.id)
       .create
 
     posts = Post::BaseQuery.new.full_join_comments.comments(&.body.eq("matching"))
