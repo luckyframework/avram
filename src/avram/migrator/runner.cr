@@ -128,6 +128,7 @@ class Avram::Migrator::Runner
       mm.new.version.to_i64 > last_version
     end
     subset.reverse.each &.new.down
+    puts "Done rolling back to #{last_version}".colorize(:green)
   end
 
   def ensure_migrated!
