@@ -22,6 +22,7 @@ class Avram::Repo
     transactions[Fiber.current.object_id]?
   end
 
+  # runs a SQL `TRUNCATE` on all tables in the database
   def self.truncate
     DatabaseCleaner.new.truncate
   end
