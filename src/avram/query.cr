@@ -1,7 +1,8 @@
 require "./queryable"
 
 abstract class Avram::Query
-  def destroy_all
+  # runs a SQL `TRUNCATE` on the current table
+  def self.truncate
     Avram::Repo.run do |db|
       db.exec "TRUNCATE TABLE #{@@table_name}"
     end
