@@ -34,7 +34,7 @@ class Avram::Model
       \{% for assoc in ASSOCIATIONS %}
          \{% if assoc[:relationship_type] == :has_many %}
            define_has_many_base_query(
-             assoc_name: \{{ assoc[:name] }},
+             assoc_name: \{{ assoc[:table_name] }},
              model: \{{ assoc[:type] }},
              foreign_key: \{{ assoc[:foreign_key].id }},
              through: \{{ assoc[:through] }}
@@ -193,6 +193,6 @@ class Avram::Model
   end
 
   macro association(table_name, type, relationship_type, foreign_key = nil, through = nil)
-    {% ASSOCIATIONS << {type: type, name: table_name.id, foreign_key: foreign_key, relationship_type: relationship_type, through: through} %}
+    {% ASSOCIATIONS << {type: type, table_name: table_name.id, foreign_key: foreign_key, relationship_type: relationship_type, through: through} %}
   end
 end

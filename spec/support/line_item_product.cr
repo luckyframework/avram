@@ -1,6 +1,3 @@
-require "./line_item"
-require "./product"
-
 class LineItemProduct < Avram::Model
   skip_default_columns
 
