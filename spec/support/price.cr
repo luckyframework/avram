@@ -1,5 +1,3 @@
-require "./line_item"
-
 class Price < Avram::Model
   skip_default_columns
 

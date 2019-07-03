@@ -56,9 +56,8 @@ module Avram::Associations
     define_has_one_base_query({{ assoc_name }}, {{ model }}, {{ foreign_key }})
   end
 
-  macro belongs_to(type_declaration)
+  macro belongs_to(type_declaration, foreign_key = nil, table = nil)
     {% assoc_name = type_declaration.var %}
-    {% foreign_key = "#{assoc_name}_id".id %}
 
     {% if type_declaration.type.is_a?(Union) %}
       {% model = type_declaration.type.types.first %}
@@ -68,18 +67,26 @@ module Avram::Associations
       {% nilable = false %}
     {% end %}
 
-    column {{ assoc_name.id }}_id : {{ model }}::PrimaryKeyType{% if nilable %}?{% end %}
+    {% if !foreign_key %}
+      {% foreign_key = "#{assoc_name}_id".id %}
+    {% end %}
+
+    {% if !table %}
+      {% table = run("../run_macros/infer_table_name.cr", model.id) %}
+    {% end %}
+
+    column {{ foreign_key.id }} : {{ model }}::PrimaryKeyType{% if nilable %}?{% end %}
 
     association \
-      table_name: :{{ model.resolve.constant(:TABLE_NAME).id }},
+      table_name: :{{ table.id }},
       type: {{ model }},
-      foreign_key: :{{ foreign_key }},
+      foreign_key: :{{ foreign_key.id }},
       relationship_type: :belongs_to
 
-    define_belongs_to_private_assoc_getter({{ assoc_name }}, {{ model }}, {{ foreign_key }}, {{ nilable }})
+    define_belongs_to_private_assoc_getter({{ assoc_name }}, {{ model }}, {{ foreign_key.id }}, {{ nilable }})
     define_public_preloaded_getters({{ assoc_name }}, {{ model }}, {{ nilable }})
     define_preloaded_setter({{ assoc_name }}, {{ model }})
-    define_belongs_to_base_query({{ assoc_name }}, {{ model }}, {{ foreign_key }})
+    define_belongs_to_base_query({{ assoc_name }}, {{ model }}, {{ foreign_key.id }})
   end
 
   private macro define_public_preloaded_getters(assoc_name, model, nilable)
