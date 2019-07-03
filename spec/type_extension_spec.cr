@@ -12,6 +12,9 @@ class SaveCompany < Company::SaveOperation
   end
 end
 
+class MenuOptionQuery < MenuOption::BaseQuery
+end
+
 describe "TypeExtensions" do
   it "should work in boxes" do
     CompanyBox.create
@@ -43,5 +46,8 @@ describe "TypeExtensions" do
     MenuOptionBox.create &.title("test").option_value(4_i16)
     opt = MenuOptionQuery.new.option_value(4).first
     opt.option_value.should eq 4_i16
+
+    opt = MenuOptionQuery.new.option_value(33000).first?
+    opt.should eq nil
   end
 end

@@ -62,6 +62,16 @@ describe Avram::Migrator::CreateTableStatement do
     CREATE TABLE users (
       custom_id_name bigserial PRIMARY KEY);
     SQL
+
+    built = Avram::Migrator::CreateTableStatement.new(:users).build do
+      primary_key id : Int16
+    end
+
+    built.statements.size.should eq 1
+    built.statements.first.should eq <<-SQL
+    CREATE TABLE users (
+      id smallserial PRIMARY KEY);
+    SQL
   end
 
   it "sets default values" do
@@ -75,6 +85,7 @@ describe Avram::Migrator::CreateTableStatement do
       add meta : JSON::Any, default: JSON::Any.new(Hash(String, JSON::Any).new)
       add joined_at : Time, default: :now
       add future_time : Time, default: Time.local
+      add friend_count : Int16, default: 1
     end
 
     built.statements.size.should eq 1
@@ -88,7 +99,8 @@ describe Avram::Migrator::CreateTableStatement do
       completed boolean NOT NULL DEFAULT 'false',
       meta jsonb NOT NULL DEFAULT '{}',
       joined_at timestamptz NOT NULL DEFAULT NOW(),
-      future_time timestamptz NOT NULL DEFAULT '#{Time.local.to_utc}');
+      future_time timestamptz NOT NULL DEFAULT '#{Time.local.to_utc}',
+      friend_count smallint NOT NULL DEFAULT '1');
     SQL
   end
 
