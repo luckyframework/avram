@@ -122,6 +122,15 @@ class Avram::Migrator::Runner
     end
   end
 
+  def rollback_to(last_version : Int64)
+    setup_migration_tracking_tables
+    subset = migrated_migrations.select do |mm|
+      mm.new.version.to_i64 > last_version
+    end
+    subset.reverse.each &.new.down
+    puts "Done rolling back to #{last_version}".colorize(:green)
+  end
+
   def ensure_migrated!
     if pending_migrations.any?
       raise "There are pending migrations. Please run lucky db.migrate"

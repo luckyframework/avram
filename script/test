@@ -14,6 +14,9 @@ then
     $COMPOSE lucky db.drop
     $COMPOSE lucky db.create
     $COMPOSE lucky db.migrate
+    printf "\nRolling back to 20180802180356\n"
+    $COMPOSE lucky db.rollback_to 20180802180356
+    printf "\nRolling back remainder\n"
     $COMPOSE lucky db.rollback_all
     $COMPOSE lucky db.migrate.one
     $COMPOSE lucky db.migrate
@@ -26,7 +29,7 @@ if [ $# -eq 0 ]
 then
     printf "\nChecking that tasks build correctly\n\n"
     $COMPOSE shards build
-    
+
     printf "\nChecking code formatting\n\n"
     if ! $COMPOSE crystal tool format --check src spec config > /dev/null; then
         printf "\nCode is not formatted.\n"
