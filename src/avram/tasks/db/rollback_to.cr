@@ -3,9 +3,9 @@ require "colorize"
 class Db::RollbackTo < LuckyCli::Task
   summary "Rollback to a specific migration"
 
-  def call(version : String? = nil)
+  def call
     Avram::Migrator.run do
-      version = version || ARGV.first?
+      version = ARGV.first?
       if version && version.to_i64?
         Avram::Migrator::Runner.new.rollback_to(version.to_i64)
       else
