@@ -137,18 +137,18 @@ class Avram::Migrator::Runner
     end
   end
 
+  def setup_migration_tracking_tables
+    DB.open(Avram::Repo.settings.url) do |db|
+      db.exec create_table_for_tracking_migrations
+    end
+  end
+
   private def migrated_migrations
     @@migrations.select &.new.migrated?
   end
 
   private def pending_migrations
     @@migrations.select &.new.pending?
-  end
-
-  private def setup_migration_tracking_tables
-    DB.open(Avram::Repo.settings.url) do |db|
-      db.exec create_table_for_tracking_migrations
-    end
   end
 
   private def prepare_for_migration
