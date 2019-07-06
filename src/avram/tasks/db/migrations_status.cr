@@ -30,12 +30,7 @@ class Db::Migrations::Status < LuckyCli::Task
 
   private def migration_statuses
     migrations.map do |migration|
-      status = if migration.new.migrated?
-                 "Migrated".colorize(:green)
-               else
-                 "Pending".colorize(:yellow)
-               end
-
+      status = migration.new.migrated? ? "Migrated" : "Pending"
       [migration.name, status]
     end
   end
