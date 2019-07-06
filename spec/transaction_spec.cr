@@ -6,7 +6,7 @@ private class PostTransactionSaveOperation < Post::SaveOperation
 
   def after_save(_user)
     if rollback_after_save
-      Avram::Repo.rollback
+      Avram::Database.rollback
     end
   end
 end
@@ -22,10 +22,10 @@ end
 describe "Avram::SaveOperation" do
   describe "wrapping multiple saves in a transaction" do
     it "rolls them all back" do
-      Avram::Repo.transaction do
+      Avram::Database.transaction do
         UserBox.create
         PostBox.create
-        Avram::Repo.rollback
+        Avram::Database.rollback
       end.should be_false
 
       UserQuery.new.select_count.to_i.should eq(0)

@@ -1,6 +1,6 @@
 database_name = "avram_dev"
 
-Avram::Repo.configure do |settings|
+Avram::Database.configure do |settings|
   settings.url = ENV["DATABASE_URL"]? || Avram::PostgresURL.build(
     hostname: "db",
     database: database_name,

@@ -136,7 +136,7 @@ module Avram::Queryable(T)
   end
 
   private def exec_query
-    Avram::Repo.run do |db|
+    Avram::Database.run do |db|
       db.query query.statement, query.args do |rs|
         @@schema_class.from_rs(rs)
       end
@@ -144,7 +144,7 @@ module Avram::Queryable(T)
   end
 
   def exec_scalar
-    Avram::Repo.run do |db|
+    Avram::Database.run do |db|
       db.scalar query.statement, query.args
     end
   end

@@ -1,6 +1,6 @@
 module Avram::Associations
   private def lazy_load_enabled?
-    Avram::Repo.settings.lazy_load_enabled
+    Avram::Database.settings.lazy_load_enabled
   end
 
   macro has_many(type_declaration, through = nil, foreign_key = nil)

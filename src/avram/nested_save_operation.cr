@@ -15,7 +15,7 @@ module Avram::NestedSaveOperation
 
       if !{{ name }}.save
         mark_nested_save_operations_as_failed
-        Avram::Repo.rollback
+        Avram::Database.rollback
       end
     end
 

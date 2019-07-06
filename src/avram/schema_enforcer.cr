@@ -17,7 +17,7 @@ module Avram::SchemaEnforcer
     @table_names : Array(String)
 
     def initialize(@table_name : Symbol)
-      @table_names = Avram::Repo.tables_with_schema(excluding: "migrations")
+      @table_names = Avram::Database.tables_with_schema(excluding: "migrations")
     end
 
     def ensure_exists!
@@ -45,7 +45,7 @@ module Avram::SchemaEnforcer
     @required_attribute_errors = [] of String
 
     def initialize(@table_name : Symbol)
-      columns = Avram::Repo.table_columns(table_name)
+      columns = Avram::Database.table_columns(table_name)
       columns.each do |column|
         @columns_map[column.name] = column.nilable
       end

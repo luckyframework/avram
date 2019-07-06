@@ -7,5 +7,5 @@ Db::Create.new.call
 Db::Migrate.new.call
 
 Spec.before_each do
-  Avram::Repo.truncate
+  Avram::Database.truncate
 end
