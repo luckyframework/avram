@@ -13,23 +13,23 @@ class Avram::Migrator::Runner
   end
 
   def self.db_name
-    (URI.parse(Avram::Repo.settings.url).path || "")[1..-1]
+    (URI.parse(Avram::Database.settings.url).path || "")[1..-1]
   end
 
   def self.db_host
-    URI.parse(Avram::Repo.settings.url).host || "localhost"
+    URI.parse(Avram::Database.settings.url).host || "localhost"
   end
 
   def self.db_port
-    URI.parse(Avram::Repo.settings.url).port || "5432"
+    URI.parse(Avram::Database.settings.url).port || "5432"
   end
 
   def self.db_user
-    URI.parse(Avram::Repo.settings.url).user
+    URI.parse(Avram::Database.settings.url).user
   end
 
   def self.db_password
-    URI.parse(Avram::Repo.settings.url).password
+    URI.parse(Avram::Database.settings.url).password
   end
 
   def self.migrations
@@ -76,7 +76,7 @@ class Avram::Migrator::Runner
   end
 
   def self.setup_migration_tracking_tables
-    DB.open(Avram::Repo.settings.url) do |db|
+    DB.open(Avram::Database.settings.url) do |db|
       db.exec create_table_for_tracking_migrations
     end
   end

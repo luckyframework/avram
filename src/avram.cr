@@ -15,6 +15,6 @@ require "uuid"
 
 module Avram
   def self.logger
-    Avram::Repo.settings.logger
+    Avram::Database.settings.logger
   end
 end

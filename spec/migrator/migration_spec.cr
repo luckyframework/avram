@@ -37,7 +37,7 @@ describe Avram::Migrator::Migration::V1 do
       MigrationThatPartiallyWorks::V999.new.up
     end
 
-    exists = Avram::Repo.run do |db|
+    exists = Avram::Database.run do |db|
       db.query_one? "SELECT EXISTS (SELECT 1 FROM pg_tables WHERE tablename = 'fake_things');", as: Bool
     end
     exists.should be_false
@@ -65,5 +65,5 @@ private def get_column_names(table_name)
     AND table_name = '#{table_name}'
   SQL
 
-  Avram::Repo.run { |db| db.query_all statement, as: String }
+  Avram::Database.run { |db| db.query_all statement, as: String }
 end

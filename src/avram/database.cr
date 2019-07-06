@@ -1,4 +1,4 @@
-class Avram::Repo
+class Avram::Database
   alias FiberId = UInt64
 
   @@db : DB::Database? = nil
@@ -102,10 +102,10 @@ class Avram::Repo
 
   class DatabaseCleaner
     def truncate
-      table_names = Avram::Repo.table_names
+      table_names = Avram::Database.table_names
       return if table_names.empty?
       statement = ("TRUNCATE TABLE #{table_names.map { |name| name }.join(", ")} RESTART IDENTITY CASCADE;")
-      Avram::Repo.run do |db|
+      Avram::Database.run do |db|
         db.exec statement
       end
     end
