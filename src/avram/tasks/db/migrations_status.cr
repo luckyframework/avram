@@ -17,7 +17,7 @@ class Db::Migrations::Status < LuckyCli::Task
   end
 
   private def ensure_migration_tracking_tables_exist
-    Avram::Migrator::Runner.new.setup_migration_tracking_tables
+    Avram::Migrator::Runner.setup_migration_tracking_tables
   end
 
   private def print_migration_statuses
