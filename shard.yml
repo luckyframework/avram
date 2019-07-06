@@ -30,6 +30,9 @@ dependencies:
   dexter:
     github: luckyframework/dexter
     version: ~> 0.1
+  shell-table:
+    github: luckyframework/shell-table.cr
+    branch: refactor/setter
 
 scripts:
   postinstall: script/precompile_tasks

@@ -75,6 +75,21 @@ class Avram::Migrator::Runner
     end
   end
 
+  def self.setup_migration_tracking_tables
+    DB.open(Avram::Repo.settings.url) do |db|
+      db.exec create_table_for_tracking_migrations
+    end
+  end
+
+  private def self.create_table_for_tracking_migrations
+    <<-SQL
+    CREATE TABLE IF NOT EXISTS #{MIGRATIONS_TABLE_NAME} (
+      id serial PRIMARY KEY,
+      version bigint NOT NULL
+    )
+    SQL
+  end
+
   private def self.macos_postgres_tools_link
     "https://postgresapp.com/documentation/cli-tools.html".colorize(:green)
   end
@@ -109,12 +124,12 @@ class Avram::Migrator::Runner
   end
 
   def rollback_all
-    setup_migration_tracking_tables
+    self.class.setup_migration_tracking_tables
     migrated_migrations.reverse.each &.new.down
   end
 
   def rollback_one
-    setup_migration_tracking_tables
+    self.class.setup_migration_tracking_tables
     if migrated_migrations.empty?
       puts "Did not roll anything back because the database has no migrations.".colorize(:green)
     else
@@ -123,7 +138,7 @@ class Avram::Migrator::Runner
   end
 
   def rollback_to(last_version : Int64)
-    setup_migration_tracking_tables
+    self.class.setup_migration_tracking_tables
     subset = migrated_migrations.select do |mm|
       mm.new.version.to_i64 > last_version
     end
@@ -145,14 +160,8 @@ class Avram::Migrator::Runner
     @@migrations.select &.new.pending?
   end
 
-  private def setup_migration_tracking_tables
-    DB.open(Avram::Repo.settings.url) do |db|
-      db.exec create_table_for_tracking_migrations
-    end
-  end
-
   private def prepare_for_migration
-    setup_migration_tracking_tables
+    self.class.setup_migration_tracking_tables
     if pending_migrations.empty?
       unless @quiet
         puts "Did not migrate anything because there are no pending migrations.".colorize(:green)
@@ -164,14 +173,5 @@ class Avram::Migrator::Runner
     raise "Unable to connect to the database. Please check your configuration.".colorize(:red).to_s
   rescue e : Exception
     raise "Unexpected error while running migrations: #{e.message}".colorize(:red).to_s
-  end
-
-  private def create_table_for_tracking_migrations
-    <<-SQL
-    CREATE TABLE IF NOT EXISTS #{MIGRATIONS_TABLE_NAME} (
-      id serial PRIMARY KEY,
-      version bigint NOT NULL
-    )
-    SQL
   end
 end
