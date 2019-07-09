@@ -10,8 +10,18 @@ abstract class Avram::Database
     end
   end
 
-  # TODO: Add a fallback 'configure' that raises at compile time and says
-  # to create a Database class
+  # :nodoc:
+  def self.configure(*args, **named_args, &block)
+    {% raise <<-ERROR
+      You can't configure Avram::Database directly.
+
+      Try this...
+
+        ▸ Configure your class that inherits from Avram::Database. Typically 'AppDatabase'.
+        ▸ If you have not created a class that inherits from Avram::Database, create one and configure it.
+      ERROR
+    %}
+  end
 
   # Rollback the current transaction
   def self.rollback
