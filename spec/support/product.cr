@@ -1,4 +1,4 @@
-class Product < Avram::Model
+class Product < BaseModel
   skip_default_columns
 
   table do

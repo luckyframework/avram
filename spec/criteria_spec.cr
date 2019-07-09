@@ -1,6 +1,6 @@
 require "./spec_helper"
 
-private class QueryMe < Avram::Model
+private class QueryMe < BaseModel
   COLUMN_SQL = "users.id, users.created_at, users.updated_at, users.age, users.nickname"
 
   table users do

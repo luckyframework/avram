@@ -1,4 +1,4 @@
-class Comment < Avram::Model
+class Comment < BaseModel
   skip_default_columns
 
   table do
@@ -9,7 +9,7 @@ class Comment < Avram::Model
   end
 end
 
-class CommentForCustomPost < Avram::Model
+class CommentForCustomPost < BaseModel
   skip_default_columns
 
   table :comments do

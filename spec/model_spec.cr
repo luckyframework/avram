@@ -1,6 +1,6 @@
 require "./spec_helper"
 
-private class QueryMe < Avram::Model
+private class QueryMe < BaseModel
   COLUMN_SQL = "users.id, users.created_at, users.updated_at, users.email, users.age"
 
   table :users do
@@ -9,40 +9,40 @@ private class QueryMe < Avram::Model
   end
 end
 
-private class ModelWithMissingButSimilarlyNamedColumn < Avram::Model
+private class ModelWithMissingButSimilarlyNamedColumn < BaseModel
   table :users do
     column mickname : String
   end
 end
 
-private class ModelWithOptionalAttributeOnRequiredColumn < Avram::Model
+private class ModelWithOptionalAttributeOnRequiredColumn < BaseModel
   table :users do
     column name : String?
   end
 end
 
-private class ModelWithRequiredAttributeOnOptionalColumn < Avram::Model
+private class ModelWithRequiredAttributeOnOptionalColumn < BaseModel
   table :users do
     column nickname : String
   end
 end
 
-private class MissingTable < Avram::Model
+private class MissingTable < BaseModel
   table :definitely_a_missing_table do
   end
 end
 
-private class MissingButSimilarlyNamedTable < Avram::Model
+private class MissingButSimilarlyNamedTable < BaseModel
   table :uusers do
   end
 end
 
-private class EmptyModelCompilesOk < Avram::Model
+private class EmptyModelCompilesOk < BaseModel
   table :no_fields do
   end
 end
 
-private class InferredTableNameModel < Avram::Model
+private class InferredTableNameModel < BaseModel
   COLUMN_SQL = "inferred_table_name_models.id, inferred_table_name_models.created_at, inferred_table_name_models.updated_at"
 
   table do

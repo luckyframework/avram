@@ -117,7 +117,7 @@ class Avram::Model
   end
 
   def delete
-    Avram::Database.run do |db|
+    self.class.database.run do |db|
       db.exec "DELETE FROM #{@@table_name} WHERE #{primary_key_name} = #{id}"
     end
   end

@@ -1,4 +1,4 @@
-class Scan < Avram::Model
+class Scan < BaseModel
   skip_default_columns
 
   table do

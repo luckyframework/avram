@@ -1,9 +1,11 @@
 require "./queryable"
 
 abstract class Avram::Query
+  abstract def database : Avram::Database
+
   # runs a SQL `TRUNCATE` on the current table
   def self.truncate
-    Avram::Database.run do |db|
+    new.database.run do |db|
       db.exec "TRUNCATE TABLE #{@@table_name}"
     end
   end

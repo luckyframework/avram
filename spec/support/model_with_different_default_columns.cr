@@ -1,6 +1,6 @@
 # Different primary key name
 # No timestamps
-class ModelWithDifferentDefaultColumns < Avram::Model
+class ModelWithDifferentDefaultColumns < BaseModel
   skip_default_columns
 
   table :table_with_different_default_columns do

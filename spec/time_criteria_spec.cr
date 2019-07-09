@@ -1,6 +1,6 @@
 require "./spec_helper"
 
-private class QueryMe < Avram::Model
+private class QueryMe < BaseModel
   table users do
     column activated_at : Time
   end

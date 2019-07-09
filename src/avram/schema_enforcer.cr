@@ -1,5 +1,5 @@
 module Avram::SchemaEnforcer
-  macro setup(table_name, columns, *args, **named_args)
+  macro setup(table_name, columns, type, *args, **named_args)
     include Avram::SchemaEnforcer
     def self.ensure_correct_column_mappings!
       attributes = [
@@ -8,16 +8,16 @@ module Avram::SchemaEnforcer
         {% end %}
       ]
 
-      EnsureExistingTable.new(:{{table_name}}).ensure_exists!
-      EnsureMatchingColumns.new(:{{table_name}}).ensure_matches! attributes
+      EnsureExistingTable.new(:{{table_name}}, database: {{ type }}.database).ensure_exists!
+      EnsureMatchingColumns.new(:{{table_name}}, database: {{ type }}.database).ensure_matches! attributes
     end
   end
 
   class EnsureExistingTable
     @table_names : Array(String)
 
-    def initialize(@table_name : Symbol)
-      @table_names = Avram::Database.tables_with_schema(excluding: "migrations")
+    def initialize(@table_name : Symbol, @database : Avram::Database.class)
+      @table_names = @database.new.tables_with_schema(excluding: "migrations")
     end
 
     def ensure_exists!
@@ -44,8 +44,8 @@ module Avram::SchemaEnforcer
     @optional_attribute_errors = [] of String
     @required_attribute_errors = [] of String
 
-    def initialize(@table_name : Symbol)
-      columns = Avram::Database.table_columns(table_name)
+    def initialize(@table_name : Symbol, @database : Avram::Database.class)
+      columns = @database.new.table_columns(table_name)
       columns.each do |column|
         @columns_map[column.name] = column.nilable
       end

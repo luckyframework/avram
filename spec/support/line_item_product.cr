@@ -1,4 +1,4 @@
-class LineItemProduct < Avram::Model
+class LineItemProduct < BaseModel
   skip_default_columns
 
   table :line_items_products do
