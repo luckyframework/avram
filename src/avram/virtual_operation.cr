@@ -1,7 +1,6 @@
 require "./virtual"
 require "./save_operation_errors"
-require "./param_key_override"
-require "./form_name"
+require "./param_key"
 
 class Avram::VirtualForm
   macro inherited
@@ -13,8 +12,7 @@ class Avram::VirtualOperation
   include Avram::Virtual
   include Avram::Validations
   include Avram::SaveOperationErrors
-  include Avram::ParamKeyOverride
-  include Avram::FormName
+  include Avram::ParamKey
 
   @params : Avram::Paramable
   getter params

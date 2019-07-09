@@ -40,14 +40,12 @@ private class ParamKeySaveOperation < ValueColumnModel::SaveOperation
 end
 
 describe "Avram::SaveOperation" do
-  it "allows overriding the form_name" do
-    ParamKeySaveOperation.new.form_name.should eq "custom_param"
-    ParamKeySaveOperation.form_name.should eq "custom_param"
+  it "allows overriding the param_key" do
+    ParamKeySaveOperation.param_key.should eq "custom_param"
   end
 
-  it "generates the correct form_name" do
-    SaveLimitedUser.new.form_name.should eq "limited_user"
-    SaveLimitedUser.form_name.should eq "limited_user"
+  it "generates the correct param_key" do
+    SaveLimitedUser.param_key.should eq "limited_user"
   end
 
   it "add required_attributes method" do

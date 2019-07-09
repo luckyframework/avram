@@ -1,18 +1,18 @@
 class Avram::Attribute(T)
   getter :name
   getter :value
-  getter :form_name
+  getter :param_key
   @errors = [] of String
   @changed = false
 
-  def initialize(@name : Symbol, @param : String?, @value : T, @form_name : String)
+  def initialize(@name : Symbol, @param : String?, @value : T, @param_key : String)
   end
 
   @_permitted : Avram::PermittedAttribute(T)?
 
   def permitted
     @_permitted ||= begin
-      Avram::PermittedAttribute.new(name: @name, param: @param, value: @value, form_name: @form_name).tap do |attribute|
+      Avram::PermittedAttribute.new(name: @name, param: @param, value: @value, param_key: @param_key).tap do |attribute|
         errors.each do |error|
           attribute.add_error error
         end

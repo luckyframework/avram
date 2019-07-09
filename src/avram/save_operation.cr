@@ -4,9 +4,8 @@ require "./nested_save_operation"
 require "./needy_initializer_and_save_methods"
 require "./virtual"
 require "./mark_as_failed"
-require "./form_name"
+require "./param_key"
 require "./save_operation_errors"
-require "./param_key_override"
 require "./inherit_attributes"
 
 abstract class Avram::SaveOperation(T)
@@ -17,9 +16,8 @@ abstract class Avram::SaveOperation(T)
   include Avram::NestedSaveOperation
   include Avram::MarkAsFailed
   include Avram::SaveOperationErrors
-  include Avram::ParamKeyOverride
   include Avram::InheritAttributess
-  include Avram::FormName
+  include Avram::ParamKey
 
   enum SaveStatus
     Saved
@@ -109,12 +107,12 @@ abstract class Avram::SaveOperation(T)
           name: :{{ attribute[:name].id }},
           param: permitted_params["{{ attribute[:name] }}"]?,
           value: @record.try(&.{{ attribute[:name] }}),
-          form_name: form_name)
+          param_key: self.class.param_key)
       end
 
       def permitted_params
         new_params = {} of String => String
-        @params.nested(form_name).each do |key, value|
+        @params.nested(self.class.param_key).each do |key, value|
           new_params[key] = value
         end
         new_params.select(@@permitted_param_keys)
