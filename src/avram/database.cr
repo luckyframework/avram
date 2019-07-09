@@ -18,11 +18,19 @@ abstract class Avram::Database
     new.rollback
   end
 
-  # runs a SQL `TRUNCATE` on all tables in the database
+  # Run a SQL `TRUNCATE` on all tables in the database
   def self.truncate
     new.truncate
   end
 
+  # Wrap the block in a database transaction
+  #
+  # ```
+  # AppDatabase.transaction do
+  #   # Create, read, update
+  #   # Force a rollback with AppDatabase.rollback
+  # end
+  # ```
   def self.transaction
     new.transaction do |*yield_args|
       yield *yield_args
