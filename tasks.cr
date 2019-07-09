@@ -17,4 +17,5 @@ class Db::Reset < LuckyCli::Task
   end
 end
 
+Habitat.raise_if_missing_settings!
 LuckyCli::Runner.run

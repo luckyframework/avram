@@ -10,3 +10,5 @@ Db::Migrate.new.call
 Spec.before_each do
   TestDatabase.truncate
 end
+
+Habitat.raise_if_missing_settings!

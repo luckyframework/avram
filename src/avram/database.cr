@@ -6,7 +6,7 @@ abstract class Avram::Database
 
   macro inherited
     Habitat.create do
-      setting url : String
+      setting url : String, example: %(Avram::PostgresURL.build(database: "my_database", username: "postgres"))
     end
   end
 

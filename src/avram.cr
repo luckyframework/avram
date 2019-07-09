@@ -17,7 +17,7 @@ module Avram
   Habitat.create do
     setting lazy_load_enabled : Bool = true
     setting logger : Dexter::Logger = Dexter::Logger.new(nil)
-    setting database_to_migrate : Avram::Database
+    setting database_to_migrate : Avram::Database, example: "AppDatabase"
   end
 
   def self.logger
