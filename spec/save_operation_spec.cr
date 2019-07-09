@@ -25,7 +25,7 @@ private class SaveLineItem < LineItem::SaveOperation
   permit_columns :name
 end
 
-private class ValueColumnModel < Avram::Model
+private class ValueColumnModel < BaseModel
   table :value_column_model do
     column value : String
   end
@@ -317,7 +317,7 @@ describe "Avram::SaveOperation" do
       it "logs the failure if a logger is set" do
         log_io = IO::Memory.new
         logger = Dexter::Logger.new(log_io)
-        Avram::Database.temp_config(logger: logger) do |settings|
+        Avram.temp_config(logger: logger) do |settings|
           SaveUser.create(name: "", age: 30) { |form, record| :unused }
           log_io.to_s.should contain(%("failed_to_save":"SaveUser","validation_errors":"name is required. joined_at is required"))
         end
@@ -443,7 +443,7 @@ describe "Avram::SaveOperation" do
         user = UserQuery.new.first
         log_io = IO::Memory.new
         logger = Dexter::Logger.new(log_io)
-        Avram::Database.temp_config(logger: logger) do |settings|
+        Avram.temp_config(logger: logger) do |settings|
           SaveUser.update(user, name: "") { |form, record| :unused }
           log_io.to_s.should contain(%("failed_to_save":"SaveUser","validation_errors":"name is required"))
         end

@@ -1,4 +1,4 @@
-class Post < Avram::Model
+class Post < BaseModel
   skip_default_columns
 
   table do
@@ -16,7 +16,7 @@ end
 # This is a regular post, but with a custom table name
 # This is to test that 'belongs_to' can accept a 'table' in the
 # CommentForCustomPost model
-class PostWithCustomTable < Avram::Model
+class PostWithCustomTable < BaseModel
   skip_default_columns
 
   table :posts do

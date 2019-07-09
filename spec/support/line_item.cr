@@ -1,4 +1,4 @@
-class LineItem < Avram::Model
+class LineItem < BaseModel
   skip_default_columns
 
   table do

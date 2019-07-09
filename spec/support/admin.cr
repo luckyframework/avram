@@ -1,4 +1,4 @@
-class Admin < Avram::Model
+class Admin < BaseModel
   COLUMN_SQL = "admins.id, admins.created_at, admins.updated_at, admins.name"
 
   table do

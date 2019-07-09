@@ -1,38 +1,65 @@
-class Avram::Database
+abstract class Avram::Database
   alias FiberId = UInt64
 
   @@db : DB::Database? = nil
-  private class_getter transactions = {} of FiberId => DB::Transaction
+  class_getter transactions = {} of FiberId => DB::Transaction
 
-  Habitat.create do
-    setting url : String
-    setting lazy_load_enabled : Bool = true
-    setting logger : Dexter::Logger = Dexter::Logger.new(nil)
+  macro inherited
+    Habitat.create do
+      setting url : String
+    end
   end
 
-  def self.run
-    yield current_transaction.try(&.connection) || db
-  end
+  # TODO: Add a fallback 'configure' that raises at compile time and says
+  # to create a Database class
 
-  def self.db
-    @@db ||= Connection.open(settings.url)
-  end
-
-  def self.current_transaction : DB::Transaction?
-    transactions[Fiber.current.object_id]?
+  # Rollback the current transaction
+  def self.rollback
+    new.rollback
   end
 
   # runs a SQL `TRUNCATE` on all tables in the database
   def self.truncate
-    DatabaseCleaner.new.truncate
+    new.truncate
   end
 
-  # Rollback the current transaction
-  def self.rollback
+  def self.transaction
+    new.transaction do |*yield_args|
+      yield *yield_args
+    end
+  end
+
+  def self.run
+    new.run do |*yield_args|
+      yield *yield_args
+    end
+  end
+
+  def url
+    settings.url
+  end
+
+  protected def run
+    yield current_transaction.try(&.connection) || db
+  end
+
+  private def db
+    @@db ||= Avram::Connection.new(settings.url, database_class: self.class).open
+  end
+
+  private def current_transaction : DB::Transaction?
+    transactions[Fiber.current.object_id]?
+  end
+
+  protected def truncate
+    DatabaseCleaner.new(self).truncate
+  end
+
+  protected def rollback
     raise Avram::Rollback.new
   end
 
-  def self.transaction : Bool
+  protected def transaction : Bool
     if current_transaction
       yield
     else
@@ -42,7 +69,11 @@ class Avram::Database
     end
   end
 
-  def self.wrap_in_transaction
+  private def transactions
+    self.class.transactions
+  end
+
+  private def wrap_in_transaction
     db.transaction do |tx|
       transactions[Fiber.current.object_id] ||= tx
       yield
@@ -54,11 +85,11 @@ class Avram::Database
     transactions.delete(Fiber.current.object_id)
   end
 
-  def self.table_names
+  def table_names
     tables_with_schema(excluding: "migrations")
   end
 
-  def self.tables_with_schema(excluding : String)
+  def tables_with_schema(excluding : String)
     select_rows <<-SQL
     SELECT table_name
     FROM information_schema.tables
@@ -68,7 +99,7 @@ class Avram::Database
     SQL
   end
 
-  def self.select_rows(statement)
+  def select_rows(statement)
     rows = [] of String
 
     run do |db|
@@ -82,7 +113,7 @@ class Avram::Database
     rows
   end
 
-  def self.table_columns(table_name)
+  def table_columns(table_name)
     statement = <<-SQL
     SELECT column_name as name, is_nullable::boolean as nilable
     FROM information_schema.columns
@@ -101,11 +132,16 @@ class Avram::Database
   end
 
   class DatabaseCleaner
+    private getter database
+
+    def initialize(@database : Avram::Database)
+    end
+
     def truncate
-      table_names = Avram::Database.table_names
+      table_names = database.table_names
       return if table_names.empty?
       statement = ("TRUNCATE TABLE #{table_names.map { |name| name }.join(", ")} RESTART IDENTITY CASCADE;")
-      Avram::Database.run do |db|
+      database.run do |db|
         db.exec statement
       end
     end

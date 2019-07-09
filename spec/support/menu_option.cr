@@ -1,4 +1,4 @@
-class MenuOption < Avram::Model
+class MenuOption < BaseModel
   skip_default_columns
 
   table do

@@ -1,4 +1,4 @@
-class Task < Avram::Model
+class Task < BaseModel
   table do
     column title : String
     column body : String?

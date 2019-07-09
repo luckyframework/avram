@@ -1,4 +1,4 @@
-class Price < Avram::Model
+class Price < BaseModel
   skip_default_columns
 
   table do

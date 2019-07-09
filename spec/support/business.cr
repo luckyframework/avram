@@ -1,4 +1,4 @@
-class Business < Avram::Model
+class Business < BaseModel
   table do
     column name : String
     has_one tax_id : TaxId
@@ -6,14 +6,14 @@ class Business < Avram::Model
   end
 end
 
-class TaxId < Avram::Model
+class TaxId < BaseModel
   table do
     column number : Int32
     belongs_to business : Business
   end
 end
 
-class EmailAddress < Avram::Model
+class EmailAddress < BaseModel
   table do
     column address : String
     belongs_to business : Business?

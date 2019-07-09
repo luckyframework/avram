@@ -1,17 +1,16 @@
 # Handles the connection to the DB.
 class Avram::Connection
-  def self.open(connection_string : String) : DB::Database
-    conn = self.new(connection_string)
-    conn.try_connection!
+  def initialize(@connection_string : String, @database_class : Avram::Database.class)
   end
 
-  def initialize(@connection_string : String)
+  def open : DB::Database
+    try_connection!
   end
 
   def try_connection!
     DB.open(@connection_string)
   rescue DB::ConnectionRefused
-    raise ConnectionError.new(connection_uri)
+    raise ConnectionError.new(connection_uri, database_class: @database_class)
   end
 
   private def connection_uri

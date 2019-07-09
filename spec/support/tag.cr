@@ -1,4 +1,4 @@
-class Tag < Avram::Model
+class Tag < BaseModel
   skip_default_columns
 
   table do

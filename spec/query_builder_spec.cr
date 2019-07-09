@@ -172,7 +172,7 @@ describe "Avram::QueryBuilder" do
 
       query.statement.should eq "SELECT * FROM users ORDER BY name ASC, id DESC"
 
-      Avram::Database.run do |db|
+      TestDatabase.run do |db|
         db.exec query.statement
       end
     end

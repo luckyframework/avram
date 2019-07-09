@@ -1,4 +1,4 @@
-class Company < Avram::Model
+class Company < BaseModel
   table do
     column sales : Int64
     column earnings : Float64
