@@ -91,7 +91,7 @@ private class TestValidationUser
 
   macro column(type, name)
     def {{ name }}
-      @_{{ name }} ||= Avram::Attribute({{ type }}).new(:{{ name }}, param: "", value: @{{ name }}, form_name: "blank")
+      @_{{ name }} ||= Avram::Attribute({{ type }}).new(:{{ name }}, param: "", value: @{{ name }}, param_key: "blank")
     end
   end
 

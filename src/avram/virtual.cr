@@ -71,7 +71,7 @@ module Avram::Virtual
         name: :{{ name }},
         param: {{ name }}_param,
         value: {{ default_value }},
-        form_name: form_name
+        param_key: self.class.param_key
       ).tap do |attribute|
         if {{ name }}_param_given?
           set_{{ name }}_from_param(attribute)
@@ -80,11 +80,11 @@ module Avram::Virtual
     end
 
     private def {{ name }}_param
-      params.nested(form_name)["{{ name }}"]?
+      params.nested(self.class.param_key)["{{ name }}"]?
     end
 
     private def {{ name }}_param_given?
-      params.nested(form_name).has_key?("{{ name }}")
+      params.nested(self.class.param_key).has_key?("{{ name }}")
     end
 
     def set_{{ name }}_from_param(attribute : Avram::Attribute)

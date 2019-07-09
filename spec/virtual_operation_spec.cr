@@ -53,14 +53,12 @@ describe Avram::VirtualOperation do
     end
   end
 
-  it "sets a form_name" do
-    TestVirtualOperation.new.form_name.should eq "test_virtual"
-    TestVirtualOperation.form_name.should eq "test_virtual"
+  it "sets a param_key" do
+    TestVirtualOperation.param_key.should eq "test_virtual"
   end
 
-  it "allows overriding the form_name" do
-    ParamKeySaveOperation.new.form_name.should eq "custom_param"
-    ParamKeySaveOperation.form_name.should eq "custom_param"
+  it "allows overriding the param_key" do
+    ParamKeySaveOperation.param_key.should eq "custom_param"
   end
 
   it "sets up initializers for params and no params" do
