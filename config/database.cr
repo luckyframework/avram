@@ -24,5 +24,5 @@ DatabaseWithIncorrectSettings.configure do |settings|
 end
 
 Avram.configure do |settings|
-  settings.database_to_migrate = TestDatabase.new
+  settings.database_to_migrate = TestDatabase
 end

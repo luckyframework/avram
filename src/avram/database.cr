@@ -53,7 +53,11 @@ abstract class Avram::Database
     end
   end
 
-  def url
+  def self.url
+    new.url
+  end
+
+  protected def url
     settings.url
   end
 
@@ -62,7 +66,7 @@ abstract class Avram::Database
   end
 
   private def db
-    @@db ||= Avram::Connection.new(settings.url, database_class: self.class).open
+    @@db ||= Avram::Connection.new(url, database_class: self.class).open
   end
 
   private def current_transaction : DB::Transaction?
