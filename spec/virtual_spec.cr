@@ -19,7 +19,7 @@ describe "virtual in forms" do
   it "is a PermittedAttribute" do
     form.password_confirmation.should be_a(Avram::PermittedAttribute(String?))
     form.password_confirmation.name.should eq(:password_confirmation)
-    form.password_confirmation.param_key.should eq("virtual")
+    form.password_confirmation.param_key.should eq("post")
   end
 
   it "generates a list of virtual_attributes" do

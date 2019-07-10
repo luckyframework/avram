@@ -44,8 +44,8 @@ describe "Avram::SaveOperation" do
     ParamKeySaveOperation.param_key.should eq "custom_param"
   end
 
-  it "generates the correct param_key" do
-    SaveLimitedUser.param_key.should eq "limited_user"
+  it "generates the correct param_key based on the model class" do
+    SaveLimitedUser.param_key.should eq "user"
   end
 
   it "add required_attributes method" do

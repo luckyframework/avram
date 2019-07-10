@@ -1,6 +1,6 @@
 require "./virtual"
 require "./save_operation_errors"
-require "./param_key"
+require "./param_key_override"
 
 class Avram::VirtualForm
   macro inherited
@@ -12,7 +12,7 @@ class Avram::VirtualOperation
   include Avram::Virtual
   include Avram::Validations
   include Avram::SaveOperationErrors
-  include Avram::ParamKey
+  include Avram::ParamKeyOverride
 
   @params : Avram::Paramable
   getter params
@@ -30,5 +30,9 @@ class Avram::VirtualOperation
 
   def attributes
     virtual_attributes
+  end
+
+  def self.param_key
+    name.underscore
   end
 end
