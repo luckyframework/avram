@@ -25,9 +25,9 @@ private class NestedParams
   end
 
   def nested?(key : String)
-    if key == "business::email_address"
+    if key == "email_address"
       @email_address
-    elsif key == "business::tax_id"
+    elsif key == "tax_id"
       @tax_id
     elsif key == "business"
       @business

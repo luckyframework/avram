@@ -4,7 +4,7 @@ require "./nested_save_operation"
 require "./needy_initializer_and_save_methods"
 require "./virtual"
 require "./mark_as_failed"
-require "./param_key"
+require "./param_key_override"
 require "./save_operation_errors"
 require "./inherit_attributes"
 
@@ -17,7 +17,7 @@ abstract class Avram::SaveOperation(T)
   include Avram::MarkAsFailed
   include Avram::SaveOperationErrors
   include Avram::InheritAttributess
-  include Avram::ParamKey
+  include Avram::ParamKeyOverride
 
   enum SaveStatus
     Saved
@@ -43,6 +43,10 @@ abstract class Avram::SaveOperation(T)
   abstract def attributes
   abstract def primary_key_name
   abstract def database
+
+  def self.param_key
+    T.name.underscore
+  end
 
   def log_failed_save
     Avram.logger.warn({

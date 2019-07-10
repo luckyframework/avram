@@ -53,8 +53,8 @@ describe Avram::VirtualOperation do
     end
   end
 
-  it "sets a param_key" do
-    TestVirtualOperation.param_key.should eq "test_virtual"
+  it "sets a param_key based on the underscored class name" do
+    TestVirtualOperation.param_key.should eq "test_virtual_operation"
   end
 
   it "allows overriding the param_key" do
