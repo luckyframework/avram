@@ -9,6 +9,8 @@ class Avram::Model
   # This setting is used to show better errors
   MACRO_CHECKS = {setup_complete: false}
 
+  class_getter table_name
+
   macro register_setup_step(call)
     {% if MACRO_CHECKS[:setup_complete] %}
       {% call.raise "Models have already been set up. Make sure to register set up steps before models are required." %}

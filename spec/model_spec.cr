@@ -1,5 +1,10 @@
 require "./spec_helper"
 
+class NamedSpaced::Model < BaseModel
+  table do
+  end
+end
+
 private class QueryMe < BaseModel
   COLUMN_SQL = "users.id, users.created_at, users.updated_at, users.email, users.age"
 
@@ -183,7 +188,10 @@ describe Avram::Model do
   end
 
   it "can infer the table name when omitted" do
-    query = InferredTableNameModel::BaseQuery.all
-    query.to_sql.should eq ["SELECT #{InferredTableNameModel::COLUMN_SQL} FROM inferred_table_name_models"]
+    InferredTableNameModel.table_name.should eq(:inferred_table_name_models)
+  end
+
+  it "can infer table name for namedspaced models" do
+    NamedSpaced::Model.table_name.should eq(:named_spaced_models)
   end
 end
