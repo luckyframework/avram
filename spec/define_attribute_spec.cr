@@ -1,10 +1,10 @@
 require "./spec_helper"
 
 private class VirtualOperation < Post::SaveOperation
-  virtual password_confirmation : String
-  virtual terms_of_service : Bool
-  virtual best_kind_of_bear : String = "black bear"
-  virtual default_is_false : Bool = false
+  attribute password_confirmation : String
+  attribute terms_of_service : Bool
+  attribute best_kind_of_bear : String = "black bear"
+  attribute default_is_false : Bool = false
 
   def prepare
     password_confirmation.value = "reset"
@@ -15,18 +15,18 @@ private class VirtualOperation < Post::SaveOperation
   end
 end
 
-describe "virtual in forms" do
+describe "attribute in forms" do
   it "is a PermittedAttribute" do
     form.password_confirmation.should be_a(Avram::PermittedAttribute(String?))
     form.password_confirmation.name.should eq(:password_confirmation)
     form.password_confirmation.param_key.should eq("post")
   end
 
-  it "generates a list of virtual_attributes" do
-    form.virtual_attributes.map(&.name).should eq [:password_confirmation,
-                                                   :terms_of_service,
-                                                   :best_kind_of_bear,
-                                                   :default_is_false]
+  it "generates a list of attributes" do
+    form.attributes.map(&.name).should eq [:password_confirmation,
+                                           :terms_of_service,
+                                           :best_kind_of_bear,
+                                           :default_is_false]
   end
 
   it "sets a default value of nil if another one is not given" do
@@ -86,7 +86,7 @@ describe "virtual in forms" do
     form.save.should eq true
   end
 
-  it "sets named args for virtual attributes, leaves other empty" do
+  it "sets named args for attributes, leaves other empty" do
     VirtualOperation.create(title: "My Title", best_kind_of_bear: "brown bear") do |form, post|
       form.best_kind_of_bear.value.should eq("brown bear")
       form.terms_of_service.value.should be_nil

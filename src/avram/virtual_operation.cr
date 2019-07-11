@@ -1,4 +1,4 @@
-require "./virtual"
+require "./define_attribute"
 require "./save_operation_errors"
 require "./param_key_override"
 
@@ -9,7 +9,7 @@ class Avram::VirtualForm
 end
 
 class Avram::VirtualOperation
-  include Avram::Virtual
+  include Avram::DefineAttribute
   include Avram::Validations
   include Avram::SaveOperationErrors
   include Avram::ParamKeyOverride
@@ -25,11 +25,7 @@ class Avram::VirtualOperation
   end
 
   def valid?
-    virtual_attributes.all? &.valid?
-  end
-
-  def attributes
-    virtual_attributes
+    attributes.all? &.valid?
   end
 
   def self.param_key

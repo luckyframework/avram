@@ -12,7 +12,7 @@ abstract class Avram::Box
   end
 
   macro setup_attribute_shortcuts(form)
-    {% for attribute in form.resolve.constant(:ATTRIBUTES) %}
+    {% for attribute in form.resolve.constant(:COLUMN_ATTRIBUTES) %}
       def {{ attribute[:name] }}(value : {{ attribute[:type] }}{% if attribute[:nilable] %}?{% end %})
         form.{{ attribute[:name] }}.value = value
         self

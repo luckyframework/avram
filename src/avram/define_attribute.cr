@@ -1,49 +1,53 @@
-module Avram::Virtual
-  macro ensure_base_virtual_attributes_method_is_present
-    {% if !@type.methods.map(&.name).includes?(:virtual_attributes.id) %}
-      def virtual_attributes
+module Avram::DefineAttribute
+  macro ensure_base_attributes_method_is_present
+    {% if !@type.methods.map(&.name).includes?(:attributes.id) %}
+      def attributes
         [] of Avram::PermittedAttribute(Nil)
       end
     {% end %}
   end
 
   macro included
-    VIRTUAL_ATTRIBUTES = [] of Nil
+    ATTRIBUTES = [] of Nil
 
     macro inherited
-      inherit_virtual_attributes
+      inherit_attributes
     end
   end
 
-  macro inherit_virtual_attributes
-    \{% if !@type.constant(:VIRTUAL_ATTRIBUTES) %}
-      VIRTUAL_ATTRIBUTES = [] of Nil
+  macro inherit_attributes
+    \{% if !@type.constant(:ATTRIBUTES) %}
+      ATTRIBUTES = [] of Nil
     \{% end %}
 
 
     \{% if !@type.ancestors.first.abstract? %}
-      \{% for attribute in @type.ancestors.first.constant :VIRTUAL_ATTRIBUTES %}
-        \{% VIRTUAL_ATTRIBUTES << type_declaration %}
+      \{% for attribute in @type.ancestors.first.constant :ATTRIBUTES %}
+        \{% ATTRIBUTES << type_declaration %}
       \{% end %}
     \{% end %}
 
     macro inherited
-      inherit_virtual_attributes
+      inherit_attributes
     end
   end
 
-  ensure_base_virtual_attributes_method_is_present
+  ensure_base_attributes_method_is_present
 
   macro allow_virtual(*args, **named_args)
-    {% raise "'allow_virtual' has been renamed to 'virtual'" %}
+    {% raise "'allow_virtual' has been renamed to 'attribute'" %}
   end
 
-  macro virtual(type_declaration)
+  macro virtual(*args, **named_args)
+    {% raise "'virtual' has been renamed to 'attribute'" %}
+  end
+
+  macro attribute(type_declaration)
     {% if type_declaration.type.is_a?(Union) %}
-      {% raise "virtual must use just one type" %}
+      {% raise "attribute must use just one type" %}
     {% end %}
 
-    {% VIRTUAL_ATTRIBUTES << type_declaration %}
+    {% ATTRIBUTES << type_declaration %}
 
     {% type = type_declaration.type %}
     {% name = type_declaration.var %}
@@ -56,9 +60,9 @@ module Avram::Virtual
     %}
     @_{{ name }} : Avram::Attribute({{ type }}?)?
 
-    ensure_base_virtual_attributes_method_is_present
+    ensure_base_attributes_method_is_present
 
-    def virtual_attributes
+    def attributes
       previous_def + [{{ name }}]
     end
 
