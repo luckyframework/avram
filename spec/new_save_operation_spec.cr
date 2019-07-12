@@ -68,6 +68,7 @@ end
 class SignUpUser < User::SaveOperation
   step do
     validate_confirmation_of password, with: password_confirmation
+    validate_size age, min: 18
   end
 
   step :run_password_validations # Runs right before save when calling 'call'
