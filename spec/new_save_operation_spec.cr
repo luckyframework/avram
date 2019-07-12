@@ -115,3 +115,5 @@ UserQuery.new.where { name.ilike == "something else" }
 UserQuery.new.where { name("Paul") }
 UserQuery.new.where { name.not.eq("Paul") }
 UserQuery.new.name.not.eq("Paul")
+
+UserQuery.new.where({name.not.eq("Paul")}).order({name.asc})
