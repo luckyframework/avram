@@ -63,9 +63,13 @@ end
 
 # Maybe call 'after_init' just 'step' and the others are 'after_save_step'
 # Since we mostly use regular steps and callbacks are more rare
+#
+# Examples of before_save: https://github.com/search?p=1&q=before_save+NOT+callbacks+NOT+class_eval+NOT+describe+language%3ARuby&type=Code
 class SignUpUser < User::SaveOperation
   step :run_password_validations # Runs right before save when calling 'call'
   step :normalize_email
+  step :calculate_new_total
+  # And probably remove 'before_save' instead to 'after_save' or 'step'
   after_save_step :send_welcome_email
 end
 
