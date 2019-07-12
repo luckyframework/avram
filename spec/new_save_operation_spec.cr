@@ -93,6 +93,17 @@ end
 # Maybe box inherits from SaveOperation and just adds some methods.
 # That way you can include validations!!!
 
-class UserBox < User::BoxOperation
+class UserBox < User::SaveOperation
+  # Adds shortcut methods
+  # Adds instance method callbacks
+  include Avram::Box
   include NormalizeStuff
+
+  step do
+    name "Paul"
+  end
+
+  def with_comments(body : Array(String))
+    after_commit_step()
+  end
 end
