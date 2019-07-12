@@ -35,9 +35,9 @@ class User < BaseModel
 end
 
 class SignUpUser < User::SaveOperation
-  after_init :run_password_validations
-  after_init :normalize_name
-  after_init :normalize_email
+  step :run_password_validations
+  step :normalize_name
+  step :normalize_email
   after_commit :send_welcome_email
 
   # Maybe
@@ -51,7 +51,7 @@ end
 
 # src/operations/mixins/default_user_validations.cr
 module User::DefaultValidations
-  after_init do
+  step do
     validate_size_of age, min: 18
   end
 end
@@ -76,6 +76,11 @@ class SignUpUser < User::SaveOperation
   step :calculate_new_total
   # And probably remove 'before_save' instead to 'after_save' or 'step'
   after_commit_step :send_welcome_email
+  after_save_step :touch_associations
+
+  def touch_associations(user)
+    Company::SaveOperation.update!(user: user, updated_at: Time.utc)
+  end
 end
 
 # Maybe...don't worry about it. Some stuff doesn't need tons of defaults
