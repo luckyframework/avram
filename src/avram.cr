@@ -18,6 +18,7 @@ module Avram
     setting lazy_load_enabled : Bool = true
     setting logger : Dexter::Logger = Dexter::Logger.new(nil)
     setting database_to_migrate : Avram::Database.class, example: "AppDatabase"
+    setting time_formats : Array(String) = [] of String
   end
 
   def self.logger

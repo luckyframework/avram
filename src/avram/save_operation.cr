@@ -2,22 +2,22 @@ require "./validations"
 require "./callbacks"
 require "./nested_save_operation"
 require "./needy_initializer_and_save_methods"
-require "./virtual"
+require "./define_attribute"
 require "./mark_as_failed"
 require "./param_key_override"
 require "./save_operation_errors"
-require "./inherit_attributes"
+require "./inherit_column_attributes"
 
 abstract class Avram::SaveOperation(T)
   include Avram::Validations
   include Avram::NeedyInitializerAndSaveMethods
-  include Avram::Virtual
+  include Avram::DefineAttribute
   include Avram::Callbacks
   include Avram::NestedSaveOperation
   include Avram::MarkAsFailed
   include Avram::SaveOperationErrors
-  include Avram::InheritAttributess
   include Avram::ParamKeyOverride
+  include Avram::InheritColumnAttributes
 
   enum SaveStatus
     Saved
@@ -76,7 +76,7 @@ abstract class Avram::SaveOperation(T)
 
   macro add_column_attributes(primary_key_type, attributes)
     {% for attribute in attributes %}
-      {% ATTRIBUTES << attribute %}
+      {% COLUMN_ATTRIBUTES << attribute %}
     {% end %}
 
     private def extract_changes_from_params
@@ -133,7 +133,7 @@ abstract class Avram::SaveOperation(T)
     {% end %}
 
     def attributes
-      column_attributes + virtual_attributes
+      column_attributes + super
     end
 
     private def column_attributes
@@ -216,7 +216,7 @@ abstract class Avram::SaveOperation(T)
           ERROR
         %}
       {% end %}
-      {% if ATTRIBUTES.any? { |attribute| attribute[:name].id == attribute_name.id } %}
+      {% if COLUMN_ATTRIBUTES.any? { |attribute| attribute[:name].id == attribute_name.id } %}
         def {{ attribute_name.id }}
           _{{ attribute_name.id }}.permitted
         end
@@ -230,7 +230,7 @@ abstract class Avram::SaveOperation(T)
 
             ▸ Make sure you spelled the column correctly.
             ▸ Add the column to the model if it doesn't exist.
-            ▸ Use 'virtual' if you want an attribute that is not saved to the database.
+            ▸ Use 'attribute' if you want an attribute that is not saved to the database.
 
           ERROR
         %}
