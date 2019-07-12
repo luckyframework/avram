@@ -107,3 +107,11 @@ class UserBox < User::SaveOperation
     after_commit_step()
   end
 end
+
+UserQuery.new.where { name == "Paul" }
+UserQuery.new.name("Paul")
+UserQuery.new.where { name.lower == "something else" }
+UserQuery.new.where { name.ilike == "something else" }
+UserQuery.new.where { name("Paul") }
+UserQuery.new.where { name.not.eq("Paul") }
+UserQuery.new.name.not.eq("Paul")
