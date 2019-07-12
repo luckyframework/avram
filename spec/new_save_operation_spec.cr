@@ -87,6 +87,42 @@ class SignUpUser < User::SaveOperation
   end
 end
 
+class RequestPasswordReset < Avram::VirtualOperation
+  # You can modify this in src/operations/mixins/user_from_email.cr
+  include UserFromEmail
+
+  attribute email : String
+
+  step validate_email
+
+  def result
+    user_from_email
+  end
+
+  def result_when_invalid
+    nil
+  end
+
+  # Run validations and yield the form and the user if valid
+  # def submit
+  #   user = user_from_email
+  #   validate(user)
+
+  #   if valid?
+  #     yield self, user
+  #   else
+  #     yield self, nil
+  #   end
+  # end
+
+  def validate_email
+    validate_required email
+    if user_from_email.nil?
+      email.add_error "is not in our system"
+    end
+  end
+end
+
 # Maybe...don't worry about it. Some stuff doesn't need tons of defaults
 #
 # So only needed for things that need to be shared...but  how to let people know...
