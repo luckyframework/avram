@@ -66,6 +66,10 @@ end
 #
 # Examples of before_save: https://github.com/search?p=1&q=before_save+NOT+callbacks+NOT+class_eval+NOT+describe+language%3ARuby&type=Code
 class SignUpUser < User::SaveOperation
+  permit_columns name, email
+  attribute password : String
+  attribute password_confirmation : String
+
   step do
     validate_confirmation_of password, with: password_confirmation
     validate_size age, min: 18
