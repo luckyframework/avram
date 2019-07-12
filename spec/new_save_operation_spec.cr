@@ -61,6 +61,14 @@ class SignUpUser < User::SaveOperation
   include User::DefaultValidations
 end
 
+# Maybe call 'after_init' just 'step' and the others are 'after_save_step'
+# Since we mostly use regular steps and callbacks are more rare
+class SignUpUser < User::SaveOperation
+  step :run_password_validations # Runs right before save when calling 'call'
+  step :normalize_email
+  after_save_step :send_welcome_email
+end
+
 # Maybe...don't worry about it. Some stuff doesn't need tons of defaults
 #
 # So only needed for things that need to be shared...but  how to let people know...
