@@ -66,11 +66,15 @@ end
 #
 # Examples of before_save: https://github.com/search?p=1&q=before_save+NOT+callbacks+NOT+class_eval+NOT+describe+language%3ARuby&type=Code
 class SignUpUser < User::SaveOperation
+  step do
+    validate_confirmation_of password, with: password_confirmation
+  end
+
   step :run_password_validations # Runs right before save when calling 'call'
   step :normalize_email
   step :calculate_new_total
   # And probably remove 'before_save' instead to 'after_save' or 'step'
-  after_save_step :send_welcome_email
+  after_commit_step :send_welcome_email
 end
 
 # Maybe...don't worry about it. Some stuff doesn't need tons of defaults
