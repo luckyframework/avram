@@ -148,6 +148,39 @@ class UserBox < User::SaveOperation
   end
 end
 
+class CreateTeam < User::SaveOperation
+  include Audited
+
+  permit_columns name, age, email
+
+  step do
+    some_validations
+  end
+
+  after_commit_step send_invitation_emails
+end
+
+class DestroyTeam < Lucky::Operation
+  needs team : Team
+
+  def execute
+    @team.delete
+    clear_cache
+    do_something_else
+  end
+end
+
+class ImportCsv < Lucky::Operation
+  needs csv_rows : Array(String)
+
+  def execute
+    AppDatabase.transaction do
+      @csv_rows.each do |row|
+      end
+    end
+  end
+end
+
 UserQuery.new.where { name == "Paul" }
 UserQuery.new.name("Paul")
 UserQuery.new.where { name.lower == "something else" }
