@@ -134,6 +134,13 @@ class Avram::Migrator::CreateTableStatement
     add_index :{{ foreign_key_name }}
   end
 
+  macro add_polymorphic_belongs_to(type_declaration, foreign_key_type = Int64, optional = false)
+    add {{ type_declaration.id }}_id : {{ foreign_key_type }}{% if optional %}?{% end %}
+    add {{ type_declaration.id }}_type : String{% if optional %}?{% end %}
+
+    add_index [:{{ type_declaration.id }}_id, :{{ type_declaration.id }}_type], unique: false
+  end
+
   macro add_belongs_to(_type_declaration, references = nil)
     {% raise "Must use 'on_delete' when creating an add_belongs_to association.
       Example: add_belongs_to user : User, on_delete: :cascade" %}

@@ -481,7 +481,7 @@ describe Avram::Query do
       comment = CommentBox.new.post_id(post.id).create
 
       query = Comment::BaseQuery.new.join_posts
-      query.to_sql.should eq ["SELECT comments.custom_id, comments.created_at, comments.updated_at, comments.body, comments.post_id FROM comments INNER JOIN posts ON comments.post_id = posts.custom_id"]
+      query.to_sql.should eq ["SELECT comments.custom_id, comments.created_at, comments.updated_at, comments.body, comments.post_id, comments.commentable_id, comments.commentable_type, comments.optional_commentable_id, comments.optional_commentable_type FROM comments INNER JOIN posts ON comments.post_id = posts.custom_id"]
 
       result = query.first
       result.post.should eq post

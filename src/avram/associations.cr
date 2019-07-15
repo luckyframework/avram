@@ -4,6 +4,7 @@ module Avram::Associations
   include HasMany
   include HasOne
   include BelongsTo
+  include Polymorphic
 
   private def lazy_load_enabled?
     Avram.settings.lazy_load_enabled

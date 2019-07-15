@@ -1,5 +1,5 @@
 module Avram::Associations::HasMany
-  macro has_many(type_declaration, through = nil, foreign_key = nil)
+  macro has_many(type_declaration, through = nil, foreign_key = nil, polymorphic = false)
     {% if !through.is_a?(NilLiteral) && !through.is_a?(SymbolLiteral) %}
       {% through.raise "The association name for 'through' must be a Symbol. Instead, got: #{through}" %}
     {% end %}
@@ -11,6 +11,10 @@ module Avram::Associations::HasMany
 
     {% foreign_key = foreign_key.id %}
 
+    {% if polymorphic != false %}
+      {% foreign_key = polymorphic.id + "_id" %}
+    {% end %}
+
     association \
       table_name: :{{ assoc_name }},
       type: {{ type_declaration.type }},
@@ -20,11 +24,11 @@ module Avram::Associations::HasMany
 
     {% model = type_declaration.type %}
 
-    define_has_many_lazy_loading({{ assoc_name }}, {{ model }}, {{ foreign_key }}, {{ through }})
-    define_has_many_base_query({{ assoc_name }}, {{ model }}, {{ foreign_key }}, {{through}})
+    define_has_many_lazy_loading({{ assoc_name }}, {{ model }}, {{ foreign_key }}, {{ through }}, {{ polymorphic }})
+    define_has_many_base_query({{ assoc_name }}, {{ model }}, {{ foreign_key }}, {{through}}, {{ polymorphic }})
   end
 
-  private macro define_has_many_base_query(assoc_name, model, foreign_key, through)
+  private macro define_has_many_base_query(assoc_name, model, foreign_key, through, polymorphic)
     class BaseQuery < Avram::Query
       def preload_{{ assoc_name }}
         preload_{{ assoc_name }}({{ model }}::BaseQuery.new)
@@ -50,6 +54,14 @@ module Avram::Associations::HasMany
                 {{ assoc_name }}[item_through.{{ foreign_key }}] << item
               end
             end
+          {% elsif polymorphic %}
+            klass = self.class.name.gsub(/::BaseQuery$/, "")
+            klass = klass.gsub(/Query$/, "")
+            {{ assoc_name }} = preload_query
+              .dup
+              .{{ polymorphic.id }}_type(klass)
+              .{{ polymorphic.id }}_id.in(ids)
+              .results.group_by(&.{{ foreign_key }})
           {% else %}
             {{ assoc_name }} = preload_query
               .dup
@@ -65,7 +77,7 @@ module Avram::Associations::HasMany
     end
   end
 
-  private macro define_has_many_lazy_loading(assoc_name, model, foreign_key, through)
+  private macro define_has_many_lazy_loading(assoc_name, model, foreign_key, through, polymorphic)
     @_preloaded_{{ assoc_name }} : Array({{ model }})?
     setter _preloaded_{{ assoc_name }}
 
@@ -94,6 +106,12 @@ module Avram::Associations::HasMany
             through_query.{{ foreign_key.id }}(id)
           end
           .preload_{{ through.id }}
+          .results
+      {% elsif polymorphic %}
+        {{ model }}::BaseQuery
+          .new
+          .{{ polymorphic.id }}_type(self.class.name)
+          .{{ foreign_key }}(id)
           .results
       {% else %}
         {{ model }}::BaseQuery

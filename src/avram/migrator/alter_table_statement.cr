@@ -138,6 +138,13 @@ class Avram::Migrator::AlterTableStatement
     {% end %}
   end
 
+  macro add_polymorphic_belongs_to(type_declaration, foreign_key_type = Int64, optional = false)
+    add {{ type_declaration.id }}_id : {{ foreign_key_type }}{% if optional %}?{% end %}, fill_existing_with: :nothing
+    add {{ type_declaration.id }}_type : String{% if optional %}?{% end %}, fill_existing_with: :nothing
+
+    add_index [:{{ type_declaration.id }}_id, :{{ type_declaration.id }}_type], unique: false
+  end
+
   def add_fill_existing_with_statements(column : Symbol | String, type, value)
     @fill_existing_with_statements += [
       "UPDATE #{@table_name} SET #{column} = #{value.to_s};",
@@ -154,5 +161,15 @@ class Avram::Migrator::AlterTableStatement
       {% raise "remove_belongs_to expected a symbol like ':user', instead got: '#{association_name}'" %}
     {% end %}
     remove {{ association_name }}_id
+  end
+
+  macro remove_polymorphic_belongs_to(association_name)
+    {% unless association_name.is_a?(SymbolLiteral) %}
+      {% raise "remove_belongs_to expected a symbol like ':user', instead got: '#{association_name}'" %}
+    {% end %}
+    remove {{ association_name }}_id
+    remove {{ association_name }}_type
+
+    drop_index([:{{ association_name.id }}_id, :{{ association_name.id }}_type], if_exists: true)
   end
 end

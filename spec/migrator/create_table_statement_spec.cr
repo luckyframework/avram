@@ -180,4 +180,28 @@ describe Avram::Migrator::CreateTableStatement do
       end
     end
   end
+
+  describe "polymorphic associations" do
+    it "can create associations" do
+      built = Avram::Migrator::CreateTableStatement.new(:comments).build do
+        add_polymorphic_belongs_to :commentable
+        add_polymorphic_belongs_to :optional_commentable, optional: true
+        add_polymorphic_belongs_to :commentable_uuid, foreign_key_type: UUID
+      end
+
+      built.statements.first.should eq <<-SQL
+      CREATE TABLE comments (
+        commentable_id bigint NOT NULL,
+        commentable_type text NOT NULL,
+        optional_commentable_id bigint,
+        optional_commentable_type text,
+        commentable_uuid_id uuid NOT NULL,
+        commentable_uuid_type text NOT NULL);
+      SQL
+
+      built.statements[1].should eq "CREATE INDEX comments_commentable_id_commentable_type_index ON comments USING btree (commentable_id, commentable_type);"
+      built.statements[2].should eq "CREATE INDEX comments_optional_commentable_id_optional_commentable_type_index ON comments USING btree (optional_commentable_id, optional_commentable_type);"
+      built.statements[3].should eq "CREATE INDEX comments_commentable_uuid_id_commentable_uuid_type_index ON comments USING btree (commentable_uuid_id, commentable_uuid_type);"
+    end
+  end
 end

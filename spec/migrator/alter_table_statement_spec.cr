@@ -82,4 +82,42 @@ describe Avram::Migrator::AlterTableStatement do
       end
     end
   end
+
+  describe "polymorphic associations" do
+    it "can create associations" do
+      built = Avram::Migrator::AlterTableStatement.new(:comments).build do
+        add_polymorphic_belongs_to :commentable
+        add_polymorphic_belongs_to :optional_commentable, optional: true
+        add_polymorphic_belongs_to :commentable_uuid, foreign_key_type: UUID
+      end
+
+      built.statements.first.should eq <<-SQL
+      ALTER TABLE comments
+        ADD commentable_id bigint NOT NULL,
+        ADD commentable_type text NOT NULL,
+        ADD optional_commentable_id bigint,
+        ADD optional_commentable_type text,
+        ADD commentable_uuid_id uuid NOT NULL,
+        ADD commentable_uuid_type text NOT NULL
+      SQL
+
+      built.statements[1].should eq "CREATE INDEX comments_commentable_id_commentable_type_index ON comments USING btree (commentable_id, commentable_type);"
+      built.statements[2].should eq "CREATE INDEX comments_optional_commentable_id_optional_commentable_type_index ON comments USING btree (optional_commentable_id, optional_commentable_type);"
+      built.statements[3].should eq "CREATE INDEX comments_commentable_uuid_id_commentable_uuid_type_index ON comments USING btree (commentable_uuid_id, commentable_uuid_type);"
+    end
+
+    it "can remove associations" do
+      built = Avram::Migrator::AlterTableStatement.new(:comments).build do
+        remove_polymorphic_belongs_to :commentable
+      end
+
+      built.statements.first.should eq <<-SQL
+      ALTER TABLE comments
+        DROP commentable_id,
+        DROP commentable_type
+      SQL
+
+      built.statements[1].should eq "DROP INDEX IF EXISTS comments_commentable_id_commentable_type_index;"
+    end
+  end
 end

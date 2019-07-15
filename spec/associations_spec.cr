@@ -91,7 +91,7 @@ describe Avram::Model do
 
       it "returns associated model when using 'table' and 'foreign_key'" do
         post = PostWithCustomTable::SaveOperation.create!(title: "foo")
-        comment = CommentForCustomPost::SaveOperation.create!(body: "bar", post_id: post.id)
+        comment = CommentForCustomPost::SaveOperation.create!(body: "bar", post_id: post.id, commentable_id: 1, commentable_type: "Company")
         comment.post_with_custom_table.should eq(post)
       end
     end

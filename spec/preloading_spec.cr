@@ -62,6 +62,23 @@ describe "Preloading" do
     end
   end
 
+  it "preloads has_many polymorphic" do
+    with_lazy_load(enabled: false) do
+      post = PostBox.create
+      company = CompanyBox.create
+
+      comment2 = CommentBox.create &.post_id(post.id).body("Comment 1").commentable_type("Company").commentable_id(company.id)
+      comment1 = CommentBox.create &.post_id(post.id).body("Comment 2").commentable_type("Company").commentable_id(company.id)
+
+      companies = Company::BaseQuery.new.preload_comments
+
+      comments = companies.results.first.comments
+      comments.size.should eq(2)
+      comments.should contain(comment1)
+      comments.should contain(comment2)
+    end
+  end
+
   it "preserves additional criteria when used after adding a preload" do
     with_lazy_load(enabled: false) do
       post = PostBox.create
@@ -164,6 +181,36 @@ describe "Preloading" do
       comments = Comment::BaseQuery.new.preload_post
 
       comments.first.post.should eq(post)
+    end
+  end
+
+  it "preloads belongs_to polymorphic" do
+    with_lazy_load(enabled: false) do
+      post = PostBox.create
+      company = CompanyBox.create
+      employee = EmployeeBox.create
+
+      comment1 = CommentBox.create &.post_id(post.id).body("Comment Company 1").commentable_type("Company").commentable_id(company.id)
+      comment2 = CommentBox.create &.post_id(post.id).body("Comment Employee 2").commentable_type("Employee").commentable_id(employee.id)
+      comment3 = CommentBox.create &.post_id(post.id).body("Comment Company 3").commentable_type("Company").commentable_id(company.id)
+
+      # Commentable 1
+      expected_results = {
+        comment1.id => {commentable_type: "Company", commentable_id: 1},
+        comment2.id => {commentable_type: "Employee", commentable_id: 1},
+        comment3.id => {commentable_type: "Company", commentable_id: 1},
+      }
+
+      Comment::BaseQuery.new.preload_commentable.results.each do |record|
+        commentable = record.commentable
+
+        if commentable.responds_to?(:id)
+          commentable.id.should eq(expected_results[record.id][:commentable_id])
+        else
+          raise Exception.new("Test Failed")
+        end
+        record.commentable.class.name.should eq(expected_results[record.id][:commentable_type])
+      end
     end
   end
 
