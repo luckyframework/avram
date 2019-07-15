@@ -4,7 +4,7 @@ module Avram::Migrator::Columns
   class StringColumn < Base
     @default : String? = nil
 
-    def initialize(@name, @nilable, @default)
+    def initialize(@name, @nilable, @default, @array)
     end
 
     def column_type

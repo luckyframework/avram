@@ -123,7 +123,11 @@ abstract class Avram::SaveOperation(T)
       end
 
       def set_{{ attribute[:name] }}_from_param(_value)
-        parse_result = {{ attribute[:type] }}::Lucky.parse(_value)
+        {% if attribute[:type].is_a?(Generic) %}
+          parse_result = {{ attribute[:type].type_vars.first }}::Lucky.parse(_value)
+        {% else %}
+          parse_result = {{ attribute[:type] }}::Lucky.parse(_value)
+        {% end %}
         if parse_result.is_a? Avram::Type::SuccessfulCast
           {{ attribute[:name] }}.value = parse_result.value
         else

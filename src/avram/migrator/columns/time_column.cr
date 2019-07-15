@@ -4,7 +4,7 @@ module Avram::Migrator::Columns
   class TimeColumn < Base
     @default : Time | Symbol | Nil = nil
 
-    def initialize(@name, @nilable, @default)
+    def initialize(@name, @nilable, @default, @array)
     end
 
     def column_type

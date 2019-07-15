@@ -78,15 +78,22 @@ class Avram::Migrator::CreateTableStatement
     {% if type_declaration.type.is_a?(Union) %}
       {% type = type_declaration.type.types.first %}
       {% nilable = true %}
+      {% array = false %}
+    {% elsif type_declaration.type.is_a?(Generic) %}
+      {% type = type_declaraion.type_vars.first %}
+      {% nilable = false %}
+      {% array = true %}
     {% else %}
       {% type = type_declaration.type %}
       {% nilable = false %}
+      {% array = false %}
     {% end %}
 
     rows << Avram::Migrator::Columns::{{ type }}Column.new(
       name: {{ type_declaration.var.stringify }},
       nilable: {{ nilable }},
       default: {{ default }},
+      array: {{ array }}
       {{ **type_options }}
     )
     .build_add_statement_for_create

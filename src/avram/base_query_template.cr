@@ -25,7 +25,7 @@ class Avram::BaseQueryTemplate
       macro generate_criteria_method(query_class, name, type)
         def \{{ name }}
           column_name = "#{@@table_name}.\{{ name }}"
-          \{{ type }}::Lucky::Criteria(\{{ query_class }}, \{{ type }}).new(self, "#{@@table_name}.\{{ name }}")
+          \{{ type }}::Lucky::Criteria(\{{ query_class }}, \{{ type }}).new(self, column_name)
         end
       end
 
@@ -34,11 +34,19 @@ class Avram::BaseQueryTemplate
           {{ column[:name] }}.eq(value)
         end
 
-        generate_criteria_method(BaseQuery, {{ column[:name] }}, {{ column[:type] }})
+        {% if column[:type].is_a?(Generic) %}
+          generate_criteria_method(BaseQuery, {{ column[:name] }}, {{ column[:type].type_vars.first }})
 
-        macro inherited
-          generate_criteria_method(\{{ @type.name }}, {{ column[:name] }}, {{ column[:type] }})
-        end
+          macro inherited
+            generate_criteria_method(\{{ @type.name }}, {{ column[:name] }}, {{ column[:type].type_vars.first }})
+          end
+        {% else %}
+          generate_criteria_method(BaseQuery, {{ column[:name] }}, {{ column[:type] }})
+
+          macro inherited
+            generate_criteria_method(\{{ @type.name }}, {{ column[:name] }}, {{ column[:type] }})
+          end
+        {% end %}
       {% end %}
 
       {% for assoc in associations %}

@@ -86,6 +86,7 @@ describe Avram::Migrator::CreateTableStatement do
       add joined_at : Time, default: :now
       add future_time : Time, default: Time.local
       add friend_count : Int16, default: 1
+      add friends : Array(String), default: ["Paul"]
     end
 
     built.statements.size.should eq 1
@@ -100,7 +101,8 @@ describe Avram::Migrator::CreateTableStatement do
       meta jsonb NOT NULL DEFAULT '{}',
       joined_at timestamptz NOT NULL DEFAULT NOW(),
       future_time timestamptz NOT NULL DEFAULT '#{Time.local.to_utc}',
-      friend_count smallint NOT NULL DEFAULT '1');
+      friend_count smallint NOT NULL DEFAULT '1',
+      friends text[] NOT NULL DEFAULT {'Paul'});
     SQL
   end
 

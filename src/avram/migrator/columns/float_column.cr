@@ -11,7 +11,7 @@ module Avram::Migrator::Columns
     def initialize(@name, @nilable, @default, @precision, @scale)
     end
 
-    def initialize(@name, @nilable, @default)
+    def initialize(@name, @nilable, @default, @array)
     end
 
     def column_type

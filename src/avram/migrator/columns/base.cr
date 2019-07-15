@@ -4,6 +4,7 @@ abstract class Avram::Migrator::Columns::Base
 
   macro inherited
     @name : String
+    @array : Bool = false
     @nilable : Bool?
     @references : String?
     @on_delete : Symbol?
@@ -32,11 +33,15 @@ abstract class Avram::Migrator::Columns::Base
     "  " + build_add_statement
   end
 
+  def as_array_type : String
+    @array ? "[]" : ""
+  end
+
   private def build_add_statement : String
     String.build do |row|
       row << name.to_s
       row << " "
-      row << column_type
+      row << column_type + as_array_type
       row << null_fragment
       row << default_fragment unless default.nil?
       row << references_fragment unless references.nil?
