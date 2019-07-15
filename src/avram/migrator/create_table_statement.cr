@@ -80,7 +80,7 @@ class Avram::Migrator::CreateTableStatement
       {% nilable = true %}
       {% array = false %}
     {% elsif type_declaration.type.is_a?(Generic) %}
-      {% type = type_declaraion.type.type_vars.first %}
+      {% type = type_declaration.type.type_vars.first %}
       {% nilable = false %}
       {% array = true %}
     {% else %}
@@ -92,7 +92,7 @@ class Avram::Migrator::CreateTableStatement
     rows << Avram::Migrator::Columns::{{ type }}Column.new(
       name: {{ type_declaration.var.stringify }},
       nilable: {{ nilable }},
-      default: {{ default }}
+      default: {{ default }},
       {{ **type_options }}
     )
     {% if array %}
