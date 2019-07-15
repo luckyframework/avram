@@ -27,6 +27,7 @@ abstract class Avram::Migrator::Columns::Base
 
   def array!
     @array = true
+    self
   end
 
   def build_add_statement_for_alter : String

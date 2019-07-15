@@ -7,6 +7,10 @@ class String
       SuccessfulCast(String).new(value)
     end
 
+    def parse(values : Array(String))
+      SuccessfulCast(Array(String)).new(values)
+    end
+
     def to_db(value : String)
       value
     end

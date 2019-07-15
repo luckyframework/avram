@@ -2,7 +2,7 @@ require "./base"
 
 module Avram::Migrator::Columns
   class StringColumn < Base
-    @default : String? = nil
+    @default : (Array(String) | String | Nil) = nil
 
     def initialize(@name, @nilable, @default)
     end

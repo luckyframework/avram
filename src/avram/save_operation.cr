@@ -129,7 +129,7 @@ abstract class Avram::SaveOperation(T)
           parse_result = {{ attribute[:type] }}::Lucky.parse(_value)
         {% end %}
         if parse_result.is_a? Avram::Type::SuccessfulCast
-          {{ attribute[:name] }}.value = parse_result.value
+          {{ attribute[:name] }}.value = parse_result.value.as({{ attribute[:type] }})
         else
           {{ attribute[:name] }}.add_error "is invalid"
         end

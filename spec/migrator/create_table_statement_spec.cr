@@ -102,7 +102,7 @@ describe Avram::Migrator::CreateTableStatement do
       joined_at timestamptz NOT NULL DEFAULT NOW(),
       future_time timestamptz NOT NULL DEFAULT '#{Time.local.to_utc}',
       friend_count smallint NOT NULL DEFAULT '1',
-      friends text[] NOT NULL DEFAULT {'Paul'});
+      friends text[] NOT NULL DEFAULT '["Paul"]');
     SQL
   end
 
