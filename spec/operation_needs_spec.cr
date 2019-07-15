@@ -1,6 +1,8 @@
 require "./spec_helper"
 
 class Needs::SaveOperation < User::SaveOperation
+  before_save prepare
+
   def prepare
     setup_required_attributes
   end

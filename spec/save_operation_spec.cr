@@ -2,6 +2,7 @@ require "./spec_helper"
 
 private class SaveUser < User::SaveOperation
   permit_columns :name, :nickname, :joined_at, :age
+  before_save prepare
 
   def prepare
     validate_required name, joined_at, age
@@ -16,6 +17,8 @@ private class SaveTask < Task::SaveOperation
 end
 
 private class ValidSaveOperationWithoutParams < Post::SaveOperation
+  before_save prepare
+
   def prepare
     title.value = "My Title"
   end
