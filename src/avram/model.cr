@@ -173,7 +173,7 @@ class Avram::Model
     {% for column in columns %}
       def {{column[:name]}}
         {% if column[:type].is_a?(Generic) %}
-          {{column[:type].type_vars.first}}::Lucky.from_db! @{{column[:name]}}, array: true
+          {{column[:type].type_vars.first}}::Lucky.from_db! @{{column[:name]}}
         {% else %}
           {{ column[:type] }}::Lucky.from_db! @{{column[:name]}}
         {% end %}

@@ -4,7 +4,7 @@ module Avram::Migrator::Columns
   class UUIDColumn < Base
     @default : UUID? = nil
 
-    def initialize(@name, @nilable, @default, @array)
+    def initialize(@name, @nilable, @default)
     end
 
     def column_type

@@ -4,7 +4,7 @@ abstract class Avram::Migrator::Columns::Base
 
   macro inherited
     @name : String
-    @array : Bool = false
+    @array : Bool?
     @nilable : Bool?
     @references : String?
     @on_delete : Symbol?
@@ -23,6 +23,10 @@ abstract class Avram::Migrator::Columns::Base
 
   def set_references(@references, @on_delete)
     {% raise "When setting a reference you must set the reference table and the 'on_delete' option." %}
+  end
+
+  def array!
+    @array = true
   end
 
   def build_add_statement_for_alter : String
