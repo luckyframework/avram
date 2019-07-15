@@ -3,25 +3,34 @@ struct Int16
     alias ColumnType = Int16
     include Avram::Type
 
-    def self.from_db!(value : Int16)
+    def from_db!(value : Int16)
       value
     end
 
-    def self.parse(value : Int16)
+    def parse(value : Int16)
       SuccessfulCast(Int16).new(value)
     end
 
-    def self.parse(value : String)
+    def parse(values : Array(Int16))
+      SuccessfulCast(Array(Int16)).new values
+    end
+
+    def parse(value : String)
       SuccessfulCast(Int16).new value.to_i16
     rescue ArgumentError
       FailedCast.new
     end
 
-    def self.parse(value : Int32)
+    def parse(values : Array(String))
+      values = values.map {|value| parse(value).value }.as(Array(Int16))
+      parse(values)
+    end
+
+    def parse(value : Int32)
       SuccessfulCast(Int16).new value.to_i16
     end
 
-    def self.to_db(value : Int16)
+    def to_db(value : Int16)
       value.to_s
     end
 
