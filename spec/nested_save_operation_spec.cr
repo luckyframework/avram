@@ -49,7 +49,7 @@ private class NestedParams
   end
 end
 
-describe "Avram::SaveOperation with nested form" do
+describe "Avram::SaveOperation with nested operation" do
   context "when not all forms are valid" do
     it "does not save either" do
       params = NestedParams.new business: {"name" => "Fubar"},
@@ -58,7 +58,7 @@ describe "Avram::SaveOperation with nested form" do
 
       SaveBusiness.create(params) do |operation, business|
         business.should be_nil
-        forms_saved?(operation, false)
+        operations_saved?(operation, false)
       end
 
       params = NestedParams.new business: {"name" => "Fubar"},
@@ -67,7 +67,7 @@ describe "Avram::SaveOperation with nested form" do
 
       SaveBusiness.create(params) do |operation, business|
         business.should be_nil
-        forms_saved?(operation, false)
+        operations_saved?(operation, false)
       end
 
       params = NestedParams.new business: {"name" => "Fubar"},
@@ -76,7 +76,7 @@ describe "Avram::SaveOperation with nested form" do
 
       SaveBusiness.create(params) do |operation, business|
         business.should be_nil
-        forms_saved?(operation, false)
+        operations_saved?(operation, false)
       end
     end
   end
@@ -88,7 +88,7 @@ describe "Avram::SaveOperation with nested form" do
         tax_id: {"number" => "123"}
 
       SaveBusiness.create(params) do |operation, business|
-        forms_saved?(operation, saved?: true)
+        operations_saved?(operation, saved?: true)
         operation.errors.keys.size.should eq 0
         operation.save_tax_id.errors.keys.size.should eq 0
         operation.save_email_address.errors.keys.size.should eq 0
@@ -100,7 +100,7 @@ describe "Avram::SaveOperation with nested form" do
   end
 end
 
-private def forms_saved?(operation, saved? : Bool)
+private def operations_saved?(operation, saved? : Bool)
   operation.saved?.should eq(saved?)
   operation.save_email_address.saved?.should eq(saved?)
   operation.save_tax_id.saved?.should eq(saved?)

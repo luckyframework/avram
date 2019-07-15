@@ -5,6 +5,7 @@ private class VirtualOperation < Post::SaveOperation
   attribute terms_of_service : Bool
   attribute best_kind_of_bear : String = "black bear"
   attribute default_is_false : Bool = false
+  before_save prepare
 
   def prepare
     password_confirmation.value = "reset"

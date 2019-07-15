@@ -13,6 +13,7 @@ end
 
 class UniquenessWithDatabaseBackedSaveOperation < User::SaveOperation
   permit_columns name
+  before_save prepare
 
   def prepare
     validate_uniqueness_of name

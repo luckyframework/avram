@@ -5,6 +5,7 @@ end
 
 class SaveCompany < Company::SaveOperation
   permit_columns :sales, :earnings
+  before_save prepare
 
   def prepare
     validate_required sales
