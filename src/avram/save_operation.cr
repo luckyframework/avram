@@ -82,7 +82,16 @@ abstract class Avram::SaveOperation(T)
     private def extract_changes_from_params
       permitted_params.each do |key, value|
         {% for attribute in attributes %}
-          set_{{ attribute[:name] }}_from_param value if key == {{ attribute[:name].stringify }}
+          set_{{ attribute[:name] }}_from_param(
+          {% if attribute[:type].is_a?(Generic) %}
+            # THIS IS A HACK.
+            # Need to figure out what `value` is, and how we can make it
+            # an array
+            [value]
+          {% else %}
+            value
+          {% end %}
+          ) if key == {{ attribute[:name].stringify }}
         {% end %}
       end
     end
