@@ -80,7 +80,7 @@ class Avram::Migrator::CreateTableStatement
       {% nilable = true %}
       {% array = false %}
     {% elsif type_declaration.type.is_a?(Generic) %}
-      {% type = type_declaraion.type_vars.first %}
+      {% type = type_declaration.type.type_vars.first %}
       {% nilable = false %}
       {% array = true %}
     {% else %}
@@ -93,9 +93,11 @@ class Avram::Migrator::CreateTableStatement
       name: {{ type_declaration.var.stringify }},
       nilable: {{ nilable }},
       default: {{ default }},
-      array: {{ array }}
       {{ **type_options }}
     )
+    {% if array %}
+    .array!
+    {% end %}
     .build_add_statement_for_create
 
     {% if index || unique %}

@@ -4,7 +4,7 @@ module Avram::Migrator::Columns
   class Int64Column < Base
     @default : Int64 | Int32 | Nil = nil
 
-    def initialize(@name, @nilable, @default, @array)
+    def initialize(@name, @nilable, @default)
     end
 
     def column_type

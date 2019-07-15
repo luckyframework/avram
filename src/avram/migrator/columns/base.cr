@@ -21,6 +21,10 @@ abstract class Avram::Migrator::Columns::Base
     self
   end
 
+  def array!
+    @array = true
+  end
+
   def set_references(@references, @on_delete)
     {% raise "When setting a reference you must set the reference table and the 'on_delete' option." %}
   end
