@@ -12,15 +12,13 @@ module Avram::Type
   end
 
   def parse(values : Array(String))
-    values = values.map do |value|
-      parsed_result = parse(value)
-      if parsed_result.is_a? Avram::Type::SuccessfulCast
-        parsed_result.value
-      else
-        nil
-      end
-    end.compact.as(Array)
-    parse(values)
+    casts = values.map { |value| parse(value) }
+    if casts.all?(&.is_a?(SuccessfulCast))
+      values = casts.map { |c| c.as(SuccessfulCast).value }
+      parse(values)
+    else
+      FailedCast.new
+    end
   end
 
   def parse!(value)
@@ -44,5 +42,8 @@ module Avram::Type
   end
 
   class FailedCast
+    def value
+      nil
+    end
   end
 end

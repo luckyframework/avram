@@ -2,7 +2,7 @@ require "./base"
 
 module Avram::Migrator::Columns
   class TimeColumn < Base
-    @default : Time | Symbol | Nil = nil
+    @default : Array(Time) | Time | Symbol | Nil = nil
 
     def initialize(@name, @nilable, @default)
     end

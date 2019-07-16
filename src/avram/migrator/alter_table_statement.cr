@@ -83,9 +83,15 @@ class Avram::Migrator::AlterTableStatement
     {% if type_declaration.type.is_a?(Union) %}
       {% type = type_declaration.type.types.first %}
       {% nilable = true %}
+      {% array = false %}
+    {% elsif type_declaration.type.is_a?(Generic) %}
+      {% type = type_declaration.type.type_vars.first %}
+      {% nilable = false %}
+      {% array = true %}
     {% else %}
       {% type = type_declaration.type %}
       {% nilable = false %}
+      {% array = false %}
     {% end %}
 
     {% if !nilable && default == nil && fill_existing_with == nil %}
@@ -112,6 +118,9 @@ class Avram::Migrator::AlterTableStatement
       default: {{ default }},
       {{ **type_options }}
     )
+    {% if array %}
+    .array!
+    {% end %}
     .build_add_statement_for_alter
 
     {% if fill_existing_with && fill_existing_with != :nothing %}

@@ -2,7 +2,7 @@ require "./base"
 
 module Avram::Migrator::Columns
   class BoolColumn < Base
-    @default : Bool? = nil
+    @default : Array(Bool) | Bool | Nil = nil
 
     def initialize(@name, @nilable, @default)
     end
