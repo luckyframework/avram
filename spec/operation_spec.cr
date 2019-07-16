@@ -1,6 +1,6 @@
 require "./spec_helper"
 
-private class TestVirtualOperation < Avram::VirtualOperation
+private class TestOperation < Avram::Operation
   attribute name : String
   attribute age : Int32
 
@@ -9,7 +9,7 @@ private class TestVirtualOperation < Avram::VirtualOperation
   end
 end
 
-private class TestVirtualOperationWithMultipleValidations < Avram::VirtualOperation
+private class TestOperationWithMultipleValidations < Avram::Operation
   attribute name : String
   attribute age : Int32
 
@@ -33,15 +33,15 @@ private class CanUseSameVirtualAttributeTwiceInModelBackedSaveOperation < User::
   attribute password : String
 end
 
-private class CanUseSameVirtualAttributeTwiceInVirtualOperation < Avram::VirtualOperation
+private class CanUseSameVirtualAttributeTwiceInOperation < Avram::Operation
   attribute name : String
 end
 
-private class ParamKeySaveOperation < Avram::VirtualOperation
+private class ParamKeySaveOperation < Avram::Operation
   param_key :custom_param
 end
 
-describe Avram::VirtualOperation do
+describe Avram::Operation do
   it "has create/update args for non column attributes" do
     UserWithVirtual.create(password: "p@ssword") do |operation, _user|
       operation.password.value = "p@ssword"
@@ -54,7 +54,7 @@ describe Avram::VirtualOperation do
   end
 
   it "sets a param_key based on the underscored class name" do
-    TestVirtualOperation.param_key.should eq "test_virtual_operation"
+    TestOperation.param_key.should eq "test_operation"
   end
 
   it "allows overriding the param_key" do
@@ -62,44 +62,44 @@ describe Avram::VirtualOperation do
   end
 
   it "sets up initializers for params and no params" do
-    virtual_operation = TestVirtualOperation.new
-    virtual_operation.name.value.should be_nil
-    virtual_operation.name.value = "Megan"
-    virtual_operation.name.value.should eq("Megan")
+    operation = TestOperation.new
+    operation.name.value.should be_nil
+    operation.name.value = "Megan"
+    operation.name.value.should eq("Megan")
 
     params = Avram::Params.new({"name" => "Jordan"})
-    virtual_operation = TestVirtualOperation.new(params)
-    virtual_operation.name.value.should eq("Jordan")
+    operation = TestOperation.new(params)
+    operation.name.value.should eq("Jordan")
   end
 
   it "parses params" do
     params = Avram::Params.new({"age" => "45"})
-    virtual_operation = TestVirtualOperation.new(params)
-    virtual_operation.age.value.should eq 45
-    virtual_operation.age.errors.should eq [] of String
+    operation = TestOperation.new(params)
+    operation.age.value.should eq 45
+    operation.age.errors.should eq [] of String
 
     params = Avram::Params.new({"age" => "not an int"})
-    virtual_operation = TestVirtualOperation.new(params)
-    virtual_operation.age.value.should be_nil
-    virtual_operation.age.errors.should eq ["is invalid"]
+    operation = TestOperation.new(params)
+    operation.age.value.should be_nil
+    operation.age.errors.should eq ["is invalid"]
   end
 
   it "includes validations" do
     params = Avram::Params.new({"name" => ""})
-    virtual_operation = TestVirtualOperation.new(params)
-    virtual_operation.name.errors.should eq [] of String
-    virtual_operation.valid?.should be_true
+    operation = TestOperation.new(params)
+    operation.name.errors.should eq [] of String
+    operation.valid?.should be_true
 
-    virtual_operation.validate
+    operation.validate
 
-    virtual_operation.name.errors.should eq ["is required"]
-    virtual_operation.valid?.should be_false
+    operation.name.errors.should eq ["is required"]
+    operation.valid?.should be_false
   end
 
   describe "#errors" do
     it "includes errors for all attributes" do
       params = Avram::Params.new({"name" => "", "age" => "20"})
-      operation = TestVirtualOperationWithMultipleValidations.new(params)
+      operation = TestOperationWithMultipleValidations.new(params)
 
       operation.validate
 

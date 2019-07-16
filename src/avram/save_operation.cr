@@ -1,22 +1,19 @@
-require "./validations"
+require "./operation"
+require "./database_validations"
 require "./callbacks"
 require "./nested_save_operation"
 require "./needy_initializer_and_save_methods"
 require "./define_attribute"
 require "./mark_as_failed"
 require "./param_key_override"
-require "./save_operation_errors"
 require "./inherit_column_attributes"
 
-abstract class Avram::SaveOperation(T)
-  include Avram::Validations
+abstract class Avram::SaveOperation(T) < Avram::Operation
   include Avram::NeedyInitializerAndSaveMethods
-  include Avram::DefineAttribute
   include Avram::Callbacks
+  include Avram::DatabaseValidations
   include Avram::NestedSaveOperation
   include Avram::MarkAsFailed
-  include Avram::SaveOperationErrors
-  include Avram::ParamKeyOverride
   include Avram::InheritColumnAttributes
 
   enum SaveStatus
@@ -25,10 +22,10 @@ abstract class Avram::SaveOperation(T)
     Unperformed
   end
 
+  @save_status = SaveStatus::Unperformed
+
   macro inherited
     @valid : Bool = true
-    @save_status = SaveStatus::Unperformed
-
     @@permitted_param_keys = [] of String
     @@schema_class = T
   end

@@ -29,7 +29,7 @@ module Avram::NestedSaveOperation
 
   def mark_nested_save_operations_as_failed
     nested_save_operations.each do |f|
-      f.mark_as_failed
+      f.as(Avram::MarkAsFailed).mark_as_failed
     end
   end
 

@@ -80,7 +80,7 @@ describe "Avram::SaveOperation callbacks" do
 
   it "does not run after_commit if rolled back" do
     post = PostBox.create
-    operation = CallbacksSaveOperation.new(post)
+    operation = CallbacksSaveOperation.new(post, rollback: true)
     operation.callbacks_that_ran.should eq([] of String)
 
     operation.save
