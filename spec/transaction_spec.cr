@@ -39,14 +39,14 @@ describe "Avram::SaveOperation" do
       post = PostBox.new.title("Old Title").create
       Post::BaseQuery.new.first.title.should eq "Old Title"
 
-      PostTransactionSaveOperation.update(post, params, rollback_after_save: true) do |form, post|
+      PostTransactionSaveOperation.update(post, params, rollback_after_save: true) do |operation, post|
         Post::BaseQuery.new.first.title.should eq "Old Title"
-        form.saved?.should be_false
+        operation.saved?.should be_false
       end
 
-      PostTransactionSaveOperation.update(post, params, rollback_after_save: false) do |form, post|
+      PostTransactionSaveOperation.update(post, params, rollback_after_save: false) do |operation, post|
         Post::BaseQuery.new.first.title.should eq "New Title"
-        form.saved?.should be_true
+        operation.saved?.should be_true
       end
     end
   end
@@ -54,16 +54,16 @@ describe "Avram::SaveOperation" do
   describe "creating" do
     it "runs in a transaction" do
       params = {"title" => "New Title"}
-      PostTransactionSaveOperation.create(params, rollback_after_save: true) do |form, post|
+      PostTransactionSaveOperation.create(params, rollback_after_save: true) do |operation, post|
         Post::BaseQuery.new.select_count.to_i.should eq(0)
         post.should be_nil
-        form.saved?.should be_false
+        operation.saved?.should be_false
       end
 
-      PostTransactionSaveOperation.create(params, rollback_after_save: false) do |form, post|
+      PostTransactionSaveOperation.create(params, rollback_after_save: false) do |operation, post|
         Post::BaseQuery.new.select_count.to_i.should eq(1)
         post.should_not be_nil
-        form.saved?.should be_true
+        operation.saved?.should be_true
       end
     end
   end
@@ -72,7 +72,7 @@ describe "Avram::SaveOperation" do
     it "rolls back the transaction and re-raises the error" do
       params = {"title" => "New Title"}
       expect_raises Exception, "Sad face" do
-        BadSaveOperation.create(params) do |form, post|
+        BadSaveOperation.create(params) do |operation, post|
           raise "This should not be executed"
         end
       end

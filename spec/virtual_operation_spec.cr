@@ -43,13 +43,13 @@ end
 
 describe Avram::VirtualOperation do
   it "has create/update args for non column attributes" do
-    UserWithVirtual.create(password: "p@ssword") do |form, _user|
-      form.password.value = "p@ssword"
+    UserWithVirtual.create(password: "p@ssword") do |operation, _user|
+      operation.password.value = "p@ssword"
     end
 
     user = UserBox.create
-    UserWithVirtual.update(user, password: "p@ssword") do |form, _user|
-      form.password.value = "p@ssword"
+    UserWithVirtual.update(user, password: "p@ssword") do |operation, _user|
+      operation.password.value = "p@ssword"
     end
   end
 
@@ -62,48 +62,48 @@ describe Avram::VirtualOperation do
   end
 
   it "sets up initializers for params and no params" do
-    virtual_form = TestVirtualOperation.new
-    virtual_form.name.value.should be_nil
-    virtual_form.name.value = "Megan"
-    virtual_form.name.value.should eq("Megan")
+    virtual_operation = TestVirtualOperation.new
+    virtual_operation.name.value.should be_nil
+    virtual_operation.name.value = "Megan"
+    virtual_operation.name.value.should eq("Megan")
 
     params = Avram::Params.new({"name" => "Jordan"})
-    virtual_form = TestVirtualOperation.new(params)
-    virtual_form.name.value.should eq("Jordan")
+    virtual_operation = TestVirtualOperation.new(params)
+    virtual_operation.name.value.should eq("Jordan")
   end
 
   it "parses params" do
     params = Avram::Params.new({"age" => "45"})
-    virtual_form = TestVirtualOperation.new(params)
-    virtual_form.age.value.should eq 45
-    virtual_form.age.errors.should eq [] of String
+    virtual_operation = TestVirtualOperation.new(params)
+    virtual_operation.age.value.should eq 45
+    virtual_operation.age.errors.should eq [] of String
 
     params = Avram::Params.new({"age" => "not an int"})
-    virtual_form = TestVirtualOperation.new(params)
-    virtual_form.age.value.should be_nil
-    virtual_form.age.errors.should eq ["is invalid"]
+    virtual_operation = TestVirtualOperation.new(params)
+    virtual_operation.age.value.should be_nil
+    virtual_operation.age.errors.should eq ["is invalid"]
   end
 
   it "includes validations" do
     params = Avram::Params.new({"name" => ""})
-    virtual_form = TestVirtualOperation.new(params)
-    virtual_form.name.errors.should eq [] of String
-    virtual_form.valid?.should be_true
+    virtual_operation = TestVirtualOperation.new(params)
+    virtual_operation.name.errors.should eq [] of String
+    virtual_operation.valid?.should be_true
 
-    virtual_form.validate
+    virtual_operation.validate
 
-    virtual_form.name.errors.should eq ["is required"]
-    virtual_form.valid?.should be_false
+    virtual_operation.name.errors.should eq ["is required"]
+    virtual_operation.valid?.should be_false
   end
 
   describe "#errors" do
     it "includes errors for all attributes" do
       params = Avram::Params.new({"name" => "", "age" => "20"})
-      form = TestVirtualOperationWithMultipleValidations.new(params)
+      operation = TestVirtualOperationWithMultipleValidations.new(params)
 
-      form.validate
+      operation.validate
 
-      form.errors.should eq({
+      operation.errors.should eq({
         :name => ["is required"],
         :age  => ["is not old enough"],
       })

@@ -28,9 +28,9 @@ describe "TypeExtensions" do
   end
 
   it "should convert params and save forms" do
-    form = SaveCompany.new({"sales" => "10", "earnings" => "10"})
-    form.sales.value.should eq 10_i64
-    form.earnings.value.should eq 10.0
+    operation = SaveCompany.new({"sales" => "10", "earnings" => "10"})
+    operation.sales.value.should eq 10_i64
+    operation.earnings.value.should eq 10.0
   end
 
   it "Int64 and Float64 should allow querying with Int32" do
