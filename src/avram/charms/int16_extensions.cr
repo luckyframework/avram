@@ -21,11 +21,6 @@ struct Int16
       FailedCast.new
     end
 
-    def parse(values : Array(String))
-      values = values.map {|value| parse(value).value }.as(Array(Int16))
-      parse(values)
-    end
-
     def parse(value : Int32)
       SuccessfulCast(Int16).new value.to_i16
     end

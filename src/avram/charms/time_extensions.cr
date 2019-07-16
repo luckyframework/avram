@@ -27,11 +27,6 @@ struct Time
         FailedCast.new
     end
 
-    def parse(values : Array(String))
-      values = values.map {|value| parse(value).value }.as(Array(Time))
-      parse(values)
-    end
-
     def self.try_parsing_with_default_formatters(value : String)
       TIME_FORMATS.find do |format|
         begin

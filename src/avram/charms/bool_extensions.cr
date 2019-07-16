@@ -25,11 +25,6 @@ struct Bool
       SuccessfulCast(Array(Bool)).new values
     end
 
-    def parse(values : Array(String))
-      values = values.map {|value| parse(value).value }.as(Array(Bool))
-      parse(values)
-    end
-
     def to_db(value : Bool)
       value.to_s
     end

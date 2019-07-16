@@ -21,11 +21,6 @@ struct UUID
       FailedCast.new
     end
 
-    def parse(values : Array(String))
-      values = values.map {|value| parse(value).value }.as(Array(UUID))
-      parse(values)
-    end
-
     def to_db(value : UUID)
       value.to_s
     end

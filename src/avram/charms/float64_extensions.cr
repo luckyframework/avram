@@ -29,11 +29,6 @@ struct Float64
       FailedCast.new
     end
 
-    def parse(values : Array(String))
-      values = values.map {|value| parse(value).value }.as(Array(Float64))
-      parse(values)
-    end
-
     def parse(value : Int32)
       SuccessfulCast(Float64).new value.to_f64
     end

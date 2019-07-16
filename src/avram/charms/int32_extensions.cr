@@ -13,11 +13,6 @@ struct Int32
       FailedCast.new
     end
 
-    def parse(values : Array(String))
-      values = values.map {|value| parse(value).value }.as(Array(Int32))
-      parse(values)
-    end
-
     def parse(value : Int32)
       SuccessfulCast(Int32).new(value)
     end
