@@ -90,20 +90,20 @@ end
 
 describe "Avram::SaveOperation callbacks" do
   it "does not run the save callbacks if just validating" do
-    form = CallbacksSaveOperation.new
-    form.callbacks_that_ran.should eq([] of String)
+    operation = CallbacksSaveOperation.new
+    operation.callbacks_that_ran.should eq([] of String)
 
-    form.valid?
-    form.callbacks_that_ran.should eq(["prepare", "after_prepare"])
+    operation.valid?
+    operation.callbacks_that_ran.should eq(["prepare", "after_prepare"])
   end
 
   it "runs all callbacks except *_update when creating" do
-    form = CallbacksSaveOperation.new
-    form.callbacks_that_ran.should eq([] of String)
+    operation = CallbacksSaveOperation.new
+    operation.callbacks_that_ran.should eq([] of String)
 
-    form.save
+    operation.save
 
-    form.callbacks_that_ran.should eq([
+    operation.callbacks_that_ran.should eq([
       "prepare",
       "after_prepare",
       "before_save",
@@ -119,12 +119,12 @@ describe "Avram::SaveOperation callbacks" do
 
   it "runs all callbacks except *_update when creating" do
     post = PostBox.create
-    form = CallbacksSaveOperation.new(post)
-    form.callbacks_that_ran.should eq([] of String)
+    operation = CallbacksSaveOperation.new(post)
+    operation.callbacks_that_ran.should eq([] of String)
 
-    form.save
+    operation.save
 
-    form.callbacks_that_ran.should eq([
+    operation.callbacks_that_ran.should eq([
       "prepare",
       "after_prepare",
       "before_save",

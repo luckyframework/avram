@@ -175,9 +175,9 @@ describe "Preloading" do
       employees = Employee::BaseQuery.new.preload_manager
       employees.first.manager.should be_nil
 
-      Employee::SaveOperation.new(employee).tap do |form|
-        form.manager_id.value = manager.id
-        form.update!
+      Employee::SaveOperation.new(employee).tap do |operation|
+        operation.manager_id.value = manager.id
+        operation.update!
       end
       employees = Employee::BaseQuery.new.preload_manager
       employees.first.manager.should eq(manager)
