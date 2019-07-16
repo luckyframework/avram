@@ -1,14 +1,16 @@
+require "./validations"
+require "./save_operation_errors"
 require "./define_attribute"
 require "./save_operation_errors"
 require "./param_key_override"
 
 class Avram::VirtualForm
   macro inherited
-    {% raise "Avram::VirtualForm has been renamed to Avram::VirtualOperation. Please inherit from Avram::VirtualOperation." %}
+    {% raise "Avram::VirtualForm has been renamed to Avram::Operation. Please inherit from Avram::Operation." %}
   end
 end
 
-class Avram::VirtualOperation
+class Avram::Operation
   include Avram::DefineAttribute
   include Avram::Validations
   include Avram::SaveOperationErrors

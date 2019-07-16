@@ -1,6 +1,6 @@
 require "./spec_helper"
 
-private class VirtualOperation < Post::SaveOperation
+private class Operation < Post::SaveOperation
   attribute password_confirmation : String
   attribute terms_of_service : Bool
   attribute best_kind_of_bear : String = "black bear"
@@ -88,12 +88,12 @@ describe "attribute in forms" do
   end
 
   it "sets named args for attributes, leaves other empty" do
-    VirtualOperation.create(title: "My Title", best_kind_of_bear: "brown bear") do |operation, post|
+    Operation.create(title: "My Title", best_kind_of_bear: "brown bear") do |operation, post|
       operation.best_kind_of_bear.value.should eq("brown bear")
       operation.terms_of_service.value.should be_nil
       post.should_not be_nil
 
-      VirtualOperation.update(post.not_nil!, best_kind_of_bear: "koala bear") do |operation, post|
+      Operation.update(post.not_nil!, best_kind_of_bear: "koala bear") do |operation, post|
         operation.best_kind_of_bear.value.should eq("koala bear")
       end
     end
@@ -101,5 +101,5 @@ describe "attribute in forms" do
 end
 
 private def operation(attrs = {} of String => String)
-  VirtualOperation.new(attrs)
+  Operation.new(attrs)
 end
