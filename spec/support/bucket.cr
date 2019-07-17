@@ -6,7 +6,5 @@ class Bucket < BaseModel
     column numbers : Array(Int32)
     column big_numbers : Array(Int64)
     column names : Array(String)
-    column dates : Array(Time)
-    column ids : Array(UUID)
   end
 end
