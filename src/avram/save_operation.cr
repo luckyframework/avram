@@ -265,14 +265,11 @@ abstract class Avram::SaveOperation(T)
     nil
   end
 
-  private def cast_value(value : Object)
-    case value
-    when JSON::Any
-      value.to_json
-    else
-      value.to_s
-    end
+  {% for attribute in COLUMN_ATTRIBUTES %}
+  private def cast_value(value : {{ attribute[:type] }})
+    value.not_nil!.class.adapter.to_db(value.as({{ attribute[:type] }}))
   end
+  {% end %}
 
   def save : Bool
     if perform_save

@@ -1,6 +1,6 @@
 struct Bool
-  def blank?
-    false
+  def self.adapter
+    Lucky
   end
 
   module Lucky
@@ -27,6 +27,10 @@ struct Bool
 
     def to_db(value : Bool)
       value.to_s
+    end
+
+    def to_db(values : Array(Bool))
+      PQ::Param.encode_array(values)
     end
 
     class Criteria(T, V) < Avram::Criteria(T, V)

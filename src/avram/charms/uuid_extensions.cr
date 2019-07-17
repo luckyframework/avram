@@ -1,6 +1,6 @@
 struct UUID
-  def blank?
-    false
+  def self.adapter
+    Lucky
   end
 
   module Lucky

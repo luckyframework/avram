@@ -1,4 +1,8 @@
 struct Int16
+  def self.adapter
+    Lucky
+  end
+
   module Lucky
     alias ColumnType = Int16
     include Avram::Type
@@ -27,6 +31,10 @@ struct Int16
 
     def to_db(value : Int16)
       value.to_s
+    end
+
+    def to_db(values : Array(Int16))
+      PQ::Param.encode_array(values)
     end
 
     class Criteria(T, V) < Avram::Criteria(T, V)

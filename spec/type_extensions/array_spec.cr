@@ -25,15 +25,4 @@ describe "Array" do
     result = Int64::Lucky.parse(["1000"])
     result.value.should eq([1000_i64])
   end
-
-  it "parses Array(UUID) from Array(String)" do
-    result = UUID::Lucky.parse(["f51a73d5-bb75-465a-8f8b-d213658dfc63"])
-    result.value.should eq([UUID.new("f51a73d5-bb75-465a-8f8b-d213658dfc63")])
-  end
-
-  it "parses Array(Time) from Array(String)" do
-    result = Time::Lucky.parse(["2019-07-16 14:42:12"])
-    time = Time.parse_utc("2019-07-16 14:42:12", "%Y-%m-%d %H:%M:%S")
-    result.value.should eq([time])
-  end
 end

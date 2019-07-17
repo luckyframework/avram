@@ -1,4 +1,8 @@
 struct Time
+  def self.adapter
+    Lucky
+  end
+
   module Lucky
     alias ColumnType = Time
     include Avram::Type

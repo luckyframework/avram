@@ -1,4 +1,8 @@
 struct JSON::Any
+  def self.adapter
+    Lucky
+  end
+
   module Lucky
     alias ColumnType = JSON::Any
     include Avram::Type
