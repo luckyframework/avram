@@ -261,15 +261,17 @@ abstract class Avram::SaveOperation(T)
     _changes
   end
 
-  private def cast_value(value : Nil)
-    nil
-  end
+  macro add_cast_value_methods(columns)
+    private def cast_value(value : Nil)
+      nil
+    end
 
-  {% for attribute in COLUMN_ATTRIBUTES %}
-  private def cast_value(value : {{ attribute[:type] }})
-    value.not_nil!.class.adapter.to_db(value.as({{ attribute[:type] }}))
+    {% for column in columns %}
+    private def cast_value(value : {{ column[:type] }})
+      value.not_nil!.class.adapter.to_db(value.as({{ column[:type] }}))
+    end
+    {% end %}
   end
-  {% end %}
 
   def save : Bool
     if perform_save

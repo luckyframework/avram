@@ -569,12 +569,14 @@ describe Avram::Query do
 
   context "when querying arrays" do
     describe "simple where query" do
-      bucket = BucketBox.new.names(["pumpkin", "zucchini"]).create
+      it "returns 1 result" do
+        bucket = BucketBox.new.names(["pumpkin", "zucchini"]).create
 
-      query = ArrayQuery.new.names(["pumpkin", "zucchini"])
-      query.to_sql.should eq ["SELECT buckets.id, buckets.created_at, buckets.updated_at, buckets.bools, buckets.prices, buckets.small_numbers, buckets.numbers, buckets.big_numbers, buckets.names FROM buckets WHERE buckets.names = $1", "{\"pumpkin\",\"zucchini\"}"]
-      result = query.first
-      result.should eq bucket
+        query = ArrayQuery.new.names(["pumpkin", "zucchini"])
+        query.to_sql.should eq ["SELECT buckets.id, buckets.created_at, buckets.updated_at, buckets.bools, buckets.small_numbers, buckets.numbers, buckets.big_numbers, buckets.names FROM buckets WHERE buckets.names = $1", "{\"pumpkin\",\"zucchini\"}"]
+        result = query.first
+        result.should eq bucket
+      end
     end
   end
 

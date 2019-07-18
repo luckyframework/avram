@@ -24,6 +24,7 @@ class Avram::SaveOperationTemplate
       end
 
       add_column_attributes({{ primary_key_type }}, {{ columns }})
+      add_cast_value_methods({{ columns }})
     end
   end
 end

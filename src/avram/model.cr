@@ -149,7 +149,7 @@ class Avram::Model
         {{column[:name]}}: {
           {% if column[:type].id == Float64.id %}
             type: PG::Numeric,
-            convertor: Float64Convertor,
+            convertor: Float64Converter,
           {% else %}
             {% if column[:type].is_a?(Generic) %}
             type: {{column[:type]}},
