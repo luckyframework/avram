@@ -82,16 +82,7 @@ abstract class Avram::SaveOperation(T) < Avram::Operation
     private def extract_changes_from_params
       permitted_params.each do |key, value|
         {% for attribute in attributes %}
-          set_{{ attribute[:name] }}_from_param(
-          {% if attribute[:type].is_a?(Generic) %}
-            # THIS IS A HACK.
-            # Need to figure out what `value` is, and how we can make it
-            # an array
-            [value]
-          {% else %}
-            value
-          {% end %}
-          ) if key == {{ attribute[:name].stringify }}
+          set_{{ attribute[:name] }}_from_param(value) if key == {{ attribute[:name].stringify }}
         {% end %}
       end
     end
@@ -133,7 +124,11 @@ abstract class Avram::SaveOperation(T) < Avram::Operation
 
       def set_{{ attribute[:name] }}_from_param(_value)
         {% if attribute[:type].is_a?(Generic) %}
-          parse_result = {{ attribute[:type].type_vars.first }}::Lucky.parse(_value)
+          # HACK:
+          # We have to pass an array her, but what's `_value`?
+          # If `_value` is `"true"`, then we pass `["true"]` which can be parsed, but
+          # what if we need to pass in multiple values? I don't know that params handles that currently
+          parse_result = {{ attribute[:type].type_vars.first }}::Lucky.parse([_value])
         {% else %}
           parse_result = {{ attribute[:type] }}::Lucky.parse(_value)
         {% end %}
