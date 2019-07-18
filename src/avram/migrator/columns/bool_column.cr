@@ -1,8 +1,8 @@
 require "./base"
 
 module Avram::Migrator::Columns
-  class BoolColumn < Base
-    @default : Array(Bool) | Bool | Nil = nil
+  class BoolColumn(T) < Base
+    @default : T | Nil = nil
 
     def initialize(@name, @nilable, @default)
     end

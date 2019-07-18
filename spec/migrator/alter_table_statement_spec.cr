@@ -8,7 +8,7 @@ describe Avram::Migrator::AlterTableStatement do
       add nickname : String, fill_existing_with: :nothing
       add age : Int32, default: 1, unique: true
       add num : Int64, default: 1, index: true
-      add amount_paid : Float, default: 1.0, precision: 10, scale: 5
+      add amount_paid : Float64, default: 1.0, precision: 10, scale: 5
       add completed : Bool, default: false
       add meta : JSON::Any, default: JSON::Any.new({"default" => JSON::Any.new("value")})
       add joined_at : Time, default: :now

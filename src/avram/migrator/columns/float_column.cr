@@ -1,10 +1,10 @@
 require "./base"
 
 module Avram::Migrator::Columns
-  class FloatColumn < Base
+  class FloatColumn(T) < Base
     private getter precision, scale
 
-    @default : Array(Float64) | Float64 | Float32 | Nil = nil
+    @default : T | Float32 | Nil = nil
     @precision : Int32?
     @scale : Int32?
 
@@ -23,9 +23,9 @@ module Avram::Migrator::Columns
     end
   end
 
-  class Float32Column < FloatColumn
+  class Float32Column(T) < FloatColumn(T)
   end
 
-  class Float64Column < FloatColumn
+  class Float64Column(T) < FloatColumn(T)
   end
 end

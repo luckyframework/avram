@@ -1,8 +1,8 @@
 require "./base"
 
 module Avram::Migrator::Columns
-  class StringColumn < Base
-    @default : Array(String) | String | Nil = nil
+  class StringColumn(T) < Base
+    @default : T | Nil = nil
 
     def initialize(@name, @nilable, @default)
     end

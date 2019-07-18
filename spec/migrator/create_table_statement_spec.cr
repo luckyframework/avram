@@ -19,7 +19,7 @@ describe Avram::Migrator::CreateTableStatement do
       add age : Int32
       add completed : Bool
       add joined_at : Time
-      add amount_paid : Float, precision: 10, scale: 2
+      add amount_paid : Float64, precision: 10, scale: 2
       add email : String?
       add meta : JSON::Any?
       add reference : UUID
@@ -80,7 +80,7 @@ describe Avram::Migrator::CreateTableStatement do
       add email : String?, default: "optional"
       add age : Int32, default: 1
       add num : Int64, default: 1
-      add amount_paid : Float, default: 1.0
+      add amount_paid : Float64, default: 1.0
       add completed : Bool, default: false
       add meta : JSON::Any, default: JSON::Any.new(Hash(String, JSON::Any).new)
       add joined_at : Time, default: :now

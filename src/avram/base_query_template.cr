@@ -35,6 +35,7 @@ class Avram::BaseQueryTemplate
         end
 
         {% if column[:type].is_a?(Generic) %}
+          # Checking Array type
           generate_criteria_method(BaseQuery, {{ column[:name] }}, {{ column[:type].type_vars.first }})
 
           macro inherited

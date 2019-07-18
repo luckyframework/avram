@@ -63,7 +63,7 @@ class Avram::Migrator::AlterTableStatement
     {% foreign_key_name = type_declaration.var + "_id" %}
     %table_name = {{ references }} || Wordsmith::Inflector.pluralize({{ underscored_class }})
 
-    rows << ::Avram::Migrator::Columns::{{ foreign_key_type }}Column.new(
+    rows << ::Avram::Migrator::Columns::{{ foreign_key_type }}Column({{ foreign_key_type }}).new(
       name: {{ foreign_key_name.stringify }},
       nilable: {{ optional }},
       default: nil
@@ -112,7 +112,9 @@ class Avram::Migrator::AlterTableStatement
       {% type_declaration.raise "Cannot use both 'default' and 'fill_existing_with' arguments" %}
     {% end %}
 
-    rows << Avram::Migrator::Columns::{{ type }}Column.new(
+    rows << Avram::Migrator::Columns::{{ type }}Column(
+    {% if array %}Array({% end %}{{ type }}{% if array %}){% end %}
+    ).new(
       name: {{ type_declaration.var.stringify }},
       nilable: {{ nilable }},
       default: {{ default }},

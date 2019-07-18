@@ -82,7 +82,7 @@ abstract class Avram::SaveOperation(T) < Avram::Operation
     private def extract_changes_from_params
       permitted_params.each do |key, value|
         {% for attribute in attributes %}
-          set_{{ attribute[:name] }}_from_param(value) if key == {{ attribute[:name].stringify }}
+          set_{{ attribute[:name] }}_from_param value if key == {{ attribute[:name].stringify }}
         {% end %}
       end
     end
@@ -124,10 +124,8 @@ abstract class Avram::SaveOperation(T) < Avram::Operation
 
       def set_{{ attribute[:name] }}_from_param(_value)
         {% if attribute[:type].is_a?(Generic) %}
-          # HACK:
-          # We have to pass an array her, but what's `_value`?
-          # If `_value` is `"true"`, then we pass `["true"]` which can be parsed, but
-          # what if we need to pass in multiple values? I don't know that params handles that currently
+          # Pass `_value` in as an Array. Currently only single values are supported.
+          # TODO: Update this once Lucky params support Arrays natively
           parse_result = {{ attribute[:type].type_vars.first }}::Lucky.parse([_value])
         {% else %}
           parse_result = {{ attribute[:type] }}::Lucky.parse(_value)
@@ -255,6 +253,9 @@ abstract class Avram::SaveOperation(T) < Avram::Operation
     end
 
     {% for column in columns %}
+    # pass `value` to it's `Lucky.to_db` for parsing.
+    # In most cases, that's just calling `to_s`, but in the case of an Array,
+    # `value` is passed to `PQ::Param` to properly encode `[true]` to `{t}`, etc...
     private def cast_value(value : {{ column[:type] }})
       value.not_nil!.class.adapter.to_db(value.as({{ column[:type] }}))
     end
