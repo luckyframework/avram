@@ -1,10 +1,11 @@
 require "./spec_helper"
 
-private class VirtualOperation < Post::SaveOperation
+private class Operation < Post::SaveOperation
   attribute password_confirmation : String
   attribute terms_of_service : Bool
   attribute best_kind_of_bear : String = "black bear"
   attribute default_is_false : Bool = false
+  before_save prepare
 
   def prepare
     password_confirmation.value = "reset"
@@ -17,88 +18,88 @@ end
 
 describe "attribute in forms" do
   it "is a PermittedAttribute" do
-    form.password_confirmation.should be_a(Avram::PermittedAttribute(String?))
-    form.password_confirmation.name.should eq(:password_confirmation)
-    form.password_confirmation.param_key.should eq("post")
+    operation.password_confirmation.should be_a(Avram::PermittedAttribute(String?))
+    operation.password_confirmation.name.should eq(:password_confirmation)
+    operation.password_confirmation.param_key.should eq("post")
   end
 
   it "generates a list of attributes" do
-    form.attributes.map(&.name).should eq [:password_confirmation,
-                                           :terms_of_service,
-                                           :best_kind_of_bear,
-                                           :default_is_false]
+    operation.attributes.map(&.name).should eq [:password_confirmation,
+                                                :terms_of_service,
+                                                :best_kind_of_bear,
+                                                :default_is_false]
   end
 
   it "sets a default value of nil if another one is not given" do
-    form.password_confirmation.value.should be_nil
-    form.terms_of_service.value.should be_nil
+    operation.password_confirmation.value.should be_nil
+    operation.terms_of_service.value.should be_nil
   end
 
   it "assigns the default value to an attribute if one is set and no param is given" do
-    form.best_kind_of_bear.value.should eq "black bear"
-    form.default_is_false.value.should be_false
+    operation.best_kind_of_bear.value.should eq "black bear"
+    operation.default_is_false.value.should be_false
   end
 
   it "overrides the default value with a param if one is given" do
-    form({"best_kind_of_bear" => "brown bear"}).best_kind_of_bear.value.should eq "brown bear"
-    form({"best_kind_of_bear" => ""}).best_kind_of_bear.value.should be_nil
+    operation({"best_kind_of_bear" => "brown bear"}).best_kind_of_bear.value.should eq "brown bear"
+    operation({"best_kind_of_bear" => ""}).best_kind_of_bear.value.should be_nil
   end
 
   it "sets the param and value basd on the passed in params" do
-    form = form({"password_confirmation" => "password"})
+    operation = operation({"password_confirmation" => "password"})
 
-    form.password_confirmation.value.should eq "password"
-    form.password_confirmation.param.should eq "password"
+    operation.password_confirmation.value.should eq "password"
+    operation.password_confirmation.param.should eq "password"
   end
 
   it "is memoized so you can change the attribute in `prepare`" do
-    form = form({"password_confirmation" => "password"})
-    form.password_confirmation.value.should eq "password"
+    operation = operation({"password_confirmation" => "password"})
+    operation.password_confirmation.value.should eq "password"
 
-    form.prepare
-    form.password_confirmation.value.should eq "reset"
+    operation.prepare
+    operation.password_confirmation.value.should eq "reset"
   end
 
   it "parses the value using the declared type" do
-    form = form({"terms_of_service" => "1"})
-    form.terms_of_service.value.should be_true
+    operation = operation({"terms_of_service" => "1"})
+    operation.terms_of_service.value.should be_true
 
-    form = form({"terms_of_service" => "0"})
-    form.terms_of_service.value.should be_false
+    operation = operation({"terms_of_service" => "0"})
+    operation.terms_of_service.value.should be_false
   end
 
   it "gracefully handles invalid params" do
-    form = form({"terms_of_service" => "not a boolean"})
-    form.terms_of_service.value.should be_nil
-    form.terms_of_service.errors.first.should eq "is invalid"
+    operation = operation({"terms_of_service" => "not a boolean"})
+    operation.terms_of_service.value.should be_nil
+    operation.terms_of_service.errors.first.should eq "is invalid"
   end
 
   it "includes attribute errors when calling SaveOperation#valid?" do
-    form = form({"terms_of_service" => "not a boolean"})
-    form.setup_required_database_columns
-    form.valid?.should be_false
+    operation = operation({"terms_of_service" => "not a boolean"})
+    operation.setup_required_database_columns
+    operation.valid?.should be_false
   end
 
   it "can still save to the database" do
     params = {"password_confirmation" => "password", "terms_of_service" => "1"}
-    form = form(params)
-    form.setup_required_database_columns
-    form.save.should eq true
+    operation = operation(params)
+    operation.setup_required_database_columns
+    operation.save.should eq true
   end
 
   it "sets named args for attributes, leaves other empty" do
-    VirtualOperation.create(title: "My Title", best_kind_of_bear: "brown bear") do |form, post|
-      form.best_kind_of_bear.value.should eq("brown bear")
-      form.terms_of_service.value.should be_nil
+    Operation.create(title: "My Title", best_kind_of_bear: "brown bear") do |operation, post|
+      operation.best_kind_of_bear.value.should eq("brown bear")
+      operation.terms_of_service.value.should be_nil
       post.should_not be_nil
 
-      VirtualOperation.update(post.not_nil!, best_kind_of_bear: "koala bear") do |form, post|
-        form.best_kind_of_bear.value.should eq("koala bear")
+      Operation.update(post.not_nil!, best_kind_of_bear: "koala bear") do |operation, post|
+        operation.best_kind_of_bear.value.should eq("koala bear")
       end
     end
   end
 end
 
-private def form(attrs = {} of String => String)
-  VirtualOperation.new(attrs)
+private def operation(attrs = {} of String => String)
+  Operation.new(attrs)
 end

@@ -1,22 +1,19 @@
-require "./validations"
+require "./operation"
+require "./database_validations"
 require "./callbacks"
 require "./nested_save_operation"
 require "./needy_initializer_and_save_methods"
 require "./define_attribute"
 require "./mark_as_failed"
 require "./param_key_override"
-require "./save_operation_errors"
 require "./inherit_column_attributes"
 
-abstract class Avram::SaveOperation(T)
-  include Avram::Validations
+abstract class Avram::SaveOperation(T) < Avram::Operation
   include Avram::NeedyInitializerAndSaveMethods
-  include Avram::DefineAttribute
   include Avram::Callbacks
+  include Avram::DatabaseValidations
   include Avram::NestedSaveOperation
   include Avram::MarkAsFailed
-  include Avram::SaveOperationErrors
-  include Avram::ParamKeyOverride
   include Avram::InheritColumnAttributes
 
   enum SaveStatus
@@ -25,10 +22,10 @@ abstract class Avram::SaveOperation(T)
     Unperformed
   end
 
+  @save_status = SaveStatus::Unperformed
+
   macro inherited
     @valid : Bool = true
-    @save_status = SaveStatus::Unperformed
-
     @@permitted_param_keys = [] of String
     @@schema_class = T
   end
@@ -48,6 +45,7 @@ abstract class Avram::SaveOperation(T)
     T.name.underscore
   end
 
+  # :nodoc:
   def log_failed_save
     Avram.logger.warn({
       failed_to_save:    self.class.name.to_s,
@@ -61,6 +59,7 @@ abstract class Avram::SaveOperation(T)
     end.join(". ")
   end
 
+  # :nodoc:
   def self.save(*args, **named_args, &block)
     {% raise <<-ERROR
       SaveOperations do not have a 'save' method.
@@ -74,6 +73,7 @@ abstract class Avram::SaveOperation(T)
     %}
   end
 
+  # :nodoc:
   macro add_column_attributes(primary_key_type, attributes)
     {% for attribute in attributes %}
       {% COLUMN_ATTRIBUTES << attribute %}
@@ -166,14 +166,6 @@ abstract class Avram::SaveOperation(T)
         {% end %}
       )
     end
-
-    def after_prepare
-      validate_required *required_attributes
-
-      {% if primary_key_type.id == UUID.id %}
-        id.value ||= UUID.random()
-      {% end %}
-    end
   end
 
   private def ensure_paramable(params)
@@ -184,22 +176,23 @@ abstract class Avram::SaveOperation(T)
     end
   end
 
+  # Runs `before_save` steps and returns `true` if all attributes are valid.
   def valid? : Bool
-    prepare
-    after_prepare
+    before_save
     attributes.all? &.valid?
   end
 
-  abstract def after_prepare
-
+  # Returns true if the operation has run and saved the record successfully
   def saved?
     save_status == SaveStatus::Saved
   end
 
+  # Return true if the operation has run and the record failed to save
   def save_failed?
     save_status == SaveStatus::SaveFailed
   end
 
+  # :nodoc:
   macro fillable(*args)
     {% raise "'fillable' has been renamed to 'permit_columns'" %}
   end
@@ -273,8 +266,45 @@ abstract class Avram::SaveOperation(T)
     {% end %}
   end
 
+  macro finished
+    # After all before_save callbacks run, make sure non-nilable column attributes
+    # are there.
+    #
+    # This must run after the other before_* callbacks otherwise it might mark
+    # a field as missing and then later another callback sets the field.
+    #
+    # For example:
+    #
+    #   before_save { email.value = "default@example.com" }
+    #
+    # If we had already validate 'email' it would say 'email is missing' when
+    # in reality We set it in another callback.
+    before_save validate_non_nilable_column_attributes
+
+    def validate_non_nilable_column_attributes
+      validate_required *required_attributes
+    end
+  end
+
   def save : Bool
-    if perform_save
+    if valid? && changes.any?
+      transaction_committed = database.transaction do
+        insert_or_update
+        saved_record = record.not_nil!
+        after_save(saved_record)
+        true
+      end
+
+      if transaction_committed
+        saved_record = record.not_nil!
+        after_commit(saved_record)
+        self.save_status = SaveStatus::Saved
+        true
+      else
+        mark_as_failed
+        false
+      end
+    elsif valid? && changes.empty?
       self.save_status = SaveStatus::Saved
       true
     else
@@ -283,38 +313,11 @@ abstract class Avram::SaveOperation(T)
     end
   end
 
-  private def perform_save : Bool
-    if valid? && changes.any?
-      database.transaction do
-        is_update = persisted?
-        before_save
-        if is_update
-          before_update
-        else
-          before_create
-        end
-
-        insert_or_update
-        saved_record = record.not_nil!
-        after_save(saved_record)
-
-        if is_update
-          after_update(saved_record)
-        else
-          after_create(saved_record)
-        end
-        true
-      end
-    else
-      valid? && changes.empty?
-    end
-  end
-
   def save! : T
     if save
       record.not_nil!
     else
-      raise Avram::InvalidSaveOperationError.new(form: self)
+      raise Avram::InvalidSaveOperationError.new(operation: self)
     end
   end
 
@@ -338,26 +341,15 @@ abstract class Avram::SaveOperation(T)
     @record.try &.id
   end
 
-  # Default callbacks
-  def prepare; end
-
-  def after_prepare; end
-
   def before_save; end
 
   def after_save(_record : T); end
 
-  def before_create; end
-
-  def after_create(_record : T); end
-
-  def before_update; end
-
-  def after_update(_record : T); end
+  def after_commit(_record : T); end
 
   private def insert : T
     self.created_at.value ||= Time.utc if responds_to?(:created_at)
-    self.updated_at.value ||= Time.utc if responds_to?(:created_at)
+    self.updated_at.value ||= Time.utc if responds_to?(:updated_at)
     @record = database.run do |db|
       db.query insert_sql.statement, insert_sql.args do |rs|
         @record = @@schema_class.from_rs(rs).first

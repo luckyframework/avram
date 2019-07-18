@@ -8,7 +8,7 @@ module Avram::NestedSaveOperation
       @_{{ name }} ||= {{ type }}.new(params)
     end
 
-    after_create save_nested_{{ name }}
+    after_save save_nested_{{ name }}
 
     def save_nested_{{ name }}(record)
       {{ name }}.{{ @type.constant(:FOREIGN_KEY).id }}.value = record.id
@@ -29,7 +29,7 @@ module Avram::NestedSaveOperation
 
   def mark_nested_save_operations_as_failed
     nested_save_operations.each do |f|
-      f.mark_as_failed
+      f.as(Avram::MarkAsFailed).mark_as_failed
     end
   end
 
