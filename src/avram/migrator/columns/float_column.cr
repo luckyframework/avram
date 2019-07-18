@@ -1,7 +1,7 @@
 require "./base"
 
 module Avram::Migrator::Columns
-  class FloatColumn(T) < Base
+  abstract class FloatColumn(T) < Base
     private getter precision, scale
 
     @default : T | Float32 | Nil = nil
