@@ -4,8 +4,8 @@ require "./support/base_model"
 require "./support/**"
 require "../config/database"
 
-Db::Create.new.call
-Db::Migrate.new.call
+Db::Create.new(quiet: true).call
+Db::Migrate.new(quiet: true).call
 
 Spec.before_each do
   TestDatabase.truncate

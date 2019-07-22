@@ -77,38 +77,38 @@ module Avram::NeedyInitializerAndSaveMethods
         {{ attribute.var }} : {{ attribute.type }} | Nothing = Nothing.new,
       {% end %}
     )
-      form = new(
+      operation = new(
         {% if with_params %}params,{% end %}
         {% for type_declaration in NEEDS_ON_INITIALIZE %}
           {{ type_declaration.var }},
         {% end %}
       )
       {% for type_declaration in NEEDS_ON_CREATE %}
-        form.{{ type_declaration.var }} = {{ type_declaration.var }}
+        operation.{{ type_declaration.var }} = {{ type_declaration.var }}
       {% end %}
 
       {% if @type.constant :COLUMN_ATTRIBUTES %}
         {% for attribute in COLUMN_ATTRIBUTES.uniq %}
           unless {{ attribute[:name] }}.is_a? Nothing
-            form.{{ attribute[:name] }}.value = {{ attribute[:name] }}
+            operation.{{ attribute[:name] }}.value = {{ attribute[:name] }}
           end
         {% end %}
       {% end %}
 
       {% for attribute in ATTRIBUTES %}
         unless {{ attribute.var }}.is_a? Nothing
-          form.{{ attribute.var }}.value = {{ attribute.var }}
+          operation.{{ attribute.var }}.value = {{ attribute.var }}
         end
       {% end %}
 
       {% if with_bang %}
-        form.save!
+        operation.save!
       {% else %}
-        if form.save
-          yield form, form.record
+        if operation.save
+          yield operation, operation.record
         else
-          form.log_failed_save
-          yield form, nil
+          operation.log_failed_save
+          yield operation, nil
         end
       {% end %}
     end
@@ -130,7 +130,7 @@ module Avram::NeedyInitializerAndSaveMethods
           {{ attribute.var }} : {{ attribute.type }} | Nothing = Nothing.new,
         {% end %}
       )
-      form = new(
+      operation = new(
         record,
         {% if with_params %}params,{% end %}
         {% for type_declaration in NEEDS_ON_INITIALIZE %}
@@ -138,31 +138,31 @@ module Avram::NeedyInitializerAndSaveMethods
         {% end %}
       )
       {% for type_declaration in NEEDS_ON_UPDATE %}
-        form.{{ type_declaration.var }} = {{ type_declaration.var }}
+        operation.{{ type_declaration.var }} = {{ type_declaration.var }}
       {% end %}
 
       {% if @type.constant :COLUMN_ATTRIBUTES %}
         {% for attribute in COLUMN_ATTRIBUTES.uniq %}
           unless {{ attribute[:name] }}.is_a? Nothing
-            form.{{ attribute[:name] }}.value = {{ attribute[:name] }}
+            operation.{{ attribute[:name] }}.value = {{ attribute[:name] }}
           end
         {% end %}
       {% end %}
 
       {% for attribute in ATTRIBUTES %}
         unless {{ attribute.var }}.is_a? Nothing
-          form.{{ attribute.var }}.value = {{ attribute.var }}
+          operation.{{ attribute.var }}.value = {{ attribute.var }}
         end
       {% end %}
 
       {% if with_bang %}
-        form.update!
+        operation.update!
       {% else %}
-        if form.save
-          yield form, form.record.not_nil!
+        if operation.save
+          yield operation, operation.record.not_nil!
         else
-          form.log_failed_save
-          yield form, form.record.not_nil!
+          operation.log_failed_save
+          yield operation, operation.record.not_nil!
         end
       {% end %}
     end

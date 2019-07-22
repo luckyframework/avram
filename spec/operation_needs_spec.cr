@@ -1,6 +1,8 @@
 require "./spec_helper"
 
 class Needs::SaveOperation < User::SaveOperation
+  before_save prepare
+
   def prepare
     setup_required_attributes
   end
@@ -29,14 +31,14 @@ describe "Avram::SaveOperation needs" do
     params = {"name" => "Paul"}
     user = UserBox.create
 
-    form = NeedsWithOnOptionSaveOperation.new(params)
-    form.created_by.should be_nil
-    form.updated_by.should be_nil
-    form.saved_by.should be_nil
-    form = NeedsWithOnOptionSaveOperation.new(user, params)
-    form.created_by.should be_nil
-    form.updated_by.should be_nil
-    form.saved_by.should be_nil
+    operation = NeedsWithOnOptionSaveOperation.new(params)
+    operation.created_by.should be_nil
+    operation.updated_by.should be_nil
+    operation.saved_by.should be_nil
+    operation = NeedsWithOnOptionSaveOperation.new(user, params)
+    operation.created_by.should be_nil
+    operation.updated_by.should be_nil
+    operation.saved_by.should be_nil
   end
 
   it "sets up a method arg for save, update, and new" do
@@ -44,26 +46,26 @@ describe "Avram::SaveOperation needs" do
     UserBox.create
     user = UserQuery.new.first
 
-    NeedsSaveOperation.create(params, nilable_value: "not nil", optional: "bar", created_by: "Jane") do |form, _record|
-      form.nilable_value.should eq("not nil")
-      form.created_by.should eq("Jane")
-      form.optional.should eq("bar")
+    NeedsSaveOperation.create(params, nilable_value: "not nil", optional: "bar", created_by: "Jane") do |operation, _record|
+      operation.nilable_value.should eq("not nil")
+      operation.created_by.should eq("Jane")
+      operation.optional.should eq("bar")
     end
-    NeedsSaveOperation.update(user, params, nilable_value: nil, created_by: "Jane") do |form, _record|
-      form.nilable_value.should be_nil
-      form.created_by.should eq("Jane")
+    NeedsSaveOperation.update(user, params, nilable_value: nil, created_by: "Jane") do |operation, _record|
+      operation.nilable_value.should be_nil
+      operation.created_by.should eq("Jane")
     end
 
     NeedsSaveOperation.new(params, nilable_value: nil, created_by: "Jane")
   end
 
   it "also generates named args for other attributes" do
-    NeedsSaveOperation.create(name: "Jane", nilable_value: "not nil", optional: "bar", created_by: "Jane") do |form, _record|
+    NeedsSaveOperation.create(name: "Jane", nilable_value: "not nil", optional: "bar", created_by: "Jane") do |operation, _record|
       # Problem seems to be that params override passed in val
-      form.name.value.should eq("Jane")
-      form.nilable_value.should eq("not nil")
-      form.created_by.should eq("Jane")
-      form.optional.should eq("bar")
+      operation.name.value.should eq("Jane")
+      operation.nilable_value.should eq("not nil")
+      operation.created_by.should eq("Jane")
+      operation.optional.should eq("bar")
     end
   end
 
@@ -72,13 +74,13 @@ describe "Avram::SaveOperation needs" do
     UserBox.create
     user = UserQuery.new.first
 
-    NeedsWithOnOptionSaveOperation.create(params, saved_by: "Me", created_by: "Bob") do |form, _record|
-      form.created_by.should eq("Bob")
-      form.updated_by.should be_nil
+    NeedsWithOnOptionSaveOperation.create(params, saved_by: "Me", created_by: "Bob") do |operation, _record|
+      operation.created_by.should eq("Bob")
+      operation.updated_by.should be_nil
     end
-    NeedsWithOnOptionSaveOperation.update(user, params, saved_by: "Me", updated_by: "Laura") do |form, _record|
-      form.created_by.should be_nil
-      form.updated_by.should eq("Laura")
+    NeedsWithOnOptionSaveOperation.update(user, params, saved_by: "Me", updated_by: "Laura") do |operation, _record|
+      operation.created_by.should be_nil
+      operation.updated_by.should eq("Laura")
     end
   end
 end

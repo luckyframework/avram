@@ -1,20 +1,20 @@
 abstract class Avram::Box
-  getter form
+  getter operation
 
   SEQUENCES = {} of String => Int32
 
   macro inherited
     {% unless @type.abstract? %}
-      {% form = @type.name.gsub(/Box/, "::SaveOperation").id %}
-      @form : {{ form }} = {{ form }}.new
-      setup_attribute_shortcuts({{ form }})
+      {% operation = @type.name.gsub(/Box/, "::SaveOperation").id %}
+      @operation : {{ operation }} = {{ operation }}.new
+      setup_attribute_shortcuts({{ operation }})
     {% end %}
   end
 
-  macro setup_attribute_shortcuts(form)
-    {% for attribute in form.resolve.constant(:COLUMN_ATTRIBUTES) %}
+  macro setup_attribute_shortcuts(operation)
+    {% for attribute in operation.resolve.constant(:COLUMN_ATTRIBUTES) %}
       def {{ attribute[:name] }}(value : {{ attribute[:type] }}{% if attribute[:nilable] %}?{% end %})
-        form.{{ attribute[:name] }}.value = value
+        operation.{{ attribute[:name] }}.value = value
         self
       end
     {% end %}
@@ -33,7 +33,7 @@ abstract class Avram::Box
   end
 
   def create
-    form.save!
+    operation.save!
   end
 
   def self.create_pair

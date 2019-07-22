@@ -39,16 +39,16 @@ module Avram
   class InvalidSaveOperationError < AvramError
     getter save_operation_errors : Hash(Symbol, Array(String))
 
-    def initialize(form)
+    def initialize(operation)
       message = String.build do |message|
-        message << "Could not save #{form.class.name}."
+        message << "Could not save #{operation.class.name}."
         message << "\n"
         message << "\n"
-        form.errors.each do |attribute_name, errors|
+        operation.errors.each do |attribute_name, errors|
           message << "  ▸ #{attribute_name}: #{errors.join(", ")}\n"
         end
       end
-      @save_operation_errors = form.errors
+      @save_operation_errors = operation.errors
       super message
     end
   end

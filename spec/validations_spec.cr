@@ -13,6 +13,7 @@ end
 
 class UniquenessWithDatabaseBackedSaveOperation < User::SaveOperation
   permit_columns name
+  before_save prepare
 
   def prepare
     validate_uniqueness_of name
@@ -136,24 +137,24 @@ describe Avram::Validations do
   describe "validate_uniqueness_of" do
     it "validates that a new record is unique with a query or without one" do
       existing_user = UserBox.new.name("Sally").nickname("Sal").create
-      form = UniquenessWithDatabaseBackedSaveOperation.new
-      form.name.value = existing_user.name
-      form.nickname.value = existing_user.nickname.not_nil!.downcase
+      operation = UniquenessWithDatabaseBackedSaveOperation.new
+      operation.name.value = existing_user.name
+      operation.nickname.value = existing_user.nickname.not_nil!.downcase
 
-      form.prepare
+      operation.prepare
 
-      form.name.errors.should contain "is already taken"
-      form.nickname.errors.should contain "is already taken"
+      operation.name.errors.should contain "is already taken"
+      operation.nickname.errors.should contain "is already taken"
     end
 
     it "ignores the existing record on update" do
       existing_user = UserBox.new.name("Sally").create
-      form = UniquenessWithDatabaseBackedSaveOperation.new(existing_user)
-      form.name.value = existing_user.name
+      operation = UniquenessWithDatabaseBackedSaveOperation.new(existing_user)
+      operation.name.value = existing_user.name
 
-      form.prepare
+      operation.prepare
 
-      form.name.errors.should_not contain "is already taken"
+      operation.name.errors.should_not contain "is already taken"
     end
   end
 

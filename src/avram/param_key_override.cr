@@ -1,6 +1,13 @@
 module Avram::ParamKeyOverride
   macro included
-    # Override the param key used for this operation
+    define_param_key_override
+
+    macro inherited
+      define_param_key_override
+    end
+  end
+
+  macro define_param_key_override
     macro param_key(key)
       def self.param_key
         \{{ key.id.stringify }}
