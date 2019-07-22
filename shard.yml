@@ -1,7 +1,7 @@
 name: avram
 version: 0.10.0
 
-crystal: 0.27.2
+crystal: 0.29.0
 
 targets:
   lucky.gen.migration:
@@ -13,14 +13,16 @@ authors:
 dependencies:
   blank:
     github: kostya/blank
+    version: 0.1.0
   lucky_cli:
     github: luckyframework/lucky_cli
     version: ~> 0.13
   db:
     github: crystal-lang/crystal-db
+    version: 0.5.1
   pg:
     github: will/crystal-pg
-    version: ~> 0.15
+    version: 0.16.1
   habitat:
     github: luckyframework/habitat
     version: ~> 0.4
