@@ -1,4 +1,8 @@
 struct Time
+  def self.adapter
+    Lucky
+  end
+
   module Lucky
     alias ColumnType = Time
     include Avram::Type
@@ -14,11 +18,11 @@ struct Time
       Time::Format::ISO_8601_TIME,
     ]
 
-    def self.from_db!(value : Time)
+    def from_db!(value : Time)
       value
     end
 
-    def self.parse(value : String) : SuccessfulCast(Time) | FailedCast
+    def parse(value : String) : SuccessfulCast(Time) | FailedCast
       # Prefer user defined string formats
       try_parsing_with_string_formats(value) ||
         # Then try default formats
@@ -51,11 +55,15 @@ struct Time
       end
     end
 
-    def self.parse(value : Time)
+    def parse(value : Time)
       SuccessfulCast(Time).new value
     end
 
-    def self.to_db(value : Time)
+    def parse(values : Array(Time))
+      SuccessfulCast(Array(Time)).new values
+    end
+
+    def to_db(value : Time)
       value.to_s
     end
 

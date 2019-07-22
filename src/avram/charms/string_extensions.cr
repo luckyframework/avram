@@ -1,4 +1,8 @@
 class String
+  def self.adapter
+    Lucky
+  end
+
   module Lucky
     alias ColumnType = String
     include Avram::Type
@@ -7,8 +11,16 @@ class String
       SuccessfulCast(String).new(value)
     end
 
+    def parse(values : Array(String))
+      SuccessfulCast(Array(String)).new(values)
+    end
+
     def to_db(value : String)
       value
+    end
+
+    def to_db(values : Array(String))
+      PQ::Param.encode_array(values)
     end
 
     class Criteria(T, V) < Avram::Criteria(T, V)

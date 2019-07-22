@@ -123,9 +123,15 @@ abstract class Avram::SaveOperation(T) < Avram::Operation
       end
 
       def set_{{ attribute[:name] }}_from_param(_value)
-        parse_result = {{ attribute[:type] }}::Lucky.parse(_value)
+        {% if attribute[:type].is_a?(Generic) %}
+          # Pass `_value` in as an Array. Currently only single values are supported.
+          # TODO: Update this once Lucky params support Arrays natively
+          parse_result = {{ attribute[:type].type_vars.first }}::Lucky.parse([_value])
+        {% else %}
+          parse_result = {{ attribute[:type] }}::Lucky.parse(_value)
+        {% end %}
         if parse_result.is_a? Avram::Type::SuccessfulCast
-          {{ attribute[:name] }}.value = parse_result.value
+          {{ attribute[:name] }}.value = parse_result.value.as({{ attribute[:type] }})
         else
           {{ attribute[:name] }}.add_error "is invalid"
         end
@@ -241,17 +247,19 @@ abstract class Avram::SaveOperation(T) < Avram::Operation
     _changes
   end
 
-  private def cast_value(value : Nil)
-    nil
-  end
-
-  private def cast_value(value : Object)
-    case value
-    when JSON::Any
-      value.to_json
-    else
-      value.to_s
+  macro add_cast_value_methods(columns)
+    private def cast_value(value : Nil)
+      nil
     end
+
+    {% for column in columns %}
+    # pass `value` to it's `Lucky.to_db` for parsing.
+    # In most cases, that's just calling `to_s`, but in the case of an Array,
+    # `value` is passed to `PQ::Param` to properly encode `[true]` to `{t}`, etc...
+    private def cast_value(value : {{ column[:type] }})
+      value.not_nil!.class.adapter.to_db(value.as({{ column[:type] }}))
+    end
+    {% end %}
   end
 
   macro finished

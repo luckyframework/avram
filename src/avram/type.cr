@@ -11,6 +11,16 @@ module Avram::Type
     SuccessfulCast(Nil).new(nil)
   end
 
+  def parse(values : Array(String))
+    casts = values.map { |value| parse(value) }
+    if casts.all?(&.is_a?(SuccessfulCast))
+      values = casts.map { |c| c.as(SuccessfulCast).value }
+      parse(values)
+    else
+      FailedCast.new
+    end
+  end
+
   def parse!(value)
     parse(value).as(SuccessfulCast).value
   end
@@ -32,5 +42,8 @@ module Avram::Type
   end
 
   class FailedCast
+    def value
+      nil
+    end
   end
 end

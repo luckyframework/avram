@@ -1,7 +1,7 @@
 require "./base"
 
 module Avram::Migrator::Columns::JSON
-  class AnyColumn < Base
+  class AnyColumn(T) < Base
     @default : ::JSON::Any? = nil
 
     def initialize(@name, @nilable, @default)

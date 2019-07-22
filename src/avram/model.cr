@@ -149,9 +149,13 @@ class Avram::Model
         {{column[:name]}}: {
           {% if column[:type].id == Float64.id %}
             type: PG::Numeric,
-            convertor: Float64Convertor,
+            convertor: Float64Converter,
           {% else %}
+            {% if column[:type].is_a?(Generic) %}
+            type: {{column[:type]}},
+            {% else %}
             type: {{column[:type]}}::Lucky::ColumnType,
+            {% end %}
           {% end %}
           nilable: {{column[:nilable]}},
         },
@@ -168,7 +172,11 @@ class Avram::Model
   macro setup_getters(columns, *args, **named_args)
     {% for column in columns %}
       def {{column[:name]}}
-        {{ column[:type] }}::Lucky.from_db! @{{column[:name]}}
+        {% if column[:type].is_a?(Generic) %}
+          {{column[:type].type_vars.first}}::Lucky.from_db! @{{column[:name]}}
+        {% else %}
+          {{ column[:type] }}::Lucky.from_db! @{{column[:name]}}
+        {% end %}
       end
     {% end %}
   end

@@ -8,7 +8,7 @@ class TestDefaults::V20180802180357 < Avram::Migrator::Migration::V1
       add published_at : Time, default: 1.day.from_now
       add admin : Bool, default: false
       add age : Int32, default: 30
-      add money : Float, default: 3.5
+      add money : Float64, default: 3.5
     end
   end
 

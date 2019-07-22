@@ -78,17 +78,28 @@ class Avram::Migrator::CreateTableStatement
     {% if type_declaration.type.is_a?(Union) %}
       {% type = type_declaration.type.types.first %}
       {% nilable = true %}
+      {% array = false %}
+    {% elsif type_declaration.type.is_a?(Generic) %}
+      {% type = type_declaration.type.type_vars.first %}
+      {% nilable = false %}
+      {% array = true %}
     {% else %}
       {% type = type_declaration.type %}
       {% nilable = false %}
+      {% array = false %}
     {% end %}
 
-    rows << Avram::Migrator::Columns::{{ type }}Column.new(
+    rows << Avram::Migrator::Columns::{{ type }}Column(
+    {% if array %}Array({% end %}{{ type }}{% if array %}){% end %}
+    ).new(
       name: {{ type_declaration.var.stringify }},
       nilable: {{ nilable }},
       default: {{ default }},
       {{ **type_options }}
     )
+    {% if array %}
+    .array!
+    {% end %}
     .build_add_statement_for_create
 
     {% if index || unique %}
@@ -112,7 +123,7 @@ class Avram::Migrator::CreateTableStatement
     {% foreign_key_name = type_declaration.var + "_id" %}
     %table_name = {{ references }} || Wordsmith::Inflector.pluralize({{ underscored_class }})
 
-    rows << Avram::Migrator::Columns::{{ foreign_key_type }}Column.new(
+    rows << Avram::Migrator::Columns::{{ foreign_key_type }}Column({{ foreign_key_type }}).new(
       name: {{ foreign_key_name.stringify }},
       nilable: {{ optional }},
       default: nil,

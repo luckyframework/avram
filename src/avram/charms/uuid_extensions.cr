@@ -1,6 +1,6 @@
 struct UUID
-  def blank?
-    false
+  def self.adapter
+    Lucky
   end
 
   module Lucky
@@ -9,6 +9,10 @@ struct UUID
 
     def parse(value : UUID)
       SuccessfulCast(UUID).new(value)
+    end
+
+    def parse(values : Array(UUID))
+      SuccessfulCast(Array(UUID)).new values
     end
 
     def parse(value : String)

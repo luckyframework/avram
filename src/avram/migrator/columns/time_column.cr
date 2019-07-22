@@ -1,8 +1,8 @@
 require "./base"
 
 module Avram::Migrator::Columns
-  class TimeColumn < Base
-    @default : Time | Symbol | Nil = nil
+  class TimeColumn(T) < Base
+    @default : T | Symbol | Nil = nil
 
     def initialize(@name, @nilable, @default)
     end

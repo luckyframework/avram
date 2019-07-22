@@ -1,8 +1,8 @@
 require "./base"
 
 module Avram::Migrator::Columns
-  class Int16Column < Base
-    @default : Int16 | Int32 | Nil = nil
+  class Int16Column(T) < Base
+    @default : T | Int32 | Nil = nil
 
     def initialize(@name, @nilable, @default)
     end

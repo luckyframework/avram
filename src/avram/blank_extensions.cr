@@ -1,3 +1,9 @@
+struct Bool
+  def blank?
+    false
+  end
+end
+
 struct Time
   def blank?
     nil?
@@ -37,5 +43,17 @@ end
 struct JSON::Any
   def blank?
     nil?
+  end
+end
+
+struct UUID
+  def blank?
+    false
+  end
+end
+
+class Array(T)
+  def blank?
+    empty?
   end
 end

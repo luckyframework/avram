@@ -1,8 +1,8 @@
 require "./base"
 
 module Avram::Migrator::Columns
-  class UUIDColumn < Base
-    @default : UUID? = nil
+  class UUIDColumn(T) < Base
+    @default : T | Nil = nil
 
     def initialize(@name, @nilable, @default)
     end
