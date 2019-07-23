@@ -24,7 +24,7 @@ class <%= migration_class_name %> < Avram::Migrator::Migration::V1
     <%- if formatted_rollback_contents -%>
     <%= formatted_rollback_contents %>
     <%- else -%>
-    # drop :things
+    # drop table_for(Thing)
     <%- end -%>
   end
 end
