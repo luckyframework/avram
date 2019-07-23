@@ -1,3 +1,3 @@
 module Avram::CallableErrorMessage
-  abstract def call(name, value)
+  abstract def call(attribute_name, attribute_value)
 end
