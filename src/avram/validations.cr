@@ -1,4 +1,4 @@
-require "./validations/**"
+require "./validations/callable_error_message"
 
 module Avram::Validations
   extend self
