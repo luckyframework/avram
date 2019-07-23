@@ -17,13 +17,33 @@ module Avram::Validations
     end
   end
 
-  def validate_confirmation_of(attribute : Avram::Attribute, with confirmation_attribute, message : Avram::Attribute::ErrorMessage = "must match")
+  # Validates that the values of two attributes are the same
+  #
+  # Takes two attributes and if the values are different the second attribute
+  # (`with`/`confirmation_attribute`) will be marked as invalid
+  #
+  # Example:
+  #
+  # ```
+  # validate_confirmation_of password, with: password_confirmation
+  # ```
+  #
+  # If `password_confirmation` does not match, it will be marked invalid.
+  def validate_confirmation_of(
+    attribute : Avram::Attribute(T),
+    with confirmation_attribute : Avram::Attribute(T),
+    message : Avram::Attribute::ErrorMessage = "must match"
+  ) forall T
     if attribute.value != confirmation_attribute.value
       confirmation_attribute.add_error message
     end
   end
 
-  def validate_inclusion_of(attribute : Avram::Attribute(T), in allowed_values : Enumerable(T), message : Avram::Attribute::ErrorMessage = "is invalid") forall T
+  def validate_inclusion_of(
+    attribute : Avram::Attribute(T),
+    in allowed_values : Enumerable(T),
+    message : Avram::Attribute::ErrorMessage = "is invalid"
+  ) forall T
     if !allowed_values.includes? attribute.value
       attribute.add_error message
     end
