@@ -68,7 +68,7 @@ class Avram::BaseQueryTemplate
               )
             {% elsif assoc[:through] %}
               {{ join_type.downcase.id }}_join_{{ assoc[:through].id }}
-              {{ assoc[:through].id }} do |join_query|
+              where_{{ assoc[:through].id }} do |join_query|
                 join_query.{{ join_type.downcase.id }}_join_{{ assoc[:table_name] }}
               end
             {% else %}
@@ -85,7 +85,7 @@ class Avram::BaseQueryTemplate
         {% end %}
 
 
-        def {{ assoc[:table_name] }}
+        def where_{{ assoc[:table_name] }}
           {{ assoc[:type] }}::BaseQuery.new_with_existing_query(query).tap do |assoc_query|
             yield assoc_query
           end
