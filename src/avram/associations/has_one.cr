@@ -54,7 +54,7 @@ module Avram::Associations::HasOne
           ids = records.map(&.id)
           {{ assoc_name }} = preload_query.dup.{{ foreign_key }}.in(ids).results.group_by(&.{{ foreign_key }})
           records.each do |record|
-            record.set_preloaded_{{ assoc_name }} {{ assoc_name }}[record.id]?.try(&.first?)
+            record.__set_preloaded_{{ assoc_name }} {{ assoc_name }}[record.id]?.try(&.first?)
           end
         end
         self

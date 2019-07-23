@@ -63,9 +63,9 @@ module Avram::Associations::BelongsTo
           {{ assoc_name }} = preload_query.dup.id.in(ids).results.group_by(&.id)
           records.each do |record|
             if (id = record.{{ foreign_key }})
-              record.set_preloaded_{{ assoc_name }} {{ assoc_name }}[id]?.try(&.first?)
+              record.__set_preloaded_{{ assoc_name }} {{ assoc_name }}[id]?.try(&.first?)
             else
-              record.set_preloaded_{{ assoc_name }} nil
+              record.__set_preloaded_{{ assoc_name }} nil
             end
           end
         end

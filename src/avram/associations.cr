@@ -20,13 +20,14 @@ module Avram::Associations
     end
 
     @_{{ assoc_name }}_preloaded : Bool = false
-    getter? _{{ assoc_name }}_preloaded
-    getter _preloaded_{{ assoc_name }} : {{ model }}?
+    private getter? _{{ assoc_name }}_preloaded
+    private getter _preloaded_{{ assoc_name }} : {{ model }}?
   end
 
   # :nodoc:
   macro __define_preloaded_setter(assoc_name, model)
-    def set_preloaded_{{ assoc_name }}(record : {{ model }}?)
+    # :nodoc:
+    def __set_preloaded_{{ assoc_name }}(record : {{ model }}?)
       @_{{ assoc_name }}_preloaded = true
       @_preloaded_{{ assoc_name }} = record
     end
