@@ -91,6 +91,18 @@ class Avram::BaseQueryTemplate
           end
           self
         end
+
+        def {{ assoc[:table_name] }}
+          \{% raise <<-ERROR
+            The methods for querying associations are now prefixed with 'where_'
+
+            Try this...
+
+              ▸ Use 'where_{{ assoc[:table_name] }}'
+            ERROR
+          %}
+          yield # This is not used. Just there so it works with blocks.
+        end
       {% end %}
     end
   end
