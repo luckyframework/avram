@@ -2,7 +2,6 @@
 
 # Exit if any subcommand fails
 set -e
-set -o pipefail
 
 # Precompile tasks if not in production and not in CI
 # Also allow skipping precompilation with an ENV var
