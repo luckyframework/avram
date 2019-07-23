@@ -1,7 +1,9 @@
 require "./validations/**"
 
 module Avram::Validations
-  private def validate_required(*attributes, message = "is required")
+  extend self
+
+  def validate_required(*attributes, message : Avram::Attribute::ErrorMessage = "is required")
     attributes.each do |attribute|
       if attribute.value.blank? && attribute.value != false
         attribute.add_error message
@@ -9,31 +11,31 @@ module Avram::Validations
     end
   end
 
-  private def validate_acceptance_of(attribute : Attribute(Bool?), message = "must be accepted")
+  def validate_acceptance_of(attribute : Avram::Attribute(Bool?), message : Avram::Attribute::ErrorMessage = "must be accepted")
     if attribute.value != true
       attribute.add_error message
     end
   end
 
-  private def validate_confirmation_of(attribute, with confirmation_attribute, message = "must match")
+  def validate_confirmation_of(attribute : Avram::Attribute, with confirmation_attribute, message : Avram::Attribute::ErrorMessage = "must match")
     if attribute.value != confirmation_attribute.value
       confirmation_attribute.add_error message
     end
   end
 
-  private def validate_inclusion_of(attribute, in allowed_values, message = "is invalid")
+  def validate_inclusion_of(attribute : Avram::Attribute, in allowed_values, message : Avram::Attribute::ErrorMessage = "is invalid")
     if !allowed_values.includes? attribute.value
       attribute.add_error message
     end
   end
 
-  private def validate_size_of(attribute, *, is exact_size, message = "is invalid")
+  def validate_size_of(attribute : Avram::Attribute, *, is exact_size, message : Avram::Attribute::ErrorMessage = "is invalid")
     if attribute.value.to_s.size != exact_size
       attribute.add_error message
     end
   end
 
-  private def validate_size_of(attribute, min = nil, max = nil)
+  def validate_size_of(attribute : Avram::Attribute, min = nil, max = nil)
     if !min.nil? && !max.nil? && min > max
       raise ImpossibleValidation.new(attribute: attribute.name, message: "size greater than #{min} but less than #{max}")
     end
@@ -49,7 +51,7 @@ module Avram::Validations
     end
   end
 
-  private def validate_uniqueness_of(
+  def validate_uniqueness_of(
     attribute : Avram::Attribute,
     query : Avram::Criteria,
     message : String = "is already taken"
@@ -61,9 +63,9 @@ module Avram::Validations
     end
   end
 
-  private def validate_uniqueness_of(
+  def validate_uniqueness_of(
     attribute : Avram::Attribute,
-    message : String = "is already taken"
+    message : Avram::Attribute::ErrorMessage = "is already taken"
   )
     attribute.value.try do |value|
       if build_validation_query(attribute.name, attribute.value).first?
