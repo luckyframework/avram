@@ -23,7 +23,7 @@ module Avram::Validations
     end
   end
 
-  def validate_inclusion_of(attribute : Avram::Attribute, in allowed_values, message : Avram::Attribute::ErrorMessage = "is invalid")
+  def validate_inclusion_of(attribute : Avram::Attribute(T), in allowed_values : Enumerable(T), message : Avram::Attribute::ErrorMessage = "is invalid") forall T
     if !allowed_values.includes? attribute.value
       attribute.add_error message
     end
