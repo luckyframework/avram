@@ -21,6 +21,7 @@ module Avram::Associations::HasMany
     {% model = type_declaration.type %}
 
     define_has_many_lazy_loading({{ assoc_name }}, {{ model }}, {{ foreign_key }}, {{ through }})
+    define_has_many_base_query({{ assoc_name }}, {{ model }}, {{ foreign_key }}, {{through}})
   end
 
   private macro define_has_many_base_query(assoc_name, model, foreign_key, through)
