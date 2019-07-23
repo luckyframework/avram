@@ -37,7 +37,7 @@ module Avram::Associations::HasMany
             all_{{ assoc_name }} = preload_query
               .dup
               .join_{{ through.id }}
-              .{{ through.id }} do |through_query|
+              .where_{{ through.id }} do |through_query|
                 through_query.{{ foreign_key.id }}.in(ids)
               end
               .preload_{{ through.id }}
@@ -90,7 +90,7 @@ module Avram::Associations::HasMany
         {{ model }}::BaseQuery
           .new
           .join_{{ through.id }}
-          .{{ through.id }} do |through_query|
+          .where_{{ through.id }} do |through_query|
             through_query.{{ foreign_key.id }}(id)
           end
           .preload_{{ through.id }}
