@@ -18,8 +18,9 @@ class Db::VerifyConnection < LuckyCli::Task
 
       To fix, try this...
 
-        ▸ Check your database config in config/database.cr and make sure it is correct
-        ▸ Then run `lucky db.verify_connection` to make sure it can connect
+        ▸ Make sure Postgres is running.
+        ▸ Check your database config in config/database.cr and make sure it is correct.
+        ▸ Then run `lucky db.verify_connection` to make sure it can connect.
 
       ERROR
     end
