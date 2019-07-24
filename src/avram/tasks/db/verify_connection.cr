@@ -6,13 +6,14 @@ class Db::VerifyConnection < LuckyCli::Task
       DB.open(Avram::Migrator::Runner.database_url) do |db|
       end
     rescue PQ::ConnectionError | DB::ConnectionRefused
-      puts <<-ERROR
+      raise <<-ERROR
       Unable to connect to postgres.
 
       Try this...
 
         ▸ Check your configuration in config/database.cr
-        ▸ Ensure you can connect locally using `psql`
+        ▸ Ensure you can connect locally using `psql #{Avram::Migrator::Runner.cmd_args}`
+
       ERROR
     end
   end
