@@ -5,7 +5,6 @@ require "./support/**"
 require "../config/database"
 
 Db::VerifyConnection.new.call
-
 Db::Create.new(quiet: true).call
 Db::Migrate.new(quiet: true).call
 
