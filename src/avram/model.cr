@@ -33,7 +33,11 @@ class Avram::Model
     ASSOCIATIONS = [] of {name: Symbol, foreign_key: Symbol, type: Object, through: Object, relationship_type: Symbol}
   end
 
-  def_equals id
+  def_equals id, model_name
+
+  def model_name
+    self.class.name
+  end
 
   def to_param
     id.to_s

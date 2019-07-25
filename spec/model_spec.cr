@@ -55,6 +55,14 @@ private class InferredTableNameModel < BaseModel
 end
 
 describe Avram::Model do
+  it "compares with id and model name, not just id" do
+    user = UserBox.create
+    task = TaskBox.create
+
+    user.id.should eq(task.id)
+    user.should_not eq(task)
+  end
+
   it "sets up initializers based on the columns" do
     now = Time.utc
 
