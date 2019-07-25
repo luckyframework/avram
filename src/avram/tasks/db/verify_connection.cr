@@ -12,6 +12,7 @@ class Db::VerifyConnection < LuckyCli::Task
       This is what we tried to connect to:
 
         * host: #{Avram::Migrator::Runner.db_host}
+        * port: #{Avram::Migrator::Runner.db_port}
         * database: #{Avram::Migrator::Runner.db_name}
         * username: #{Avram::Migrator::Runner.db_user}
         * password: check config/database.cr
@@ -19,7 +20,7 @@ class Db::VerifyConnection < LuckyCli::Task
       To fix, try this...
 
         ▸ Make sure Postgres is running.
-        ▸ Check your database config in config/database.cr and make sure it is correct.
+        ▸ Check connection settings in config/database.cr.
         ▸ Then run `lucky db.verify_connection` to make sure it can connect.
 
       ERROR
