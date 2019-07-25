@@ -14,6 +14,7 @@ class Avram::QueryBuilder
   @selections : String = "*"
   @prepared_statement_placeholder = 0
   @distinct : Bool = false
+  @delete : Bool = false
   @distinct_on : String | Symbol | Nil = nil
 
   VALID_DIRECTIONS = [:asc, :desc]
@@ -26,7 +27,7 @@ class Avram::QueryBuilder
   end
 
   def statement
-    join_sql [select_sql] + sql_condition_clauses
+    join_sql [@delete ? delete_sql : select_sql] + sql_condition_clauses
   end
 
   def statement_for_update(params)
@@ -68,6 +69,11 @@ class Avram::QueryBuilder
 
   private def sql_condition_clauses
     [joins_sql, wheres_sql, order_sql, limit_sql, offset_sql]
+  end
+
+  def delete
+    @delete = true
+    self
   end
 
   def distinct
@@ -246,5 +252,9 @@ class Avram::QueryBuilder
   private def next_prepared_statement_placeholder
     @prepared_statement_placeholder += 1
     "$#{@prepared_statement_placeholder}"
+  end
+
+  private def delete_sql
+    "DELETE FROM #{table}"
   end
 end

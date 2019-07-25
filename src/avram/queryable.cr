@@ -55,6 +55,13 @@ module Avram::Queryable(T)
     self
   end
 
+  def delete_all : Int64
+    query.delete
+    database.run do |db|
+      db.exec(query.statement, query.args).rows_affected
+    end
+  end
+
   def join(join_clause : Avram::Join::SqlClause)
     query.join(join_clause)
     self
