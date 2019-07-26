@@ -598,7 +598,7 @@ describe Avram::Query do
 
       ChainedQuery.new.select_count.should eq 4
       # use the glove to remove half of them
-      result = ChainedQuery.new.young.delete_all
+      result = ChainedQuery.new.young.delete
       result.should eq 2
       ChainedQuery.new.select_count.should eq 2
     end
@@ -607,7 +607,7 @@ describe Avram::Query do
       UserBox.new.name("Steve").age(90).create
       UserBox.new.name("Nick").age(66).create
 
-      result = ChainedQuery.new.delete_all
+      result = ChainedQuery.new.delete
       result.should eq 2
       ChainedQuery.new.select_count.should eq 0
     end
