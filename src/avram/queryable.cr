@@ -62,7 +62,7 @@ module Avram::Queryable(T)
   #
   # ```
   # # DELETE FROM users WHERE age < 21
-  # UserQuery.new.age.lt(21).delete_all
+  # UserQuery.new.age.lt(21).delete
   # ```
   def delete : Int64
     query.delete
