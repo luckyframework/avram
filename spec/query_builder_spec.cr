@@ -6,6 +6,18 @@ describe "Avram::QueryBuilder" do
     new_query.args.should eq [] of String
   end
 
+  it "deletes all" do
+    new_query.delete.statement.should eq "DELETE FROM users"
+  end
+
+  it "deletes where" do
+    query = new_query
+      .where(Avram::Where::Equal.new(:age, "42"))
+      .delete
+    query.statement.should eq "DELETE FROM users WHERE age = $1"
+    query.args.should eq ["42"]
+  end
+
   it "can be limited" do
     query = new_query.limit(1)
     query.statement.should eq "SELECT * FROM users LIMIT 1"

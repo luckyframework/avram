@@ -55,6 +55,21 @@ module Avram::Queryable(T)
     self
   end
 
+  # Delete the records using the query's where clauses,
+  # or all the records if no wheres are added.
+  #
+  # returns the number of records removed as `Int64`.
+  # ```
+  # # DELETE FROM users WHERE age < 21
+  # UserQuery.new.age.lt(21).delete
+  # ```
+  def delete : Int64
+    query.delete
+    database.run do |db|
+      db.exec(query.statement, query.args).rows_affected
+    end
+  end
+
   def join(join_clause : Avram::Join::SqlClause)
     query.join(join_clause)
     self

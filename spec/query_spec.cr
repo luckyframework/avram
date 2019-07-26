@@ -588,4 +588,28 @@ describe Avram::Query do
       UserQuery.new.select_count.should eq 0
     end
   end
+
+  describe "delete_all" do
+    it "deletes user records that are young" do
+      UserBox.new.name("Tony").age(48).create
+      UserBox.new.name("Peter").age(15).create
+      UserBox.new.name("Bruce").age(49).create
+      UserBox.new.name("Wanda").age(17).create
+
+      ChainedQuery.new.select_count.should eq 4
+      # use the glove to remove half of them
+      result = ChainedQuery.new.young.delete
+      result.should eq 2
+      ChainedQuery.new.select_count.should eq 2
+    end
+
+    it "delete all records since no where clause is specified" do
+      UserBox.new.name("Steve").age(90).create
+      UserBox.new.name("Nick").age(66).create
+
+      result = ChainedQuery.new.delete
+      result.should eq 2
+      ChainedQuery.new.select_count.should eq 0
+    end
+  end
 end
