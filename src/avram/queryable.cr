@@ -55,6 +55,15 @@ module Avram::Queryable(T)
     self
   end
 
+  # returns the number of records removed as `Int64`.
+  # This will run a `DELETE FROM` on the current table
+  # with any `WHERE` queries specified. If none are provided,
+  # it will delete all records from the table.
+  #
+  # ```
+  # # DELETE FROM users WHERE age < 21
+  # UserQuery.new.age.lt(21).delete_all
+  # ```
   def delete_all : Int64
     query.delete
     database.run do |db|
