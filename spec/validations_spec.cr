@@ -18,6 +18,60 @@ private def attribute(value)
 end
 
 describe Avram::Validations do
+  describe "validate_at_most_one_filled" do
+    it "marks filled attribute as invalid if more than one is filled" do
+      filled_attribute = attribute("filled")
+      filled_attribute_2 = attribute("filled")
+      blank_attribute = attribute("")
+      Avram::Validations.validate_at_most_one_filled(filled_attribute, filled_attribute_2, blank_attribute)
+      filled_attribute.valid?.should be_true
+      blank_attribute.valid?.should be_true
+      filled_attribute_2.errors.should eq(["must be blank"])
+    end
+
+    it "does not mark any fields as invalid if just one is filled" do
+      filled_attribute = attribute("filled")
+      blank_attribute = attribute("")
+
+      Avram::Validations.validate_at_most_one_filled(filled_attribute, blank_attribute)
+
+      filled_attribute.valid?.should be_true
+      blank_attribute.valid?.should be_true
+    end
+  end
+
+  describe "validate_exactly_one_filled" do
+    it "marks filled attribute as invalid if more than one is filled" do
+      filled_attribute = attribute("filled")
+      filled_attribute_2 = attribute("filled")
+      blank_attribute = attribute("")
+      Avram::Validations.validate_exactly_one_filled(filled_attribute, filled_attribute_2, blank_attribute)
+      filled_attribute.valid?.should be_true
+      blank_attribute.valid?.should be_true
+      filled_attribute_2.errors.should eq(["must be blank"])
+    end
+
+    it "marks first field as invalid if no attributes are filled" do
+      first_blank_attribute = attribute(nil)
+      second_blank_attribute = attribute("")
+
+      Avram::Validations.validate_exactly_one_filled(first_blank_attribute, second_blank_attribute)
+
+      first_blank_attribute.errors.should eq(["at least one must be filled"])
+      second_blank_attribute.valid?.should be_true
+    end
+
+    it "fields are valid if only one is filled" do
+      filled_attribute = attribute("filled")
+      blank_attribute = attribute("")
+
+      Avram::Validations.validate_exactly_one_filled(filled_attribute, blank_attribute)
+
+      filled_attribute.valid?.should be_true
+      blank_attribute.valid?.should be_true
+    end
+  end
+
   describe "validate_required" do
     it "validates multiple attributes" do
       empty_attribute = attribute("")

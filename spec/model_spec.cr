@@ -57,10 +57,10 @@ end
 describe Avram::Model do
   it "compares with id and model name, not just id" do
     user = UserBox.create
-    task = TaskBox.create
+    post = PostBox.create
 
-    user.id.should eq(task.id)
-    user.should_not eq(task)
+    user.id.should eq(post.id)
+    user.should_not eq(post)
   end
 
   it "sets up initializers based on the columns" do
