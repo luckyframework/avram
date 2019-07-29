@@ -7,12 +7,14 @@ docker-compose up -d
 
 COMPOSE="docker-compose exec app"
 
+printf "\nRunning tasks\n\n"
+$COMPOSE lucky db.drop
+$COMPOSE lucky db.create
+$COMPOSE lucky db.migrate
+
 if [ $# -eq 0 ]
 then
-    printf "\nRunning tasks\n\n"
-    $COMPOSE lucky db.drop
-    $COMPOSE lucky db.create
-    $COMPOSE lucky db.migrate
+    # Integratioin test various tasks
     printf "\nRolling back to 20180802180356\n"
     $COMPOSE lucky db.rollback_to 20180802180356
     printf "\nRolling back remainder\n"

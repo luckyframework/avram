@@ -1,15 +1,19 @@
 require "db"
 require "levenshtein"
 require "./schema_enforcer"
+require "./polymorphic"
 
-class Avram::Model
+abstract class Avram::Model
   include Avram::Associations
+  include Avram::Polymorphic
 
   SETUP_STEPS = [] of Nil
   # This setting is used to show better errors
   MACRO_CHECKS = {setup_complete: false}
 
   class_getter table_name
+
+  abstract def id
 
   macro register_setup_step(call)
     {% if MACRO_CHECKS[:setup_complete] %}
