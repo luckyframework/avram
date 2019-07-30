@@ -3,7 +3,7 @@ class Avram::BaseQueryTemplate
     class ::{{ type }}::BaseQuery < Avram::Query
       include Avram::Queryable({{ type }})
 
-      def database
+      def database : Avram::Database.class
         {{ type }}.database
       end
 

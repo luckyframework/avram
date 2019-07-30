@@ -1,7 +1,7 @@
 require "./queryable"
 
 abstract class Avram::Query
-  abstract def database : Avram::Database
+  abstract def database : Avram::Database.class
 
   # runs a SQL `TRUNCATE` on the current table
   def self.truncate

@@ -24,7 +24,7 @@ private class NestedParams
   def initialize(@business, @email_address, @tax_id)
   end
 
-  def nested?(key : String)
+  def nested?(key : String) : Hash(String, String)
     if key == "email_address"
       @email_address
     elsif key == "tax_id"
@@ -36,7 +36,7 @@ private class NestedParams
     end
   end
 
-  def nested(key : String)
+  def nested(key : String) : Hash(String, String)
     nested?(key)
   end
 
