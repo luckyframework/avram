@@ -26,7 +26,7 @@ module Avram::Where
   end
 
   class Null < NullSqlClause
-    def operator
+    def operator : String
       "IS"
     end
 
@@ -36,7 +36,7 @@ module Avram::Where
   end
 
   class NotNull < NullSqlClause
-    def operator
+    def operator : String
       "IS NOT"
     end
 
@@ -46,7 +46,7 @@ module Avram::Where
   end
 
   class Equal < SqlClause
-    def operator
+    def operator : String
       "="
     end
 
@@ -56,7 +56,7 @@ module Avram::Where
   end
 
   class NotEqual < SqlClause
-    def operator
+    def operator : String
       "!="
     end
 
@@ -66,7 +66,7 @@ module Avram::Where
   end
 
   class GreaterThan < SqlClause
-    def operator
+    def operator : String
       ">"
     end
 
@@ -76,7 +76,7 @@ module Avram::Where
   end
 
   class GreaterThanOrEqualTo < SqlClause
-    def operator
+    def operator : String
       ">="
     end
 
@@ -86,7 +86,7 @@ module Avram::Where
   end
 
   class LessThan < SqlClause
-    def operator
+    def operator : String
       "<"
     end
 
@@ -96,7 +96,7 @@ module Avram::Where
   end
 
   class LessThanOrEqualTo < SqlClause
-    def operator
+    def operator : String
       "<="
     end
 
@@ -106,7 +106,7 @@ module Avram::Where
   end
 
   class Like < SqlClause
-    def operator
+    def operator : String
       "LIKE"
     end
 
@@ -116,7 +116,7 @@ module Avram::Where
   end
 
   class Ilike < SqlClause
-    def operator
+    def operator : String
       "ILIKE"
     end
 
@@ -126,7 +126,7 @@ module Avram::Where
   end
 
   class NotLike < SqlClause
-    def operator
+    def operator : String
       "NOT LIKE"
     end
 
@@ -136,7 +136,7 @@ module Avram::Where
   end
 
   class NotIlike < SqlClause
-    def operator
+    def operator : String
       "NOT ILIKE"
     end
 
@@ -146,7 +146,7 @@ module Avram::Where
   end
 
   class In < SqlClause
-    def operator
+    def operator : String
       "= ANY"
     end
 
@@ -160,7 +160,7 @@ module Avram::Where
   end
 
   class NotIn < SqlClause
-    def operator
+    def operator : String
       "!= ALL"
     end
 
