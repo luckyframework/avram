@@ -1,6 +1,6 @@
 class Avram::QueryBuilder
   alias ColumnName = Symbol | String
-  getter table, wheres, raw_wheres, joins
+  getter table
   @limit : Int32?
   @offset : Int32?
   @wheres = [] of Avram::Where::SqlClause
@@ -224,8 +224,12 @@ class Avram::QueryBuilder
     self
   end
 
+  def joins
+    @joins.uniq(&.to_sql)
+  end
+
   private def joins_sql
-    @joins.map(&.to_sql).join(" ")
+    joins.map(&.to_sql).join(" ")
   end
 
   def where(where_clause : Avram::Where::SqlClause)
@@ -245,22 +249,30 @@ class Avram::QueryBuilder
   end
 
   private def joined_wheres_queries
-    if @wheres.any? || @raw_wheres.any?
-      statements = @wheres.map do |sql_clause|
+    if wheres.any? || raw_wheres.any?
+      statements = wheres.map do |sql_clause|
         if sql_clause.is_a?(Avram::Where::NullSqlClause)
           sql_clause.prepare
         else
           sql_clause.prepare(next_prepared_statement_placeholder)
         end
       end
-      statements += @raw_wheres.map(&.to_sql)
+      statements += raw_wheres.map(&.to_sql)
 
       "WHERE " + statements.join(" AND ")
     end
   end
 
+  def wheres
+    @wheres.uniq { |where| where.prepare(prepared_statement_placeholder: "unused") + where.value.to_s }
+  end
+
+  def raw_wheres
+    @raw_wheres.uniq(&.to_sql)
+  end
+
   private def prepared_statement_values
-    @wheres.uniq.compact_map do |sql_clause|
+    wheres.compact_map do |sql_clause|
       sql_clause.value unless sql_clause.is_a?(Avram::Where::NullSqlClause)
     end
   end

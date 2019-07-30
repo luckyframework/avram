@@ -1,6 +1,22 @@
 require "./spec_helper"
 
 describe Avram::QueryBuilder do
+  it "ensures uniqueness for where, raw_where, and joins" do
+    query = new_query
+      .where(Avram::Where::Equal.new(:name, "Paul"))
+      .where(Avram::Where::Equal.new(:name, "Paul"))
+      .raw_where(Avram::Where::Raw.new("name = ?", "Mikias"))
+      .raw_where(Avram::Where::Raw.new("name = ?", "Mikias"))
+      .join(Avram::Join::Inner.new(:users, :posts))
+      .join(Avram::Join::Inner.new(:users, :posts))
+
+    query.wheres.size.should eq(1)
+    query.raw_wheres.size.should eq(1)
+    query.joins.size.should eq(1)
+    query.statement.should eq "SELECT * FROM users INNER JOIN posts ON users.id = posts.user_id WHERE name = $1 AND name = 'Mikias'"
+    query.args.should eq ["Paul"]
+  end
+
   it "selects all" do
     new_query.statement.should eq "SELECT * FROM users"
     new_query.args.should eq [] of String
