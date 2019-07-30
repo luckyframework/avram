@@ -1,11 +1,10 @@
 class Avram::QueryBuilder
   alias ColumnName = Symbol | String
-  getter :table
+  getter table, wheres, raw_wheres, joins
   @limit : Int32?
   @offset : Int32?
   @wheres = [] of Avram::Where::SqlClause
   @raw_wheres = [] of Avram::Where::Raw
-  @wheres_sql : String?
   @joins = [] of Avram::Join::SqlClause
   @orders = {
     asc:  [] of Symbol | String,
@@ -24,6 +23,21 @@ class Avram::QueryBuilder
 
   def to_sql
     [statement] + args
+  end
+
+  # Merges the wheres, raw wheres, and joins from the passed in query
+  def merge(query_to_merge : Avram::QueryBuilder)
+    query_to_merge.wheres.each do |where|
+      where(where)
+    end
+
+    query_to_merge.raw_wheres.each do |where|
+      raw_where(where)
+    end
+
+    query_to_merge.joins.each do |join|
+      join(join)
+    end
   end
 
   def statement
@@ -224,8 +238,10 @@ class Avram::QueryBuilder
     self
   end
 
+  @_wheres_sql : String?
+
   private def wheres_sql
-    @wheres_sql ||= joined_wheres_queries
+    @_wheres_sql ||= joined_wheres_queries
   end
 
   private def joined_wheres_queries

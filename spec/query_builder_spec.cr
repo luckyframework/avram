@@ -1,6 +1,6 @@
 require "./spec_helper"
 
-describe "Avram::QueryBuilder" do
+describe Avram::QueryBuilder do
   it "selects all" do
     new_query.statement.should eq "SELECT * FROM users"
     new_query.args.should eq [] of String
