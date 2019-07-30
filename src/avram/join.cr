@@ -38,25 +38,25 @@ module Avram::Join
   end
 
   class Inner < SqlClause
-    def join_type
+    def join_type : String
       "INNER"
     end
   end
 
   class Left < SqlClause
-    def join_type
+    def join_type : String
       "LEFT"
     end
   end
 
   class Right < SqlClause
-    def join_type
+    def join_type : String
       "RIGHT"
     end
   end
 
   class Full < SqlClause
-    def join_type
+    def join_type : String
       "FULL"
     end
   end

@@ -61,7 +61,8 @@ abstract class Avram::Database
     settings.url
   end
 
-  protected def run
+  # :nodoc:
+  def run
     yield current_transaction.try(&.connection) || db
   end
 
@@ -81,7 +82,8 @@ abstract class Avram::Database
     raise Avram::Rollback.new
   end
 
-  protected def transaction : Bool
+  # :nodoc:
+  def transaction : Bool
     if current_transaction
       yield
     else

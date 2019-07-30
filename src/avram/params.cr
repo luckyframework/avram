@@ -15,11 +15,11 @@ class Avram::Params
     end
   end
 
-  def nested?(key)
+  def nested?(key) : Hash(String, String)
     @hash
   end
 
-  def nested(key)
+  def nested(key) : Hash(String, String)
     @hash
   end
 

@@ -1,5 +1,5 @@
 class BaseModel < Avram::Model
-  def self.database
+  def self.database : Avram::Database.class
     TestDatabase
   end
 end

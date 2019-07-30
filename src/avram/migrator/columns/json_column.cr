@@ -7,7 +7,7 @@ module Avram::Migrator::Columns::JSON
     def initialize(@name, @nilable, @default)
     end
 
-    def column_type
+    def column_type : String
       "jsonb"
     end
 

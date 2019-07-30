@@ -7,7 +7,7 @@ module Avram::Migrator::Columns
     def initialize(@name, @nilable, @default)
     end
 
-    def column_type
+    def column_type : String
       "smallint"
     end
   end
