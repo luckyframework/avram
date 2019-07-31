@@ -51,7 +51,7 @@ module Avram::Queryable(T)
 
   def distinct_on(&block)
     criteria = yield self
-    criteria.distinct_on
+    criteria.__distinct_on
     self
   end
 

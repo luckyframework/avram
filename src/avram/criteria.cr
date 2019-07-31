@@ -125,7 +125,8 @@ class Avram::Criteria(T, V)
     add_clause(Avram::Where::In.new(column, values))
   end
 
-  def distinct_on
+  # :nodoc:
+  def __distinct_on : Avram::QueryBuilder
     rows.query.distinct_on(column)
   end
 
