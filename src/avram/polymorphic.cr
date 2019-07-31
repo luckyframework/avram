@@ -104,14 +104,38 @@ module Avram::Polymorphic
   macro polymorphic(polymorphic_name, associations, optional = false)
     {% polymorphic_name = polymorphic_name.id %}
     def {{ polymorphic_name }}
+      ensure_{{ polymorphic_name }}_belongs_to_are_nilable!
+
       # Generates something like: post || video
       {{ associations.map(&.id).join(" || ").id }}{% if !optional %} || Avram::Polymorphic.raise_missing_polymorphic(:{{ polymorphic_name }}, self){% end %}
     end
 
     def {{ polymorphic_name }}!
+      ensure_{{ polymorphic_name }}_belongs_to_are_nilable!
+
       # Generates something like: post! || video!
       {% associations_with_a_bang = associations.map(&.id).map { |assoc| "#{assoc}!" } %}
       {{ associations_with_a_bang.join(" || ").id }}{% if !optional %} || Avram::Polymorphic.raise_missing_polymorphic(:{{ polymorphic_name }}, self){% end %}
+    end
+
+    private def ensure_{{ polymorphic_name }}_belongs_to_are_nilable! : Nil
+      if should_check_polymorphism_at_runtime?
+        {% associations_to_check = associations.map(&.id).map { |assoc| "#{assoc}.as(Nil)" } %}
+        {{ associations_to_check.join(" || ").id }} # Ensure polymorphic associations are nilable
+      end
+    end
+
+    # This is a bit of a hack to get around Crystal's smart compiler :)
+    # In the ensure_{assoc}_belongs_to_are_nilable! we need to check that the
+    # compiler *can* cast to nil, but we don't want to *actually* check it at
+    # runtime. The problem is that we can't do `if false` because Crystal realizes
+    # That will never match and so doesn't even check the `as(Nil)`
+    # We have to trick it by extracting the false to a method. That way
+    # Crystal doesn't realize it is always 'false' and will still check
+    # That the types can be cast to Nil at compile, without actually casting it
+    # at runtime.
+    private def should_check_polymorphism_at_runtime? : Bool
+      false
     end
 
     macro finished
