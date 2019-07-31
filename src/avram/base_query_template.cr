@@ -85,7 +85,7 @@ class Avram::BaseQueryTemplate
         {% end %}
 
 
-        def where_{{ assoc[:table_name] }}(assoc_query : ::{{ assoc[:type] }}::BaseQuery, auto_inner_join : Bool = true)
+        def where_{{ assoc[:table_name] }}(assoc_query : {{ assoc[:type] }}::BaseQuery, auto_inner_join : Bool = true)
           join_{{ assoc[:table_name] }} if auto_inner_join
           query.merge(assoc_query.query)
           self

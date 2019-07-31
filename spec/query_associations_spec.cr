@@ -7,6 +7,19 @@ class CommentQuery < Comment::BaseQuery
   end
 end
 
+class NamedSpaced::Organization < BaseModel
+  table do
+    has_many locations : Location
+  end
+end
+
+class NamedSpaced::Location < BaseModel
+  table do
+    column name : String
+    belongs_to organization : Organization
+  end
+end
+
 describe "Query associations" do
   it "can query associations" do
     post_with_matching_comment = PostBox.create
@@ -118,5 +131,11 @@ describe "Query associations" do
       .where_comments(Comment::BaseQuery.new.body.eq("matching"), auto_inner_join: false)
     posts.to_sql[0].should contain "FULL JOIN"
     posts.results.should eq([post_with_matching_comment])
+  end
+
+  it "can query associations on namespaced models" do
+    orgs = NamedSpaced::Organization::BaseQuery.new
+      .where_locations(NamedSpaced::Location::BaseQuery.new.name("Home"))
+    orgs.to_sql[0].should contain "INNER JOIN"
   end
 end

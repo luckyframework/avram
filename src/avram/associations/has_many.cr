@@ -6,7 +6,7 @@ module Avram::Associations::HasMany
     {% assoc_name = type_declaration.var %}
 
     {% unless foreign_key %}
-      {% foreign_key = "#{@type.name.underscore}_id".id %}
+      {% foreign_key = "#{@type.name.underscore.split("::").last.id}_id".id %}
     {% end %}
 
     {% foreign_key = foreign_key.id %}
