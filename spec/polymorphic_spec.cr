@@ -116,8 +116,4 @@ describe "polymorphic belongs to" do
       event.optional_eventable!.should be_nil
     end
   end
-
-  # They must be nullable since only one can be filled in at a time.
-  # And remind to make migration optional too
-  pending "ensure defined polymorphic associations are nullable"
 end
