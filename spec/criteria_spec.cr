@@ -24,7 +24,21 @@ describe Avram::Criteria do
     end
 
     it "uses 'IS NULL' for comparisons to nil" do
-      nickname.nilable_eq(nil).to_sql.should eq ["SELECT #{QueryMe::COLUMN_SQL} FROM users WHERE users.nickname IS NULL"]
+      # Need to do this so that we get a nilable type, but not just Nil
+      nilable = [nil, "name"].first
+      nickname.nilable_eq(nilable).to_sql.should eq ["SELECT #{QueryMe::COLUMN_SQL} FROM users WHERE users.nickname IS NULL"]
+    end
+  end
+
+  describe "is_nil" do
+    it "uses IS NULL" do
+      nickname.is_nil.to_sql.should eq ["SELECT #{QueryMe::COLUMN_SQL} FROM users WHERE users.nickname IS NULL"]
+    end
+  end
+
+  describe "is_not_nil" do
+    it "uses IS NOT NULL" do
+      nickname.is_not_nil.to_sql.should eq ["SELECT #{QueryMe::COLUMN_SQL} FROM users WHERE users.nickname IS NOT NULL"]
     end
   end
 
