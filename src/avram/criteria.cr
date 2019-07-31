@@ -6,37 +6,77 @@ class Avram::Criteria(T, V)
     @negate_next_criteria = false
   end
 
-  def desc_order
+  def desc_order : T
     rows.query.order_by(column, :desc)
     rows
   end
 
-  def asc_order
+  def asc_order : T
     rows.query.order_by(column, :asc)
     rows
   end
 
-  # :nodoc:
-  def eq(_value : Nil)
-    {{ raise "Use `nilable_eq` instead of `eq` if trying to check against a nilable value." }}
-  end
-
-  def eq(value)
+  def eq(value) : T
+    check_just_nil!(typeof(value))
+    check_nilable!(value)
     perform_eq(value)
   end
 
-  private def perform_eq(value)
-    add_clause(Avram::Where::Equal.new(column, V::Lucky.to_db!(value)))
-    rows
+  private def check_nilable!(_value : Nil)
+    {% raise <<-ERROR
+
+      The 'eq' method cannot compare values that may be 'nil'
+
+      Try this...
+
+        ▸ Use 'nilable_eq'. This method allows checking against nilable values
+        ▸ Ensure the value is not nilable by wrapping it in an 'if' or using 'not_nil!'
+
+      ERROR
+    %}
   end
 
-  def nilable_eq(value)
+  private def check_nilable!(_value)
+    # carry on
+  end
+
+  private def check_just_nil!(_type_of_value : Nil.class)
+    {% raise <<-ERROR
+
+      To check if a column is 'nil' use these methods instead...
+
+        ▸ 'is_nil'
+        ▸ 'is_not_nil'
+
+      ERROR
+    %}
+  end
+
+  private def check_just_nil!(_type_of_value)
+    # carry on
+  end
+
+  private def perform_eq(value) : T
+    add_clause(Avram::Where::Equal.new(column, V::Lucky.to_db!(value)))
+  end
+
+  def nilable_eq(value) : T
+    check_just_nil!(typeof(value))
+
     if value.nil?
-      add_clause(Avram::Where::Null.new(column))
-      rows
+      is_nil
     else
       perform_eq(value)
     end
+  end
+
+  def is_nil : T
+    add_clause(Avram::Where::Null.new(column))
+  end
+
+  def is_not_nil : T
+    not()
+    is_nil
   end
 
   def not : Avram::Criteria
@@ -80,17 +120,16 @@ class Avram::Criteria(T, V)
     rows.exec_scalar.as(Int64)
   end
 
-  def in(values)
+  def in(values) : T
     values = values.map { |value| V::Lucky.to_db!(value) }
     add_clause(Avram::Where::In.new(column, values))
   end
 
   def distinct_on
     rows.query.distinct_on(column)
-    rows
   end
 
-  private def add_clause(sql_clause)
+  private def add_clause(sql_clause) : T
     sql_clause = build_sql_clause(sql_clause)
     rows.query.where(sql_clause)
     rows
