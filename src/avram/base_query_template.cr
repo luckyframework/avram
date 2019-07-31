@@ -68,7 +68,7 @@ class Avram::BaseQueryTemplate
               )
             {% elsif assoc[:through] %}
               {{ join_type.downcase.id }}_join_{{ assoc[:through].id }}
-              where_{{ assoc[:through].id }} do |join_query|
+              __yield_where_{{ assoc[:through].id }} do |join_query|
                 join_query.{{ join_type.downcase.id }}_join_{{ assoc[:table_name] }}
               end
             {% else %}
@@ -85,20 +85,30 @@ class Avram::BaseQueryTemplate
         {% end %}
 
 
-        def where_{{ assoc[:table_name] }}
-          {{ assoc[:type] }}::BaseQuery.new_with_existing_query(query).tap do |assoc_query|
-            yield assoc_query
-          end
+        def where_{{ assoc[:table_name] }}(assoc_query : ::{{ assoc[:type] }}::BaseQuery, auto_inner_join : Bool = true)
+          join_{{ assoc[:table_name] }} if auto_inner_join
+          query.merge(assoc_query.query)
+          self
+        end
+
+        # :nodoc:
+        # Used internally for has_many throuogh queries
+        def __yield_where_{{ assoc[:table_name] }}
+          assoc_query = yield {{ assoc[:type] }}::BaseQuery.new
+          query.merge(assoc_query.query)
           self
         end
 
         def {{ assoc[:table_name] }}
           \{% raise <<-ERROR
-            The methods for querying associations are now prefixed with 'where_'
+            The methods for querying associations have changed
 
-            Try this...
+              * They are now prefixed with 'where_'.
+              * The query is no longer yielded. You must pass it explicitly.
 
-              ▸ Use 'where_{{ assoc[:table_name] }}'
+            Example:
+
+              where_{{ assoc[:table_name] }}({{ assoc[:type] }}Query.new.some_condition)
             ERROR
           %}
           yield # This is not used. Just there so it works with blocks.
