@@ -1,4 +1,22 @@
-ECTIONS = [:asc, :desc]
+class Avram::QueryBuilder
+  alias ColumnName = Symbol | String
+  getter table
+  @limit : Int32?
+  @offset : Int32?
+  @wheres = [] of Avram::Where::SqlClause
+  @raw_wheres = [] of Avram::Where::Raw
+  @joins = [] of Avram::Join::SqlClause
+  @orders = {
+    asc:  [] of Symbol | String,
+    desc: [] of Symbol | String,
+  }
+  @selections : String = "*"
+  @prepared_statement_placeholder = 0
+  @distinct : Bool = false
+  @delete : Bool = false
+  @distinct_on : String | Symbol | Nil = nil
+
+  VALID_DIRECTIONS = [:asc, :desc]
 
   def initialize(@table : Symbol)
   end
@@ -107,6 +125,10 @@ ECTIONS = [:asc, :desc]
     self
   end
 
+  def reset_order
+    @orders.values.each(&.clear)
+  end
+
   def reverse_order
     @orders = {
       asc:  @orders[:desc],
@@ -172,10 +194,6 @@ ECTIONS = [:asc, :desc]
 
   private def has_unsupported_clauses?
     @limit || @offset
-  end
-
-  private def reset_order
-    @orders.values.each(&.clear)
   end
 
   def select(selection : Array(Symbol))

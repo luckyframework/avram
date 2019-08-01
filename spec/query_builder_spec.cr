@@ -19,6 +19,15 @@ describe Avram::QueryBuilder do
     query.args.should eq ["Paul"]
   end
 
+  it "can reset order" do
+    query = new_query.order_by(:my_column, :asc)
+    query.statement.should eq "SELECT * FROM users ORDER BY my_column ASC"
+
+    query.reset_order
+
+    query.statement.should eq "SELECT * FROM users"
+  end
+
   it "selects all" do
     new_query.statement.should eq "SELECT * FROM users"
     new_query.args.should eq [] of String

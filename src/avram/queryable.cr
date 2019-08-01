@@ -44,12 +44,17 @@ module Avram::Queryable(T)
       .select(@@schema_class.column_names)
   end
 
-  def distinct
+  def distinct : self
     query.distinct
     self
   end
 
-  def distinct_on(&block)
+  def reset_order : self
+    query.reset_order
+    self
+  end
+
+  def distinct_on(&block) : self
     criteria = yield self
     criteria.__distinct_on
     self
@@ -70,37 +75,37 @@ module Avram::Queryable(T)
     end
   end
 
-  def join(join_clause : Avram::Join::SqlClause)
+  def join(join_clause : Avram::Join::SqlClause) : self
     query.join(join_clause)
     self
   end
 
-  def where(column : Symbol, value)
+  def where(column : Symbol, value) : self
     query.where(Avram::Where::Equal.new(column, value.to_s))
     self
   end
 
-  def where(statement : String, *bind_vars)
+  def where(statement : String, *bind_vars) : self
     query.raw_where(Avram::Where::Raw.new(statement, *bind_vars))
     self
   end
 
-  def order_by(column, direction)
+  def order_by(column, direction) : self
     query.order_by(column, direction)
     self
   end
 
-  def none
+  def none : self
     query.where(Avram::Where::Equal.new("1", "0"))
     self
   end
 
-  def limit(amount)
+  def limit(amount) : self
     query.limit(amount)
     self
   end
 
-  def offset(amount)
+  def offset(amount) : self
     query.offset(amount)
     self
   end
