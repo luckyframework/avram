@@ -35,6 +35,13 @@ describe Avram::Query do
     query.args.should eq [] of String
   end
 
+  it "can reset order" do
+    query = UserQuery.new.order_by(:some_column, :asc).reset_order.query
+
+    query.statement.should eq "SELECT #{User::COLUMN_SQL} FROM users"
+    query.args.should eq [] of String
+  end
+
   it "can select distinct on a specific column" do
     UserBox.new.name("Purcell").age(22).create
     UserBox.new.name("Purcell").age(84).create
