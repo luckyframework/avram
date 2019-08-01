@@ -1,22 +1,4 @@
-class Avram::QueryBuilder
-  alias ColumnName = Symbol | String
-  getter table
-  @limit : Int32?
-  @offset : Int32?
-  @wheres = [] of Avram::Where::SqlClause
-  @raw_wheres = [] of Avram::Where::Raw
-  @joins = [] of Avram::Join::SqlClause
-  @orders = {
-    asc:  [] of Symbol | String,
-    desc: [] of Symbol | String,
-  }
-  @selections : String = "*"
-  @prepared_statement_placeholder = 0
-  @distinct : Bool = false
-  @delete : Bool = false
-  @distinct_on : String | Symbol | Nil = nil
-
-  VALID_DIRECTIONS = [:asc, :desc]
+ECTIONS = [:asc, :desc]
 
   def initialize(@table : Symbol)
   end
@@ -135,7 +117,7 @@ class Avram::QueryBuilder
 
   def order_sql
     if ordered?
-      "ORDER BY " + @orders.map do |direction, columns|
+      "ORDER BY " + orders.map do |direction, columns|
         next if columns.empty?
         "#{columns.join(" #{direction.to_s.upcase}, ")} #{direction.to_s.upcase}"
       end.reject(&.nil?).join(", ")

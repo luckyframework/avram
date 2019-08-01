@@ -1,7 +1,7 @@
 require "./spec_helper"
 
 describe Avram::QueryBuilder do
-  it "ensures uniqueness for where, raw_where, and joins" do
+  it "ensures uniqueness for where, raw_where, orders, and joins" do
     query = new_query
       .where(Avram::Where::Equal.new(:name, "Paul"))
       .where(Avram::Where::Equal.new(:name, "Paul"))
@@ -9,11 +9,13 @@ describe Avram::QueryBuilder do
       .raw_where(Avram::Where::Raw.new("name = ?", "Mikias"))
       .join(Avram::Join::Inner.new(:users, :posts))
       .join(Avram::Join::Inner.new(:users, :posts))
+      .order_by(:my_column, :asc)
+      .order_by(:my_column, :asc)
 
     query.wheres.size.should eq(1)
     query.raw_wheres.size.should eq(1)
     query.joins.size.should eq(1)
-    query.statement.should eq "SELECT * FROM users INNER JOIN posts ON users.id = posts.user_id WHERE name = $1 AND name = 'Mikias'"
+    query.statement.should eq "SELECT * FROM users INNER JOIN posts ON users.id = posts.user_id WHERE name = $1 AND name = 'Mikias' ORDER BY my_column ASC"
     query.args.should eq ["Paul"]
   end
 
