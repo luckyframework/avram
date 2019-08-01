@@ -612,4 +612,11 @@ describe Avram::Query do
       ChainedQuery.new.select_count.should eq 0
     end
   end
+
+  describe "ordering" do
+    it "orders by a joined table" do
+      query = Post::BaseQuery.new.where_comments(Comment::BaseQuery.new.created_at.asc_order)
+      query.to_sql[0].should contain "ORDER BY comments.created_at ASC"
+    end
+  end
 end
