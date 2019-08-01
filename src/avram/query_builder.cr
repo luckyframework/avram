@@ -25,7 +25,7 @@ class Avram::QueryBuilder
     [statement] + args
   end
 
-  # Merges the wheres, raw wheres, and joins from the passed in query
+  # Merges the wheres, raw wheres, joins, and orders from the passed in query
   def merge(query_to_merge : Avram::QueryBuilder)
     query_to_merge.wheres.each do |where|
       where(where)
@@ -37,6 +37,12 @@ class Avram::QueryBuilder
 
     query_to_merge.joins.each do |join|
       join(join)
+    end
+
+    query_to_merge.orders.each do |direction, order_bys|
+      order_bys.each do |order|
+        order_by(order, direction)
+      end
     end
   end
 
@@ -134,6 +140,13 @@ class Avram::QueryBuilder
         "#{columns.join(" #{direction.to_s.upcase}, ")} #{direction.to_s.upcase}"
       end.reject(&.nil?).join(", ")
     end
+  end
+
+  def orders
+    {
+      asc:  @orders[:asc].uniq,
+      desc: @orders[:desc].uniq,
+    }
   end
 
   def select_count
