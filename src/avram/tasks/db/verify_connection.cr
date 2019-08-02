@@ -22,7 +22,7 @@ class Db::VerifyConnection < LuckyCli::Task
         ▸ Make sure Postgres is running.
         ▸ Check connection settings in config/database.cr.
         ▸ If the database has not been created yet, run 'lucky db.create'
-        ▸ Then run `lucky db.verify_connection` to make sure it can connect.
+        ▸ Then run 'lucky db.verify_connection' to make sure it can connect.
 
       ERROR
     end
