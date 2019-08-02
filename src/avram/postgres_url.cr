@@ -37,8 +37,8 @@ class Avram::PostgresURL
   end
 
   private def set_url_creds(io)
-    io << URI.escape(username) unless username.empty?
-    io << ":#{URI.escape(password)}" unless password.empty?
+    io << URI.encode_www_form(username) unless username.empty?
+    io << ":#{URI.encode_www_form(password)}" unless password.empty?
     io << "@" unless username.empty?
   end
 
