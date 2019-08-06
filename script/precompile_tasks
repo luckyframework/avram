@@ -8,5 +8,5 @@ set -e
 if [ "$LUCKY_ENV" != "production" ] && [ -z "$CI" ] && [ -z "$SKIP_LUCKY_TASK_PRECOMPILATION" ]; then
     shards build && \
     mkdir -p ../../bin && \
-    cp -r $(pwd)/bin $(pwd)/../..
+    cp -r "$(pwd)/bin" "$(pwd)/../.."
 fi
