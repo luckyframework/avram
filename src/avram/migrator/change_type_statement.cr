@@ -1,4 +1,4 @@
-class Avram::Migrator::ChangeColumnTypeStatement
+class Avram::Migrator::ChangeTypeStatement
   getter table_name, column_name
 
   alias ColumnType = Int32.class | Int64.class

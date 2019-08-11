@@ -28,8 +28,8 @@ module Avram::Migrator::StatementHelpers
     end
   end
 
-  def change_column_type(table : Symbol, column : Symbol, type : ChangeColumnTypeStatement::ColumnType)
-    prepared_statements << ChangeColumnTypeStatement.new(table, column, type).build
+  def change_type(table : Symbol, column : Symbol, type : Avram::Migrator::Columns::Base)
+    prepared_statements << ChangeTypeStatement.new(table, column, type).build
   end
 
   def create_foreign_key(from : Symbol, to : Symbol, on_delete : Symbol, column : Symbol?, primary_key = :id)
