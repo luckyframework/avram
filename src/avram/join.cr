@@ -14,6 +14,10 @@ module Avram::Join
     )
     end
 
+    def clone
+      self
+    end
+
     abstract def join_type : String
 
     def to_sql

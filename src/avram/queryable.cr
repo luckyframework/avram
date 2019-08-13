@@ -41,7 +41,7 @@ module Avram::Queryable(T)
   def query
     existing_query = @query
     if existing_query
-      @query = existing_query.dup
+      @query = existing_query.clone
     else
       @query = Avram::QueryBuilder
         .new(table: @@table_name)

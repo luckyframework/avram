@@ -21,6 +21,13 @@ class Avram::QueryBuilder
   def initialize(@table : Symbol)
   end
 
+  def clone : self
+    {% for var in @type.instance_vars %}
+      @{{ var }} = @{{ var }}.clone
+    {% end %}
+    self
+  end
+
   def to_sql
     [statement] + args
   end

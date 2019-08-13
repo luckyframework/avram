@@ -9,6 +9,10 @@ module Avram::Where
     abstract def operator : String
     abstract def negated : SqlClause
 
+    def clone
+      self
+    end
+
     def prepare(prepared_statement_placeholder : String)
       "#{column} #{operator} #{prepared_statement_placeholder}"
     end
@@ -179,6 +183,10 @@ module Avram::Where
     def initialize(statement : String, *bind_vars)
       ensure_enough_bind_variables_for!(statement, *bind_vars)
       @clause = build_clause(statement, *bind_vars)
+    end
+
+    def clone
+      self
     end
 
     def to_sql
