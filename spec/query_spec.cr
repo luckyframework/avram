@@ -24,6 +24,13 @@ class ArrayQuery < Bucket::BaseQuery
 end
 
 describe Avram::Query do
+  it "does not mutate the query" do
+    query = UserQuery.new.name("Jane")
+    query.select_count
+    query.first?
+    query.last?
+  end
+
   it "can chain scope methods" do
     ChainedQuery.new.young.named("Paul")
   end

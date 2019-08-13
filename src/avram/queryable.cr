@@ -39,9 +39,14 @@ module Avram::Queryable(T)
   end
 
   def query
-    @query ||= Avram::QueryBuilder
-      .new(table: @@table_name)
-      .select(@@schema_class.column_names)
+    existing_query = @query
+    if existing_query
+      @query = existing_query.dup
+    else
+      @query = Avram::QueryBuilder
+        .new(table: @@table_name)
+        .select(@@schema_class.column_names)
+    end
   end
 
   def distinct : self
