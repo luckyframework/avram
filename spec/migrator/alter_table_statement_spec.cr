@@ -48,6 +48,22 @@ describe Avram::Migrator::AlterTableStatement do
     built.statements[6].should eq "ALTER TABLE users ALTER COLUMN updated_at SET NOT NULL;"
   end
 
+  it "does not build statements if nothing is altered" do
+    built = Avram::Migrator::AlterTableStatement.new(:users).build { }
+    built.statements.size.should eq 0
+  end
+
+  it "can change column types" do
+    built = Avram::Migrator::AlterTableStatement.new(:users).build do
+      change_type id : Int64
+      change_type age : Float64, precision: 1, scale: 2
+    end
+
+    built.statements.size.should eq 2
+    built.statements[0].should eq "ALTER TABLE users ALTER COLUMN id SET DATA TYPE bigint;"
+    built.statements[1].should eq "ALTER TABLE users ALTER COLUMN age SET DATA TYPE decimal(1,2);"
+  end
+
   describe "associations" do
     it "can create associations" do
       built = Avram::Migrator::AlterTableStatement.new(:comments).build do
