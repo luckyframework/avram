@@ -6,8 +6,26 @@ class Avram::Migrator::AlterTableStatement
   getter rows = [] of String
   getter dropped_rows = [] of String
   getter fill_existing_with_statements = [] of String
+  getter change_type_statements = [] of String
 
   def initialize(@table_name : Symbol)
+  end
+
+  macro change_type(type_declaration, **type_options)
+    {% if !type_declaration.is_a?(TypeDeclaration) %}
+      {% type_declaration.raise "Must pass a type declaration to 'change_type'. Example: change_type age : Int32" %}
+    {% end %}
+    %column = ::Avram::Migrator::Columns::{{ type_declaration.type }}Column({{ type_declaration.type }}).new(
+      name: {{ type_declaration.var.stringify }},
+      nilable: false,
+      default: nil,
+      {{ **type_options }}
+    )
+    add_change_type_statement %column
+  end
+
+  def add_change_type_statement(column : ::Avram::Migrator::Columns::Base)
+    change_type_statements << column.build_change_type_statement(@table_name)
   end
 
   # Accepts a block to alter a table using the `add` method. The generated sql
@@ -36,14 +54,19 @@ class Avram::Migrator::AlterTableStatement
   end
 
   def statements
-    [alter_statement] + index_statements + fill_existing_with_statements
+    alter_statements + change_type_statements + index_statements + fill_existing_with_statements
   end
 
-  def alter_statement
-    String.build do |statement|
-      statement << "ALTER TABLE #{@table_name}"
-      statement << "\n"
-      statement << (rows + dropped_rows).join(",\n")
+  def alter_statements : Array(String)
+    if (rows + dropped_rows).empty?
+      [] of String
+    else
+      statement = String.build do |statement|
+        statement << "ALTER TABLE #{@table_name}"
+        statement << "\n"
+        statement << (rows + dropped_rows).join(",\n")
+      end
+      [statement]
     end
   end
 
