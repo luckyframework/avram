@@ -323,6 +323,15 @@ describe "Avram::SaveOperation" do
           log_io.to_s.should contain(%("failed_to_save":"SaveUser","validation_errors":"name is required. joined_at is required"))
         end
       end
+
+      it "skips logging if log level is nil" do
+        log_io = IO::Memory.new
+        logger = Dexter::Logger.new(log_io)
+        Avram.temp_config(logger: logger, save_failed_log_level: nil) do |settings|
+          SaveUser.create(name: "", age: 30) { |operation, record| :unused }
+          log_io.to_s.should eq("")
+        end
+      end
     end
 
     context "with a uuid backed model" do
