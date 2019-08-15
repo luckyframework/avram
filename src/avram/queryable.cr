@@ -47,7 +47,7 @@ module Avram::Queryable(T)
   def clone : self
     original_query = query
     instance = self.class.new
-    instance.query.merge(original_query)
+    instance.query.clone(original_query)
     instance
   end
 
