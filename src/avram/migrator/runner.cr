@@ -96,27 +96,24 @@ class Avram::Migrator::Runner
       puts "Done dumping #{db_name.colorize(:green)}"
     end
   rescue e : Exception
-    if message = e.message
-      if message.includes?("does not exist")
-        raise <<-ERROR
-        The database #{db_name} does not exist on host #{db_host}.
+    message = e.message.to_s
+    if message.includes?("does not exist")
+      raise <<-ERROR
+      The database #{db_name} does not exist on host #{db_host}.
 
-        Try running 'lucky db.create' first.
-        ERROR
-      elsif message.includes?("Connection refused")
-        raise <<-ERROR
-        Unable to connect to db #{db_name}.
+      Try running 'lucky db.create' first.
+      ERROR
+    elsif message.includes?("Connection refused")
+      raise <<-ERROR
+      Unable to connect to db #{db_name}.
 
-        Try this...
+      Try this...
 
-          ▸ Check your settings in 'config/database.cr'.
-          ▸ Run 'luck db.verify_connection' to ensure you can connect
-        ERROR
-      else
-        raise e.message.as(String)
-      end
+        ▸ Check your settings in 'config/database.cr'.
+        ▸ Run 'luck db.verify_connection' to ensure you can connect
+      ERROR
     else
-      raise "Here? #{e}"
+      raise e.message.as(String)
     end
   end
 
