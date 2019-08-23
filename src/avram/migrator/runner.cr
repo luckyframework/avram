@@ -70,9 +70,25 @@ class Avram::Migrator::Runner
       raise <<-ERROR
       #{message}
 
-        #{green_arrow} If you are on macOS  you can install postgres tools from #{macos_postgres_tools_link}
-        #{green_arrow} If you are on linux you can try running #{linux_postgres_installation_instructions}
-        #{green_arrow} If you are on CI or some servers, there may already be a database created so you don't need this command"
+      Try this...
+
+        ▸ #{green_arrow} If you are on macOS  you can install postgres tools from #{macos_postgres_tools_link}
+        ▸ #{green_arrow} If you are on linux you can try running #{linux_postgres_installation_instructions}
+        ▸ #{green_arrow} If you are on CI or some servers, there may already be a database created so you don't need this command"
+
+      ERROR
+    elsif (message = e.message) && message.includes?("could not connect to database template")
+      raise <<-ERROR
+      Creating the database failed. It looks like Postgres is not running.
+
+      Message from Postgres:
+
+        #{message}
+
+      Try this...
+
+        ▸ Make sure Postgres is running
+
       ERROR
     else
       raise e
