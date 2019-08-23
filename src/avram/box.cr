@@ -46,12 +46,11 @@ abstract class Avram::Box
   # tags.size    # => 2
   # ```
   def self.create_pair
-    [1, 2].map do |n|
-      new.create
-    end
+    create_pair { |box| box }
   end
 
   # Similar to `create_pair`, but accepts a block which yields the box instance.
+  #
   # Both boxes receive the same argument values.
   #
   # Usage:

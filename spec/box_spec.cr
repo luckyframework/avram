@@ -27,6 +27,14 @@ describe Avram::Box do
     end
 
     it "yields the block to both boxes" do
+      users = UserBox.create_pair do |box|
+        box.age(30)
+      end
+      users.first.age.should eq 30
+      users.last.age.should eq 30
+    end
+
+    it "works with sequences" do
       tags = TagBox.create_pair do |box|
         box.name(box.sequence("new-tag"))
       end
