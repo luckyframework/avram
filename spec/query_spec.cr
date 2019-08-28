@@ -639,10 +639,10 @@ describe Avram::Query do
     end
 
     it "returns separate results than the original query" do
-      UserBox.new.name("Purcell").age(22).create
-      UserBox.new.name("Purcell").age(84).create
-      UserBox.new.name("Griffiths").age(55).create
-      UserBox.new.name("Griffiths").age(75).create
+      UserBox.create &.name("Purcell").age(22)
+      UserBox.create &.name("Purcell").age(84)
+      UserBox.create &.name("Griffiths").age(55)
+      UserBox.create &.name("Griffiths").age(75)
 
       original_query = ChainedQuery.new.named("Purcell")
       new_query = original_query.clone.age.gt(30)
@@ -652,8 +652,8 @@ describe Avram::Query do
     end
 
     it "clones joined queries" do
-      post = PostBox.new.create
-      CommentBox.new.post_id(post.id).create
+      post = PostBox.create
+      CommentBox.create &.post_id(post.id)
 
       original_query = Post::BaseQuery.new.where_comments(Comment::BaseQuery.new.created_at.asc_order)
       new_query = original_query.clone.select_count
