@@ -626,4 +626,40 @@ describe Avram::Query do
       query.to_sql[0].should contain "ORDER BY comments.created_at ASC"
     end
   end
+
+  describe "cloning queries" do
+    it "leaves the original query unaffected" do
+      original_query = ChainedQuery.new.young
+      new_query = original_query.clone.named("bruce wayne").joined_at.asc_order
+
+      original_query.to_sql.size.should eq 2
+      new_query.to_sql.size.should eq 3
+      new_query.to_sql[0].should contain "ORDER BY users.joined_at"
+      original_query.to_sql[0].should_not contain "ORDER BY"
+    end
+
+    it "returns separate results than the original query" do
+      UserBox.create &.name("Purcell").age(22)
+      UserBox.create &.name("Purcell").age(84)
+      UserBox.create &.name("Griffiths").age(55)
+      UserBox.create &.name("Griffiths").age(75)
+
+      original_query = ChainedQuery.new.named("Purcell")
+      new_query = original_query.clone.age.gt(30)
+
+      original_query.select_count.should eq 2
+      new_query.select_count.should eq 1
+    end
+
+    it "clones joined queries" do
+      post = PostBox.create
+      CommentBox.create &.post_id(post.id)
+
+      original_query = Post::BaseQuery.new.where_comments(Comment::BaseQuery.new.created_at.asc_order)
+      new_query = original_query.clone.select_count
+
+      original_query.first.should_not eq nil
+      new_query.should eq 1
+    end
+  end
 end

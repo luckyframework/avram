@@ -241,6 +241,27 @@ describe Avram::QueryBuilder do
       query.ordered?.should eq false
     end
   end
+
+  describe "clone" do
+    it "copies over all parts of a query" do
+      old_query = new_query
+        .select([:name, :age])
+        .join(Avram::Join::Inner.new(:users, :posts))
+        .where(Avram::Where::Equal.new(:name, "Paul"))
+        .order_by(:id, :asc)
+        .limit(1)
+        .offset(2)
+      cloned_query = new_query
+        .clone(old_query)
+        .where(Avram::Where::GreaterThan.new(:age, "20"))
+        .limit(10)
+        .offset(5)
+
+      cloned_query.statement.should eq "SELECT users.name, users.age FROM users INNER JOIN posts ON users.id = posts.user_id WHERE name = $1 AND age > $2 ORDER BY id ASC LIMIT 10 OFFSET 5"
+
+      old_query.statement.should eq "SELECT users.name, users.age FROM users INNER JOIN posts ON users.id = posts.user_id WHERE name = $1 ORDER BY id ASC LIMIT 1 OFFSET 2"
+    end
+  end
 end
 
 private def new_query
