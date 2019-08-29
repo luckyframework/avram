@@ -664,24 +664,12 @@ describe Avram::Query do
 
     it "clones preloads" do
       Avram.temp_config(lazy_load_enabled: false) do
-        #post = PostBox.create
-        #comment = CommentBox.create &.post_id(post.id)
-        #posts = Post::BaseQuery.new.preload_comments
-        #cloned_posts = posts.clone
-        #posts.first.comments.should eq([comment])
-        #cloned_posts.first.comments.should eq([comment])
-
-        item = LineItemBox.create
-        price = PriceBox.create &.line_item_id(item.id).in_cents(500)
-        product = ProductBox.create
-        LineItemProductBox.create &.line_item_id(item.id).product_id(product.id)
-
-        products = Product::BaseQuery.new
-                      .preload_line_items
-                      .where_line_items(LineItem::BaseQuery.new.preload_price)
-        #cloned_products = products.clone
-        products.first.line_items.first.price.as(Price).in_cents.should eq(500)
-        #cloned_products.first.line_items.first.price.as(Price).in_cents.should eq(500)
+        post = PostBox.create
+        comment = CommentBox.create &.post_id(post.id)
+        posts = Post::BaseQuery.new.preload_comments
+        cloned_posts = posts.clone
+        posts.first.comments.should eq([comment])
+        cloned_posts.first.comments.should eq([comment])
       end
     end
   end
