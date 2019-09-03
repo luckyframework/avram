@@ -76,10 +76,10 @@ describe Avram::Migrator::AlterTableStatement do
 
       built.statements.first.should eq <<-SQL
       ALTER TABLE comments
-        ADD user_id int NOT NULL REFERENCES users ON DELETE CASCADE,
-        ADD post_id int REFERENCES posts ON DELETE RESTRICT,
-        ADD category_label_id int NOT NULL REFERENCES custom_table ON DELETE SET NULL,
-        ADD employee_id int NOT NULL REFERENCES users ON DELETE CASCADE,
+        ADD user_id bigint NOT NULL REFERENCES users ON DELETE CASCADE,
+        ADD post_id bigint REFERENCES posts ON DELETE RESTRICT,
+        ADD category_label_id bigint NOT NULL REFERENCES custom_table ON DELETE SET NULL,
+        ADD employee_id bigint NOT NULL REFERENCES users ON DELETE CASCADE,
         ADD line_item_id uuid NOT NULL REFERENCES line_items ON DELETE CASCADE
       SQL
 
