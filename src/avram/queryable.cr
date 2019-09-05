@@ -44,6 +44,14 @@ module Avram::Queryable(T)
       .select(@@schema_class.column_names)
   end
 
+  def clone : self
+    original_query = query
+    instance = self.class.new
+    instance.query.clone(original_query)
+    preloads.each { |preload| instance.add_preload(&preload) }
+    instance
+  end
+
   def distinct : self
     query.distinct
     self

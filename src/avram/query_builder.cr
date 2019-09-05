@@ -46,6 +46,14 @@ class Avram::QueryBuilder
     end
   end
 
+  # Similar to `merge`, but includes ALL query parts
+  def clone(query_to_merge : Avram::QueryBuilder)
+    merge(query_to_merge)
+    self.select(query_to_merge.selects)
+    limit(query_to_merge.limit)
+    offset(query_to_merge.offset)
+  end
+
   def statement
     join_sql [@delete ? delete_sql : select_sql] + sql_condition_clauses
   end
@@ -110,9 +118,17 @@ class Avram::QueryBuilder
     @distinct || @distinct_on
   end
 
+  def limit
+    @limit
+  end
+
   def limit(amount)
     @limit = amount
     self
+  end
+
+  def offset
+    @offset
   end
 
   def offset(@offset)
@@ -196,7 +212,13 @@ class Avram::QueryBuilder
     @limit || @offset
   end
 
-  def select(selection : Array(Symbol))
+  def selects
+    @selections
+      .split(", ")
+      .map { |column| column.split(".").last }
+  end
+
+  def select(selection : Array(Symbol | String))
     @selections = selection
       .map { |column| "#{@table}.#{column}" }
       .join(", ")
