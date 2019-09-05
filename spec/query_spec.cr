@@ -681,7 +681,7 @@ describe Avram::Query do
         LineItemProductBox.create &.line_item_id(item.id).product_id(product.id)
 
         products = Product::BaseQuery.new
-                      .preload_line_items(LineItem::BaseQuery.new.preload_price)
+          .preload_line_items(LineItem::BaseQuery.new.preload_price)
         cloned_products = products.clone
         products.first.line_items.first.price.as(Price).in_cents.should eq(500)
         cloned_products.first.line_items.first.price.as(Price).in_cents.should eq(500)
