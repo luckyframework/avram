@@ -695,6 +695,7 @@ describe Avram::Query do
       end_date = 1.day.ago
       post = PostBox.create &.published_at(3.days.ago)
       posts = Post::BaseQuery.new.published_at.between(start_date, end_date)
+
       posts.query.statement.should eq "SELECT posts.custom_id, posts.created_at, posts.updated_at, posts.title, posts.published_at FROM posts WHERE posts.published_at >= $1 AND posts.published_at <= $2"
       posts.query.args.should eq [start_date.to_s("%Y-%m-%d %H:%M:%S %:z"), end_date.to_s("%Y-%m-%d %H:%M:%S %:z")]
       posts.first.should eq post
@@ -703,6 +704,7 @@ describe Avram::Query do
     it "queries between numbers" do
       company = CompanyBox.create &.sales(50)
       companies = Company::BaseQuery.new.sales.between(1, 100)
+
       companies.query.statement.should eq "SELECT companies.id, companies.created_at, companies.updated_at, companies.sales, companies.earnings FROM companies WHERE companies.sales >= $1 AND companies.sales <= $2"
       companies.query.args.should eq ["1", "100"]
       companies.first.should eq company
@@ -711,6 +713,7 @@ describe Avram::Query do
     it "queries between floats" do
       company = CompanyBox.create &.earnings(300.45)
       companies = Company::BaseQuery.new.earnings.between(123.45, 678.901)
+
       companies.query.statement.should eq "SELECT companies.id, companies.created_at, companies.updated_at, companies.sales, companies.earnings FROM companies WHERE companies.earnings >= $1 AND companies.earnings <= $2"
       companies.query.args.should eq ["123.45", "678.901"]
       companies.first.should eq company
