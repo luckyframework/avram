@@ -68,6 +68,10 @@ struct Time
     end
 
     class Criteria(T, V) < Avram::Criteria(T, V)
+      def between(start_date : Time, end_date : Time)
+        add_clause(Avram::Where::GreaterThanOrEqualTo.new(@column, V::Lucky.to_db!(start_date)))
+        add_clause(Avram::Where::LessThanOrEqualTo.new(@column, V::Lucky.to_db!(end_date)))
+      end
     end
   end
 end
