@@ -7,8 +7,8 @@ class Avram::QueryBuilder
   @raw_wheres = [] of Avram::Where::Raw
   @joins = [] of Avram::Join::SqlClause
   @orders = {
-    asc:  [] of Symbol | String,
-    desc: [] of Symbol | String,
+    asc:  [] of Tuple(ColumnName, Symbol?),
+    desc: [] of Tuple(ColumnName, Symbol?),
   }
   @selections : String = "*"
   @prepared_statement_placeholder = 0
@@ -17,6 +17,7 @@ class Avram::QueryBuilder
   @distinct_on : String | Symbol | Nil = nil
 
   VALID_DIRECTIONS = [:asc, :desc]
+  VALID_NULL_SORTING = [:nulls_first, :nulls_last]
 
   def initialize(@table : Symbol)
   end
@@ -135,9 +136,10 @@ class Avram::QueryBuilder
     self
   end
 
-  def order_by(column, direction : Symbol)
+  def order_by(column, direction : Symbol, null_sorting : Symbol? = nil)
     raise "Direction must be :asc or :desc, got #{direction}" unless VALID_DIRECTIONS.includes?(direction)
-    @orders[direction] << column
+    raise "NULL Sorting must be :nulls_first or :nulls_last, got #{null_sorting}" unless null_sorting && VALID_NULL_SORTING.includes?(null_sorting)
+    @orders[direction] << {column, null_sorting}
     self
   end
 

@@ -625,6 +625,18 @@ describe Avram::Query do
       query = Post::BaseQuery.new.where_comments(Comment::BaseQuery.new.created_at.asc_order)
       query.to_sql[0].should contain "ORDER BY comments.created_at ASC"
     end
+
+    it "orders nulls first" do
+      query = Post::BaseQuery.new.published_at.asc_order(:nulls_first)
+
+      query.to_sql[0].should contain "ORDER BY posts.published_at ASC NULLS FIRST"
+    end
+
+    it "orders nulls last" do
+      query = Post::BaseQuery.new.published_at.asc_order(:nulls_last)
+
+      query.to_sql[0].should contain "ORDER BY posts.published_at ASC NULLS LAST"
+    end
   end
 
   describe "cloning queries" do
