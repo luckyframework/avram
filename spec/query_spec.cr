@@ -637,6 +637,12 @@ describe Avram::Query do
 
       query.to_sql[0].should contain "ORDER BY posts.published_at ASC NULLS LAST"
     end
+
+    it "returns a nice error when trying to order by a weird direction" do
+      expect_raises(Exception, /Accepted values are: :asc, :desc/) do
+        Post::BaseQuery.new.order_by(:published_at, :sideways)
+      end
+    end
   end
 
   describe "cloning queries" do
