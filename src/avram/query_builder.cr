@@ -6,18 +6,12 @@ class Avram::QueryBuilder
   @wheres = [] of Avram::Where::SqlClause
   @raw_wheres = [] of Avram::Where::Raw
   @joins = [] of Avram::Join::SqlClause
-  @orders = {
-    asc:  [] of Tuple(ColumnName, Symbol?),
-    desc: [] of Tuple(ColumnName, Symbol?),
-  }
+  @orders = [] of Avram::OrderBy
   @selections : String = "*"
   @prepared_statement_placeholder = 0
   @distinct : Bool = false
   @delete : Bool = false
   @distinct_on : String | Symbol | Nil = nil
-
-  VALID_DIRECTIONS = [:asc, :desc]
-  VALID_NULL_SORTING = [:nulls_first, :nulls_last]
 
   def initialize(@table : Symbol)
   end
@@ -40,10 +34,8 @@ class Avram::QueryBuilder
       join(join)
     end
 
-    query_to_merge.orders.each do |direction, order_bys|
-      order_bys.each do |order|
-        order_by(order, direction)
-      end
+    query_to_merge.orders.each do |order|
+      order_by(order)
     end
   end
 
@@ -136,39 +128,35 @@ class Avram::QueryBuilder
     self
   end
 
-  def order_by(column, direction : Symbol, null_sorting : Symbol? = nil)
-    raise "Direction must be :asc or :desc, got #{direction}" unless VALID_DIRECTIONS.includes?(direction)
-    raise "NULL Sorting must be :nulls_first or :nulls_last, got #{null_sorting}" unless null_sorting && VALID_NULL_SORTING.includes?(null_sorting)
-    @orders[direction] << {column, null_sorting}
+  def order_by(order : OrderBy)
+    @orders << order
     self
   end
 
   def reset_order
-    @orders.values.each(&.clear)
+    @orders.clear
   end
 
   def reverse_order
-    @orders = {
-      asc:  @orders[:desc],
-      desc: @orders[:asc],
-    }
+    @orders = @orders.map(&.reversed).reverse
     self
   end
 
   def order_sql
     if ordered?
-      "ORDER BY " + orders.map do |direction, columns|
-        next if columns.empty?
-        "#{columns.join(" #{direction.to_s.upcase}, ")} #{direction.to_s.upcase}"
-      end.reject(&.nil?).join(", ")
+      String.build do |str|
+        str << "ORDER BY "
+        orders.each_with_index do |order, index|
+          str << ", " unless index.zero?
+          str << "#{order.column} #{order.direction}"
+          str << " #{order.nulls}" unless order.nulls.default?
+        end
+      end
     end
   end
 
   def orders
-    {
-      asc:  @orders[:asc].uniq,
-      desc: @orders[:desc].uniq,
-    }
+    @orders.uniq!(&.column)
   end
 
   def select_count
@@ -228,9 +216,7 @@ class Avram::QueryBuilder
   end
 
   def ordered?
-    @orders.values.any? do |columns|
-      columns.any?
-    end
+    @orders.size > 0
   end
 
   private def select_sql

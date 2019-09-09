@@ -99,7 +99,8 @@ module Avram::Queryable(T)
   end
 
   def order_by(column, direction) : self
-    query.order_by(column, direction)
+    direction = Avram::OrderBy::Direction.parse(direction.to_s)
+    query.order_by(Avram::OrderBy.new(column, direction))
     self
   end
 

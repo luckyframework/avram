@@ -2,22 +2,17 @@ class Avram::Criteria(T, V)
   property :rows, :column
   @negate_next_criteria : Bool
 
-  enum NullSorting
-    NullsFirst
-    NullsLast
-  end
-
   def initialize(@rows : T, @column : Symbol | String)
     @negate_next_criteria = false
   end
 
-  def desc_order(null_sorting : NullSorting? = nil) : T
-    rows.query.order_by(column, :desc, null_sorting)
+  def desc_order(null_sorting : Avram::OrderBy::NullSorting = :default) : T
+    rows.query.order_by(Avram::OrderBy.new(column, :desc, null_sorting))
     rows
   end
 
-  def asc_order(null_sorting : NullSorting? = nil) : T
-    rows.query.order_by(column, :asc, null_sorting)
+  def asc_order(null_sorting : Avram::OrderBy::NullSorting = :default) : T
+    rows.query.order_by(Avram::OrderBy.new(column, :asc, null_sorting))
     rows
   end
 
