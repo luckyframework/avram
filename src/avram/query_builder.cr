@@ -144,14 +144,7 @@ class Avram::QueryBuilder
 
   def order_sql
     if ordered?
-      String.build do |str|
-        str << "ORDER BY "
-        orders.each_with_index do |order, index|
-          str << ", " unless index.zero?
-          str << "#{order.column} #{order.direction}"
-          str << " #{order.nulls}" unless order.nulls.default?
-        end
-      end
+      "ORDER BY " + orders.map(&.prepare).join(", ")
     end
   end
 
@@ -216,7 +209,7 @@ class Avram::QueryBuilder
   end
 
   def ordered?
-    @orders.size > 0
+    @orders.any?
   end
 
   private def select_sql

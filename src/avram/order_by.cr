@@ -26,5 +26,12 @@ module Avram
       @direction = @direction.asc? ? Direction::DESC : Direction::ASC
       self
     end
+
+    def prepare
+      String.build do |str|
+        str << "#{column} #{direction}"
+        str << " #{nulls}" unless nulls.default?
+      end
+    end
   end
 end
