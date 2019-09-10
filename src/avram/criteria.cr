@@ -6,13 +6,13 @@ class Avram::Criteria(T, V)
     @negate_next_criteria = false
   end
 
-  def desc_order : T
-    rows.query.order_by(column, :desc)
+  def desc_order(null_sorting : Avram::OrderBy::NullSorting = :default) : T
+    rows.query.order_by(Avram::OrderBy.new(column, :desc, null_sorting))
     rows
   end
 
-  def asc_order : T
-    rows.query.order_by(column, :asc)
+  def asc_order(null_sorting : Avram::OrderBy::NullSorting = :default) : T
+    rows.query.order_by(Avram::OrderBy.new(column, :asc, null_sorting))
     rows
   end
 

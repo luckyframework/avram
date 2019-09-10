@@ -6,17 +6,12 @@ class Avram::QueryBuilder
   @wheres = [] of Avram::Where::SqlClause
   @raw_wheres = [] of Avram::Where::Raw
   @joins = [] of Avram::Join::SqlClause
-  @orders = {
-    asc:  [] of Symbol | String,
-    desc: [] of Symbol | String,
-  }
+  @orders = [] of Avram::OrderBy
   @selections : String = "*"
   @prepared_statement_placeholder = 0
   @distinct : Bool = false
   @delete : Bool = false
   @distinct_on : String | Symbol | Nil = nil
-
-  VALID_DIRECTIONS = [:asc, :desc]
 
   def initialize(@table : Symbol)
   end
@@ -39,10 +34,8 @@ class Avram::QueryBuilder
       join(join)
     end
 
-    query_to_merge.orders.each do |direction, order_bys|
-      order_bys.each do |order|
-        order_by(order, direction)
-      end
+    query_to_merge.orders.each do |order|
+      order_by(order)
     end
   end
 
@@ -135,38 +128,28 @@ class Avram::QueryBuilder
     self
   end
 
-  def order_by(column, direction : Symbol)
-    raise "Direction must be :asc or :desc, got #{direction}" unless VALID_DIRECTIONS.includes?(direction)
-    @orders[direction] << column
+  def order_by(order : OrderBy)
+    @orders << order
     self
   end
 
   def reset_order
-    @orders.values.each(&.clear)
+    @orders.clear
   end
 
   def reverse_order
-    @orders = {
-      asc:  @orders[:desc],
-      desc: @orders[:asc],
-    }
+    @orders = @orders.map(&.reversed).reverse
     self
   end
 
   def order_sql
     if ordered?
-      "ORDER BY " + orders.map do |direction, columns|
-        next if columns.empty?
-        "#{columns.join(" #{direction.to_s.upcase}, ")} #{direction.to_s.upcase}"
-      end.reject(&.nil?).join(", ")
+      "ORDER BY " + orders.map(&.prepare).join(", ")
     end
   end
 
   def orders
-    {
-      asc:  @orders[:asc].uniq,
-      desc: @orders[:desc].uniq,
-    }
+    @orders.uniq!(&.column)
   end
 
   def select_count
@@ -226,9 +209,7 @@ class Avram::QueryBuilder
   end
 
   def ordered?
-    @orders.values.any? do |columns|
-      columns.any?
-    end
+    @orders.any?
   end
 
   private def select_sql
