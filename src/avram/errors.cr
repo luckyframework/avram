@@ -36,8 +36,8 @@ module Avram
   end
 
   # Raised when using the create! or update! methods on a form when it does not have the proper attributes
-  class InvalidSaveOperationError < AvramError
-    getter save_operation_errors : Hash(Symbol, Array(String))
+  class InvalidOperationError < AvramError
+    getter errors : Hash(Symbol, Array(String))
 
     def initialize(operation)
       message = String.build do |message|
@@ -48,8 +48,18 @@ module Avram
           message << "  ▸ #{attribute_name}: #{errors.join(", ")}\n"
         end
       end
-      @save_operation_errors = operation.errors
+      @errors = operation.errors
       super message
+    end
+
+    def save_operation_errors
+      {% raise "Avram::InvalidSaveOperationError#save_operation_errors has been renamed to 'errors'" %}
+    end
+  end
+
+  class InvalidSaveOperationError
+    def initialize(*args, **named_args)
+      {% raise "#{@type} has been renamed to Avram::InvalidOperationError" %}
     end
   end
 
