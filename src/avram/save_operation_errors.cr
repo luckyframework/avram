@@ -9,6 +9,4 @@ module Avram::SaveOperationErrors
       end
     end
   end
-
-  abstract def attributes
 end
