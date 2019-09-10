@@ -315,7 +315,7 @@ abstract class Avram::SaveOperation(T) < Avram::Operation
     if save
       record.not_nil!
     else
-      raise Avram::InvalidSaveOperationError.new(operation: self)
+      raise Avram::InvalidOperationError.new(operation: self)
     end
   end
 

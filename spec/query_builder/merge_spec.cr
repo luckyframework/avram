@@ -19,9 +19,9 @@ describe "Avram::QueryBuilder#merge" do
 
   it "merges orders" do
     query_1 = new_query
-      .order_by(:id, :asc)
+      .order_by(Avram::OrderBy.new(:id, :asc))
     query_2 = new_query
-      .order_by(:name, :desc)
+      .order_by(Avram::OrderBy.new(:name, :desc))
 
     query_1.merge(query_2)
     query_1.statement.should contain "ORDER BY id ASC, name DESC"

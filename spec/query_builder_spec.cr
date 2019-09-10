@@ -9,8 +9,8 @@ describe Avram::QueryBuilder do
       .raw_where(Avram::Where::Raw.new("name = ?", "Mikias"))
       .join(Avram::Join::Inner.new(:users, :posts))
       .join(Avram::Join::Inner.new(:users, :posts))
-      .order_by(:my_column, :asc)
-      .order_by(:my_column, :asc)
+      .order_by(Avram::OrderBy.new(:my_column, :asc))
+      .order_by(Avram::OrderBy.new(:my_column, :asc))
 
     query.wheres.size.should eq(1)
     query.raw_wheres.size.should eq(1)
@@ -20,7 +20,7 @@ describe Avram::QueryBuilder do
   end
 
   it "can reset order" do
-    query = new_query.order_by(:my_column, :asc)
+    query = new_query.order_by(Avram::OrderBy.new(:my_column, :asc))
     query.statement.should eq "SELECT * FROM users ORDER BY my_column ASC"
 
     query.reset_order
@@ -78,14 +78,14 @@ describe Avram::QueryBuilder do
 
   it "can be ordered" do
     query = new_query
-      .order_by(:name, :asc)
-      .order_by(:birthday, :asc)
-      .order_by(:email, :desc)
+      .order_by(Avram::OrderBy.new(:name, :asc))
+      .order_by(Avram::OrderBy.new(:birthday, :asc))
+      .order_by(Avram::OrderBy.new(:email, :desc))
     query.statement.should eq "SELECT * FROM users ORDER BY name ASC, birthday ASC, email DESC"
     query.args.should eq [] of String
 
     query = new_query
-      .order_by(:name, :asc)
+      .order_by(Avram::OrderBy.new(:name, :asc))
     query.statement.should eq "SELECT * FROM users ORDER BY name ASC"
   end
 
@@ -196,7 +196,7 @@ describe Avram::QueryBuilder do
     it "reverses the order of the query" do
       query = Avram::QueryBuilder
         .new(table: :users)
-        .order_by(:id, :asc)
+        .order_by(Avram::OrderBy.new(:id, :asc))
         .reverse_order
 
       query.statement.should eq "SELECT * FROM users ORDER BY id DESC"
@@ -205,8 +205,8 @@ describe Avram::QueryBuilder do
     it "reverses both directions" do
       query = Avram::QueryBuilder
         .new(table: :users)
-        .order_by(:id, :asc)
-        .order_by(:name, :desc)
+        .order_by(Avram::OrderBy.new(:id, :asc))
+        .order_by(Avram::OrderBy.new(:name, :desc))
         .reverse_order
 
       query.statement.should eq "SELECT * FROM users ORDER BY name ASC, id DESC"
@@ -229,7 +229,7 @@ describe Avram::QueryBuilder do
     it "returns true if the query is ordered" do
       query = Avram::QueryBuilder
         .new(table: :users)
-        .order_by(:id, :asc)
+        .order_by(Avram::OrderBy.new(:id, :asc))
 
       query.ordered?.should eq true
     end
@@ -248,7 +248,7 @@ describe Avram::QueryBuilder do
         .select([:name, :age])
         .join(Avram::Join::Inner.new(:users, :posts))
         .where(Avram::Where::Equal.new(:name, "Paul"))
-        .order_by(:id, :asc)
+        .order_by(Avram::OrderBy.new(:id, :asc))
         .limit(1)
         .offset(2)
       cloned_query = new_query

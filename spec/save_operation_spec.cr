@@ -366,7 +366,7 @@ describe "Avram::SaveOperation" do
       it "raises an exception" do
         params = {"name" => "", "age" => "30"}
 
-        expect_raises Avram::InvalidSaveOperationError do
+        expect_raises Avram::InvalidOperationError do
           SaveUser.create!(params)
         end
       end
@@ -497,7 +497,7 @@ describe "Avram::SaveOperation" do
         user = UserQuery.new.first
         params = {"name" => ""}
 
-        expect_raises Avram::InvalidSaveOperationError do
+        expect_raises Avram::InvalidOperationError do
           SaveUser.update! user, with: params
         end
       end
