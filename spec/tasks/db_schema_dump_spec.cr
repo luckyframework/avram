@@ -2,11 +2,11 @@ require "../spec_helper"
 
 describe Db::Schema::Dump do
   it "generates a new sql dump file" do
-    Db::Schema::Dump.new.call
+    Dir.mkdir_p("tmp")
+    Db::Schema::Dump.new("tmp/structure.sql").call
 
-    filename = Dir.entries(Dir.current).find { |e| e =~ /lucky_avram_dev_dump/ }.to_s
+    filename = "tmp/structure.sql"
     File.exists?(filename).should eq true
     File.read(filename).should contain "PostgreSQL database dump"
-    File.delete(filename)
   end
 end

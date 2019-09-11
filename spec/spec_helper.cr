@@ -1,3 +1,4 @@
+require "file_utils"
 require "spec"
 require "../src/avram"
 require "./support/base_model"
@@ -10,6 +11,7 @@ Db::Migrate.new(quiet: true).call
 
 Spec.before_each do
   TestDatabase.truncate
+  FileUtils.rm_r("tmp") rescue nil
 end
 
 class SampleBackupDatabase < Avram::Database

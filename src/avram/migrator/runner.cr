@@ -106,30 +106,11 @@ class Avram::Migrator::Runner
     end
   end
 
-  def self.dump_db(quiet : Bool = false)
-    run "pg_dump -U #{db_user} -h #{db_host} -p #{db_port} -s #{db_name} > lucky_#{db_name}_dump-#{Time.now.to_s("%Y%m%d%H%I")}.sql"
+  def self.dump_db(dump_to : String = "db/structure.sql", quiet : Bool = false)
+    Db::VerifyConnection.new(quiet: true).call
+    run "pg_dump -U #{db_user} -h #{db_host} -p #{db_port} -s #{db_name} > #{dump_to}"
     unless quiet
       puts "Done dumping #{db_name.colorize(:green)}"
-    end
-  rescue e : Exception
-    message = e.message.to_s
-    if message.includes?("does not exist")
-      raise <<-ERROR
-      The database #{db_name} does not exist on host #{db_host}.
-
-      Try running 'lucky db.create' first.
-      ERROR
-    elsif message.includes?("Connection refused")
-      raise <<-ERROR
-      Unable to connect to db #{db_name}.
-
-      Try this...
-
-        ▸ Check your settings in 'config/database.cr'.
-        ▸ Run 'luck db.verify_connection' to ensure you can connect
-      ERROR
-    else
-      raise e.message.as(String)
     end
   end
 

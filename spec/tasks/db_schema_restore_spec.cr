@@ -4,7 +4,7 @@ SQL_DUMP_FILE = "spec/support/files/sample_backup.sql"
 
 describe Db::Schema::Restore do
   it "raises an error when no import file is supplied" do
-    expect_raises(Exception, "An import file must be provided") do
+    expect_raises(Exception, "A path to the import SQL file must be provided") do
       Db::Schema::Restore.new.call
     end
   end
