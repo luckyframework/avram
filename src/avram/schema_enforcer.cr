@@ -22,7 +22,7 @@ module Avram::SchemaEnforcer
 
     def ensure_exists!
       if table_missing?
-        best_match = Levenshtein::Finder.find @table_name.to_s, @table_names, tolerance: 4
+        best_match = Levenshtein::Finder.find @table_name.to_s, @table_names, tolerance: 2
         message = "The table '#{@table_name}' was not found."
 
         if best_match
@@ -82,7 +82,7 @@ module Avram::SchemaEnforcer
 
     private def missing_attribute_error(table_name, column_names, missing_attribute)
       message = "The table '#{table_name}' does not have a '#{missing_attribute[:name]}' column."
-      best_match = Levenshtein::Finder.find missing_attribute[:name].to_s, column_names, tolerance: 4
+      best_match = Levenshtein::Finder.find missing_attribute[:name].to_s, column_names, tolerance: 2
 
       if best_match
         message += " Did you mean #{best_match}?"
