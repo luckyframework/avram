@@ -1,6 +1,12 @@
 require "./spec_helper"
 
 private class SaveUser < User::SaveOperation
+  # There was a bug where adding a non-database attribute would make it so
+  # 'attributes' only returned the non-database attributes.
+  #
+  # So we add a non-database attribute and check that the permitted_columns are
+  # still included in validation errors.
+  attribute should_not_override_permitted_columns : String
   permit_columns :name, :nickname, :joined_at, :age
   before_save prepare
 
@@ -366,7 +372,7 @@ describe "Avram::SaveOperation" do
       it "raises an exception" do
         params = {"name" => "", "age" => "30"}
 
-        expect_raises Avram::InvalidSaveOperationError do
+        expect_raises Avram::InvalidOperationError do
           SaveUser.create!(params)
         end
       end
@@ -497,7 +503,7 @@ describe "Avram::SaveOperation" do
         user = UserQuery.new.first
         params = {"name" => ""}
 
-        expect_raises Avram::InvalidSaveOperationError do
+        expect_raises Avram::InvalidOperationError do
           SaveUser.update! user, with: params
         end
       end

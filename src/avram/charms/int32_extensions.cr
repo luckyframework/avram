@@ -34,6 +34,7 @@ struct Int32
     end
 
     class Criteria(T, V) < Avram::Criteria(T, V)
+      include Avram::BetweenCriteria(T, V)
     end
   end
 end

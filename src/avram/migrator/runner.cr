@@ -72,9 +72,9 @@ class Avram::Migrator::Runner
 
       Try this...
 
-        ▸ #{green_arrow} If you are on macOS  you can install postgres tools from #{macos_postgres_tools_link}
-        ▸ #{green_arrow} If you are on linux you can try running #{linux_postgres_installation_instructions}
-        ▸ #{green_arrow} If you are on CI or some servers, there may already be a database created so you don't need this command"
+        ▸ If you are on macOS  you can install postgres tools from #{macos_postgres_tools_link}
+        ▸ If you are on linux you can try running #{linux_postgres_installation_instructions}
+        ▸ If you are on CI or some servers, there may already be a database created so you don't need this command"
 
       ERROR
     elsif (message = e.message) && message.includes?("could not connect to database template")
