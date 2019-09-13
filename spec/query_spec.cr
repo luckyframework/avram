@@ -737,4 +737,28 @@ describe Avram::Query do
       companies.first.should eq company
     end
   end
+
+  describe "#group" do
+    it "groups" do
+      user = UserBox.create &.age(25).name("Michael")
+      user = UserBox.create &.age(25).name("Dwight")
+      user = UserBox.create &.age(21).name("Jim")
+
+      users = UserQuery.new.group(&.age).group(&.id)
+      users.query.statement.should eq "SELECT #{User::COLUMN_SQL} FROM users GROUP BY users.age, users.id"
+      users.map(&.name).should contain "Dwight"
+    end
+
+    it "raises an error when grouped incorrectly" do
+      user = UserBox.create &.age(25).name("Erin")
+      user = UserBox.create &.age(25).name("Angela")
+      user = UserBox.create &.age(21).name("Pam")
+
+      users = UserQuery.new.group(&.age)
+
+      expect_raises(PQ::PQError, /column "users\.id" must appear in the GROUP BY/) do
+        users.map(&.name).should contain "Pam"
+      end
+    end
+  end
 end

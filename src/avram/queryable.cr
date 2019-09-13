@@ -106,6 +106,12 @@ module Avram::Queryable(T)
     raise "#{e.message}. Accepted values are: :asc, :desc"
   end
 
+  def group(&block) : self
+    criteria = yield self
+    criteria.__group
+    self
+  end
+
   def none : self
     query.where(Avram::Where::Equal.new("1", "0"))
     self

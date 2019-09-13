@@ -130,6 +130,11 @@ class Avram::Criteria(T, V)
     rows.query.distinct_on(column)
   end
 
+  # :nodoc:
+  def __group : Avram::QueryBuilder
+    rows.query.group_by(column)
+  end
+
   private def add_clause(sql_clause) : T
     sql_clause = build_sql_clause(sql_clause)
     rows.query.where(sql_clause)
