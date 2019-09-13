@@ -24,10 +24,17 @@ describe "attribute in forms" do
   end
 
   it "generates a list of attributes" do
-    operation.attributes.map(&.name).should eq [:password_confirmation,
-                                                :terms_of_service,
-                                                :best_kind_of_bear,
-                                                :default_is_false]
+    operation.attributes.map(&.name).should eq [
+      :default_is_false,
+      :best_kind_of_bear,
+      :terms_of_service,
+      :password_confirmation,
+      :custom_id,
+      :created_at,
+      :updated_at,
+      :title,
+      :published_at,
+    ]
   end
 
   it "sets a default value of nil if another one is not given" do
