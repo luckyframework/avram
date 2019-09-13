@@ -95,6 +95,25 @@ class Avram::Migrator::Runner
     end
   end
 
+  def self.restore_db(restore_file : String, quiet : Bool = false)
+    if File.exists?(restore_file)
+      run "psql -q #{cmd_args} -v ON_ERROR_STOP=1 < #{restore_file}"
+      unless quiet
+        puts "Done restoring #{db_name.colorize(:green)}"
+      end
+    else
+      raise "Unable to locate the restore file: #{restore_file}"
+    end
+  end
+
+  def self.dump_db(dump_to : String = "db/structure.sql", quiet : Bool = false)
+    Db::VerifyConnection.new(quiet: true).call
+    run "pg_dump -U #{db_user} -h #{db_host} -p #{db_port} -s #{db_name} > #{dump_to}"
+    unless quiet
+      puts "Done dumping #{db_name.colorize(:green)}"
+    end
+  end
+
   def self.setup_migration_tracking_tables
     DB.open(database_url) do |db|
       db.exec create_table_for_tracking_migrations
