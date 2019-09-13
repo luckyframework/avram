@@ -288,6 +288,26 @@ describe Avram::QueryBuilder do
 
       query.statement.should eq "SELECT * FROM users GROUP BY name"
     end
+
+    it "groups by multiple columns" do
+      query = Avram::QueryBuilder
+        .new(table: :users)
+        .group_by(:age)
+        .group_by(:average_score)
+      query.statement.should eq "SELECT * FROM users GROUP BY age, average_score"
+    end
+
+    it "groups in the proper order with other query parts" do
+      query = Avram::QueryBuilder
+        .new(table: :users)
+        .where(Avram::Where::Equal.new(:name, "Paul"))
+        .order_by(Avram::OrderBy.new(:name, :desc))
+        .group_by(:age)
+        .group_by(:average_score)
+        .limit(10)
+      query.statement.should eq "SELECT * FROM users WHERE name = $1 GROUP BY age, average_score ORDER BY name DESC LIMIT 10"
+      query.args.should eq ["Paul"]
+    end
   end
 end
 
