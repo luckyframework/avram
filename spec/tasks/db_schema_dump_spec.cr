@@ -2,7 +2,6 @@ require "../spec_helper"
 
 describe Db::Schema::Dump do
   it "generates a new sql dump file" do
-    Dir.mkdir_p("tmp")
     Db::Schema::Dump.new("tmp/structure.sql").call
 
     filename = "tmp/structure.sql"

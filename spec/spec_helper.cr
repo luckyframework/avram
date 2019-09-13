@@ -11,7 +11,8 @@ Db::Migrate.new(quiet: true).call
 
 Spec.before_each do
   TestDatabase.truncate
-  FileUtils.rm_r("tmp") rescue nil
+  FileUtils.rm_rf("tmp")
+  Dir.mkdir_p("tmp")
 end
 
 class SampleBackupDatabase < Avram::Database
