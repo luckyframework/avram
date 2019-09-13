@@ -1,11 +1,14 @@
 require "../spec_helper"
+include CleanupHelper
 
 describe Db::Schema::Dump do
   it "generates a new sql dump file" do
-    Db::Schema::Dump.new("tmp/structure.sql").call
+    with_cleanup do
+      Db::Schema::Dump.new("structure.sql").call
 
-    filename = "tmp/structure.sql"
-    File.exists?(filename).should eq true
-    File.read(filename).should contain "PostgreSQL database dump"
+      filename = "structure.sql"
+      File.exists?(filename).should eq true
+      File.read(filename).should contain "PostgreSQL database dump"
+    end
   end
 end
