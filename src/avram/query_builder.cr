@@ -7,6 +7,7 @@ class Avram::QueryBuilder
   @raw_wheres = [] of Avram::Where::Raw
   @joins = [] of Avram::Join::SqlClause
   @orders = [] of Avram::OrderBy
+  @groups = [] of ColumnName
   @selections : String = "*"
   @prepared_statement_placeholder = 0
   @distinct : Bool = false
@@ -36,6 +37,10 @@ class Avram::QueryBuilder
 
     query_to_merge.orders.each do |order|
       order_by(order)
+    end
+
+    query_to_merge.groups.each do |group|
+      group_by(group)
     end
   end
 
@@ -89,7 +94,7 @@ class Avram::QueryBuilder
   end
 
   private def sql_condition_clauses
-    [joins_sql, wheres_sql, order_sql, limit_sql, offset_sql]
+    [joins_sql, wheres_sql, group_sql, order_sql, limit_sql, offset_sql]
   end
 
   def delete
@@ -150,6 +155,25 @@ class Avram::QueryBuilder
 
   def orders
     @orders.uniq!(&.column)
+  end
+
+  def group_by(column : ColumnName)
+    @groups << column
+    self
+  end
+
+  def group_sql
+    if grouped?
+      "GROUP BY " + groups.join(", ")
+    end
+  end
+
+  def groups
+    @groups
+  end
+
+  def grouped?
+    @groups.any?
   end
 
   def select_count

@@ -262,6 +262,53 @@ describe Avram::QueryBuilder do
       old_query.statement.should eq "SELECT users.name, users.age FROM users INNER JOIN posts ON users.id = posts.user_id WHERE name = $1 ORDER BY id ASC LIMIT 1 OFFSET 2"
     end
   end
+
+  describe "grouped?" do
+    it "returns true when there's a grouping" do
+      query = Avram::QueryBuilder
+        .new(table: :users)
+        .group_by(:id)
+
+      query.grouped?.should eq true
+    end
+
+    it "returns false when there's no groups" do
+      query = Avram::QueryBuilder
+        .new(table: :users)
+
+      query.grouped?.should eq false
+    end
+  end
+
+  describe "group_by" do
+    it "groups by a column" do
+      query = Avram::QueryBuilder
+        .new(table: :users)
+        .group_by(:name)
+
+      query.statement.should eq "SELECT * FROM users GROUP BY name"
+    end
+
+    it "groups by multiple columns" do
+      query = Avram::QueryBuilder
+        .new(table: :users)
+        .group_by(:age)
+        .group_by(:average_score)
+      query.statement.should eq "SELECT * FROM users GROUP BY age, average_score"
+    end
+
+    it "groups in the proper order with other query parts" do
+      query = Avram::QueryBuilder
+        .new(table: :users)
+        .where(Avram::Where::Equal.new(:name, "Paul"))
+        .order_by(Avram::OrderBy.new(:name, :desc))
+        .group_by(:age)
+        .group_by(:average_score)
+        .limit(10)
+      query.statement.should eq "SELECT * FROM users WHERE name = $1 GROUP BY age, average_score ORDER BY name DESC LIMIT 10"
+      query.args.should eq ["Paul"]
+    end
+  end
 end
 
 private def new_query
