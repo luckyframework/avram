@@ -1,4 +1,6 @@
 module Avram::SchemaEnforcer
+  MODELS_TO_ENFORCE = [] of Avram::Model.class
+
   macro setup(table_name, columns, type, *args, **named_args)
     include Avram::SchemaEnforcer
     def self.ensure_correct_column_mappings!
@@ -10,6 +12,16 @@ module Avram::SchemaEnforcer
 
       EnsureExistingTable.new(:{{table_name}}, database: {{ type }}.database).ensure_exists!
       EnsureMatchingColumns.new(:{{table_name}}, database: {{ type }}.database).ensure_matches! attributes
+    end
+
+    {% if !type.resolve.abstract? %}
+      {% Avram::SchemaEnforcer::MODELS_TO_ENFORCE << type %}
+    {% end %}
+  end
+
+  def self.ensure_correct_column_mappings!
+    MODELS_TO_ENFORCE.each do |model_type|
+      model_type.ensure_correct_column_mappings!
     end
   end
 
@@ -29,7 +41,7 @@ module Avram::SchemaEnforcer
           message += " Did you mean #{best_match}?"
         end
 
-        raise message
+        raise Avram::SchemaMismatchError.new(message)
       end
     end
 
@@ -59,7 +71,7 @@ module Avram::SchemaEnforcer
       if matching_error?
         message = @missing_columns + @optional_attribute_errors + @required_attribute_errors
 
-        raise message.join("\n\n")
+        raise Avram::SchemaMismatchError.new(message.join("\n\n"))
       end
     end
 
