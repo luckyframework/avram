@@ -52,9 +52,9 @@ module Avram::SchemaEnforcer
           if best_match
             message << <<-TEXT
 
-            If you meant for #{model_class} to use the '#{best_match.colorize.yellow.bold}' table, try this...
+            If you meant for #{model_class.to_s.colorize.bold} to use the '#{best_match.colorize.yellow.bold}' table, try this...
 
-              ▸ Change the table name in #{model_class}:
+              ▸ Change the table name in #{model_class.to_s.colorize.bold}:
 
                   table :#{best_match} do
                     #{"# ..columns".colorize.dim}
@@ -168,7 +168,7 @@ module Avram::SchemaEnforcer
       <<-ERROR
       #{model_class.to_s.colorize.bold} has defined '#{attribute[:name].to_s.colorize.bold}' as nilable (#{attribute[:type]}?), but the database column does not allow nils.
 
-      Either mark the column as required in #{model_class}:
+      Either mark the column as required in #{model_class.to_s.colorize.bold}:
 
         #{"# Remove the '?'".colorize.dim}
         column #{attribute[:name]} : #{attribute[:type]}
@@ -191,7 +191,7 @@ module Avram::SchemaEnforcer
       <<-ERROR
       #{model_class.to_s.colorize.bold} has defined '#{attribute[:name].to_s.colorize.bold}' as required (#{attribute[:type]}), but the database column does allow nils.
 
-      Either mark the column as optional in #{model_class}:
+      Either mark the column as optional in #{model_class.to_s.colorize.bold}:
 
         #{"# Add '?' to the  end of the type".colorize.bold}
         column #{attribute[:name]} : #{attribute[:type]}?
