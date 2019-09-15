@@ -10,8 +10,16 @@ module Avram::SchemaEnforcer
         {% end %}
       ]
 
-      EnsureExistingTable.new(:{{table_name}}, database: {{ type }}.database).ensure_exists!
-      EnsureMatchingColumns.new(:{{table_name}}, database: {{ type }}.database).ensure_matches! attributes
+      EnsureExistingTable.new(
+        model_class: {{ type }},
+        table_name: :{{table_name}},
+        database: {{ type }}.database
+      ).ensure_exists!
+      EnsureMatchingColumns.new(
+        model_class: {{ type }},
+        table_name: :{{table_name}},
+        database: {{ type }}.database
+      ).ensure_matches! attributes
     end
 
     {% if !type.resolve.abstract? %}
@@ -26,19 +34,49 @@ module Avram::SchemaEnforcer
   end
 
   class EnsureExistingTable
+    private getter table_name, model_class
     @table_names : Array(String)
 
-    def initialize(@table_name : Symbol, @database : Avram::Database.class)
+    def initialize(@model_class : Avram::Model.class,
+                   @table_name : Symbol,
+                   @database : Avram::Database.class)
       @table_names = @database.new.tables_with_schema(excluding: "migrations")
     end
 
     def ensure_exists!
       if table_missing?
         best_match = Levenshtein::Finder.find @table_name.to_s, @table_names, tolerance: 2
-        message = "The table '#{@table_name}' was not found."
+        message = String.build do |message|
+          message << "#{@model_class} wants to use the '#{table_name}' table but it is missing.\n"
 
-        if best_match
-          message += " Did you mean #{best_match}?"
+          if best_match
+            message << <<-TEXT
+
+            If you meant for #{model_class} to use the '#{best_match}' table, try this...
+
+              ▸ Change the table name in #{model_class}:
+
+                  table :#{best_match} do
+                    # ..columns
+                  end
+
+            TEXT
+          end
+
+          message << <<-TEXT
+
+          If you need to create the '#{table_name}' table...
+
+            ▸ Generate a migration:
+
+                lucky gen.migration Create#{Wordsmith::Inflector.pluralize(model_class.name.to_s)}
+
+            ▸ Create the table in the migration:
+
+                create :#{table_name} do/end
+
+
+          TEXT
         end
 
         raise Avram::SchemaMismatchError.new(message)
@@ -51,12 +89,15 @@ module Avram::SchemaEnforcer
   end
 
   class EnsureMatchingColumns
+    private getter model_class, table_name
     @columns_map = Hash(String, Bool).new
     @missing_columns = [] of String
     @optional_attribute_errors = [] of String
     @required_attribute_errors = [] of String
 
-    def initialize(@table_name : Symbol, @database : Avram::Database.class)
+    def initialize(@model_class : Avram::Model.class,
+                   @table_name : Symbol,
+                   @database : Avram::Database.class)
       columns = @database.new.table_columns(table_name)
       columns.each do |column|
         @columns_map[column.name] = column.nilable
@@ -93,35 +134,79 @@ module Avram::SchemaEnforcer
     end
 
     private def missing_attribute_error(table_name, column_names, missing_attribute)
-      message = "The table '#{table_name}' does not have a '#{missing_attribute[:name]}' column."
+      message = "#{model_class} wants to use the column '#{missing_attribute[:name]}' but it does not exist."
       best_match = Levenshtein::Finder.find missing_attribute[:name].to_s, column_names, tolerance: 2
 
       if best_match
-        message += " Did you mean #{best_match}?"
+        message += " Did you mean '#{best_match}'?\n\n"
       else
-        message += " Make sure you've added it to a migration."
+        message += <<-TEXT
+
+
+        Try adding the column to the table...
+
+          ▸ Generate a migration:
+
+              lucky gen.migration Add#{Wordsmith::Inflector.classify(missing_attribute[:name])}To#{Wordsmith::Inflector.pluralize(model_class)}
+
+          ▸ Add the column to the migration:
+
+              alter :#{table_name} do
+                # Add the column:
+                add #{missing_attribute[:name]} : #{missing_attribute[:type]}
+
+                # Or if this is a column for a belongs_to relationship:
+                add_belongs_to #{missing_attribute[:name]} : #{missing_attribute[:type]}
+              end
+
+
+        TEXT
       end
     end
 
     private def optional_attribute_error(table_name, attribute)
       <<-ERROR
-      '#{attribute[:name]}' is marked as nilable (#{attribute[:name]} : #{attribute[:type]}?), but the database column does not allow nils.
+      #{model_class} has defined '#{attribute[:name]}' as nilable (#{attribute[:type]}?), but the database column does not allow nils.
 
-      Try this...
+      Either mark the column as required in #{model_class}:
 
-        * Mark '#{attribute[:name]}' as non-nilable in your model: #{attribute[:name]} : #{attribute[:type]}
-        * Or, change the column in a migration to allow nils: make_optional :#{table_name}, :#{attribute[:name]}
+        # Remove the '?'
+        column #{attribute[:name]} : #{attribute[:type]}
+
+      Or, make the column optional in a migration:
+
+        ▸ Generate a migration:
+
+            lucky gen.migration Make#{model_class}#{Wordsmith::Inflector.classify(attribute[:name])}Optional
+
+        ▸ Make the column optional:
+
+            make_optional :#{table_name}, :#{attribute[:name]}
+
+
       ERROR
     end
 
     private def required_attribute_error(table_name, attribute)
       <<-ERROR
-      '#{attribute[:name]}' is marked as required (#{attribute[:name]} : #{attribute[:type]}), but the database column allows nils.
+      #{model_class} has defined '#{attribute[:name]}' as required (#{attribute[:type]}), but the database column does allow nils.
 
-      Try this...
+      Either mark the column as optional in #{model_class}:
 
-        * Mark '#{attribute[:name]}' as nilable in your model: #{attribute[:name]} : #{attribute[:type]}?
-        * Or, change the column in a migration to be required: make_required :#{table_name}, :#{attribute[:name]}
+        # Add '?' to the  end of the type
+        column #{attribute[:name]} : #{attribute[:type]}?
+
+      Or, make the column required in a migration:
+
+        ▸ Generate a migration:
+
+            lucky gen.migration Make#{model_class}#{Wordsmith::Inflector.classify(attribute[:name])}Required
+
+        ▸ Make the column required:
+
+            make_required :#{table_name}, :#{attribute[:name]}
+
+
       ERROR
     end
   end

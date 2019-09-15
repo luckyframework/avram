@@ -46,31 +46,31 @@ describe Avram::SchemaEnforcer do
 
   describe "ensures correct column mappings for a single model" do
     it "raises on missing table" do
-      expect_raises Avram::SchemaMismatchError, "The table 'definitely_a_missing_table' was not found." do
+      expect_raises Avram::SchemaMismatchError, "wants to use the 'definitely_a_missing_table' table" do
         MissingTable.ensure_correct_column_mappings!
       end
     end
 
     it "raises on a missing but similarly named table" do
-      expect_raises Avram::SchemaMismatchError, "The table 'uusers' was not found. Did you mean users?" do
+      expect_raises Avram::SchemaMismatchError, "'uusers' table" do
         MissingButSimilarlyNamedTable.ensure_correct_column_mappings!
       end
     end
 
     it "raises on tables with missing columns" do
-      expect_raises Avram::SchemaMismatchError, "The table 'users' does not have a 'mickname' column. Did you mean nickname?" do
+      expect_raises Avram::SchemaMismatchError, "wants to use the column 'mickname' but it does not exist. Did you mean 'nickname'?" do
         ModelWithMissingButSimilarlyNamedColumn.ensure_correct_column_mappings!
       end
     end
 
     it "raises on nilable column with required columns" do
-      expect_raises Avram::SchemaMismatchError, "'name' is marked as nilable (name : String?), but the database column does not allow nils." do
+      expect_raises Avram::SchemaMismatchError, "ModelWithOptionalAttributeOnRequiredColumn has defined 'name' as nilable (String?)" do
         ModelWithOptionalAttributeOnRequiredColumn.ensure_correct_column_mappings!
       end
     end
 
     it "raises on required columns with nilable columns" do
-      expect_raises Avram::SchemaMismatchError, "'nickname' is marked as required (nickname : String), but the database column allows nils." do
+      expect_raises Avram::SchemaMismatchError, "ModelWithRequiredAttributeOnOptionalColumn has defined 'nickname' as required (String)" do
         ModelWithRequiredAttributeOnOptionalColumn.ensure_correct_column_mappings!
       end
     end
