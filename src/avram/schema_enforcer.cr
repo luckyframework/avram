@@ -56,8 +56,8 @@ module Avram::SchemaEnforcer
 
               ▸ Change the table name in #{model_class.to_s.colorize.bold}:
 
-                  table :#{best_match} do
-                    #{"# ..columns".colorize.dim}
+                  table :#{best_match.colorize.bold} do
+                    # ..columns
                   end
 
             TEXT
