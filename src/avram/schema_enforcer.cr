@@ -47,17 +47,17 @@ module Avram::SchemaEnforcer
       if table_missing?
         best_match = Levenshtein::Finder.find @table_name.to_s, @table_names, tolerance: 2
         message = String.build do |message|
-          message << "#{@model_class} wants to use the '#{table_name}' table but it is missing.\n"
+          message << "#{@model_class.to_s.colorize.bold} wants to use the '#{table_name.colorize.bold}' table but it is missing.\n"
 
           if best_match
             message << <<-TEXT
 
-            If you meant for #{model_class} to use the '#{best_match}' table, try this...
+            If you meant for #{model_class} to use the '#{best_match.colorize.yellow.bold}' table, try this...
 
               ▸ Change the table name in #{model_class}:
 
                   table :#{best_match} do
-                    # ..columns
+                    #{"# ..columns".colorize.dim}
                   end
 
             TEXT
@@ -134,11 +134,11 @@ module Avram::SchemaEnforcer
     end
 
     private def missing_attribute_error(table_name, column_names, missing_attribute)
-      message = "#{model_class} wants to use the column '#{missing_attribute[:name]}' but it does not exist."
+      message = "#{model_class.to_s.colorize.bold} wants to use the column '#{missing_attribute[:name].to_s.colorize.bold}' but it does not exist."
       best_match = Levenshtein::Finder.find missing_attribute[:name].to_s, column_names, tolerance: 2
 
       if best_match
-        message += " Did you mean '#{best_match}'?\n\n"
+        message += " Did you mean '#{best_match.colorize.yellow.bold}'?\n\n"
       else
         message += <<-TEXT
 
@@ -152,10 +152,10 @@ module Avram::SchemaEnforcer
           ▸ Add the column to the migration:
 
               alter :#{table_name} do
-                # Add the column:
+                #{"# Add the column:".colorize.dim}
                 add #{missing_attribute[:name]} : #{missing_attribute[:type]}
 
-                # Or if this is a column for a belongs_to relationship:
+                #{"# Or if this is a column for a belongs_to relationship:".colorize.dim}
                 add_belongs_to #{missing_attribute[:name]} : #{missing_attribute[:type]}
               end
 
@@ -166,11 +166,11 @@ module Avram::SchemaEnforcer
 
     private def optional_attribute_error(table_name, attribute)
       <<-ERROR
-      #{model_class} has defined '#{attribute[:name]}' as nilable (#{attribute[:type]}?), but the database column does not allow nils.
+      #{model_class.to_s.colorize.bold} has defined '#{attribute[:name].to_s.colorize.bold}' as nilable (#{attribute[:type]}?), but the database column does not allow nils.
 
       Either mark the column as required in #{model_class}:
 
-        # Remove the '?'
+        #{"# Remove the '?'".colorize.dim}
         column #{attribute[:name]} : #{attribute[:type]}
 
       Or, make the column optional in a migration:
@@ -189,11 +189,11 @@ module Avram::SchemaEnforcer
 
     private def required_attribute_error(table_name, attribute)
       <<-ERROR
-      #{model_class} has defined '#{attribute[:name]}' as required (#{attribute[:type]}), but the database column does allow nils.
+      #{model_class.to_s.colorize.bold} has defined '#{attribute[:name].to_s.colorize.bold}' as required (#{attribute[:type]}), but the database column does allow nils.
 
       Either mark the column as optional in #{model_class}:
 
-        # Add '?' to the  end of the type
+        #{"# Add '?' to the  end of the type".colorize.bold}
         column #{attribute[:name]} : #{attribute[:type]}?
 
       Or, make the column required in a migration:
