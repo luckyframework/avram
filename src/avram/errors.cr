@@ -9,6 +9,10 @@ module Avram
   class Rollback < AvramError
   end
 
+  # Raised by Avram::SchemaEnforcer when columns or tables don't match the database.
+  class SchemaMismatchError < AvramError
+  end
+
   # Raised when trying to access a record that was not preloaded and lazy load
   # is disabled.
   class LazyLoadError < AvramError

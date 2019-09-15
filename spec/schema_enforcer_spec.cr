@@ -29,33 +29,48 @@ private class MissingButSimilarlyNamedTable < BaseModel
 end
 
 describe Avram::SchemaEnforcer do
-  describe "ensures correct column mappings" do
+  it "automatically adds models to MODELS_TO_ENFORCE" do
+    # Just check that it contains some models from this spec
+    Avram::SchemaEnforcer::MODELS_TO_ENFORCE.should contain(MissingTable)
+  end
+
+  it "does not add abstract models" do
+    Avram::SchemaEnforcer::MODELS_TO_ENFORCE.should_not contain(BaseModel)
+  end
+
+  it "raises if any of the models have a mismatched schema" do
+    expect_raises Avram::SchemaMismatchError do
+      Avram::SchemaEnforcer.ensure_correct_column_mappings!
+    end
+  end
+
+  describe "ensures correct column mappings for a single model" do
     it "raises on missing table" do
-      expect_raises Exception, "The table 'definitely_a_missing_table' was not found." do
+      expect_raises Avram::SchemaMismatchError, "The table 'definitely_a_missing_table' was not found." do
         MissingTable.ensure_correct_column_mappings!
       end
     end
 
     it "raises on a missing but similarly named table" do
-      expect_raises Exception, "The table 'uusers' was not found. Did you mean users?" do
+      expect_raises Avram::SchemaMismatchError, "The table 'uusers' was not found. Did you mean users?" do
         MissingButSimilarlyNamedTable.ensure_correct_column_mappings!
       end
     end
 
     it "raises on tables with missing columns" do
-      expect_raises Exception, "The table 'users' does not have a 'mickname' column. Did you mean nickname?" do
+      expect_raises Avram::SchemaMismatchError, "The table 'users' does not have a 'mickname' column. Did you mean nickname?" do
         ModelWithMissingButSimilarlyNamedColumn.ensure_correct_column_mappings!
       end
     end
 
     it "raises on nilable column with required columns" do
-      expect_raises Exception, "'name' is marked as nilable (name : String?), but the database column does not allow nils." do
+      expect_raises Avram::SchemaMismatchError, "'name' is marked as nilable (name : String?), but the database column does not allow nils." do
         ModelWithOptionalAttributeOnRequiredColumn.ensure_correct_column_mappings!
       end
     end
 
     it "raises on required columns with nilable columns" do
-      expect_raises Exception, "'nickname' is marked as required (nickname : String), but the database column allows nils." do
+      expect_raises Avram::SchemaMismatchError, "'nickname' is marked as required (nickname : String), but the database column allows nils." do
         ModelWithRequiredAttributeOnOptionalColumn.ensure_correct_column_mappings!
       end
     end
