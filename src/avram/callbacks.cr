@@ -134,7 +134,7 @@ module Avram::Callbacks
 
       Try this...
 
-        ▸ before_save #{ callback_method.id }
+        ▸ before_save #{callback_method.id}
 
       ERROR
     %}
