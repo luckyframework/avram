@@ -127,14 +127,14 @@ module Avram::Callbacks
   {% end %}
 
   # :nodoc:
-  macro before(unused)
+  macro before(callback_method)
     {% raise <<-ERROR
 
       'before' is not a valid SaveOperation callback.
 
       Try this...
 
-        ▸ before_save #{ unused.id }
+        ▸ before_save #{ callback_method.id }
 
       ERROR
     %}
