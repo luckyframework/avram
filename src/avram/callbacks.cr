@@ -125,4 +125,18 @@ module Avram::Callbacks
       \{% raise "'before_#{removed_callback.id}' has been removed" %}
     end
   {% end %}
+
+  # :nodoc:
+  macro before(callback_method)
+    {% raise <<-ERROR
+
+      'before' is not a valid SaveOperation callback.
+
+      Try this...
+
+        ▸ before_save #{callback_method.id}
+
+      ERROR
+    %}
+  end
 end
