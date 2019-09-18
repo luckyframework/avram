@@ -3,6 +3,7 @@ module Avram::SchemaEnforcer
 
   macro setup(table_name, columns, type, *args, **named_args)
     include Avram::SchemaEnforcer
+
     def self.ensure_correct_column_mappings!
       attributes = [
         {% for attribute in columns %}
@@ -28,9 +29,11 @@ module Avram::SchemaEnforcer
   end
 
   def self.ensure_correct_column_mappings!
-    MODELS_TO_ENFORCE.each do |model_type|
-      model_type.ensure_correct_column_mappings!
-    end
+    {% if !MODELS_TO_ENFORCE.empty? %}
+      MODELS_TO_ENFORCE.each do |model|
+        model.ensure_correct_column_mappings!
+      end
+    {% end %}
   end
 
   class EnsureExistingTable
