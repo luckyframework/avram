@@ -17,7 +17,7 @@ class SampleBackupDatabase < Avram::Database
 end
 
 SampleBackupDatabase.configure do |settings|
-  settings.url = Avram::PostgresURL.build(
+  settings.url = ENV["BACKUP_DATABASE_URL"]? || Avram::PostgresURL.build(
     hostname: "db",
     database: "sample_backup",
     username: "lucky",
