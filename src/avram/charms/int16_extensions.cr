@@ -27,6 +27,8 @@ struct Int16
 
     def parse(value : Int32)
       SuccessfulCast(Int16).new value.to_i16
+    rescue OverflowError
+      FailedCast.new
     end
 
     def to_db(value : Int16)
