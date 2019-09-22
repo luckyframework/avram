@@ -79,7 +79,7 @@ module Avram::Queryable(T)
   def delete : Int64
     query.delete
     database.run do |db|
-      db.exec(query.statement, query.args).rows_affected
+      db.exec(query.statement, args: query.args).rows_affected
     end
   end
 
@@ -174,7 +174,7 @@ module Avram::Queryable(T)
 
   private def exec_query
     database.run do |db|
-      db.query query.statement, query.args do |rs|
+      db.query query.statement, args: query.args do |rs|
         @@schema_class.from_rs(rs)
       end
     end
@@ -182,7 +182,7 @@ module Avram::Queryable(T)
 
   def exec_scalar
     database.run do |db|
-      db.scalar query.statement, query.args
+      db.scalar query.statement, args: query.args
     end
   end
 
