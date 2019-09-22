@@ -74,7 +74,7 @@ class Avram::QueryBuilder
       else
         value.to_s
       end
-    end
+    end.to_a
   end
 
   private def set_sql_clause(params)
