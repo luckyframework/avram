@@ -48,7 +48,9 @@ describe "TypeExtensions" do
     opt = MenuOptionQuery.new.option_value(4).first
     opt.option_value.should eq 4_i16
 
-    opt = MenuOptionQuery.new.option_value(33000).first?
+    # Any Int32 value above Int16::MAX will return a FailedCast
+    # in Avram::Type#parse!
+    opt = MenuOptionQuery.new.option_value(32767).first?
     opt.should eq nil
   end
 end

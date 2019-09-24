@@ -17,7 +17,7 @@ class TestChangeType::V20190723233131 < Avram::Migrator::Migration::V1
   end
 
   def migrate
-    TempUserInt64::SaveOperation.create!(name: "foo", age: 0, joined_at: Time.now)
+    TempUserInt64::SaveOperation.create!(name: "foo", age: 0, joined_at: Time.utc)
 
     alter table_for(User) do
       change_type id : Int32
