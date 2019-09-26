@@ -6,7 +6,7 @@ class Db::Schema::Restore < LuckyCli::Task
 
   def help_message
     <<-TEXT
-    Restores the database from a sql dump file.
+    #{summary}
 
     You must specify the path to the sql that you want Avram to restore from.
 

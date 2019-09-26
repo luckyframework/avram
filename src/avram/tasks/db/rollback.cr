@@ -5,7 +5,7 @@ class Db::Rollback < LuckyCli::Task
 
   def help_message
     <<-TEXT
-    Rollback the last migration.
+    #{summary}
 
     Example:
 

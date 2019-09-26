@@ -7,7 +7,7 @@ class Db::VerifyConnection < LuckyCli::Task
 
   def help_message
     <<-TEXT
-    Verifies that the connection settings work
+    #{summary}
 
     The connection settings are typically defined in config/database.cr
 

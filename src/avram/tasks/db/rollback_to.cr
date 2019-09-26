@@ -5,7 +5,7 @@ class Db::RollbackTo < LuckyCli::Task
 
   def help_message
     <<-TEXT
-    Rollback to a specific migration.
+    #{summary}
 
     You can get the migration version from the filename or by running 'lucky db.migration.status'
 

@@ -12,7 +12,7 @@ class Db::Drop < LuckyCli::Task
 
   def help_message
     <<-TEXT
-    Drops the database.
+    #{summary}
 
     The database name is usually found in config/database.cr
 

@@ -5,7 +5,7 @@ class Db::Redo < LuckyCli::Task
 
   def help_message
     <<-TEXT
-    Rollback and run just the last migration.
+    #{summary}
 
     Example:
 

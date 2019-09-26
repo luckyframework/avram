@@ -5,7 +5,7 @@ class Db::RollbackAll < LuckyCli::Task
 
   def help_message
     <<-TEXT
-    Rollback all migrations.
+    #{summary}
 
     You may also want to look at 'lucky db.drop'.
 
