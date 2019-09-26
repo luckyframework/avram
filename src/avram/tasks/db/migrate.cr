@@ -1,14 +1,14 @@
 require "colorize"
 
 class Db::Migrate < LuckyCli::Task
-  summary "Migrate the database"
+  summary "Run any pending migrations"
 
   def initialize(@quiet : Bool = false)
   end
 
   def help_message
     <<-TEXT
-    Runs any pending migrations.
+    #{summary}
 
     Examples:
 

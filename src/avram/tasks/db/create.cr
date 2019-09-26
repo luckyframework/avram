@@ -6,7 +6,7 @@ class Db::Create < LuckyCli::Task
 
   def help_message
     <<-TEXT
-    Creates the database.
+    #{summary}
 
     The database name is usually found in config/database.cr
 

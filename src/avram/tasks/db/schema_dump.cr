@@ -6,7 +6,7 @@ class Db::Schema::Dump < LuckyCli::Task
 
   def help_message
     <<-TEXT
-    Exports/dumps the database schema to a sql file.
+    #{summary}
 
     You must specify the path that you want Avram to dump the sql to. Note
     that this dumps the schema but does not dump any data.
