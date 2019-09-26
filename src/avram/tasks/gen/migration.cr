@@ -19,6 +19,21 @@ class Avram::Migrator::MigrationGenerator
   def initialize(@name, @migrate_contents : String, @rollback_contents : String)
   end
 
+  def help_message
+    <<-TEXT
+    Generates a migration using the passed in migration name.
+
+    The migration name must be CamelCase. No other options are available.
+
+    Examples:
+
+      lucky gen.migration CreateUsers
+      lucky gen.migration AddAgeToUsers
+      lucky gen.migration MakeUserNameOptional
+
+    TEXT
+  end
+
   def generate(@_version = @_version)
     ensure_camelcase_name
     make_migrations_folder_if_missing
