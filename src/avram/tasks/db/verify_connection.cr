@@ -5,6 +5,20 @@ class Db::VerifyConnection < LuckyCli::Task
   def initialize(@quiet : Bool = false)
   end
 
+  def help_message
+    <<-TEXT
+    Verifies that the connection settings work
+
+    The connection settings are typically defined in config/database.cr
+
+    Examples:
+
+      lucky db.verify_connection
+      LUCKY_ENV=test lucky db.verify_connection # Verify test db connection
+
+    TEXT
+  end
+
   def call
     begin
       DB.open(Avram::Migrator::Runner.database_url) do |db|

@@ -12,6 +12,18 @@ class Db::Migrations::Status < LuckyCli::Task
     end
   end
 
+  def help_message
+    <<-TEXT
+    Shows which migrations are pending and which have been run.
+
+    Examples:
+
+      lucky db.migration.status
+      LUCKY_ENV=test lucky db.migration.status # Show migration status for test db
+
+    TEXT
+  end
+
   private def migrations
     Avram::Migrator::Runner.migrations
   end
