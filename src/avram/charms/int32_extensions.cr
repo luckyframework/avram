@@ -21,8 +21,6 @@ struct Int32
       SuccessfulCast(Int32).new(value)
     end
 
-    # Isn't a `def parse(value : Int64)` missing?
-
     def parse(values : Array(Int32))
       SuccessfulCast(Array(Int32)).new values
     end
