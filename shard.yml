@@ -16,7 +16,7 @@ dependencies:
     version: 0.1.0
   lucky_cli:
     github: luckyframework/lucky_cli
-    tag: v0.18.0-preview
+    version: ~> 0.18.0
   db:
     github: crystal-lang/crystal-db
     version: ~> 0.7.0
