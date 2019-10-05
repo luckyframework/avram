@@ -115,8 +115,16 @@ abstract class Avram::Model
 
   def delete
     self.class.database.run do |db|
-      db.exec "DELETE FROM #{@@table_name} WHERE #{primary_key_name} = #{id}"
+      db.exec "DELETE FROM #{@@table_name} WHERE #{primary_key_name} = #{escape_primary_key(id)}"
     end
+  end
+
+  private def escape_primary_key(id : Int64 | Int32 | Int16)
+    id
+  end
+
+  private def escape_primary_key(id : UUID)
+    PG::EscapeHelper.escape_literal(id.to_s)
   end
 
   macro setup_table_name(table_name, *args, **named_args)
