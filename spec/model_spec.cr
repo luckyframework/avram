@@ -133,6 +133,15 @@ describe Avram::Model do
       item = LineItemQuery.new.first
       item.id.to_s.should match(uuid_regexp)
     end
+
+    it "can be deleted" do
+      LineItemBox.create
+
+      item = LineItemQuery.new.first
+      item.delete
+
+      LineItem::BaseQuery.all.size.should eq 0
+    end
   end
 
   it "can infer the table name when omitted" do
