@@ -13,7 +13,7 @@ class Db::Migrate < LuckyCli::Task
     Examples:
 
       lucky db.migrate
-      LUCKY_ENV=test lucky db.migrat # Runs migrations onthe test database
+      LUCKY_ENV=test lucky db.migrate # Runs migrations on the test database
 
     TEXT
   end

@@ -92,7 +92,7 @@ class Avram::BaseQueryTemplate
         end
 
         # :nodoc:
-        # Used internally for has_many throuogh queries
+        # Used internally for has_many through queries
         def __yield_where_{{ assoc[:table_name] }}
           assoc_query = yield {{ assoc[:type] }}::BaseQuery.new
           query.merge(assoc_query.query)

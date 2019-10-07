@@ -56,7 +56,7 @@ module Avram::Validations
 
   # Validate whether an attribute was accepted (`true`)
   #
-  # This validation is only for Boolean Attributes. The attribute qill be marked
+  # This validation is only for Boolean Attributes. The attribute will be marked
   # as invalid for any value other than `true`.
   def validate_acceptance_of(attribute : Avram::Attribute(Bool?), message : Avram::Attribute::ErrorMessage = "must be accepted")
     if attribute.value != true
