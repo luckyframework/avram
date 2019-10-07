@@ -52,7 +52,7 @@ describe "attribute in forms" do
     operation({"best_kind_of_bear" => ""}).best_kind_of_bear.value.should be_nil
   end
 
-  it "sets the param and value basd on the passed in params" do
+  it "sets the param and value based on the passed in params" do
     operation = operation({"password_confirmation" => "password"})
 
     operation.password_confirmation.value.should eq "password"

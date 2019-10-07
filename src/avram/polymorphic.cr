@@ -2,7 +2,7 @@
 module Avram::Polymorphic
   # Sets up helper methods for validating and loading polymorphic associatiions
   #
-  # This will generate methods for validiating, preloading, and lazy loading
+  # This will generate methods for validating, preloading, and lazy loading
   # polymorphic associations.
 
   # > *Important note:* the `belongs_to` associations must be nilable since only
