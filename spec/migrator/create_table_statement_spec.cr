@@ -87,6 +87,7 @@ describe Avram::Migrator::CreateTableStatement do
       add future_time : Time, default: Time.local
       add friend_count : Int16, default: 1
       add friends : Array(String), default: ["Paul"]
+      add problems : Array(String), default: [] of String
     end
 
     built.statements.size.should eq 1
@@ -102,7 +103,8 @@ describe Avram::Migrator::CreateTableStatement do
       joined_at timestamptz NOT NULL DEFAULT NOW(),
       future_time timestamptz NOT NULL DEFAULT '#{Time.local.to_utc}',
       friend_count smallint NOT NULL DEFAULT '1',
-      friends text[] NOT NULL DEFAULT '["Paul"]');
+      friends text[] NOT NULL DEFAULT '{"Paul"}',
+      problems text[] NOT NULL DEFAULT '{}');
     SQL
   end
 
