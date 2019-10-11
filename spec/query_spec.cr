@@ -757,4 +757,26 @@ describe Avram::Query do
       end
     end
   end
+
+  context "queries joining with has_one" do
+    describe "when you query from the belongs_to side" do
+      it "returns a record" do
+        line_item = LineItemBox.create &.name("Thing 1")
+        price = PriceBox.create &.in_cents(100).line_item_id(line_item.id)
+
+        query = PriceQuery.new.where_line_items(LineItemQuery.new.name("Thing 1"))
+        query.first.should eq price
+      end
+    end
+
+    describe "when you query from the has_one side" do
+      it "returns a record" do
+        line_item = LineItemBox.create &.name("Thing 1")
+        price = PriceBox.create &.in_cents(100).line_item_id(line_item.id)
+
+        query = LineItemQuery.new.where_price(PriceQuery.new.in_cents(100))
+        query.first.should eq line_item
+      end
+    end
+  end
 end
