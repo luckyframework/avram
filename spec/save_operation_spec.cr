@@ -32,6 +32,11 @@ end
 
 private class SaveLineItem < LineItem::SaveOperation
   permit_columns :name
+  before_save prepare
+
+  def prepare
+    1
+  end
 end
 
 private class ValueColumnModel < BaseModel

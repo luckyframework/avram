@@ -8,12 +8,20 @@ class Avram::SaveOperationTemplate
 
     class ::{{ type }}::SaveOperation < Avram::SaveOperation({{ type }})
       {% if primary_key_type.id == UUID.id %}
-        before_save set_uuid
-
-        def set_uuid
-          id.value ||= UUID.random()
-        end
+        # `before_save` calls `previous_def` which will not
+        # run this call on subclasses.
+        before_save set_primary_key_uuid
       {% end %}
+
+      macro inherited
+        {% if primary_key_type.id == UUID.id %}
+          before_save set_primary_key_uuid
+        {% end %}
+      end
+
+      def set_primary_key_uuid
+        id.value ||= UUID.random()
+      end
 
       def database
         {{ type }}.database
