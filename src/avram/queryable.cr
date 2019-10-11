@@ -62,6 +62,16 @@ module Avram::Queryable(T)
     self
   end
 
+  def reset_limit : self
+    query.limit(nil)
+    self
+  end
+
+  def reset_offset : self
+    query.offset(nil)
+    self
+  end
+
   def distinct_on(&block) : self
     criteria = yield self
     criteria.__distinct_on
