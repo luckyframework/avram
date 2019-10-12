@@ -757,4 +757,17 @@ describe Avram::Query do
       end
     end
   end
+
+  describe "#to_prepared_sql" do
+    it "returns the full SQL with args combined" do
+      query = Bucket::BaseQuery.new.names(["Larry", "Moe", "Curly"]).numbers([1, 2, 3])
+      query.to_prepared_sql.should eq(%{SELECT buckets.id, buckets.created_at, buckets.updated_at, buckets.bools, buckets.small_numbers, buckets.numbers, buckets.big_numbers, buckets.names FROM buckets WHERE buckets.names = {"Larry","Moe","Curly"} AND buckets.numbers = {1,2,3}})
+
+      query = Blob::BaseQuery.new.doc(JSON::Any.new({"properties" => JSON::Any.new("sold")}))
+      query.to_prepared_sql.should eq(%{SELECT blobs.id, blobs.created_at, blobs.updated_at, blobs.doc FROM blobs WHERE blobs.doc = {"properties":"sold"}})
+
+      query = UserQuery.new.name.in(["Don", "Juan"]).age.gt(30)
+      query.to_prepared_sql.should eq(%{SELECT #{User::COLUMN_SQL} FROM users WHERE users.name = ANY ({"Don","Juan"}) AND users.age > 30})
+    end
+  end
 end

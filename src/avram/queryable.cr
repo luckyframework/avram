@@ -197,4 +197,8 @@ module Avram::Queryable(T)
   def to_sql
     query.to_sql
   end
+
+  def to_prepared_sql
+    query.to_prepared_sql
+  end
 end
