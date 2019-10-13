@@ -6,8 +6,6 @@ private class CallbacksSaveOperation < Post::SaveOperation
   @callbacks_that_ran = [] of String
   getter callbacks_that_ran
 
-  before_save setup_required_attributes
-
   before_save :run_before_save
   before_save { run_before_save_again }
 
@@ -45,15 +43,21 @@ private class CallbacksSaveOperation < Post::SaveOperation
   private def mark_callback(callback_name)
     callbacks_that_ran << callback_name
   end
+end
 
-  private def setup_required_attributes
-    title.value = "Title"
+private class SaveLineItem < LineItem::SaveOperation
+  permit_columns :name
+  before_save prepare
+
+  def prepare
+    true
   end
 end
 
-describe "Avram::SaveOperation callbacks" do
+describe "Avram::SaveOperation callbacks", focus: true do
   it "does not run after_* callbacks if just validating" do
     operation = CallbacksSaveOperation.new
+    operation.set_title_from_param("A Title")
     operation.callbacks_that_ran.should eq([] of String)
 
     operation.valid?
@@ -64,6 +68,7 @@ describe "Avram::SaveOperation callbacks" do
   it "runs all callbacks when saving successfully" do
     post = PostBox.create
     operation = CallbacksSaveOperation.new(post)
+    operation.set_title_from_param("A Title")
     operation.callbacks_that_ran.should eq([] of String)
 
     operation.save
@@ -81,6 +86,7 @@ describe "Avram::SaveOperation callbacks" do
   it "does not run after_commit if rolled back" do
     post = PostBox.create
     operation = CallbacksSaveOperation.new(post, rollback: true)
+    operation.set_title_from_param("A Title")
     operation.callbacks_that_ran.should eq([] of String)
 
     operation.save
@@ -90,5 +96,22 @@ describe "Avram::SaveOperation callbacks" do
       "before_save_again",
       "after_save",
     ])
+  end
+
+  it "runs before_save validations on required fields" do
+    operation = CallbacksSaveOperation.new
+    operation.callbacks_that_ran.should eq([] of String)
+
+    operation.valid?.should eq false
+
+    operation.callbacks_that_ran.should eq(["before_save", "before_save_again"])
+  end
+
+  it "runs before_save in parent class when a custom before_save is added" do
+    params = {"name" => "A fancy hat"}
+    SaveLineItem.create params do |operation, record|
+      operation.saved?.should be_true
+      record.should be_a(LineItem)
+    end
   end
 end

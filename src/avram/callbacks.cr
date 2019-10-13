@@ -16,6 +16,8 @@ module Avram::Callbacks
     def before_save
       {% if @type.methods.map(&.name).includes?(:before_save.id) %}
         previous_def
+      {% else %}
+        super
       {% end %}
 
       {{ method_name.id }}
@@ -37,6 +39,8 @@ module Avram::Callbacks
     def before_save
       {% if @type.methods.map(&.name).includes?(:before_save.id) %}
         previous_def
+      {% else %}
+        super
       {% end %}
 
       {{ yield }}
@@ -68,6 +72,8 @@ module Avram::Callbacks
     def after_save(object)
       {% if @type.methods.map(&.name).includes?(:after_save.id) %}
         previous_def
+      {% else %}
+        super
       {% end %}
 
       {{ method_name.id }}(object)
@@ -92,6 +98,8 @@ module Avram::Callbacks
     def after_commit(object)
       {% if @type.methods.map(&.name).includes?(:after_commit.id) %}
         previous_def
+      {% else %}
+        super
       {% end %}
 
       {{ method_name.id }}(object)
