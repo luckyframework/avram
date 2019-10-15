@@ -757,4 +757,20 @@ describe Avram::Query do
       end
     end
   end
+
+  describe "#reset_limit" do
+    it "resets the limit to nil" do
+      users = UserQuery.new.limit(10)
+      users.query.limit.should eq 10
+      users.reset_limit.query.limit.should eq nil
+    end
+  end
+
+  describe "#reset_offset" do
+    it "resets the offset to nil" do
+      users = UserQuery.new.offset(10)
+      users.query.offset.should eq 10
+      users.reset_offset.query.offset.should eq nil
+    end
+  end
 end
