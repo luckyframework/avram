@@ -52,12 +52,25 @@ private class CallbacksSaveOperation < Post::SaveOperation
   end
 end
 
-private class SaveLineItem < LineItem::SaveOperation
+private class SaveLineItemBase < LineItem::SaveOperation
   permit_columns :name
-  before_save prepare
+  getter locked : Bool = false
 
-  def prepare
-    true
+  before_save lock
+
+  def lock
+    @locked = true
+  end
+end
+
+private class SaveLineItemSub < SaveLineItemBase
+  permit_columns :name
+  getter loaded : Bool = false
+
+  before_save load
+
+  def load
+    @loaded = true
   end
 end
 
@@ -111,9 +124,11 @@ describe "Avram::SaveOperation callbacks" do
     operation.callbacks_that_ran.should eq(["before_save", "before_save_again"])
   end
 
-  it "runs before_save in parent class when a custom before_save is added" do
+  it "runs before_save in parent class and before_save in child class" do
     params = {"name" => "A fancy hat"}
-    SaveLineItem.create params do |operation, record|
+    SaveLineItemSub.create params do |operation, record|
+      operation.locked.should be_true
+      operation.loaded.should be_true
       operation.saved?.should be_true
       record.should be_a(LineItem)
     end
