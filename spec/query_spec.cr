@@ -759,16 +759,18 @@ describe Avram::Query do
   end
 
   describe "#reset_limit" do
-    it "resets the limit to nil so we can use aggregate functions again" do
+    it "resets the limit to nil" do
       users = UserQuery.new.limit(10)
-      users.reset_limit.select_count.should eq 0
+      users.query.limit.should eq 10
+      users.reset_limit.query.limit.should eq nil
     end
   end
 
   describe "#reset_offset" do
-    it "resets the offset to nil so we can use aggregate functions again" do
+    it "resets the offset to nil" do
       users = UserQuery.new.offset(10)
-      users.reset_offset.select_count.should eq 0
+      users.query.offset.should eq 10
+      users.reset_offset.query.offset.should eq nil
     end
   end
 end
