@@ -21,6 +21,12 @@ struct Int32
       SuccessfulCast(Int32).new(value)
     end
 
+    def parse(value : Int64)
+      SuccessfulCast(Int32).new value.to_i32
+    rescue OverflowError
+      FailedCast.new
+    end
+
     def parse(values : Array(Int32))
       SuccessfulCast(Array(Int32)).new values
     end
