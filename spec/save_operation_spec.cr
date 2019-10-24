@@ -110,7 +110,7 @@ describe "Avram::SaveOperation" do
   end
 
   describe "#errors" do
-    it "includes errors for all form attributes" do
+    it "includes errors for all operation attributes" do
       operation = SaveUser.new
 
       operation.valid?
@@ -303,7 +303,7 @@ describe "Avram::SaveOperation" do
     end
 
     context "on success" do
-      it "yields the form and the saved record" do
+      it "yields the operation and the saved record" do
         params = {"joined_at" => now_as_string, "name" => "New Name", "age" => "30"}
         SaveUser.create params do |operation, record|
           operation.saved?.should be_true
@@ -313,7 +313,7 @@ describe "Avram::SaveOperation" do
     end
 
     context "on failure" do
-      it "yields the form and nil" do
+      it "yields the operation and nil" do
         params = {"name" => "", "age" => "30"}
         SaveUser.create params do |operation, record|
           operation.save_failed?.should be_true
@@ -423,7 +423,7 @@ describe "Avram::SaveOperation" do
     end
 
     context "on success" do
-      it "yields the form and the updated record" do
+      it "yields the operation and the updated record" do
         UserBox.new.name("Old Name").create
         user = UserQuery.new.first
         params = {"name" => "New Name"}
@@ -444,7 +444,7 @@ describe "Avram::SaveOperation" do
     end
 
     context "on failure" do
-      it "yields the form and nil" do
+      it "yields the operation and nil" do
         UserBox.new.name("Old Name").create
         user = UserQuery.new.first
         params = {"name" => ""}
