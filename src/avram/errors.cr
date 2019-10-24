@@ -39,7 +39,7 @@ module Avram
     end
   end
 
-  # Raised when using the create! or update! methods on a form when it does not have the proper attributes
+  # Raised when using the create! or update! methods on an operation when it does not have the proper attributes
   class InvalidOperationError < AvramError
     getter errors : Hash(Symbol, Array(String))
 
