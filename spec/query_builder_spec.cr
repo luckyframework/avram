@@ -7,6 +7,7 @@ describe Avram::QueryBuilder do
       .where(Avram::Where::Equal.new(:name, "Paul"))
       .raw_where(Avram::Where::Raw.new("name = ?", "Mikias"))
       .raw_where(Avram::Where::Raw.new("name = ?", "Mikias"))
+      .raw_where(Avram::Where::Raw.new("name = ?", args: ["Mikias"]))
       .join(Avram::Join::Inner.new(:users, :posts))
       .join(Avram::Join::Inner.new(:users, :posts))
       .order_by(Avram::OrderBy.new(:my_column, :asc))
@@ -71,8 +72,9 @@ describe Avram::QueryBuilder do
     query = new_query
       .raw_where(Avram::Where::Raw.new("name = ?", "Mikias"))
       .raw_where(Avram::Where::Raw.new("age > ?", 26))
+      .raw_where(Avram::Where::Raw.new("age < ?", args: [30]))
       .limit(1)
-    query.statement.should eq "SELECT * FROM users WHERE name = 'Mikias' AND age > 26 LIMIT 1"
+    query.statement.should eq "SELECT * FROM users WHERE name = 'Mikias' AND age > 26 AND age < 30 LIMIT 1"
     query.args.empty?.should be_true
   end
 
