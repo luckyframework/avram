@@ -17,11 +17,12 @@ class Avram::Migrator::Runner
   end
 
   def self.db_host
-    URI.parse(database_url).host || "localhost"
+    host = URI.parse(database_url).host
+    host unless host.blank?
   end
 
   def self.db_port
-    URI.parse(database_url).port || "5432"
+    URI.parse(database_url).port
   end
 
   def self.db_user
@@ -42,8 +43,11 @@ class Avram::Migrator::Runner
 
   def self.cmd_args
     args = ""
-    args += "-U #{self.db_user} " if self.db_user
-    args += "-h #{self.db_host} -p #{self.db_port} #{self.db_name}"
+    args += "-U #{self.db_user}" if self.db_user
+    args += " -h #{self.db_host}" if self.db_host
+    args += " -p #{self.db_port}" if self.db_port
+    args += " #{self.db_name}"
+    args
   end
 
   def self.drop_db
