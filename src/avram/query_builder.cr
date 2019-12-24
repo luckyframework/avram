@@ -24,11 +24,11 @@ class Avram::QueryBuilder
   # Prepares the SQL statement by combining the `args` and `statement`
   # in to a single `String`
   def to_prepared_sql : String
-    params = args.map { |arg| String.new(PQ::Param.encode(arg).slice) }
+    params = args.map { |arg| "'#{String.new(PQ::Param.encode(arg).slice)}'" }
     i = 0
     sql = statement
-    sql.scan(/\$\d/) do |match|
-      sql = sql.gsub(match[0], params[i])
+    sql.scan(/\$\d+/) do |match|
+      sql = sql.sub(match[0], params[i])
       i += 1
     end
     sql

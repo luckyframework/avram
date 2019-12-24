@@ -760,14 +760,37 @@ describe Avram::Query do
 
   describe "#to_prepared_sql" do
     it "returns the full SQL with args combined" do
+      query = Post::BaseQuery.new.title("The Short Post")
+      query.to_prepared_sql.should eq(%{SELECT posts.custom_id, posts.created_at, posts.updated_at, posts.title, posts.published_at FROM posts WHERE posts.title = 'The Short Post'})
+
       query = Bucket::BaseQuery.new.names(["Larry", "Moe", "Curly"]).numbers([1, 2, 3])
-      query.to_prepared_sql.should eq(%{SELECT buckets.id, buckets.created_at, buckets.updated_at, buckets.bools, buckets.small_numbers, buckets.numbers, buckets.big_numbers, buckets.names FROM buckets WHERE buckets.names = {"Larry","Moe","Curly"} AND buckets.numbers = {1,2,3}})
+      query.to_prepared_sql.should eq(%{SELECT buckets.id, buckets.created_at, buckets.updated_at, buckets.bools, buckets.small_numbers, buckets.numbers, buckets.big_numbers, buckets.names FROM buckets WHERE buckets.names = '{"Larry","Moe","Curly"}' AND buckets.numbers = '{1,2,3}'})
 
       query = Blob::BaseQuery.new.doc(JSON::Any.new({"properties" => JSON::Any.new("sold")}))
-      query.to_prepared_sql.should eq(%{SELECT blobs.id, blobs.created_at, blobs.updated_at, blobs.doc FROM blobs WHERE blobs.doc = {"properties":"sold"}})
+      query.to_prepared_sql.should eq(%{SELECT blobs.id, blobs.created_at, blobs.updated_at, blobs.doc FROM blobs WHERE blobs.doc = '{"properties":"sold"}'})
 
       query = UserQuery.new.name.in(["Don", "Juan"]).age.gt(30)
-      query.to_prepared_sql.should eq(%{SELECT #{User::COLUMN_SQL} FROM users WHERE users.name = ANY ({"Don","Juan"}) AND users.age > 30})
+      query.to_prepared_sql.should eq(%{SELECT #{User::COLUMN_SQL} FROM users WHERE users.name = ANY ('{"Don","Juan"}') AND users.age > '30'})
+    end
+
+    it "returns the full SQL with a lot of args" do
+      a_week = 1.week.ago
+      an_hour = 1.hour.ago
+      a_day = 1.day.ago
+
+      query = UserQuery.new
+        .name("Don")
+        .age.gt(21)
+        .age.lt(99)
+        .nickname.ilike("j%")
+        .nickname.ilike("%y")
+        .joined_at.gt(a_week)
+        .joined_at.lt(an_hour)
+        .average_score.gt(1.2)
+        .average_score.lt(4.9)
+        .created_at(a_day)
+
+      query.to_prepared_sql.should eq(%{SELECT users.id, users.created_at, users.updated_at, users.name, users.age, users.nickname, users.joined_at, users.average_score FROM users WHERE users.name = 'Don' AND users.age > '21' AND users.age < '99' AND users.nickname ILIKE 'j%' AND users.nickname ILIKE '%y' AND users.joined_at > '#{a_week}' AND users.joined_at < '#{an_hour}' AND users.average_score > '1.2' AND users.average_score < '4.9' AND users.created_at = '#{a_day}'})
     end
   end
 
