@@ -21,6 +21,19 @@ class Avram::QueryBuilder
     [statement] + args
   end
 
+  # Prepares the SQL statement by combining the `args` and `statement`
+  # in to a single `String`
+  def to_prepared_sql : String
+    params = args.map { |arg| "'#{String.new(PQ::Param.encode(arg).slice)}'" }
+    i = 0
+    sql = statement
+    sql.scan(/\$\d+/) do |match|
+      sql = sql.sub(match[0], params[i])
+      i += 1
+    end
+    sql
+  end
+
   # Merges the wheres, raw wheres, joins, and orders from the passed in query
   def merge(query_to_merge : Avram::QueryBuilder)
     query_to_merge.wheres.each do |where|
