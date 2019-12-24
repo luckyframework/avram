@@ -355,6 +355,14 @@ describe Avram::Query do
       max = UserQuery.new.age.lte(2).age.select_max
       max.should eq 2
     end
+
+    it "works when there are no matching records" do
+      UserBox.create &.age(2)
+      UserBox.create &.age(1)
+      UserBox.create &.age(3)
+      max = UserQuery.new.age.gt(3).age.select_max
+      max.should eq nil
+    end
   end
 
   describe "#select_average" do
