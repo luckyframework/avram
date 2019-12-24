@@ -133,8 +133,7 @@ class Avram::QueryBuilder
     @limit
   end
 
-  def limit(amount)
-    @limit = amount
+  def limit(@limit)
     self
   end
 

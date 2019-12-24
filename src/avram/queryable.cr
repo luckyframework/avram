@@ -62,6 +62,16 @@ module Avram::Queryable(T)
     self
   end
 
+  def reset_limit : self
+    query.limit(nil)
+    self
+  end
+
+  def reset_offset : self
+    query.offset(nil)
+    self
+  end
+
   def distinct_on(&block) : self
     criteria = yield self
     criteria.__distinct_on
@@ -94,7 +104,11 @@ module Avram::Queryable(T)
   end
 
   def where(statement : String, *bind_vars) : self
-    query.raw_where(Avram::Where::Raw.new(statement, *bind_vars))
+    where(statement, args: bind_vars.to_a)
+  end
+
+  def where(statement : String, *, args bind_vars : Array) : self
+    query.raw_where(Avram::Where::Raw.new(statement, args: bind_vars))
     self
   end
 

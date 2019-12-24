@@ -67,6 +67,10 @@ abstract class Avram::Migrator::Columns::Base
     escape_literal(value.to_s)
   end
 
+  def self.prepare_value_for_database(value : Array)
+    escape_literal(PQ::Param.encode_array(value))
+  end
+
   def self.escape_literal(value)
     PG::EscapeHelper.escape_literal(value)
   end

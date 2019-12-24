@@ -171,9 +171,15 @@ abstract class Avram::SaveOperation(T) < Avram::Operation
     end
   end
 
-  # Runs `before_save` steps and returns `true` if all attributes are valid.
+  # Runs `before_save` steps,
+  # required validation, then returns `true` if all attributes are valid.
   def valid? : Bool
     before_save
+
+    # These validations must be ran after all `before_save` callbacks have completed
+    # in the case that someone has set a required field in a `before_save`. If we run
+    # this in a `before_save` ourselves, the ordering would cause this to be ran first.
+    validate_required *required_attributes
     attributes.all? &.valid?
   end
 
@@ -262,26 +268,6 @@ abstract class Avram::SaveOperation(T) < Avram::Operation
       value.not_nil!.class.adapter.to_db(value.as({{ column[:type] }}))
     end
     {% end %}
-  end
-
-  macro finished
-    # After all before_save callbacks run, make sure non-nilable column attributes
-    # are there.
-    #
-    # This must run after the other before_* callbacks otherwise it might mark
-    # a field as missing and then later another callback sets the field.
-    #
-    # For example:
-    #
-    #   before_save { email.value = "default@example.com" }
-    #
-    # If we had already validate 'email' it would say 'email is missing' when
-    # in reality We set it in another callback.
-    before_save validate_non_nilable_column_attributes
-
-    def validate_non_nilable_column_attributes
-      validate_required *required_attributes
-    end
   end
 
   def save : Bool

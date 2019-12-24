@@ -770,4 +770,20 @@ describe Avram::Query do
       query.to_prepared_sql.should eq(%{SELECT #{User::COLUMN_SQL} FROM users WHERE users.name = ANY ({"Don","Juan"}) AND users.age > 30})
     end
   end
+
+  describe "#reset_limit" do
+    it "resets the limit to nil" do
+      users = UserQuery.new.limit(10)
+      users.query.limit.should eq 10
+      users.reset_limit.query.limit.should eq nil
+    end
+  end
+
+  describe "#reset_offset" do
+    it "resets the offset to nil" do
+      users = UserQuery.new.offset(10)
+      users.query.offset.should eq 10
+      users.reset_offset.query.offset.should eq nil
+    end
+  end
 end
