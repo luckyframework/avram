@@ -707,9 +707,6 @@ describe Avram::Query do
     end
 
     it "clones distinct queries" do
-      post = PostBox.create &.title("Jim and Pam").published_at(2.days.ago)
-      PostBox.create &.title("Jim and Pam").published_at(nil)
-
       original_query = Post::BaseQuery.new.distinct_on(&.title).clone
       new_query = original_query.published_at.is_nil
 
