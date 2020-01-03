@@ -705,6 +705,13 @@ describe Avram::Query do
         cloned_products.first.line_items.first.price.should_not be_nil
       end
     end
+
+    it "clones distinct queries" do
+      original_query = Post::BaseQuery.new.distinct_on(&.title).clone
+      new_query = original_query.published_at.is_nil
+
+      new_query.to_sql[0].should contain "DISTINCT ON"
+    end
   end
 
   describe "#between" do
