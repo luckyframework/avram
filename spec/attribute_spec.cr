@@ -8,7 +8,7 @@ private class CallableMessage
   end
 end
 
-describe "Avram::Attribute", focus: true do
+describe "Avram::Attribute" do
   it "Attribute#value returns nil on empty strings" do
     empty_string = Avram::Attribute.new(name: :blank, param: nil, value: " ", param_key: "test_form")
     empty_string.value.should be_nil
@@ -67,15 +67,29 @@ describe "Avram::Attribute", focus: true do
       attribute.changed?(from: "green", to: "blue").should be_false
       attribute.changed?(from: "red", to: "green").should be_true
     end
+
+    it "treats an explicit nil as change" do
+      attribute = Avram::Attribute.new(name: :color, param: nil, value: nil, param_key: "test_form")
+
+      attribute.value = nil
+      attribute.changed?.should be_true
+    end
   end
 
   describe "Attribute#changes" do
     it "returns an array with changes of the value" do
       attribute = Avram::Attribute.new(name: :color, param: nil, value: "pink", param_key: "test_form")
 
-      attribute.changes.should eq([] of String)
+      attribute.changes.should eq([] of String | Nil)
       attribute.value = "magenta"
       attribute.changes.should eq(["pink", "magenta"])
+    end
+
+    it "returns an array of nils if nil is set explicitly" do
+      attribute = Avram::Attribute.new(name: :color, param: nil, value: nil, param_key: "test_form")
+
+      attribute.value = nil
+      attribute.changes.should eq([nil, nil])
     end
   end
 end

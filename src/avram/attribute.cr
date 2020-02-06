@@ -1,9 +1,9 @@
 class Avram::Attribute(T)
   alias ErrorMessage = String | Proc(String, String, String) | Avram::CallableErrorMessage
   getter :name
-  setter :value
   getter :param_key
   @errors = [] of String
+  @explicit_nil = false
 
   def initialize(@name : Symbol, @param : String?, @value : T, @param_key : String)
     @original_value = @value
@@ -50,6 +50,10 @@ class Avram::Attribute(T)
     ensure_no_blank(@value)
   end
 
+  def value=(@value)
+    @explicit_nil = true if @value.nil?
+  end
+
   def original_value
     ensure_no_blank(@original_value)
   end
@@ -69,10 +73,10 @@ class Avram::Attribute(T)
   def changed?(**arguments)
     from = arguments[:from]? ? arguments[:from]? == @original_value : true
     to = arguments[:to]? ? arguments[:to]? == @value : true
-    @value != @original_value && to && from
+    (@value != @original_value || @explicit_nil) && to && from
   end
 
   def changes
-    changed? ? [@original_value, @value] : [] of String
+    changed? ? [@original_value, @value] : [] of String | Nil
   end
 end
