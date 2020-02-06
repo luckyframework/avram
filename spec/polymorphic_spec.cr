@@ -109,7 +109,7 @@ describe "polymorphic belongs to" do
       end
     end
 
-    it "can return 'nil'" do
+    it "can return 'nil'", focus: true do
       event = OptionalPolymorphicEvent::SaveOperation.create!(task_id: nil, task_list_id: nil)
       typeof(event.optional_eventable).should eq(PolymorphicTask | PolymorphicTaskList | Nil)
       typeof(event.optional_eventable!).should eq(PolymorphicTask | PolymorphicTaskList | Nil)

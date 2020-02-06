@@ -17,7 +17,7 @@ describe "JSON Columns" do
     blob2.doc.should eq JSON::Any.new(42_i64)
   end
 
-  it "should be nullable" do
+  it "should be nullable", focus: true do
     blob = BlobBox.new.doc(nil).create
     blob = BlobQuery.new.first
     blob.doc.should eq nil

@@ -8,13 +8,21 @@ private class CallableMessage
   end
 end
 
-describe "Avram::Attribute" do
+describe "Avram::Attribute", focus: true do
   it "Attribute#value returns nil on empty strings" do
     empty_string = Avram::Attribute.new(name: :blank, param: nil, value: " ", param_key: "test_form")
     empty_string.value.should be_nil
 
     empty_array = Avram::Attribute.new(name: :empty_array, param: nil, value: [] of String, param_key: "test_form")
     empty_array.value.should_not be_nil
+  end
+
+  it "Attribute#original_value returns nil on empty strings" do
+    empty_string = Avram::Attribute.new(name: :blank, param: nil, value: " ", param_key: "test_form")
+    empty_string.original_value.should be_nil
+
+    empty_array = Avram::Attribute.new(name: :empty_array, param: nil, value: [] of String, param_key: "test_form")
+    empty_array.original_value.should_not be_nil
   end
 
   it "can reset errors" do
@@ -35,5 +43,39 @@ describe "Avram::Attribute" do
       "attr_name message from Proc",
       "Error: attr_name with value of 'fake' is invalid",
     ])
+  end
+
+  describe "Attribute#changed?" do
+    it "tests if the value has changed since initialization" do
+      attribute = Avram::Attribute.new(name: :state, param: nil, value: "caterpillar", param_key: "test_form")
+
+      attribute.changed?.should be_false
+      attribute.value = "caterpillar"
+      attribute.changed?.should be_false
+      attribute.value = "butterfly"
+      attribute.changed?.should be_true
+    end
+
+    it "can detect change from and to a given value" do
+      attribute = Avram::Attribute.new(name: :color, param: nil, value: "red", param_key: "test_form")
+
+      attribute.value = "green"
+      attribute.changed?(from: "blue").should be_false
+      attribute.changed?(from: "red").should be_true
+      attribute.changed?(to: "red").should be_false
+      attribute.changed?(to: "green").should be_true
+      attribute.changed?(from: "green", to: "blue").should be_false
+      attribute.changed?(from: "red", to: "green").should be_true
+    end
+  end
+
+  describe "Attribute#changes" do
+    it "returns an array with changes of the value" do
+      attribute = Avram::Attribute.new(name: :color, param: nil, value: "pink", param_key: "test_form")
+
+      attribute.changes.should eq([] of String)
+      attribute.value = "magenta"
+      attribute.changes.should eq(["pink", "magenta"])
+    end
   end
 end
