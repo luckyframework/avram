@@ -66,13 +66,12 @@ class Avram::Attribute(T)
     errors.empty?
   end
 
-  def changed?(**arguments)
-    from = arguments[:from]? ? arguments[:from]? == @original_value : true
-    to = arguments[:to]? ? arguments[:to]? == @value : true
-    @value != @original_value && to && from
+  def changed?(from : T | Nothing = Nothing.new, to : T | Nothing = Nothing.new)
+    from = from.is_a?(Nothing) ? true : from == original_value
+    to = to.is_a?(Nothing) ? true : to == value
+    value != original_value && from && to
   end
+end
 
-  def changes
-    changed? ? [@original_value, @value] : [] of String
-  end
+class Nothing
 end
