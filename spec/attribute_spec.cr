@@ -8,7 +8,7 @@ private class CallableMessage
   end
 end
 
-describe "Avram::Attribute", focus: true do
+describe "Avram::Attribute" do
   describe "#value" do
     it "returns nil on empty strings" do
       empty_string = Avram::Attribute.new(name: :blank, param: nil, value: " ", param_key: "test_form")
