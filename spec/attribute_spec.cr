@@ -77,10 +77,10 @@ describe "Avram::Attribute" do
   end
 
   describe "Attribute#changes" do
-    it "returns an array with changes of the value" do
+    it "returns an array with changes of the value or nil" do
       attribute = Avram::Attribute.new(name: :color, param: nil, value: "pink", param_key: "test_form")
 
-      attribute.changes.should eq([] of String | Nil)
+      attribute.changes.should be_nil
       attribute.value = "magenta"
       attribute.changes.should eq(["pink", "magenta"])
     end

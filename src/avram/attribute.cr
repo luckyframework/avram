@@ -77,6 +77,6 @@ class Avram::Attribute(T)
   end
 
   def changes
-    changed? ? [@original_value, @value] : [] of String | Nil
+    changed? ? [@original_value, @value] : Nil
   end
 end
