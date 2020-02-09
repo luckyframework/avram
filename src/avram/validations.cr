@@ -103,7 +103,7 @@ module Avram::Validations
     end
   end
 
-  # Validates that the attribute value is in a list of allowed values
+  # Validates that nil is allowed with a list of values
   #
   # ```
   # validate_inclusion_of state, in: ["NY", "MA"], allow_nil: true
