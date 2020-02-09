@@ -18,7 +18,8 @@ describe "JSON Columns" do
   end
 
   it "should be nullable" do
-    blob = BlobBox.new.doc(nil).create
+    blob = BlobBox.create
+    SaveBlob.update!(blob, doc: nil)
     blob = BlobQuery.new.first
     blob.doc.should eq nil
   end
