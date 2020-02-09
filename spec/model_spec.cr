@@ -45,7 +45,8 @@ describe Avram::Model do
       created_at: now,
       updated_at: now,
       nickname: "nick",
-      average_score: nil
+      average_score: nil,
+      available_for_hire: nil
 
     user.name.should eq "Name"
     user.age.should eq 24
@@ -53,6 +54,8 @@ describe Avram::Model do
     user.updated_at.should eq now
     user.created_at.should eq now
     user.nickname.should eq "nick"
+    user.available_for_hire.should be_nil
+    user.available_for_hire?.should be_false
   end
 
   it "can be used for params" do
@@ -65,7 +68,8 @@ describe Avram::Model do
       created_at: now,
       updated_at: now,
       nickname: "nick",
-      average_score: nil
+      average_score: nil,
+      available_for_hire: nil
 
     user.to_param.should eq "123"
   end

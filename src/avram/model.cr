@@ -183,6 +183,11 @@ abstract class Avram::Model
           %from_db.as({{column[:type]}})
         {% end %}
       end
+      {% if column[:type].id == Bool.id %}
+      def {{column[:name]}}? : Bool
+        !!{{column[:name]}}
+      end
+      {% end %}
     {% end %}
   end
 

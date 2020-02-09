@@ -1,5 +1,5 @@
 class User < BaseModel
-  COLUMN_SQL = "users.id, users.created_at, users.updated_at, users.name, users.age, users.nickname, users.joined_at, users.average_score"
+  COLUMN_SQL = "users.id, users.created_at, users.updated_at, users.name, users.age, users.nickname, users.joined_at, users.average_score, users.available_for_hire"
 
   table do
     column name : String
@@ -7,6 +7,7 @@ class User < BaseModel
     column nickname : String?
     column joined_at : Time
     column average_score : Float64?
+    column available_for_hire : Bool?
     has_one sign_in_credential : SignInCredential?
   end
 end
