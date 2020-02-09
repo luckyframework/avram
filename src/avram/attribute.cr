@@ -71,7 +71,9 @@ class Avram::Attribute(T)
     to = to.is_a?(Nothing) ? true : to == value
     value != original_value && from && to
   end
+
+  class Nothing
+  end
 end
 
-class Nothing
-end
+
