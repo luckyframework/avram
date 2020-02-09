@@ -207,7 +207,7 @@ describe Avram::Validations do
       forbidden_name.errors.should eq(["is invalid"])
     end
 
-    it "can be allowed to be nil" do
+    it "can allow nil" do
       nil_name = attribute(nil)
       Avram::Validations.validate_inclusion_of nil_name, in: ["Jamie"], allow_nil: true
       nil_name.valid?.should be_true
