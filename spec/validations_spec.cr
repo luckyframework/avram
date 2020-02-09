@@ -208,7 +208,8 @@ describe Avram::Validations do
     end
 
     it "can allow nil" do
-      nil_name = attribute(nil)
+      nil_name = Avram::Attribute(String?).new(value: nil, param: nil, param_key: "fake", name: :fake)
+
       Avram::Validations.validate_inclusion_of(nil_name, in: ["Jamie"], allow_nil: true)
       nil_name.valid?.should be_true
 
