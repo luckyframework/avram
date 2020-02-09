@@ -94,13 +94,30 @@ module Avram::Validations
   #
   # This will mark `state` as invalid unless the value is `"NY"`, or `"MA"`.
   def validate_inclusion_of(
-    attribute : Avram::Attribute,
+    attribute : Avram::Attribute(T),
     in allowed_values : Enumerable(T),
-    message : Avram::Attribute::ErrorMessage = "is invalid",
-    allow_nil : Bool = false
+    message : Avram::Attribute::ErrorMessage = "is invalid"
   ) forall T
     unless allowed_values.includes? attribute.value
-      attribute.add_error message unless allow_nil && attribute.value.nil?
+      attribute.add_error message
+    end
+  end
+
+  # Validates that the attribute value is in a list of allowed values
+  #
+  # ```
+  # validate_inclusion_of state, in: ["NY", "MA"], allow_nil: true
+  # ```
+  #
+  # This will mark `state` as invalid unless the value is `nil`, `"NY"` or `"MA"`.
+  def validate_inclusion_of(
+    attribute : Avram::Attribute(Nil),
+    in allowed_values : Enumerable,
+    message : Avram::Attribute::ErrorMessage = "is invalid",
+    allow_nil : Bool = false
+  )
+    unless allow_nil && attribute.value.nil?
+      attribute.add_error message
     end
   end
 

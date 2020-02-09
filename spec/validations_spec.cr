@@ -199,20 +199,23 @@ describe Avram::Validations do
   describe "validate_inclusion_of" do
     it "validates" do
       allowed_name = attribute("Jamie")
-      Avram::Validations.validate_inclusion_of allowed_name, in: ["Jamie"]
+      Avram::Validations.validate_inclusion_of(allowed_name, in: ["Jamie"])
       allowed_name.valid?.should be_true
 
       forbidden_name = attribute("123123123")
-      Avram::Validations.validate_inclusion_of forbidden_name, in: ["Jamie"]
+      Avram::Validations.validate_inclusion_of(forbidden_name, in: ["Jamie"])
       forbidden_name.errors.should eq(["is invalid"])
     end
 
     it "can allow nil" do
       nil_name = attribute(nil)
-      Avram::Validations.validate_inclusion_of nil_name, in: ["Jamie"], allow_nil: true
+      Avram::Validations.validate_inclusion_of(nil_name, in: ["Jamie"], allow_nil: true)
       nil_name.valid?.should be_true
 
-      Avram::Validations.validate_inclusion_of nil_name, in: ["Jamie"]
+      Avram::Validations.validate_inclusion_of(nil_name, in: ["Jamie"], allow_nil: false)
+      nil_name.valid?.should be_false
+
+      Avram::Validations.validate_inclusion_of(nil_name, in: ["Jamie"])
       nil_name.valid?.should be_false
     end
   end
