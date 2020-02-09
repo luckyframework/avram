@@ -102,7 +102,8 @@ describe "Avram::SaveOperation" do
   end
 
   it "treats nil changes as nil and not an empty string" do
-    operation = SaveUser.new
+    user = UserBox.build
+    operation = SaveUser.new(user)
     operation.name.value = nil
 
     operation.changes.has_key?(:name).should be_true

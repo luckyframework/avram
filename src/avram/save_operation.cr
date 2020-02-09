@@ -271,7 +271,7 @@ abstract class Avram::SaveOperation(T) < Avram::Operation
   end
 
   def save : Bool
-    if valid? && changes.any?
+    if valid? && (!persisted? || changes.any?)
       transaction_committed = database.transaction do
         insert_or_update
         saved_record = record.not_nil!
