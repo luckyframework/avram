@@ -705,6 +705,13 @@ describe Avram::Query do
         cloned_products.first.line_items.first.price.should_not be_nil
       end
     end
+
+    it "clones distinct queries" do
+      original_query = Post::BaseQuery.new.distinct_on(&.title).clone
+      new_query = original_query.published_at.is_nil
+
+      new_query.to_sql[0].should contain "DISTINCT ON"
+    end
   end
 
   describe "#between" do
@@ -788,9 +795,10 @@ describe Avram::Query do
         .joined_at.lt(an_hour)
         .average_score.gt(1.2)
         .average_score.lt(4.9)
+        .available_for_hire(true)
         .created_at(a_day)
 
-      query.to_prepared_sql.should eq(%{SELECT users.id, users.created_at, users.updated_at, users.name, users.age, users.nickname, users.joined_at, users.average_score FROM users WHERE users.name = 'Don' AND users.age > '21' AND users.age < '99' AND users.nickname ILIKE 'j%' AND users.nickname ILIKE '%y' AND users.joined_at > '#{a_week}' AND users.joined_at < '#{an_hour}' AND users.average_score > '1.2' AND users.average_score < '4.9' AND users.created_at = '#{a_day}'})
+      query.to_prepared_sql.should eq(%{SELECT users.id, users.created_at, users.updated_at, users.name, users.age, users.nickname, users.joined_at, users.average_score, users.available_for_hire FROM users WHERE users.name = 'Don' AND users.age > '21' AND users.age < '99' AND users.nickname ILIKE 'j%' AND users.nickname ILIKE '%y' AND users.joined_at > '#{a_week}' AND users.joined_at < '#{an_hour}' AND users.average_score > '1.2' AND users.average_score < '4.9' AND users.available_for_hire = 'true' AND users.created_at = '#{a_day}'})
     end
   end
 

@@ -1,12 +1,12 @@
 class Avram::Attribute(T)
   alias ErrorMessage = String | Proc(String, String, String) | Avram::CallableErrorMessage
   getter :name
-  getter :value
+  setter :value
   getter :param_key
   @errors = [] of String
-  @changed = false
 
   def initialize(@name : Symbol, @param : String?, @value : T, @param_key : String)
+    @original_value = @value
   end
 
   @_permitted : Avram::PermittedAttribute(T)?
@@ -47,7 +47,14 @@ class Avram::Attribute(T)
   end
 
   def value
-    value = @value
+    ensure_no_blank(@value)
+  end
+
+  def original_value
+    ensure_no_blank(@original_value)
+  end
+
+  private def ensure_no_blank(value : T)
     if value.is_a?(String) && value.blank?
       nil
     else
@@ -59,11 +66,12 @@ class Avram::Attribute(T)
     errors.empty?
   end
 
-  def value=(@value)
-    @changed = true
+  def changed?(from : T | Nothing = Nothing.new, to : T | Nothing = Nothing.new)
+    from = from.is_a?(Nothing) ? true : from == original_value
+    to = to.is_a?(Nothing) ? true : to == value
+    value != original_value && from && to
   end
 
-  def changed?
-    @changed
+  class Nothing
   end
 end

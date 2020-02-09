@@ -1,6 +1,7 @@
 class Avram::QueryBuilder
   alias ColumnName = Symbol | String
   getter table
+  getter distinct_on : String | Symbol | Nil = nil
   @limit : Int32?
   @offset : Int32?
   @wheres = [] of Avram::Where::SqlClause
@@ -12,7 +13,6 @@ class Avram::QueryBuilder
   @prepared_statement_placeholder = 0
   @distinct : Bool = false
   @delete : Bool = false
-  @distinct_on : String | Symbol | Nil = nil
 
   def initialize(@table : Symbol)
   end
@@ -61,6 +61,8 @@ class Avram::QueryBuilder
   def clone(query_to_merge : Avram::QueryBuilder)
     merge(query_to_merge)
     self.select(query_to_merge.selects)
+    distinct if query_to_merge.distinct?
+    distinct_on(query_to_merge.distinct_on.to_s) if query_to_merge.has_distinct_on?
     limit(query_to_merge.limit)
     offset(query_to_merge.offset)
   end
@@ -125,8 +127,12 @@ class Avram::QueryBuilder
     self
   end
 
-  private def distinct?
-    @distinct || @distinct_on
+  def distinct?
+    @distinct || has_distinct_on?
+  end
+
+  def has_distinct_on?
+    !!@distinct_on
   end
 
   def limit
@@ -252,7 +258,7 @@ class Avram::QueryBuilder
     String.build do |sql|
       sql << "SELECT "
       sql << "DISTINCT " if distinct?
-      sql << "ON (#{@distinct_on}) " if @distinct_on
+      sql << "ON (#{@distinct_on}) " if has_distinct_on?
       sql << @selections
       sql << " FROM "
       sql << table
