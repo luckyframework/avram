@@ -75,5 +75,3 @@ class Avram::Attribute(T)
   class Nothing
   end
 end
-
-
