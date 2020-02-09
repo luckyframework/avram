@@ -8,6 +8,7 @@ class CreateUsers::V20170127143149 < Avram::Migrator::Migration::V1
       add age : Int32
       add joined_at : Time
       add average_score : Float64?
+      add available_for_hire : Bool?
     end
   end
 
