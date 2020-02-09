@@ -243,7 +243,7 @@ describe Avram::Validations do
       end
     end
 
-    it "can be allowed to be nil" do
+    it "can allow nil" do
       just_nil = attribute(nil)
       Avram::Validations.validate_size_of(just_nil, is: 10, allow_nil: true)
       just_nil.valid?.should be_true
