@@ -1,7 +1,9 @@
 require "./index_statement_helpers"
+require "./missing_on_delete_with_belongs_to_error"
 
 class Avram::Migrator::CreateTableStatement
   include Avram::Migrator::IndexStatementHelpers
+  include Avram::Migrator::MissingOnDeleteWithBelongsToError
 
   private getter rows = [] of String
 
@@ -132,10 +134,5 @@ class Avram::Migrator::CreateTableStatement
     .build_add_statement_for_create
 
     add_index :{{ foreign_key_name }}
-  end
-
-  macro add_belongs_to(_type_declaration, references = nil)
-    {% raise "Must use 'on_delete' when creating an add_belongs_to association.
-      Example: add_belongs_to user : User, on_delete: :cascade" %}
   end
 end

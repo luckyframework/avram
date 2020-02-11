@@ -705,6 +705,13 @@ describe Avram::Query do
         cloned_products.first.line_items.first.price.should_not be_nil
       end
     end
+
+    it "clones distinct queries" do
+      original_query = Post::BaseQuery.new.distinct_on(&.title).clone
+      new_query = original_query.published_at.is_nil
+
+      new_query.to_sql[0].should contain "DISTINCT ON"
+    end
   end
 
   describe "#between" do
@@ -777,6 +784,59 @@ describe Avram::Query do
         query = LineItemQuery.new.where_price(PriceQuery.new.in_cents(100))
         query.first.should eq line_item
       end
+    end
+  end
+
+  describe "#to_prepared_sql" do
+    it "returns the full SQL with args combined" do
+      query = Post::BaseQuery.new.title("The Short Post")
+      query.to_prepared_sql.should eq(%{SELECT posts.custom_id, posts.created_at, posts.updated_at, posts.title, posts.published_at FROM posts WHERE posts.title = 'The Short Post'})
+
+      query = Bucket::BaseQuery.new.names(["Larry", "Moe", "Curly"]).numbers([1, 2, 3])
+      query.to_prepared_sql.should eq(%{SELECT buckets.id, buckets.created_at, buckets.updated_at, buckets.bools, buckets.small_numbers, buckets.numbers, buckets.big_numbers, buckets.names FROM buckets WHERE buckets.names = '{"Larry","Moe","Curly"}' AND buckets.numbers = '{1,2,3}'})
+
+      query = Blob::BaseQuery.new.doc(JSON::Any.new({"properties" => JSON::Any.new("sold")}))
+      query.to_prepared_sql.should eq(%{SELECT blobs.id, blobs.created_at, blobs.updated_at, blobs.doc FROM blobs WHERE blobs.doc = '{"properties":"sold"}'})
+
+      query = UserQuery.new.name.in(["Don", "Juan"]).age.gt(30)
+      query.to_prepared_sql.should eq(%{SELECT #{User::COLUMN_SQL} FROM users WHERE users.name = ANY ('{"Don","Juan"}') AND users.age > '30'})
+    end
+
+    it "returns the full SQL with a lot of args" do
+      a_week = 1.week.ago
+      an_hour = 1.hour.ago
+      a_day = 1.day.ago
+
+      query = UserQuery.new
+        .name("Don")
+        .age.gt(21)
+        .age.lt(99)
+        .nickname.ilike("j%")
+        .nickname.ilike("%y")
+        .joined_at.gt(a_week)
+        .joined_at.lt(an_hour)
+        .average_score.gt(1.2)
+        .average_score.lt(4.9)
+        .available_for_hire(true)
+        .created_at(a_day)
+
+      query.to_prepared_sql.should eq(%{SELECT users.id, users.created_at, users.updated_at, users.name, users.age, users.nickname, users.joined_at, users.average_score, users.available_for_hire FROM users WHERE users.name = 'Don' AND users.age > '21' AND users.age < '99' AND users.nickname ILIKE 'j%' AND users.nickname ILIKE '%y' AND users.joined_at > '#{a_week}' AND users.joined_at < '#{an_hour}' AND users.average_score > '1.2' AND users.average_score < '4.9' AND users.available_for_hire = 'true' AND users.created_at = '#{a_day}'})
+    end
+  end
+
+  describe "#reset_limit" do
+    it "resets the limit to nil" do
+      users = UserQuery.new.limit(10)
+      users.query.limit.should eq 10
+      users.reset_limit.query.limit.should eq nil
+    end
+  end
+
+  describe "#reset_offset" do
+    it "resets the offset to nil" do
+      users = UserQuery.new.offset(10)
+      users.query.offset.should eq 10
+      users.reset_offset.query.offset.should eq nil
     end
   end
 end

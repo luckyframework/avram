@@ -2,6 +2,7 @@ require "./spec_helper"
 
 private class CallbacksSaveOperation < Post::SaveOperation
   needs rollback : Bool = false
+  needs skip_set_required : Bool = false
 
   @callbacks_that_ran = [] of String
   getter callbacks_that_ran
@@ -47,7 +48,29 @@ private class CallbacksSaveOperation < Post::SaveOperation
   end
 
   private def setup_required_attributes
-    title.value = "Title"
+    title.value = "Title" unless @skip_set_required
+  end
+end
+
+private class SaveLineItemBase < LineItem::SaveOperation
+  permit_columns :name
+  getter locked : Bool = false
+
+  before_save lock
+
+  def lock
+    @locked = true
+  end
+end
+
+private class SaveLineItemSub < SaveLineItemBase
+  permit_columns :name
+  getter loaded : Bool = false
+
+  before_save load
+
+  def load
+    @loaded = true
   end
 end
 
@@ -90,5 +113,24 @@ describe "Avram::SaveOperation callbacks" do
       "before_save_again",
       "after_save",
     ])
+  end
+
+  it "runs before_save validations on required fields" do
+    operation = CallbacksSaveOperation.new(skip_set_required: true)
+    operation.callbacks_that_ran.should eq([] of String)
+
+    operation.valid?.should eq false
+
+    operation.callbacks_that_ran.should eq(["before_save", "before_save_again"])
+  end
+
+  it "runs before_save in parent class and before_save in child class" do
+    params = {"name" => "A fancy hat"}
+    SaveLineItemSub.create params do |operation, record|
+      operation.locked.should be_true
+      operation.loaded.should be_true
+      operation.saved?.should be_true
+      record.should be_a(LineItem)
+    end
   end
 end
