@@ -162,17 +162,17 @@ describe "Avram::SaveOperation" do
   describe "parsing" do
     it "parse integers, time objects, etc." do
       time = 1.day.ago.at_beginning_of_minute
-      operation = SaveUser.new({"joined_at" => time.to_s("%FT%X%z")})
+      operation = SaveUser.new(Avram::Params.new({"joined_at" => time.to_s("%FT%X%z")}))
 
       operation.joined_at.value.should eq time
       operation.joined_at.value.not_nil!.utc?.should be_true
     end
 
     it "gracefully handles bad inputs when parsing" do
-      operation = SaveUser.new({
+      operation = SaveUser.new(Avram::Params.new({
         "joined_at" => "this is not a time",
         "age"       => "not an int",
-      })
+      }))
 
       operation.joined_at.errors.should eq ["is invalid"]
       operation.age.errors.should eq ["is invalid"]
@@ -185,13 +185,13 @@ describe "Avram::SaveOperation" do
 
   describe "permit_columns" do
     it "ignores params that are not permitted" do
-      operation = SaveLimitedUser.new({"name" => "someone", "nickname" => "nothing"})
+      operation = SaveLimitedUser.new(Avram::Params.new({"name" => "someone", "nickname" => "nothing"}))
       operation.changes.has_key?(:nickname).should be_false
       operation.changes[:name]?.should eq "someone"
     end
 
     it "returns a Avram::PermittedAttribute" do
-      operation = SaveLimitedUser.new({"name" => "someone", "nickname" => "nothing"})
+      operation = SaveLimitedUser.new(Avram::Params.new({"name" => "someone", "nickname" => "nothing"}))
       operation.nickname.value.should be_nil
       operation.nickname.is_a?(Avram::Attribute).should be_true
       operation.name.value.should eq "someone"
@@ -201,7 +201,7 @@ describe "Avram::SaveOperation" do
 
   describe "settings values from params" do
     it "sets the values" do
-      params = {"name" => "Paul", "nickname" => "Pablito"}
+      params = Avram::Params.new({"name" => "Paul", "nickname" => "Pablito"})
 
       operation = SaveUser.new(params)
 
@@ -213,8 +213,9 @@ describe "Avram::SaveOperation" do
     it "returns the value from params for updates" do
       user = UserBox.build
       params = {"name" => "New Name From Params"}
+      avram_params = Avram::Params.new(params)
 
-      operation = SaveUser.new(user, params)
+      operation = SaveUser.new(user, avram_params)
 
       operation.name.value.should eq params["name"]
       operation.nickname.value.should eq user.nickname
@@ -224,7 +225,7 @@ describe "Avram::SaveOperation" do
 
   describe "params" do
     it "creates a param method for each of the permit_columns attributes" do
-      params = {"name" => "Paul", "nickname" => "Pablito"}
+      params = Avram::Params.new({"name" => "Paul", "nickname" => "Pablito"})
 
       operation = SaveUser.new(params)
 
@@ -235,7 +236,7 @@ describe "Avram::SaveOperation" do
     it "uses the value if param is empty" do
       user = UserBox.build
 
-      operation = SaveUser.new(user, {} of String => String)
+      operation = SaveUser.new(user, Avram::Params.new({} of String => String))
 
       operation.name.param.should eq user.name
     end
@@ -243,7 +244,7 @@ describe "Avram::SaveOperation" do
 
   describe "errors" do
     it "creates an error method for each of the permit_columns attributes" do
-      params = {"name" => "Paul", "age" => "30", "joined_at" => now_as_string}
+      params = Avram::Params.new({"name" => "Paul", "age" => "30", "joined_at" => now_as_string})
       operation = SaveUser.new(params)
       operation.valid?.should be_true
 
@@ -255,7 +256,7 @@ describe "Avram::SaveOperation" do
     end
 
     it "only returns unique errors" do
-      params = {"name" => "Paul", "nickname" => "Pablito"}
+      params = Avram::Params.new({"name" => "Paul", "nickname" => "Pablito"})
       operation = SaveUser.new(params)
 
       operation.name.add_error "is not valid"
@@ -267,7 +268,7 @@ describe "Avram::SaveOperation" do
 
   describe "attributes" do
     it "creates a method for each of the permit_columns attributes" do
-      params = {} of String => String
+      params = Avram::Params.new({} of String => String)
       operation = SaveLimitedUser.new(params)
 
       operation.responds_to?(:name).should be_true
@@ -275,7 +276,7 @@ describe "Avram::SaveOperation" do
     end
 
     it "returns an attribute with the attribute name, value and errors" do
-      params = {"name" => "Joe"}
+      params = Avram::Params.new({"name" => "Joe"})
       operation = SaveUser.new(params)
       operation.name.add_error "wrong"
 
@@ -305,7 +306,7 @@ describe "Avram::SaveOperation" do
 
     context "on success" do
       it "yields the operation and the saved record" do
-        params = {"joined_at" => now_as_string, "name" => "New Name", "age" => "30"}
+        params = Avram::Params.new({"joined_at" => now_as_string, "name" => "New Name", "age" => "30"})
         SaveUser.create params do |operation, record|
           operation.saved?.should be_true
           record.is_a?(User).should be_true
@@ -315,7 +316,7 @@ describe "Avram::SaveOperation" do
 
     context "on failure" do
       it "yields the operation and nil" do
-        params = {"name" => "", "age" => "30"}
+        params = Avram::Params.new({"name" => "", "age" => "30"})
         SaveUser.create params do |operation, record|
           operation.save_failed?.should be_true
           record.should be_nil
@@ -343,7 +344,7 @@ describe "Avram::SaveOperation" do
 
     context "with a uuid backed model" do
       it "can create with params" do
-        params = {"name" => "A fancy hat"}
+        params = Avram::Params.new({"name" => "A fancy hat"})
         SaveLineItem.create params do |operation, record|
           operation.saved?.should be_true
           record.should be_a(LineItem)
@@ -360,7 +361,7 @@ describe "Avram::SaveOperation" do
 
     context "on success" do
       it "saves and returns the record" do
-        params = {"joined_at" => now_as_string, "name" => "New Name", "age" => "30"}
+        params = Avram::Params.new({"joined_at" => now_as_string, "name" => "New Name", "age" => "30"})
 
         record = SaveUser.create!(params)
 
@@ -398,7 +399,7 @@ describe "Avram::SaveOperation" do
     it "works when there are no changes" do
       UserBox.new.name("Old Name").create
       user = UserQuery.new.first
-      params = {} of String => String
+      params = Avram::Params.new({} of String => String)
       SaveUser.update user, with: params do |operation, record|
         operation.saved?.should be_true
       end
@@ -407,7 +408,6 @@ describe "Avram::SaveOperation" do
     it "returns true when there are no changes" do
       UserBox.new.name("Old Name").create
       user = UserQuery.new.first
-      params = {} of String => String
       SaveUser.new(user).tap do |operation|
         operation.save.should be_true
       end
@@ -427,7 +427,7 @@ describe "Avram::SaveOperation" do
       it "yields the operation and the updated record" do
         UserBox.new.name("Old Name").create
         user = UserQuery.new.first
-        params = {"name" => "New Name"}
+        params = Avram::Params.new({"name" => "New Name"})
         SaveUser.update user, with: params do |operation, record|
           operation.saved?.should be_true
           record.name.should eq "New Name"
