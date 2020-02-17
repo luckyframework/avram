@@ -41,6 +41,7 @@ describe Avram::Model do
     user = User.new id: 123_i64,
       name: "Name",
       age: 24,
+      year_born: 1990_i16,
       joined_at: now,
       created_at: now,
       updated_at: now,
@@ -50,6 +51,7 @@ describe Avram::Model do
 
     user.name.should eq "Name"
     user.age.should eq 24
+    user.year_born.should eq 1990_i16
     user.joined_at.should eq now
     user.updated_at.should eq now
     user.created_at.should eq now
@@ -64,6 +66,7 @@ describe Avram::Model do
     user = User.new id: 123_i64,
       name: "Name",
       age: 24,
+      year_born: 1990_i16,
       joined_at: now,
       created_at: now,
       updated_at: now,

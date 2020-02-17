@@ -1,9 +1,10 @@
 class User < BaseModel
-  COLUMN_SQL = "users.id, users.created_at, users.updated_at, users.name, users.age, users.nickname, users.joined_at, users.average_score, users.available_for_hire"
+  COLUMN_SQL = "users.id, users.created_at, users.updated_at, users.name, users.age, users.year_born, users.nickname, users.joined_at, users.average_score, users.available_for_hire"
 
   table do
     column name : String
     column age : Int32
+    column year_born : Int16?
     column nickname : String?
     column joined_at : Time
     column average_score : Float64?

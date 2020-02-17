@@ -51,6 +51,12 @@ struct Float64
 
     class Criteria(T, V) < Avram::Criteria(T, V)
       include Avram::BetweenCriteria(T, V)
+
+      def select_sum : Float64?
+        if sum = super
+          sum.as(PG::Numeric).to_f
+        end
+      end
     end
   end
 end

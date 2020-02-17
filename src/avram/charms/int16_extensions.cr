@@ -41,6 +41,10 @@ struct Int16
 
     class Criteria(T, V) < Avram::Criteria(T, V)
       include Avram::BetweenCriteria(T, V)
+
+      def select_sum : Int64?
+        super.as(Int64?)
+      end
     end
   end
 end
