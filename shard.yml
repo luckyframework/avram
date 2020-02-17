@@ -1,7 +1,7 @@
 name: avram
-version: 0.12.2
+version: 0.12.3
 
-crystal: 0.32.0
+crystal: 0.33.0
 
 targets:
   lucky.gen.migration:
