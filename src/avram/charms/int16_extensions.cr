@@ -45,6 +45,10 @@ struct Int16
       def select_sum : Int64?
         super.as(Int64?)
       end
+
+      def select_sum! : Int64
+        select_sum || 0_i64
+      end
     end
   end
 end

@@ -57,6 +57,10 @@ struct Float64
           sum.as(PG::Numeric).to_f
         end
       end
+
+      def select_sum! : Float64
+        select_sum || 0_f64
+      end
     end
   end
 end
