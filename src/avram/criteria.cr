@@ -115,9 +115,9 @@ class Avram::Criteria(T, V)
     rows.exec_scalar.as(PG::Numeric).to_f
   end
 
-  def select_sum : Int64
+  def select_sum
     rows.query.select_sum(column)
-    rows.exec_scalar.as(Int64)
+    rows.exec_scalar
   end
 
   def in(values) : T
