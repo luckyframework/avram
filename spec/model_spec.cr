@@ -46,6 +46,7 @@ describe Avram::Model do
       created_at: now,
       updated_at: now,
       nickname: "nick",
+      total_score: nil,
       average_score: nil,
       available_for_hire: nil
 
@@ -71,6 +72,7 @@ describe Avram::Model do
       created_at: now,
       updated_at: now,
       nickname: "nick",
+      total_score: nil,
       average_score: nil,
       available_for_hire: nil
 
