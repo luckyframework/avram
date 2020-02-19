@@ -70,7 +70,7 @@ class Avram::BaseQueryTemplate
               join(
                 Avram::Join::{{ join_type.id }}.new(
                   from: @@table_name,
-                  to: :{{ assoc[:table_name] }},
+                  to: {{ assoc[:type] }}::TABLE_NAME,
                   foreign_key: :{{ assoc[:foreign_key] }},
                   primary_key: primary_key_name
                 )
