@@ -60,7 +60,8 @@ module Avram::Associations::BelongsTo
               ids << id
             end
           end
-          {{ assoc_name }} = preload_query.dup.id.in(ids).results.group_by(&.id)
+          empty_results = {} of {{ model }}::PrimaryKeyType => Array({{ model }})
+          {{ assoc_name }} = ids.empty? ? empty_results  : preload_query.dup.id.in(ids).results.group_by(&.id)
           records.each do |record|
             if (id = record.{{ foreign_key }})
               record.__set_preloaded_{{ assoc_name }} {{ assoc_name }}[id]?.try(&.first?)

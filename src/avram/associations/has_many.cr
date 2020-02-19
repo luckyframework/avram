@@ -33,6 +33,9 @@ module Avram::Associations::HasMany
       def preload_{{ assoc_name }}(preload_query : {{ model }}::BaseQuery)
         add_preload do |records|
           ids = records.map(&.id)
+          if ids.empty?
+            {{ assoc_name }} = {} of {{ model }}::PrimaryKeyType => Array({{ model }})
+          else
           {% if through %}
             all_{{ assoc_name }} = preload_query
               .dup
@@ -56,6 +59,7 @@ module Avram::Associations::HasMany
               .{{ foreign_key }}.in(ids)
               .results.group_by(&.{{ foreign_key }})
           {% end %}
+          end
           records.each do |record|
             record._preloaded_{{ assoc_name }} = {{ assoc_name }}[record.id]? || [] of {{ model }}
           end
