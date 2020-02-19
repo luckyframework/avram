@@ -66,6 +66,15 @@ class Avram::BaseQueryTemplate
                   foreign_key: primary_key_name
                 )
               )
+            {% elsif assoc[:relationship_type] == :has_one %}
+              join(
+                Avram::Join::{{ join_type.id }}.new(
+                  from: @@table_name,
+                  to: {{ assoc[:type] }}::TABLE_NAME,
+                  foreign_key: :{{ assoc[:foreign_key] }},
+                  primary_key: primary_key_name
+                )
+              )
             {% elsif assoc[:through] %}
               {{ join_type.downcase.id }}_join_{{ assoc[:through].id }}
               __yield_where_{{ assoc[:through].id }} do |join_query|
