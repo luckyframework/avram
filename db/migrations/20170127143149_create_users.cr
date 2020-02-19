@@ -6,6 +6,7 @@ class CreateUsers::V20170127143149 < Avram::Migrator::Migration::V1
       add name : String
       add nickname : String?
       add age : Int32
+      add year_born : Int16?
       add joined_at : Time
       add average_score : Float64?
       add available_for_hire : Bool?
