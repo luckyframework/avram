@@ -369,15 +369,16 @@ describe Avram::Query do
 
   describe "#select_average" do
     it "returns the average" do
-      UserBox.create &.total_score(2000)
-      UserBox.create &.total_score(1000)
-      UserBox.create &.total_score(3000)
-      average = UserQuery.new.total_score.select_average
-      average.should eq 2000_f64
+      UserBox.create &.age(2)
+      UserBox.create &.age(1)
+      UserBox.create &.age(3)
+      average = UserQuery.new.age.select_average
+      average.should eq 2
+      average.should be_a Float64
     end
 
-    it "returns nil if no records" do
-      average = UserQuery.new.total_score.select_average
+    it "returns nil if there are no records" do
+      average = UserQuery.new.age.select_average
       average.should be_nil
     end
 
@@ -386,14 +387,15 @@ describe Avram::Query do
       UserBox.create &.age(1)
       UserBox.create &.age(3)
       average = UserQuery.new.age.gte(2).age.select_average
-      average.should eq 2.5_f64
+      average.should eq 2.5
     end
   end
 
   describe "#select_average!" do
     it "returns 0_f64 if there are no records" do
       average = UserQuery.new.age.select_average!
-      average.should eq 0_f64
+      average.should eq 0
+      average.should be_a Float64
     end
   end
 
