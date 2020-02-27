@@ -96,10 +96,11 @@ module Avram::Validations
   def validate_inclusion_of(
     attribute : Avram::Attribute(T),
     in allowed_values : Enumerable(T),
-    message : Avram::Attribute::ErrorMessage = "is invalid"
+    message : Avram::Attribute::ErrorMessage = "is invalid",
+    allow_nil : Bool = false
   ) forall T
-    if !allowed_values.includes? attribute.value
-      attribute.add_error message
+    unless allowed_values.includes? attribute.value
+      attribute.add_error message unless allow_nil && attribute.value.nil?
     end
   end
 
@@ -108,9 +109,15 @@ module Avram::Validations
   # ```
   # validate_size_of api_key, is: 32
   # ```
-  def validate_size_of(attribute : Avram::Attribute, *, is exact_size, message : Avram::Attribute::ErrorMessage = "is invalid")
+  def validate_size_of(
+    attribute : Avram::Attribute,
+    *,
+    is exact_size,
+    message : Avram::Attribute::ErrorMessage = "is invalid",
+    allow_nil : Bool = false
+  )
     if attribute.value.to_s.size != exact_size
-      attribute.add_error message
+      attribute.add_error message unless allow_nil && attribute.value.nil?
     end
   end
 
@@ -120,19 +127,28 @@ module Avram::Validations
   # validate_size_of age, min: 18, max: 100
   # validate_size_of account_balance, min: 500
   # ```
-  def validate_size_of(attribute : Avram::Attribute, min = nil, max = nil)
+  def validate_size_of(
+    attribute : Avram::Attribute,
+    min = nil,
+    max = nil,
+    allow_nil : Bool = false
+  )
     if !min.nil? && !max.nil? && min > max
-      raise ImpossibleValidation.new(attribute: attribute.name, message: "size greater than #{min} but less than #{max}")
+      raise ImpossibleValidation.new(
+        attribute: attribute.name,
+        message: "size greater than #{min} but less than #{max}")
     end
 
-    size = attribute.value.to_s.size
+    unless allow_nil && attribute.value.nil?
+      size = attribute.value.to_s.size
 
-    if !min.nil? && size < min
-      attribute.add_error "is too short"
-    end
+      if !min.nil? && size < min
+        attribute.add_error "is too short"
+      end
 
-    if !max.nil? && size > max
-      attribute.add_error "is too long"
+      if !max.nil? && size > max
+        attribute.add_error "is too long"
+      end
     end
   end
 

@@ -199,12 +199,25 @@ describe Avram::Validations do
   describe "validate_inclusion_of" do
     it "validates" do
       allowed_name = attribute("Jamie")
-      Avram::Validations.validate_inclusion_of allowed_name, in: ["Jamie"]
+      Avram::Validations.validate_inclusion_of(allowed_name, in: ["Jamie"])
       allowed_name.valid?.should be_true
 
       forbidden_name = attribute("123123123")
-      Avram::Validations.validate_inclusion_of forbidden_name, in: ["Jamie"]
+      Avram::Validations.validate_inclusion_of(forbidden_name, in: ["Jamie"])
       forbidden_name.errors.should eq(["is invalid"])
+    end
+
+    it "can allow nil" do
+      nil_name = Avram::Attribute(String?).new(value: nil, param: nil, param_key: "fake", name: :fake)
+
+      Avram::Validations.validate_inclusion_of(nil_name, in: ["Jamie"], allow_nil: true)
+      nil_name.valid?.should be_true
+
+      Avram::Validations.validate_inclusion_of(nil_name, in: ["Jamie"], allow_nil: false)
+      nil_name.valid?.should be_false
+
+      Avram::Validations.validate_inclusion_of(nil_name, in: ["Jamie"])
+      nil_name.valid?.should be_false
     end
   end
 
@@ -218,9 +231,9 @@ describe Avram::Validations do
       Avram::Validations.validate_size_of(too_short_attribute, min: 2)
       too_short_attribute.errors.should eq(["is too short"])
 
-      too_long_attribute = attribute("P")
-      Avram::Validations.validate_size_of(too_long_attribute, min: 2)
-      too_long_attribute.errors.should eq(["is too short"])
+      too_long_attribute = attribute("Supercalifragilisticexpialidocious")
+      Avram::Validations.validate_size_of(too_long_attribute, max: 32)
+      too_long_attribute.errors.should eq(["is too long"])
 
       just_right_attribute = attribute("Goldilocks")
       Avram::Validations.validate_size_of(just_right_attribute, is: 10)
@@ -232,6 +245,21 @@ describe Avram::Validations do
       expect_raises(Avram::ImpossibleValidation) do
         Avram::Validations.validate_size_of does_not_matter, min: 4, max: 1
       end
+    end
+
+    it "can allow nil" do
+      just_nil = attribute(nil)
+      Avram::Validations.validate_size_of(just_nil, is: 10, allow_nil: true)
+      just_nil.valid?.should be_true
+
+      Avram::Validations.validate_size_of(just_nil, min: 1, max: 2, allow_nil: true)
+      just_nil.valid?.should be_true
+
+      Avram::Validations.validate_size_of(just_nil, is: 10)
+      just_nil.valid?.should be_false
+
+      Avram::Validations.validate_size_of(just_nil, min: 1, max: 2)
+      just_nil.valid?.should be_false
     end
   end
 end

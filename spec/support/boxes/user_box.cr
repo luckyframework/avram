@@ -12,9 +12,12 @@ class UserBox < BaseBox
       updated_at: Time.utc,
       joined_at: Time.utc,
       age: 18,
+      year_born: nil,
       name: "Paul Smith",
       nickname: nil,
-      average_score: nil
+      total_score: nil,
+      average_score: nil,
+      available_for_hire: nil
     )
   end
 end
