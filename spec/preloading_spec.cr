@@ -53,6 +53,7 @@ describe "Preloading" do
 
   it "preloads has_one with custom query and nested preload" do
     with_lazy_load(enabled: false) do
+      SignInCredential::BaseQuery.times_called = 0
       user = UserBox.create
       sign_in_credential = SignInCredentialBox.create &.user_id(user.id)
 
@@ -61,6 +62,7 @@ describe "Preloading" do
       ).first
 
       user.sign_in_credential.not_nil!.user.should eq user
+      SignInCredential::BaseQuery.times_called.should eq 1
     end
   end
 
@@ -78,12 +80,14 @@ describe "Preloading" do
 
   it "preloads has_many" do
     with_lazy_load(enabled: false) do
+      Comment::BaseQuery.times_called = 0
       post = PostBox.create
       comment = CommentBox.create &.post_id(post.id)
 
       posts = Post::BaseQuery.new.preload_comments
 
       posts.results.first.comments.should eq([comment])
+      Comment::BaseQuery.times_called.should eq 1
     end
   end
 
@@ -183,12 +187,14 @@ describe "Preloading" do
 
   it "preloads belongs_to" do
     with_lazy_load(enabled: false) do
+      Post::BaseQuery.times_called = 0
       post = PostBox.create
       comment = CommentBox.create &.post_id(post.id)
 
       comments = Comment::BaseQuery.new.preload_post
 
       comments.first.post.should eq(post)
+      Post::BaseQuery.times_called.should eq 1
     end
   end
 
