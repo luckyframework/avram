@@ -14,6 +14,7 @@ module QueryCalledPatch
     end
   end
 end
+
 class Comment::BaseQuery
   include QueryCalledPatch
 end
