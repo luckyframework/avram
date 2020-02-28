@@ -2,6 +2,30 @@ require "./spec_helper"
 
 include LazyLoadHelpers
 
+# NOTE: This is only for testing if this is called during a query
+# TODO: Remove once a proper mocking shard is built
+module QueryCalledPatch
+  macro included
+    class_property times_called : Int32 = 0
+
+    def database : Avram::Database.class
+      self.class.times_called += 1
+      previous_def
+    end
+  end
+end
+class Comment::BaseQuery
+  include QueryCalledPatch
+end
+
+class SignInCredential::BaseQuery
+  include QueryCalledPatch
+end
+
+class Post::BaseQuery
+  include QueryCalledPatch
+end
+
 describe "Preloading" do
   it "can disable lazy loading" do
     with_lazy_load(enabled: false) do
@@ -244,5 +268,31 @@ describe "Preloading" do
     posts = Post::BaseQuery.new
 
     posts.results.first.comments.should eq([comment])
+  end
+
+  describe "when there's no results in the parent query" do
+    it "skips running the preload query for has_many" do
+      Comment::BaseQuery.times_called = 0
+      posts = Post::BaseQuery.new.preload_comments
+      posts.results
+
+      Comment::BaseQuery.times_called.should eq 0
+    end
+
+    it "skips running the preload for has_one" do
+      SignInCredential::BaseQuery.times_called = 0
+      admin = Admin::BaseQuery.new.preload_sign_in_credential
+      admin.results
+
+      SignInCredential::BaseQuery.times_called.should eq 0
+    end
+
+    it "skips running the preload for belongs_to" do
+      Post::BaseQuery.times_called = 0
+      comments = Comment::BaseQuery.new.preload_post
+      comments.results
+
+      Post::BaseQuery.times_called.should eq 0
+    end
   end
 end
