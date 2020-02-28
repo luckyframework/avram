@@ -337,6 +337,11 @@ describe Avram::Query do
       min = UserQuery.new.age.gte(2).age.select_min
       min.should eq 2
     end
+
+    it "returns nil if no records" do
+      min = UserQuery.new.age.select_min
+      min.should be_nil
+    end
   end
 
   describe "#select_max" do
@@ -355,6 +360,11 @@ describe Avram::Query do
       max = UserQuery.new.age.lte(2).age.select_max
       max.should eq 2
     end
+
+    it "returns nil if no records" do
+      max = UserQuery.new.age.select_max
+      max.should be_nil
+    end
   end
 
   describe "#select_average" do
@@ -363,7 +373,13 @@ describe Avram::Query do
       UserBox.create &.age(1)
       UserBox.create &.age(3)
       average = UserQuery.new.age.select_average
-      average.should eq 2.0
+      average.should eq 2
+      average.should be_a Float64
+    end
+
+    it "returns nil if there are no records" do
+      average = UserQuery.new.age.select_average
+      average.should be_nil
     end
 
     it "works with chained where clauses" do
@@ -375,21 +391,21 @@ describe Avram::Query do
     end
   end
 
-  describe "#select_sum for Int32 column" do
-    it "returns the sum" do
-      UserBox.create &.age(2)
-      UserBox.create &.age(1)
-      UserBox.create &.age(3)
-      sum = UserQuery.new.age.select_sum
-      sum.should eq 6
+  describe "#select_average!" do
+    it "returns 0_f64 if there are no records" do
+      average = UserQuery.new.age.select_average!
+      average.should eq 0
+      average.should be_a Float64
     end
+  end
 
+  describe "#select_sum" do
     it "works with chained where clauses" do
-      UserBox.create &.age(2)
-      UserBox.create &.age(1)
-      UserBox.create &.age(3)
-      sum = UserQuery.new.age.gte(2).age.select_sum
-      sum.should eq 5
+      UserBox.create &.total_score(2000)
+      UserBox.create &.total_score(1000)
+      UserBox.create &.total_score(3000)
+      sum = UserQuery.new.total_score.gte(2000).total_score.select_sum
+      sum.should eq 5000
     end
 
     it "returns nil if there are no records" do
@@ -398,72 +414,59 @@ describe Avram::Query do
     end
   end
 
-  describe "#select_sum! for Int32 column" do
-    it "returns 0 if there are no records" do
-      query_sum = UserQuery.new.age.select_sum!
-      query_sum.should eq 0_i64
-    end
-  end
-
   describe "#select_sum for Int64 column" do
     it "returns the sum" do
-      sum = UserBox.create.id + UserBox.create.id
-      query_sum = UserQuery.new.id.select_sum
-      query_sum.should eq sum
-    end
-
-    it "works with chained where clauses" do
-      user1 = UserBox.create
-      user2 = UserBox.create
-      user3 = UserBox.create
-      sum = user1.id + user2.id
-
-      query_sum = UserQuery.new.id.not.eq(user3.id).id.select_sum
-      query_sum.should eq sum
-    end
-
-    it "returns nil if there are no records" do
-      query_sum = UserQuery.new.id.select_sum
-      query_sum.should be_nil
+      UserBox.create &.total_score(2000)
+      UserBox.create &.total_score(1000)
+      UserBox.create &.total_score(3000)
+      sum = UserQuery.new.total_score.select_sum
+      sum.should eq 6000
+      sum.should be_a Int64
     end
   end
 
   describe "#select_sum! for Int64 column" do
     it "returns 0 if there are no records" do
+      query_sum = UserQuery.new.total_score.select_sum!
+      query_sum.should eq 0
+      query_sum.should be_a Int64
+    end
+  end
+
+  describe "#select_sum for Int32 column" do
+    it "returns the sum" do
+      UserBox.create &.age(2)
+      UserBox.create &.age(1)
+      UserBox.create &.age(3)
+      query_sum = UserQuery.new.age.select_sum
+      query_sum.should eq 6
+      query_sum.should be_a Int64
+    end
+  end
+
+  describe "#select_sum! for Int32 column" do
+    it "returns 0 if there are no records" do
       query_sum = UserQuery.new.id.select_sum!
-      query_sum.should eq 0_i64
+      query_sum.should eq 0
+      query_sum.should be_a Int64
     end
   end
 
   describe "#select_sum for Int16 column" do
     it "returns the sum" do
-      years = [1990_i16, 1995_i16]
-      sum = years.sum
-      years.each { |year| UserBox.create &.year_born(year) }
+      UserBox.create &.year_born(1990_i16)
+      UserBox.create &.year_born(1995_i16)
       query_sum = UserQuery.new.year_born.select_sum
-      query_sum.should eq sum
-    end
-
-    it "works with chained where clauses" do
-      years = [1990_i16, 1995_i16]
-      sum = years.sum
-      out_of_range = 2000_i16
-      years.each { |year| UserBox.create &.year_born(year) }
-      UserBox.create &.year_born(out_of_range)
-      query_sum = UserQuery.new.year_born.lt(2000).year_born.select_sum
-      query_sum.should eq sum
-    end
-
-    it "returns nil if there are no records" do
-      query_sum = UserQuery.new.year_born.select_sum
-      query_sum.should be_nil
+      query_sum.should eq 3985
+      query_sum.should be_a Int64
     end
   end
 
   describe "#select_sum! for Int16 column" do
     it "returns 0 if there are no records" do
-      query_sum = UserQuery.new.year_born.select_sum!
-      query_sum.should eq 0_i64
+      query_sum = UserQuery.new.id.select_sum!
+      query_sum.should eq 0
+      query_sum.should be_a Int64
     end
   end
 
@@ -474,27 +477,15 @@ describe Avram::Query do
       scores.each { |score| UserBox.create &.average_score(score) }
       query_sum = UserQuery.new.average_score.select_sum
       query_sum.should eq sum
-    end
-
-    it "works with chained where clauses" do
-      scores = [100.4, 123.22]
-      sum = scores.sum
-      out_of_range = 200
-      scores.each { |score| UserBox.create &.average_score(score) }
-      query_sum = UserQuery.new.average_score.lt(out_of_range).average_score.select_sum
-      query_sum.should eq sum
-    end
-
-    it "returns nil if there are no records" do
-      query_sum = UserQuery.new.id.select_sum
-      query_sum.should be_nil
+      sum.should be_a Float64
     end
   end
 
   describe "#select_sum! for Float64 column" do
     it "returns 0 if there are no records" do
-      query_sum = UserQuery.new.id.select_sum!
-      query_sum.should eq 0_i64
+      query_sum = UserQuery.new.average_score.select_sum!
+      query_sum.should eq 0
+      query_sum.should be_a Float64
     end
   end
 
@@ -925,7 +916,7 @@ describe Avram::Query do
         .available_for_hire(true)
         .created_at(a_day)
 
-      query.to_prepared_sql.should eq(%{SELECT users.id, users.created_at, users.updated_at, users.name, users.age, users.year_born, users.nickname, users.joined_at, users.average_score, users.available_for_hire FROM users WHERE users.name = 'Don' AND users.age > '21' AND users.age < '99' AND users.nickname ILIKE 'j%' AND users.nickname ILIKE '%y' AND users.joined_at > '#{a_week}' AND users.joined_at < '#{an_hour}' AND users.average_score > '1.2' AND users.average_score < '4.9' AND users.available_for_hire = 'true' AND users.created_at = '#{a_day}'})
+      query.to_prepared_sql.should eq(%{SELECT users.id, users.created_at, users.updated_at, users.name, users.age, users.year_born, users.nickname, users.joined_at, users.total_score, users.average_score, users.available_for_hire FROM users WHERE users.name = 'Don' AND users.age > '21' AND users.age < '99' AND users.nickname ILIKE 'j%' AND users.nickname ILIKE '%y' AND users.joined_at > '#{a_week}' AND users.joined_at < '#{an_hour}' AND users.average_score > '1.2' AND users.average_score < '4.9' AND users.available_for_hire = 'true' AND users.created_at = '#{a_day}'})
     end
   end
 

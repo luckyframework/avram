@@ -15,6 +15,7 @@ class UserBox < BaseBox
       year_born: nil,
       name: "Paul Smith",
       nickname: nil,
+      total_score: nil,
       average_score: nil,
       available_for_hire: nil
     )
