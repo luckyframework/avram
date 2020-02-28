@@ -1,10 +1,8 @@
 require "./spec_helper"
 
 describe Avram::Box do
-  describe "Virgin model" do
-    it "creates a model without additional columns" do
-      VirginBox.create.id.should_not be_nil
-    end
+  it "can create a model without additional columns" do
+    PlainModelBox.create.id.should_not be_nil
   end
 
   describe "Sequences" do
