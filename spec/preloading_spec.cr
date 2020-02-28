@@ -4,7 +4,7 @@ include LazyLoadHelpers
 
 # NOTE: This is only for testing if this is called during a query
 # TODO: Remove once a proper mocking shard is built
-module QueryCalledPatch
+module QuerySpy
   macro included
     class_property times_called : Int32 = 0
 
@@ -16,15 +16,15 @@ module QueryCalledPatch
 end
 
 class Comment::BaseQuery
-  include QueryCalledPatch
+  include QuerySpy
 end
 
 class SignInCredential::BaseQuery
-  include QueryCalledPatch
+  include QuerySpy
 end
 
 class Post::BaseQuery
-  include QueryCalledPatch
+  include QuerySpy
 end
 
 describe "Preloading" do
