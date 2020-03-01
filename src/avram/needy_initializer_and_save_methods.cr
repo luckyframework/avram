@@ -185,7 +185,6 @@ module Avram::NeedyInitializerAndSaveMethods
 
   macro generate_initializer
     def initialize(
-        # params : Hash(String, String) | Avram::Paramable,
         @params : Avram::Paramable,
         {% for type_declaration in NEEDS_ON_INITIALIZE %}
           @{{ type_declaration }},
@@ -205,7 +204,6 @@ module Avram::NeedyInitializerAndSaveMethods
 
     def initialize(
         @record : T,
-        # params : Hash(String, String) | Avram::Paramable,
         @params : Avram::Paramable,
         {% for type_declaration in NEEDS_ON_INITIALIZE %}
           @{{ type_declaration }},

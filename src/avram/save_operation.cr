@@ -163,8 +163,6 @@ abstract class Avram::SaveOperation(T) < Avram::Operation
     end
   end
 
-  # Avram::Params.new(params)
-
   # Runs `before_save` steps,
   # required validation, then returns `true` if all attributes are valid.
   def valid? : Bool
