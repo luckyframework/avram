@@ -372,7 +372,7 @@ describe "Avram::SaveOperation" do
 
     context "on failure" do
       it "raises an exception" do
-        params = {"name" => "", "age" => "30"}
+        params = Avram::Params.new({"name" => "", "age" => "30"})
 
         expect_raises Avram::InvalidOperationError do
           SaveUser.create!(params)
@@ -391,7 +391,7 @@ describe "Avram::SaveOperation" do
     end
 
     it "can handle an attribute named 'value'" do
-      ValueColumnModelSaveOperation.new({"value" => "value"}).value.value.should eq "value"
+      ValueColumnModelSaveOperation.new(Avram::Params.new({"value" => "value"})).value.value.should eq "value"
     end
   end
 
@@ -436,7 +436,7 @@ describe "Avram::SaveOperation" do
 
       it "updates updated_at" do
         user = UserBox.new.updated_at(1.day.ago).create
-        params = {"name" => "New Name"}
+        params = Avram::Params.new({"name" => "New Name"})
         SaveUser.update user, with: params do |operation, record|
           operation.saved?.should be_true
           record.updated_at.should be > 1.second.ago
@@ -448,7 +448,7 @@ describe "Avram::SaveOperation" do
       it "yields the operation and nil" do
         UserBox.new.name("Old Name").create
         user = UserQuery.new.first
-        params = {"name" => ""}
+        params = Avram::Params.new({"name" => ""})
         SaveUser.update user, with: params do |operation, record|
           operation.save_failed?.should be_true
           record.name.should eq "Old Name"
@@ -470,7 +470,7 @@ describe "Avram::SaveOperation" do
     context "with a uuid backed model" do
       it "doesn't generate a new uuid" do
         line_item = LineItemBox.create
-        SaveLineItem.update(line_item, {"name" => "Another pair of shoes"}) do |operation, record|
+        SaveLineItem.update(line_item, Avram::Params.new({"name" => "Another pair of shoes"})) do |operation, record|
           operation.saved?.should be_true
           record.id.should eq line_item.id
         end
@@ -489,7 +489,7 @@ describe "Avram::SaveOperation" do
       it "updates and returns the record" do
         UserBox.new.name("Old Name").create
         user = UserQuery.new.first
-        params = {"name" => "New Name"}
+        params = Avram::Params.new({"name" => "New Name"})
 
         record = SaveUser.update! user, with: params
 
@@ -502,7 +502,7 @@ describe "Avram::SaveOperation" do
       it "raises an exception" do
         UserBox.new.name("Old Name").create
         user = UserQuery.new.first
-        params = {"name" => ""}
+        params = Avram::Params.new({"name" => ""})
 
         expect_raises Avram::InvalidOperationError do
           SaveUser.update! user, with: params
