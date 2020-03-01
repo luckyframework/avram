@@ -1,6 +1,10 @@
 require "./spec_helper"
 
 describe Avram::Box do
+  it "can create a model without additional columns" do
+    PlainModelBox.create.id.should_not be_nil
+  end
+
   describe "Sequences" do
     it "increases a value every time it's called" do
       BaseBox::SEQUENCES["name"] = 0
