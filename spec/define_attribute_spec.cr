@@ -108,5 +108,5 @@ describe "attribute in operations" do
 end
 
 private def operation(attrs = {} of String => String)
-  Operation.new(attrs)
+  Operation.new(Avram::Params.new(attrs))
 end

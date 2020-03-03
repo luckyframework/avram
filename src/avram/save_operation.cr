@@ -163,14 +163,6 @@ abstract class Avram::SaveOperation(T) < Avram::Operation
     end
   end
 
-  private def ensure_paramable(params)
-    if params.is_a? Avram::Paramable
-      params
-    else
-      Avram::Params.new(params)
-    end
-  end
-
   # Runs `before_save` steps,
   # required validation, then returns `true` if all attributes are valid.
   def valid? : Bool
