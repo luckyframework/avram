@@ -6,6 +6,7 @@ require "./polymorphic"
 abstract class Avram::Model
   include Avram::Associations
   include Avram::Polymorphic
+  include Avram::SchemaEnforcer
 
   SETUP_STEPS = [] of Nil
   # This setting is used to show better errors
