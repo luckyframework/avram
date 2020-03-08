@@ -213,7 +213,7 @@ abstract class Avram::Model
     end
   end
 
-  macro association(table_name, type, relationship_type, foreign_key = nil, through = nil)
-    {% ASSOCIATIONS << {type: type, table_name: table_name.id, foreign_key: foreign_key, relationship_type: relationship_type, through: through} %}
+  macro association(table_name, type, relationship_type, foreign_key = nil, through = nil, query = nil)
+    {% ASSOCIATIONS << {type: type, table_name: table_name.id, foreign_key: foreign_key, relationship_type: relationship_type, through: through, query: query} %}
   end
 end

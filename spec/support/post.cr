@@ -8,6 +8,8 @@ class Post < BaseModel
     column title : String
     column published_at : Time?
     has_many comments : Comment
+    has_many nice_comments : Comment,
+      query: Comment::BaseQuery.new.body(Comment::NICE_COMMENT_BODY)
     has_many taggings : Tagging
     has_many tags : Tag, through: :taggings
   end

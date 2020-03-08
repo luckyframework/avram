@@ -1,5 +1,5 @@
 module Avram::Associations::HasMany
-  macro has_many(type_declaration, through = nil, foreign_key = nil)
+  macro has_many(type_declaration, through = nil, foreign_key = nil, query = nil)
     {% if !through.is_a?(NilLiteral) && !through.is_a?(SymbolLiteral) %}
       {% through.raise "The association name for 'through' must be a Symbol. Instead, got: #{through}" %}
     {% end %}
@@ -16,15 +16,16 @@ module Avram::Associations::HasMany
       type: {{ type_declaration.type }},
       foreign_key: :{{ foreign_key }},
       through: {{ through }},
-      relationship_type: :has_many
+      relationship_type: :has_many,
+      query: {{ query }}
 
     {% model = type_declaration.type %}
 
-    define_has_many_lazy_loading({{ assoc_name }}, {{ model }}, {{ foreign_key }}, {{ through }})
-    define_has_many_base_query({{ assoc_name }}, {{ model }}, {{ foreign_key }}, {{through}})
+    define_has_many_lazy_loading({{ assoc_name }}, {{ model }}, {{ foreign_key }}, {{ through }}, {{ query }})
+    define_has_many_base_query({{ assoc_name }}, {{ model }}, {{ foreign_key }}, {{through}}, {{ query }})
   end
 
-  private macro define_has_many_base_query(assoc_name, model, foreign_key, through)
+  private macro define_has_many_base_query(assoc_name, model, foreign_key, through, query)
     class BaseQuery < Avram::Query
       def preload_{{ assoc_name }}
         preload_{{ assoc_name }}({{ model }}::BaseQuery.new)
@@ -69,7 +70,7 @@ module Avram::Associations::HasMany
     end
   end
 
-  private macro define_has_many_lazy_loading(assoc_name, model, foreign_key, through)
+  private macro define_has_many_lazy_loading(assoc_name, model, foreign_key, through, query)
     @_preloaded_{{ assoc_name }} : Array({{ model }})?
     setter _preloaded_{{ assoc_name }}
 
@@ -90,6 +91,8 @@ module Avram::Associations::HasMany
     end
 
     private def lazy_load_{{ assoc_name }} : Array({{ model }})
+      {% query = query || "#{model}::BaseQuery.new".id %}
+
       {% if through %}
         {{ model }}::BaseQuery
           .new
@@ -100,8 +103,7 @@ module Avram::Associations::HasMany
           .preload_{{ through.id }}
           .results
       {% else %}
-        {{ model }}::BaseQuery
-          .new
+        {{ query }}
           .{{ foreign_key }}(id)
           .results
       {% end %}

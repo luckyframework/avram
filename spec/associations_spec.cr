@@ -12,6 +12,24 @@ describe Avram::Model do
       comment.post.should eq post
     end
 
+    # Prob need to join and then add a where right afterward!
+    pending "joins work with has many and a query"
+    pending "preloads work with has many and a query"
+    pending "lazy loads work with has many and a query"
+    pending "works with through"
+
+    it "uses the provided 'query' option to filter results" do
+      post = PostBox.create
+      another_post = PostBox.create
+      nice_comment = CommentBox.create &.nice.post_id(post.id)
+      not_nice_comment = CommentBox.create &.post_id(post.id).body("Troll")
+      _nice_comment_on_another_post = CommentBox.create &.nice.post_id(another_post.id)
+
+      post = Post::BaseQuery.new.find(post.id)
+
+      post.nice_comments.to_a.should eq [nice_comment]
+    end
+
     it "gets the related records for nilable association that exists" do
       manager = ManagerBox.create
       employee = EmployeeBox.new.manager_id(manager.id).create
