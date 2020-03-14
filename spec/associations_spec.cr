@@ -16,7 +16,6 @@ describe Avram::Model do
     pending "joins work with has many and a query"
     pending "preloads work with has many and a query"
     pending "lazy loads work with has many and a query"
-    pending "works with through"
 
     it "uses the provided 'query' option to filter results" do
       post = PostBox.create
@@ -58,6 +57,15 @@ describe Avram::Model do
 
   describe "has_many through" do
     it "joins the two associations" do
+      tag = TagBox.create
+      post = PostBox.create
+      _different_tag = TagBox.create
+      TaggingBox.new.tag_id(tag.id).post_id(post.id).create
+
+      post.tags.should eq [tag]
+    end
+
+    it "uses the 'query' option when joining" do
       tag = TagBox.create
       post = PostBox.create
       _different_tag = TagBox.create
