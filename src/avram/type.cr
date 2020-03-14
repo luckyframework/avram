@@ -1,4 +1,4 @@
-module Avram::Type
+module Avram::Type(T)
   macro included
     extend self
   end
@@ -8,21 +8,21 @@ module Avram::Type
   end
 
   def parse(value : Nil)
-    SuccessfulCast(Nil).new(nil)
+    nil
   end
 
   def parse(values : Array(String))
     casts = values.map { |value| parse(value) }
-    if casts.all?(&.is_a?(SuccessfulCast))
-      values = casts.map { |c| c.as(SuccessfulCast).value }
+    if casts.none?(&.is_a?(FailedCast))
+      values = casts.map { |c| c.as(T) }
       parse(values)
     else
-      FailedCast.new
+      failed_cast
     end
   end
 
   def parse!(value)
-    parse(value).as(SuccessfulCast).value
+    parse(value)
   end
 
   def to_db(value : Nil)
@@ -34,11 +34,8 @@ module Avram::Type
     to_db(parsed_value)
   end
 
-  class SuccessfulCast(T)
-    getter :value
-
-    def initialize(@value : T)
-    end
+  def failed_cast
+    FailedCast.new
   end
 
   class FailedCast

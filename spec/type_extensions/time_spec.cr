@@ -13,7 +13,7 @@ describe "Time column type" do
       }
       times.each do |_format, time|
         result = Time::Lucky.parse(time)
-        result.should be_a(Avram::Type::SuccessfulCast(Time))
+        result.should be_a(Time)
       end
     end
 
@@ -21,11 +21,11 @@ describe "Time column type" do
       Avram.temp_config(time_formats: ["%Y-%B-%-d"]) do
         result = Time::Lucky.parse("2017-January-30")
 
-        result.should be_a(Avram::Type::SuccessfulCast(Time))
-        value = result.as(Avram::Type::SuccessfulCast(Time)).value
-        value.year.should eq(2017)
-        value.month.should eq(1)
-        value.day.should eq(30)
+        result.should be_a(Time)
+        result = result.as(Time)
+        result.year.should eq(2017)
+        result.month.should eq(1)
+        result.day.should eq(30)
       end
     end
 
@@ -34,7 +34,7 @@ describe "Time column type" do
 
       result = Time::Lucky.parse(time)
 
-      result.value.should eq(time)
+      result.should eq(time)
     end
 
     it "can't cast an invalid value" do

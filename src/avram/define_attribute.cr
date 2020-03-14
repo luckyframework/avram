@@ -93,10 +93,10 @@ module Avram::DefineAttribute
 
     def set_{{ name }}_from_param(attribute : Avram::Attribute)
       parse_result = {{ type }}::Lucky.parse({{ name }}_param)
-      if parse_result.is_a? Avram::Type::SuccessfulCast
-        attribute.value = parse_result.value
-      else
+      if parse_result.is_a? Avram::Type::FailedCast
         attribute.add_error "is invalid"
+      else
+        attribute.value = parse_result
       end
     end
   end

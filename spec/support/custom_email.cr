@@ -16,14 +16,14 @@ class CustomEmail
 
   module Lucky
     alias ColumnType = String
-    include Avram::Type
+    include Avram::Type(CustomEmail)
 
     def parse(value : CustomEmail)
-      SuccessfulCast(CustomEmail).new(value)
+      value
     end
 
     def parse(value : String)
-      SuccessfulCast(CustomEmail).new(CustomEmail.new(value))
+      CustomEmail.new(value)
     end
 
     def to_db(value : String)

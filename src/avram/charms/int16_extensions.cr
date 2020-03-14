@@ -5,30 +5,30 @@ struct Int16
 
   module Lucky
     alias ColumnType = Int16
-    include Avram::Type
+    include Avram::Type(Int16)
 
     def from_db!(value : Int16)
       value
     end
 
     def parse(value : Int16)
-      SuccessfulCast(Int16).new(value)
+      value
     end
 
     def parse(values : Array(Int16))
-      SuccessfulCast(Array(Int16)).new values
+      values
     end
 
     def parse(value : String)
-      SuccessfulCast(Int16).new value.to_i16
+      value.to_i16
     rescue ArgumentError
-      FailedCast.new
+      failed_cast
     end
 
     def parse(value : Int32)
-      SuccessfulCast(Int16).new value.to_i16
+      value.to_i16
     rescue OverflowError
-      FailedCast.new
+      failed_cast
     end
 
     def to_db(value : Int16)

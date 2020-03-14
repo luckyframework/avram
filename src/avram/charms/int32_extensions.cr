@@ -5,30 +5,30 @@ struct Int32
 
   module Lucky
     alias ColumnType = Int32
-    include Avram::Type
+    include Avram::Type(Int32)
 
     def from_db!(value : Int32)
       value
     end
 
     def parse(value : String)
-      SuccessfulCast(Int32).new value.to_i
+      value.to_i
     rescue ArgumentError
-      FailedCast.new
+      failed_cast
     end
 
     def parse(value : Int32)
-      SuccessfulCast(Int32).new(value)
+      value
     end
 
     def parse(value : Int64)
-      SuccessfulCast(Int32).new value.to_i32
+      value.to_i32
     rescue OverflowError
-      FailedCast.new
+      failed_cast
     end
 
     def parse(values : Array(Int32))
-      SuccessfulCast(Array(Int32)).new values
+      values
     end
 
     def to_db(value : Int32)

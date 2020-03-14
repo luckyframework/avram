@@ -5,20 +5,20 @@ struct UUID
 
   module Lucky
     alias ColumnType = String
-    include Avram::Type
+    include Avram::Type(UUID)
 
     def parse(value : UUID)
-      SuccessfulCast(UUID).new(value)
+      value
     end
 
     def parse(values : Array(UUID))
-      SuccessfulCast(Array(UUID)).new values
+      values
     end
 
     def parse(value : String)
-      SuccessfulCast(UUID).new(UUID.new(value))
+      UUID.new(value)
     rescue
-      FailedCast.new
+      failed_cast
     end
 
     def to_db(value : UUID)

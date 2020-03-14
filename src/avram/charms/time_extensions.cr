@@ -5,7 +5,7 @@ struct Time
 
   module Lucky
     alias ColumnType = Time
-    include Avram::Type
+    include Avram::Type(Time)
 
     TIME_FORMATS = [
       Time::Format::ISO_8601_DATE_TIME,
@@ -22,13 +22,13 @@ struct Time
       value
     end
 
-    def parse(value : String) : SuccessfulCast(Time) | FailedCast
+    def parse(value : String)
       # Prefer user defined string formats
       try_parsing_with_string_formats(value) ||
         # Then try default formats
         try_parsing_with_default_formatters(value) ||
         # Fail if none of them work
-        FailedCast.new
+        failed_cast
     end
 
     def self.try_parsing_with_default_formatters(value : String)
@@ -39,7 +39,7 @@ struct Time
           nil
         end
       end.try do |format|
-        SuccessfulCast.new format.parse(value).to_utc
+        format.parse(value).to_utc
       end
     end
 
@@ -51,16 +51,16 @@ struct Time
           nil
         end
       end.try do |format|
-        SuccessfulCast.new Time.parse(value, format, Time::Location.load("UTC")).to_utc
+        Time.parse(value, format, Time::Location.load("UTC")).to_utc
       end
     end
 
     def parse(value : Time)
-      SuccessfulCast(Time).new value
+      value
     end
 
     def parse(values : Array(Time))
-      SuccessfulCast(Array(Time)).new values
+      values
     end
 
     def to_db(value : Time)

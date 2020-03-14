@@ -5,24 +5,24 @@ struct Bool
 
   module Lucky
     alias ColumnType = Bool
-    include Avram::Type
+    include Avram::Type(Bool)
 
     def parse(value : String)
       if %w(true 1).includes? value
-        SuccessfulCast(Bool).new true
+        true
       elsif %w(false 0).includes? value
-        SuccessfulCast(Bool).new false
+        false
       else
-        FailedCast.new
+        failed_cast
       end
     end
 
     def parse(value : Bool)
-      SuccessfulCast(Bool).new value
+      value
     end
 
     def parse(values : Array(Bool))
-      SuccessfulCast(Array(Bool)).new values
+      values
     end
 
     def to_db(value : Bool)

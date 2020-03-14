@@ -5,14 +5,14 @@ class String
 
   module Lucky
     alias ColumnType = String
-    include Avram::Type
+    include Avram::Type(String)
 
     def parse(value : String)
-      SuccessfulCast(String).new(value)
+      value
     end
 
     def parse(values : Array(String))
-      SuccessfulCast(Array(String)).new(values)
+      values
     end
 
     def to_db(value : String)

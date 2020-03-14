@@ -5,7 +5,7 @@ struct Float64
 
   module Lucky
     alias ColumnType = Float64
-    include Avram::Type
+    include Avram::Type(Float64)
 
     def from_db!(value : Float64)
       value
@@ -16,29 +16,29 @@ struct Float64
     end
 
     def parse(value : Float64)
-      SuccessfulCast(Float64).new(value)
+      value
     end
 
     def parse(values : Array(Float64))
-      SuccessfulCast(Array(Float64)).new values
+      values
     end
 
     def parse(value : PG::Numeric)
-      SuccessfulCast(Float64).new(value.to_f)
+      value.to_f
     end
 
     def parse(value : String)
-      SuccessfulCast(Float64).new value.to_f64
+      value.to_f64
     rescue ArgumentError
-      FailedCast.new
+      failed_cast
     end
 
     def parse(value : Int32)
-      SuccessfulCast(Float64).new value.to_f64
+      value.to_f64
     end
 
     def parse(value : Int64)
-      SuccessfulCast(Float64).new value.to_f64
+      value.to_f64
     end
 
     def to_db(value : Float64)
