@@ -125,7 +125,7 @@ describe "Avram::SaveOperation callbacks" do
   end
 
   it "runs before_save in parent class and before_save in child class" do
-    params = {"name" => "A fancy hat"}
+    params = Avram::Params.new({"name" => "A fancy hat"})
     SaveLineItemSub.create params do |operation, record|
       operation.locked.should be_true
       operation.loaded.should be_true

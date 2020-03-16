@@ -11,7 +11,7 @@ module Avram::Associations::HasOne
     {% end %}
 
     {% unless foreign_key %}
-      {% foreign_key = "#{@type.name.underscore}_id".id %}
+      {% foreign_key = "#{@type.name.underscore.split("::").last.id}_id".id %}
     {% end %}
 
     {% foreign_key = foreign_key.id %}
@@ -52,7 +52,8 @@ module Avram::Associations::HasOne
       def preload_{{ assoc_name }}(preload_query : {{ model }}::BaseQuery)
         add_preload do |records|
           ids = records.map(&.id)
-          {{ assoc_name }} = preload_query.dup.{{ foreign_key }}.in(ids).results.group_by(&.{{ foreign_key }})
+          empty_results = {} of {{ model }}::PrimaryKeyType => Array({{ model }})
+          {{ assoc_name }} = ids.empty? ? empty_results : preload_query.dup.{{ foreign_key }}.in(ids).results.group_by(&.{{ foreign_key }})
           records.each do |record|
             record.__set_preloaded_{{ assoc_name }} {{ assoc_name }}[record.id]?.try(&.first?)
           end

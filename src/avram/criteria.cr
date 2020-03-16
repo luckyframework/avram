@@ -100,24 +100,28 @@ class Avram::Criteria(T, V)
     add_clause(Avram::Where::LessThanOrEqualTo.new(column, V::Lucky.to_db!(value)))
   end
 
-  def select_min : V
+  def select_min : V | Nil
     rows.query.select_min(column)
-    rows.exec_scalar.as(V)
+    rows.exec_scalar.as(V | Nil)
   end
 
-  def select_max : V
+  def select_max : V | Nil
     rows.query.select_max(column)
-    rows.exec_scalar.as(V)
+    rows.exec_scalar.as(V | Nil)
   end
 
-  def select_average : Float
+  def select_average : Float64?
     rows.query.select_average(column)
-    rows.exec_scalar.as(PG::Numeric).to_f
+    rows.exec_scalar.as(PG::Numeric | Nil).try &.to_f64
   end
 
-  def select_sum : Int64
+  def select_average! : Float64
+    select_average || 0_f64
+  end
+
+  def select_sum
     rows.query.select_sum(column)
-    rows.exec_scalar.as(Int64)
+    rows.exec_scalar
   end
 
   def in(values) : T

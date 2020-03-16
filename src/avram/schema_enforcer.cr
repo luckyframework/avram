@@ -1,10 +1,11 @@
 module Avram::SchemaEnforcer
-  MODELS_TO_ENFORCE = [] of Avram::Model.class
+  ALL_MODELS     = [] of Avram::Model.class
+  MODELS_TO_SKIP = [] of String # Stringified class name
 
   macro setup(table_name, columns, type, *args, **named_args)
-    include Avram::SchemaEnforcer
-
     def self.ensure_correct_column_mappings!
+      return if Avram::SchemaEnforcer::MODELS_TO_SKIP.includes?(self.name)
+
       attributes = [
         {% for attribute in columns %}
           { name: :{{attribute[:name]}}, nilable: {{ attribute[:nilable] }}, type: {{ attribute[:type] }} },
@@ -24,16 +25,20 @@ module Avram::SchemaEnforcer
     end
 
     {% if !type.resolve.abstract? %}
-      {% Avram::SchemaEnforcer::MODELS_TO_ENFORCE << type %}
+      {% Avram::SchemaEnforcer::ALL_MODELS << type %}
     {% end %}
   end
 
   def self.ensure_correct_column_mappings!
-    {% if !MODELS_TO_ENFORCE.empty? %}
-      MODELS_TO_ENFORCE.each do |model|
+    {% if !ALL_MODELS.empty? %}
+      ALL_MODELS.each do |model|
         model.ensure_correct_column_mappings!
       end
     {% end %}
+  end
+
+  macro skip_schema_enforcer
+    {% Avram::SchemaEnforcer::MODELS_TO_SKIP << @type.stringify %}
   end
 
   class EnsureExistingTable
@@ -76,7 +81,18 @@ module Avram::SchemaEnforcer
 
             ▸ Create the table in the migration:
 
-                create :#{table_name} do/end
+                create table_for(#{model_class.name}) do/end
+
+          TEXT
+
+          message << <<-TEXT
+
+          Or, you can skip schema checks for this model:
+
+              class #{model_class.to_s} < BaseModel
+                # Great for models used in migrations, or for legacy schemas
+                skip_schema_enforcer
+              end
 
 
           TEXT
@@ -162,6 +178,13 @@ module Avram::SchemaEnforcer
                 add_belongs_to #{missing_attribute[:name]} : #{missing_attribute[:type]}
               end
 
+        Or, you can skip schema checks for this model:
+
+            class #{model_class.to_s} < BaseModel
+              # Great for models used in migrations, or for legacy schemas
+              skip_schema_enforcer
+            end
+
 
         TEXT
       end
@@ -186,6 +209,13 @@ module Avram::SchemaEnforcer
 
             make_optional :#{table_name}, :#{attribute[:name]}
 
+      Alternatively, you can skip schema checks for this model:
+
+          class #{model_class.to_s} < BaseModel
+            # Great for models used in migrations, or for legacy schemas
+            skip_schema_enforcer
+          end
+
 
       ERROR
     end
@@ -208,6 +238,13 @@ module Avram::SchemaEnforcer
         ▸ Make the column required:
 
             make_required :#{table_name}, :#{attribute[:name]}
+
+      Alternatively, you can skip schema checks for this model:
+
+        class #{model_class.to_s} < BaseModel
+          # Great for models used in migrations, or use with legacy schemas
+          skip_schema_enforcer
+        end
 
 
       ERROR

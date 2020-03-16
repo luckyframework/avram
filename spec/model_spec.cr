@@ -1,5 +1,7 @@
 require "./spec_helper"
 
+include LazyLoadHelpers
+
 class NamedSpaced::Model < BaseModel
   table do
   end
@@ -41,18 +43,24 @@ describe Avram::Model do
     user = User.new id: 123_i64,
       name: "Name",
       age: 24,
+      year_born: 1990_i16,
       joined_at: now,
       created_at: now,
       updated_at: now,
       nickname: "nick",
-      average_score: nil
+      total_score: nil,
+      average_score: nil,
+      available_for_hire: nil
 
     user.name.should eq "Name"
     user.age.should eq 24
+    user.year_born.should eq 1990_i16
     user.joined_at.should eq now
     user.updated_at.should eq now
     user.created_at.should eq now
     user.nickname.should eq "nick"
+    user.available_for_hire.should be_nil
+    user.available_for_hire?.should be_false
   end
 
   it "can be used for params" do
@@ -61,11 +69,14 @@ describe Avram::Model do
     user = User.new id: 123_i64,
       name: "Name",
       age: 24,
+      year_born: 1990_i16,
       joined_at: now,
       created_at: now,
       updated_at: now,
       nickname: "nick",
-      average_score: nil
+      total_score: nil,
+      average_score: nil,
+      available_for_hire: nil
 
     user.to_param.should eq "123"
   end
@@ -79,6 +90,30 @@ describe Avram::Model do
 
     user.email.should be_a(CustomEmail)
     user.email.to_s.should eq "foo@bar.com"
+  end
+
+  describe "reload" do
+    it "can reload a model" do
+      user = UserBox.create &.name("Original Name")
+
+      # Update returns a brand new user. It should have the new name
+      newly_updated_user = User::SaveOperation.update!(user, name: "Updated Name")
+
+      newly_updated_user.name.should eq("Updated Name")
+      # The original user is not modified
+      user.name.should eq("Original Name")
+      # So we reload it to get the new goodies
+      user.reload.name.should eq("Updated Name")
+    end
+
+    it "can reload a model with a yielded query" do
+      with_lazy_load(enabled: false) do
+        post = PostBox.create
+
+        # If `preload_tags` doesn't work this will raise
+        post.reload(&.preload_tags).tags.should be_empty
+      end
+    end
   end
 
   it "sets up simple methods for equality" do

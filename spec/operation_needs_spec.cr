@@ -28,7 +28,7 @@ end
 
 describe "Avram::SaveOperation needs" do
   it "doesn't change the initializer if an 'on' option is used'" do
-    params = {"name" => "Paul"}
+    params = Avram::Params.new({"name" => "Paul"})
     user = UserBox.create
 
     operation = NeedsWithOnOptionSaveOperation.new(params)
@@ -42,7 +42,7 @@ describe "Avram::SaveOperation needs" do
   end
 
   it "sets up a method arg for save, update, and new" do
-    params = {"name" => "Paul"}
+    params = Avram::Params.new({"name" => "Paul"})
     UserBox.create
     user = UserQuery.new.first
 
@@ -70,7 +70,7 @@ describe "Avram::SaveOperation needs" do
   end
 
   it "can have needs for just save, create or update" do
-    params = {"name" => "Paul"}
+    params = Avram::Params.new({"name" => "Paul"})
     UserBox.create
     user = UserQuery.new.first
 

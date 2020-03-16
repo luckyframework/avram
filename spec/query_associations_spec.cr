@@ -10,10 +10,18 @@ end
 class NamedSpaced::Organization < BaseModel
   table do
     has_many locations : Location
+    has_one president : Staff
   end
 end
 
 class NamedSpaced::Location < BaseModel
+  table do
+    column name : String
+    belongs_to organization : Organization
+  end
+end
+
+class NamedSpaced::Staff < BaseModel
   table do
     column name : String
     belongs_to organization : Organization
@@ -137,5 +145,8 @@ describe "Query associations" do
     orgs = NamedSpaced::Organization::BaseQuery.new
       .where_locations(NamedSpaced::Location::BaseQuery.new.name("Home"))
     orgs.to_sql[0].should contain "INNER JOIN"
+
+    staff = NamedSpaced::Staff::BaseQuery.new
+    staff.to_sql[0].should contain "named_spaced_staffs"
   end
 end

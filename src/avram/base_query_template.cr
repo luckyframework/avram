@@ -7,6 +7,10 @@ class Avram::BaseQueryTemplate
         {{ type }}.database
       end
 
+      def query_class
+
+      end
+
       @@table_name = :{{ table_name }}
       @@schema_class = {{ type }}
 
@@ -64,6 +68,15 @@ class Avram::BaseQueryTemplate
                   to: :{{ assoc[:table_name] }},
                   primary_key: {{ assoc[:foreign_key] }},
                   foreign_key: primary_key_name
+                )
+              )
+            {% elsif assoc[:relationship_type] == :has_one %}
+              join(
+                Avram::Join::{{ join_type.id }}.new(
+                  from: @@table_name,
+                  to: {{ assoc[:type] }}::TABLE_NAME,
+                  foreign_key: :{{ assoc[:foreign_key] }},
+                  primary_key: primary_key_name
                 )
               )
             {% elsif assoc[:through] %}

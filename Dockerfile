@@ -1,4 +1,4 @@
-FROM crystallang/crystal:0.31.1
+FROM crystallang/crystal:0.33.0
 WORKDIR /data
 
 # install base dependencies
@@ -6,7 +6,7 @@ RUN apt-get update && \
   apt-get install -y libgconf-2-4 curl libreadline-dev && \
   # postgres 11 installation
   curl https://www.postgresql.org/media/keys/ACCC4CF8.asc | apt-key add - && \
-  echo "deb http://apt.postgresql.org/pub/repos/apt/ xenial-pgdg main" | tee /etc/apt/sources.list.d/postgres.list && \
+  echo "deb http://apt.postgresql.org/pub/repos/apt/ bionic-pgdg main" | tee /etc/apt/sources.list.d/postgres.list && \
   apt-get update && \
   apt-get install -y postgresql-11 && \
   rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*

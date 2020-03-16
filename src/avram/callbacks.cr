@@ -106,18 +106,22 @@ module Avram::Callbacks
     end
   end
 
-  {% for callbacks_without_block in [:after_save, :after_commit] %}
+  {% for callback_without_block in [:after_save, :after_commit] %}
     # :nodoc:
-    macro {{ callbacks_without_block.id }}
+    macro {{ callback_without_block.id }}
       \{% raise <<-ERROR
-        '#{callbacks_without_block.id}' does not accept a block. Instead give it a method name  to run.
+        '{{callback_without_block.id}}' does not accept a block. Instead give it a method name to run.
 
         Example:
 
-            #{callbacks_without_block.id} run_something
+            {{callback_without_block.id}} run_something
+
+            def run_something(newly_saved_record)
+              # Do something
+            end
         ERROR
       %}
-      # Will never be called but must be there so that the macro accepts a block
+      # Will never be called but must be there so that the macro accepts a block:
       \{{ yield }}
     end
   {% end %}
@@ -125,12 +129,12 @@ module Avram::Callbacks
   {% for removed_callback in [:create, :update] %}
     # :nodoc:
     macro after_{{ removed_callback.id }}(method_name)
-      \{% raise "'after_#{removed_callback}' has been removed" %}
+      \{% raise "'after_{{removed_callback.id}}' has been removed" %}
     end
 
     # :nodoc:
     macro before_{{ removed_callback.id }}(method_name)
-      \{% raise "'before_#{removed_callback.id}' has been removed" %}
+      \{% raise "'before_{{removed_callback.id}}' has been removed" %}
     end
   {% end %}
 

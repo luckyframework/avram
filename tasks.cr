@@ -1,6 +1,6 @@
 require "lucky_cli"
 require "./src/avram"
-require "./config/database"
+require "./config/*"
 require "./db/migrations/*"
 
 class Db::Reset < LuckyCli::Task
