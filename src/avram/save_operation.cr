@@ -237,7 +237,7 @@ abstract class Avram::SaveOperation(T) < Avram::Operation
     {% end %}
   end
 
-  def changes
+  def changes : Hash(Symbol, String?)
     _changes = {} of Symbol => String?
     column_attributes.each do |attribute|
       if attribute.changed?

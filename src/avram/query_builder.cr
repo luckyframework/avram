@@ -71,8 +71,12 @@ class Avram::QueryBuilder
     join_sql [@delete ? delete_sql : select_sql] + sql_condition_clauses
   end
 
-  def statement_for_update(params)
-    join_sql ["UPDATE #{table}", set_sql_clause(params)] + sql_condition_clauses + ["RETURNING #{@selections}"]
+  def statement_for_update(params, return_columns returning? : Bool = true)
+    sql = ["UPDATE #{table}", set_sql_clause(params)]
+    sql += sql_condition_clauses
+    sql += ["RETURNING #{@selections}"] if returning?
+
+    join_sql sql
   end
 
   def args_for_update(params)
