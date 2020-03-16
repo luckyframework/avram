@@ -74,13 +74,13 @@ module Avram::Queryable(T)
 
   def distinct_on(&block) : self
     criteria = yield self
-    criteria.__distinct_on
+    criteria.private_distinct_on
     self
   end
 
   def reset_where(&block) : self
     criteria = yield self
-    criteria.__reset_where
+    criteria.private_reset_where
     self
   end
 
@@ -128,7 +128,7 @@ module Avram::Queryable(T)
 
   def group(&block) : self
     criteria = yield self
-    criteria.__group
+    criteria.private_group
     self
   end
 
