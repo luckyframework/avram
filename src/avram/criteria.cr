@@ -130,17 +130,17 @@ class Avram::Criteria(T, V)
   end
 
   # :nodoc:
-  def __distinct_on : Avram::QueryBuilder
+  def private_distinct_on : Avram::QueryBuilder
     rows.query.distinct_on(column)
   end
 
   # :nodoc:
-  def __group : Avram::QueryBuilder
+  def private_group : Avram::QueryBuilder
     rows.query.group_by(column)
   end
 
   # :nodoc:
-  def __reset_where : Avram::QueryBuilder
+  def private_reset_where : Avram::QueryBuilder
     rows.query.reset_where(column)
   end
 
