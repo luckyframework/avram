@@ -1,7 +1,7 @@
 class Avram::QueryBuilder
   alias ColumnName = Symbol | String
   getter table
-  getter distinct_on : String | Symbol | Nil = nil
+  getter distinct_on : ColumnName | Nil = nil
   @limit : Int32?
   @offset : Int32?
   @wheres = [] of Avram::Where::SqlClause
@@ -122,7 +122,7 @@ class Avram::QueryBuilder
     self
   end
 
-  def distinct_on(column : Symbol | String)
+  def distinct_on(column : ColumnName)
     @distinct_on = column
     self
   end
@@ -153,6 +153,11 @@ class Avram::QueryBuilder
 
   def order_by(order : OrderBy)
     @orders << order
+    self
+  end
+
+  def reset_where(column : ColumnName)
+    @wheres.reject! { |clause| clause.column.to_s == column.to_s }
     self
   end
 
@@ -243,7 +248,7 @@ class Avram::QueryBuilder
       .map { |column| column.split(".").last }
   end
 
-  def select(selection : Array(Symbol | String))
+  def select(selection : Array(ColumnName))
     @selections = selection
       .map { |column| "#{@table}.#{column}" }
       .join(", ")
