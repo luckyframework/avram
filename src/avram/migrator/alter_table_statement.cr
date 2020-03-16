@@ -67,6 +67,7 @@ class Avram::Migrator::AlterTableStatement
         statement << "ALTER TABLE #{@table_name}"
         statement << "\n"
         statement << (rows + dropped_rows).join(",\n")
+        statement << ';'
       end
       [statement]
     end
@@ -110,7 +111,7 @@ class Avram::Migrator::AlterTableStatement
       {% array = true %}
     {% else %}
       {% type = type_declaration.type %}
-      {% nilable = false %}
+      {% nilable = (fill_existing_with != nil) && (fill_existing_with != :nothing) %}
       {% array = false %}
     {% end %}
 

@@ -23,7 +23,7 @@ describe Avram::Migrator::AlterTableStatement do
     built.statements.first.should eq <<-SQL
     ALTER TABLE users
       ADD name text,
-      ADD email text NOT NULL,
+      ADD email text,
       ADD nickname text NOT NULL,
       ADD age int NOT NULL DEFAULT '1',
       ADD num bigint NOT NULL DEFAULT '1',
@@ -31,12 +31,12 @@ describe Avram::Migrator::AlterTableStatement do
       ADD completed boolean NOT NULL DEFAULT 'false',
       ADD meta jsonb NOT NULL DEFAULT '{"default":"value"}',
       ADD joined_at timestamptz NOT NULL DEFAULT NOW(),
-      ADD updated_at timestamptz NOT NULL,
+      ADD updated_at timestamptz,
       ADD future_time timestamptz NOT NULL DEFAULT '#{Time.local.to_utc}',
       ADD new_id uuid NOT NULL DEFAULT '46d9b2f0-0718-4d4c-a5a1-5af81d5b11e0',
       ADD numbers int[] NOT NULL,
       DROP old_column,
-      DROP employee_id
+      DROP employee_id;
     SQL
 
     built.statements.size.should eq 9
@@ -80,7 +80,7 @@ describe Avram::Migrator::AlterTableStatement do
         ADD post_id bigint REFERENCES posts ON DELETE RESTRICT,
         ADD category_label_id bigint NOT NULL REFERENCES custom_table ON DELETE SET NULL,
         ADD employee_id bigint NOT NULL REFERENCES users ON DELETE CASCADE,
-        ADD line_item_id uuid NOT NULL REFERENCES line_items ON DELETE CASCADE
+        ADD line_item_id uuid NOT NULL REFERENCES line_items ON DELETE CASCADE;
       SQL
 
       built.statements[1].should eq "CREATE INDEX comments_user_id_index ON comments USING btree (user_id);"
