@@ -699,6 +699,63 @@ describe Avram::Query do
     end
   end
 
+  describe "update" do
+    it "updates records when wheres are added" do
+      UserBox.create &.available_for_hire(false)
+      UserBox.create &.available_for_hire(false)
+
+      updated_count = ChainedQuery.new.update(available_for_hire: true)
+
+      updated_count.should eq(2)
+      results = ChainedQuery.new.results
+      results.size.should eq(2)
+      results.all?(&.available_for_hire).should be_true
+    end
+
+    it "updates some records when wheres are added" do
+      helen = UserBox.create &.available_for_hire(false).name("Helen")
+      kate = UserBox.create &.available_for_hire(false).name("Kate")
+
+      updated_count = ChainedQuery.new.name("Helen").update(available_for_hire: true)
+
+      updated_count.should eq 1
+      helen.reload.available_for_hire.should be_true
+      kate.reload.available_for_hire.should be_false
+    end
+
+    it "only sets columns to `nil` if explicitly set" do
+      richard = UserBox.create &.name("Richard").nickname("Rich")
+
+      updated_count = ChainedQuery.new.update(nickname: nil)
+
+      updated_count.should eq 1
+      richard = richard.reload
+      richard.nickname.should be_nil
+      richard.name.should eq("Richard")
+    end
+
+    it "works with JSON" do
+      blob = BlobBox.create &.doc(JSON::Any.new({"updated" => JSON::Any.new(true)}))
+
+      updated_doc = JSON::Any.new({"updated" => JSON::Any.new(false)})
+      updated_count = Blob::BaseQuery.new.update(doc: updated_doc)
+
+      updated_count.should eq(1)
+      blog = blob.reload
+      blog.doc.should eq(updated_doc)
+    end
+
+    it "works with arrays" do
+      bucket = BucketBox.create &.names(["Luke"])
+
+      updated_count = Bucket::BaseQuery.new.update(names: ["Rey"])
+
+      updated_count.should eq(1)
+      bucket = bucket.reload
+      bucket.names.should eq(["Rey"])
+    end
+  end
+
   describe "delete" do
     it "deletes user records that are young" do
       UserBox.new.name("Tony").age(48).create

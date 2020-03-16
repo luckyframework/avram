@@ -84,10 +84,10 @@ module Avram::Queryable(T)
     self
   end
 
-  # Delete the records using the query's where clauses,
-  # or all the records if no wheres are added.
+  # Delete the records using the query's where clauses, or all records if no wheres are added.
   #
-  # returns the number of records removed as `Int64`.
+  # Returns the number of deleted records as `Int64`.
+  #
   # ```
   # # DELETE FROM users WHERE age < 21
   # UserQuery.new.age.lt(21).delete
@@ -98,6 +98,16 @@ module Avram::Queryable(T)
       db.exec(query.statement, args: query.args).rows_affected
     end
   end
+
+  # Update the records using the query's where clauses, or all records if no wheres are added.
+  #
+  # Returns the number of records updated as `Int64`.
+  #
+  # ```
+  # # Update all comments with the word "spam" as spam
+  # CommentQuery.new.body.ilike("spam").update(spam: true)
+  # ```
+  abstract def update : Int64
 
   def join(join_clause : Avram::Join::SqlClause) : self
     query.join(join_clause)

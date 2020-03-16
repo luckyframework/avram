@@ -1,6 +1,9 @@
 class Avram::BaseQueryTemplate
   macro setup(type, columns, associations, table_name, primary_key_name, *args, **named_args)
     class ::{{ type }}::BaseQuery < Avram::Query
+      private class Nothing
+      end
+
       include Avram::Queryable({{ type }})
 
       def database : Avram::Database.class
@@ -30,6 +33,33 @@ class Avram::BaseQueryTemplate
         def \{{ name }}
           column_name = "#{@@table_name}.\{{ name }}"
           \{{ type }}::Lucky::Criteria(\{{ query_class }}, \{{ type }}).new(self, column_name)
+        end
+      end
+
+      def update(
+          {% for column in columns %}
+            {{ column[:name] }} : {{ column[:type] }} | Nothing{% if column[:nilable] %} | Nil{% end %} = Nothing.new,
+          {% end %}
+        ) : Int64
+
+        _changes = {} of Symbol => String?
+
+        {% for column in columns %}
+          if {{ column[:name] }}.nil?
+            _changes[:{{ column[:name] }}] = nil
+          elsif {{ column[:name] }}.is_a?(Nothing)
+            nil
+          else
+            value = {{ column[:name] }}.not_nil!.class.adapter.to_db({{ column[:name] }}).to_s
+            _changes[:{{ column[:name] }}] = value
+          end
+        {% end %}
+
+        database.run do |db|
+          db.exec(
+            query.statement_for_update(_changes, return_columns: false),
+            args: query.args_for_update(_changes)
+          ).rows_affected
         end
       end
 
