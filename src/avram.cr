@@ -21,6 +21,7 @@ module Avram
     setting logger : Dexter::Logger = Dexter::Logger.new(nil)
     setting query_log_level : ::Logger::Severity?
     setting save_failed_log_level : ::Logger::Severity? = ::Logger::Severity::WARN
+    setting query_failed_log_level : ::Logger::Severity? = ::Logger::Severity::ERROR
     setting database_to_migrate : Avram::Database.class, example: "AppDatabase"
     setting time_formats : Array(String) = [] of String
   end

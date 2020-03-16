@@ -6,6 +6,11 @@ class Avram::SaveOperationTemplate
       end
     end
 
+    # This makes it easy for plugins and extensions to use the base SaveOperation
+    def base_query_class : ::{{ type }}::BaseQuery.class
+      ::{{ type }}::BaseQuery
+    end
+
     class ::{{ type }}::SaveOperation < Avram::SaveOperation({{ type }})
       {% if primary_key_type.id == UUID.id %}
         before_save set_uuid

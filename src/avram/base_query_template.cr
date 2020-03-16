@@ -7,6 +7,10 @@ class Avram::BaseQueryTemplate
         {{ type }}.database
       end
 
+      def query_class
+
+      end
+
       @@table_name = :{{ table_name }}
       @@schema_class = {{ type }}
 
