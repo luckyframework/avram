@@ -78,6 +78,12 @@ module Avram::Queryable(T)
     self
   end
 
+  def reset_where(&block) : self
+    criteria = yield self
+    criteria.__reset_where
+    self
+  end
+
   # Delete the records using the query's where clauses,
   # or all the records if no wheres are added.
   #

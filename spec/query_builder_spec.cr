@@ -29,6 +29,23 @@ describe Avram::QueryBuilder do
     query.statement.should eq "SELECT * FROM users"
   end
 
+  it "can reset where for a specific column" do
+    query = new_query
+      .where(Avram::Where::GreaterThan.new(:age, "18"))
+      .where(Avram::Where::LessThan.new(:age, "81"))
+      .where(Avram::Where::Equal.new(:name, "Pauline"))
+    query.args.should eq ["18", "81", "Pauline"]
+
+    query.reset_where("name")
+
+    query.statement.should eq "SELECT * FROM users WHERE age > $1 AND age < $2"
+    query.args.should eq ["18", "81"]
+
+    query.reset_where(:age)
+
+    query.args.should be_empty
+  end
+
   it "selects all" do
     new_query.statement.should eq "SELECT * FROM users"
     new_query.args.should eq [] of String

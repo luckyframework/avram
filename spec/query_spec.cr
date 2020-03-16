@@ -42,6 +42,13 @@ describe Avram::Query do
     query.args.should eq [] of String
   end
 
+  it "can reset where on a specific column" do
+    query = UserQuery.new.name("Purcell").age(35).reset_where(&.name).query
+
+    query.statement.should eq "SELECT #{User::COLUMN_SQL} FROM users WHERE users.age = $1"
+    query.args.should eq ["35"] of String
+  end
+
   it "can select distinct on a specific column" do
     UserBox.new.name("Purcell").age(22).create
     UserBox.new.name("Purcell").age(84).create
