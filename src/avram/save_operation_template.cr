@@ -11,6 +11,10 @@ class Avram::SaveOperationTemplate
       ::{{ type }}::BaseQuery
     end
 
+    def save_operation_class : ::{{ type }}::SaveOperation.class
+      ::{{ type }}::SaveOperation
+    end
+
     class ::{{ type }}::SaveOperation < Avram::SaveOperation({{ type }})
       {% if primary_key_type.id == UUID.id %}
         before_save set_uuid
