@@ -699,7 +699,7 @@ describe Avram::Query do
     end
   end
 
-  describe "delete_all" do
+  describe "delete" do
     it "deletes user records that are young" do
       UserBox.new.name("Tony").age(48).create
       UserBox.new.name("Peter").age(15).create
