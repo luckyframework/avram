@@ -20,27 +20,7 @@ private class NeedsSaveOperation < Needs::SaveOperation
   needs optional : String = "bar"
 end
 
-private class NeedsWithOnOptionSaveOperation < Needs::SaveOperation
-  needs created_by : String, on: :create
-  needs updated_by : String, on: :update
-  needs saved_by : String, on: :save
-end
-
 describe "Avram::SaveOperation needs" do
-  it "doesn't change the initializer if an 'on' option is used'" do
-    params = Avram::Params.new({"name" => "Paul"})
-    user = UserBox.create
-
-    operation = NeedsWithOnOptionSaveOperation.new(params)
-    operation.created_by.should be_nil
-    operation.updated_by.should be_nil
-    operation.saved_by.should be_nil
-    operation = NeedsWithOnOptionSaveOperation.new(user, params)
-    operation.created_by.should be_nil
-    operation.updated_by.should be_nil
-    operation.saved_by.should be_nil
-  end
-
   it "sets up a method arg for save, update, and new" do
     params = Avram::Params.new({"name" => "Paul"})
     UserBox.create
@@ -66,21 +46,6 @@ describe "Avram::SaveOperation needs" do
       operation.nilable_value.should eq("not nil")
       operation.created_by.should eq("Jane")
       operation.optional.should eq("bar")
-    end
-  end
-
-  it "can have needs for just save, create or update" do
-    params = Avram::Params.new({"name" => "Paul"})
-    UserBox.create
-    user = UserQuery.new.first
-
-    NeedsWithOnOptionSaveOperation.create(params, saved_by: "Me", created_by: "Bob") do |operation, _record|
-      operation.created_by.should eq("Bob")
-      operation.updated_by.should be_nil
-    end
-    NeedsWithOnOptionSaveOperation.update(user, params, saved_by: "Me", updated_by: "Laura") do |operation, _record|
-      operation.created_by.should be_nil
-      operation.updated_by.should eq("Laura")
     end
   end
 end
