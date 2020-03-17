@@ -57,6 +57,10 @@ private class ParamKeySaveOperation < ValueColumnModel::SaveOperation
   param_key :custom_param
 end
 
+private class UpsertUserOperation < User::SaveOperation
+  upsert_lookup_columns :name, :nickname
+end
+
 private class OverrideDefaults < ModelWithDefaultValues::SaveOperation
   permit_columns :greeting, :drafted_at, :published_at, :admin, :age, :money
 end
@@ -155,6 +159,107 @@ describe "Avram::SaveOperation" do
 
     operation.changes.has_key?(:name).should be_true
     operation.changes[:name].should be_nil
+  end
+
+  describe "upsert upsert_lookup_columns" do
+    describe ".upsert" do
+      it "updates the existing record if one exists" do
+        existing_user = UserFactory.create &.name("Rich").nickname(nil).age(20)
+        joined_at = Time.utc.at_beginning_of_second
+
+        UpsertUserOperation.upsert(
+          name: "Rich",
+          nickname: nil,
+          age: 30,
+          joined_at: joined_at
+        ) do |_operation, user|
+          UserQuery.new.select_count.should eq(1)
+          user = user.not_nil!
+          user.id.should eq(existing_user.id)
+          user.name.should eq("Rich")
+          user.nickname.should be_nil
+          user.age.should eq(30)
+          user.joined_at.should eq(joined_at)
+        end
+      end
+
+      it "creates a new record if match one doesn't exist" do
+        user_with_different_nickname =
+          UserFactory.create &.name("Rich").nickname(nil).age(20)
+        joined_at = Time.utc.at_beginning_of_second
+
+        UpsertUserOperation.upsert(
+          name: "Rich",
+          nickname: "R.",
+          age: 30,
+          joined_at: joined_at
+        ) do |_operation, user|
+          UserQuery.new.select_count.should eq(2)
+          # Keep existing user the same
+          user_with_different_nickname.age.should eq(20)
+          user_with_different_nickname.nickname.should eq(nil)
+
+          user = user.not_nil!
+          user.id.should_not eq(user_with_different_nickname.id)
+          user.name.should eq("Rich")
+          user.nickname.should eq("R.")
+          user.age.should eq(30)
+          user.joined_at.should eq(joined_at)
+        end
+      end
+    end
+
+    describe ".upsert!" do
+      it "updates the existing record if one exists" do
+        existing_user = UserFactory.create &.name("Rich").nickname(nil).age(20)
+        joined_at = Time.utc.at_beginning_of_second
+
+        user = UpsertUserOperation.upsert!(
+          name: "Rich",
+          nickname: nil,
+          age: 30,
+          joined_at: joined_at
+        )
+
+        UserQuery.new.select_count.should eq(1)
+        user = user.not_nil!
+        user.id.should eq(existing_user.id)
+        user.name.should eq("Rich")
+        user.nickname.should be_nil
+        user.age.should eq(30)
+        user.joined_at.should eq(joined_at)
+      end
+
+      it "creates a new record if one doesn't exist" do
+        user_with_different_nickname = UserFactory.create &.name("Rich").nickname(nil).age(20)
+        joined_at = Time.utc.at_beginning_of_second
+
+        user = UpsertUserOperation.upsert!(
+          name: "Rich",
+          nickname: "R.",
+          age: 30,
+          joined_at: joined_at
+        )
+
+        UserQuery.new.select_count.should eq(2)
+        # Keep existing user the same
+        user_with_different_nickname.age.should eq(20)
+        user_with_different_nickname.nickname.should eq(nil)
+
+        user = user.not_nil!
+        user.id.should_not eq(user_with_different_nickname.id)
+        user.name.should eq("Rich")
+        user.nickname.should eq("R.")
+        user.age.should eq(30)
+        user.joined_at.should eq(joined_at)
+      end
+
+      it "raises if the record is invalid" do
+        expect_raises(Avram::InvalidOperationError) do
+          UpsertUserOperation.upsert!(name: "")
+        end
+      end
+    end
   end
 
   describe "#errors" do
