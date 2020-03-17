@@ -8,6 +8,7 @@ private class SaveUser < User::SaveOperation
   # still included in validation errors.
   attribute should_not_override_permitted_columns : String
   permit_columns :name, :nickname, :joined_at, :age
+  attribute set_from_init : String
   before_save prepare
 
   def prepare
@@ -164,6 +165,12 @@ describe "Avram::SaveOperation" do
       operation = SaveUser.new(user, params)
 
       operation.name.value.should eq "New Name"
+    end
+
+    it "allows setting attributes" do
+      operation = SaveUser.new(name: "Tracy", set_from_init: "success")
+      operation.name.value.should eq("Tracy")
+      operation.set_from_init.value.should eq("success")
     end
   end
 
