@@ -191,7 +191,6 @@ module Avram::NeedyInitializerAndSaveMethods
           self.{{ attribute.var }}.value = {{ attribute.var }}
         end
       {% end %}
-
     end
   end
 end
