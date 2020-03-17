@@ -17,11 +17,12 @@ class Avram::Migrator::Runner
   end
 
   def self.db_host
-    URI.parse(database_url).host || "localhost"
+    host = URI.parse(database_url).host
+    host unless host.blank?
   end
 
   def self.db_port
-    URI.parse(database_url).port || "5432"
+    URI.parse(database_url).port
   end
 
   def self.db_user
@@ -41,13 +42,16 @@ class Avram::Migrator::Runner
   end
 
   def self.cmd_args
-    args = ""
-    args += "-U #{self.db_user} " if self.db_user
-    args += "-h #{self.db_host} -p #{self.db_port} #{self.db_name}"
+    String.build do |args|
+      args << "-U #{self.db_user}" if self.db_user
+      args << " -h #{self.db_host}" if self.db_host
+      args << " -p #{self.db_port}" if self.db_port
+      args << " #{self.db_name}"
+    end
   end
 
   def self.drop_db
-    run "dropdb #{self.cmd_args}"
+    run "dropdb #{cmd_args}"
   rescue e : Exception
     if (message = e.message) && message.includes?(%("#{self.db_name}" does not exist))
       puts "Already dropped #{self.db_name.colorize(:green)}"
@@ -57,7 +61,7 @@ class Avram::Migrator::Runner
   end
 
   def self.create_db(quiet? : Bool = false)
-    run "createdb #{self.cmd_args}"
+    run "createdb #{cmd_args}"
     unless quiet?
       puts "Done creating #{Avram::Migrator::Runner.db_name.colorize(:green)}"
     end
@@ -108,7 +112,7 @@ class Avram::Migrator::Runner
 
   def self.dump_db(dump_to : String = "db/structure.sql", quiet : Bool = false)
     Db::VerifyConnection.new(quiet: true).call
-    run "pg_dump -U #{db_user} -h #{db_host} -p #{db_port} -s #{db_name} > #{dump_to}"
+    run "pg_dump -s #{cmd_args} > #{dump_to}"
     unless quiet
       puts "Done dumping #{db_name.colorize(:green)}"
     end
