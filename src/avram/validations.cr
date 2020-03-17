@@ -48,7 +48,7 @@ module Avram::Validations
   # ```
   def validate_required(*attributes, message : Avram::Attribute::ErrorMessage = "is required")
     attributes.each do |attribute|
-      if attribute.value.blank? && attribute.value != false
+      if attribute.value.blank_for_validates_required?
         attribute.add_error message
       end
     end

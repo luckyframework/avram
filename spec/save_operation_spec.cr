@@ -62,6 +62,14 @@ describe "Avram::SaveOperation" do
     operation.required_attributes.should eq({operation.title})
   end
 
+  it "can save empty arrays" do
+    bucket = BucketBox.create
+
+    bucket = Bucket::SaveOperation.update!(bucket, names: [] of String)
+
+    bucket.names.should eq([] of String)
+  end
+
   it "set params if passed in" do
     now = Time.utc.at_beginning_of_minute
     user = SaveUser.create!(name: "Dan", age: 34, joined_at: now)
