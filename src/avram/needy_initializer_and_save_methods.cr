@@ -68,37 +68,17 @@ module Avram::NeedyInitializerAndSaveMethods
       {% for type_declaration in (NEEDS_ON_CREATE + NEEDS_ON_INITIALIZE) %}
         {{ type_declaration }},
       {% end %}
-      {% if @type.constant :COLUMN_ATTRIBUTES %}
-        {% for attribute in COLUMN_ATTRIBUTES.uniq %}
-          {{ attribute[:name] }} : {{ attribute[:type] }} | Nothing{% if attribute[:nilable] %} | Nil{% end %} = Nothing.new,
-        {% end %}
-      {% end %}
-      {% for attribute in ATTRIBUTES %}
-        {{ attribute.var }} : {{ attribute.type }} | Nothing = Nothing.new,
-      {% end %}
+      **named_args
     )
       operation = new(
         {% if with_params %}params,{% end %}
         {% for type_declaration in NEEDS_ON_INITIALIZE %}
           {{ type_declaration.var }},
         {% end %}
+        **named_args
       )
       {% for type_declaration in NEEDS_ON_CREATE %}
         operation.{{ type_declaration.var }} = {{ type_declaration.var }}
-      {% end %}
-
-      {% if @type.constant :COLUMN_ATTRIBUTES %}
-        {% for attribute in COLUMN_ATTRIBUTES.uniq %}
-          unless {{ attribute[:name] }}.is_a? Nothing
-            operation.{{ attribute[:name] }}.value = {{ attribute[:name] }}
-          end
-        {% end %}
-      {% end %}
-
-      {% for attribute in ATTRIBUTES %}
-        unless {{ attribute.var }}.is_a? Nothing
-          operation.{{ attribute.var }}.value = {{ attribute.var }}
-        end
       {% end %}
 
       {% if with_bang %}
@@ -121,14 +101,7 @@ module Avram::NeedyInitializerAndSaveMethods
         {% for type_declaration in (NEEDS_ON_UPDATE + NEEDS_ON_INITIALIZE) %}
           {{ type_declaration }},
         {% end %}
-        {% if @type.constant :COLUMN_ATTRIBUTES %}
-          {% for attribute in COLUMN_ATTRIBUTES.uniq %}
-            {{ attribute[:name] }} : {{ attribute[:type] }} | Nothing{% if attribute[:nilable] %} | Nil{% end %} = Nothing.new,
-          {% end %}
-        {% end %}
-        {% for attribute in ATTRIBUTES %}
-          {{ attribute.var }} : {{ attribute.type }} | Nothing = Nothing.new,
-        {% end %}
+        **named_args
       )
       operation = new(
         record,
@@ -136,23 +109,10 @@ module Avram::NeedyInitializerAndSaveMethods
         {% for type_declaration in NEEDS_ON_INITIALIZE %}
           {{ type_declaration.var }},
         {% end %}
+        **named_args
       )
       {% for type_declaration in NEEDS_ON_UPDATE %}
         operation.{{ type_declaration.var }} = {{ type_declaration.var }}
-      {% end %}
-
-      {% if @type.constant :COLUMN_ATTRIBUTES %}
-        {% for attribute in COLUMN_ATTRIBUTES.uniq %}
-          unless {{ attribute[:name] }}.is_a? Nothing
-            operation.{{ attribute[:name] }}.value = {{ attribute[:name] }}
-          end
-        {% end %}
-      {% end %}
-
-      {% for attribute in ATTRIBUTES %}
-        unless {{ attribute.var }}.is_a? Nothing
-          operation.{{ attribute.var }}.value = {{ attribute.var }}
-        end
       {% end %}
 
       {% if with_bang %}
@@ -180,46 +140,58 @@ module Avram::NeedyInitializerAndSaveMethods
     generate_update(with_params: false, with_bang: false)
   end
 
-  class Nothing
+  private class Nothing
   end
 
   macro generate_initializer
     def initialize(
-        @params : Avram::Paramable,
+        @record : T? = nil,
+        @params : Avram::Paramable = Avram::Params.new,
         {% for type_declaration in NEEDS_ON_INITIALIZE %}
           @{{ type_declaration }},
         {% end %}
+        **named_args
       )
+      set_attributes(**named_args)
       extract_changes_from_params
     end
 
     def initialize(
+        @params : Avram::Paramable = Avram::Params.new,
         {% for type_declaration in NEEDS_ON_INITIALIZE %}
           @{{ type_declaration }},
         {% end %}
-      )
-      @params = Avram::Params.new
+        **named_args
+    )
+      @record = nil
+      set_attributes(**named_args)
       extract_changes_from_params
     end
 
-    def initialize(
-        @record : T,
-        @params : Avram::Paramable,
-        {% for type_declaration in NEEDS_ON_INITIALIZE %}
-          @{{ type_declaration }},
+    def set_attributes(
+      {% if @type.constant :COLUMN_ATTRIBUTES %}
+        {% for attribute in COLUMN_ATTRIBUTES.uniq %}
+          {{ attribute[:name] }} : {{ attribute[:type] }} | Nothing{% if attribute[:nilable] %} | Nil{% end %} = Nothing.new,
         {% end %}
-      )
-      extract_changes_from_params
-    end
+      {% end %}
+      {% for attribute in ATTRIBUTES %}
+        {{ attribute.var }} : {{ attribute.type }} | Nothing = Nothing.new,
+      {% end %}
+    )
+      {% if @type.constant :COLUMN_ATTRIBUTES %}
+        {% for attribute in COLUMN_ATTRIBUTES.uniq %}
+          unless {{ attribute[:name] }}.is_a? Nothing
+            self.{{ attribute[:name] }}.value = {{ attribute[:name] }}
+          end
+        {% end %}
+      {% end %}
 
-    def initialize(
-        @record : T,
-        {% for type_declaration in NEEDS_ON_INITIALIZE %}
-          @{{ type_declaration }},
-        {% end %}
-      )
-      @params = Avram::Params.new
-      extract_changes_from_params
+      {% for attribute in ATTRIBUTES %}
+        unless {{ attribute.var }}.is_a? Nothing
+          self.{{ attribute.var }}.value = {{ attribute.var }}
+        end
+      {% end %}
+
     end
   end
 end
