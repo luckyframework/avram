@@ -25,12 +25,38 @@ class Avram::Criteria(T, V)
   private def check_nilable!(_value : Nil)
     {% raise <<-ERROR
 
-      The 'eq' method cannot compare values that may be 'nil'
+      The 'eq' method can't compare a column to a value that may be 'nil'.
 
-      Try this...
+      ▸ If you didn't realize the value might be nil...
 
-        ▸ Use 'nilable_eq'. This method allows checking against nilable values
-        ▸ Ensure the value is not nilable by wrapping it in an 'if' or using 'not_nil!'
+          # Try using an if/case to conditionally add wheres to your query
+          query = MyQuery.new
+          name = name_that_might_be_nil
+
+          if name
+            # We can be sure value is not nil and can safely use it
+            query.name(name)
+          else
+            # Don't add the name criteria, give me all users if 'name' is nil
+            query
+          end
+
+      ▸ If you want to allow comparing to 'nil'...
+
+          # Use 'nilable_eq' to allow querying against nil.
+          #
+          # For example if you have an optional 'nickname' column and you want
+          # to allow people to query it with a String to find people with a
+          # nickname, or Nil to find people without a nickname:
+          UserQuery.new.nickname.nilable_eq(nickname_that_can_be_nil)
+
+      ▸ If the compiler is wrong and the value can't be 'nil'...
+
+          # Use 'not_nil!' to tell Crystal that the value won't actually be 'nil'
+          # When using this, be careful that the value really won't be 'nil'
+          # or you will get a runtime error
+          UserQuery.new.name(name_that_isnt_actually_nil.not_nil!)
+
 
       ERROR
     %}
