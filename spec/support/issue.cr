@@ -8,9 +8,9 @@ class Issue < BaseModel
   end
 
   avram_enum Role do
-    Issue    = 0
-    Bug      = 1
-    Critical = 2
+    Issue    = 1
+    Bug      = 2
+    Critical = 3
   end
 
   table do
