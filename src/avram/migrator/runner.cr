@@ -80,6 +80,7 @@ class Avram::Migrator::Runner
         ▸ If you are on linux you can try running #{linux_postgres_installation_instructions}
         ▸ If you are on CI or some servers, there may already be a database created so you don't need this command"
 
+
       ERROR
     elsif (message = e.message) && message.includes?("could not connect to database template")
       raise <<-ERROR
@@ -92,6 +93,8 @@ class Avram::Migrator::Runner
       Try this...
 
         ▸ Make sure Postgres is running
+        ▸ Check your database configuration settings
+
 
       ERROR
     else
