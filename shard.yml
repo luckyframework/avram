@@ -17,12 +17,9 @@ dependencies:
   lucky_cli:
     github: luckyframework/lucky_cli
     version: ~> 0.20.0
-  db:
-    github: crystal-lang/crystal-db
-    version: ~> 0.8.0
   pg:
     github: will/crystal-pg
-    version: ~> 0.20.0
+    version: ~> 0.21.0
   habitat:
     github: luckyframework/habitat
     version: ~> 0.4.0
