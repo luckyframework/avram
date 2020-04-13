@@ -47,11 +47,11 @@ abstract class Avram::SaveOperation(T) < Avram::Operation
 
   # :nodoc:
   def log_failed_save
-    Avram.settings.save_failed_log_level.try do |level|
-      Avram.logger.log(level, {
+    Avram::SaveFailedLog.info do
+      {
         failed_to_save:    self.class.name.to_s,
         validation_errors: error_messages_as_string,
-      })
+      }
     end
   end
 

@@ -5,19 +5,16 @@ require "./support/base_model"
 require "./support/**"
 require "../config/*"
 
+backend = Log::IOBackend.new(STDERR)
+backend.formatter = Dexter::JSONLogFormatter.proc
+Log.builder.bind("avram.*", :error, Log::IOBackend.new(STDERR))
+
 Db::Create.new(quiet: true).call
 Db::Migrate.new(quiet: true).call
 Db::VerifyConnection.new(quiet: true).call
 
 Spec.before_each do
   TestDatabase.truncate
-end
-
-logger = Dexter::Logger.new(STDERR, level: Logger::Severity::ERROR)
-
-Avram.configure do |settings|
-  settings.logger = logger
-  settings.query_failed_log_level = Logger::Severity::ERROR
 end
 
 class SampleBackupDatabase < Avram::Database

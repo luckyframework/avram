@@ -338,21 +338,10 @@ describe "Avram::SaveOperation" do
         end
       end
 
-      it "logs the failure if a logger is set" do
-        log_io = IO::Memory.new
-        logger = Dexter::Logger.new(log_io)
-        Avram.temp_config(logger: logger) do |settings|
-          SaveUser.create(name: "", age: 30) { |operation, record| :unused }
+      it "logs the failure" do
+        LogHelper.temp_override(Avram::SaveFailedLog) do |log_io|
+          SaveUser.create(name: "", age: 30) { |_operation, _record| :unused }
           log_io.to_s.should contain(%("failed_to_save":"SaveUser","validation_errors":"name is required. joined_at is required"))
-        end
-      end
-
-      it "skips logging if log level is nil" do
-        log_io = IO::Memory.new
-        logger = Dexter::Logger.new(log_io)
-        Avram.temp_config(logger: logger, save_failed_log_level: nil) do |settings|
-          SaveUser.create(name: "", age: 30) { |operation, record| :unused }
-          log_io.to_s.should eq("")
         end
       end
     end
@@ -473,10 +462,9 @@ describe "Avram::SaveOperation" do
       it "logs the failure" do
         UserBox.new.name("Old Name").create
         user = UserQuery.new.first
-        log_io = IO::Memory.new
-        logger = Dexter::Logger.new(log_io)
-        Avram.temp_config(logger: logger) do |settings|
-          SaveUser.update(user, name: "") { |operation, record| :unused }
+
+        LogHelper.temp_override(Avram::SaveFailedLog) do |log_io|
+          SaveUser.update(user, name: "") { |_operation, _record| :unused }
           log_io.to_s.should contain(%("failed_to_save":"SaveUser","validation_errors":"name is required"))
         end
       end

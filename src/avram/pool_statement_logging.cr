@@ -40,20 +40,29 @@ module DB
       raise e
     end
 
-    private def log_query(*args_, args : Array? = nil)
-      Avram.settings.query_log_level.try do |level|
-        logging_args = EnumerableConcat.build(args_, args)
-        logging_args = logging_args.to_a if logging_args.is_a?(EnumerableConcat)
-        Avram.logger.log(level, {query: @query, args: logging_args})
+    private def log_query(*args_, args : Array? = nil) : Nil
+      Avram::QueryLog.info do
+        log_data(*args_, args: args || [] of String)
       end
     end
 
-    private def log_error(*args_, args : Array? = nil)
-      Avram.settings.query_failed_log_level.try do |level|
-        logging_args = EnumerableConcat.build(args_, args)
-        logging_args = logging_args.to_a if logging_args.is_a?(EnumerableConcat)
-        Avram.logger.log(level, {failed_query: @query, args: logging_args})
+    private def log_error(*args_, args : Array? = nil) : Nil
+      Avram::FailedQueryLog.info do
+        log_data(*args_, args: args || [] of String)
       end
+    end
+
+    private def log_data(*args_, args : Array)
+      logging_args = EnumerableConcat.build(args_, args)
+      logging_args = if logging_args.is_a?(Tuple) || logging_args.nil?
+                       [] of String
+                     elsif logging_args.is_a?(String)
+                       [logging_args]
+                     else
+                       logging_args.to_a
+                     end
+
+      {query: @query, args: logging_args}
     end
   end
 end
