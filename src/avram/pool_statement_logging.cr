@@ -41,13 +41,13 @@ module DB
     end
 
     private def log_query(*args_, args : Array? = nil) : Nil
-      Avram::QueryLog.info do
+      Avram::QueryLog.dexter.info do
         log_data(*args_, args: args || [] of String)
       end
     end
 
     private def log_error(*args_, args : Array? = nil) : Nil
-      Avram::FailedQueryLog.info do
+      Avram::FailedQueryLog.dexter.info do
         log_data(*args_, args: args || [] of String)
       end
     end
