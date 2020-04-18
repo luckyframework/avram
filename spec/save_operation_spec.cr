@@ -339,9 +339,9 @@ describe "Avram::SaveOperation" do
       end
 
       it "logs the failure" do
-        LogHelper.temp_override(Avram::SaveFailedLog) do |log_io|
+        Avram::SaveFailedLog.dexter.temp_config do |log_io|
           SaveUser.create(name: "", age: 30) { |_operation, _record| :unused }
-          log_io.to_s.should contain(%("failed_to_save":"SaveUser","validation_errors":"name is required. joined_at is required"))
+          log_io.to_s.should contain(%("failed_to_save" => "SaveUser", "validation_errors" => "name is required. joined_at is required"))
         end
       end
     end
@@ -463,9 +463,9 @@ describe "Avram::SaveOperation" do
         UserBox.new.name("Old Name").create
         user = UserQuery.new.first
 
-        LogHelper.temp_override(Avram::SaveFailedLog) do |log_io|
+        Avram::SaveFailedLog.dexter.temp_config do |log_io|
           SaveUser.update(user, name: "") { |_operation, _record| :unused }
-          log_io.to_s.should contain(%("failed_to_save":"SaveUser","validation_errors":"name is required"))
+          log_io.to_s.should contain(%("failed_to_save" => "SaveUser", "validation_errors" => "name is required"))
         end
       end
     end
