@@ -182,6 +182,8 @@ module Avram::Queryable(T)
   def select_count : Int64
     query.select_count
     exec_scalar.as(Int64)
+  rescue e : DB::NoResultsError
+    0_i64
   end
 
   def each
