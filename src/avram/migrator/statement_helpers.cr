@@ -47,4 +47,16 @@ module Avram::Migrator::StatementHelpers
   def make_optional(table : Symbol, column : Symbol)
     prepared_statements << Avram::Migrator::ChangeNullStatement.new(table, column, required: false).build
   end
+
+  def enable_extension(name : String)
+    prepared_statements << Avram::Migrator::CreateExtensionStatement.new(name).build
+  end
+
+  def disable_extension(name : String)
+    prepared_statements << Avram::Migrator::DropExtensionStatement.new(name).build
+  end
+
+  def update_extension(name : String, to : String? = nil)
+    prepared_statements << Avram::Migrator::AlterExtensionStatement.new(name, to: to).build
+  end
 end
