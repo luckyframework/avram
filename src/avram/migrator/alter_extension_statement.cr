@@ -11,6 +11,6 @@ class Avram::Migrator::AlterExtensionStatement
   end
 
   def to_version
-    "TO '#{@to}'"
+    " TO '#{@to}'"
   end
 end
