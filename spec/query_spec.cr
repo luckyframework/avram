@@ -532,6 +532,11 @@ describe Avram::Query do
         UserQuery.new.offset(1).select_count
       end
     end
+
+    it "returns 0 if postgres returns no results" do
+      query = UserQuery.new.distinct_on(&.name).average_score.gt(5).group(&.name).group(&.id).select_count
+      query.should eq 0
+    end
   end
 
   describe "#not with an argument" do
