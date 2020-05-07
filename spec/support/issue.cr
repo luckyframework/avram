@@ -14,8 +14,8 @@ class Issue < BaseModel
   end
 
   table do
-    column status : Issue::AvramStatus
-    column role : Issue::AvramRole
+    column status : Issue::Status
+    column role : Issue::Role
   end
 end
 

@@ -1,7 +1,7 @@
 class IssueBox < BaseBox
   def initialize
-    status Issue::AvramStatus.new(:opened)
-    role Issue::AvramRole.new(:issue)
+    status Issue::Status.new(:opened)
+    role Issue::Role.new(:issue)
   end
 
   def build_model

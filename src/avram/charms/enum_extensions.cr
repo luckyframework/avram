@@ -1,9 +1,9 @@
 macro avram_enum(enum_name, &block)
-  enum {{ enum_name }}
+  enum Avram{{ enum_name }}
     {{ block.body }}
   end
 
-  class Avram{{ enum_name }}
+  class {{ enum_name }}
     def self.adapter
       Lucky
     end
@@ -11,55 +11,45 @@ macro avram_enum(enum_name, &block)
     # You may need to prefix with {{ @type }}
     #
     #   {{ @type }}::{{enum_name}}
-    def initialize(@enum : {{ enum_name }})
+    def initialize(@enum : Avram{{ enum_name }})
     end
 
     def initialize(enum_value : Int32)
-      @enum = {{ enum_name }}.from_value(enum_value)
+      @enum = Avram{{ enum_name }}.from_value(enum_value)
     end
 
     def initialize(enum_value : String)
-      @enum = {{ enum_name }}.from_value(enum_value.to_i)
+      @enum = Avram{{ enum_name }}.from_value(enum_value.to_i)
     end
 
-    def to_s
-      @enum.to_s
-    end
-
-    def value
-      @enum
-    end
-
-    def blank?
-      @enum.nil?
-    end
+    forward_missing_to @enum
 
     module Lucky
       alias ColumnType = Int32
       include Avram::Type
 
       def from_db!(value : Int32)
-        Avram{{ enum_name }}.new(value)
+        {{ enum_name }}.new(value)
       end
 
       def parse(value : Avram{{ enum_name }})
-        SuccessfulCast(Avram{{ enum_name }}).new(value)
+        SuccessfulCast({{ enum_name }}).new(value)
       end
 
       def parse(value : String)
-        SuccessfulCast(Avram{{ enum_name }}).new(Avram{{ enum_name }}.new(value.to_i))
+        SuccessfulCast({{ enum_name }}).new({{ enum_name }}.new(value.to_i))
       end
 
       def parse(value : Int32)
-        SuccessfulCast(Avram{{ enum_name }}).new(Avram{{ enum_name }}.new(value))
+        SuccessfulCast({{ enum_name }}).new({{ enum_name }}.new(value))
       end
 
       def to_db(value : Int32)
         value.to_s
       end
 
-      def to_db(value : Avram{{ enum_name }})
-        value.value.value.to_s
+      def to_db(value : {{ enum_name }})
+        value.value.to_s
       end
 
       class Criteria(T, V) < Int32::Lucky::Criteria(T, V)
