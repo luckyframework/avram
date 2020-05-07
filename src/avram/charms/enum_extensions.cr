@@ -8,6 +8,8 @@ macro avram_enum(enum_name, &block)
       Lucky
     end
 
+    getter :enum
+
     # You may need to prefix with {{ @type }}
     #
     #   {{ @type }}::{{enum_name}}
