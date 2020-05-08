@@ -18,4 +18,11 @@ describe "Enum" do
     updated_issue.status.enum.should eq(Issue::AvramStatus::Closed)
     updated_issue.role.enum.should eq(Issue::AvramRole::Issue)
   end
+
+  it "access enum methods" do
+    issue = IssueBox.create
+
+    issue.status.opened?.should eq(true)
+    issue.status.value.should eq(0)
+  end
 end
