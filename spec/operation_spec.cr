@@ -41,6 +41,15 @@ private class ParamKeySaveOperation < Avram::Operation
   param_key :custom_param
 end
 
+private class NeedyOperation < Avram::SubmitOperation
+  needs test_operation : TestOperation
+  attribute secret : String
+
+  def execute
+    "The secret to #{test_operation.class} is #{secret.value}"
+  end
+end
+
 describe Avram::Operation do
   it "has create/update args for non column attributes" do
     UserWithVirtual.create(password: "p@ssword") do |operation, _user|
@@ -107,6 +116,16 @@ describe Avram::Operation do
         :name => ["is required"],
         :age  => ["is not old enough"],
       })
+    end
+  end
+
+  describe "using needs" do
+    it "allows needs to be passed in" do
+      test_op = TestOperation.new
+      params = Avram::Params.new({"secret" => "shhh"})
+      NeedyOperation.run(params, test_operation: test_op) do |op, result|
+        result.should eq "The secret to TestOperation is shhh"
+      end
     end
   end
 end
