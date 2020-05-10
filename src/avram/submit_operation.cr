@@ -6,9 +6,9 @@ abstract class Avram::SubmitOperation < Avram::Operation
 
   def self.run(params : Avram::Paramable, **needs)
     inst = self.new(params, **needs)
-    result = inst.execute
+    result = inst.submit
     yield(inst, result)
   end
 
-  abstract def execute
+  abstract def submit
 end

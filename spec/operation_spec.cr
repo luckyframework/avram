@@ -45,7 +45,7 @@ private class NeedyOperation < Avram::SubmitOperation
   needs test_operation : TestOperation
   attribute secret : String
 
-  def execute
+  def submit
     "The secret to #{test_operation.class} is #{secret.value}"
   end
 end
