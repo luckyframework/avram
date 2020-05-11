@@ -13,10 +13,6 @@ module Avram::NeedySubmitOperationInitializer
     property {{ type_declaration.var }}
   end
 
-  macro needs(type_declaration, on)
-    {% on.raise "The 'on' option is no longer supported. Please use needs without 'on' instead." %}
-  end
-
   macro inherit_needs
     \{% if !@type.constant(:OPERATION_NEEDS) %}
       OPERATION_NEEDS = [] of Nil
@@ -40,10 +36,8 @@ module Avram::NeedySubmitOperationInitializer
   macro setup_initializer
     # Build up a list of method arguments
     #
-    # These method arguments can be used in macros fro generating create/update/new
-    #
     # This way everything has a name and type and we don't have to rely on
-    # **named_args. **named_args** are easy but you get horrible type errors.
+    # **named_args**. **named_args** are easy but you get horrible type errors.
     #
     # attribute_method_args would look something like:
     #
