@@ -6,6 +6,7 @@ class Avram::Migrator::AlterTableStatement
   include Avram::Migrator::MissingOnDeleteWithBelongsToError
 
   getter rows = [] of String
+  getter renamed_rows = [] of String
   getter dropped_rows = [] of String
   getter fill_existing_with_statements = [] of String
   getter change_type_statements = [] of String
@@ -60,13 +61,13 @@ class Avram::Migrator::AlterTableStatement
   end
 
   def alter_statements : Array(String)
-    if (rows + dropped_rows).empty?
+    if (rows + renamed_rows + dropped_rows).empty?
       [] of String
     else
       statement = String.build do |statement|
         statement << "ALTER TABLE #{@table_name}"
         statement << "\n"
-        statement << (rows + dropped_rows).join(",\n")
+        statement << (rows + renamed_rows + dropped_rows).join(",\n")
         statement << ';'
       end
       [statement]
@@ -164,6 +165,19 @@ class Avram::Migrator::AlterTableStatement
       "UPDATE #{@table_name} SET #{column} = #{value.to_s};",
       "ALTER TABLE #{@table_name} ALTER COLUMN #{column} SET NOT NULL;",
     ]
+  end
+
+  def rename(name : Symbol, new_name : Symbol)
+    renamed_rows << "  RENAME COLUMN #{name} TO #{new_name}"
+  end
+
+  macro rename_belongs_to(from_association_name, to_association_name)
+    {% for association_name in {from_association_name, to_association_name} %}
+      {% unless association_name.is_a?(SymbolLiteral) %}
+        {% raise "rename_belongs_to expected a symbol like ':user', instead got: '#{association_name}'" %}
+      {% end %}
+    {% end %}
+    rename {{from_association_name}}_id, {{to_association_name}}_id
   end
 
   def remove(name : Symbol)
