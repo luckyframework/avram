@@ -22,7 +22,12 @@ describe Avram::Migrator::AlterTableStatement do
       remove_belongs_to :employee
     end
 
-    built.statements.first.should eq <<-SQL
+    built.statements.size.should eq 11
+
+    built.statements[0].should eq "ALTER TABLE users RENAME COLUMN old_name TO new_name;"
+    built.statements[1].should eq "ALTER TABLE users RENAME COLUMN owner_id TO boss_id;"
+
+    built.statements[2].should eq <<-SQL
     ALTER TABLE users
       ADD name text,
       ADD email text,
@@ -37,19 +42,16 @@ describe Avram::Migrator::AlterTableStatement do
       ADD future_time timestamptz NOT NULL DEFAULT '#{Time.local.to_utc}',
       ADD new_id uuid NOT NULL DEFAULT '46d9b2f0-0718-4d4c-a5a1-5af81d5b11e0',
       ADD numbers int[] NOT NULL,
-      RENAME COLUMN old_name TO new_name,
-      RENAME COLUMN owner_id TO boss_id,
       DROP old_column,
       DROP employee_id;
     SQL
 
-    built.statements.size.should eq 9
-    built.statements[1].should eq "CREATE UNIQUE INDEX users_age_index ON users USING btree (age);"
-    built.statements[2].should eq "CREATE INDEX users_num_index ON users USING btree (num);"
-    built.statements[3].should eq "UPDATE users SET email = 'noreply@lucky.com';"
-    built.statements[4].should eq "ALTER TABLE users ALTER COLUMN email SET NOT NULL;"
-    built.statements[5].should eq "UPDATE users SET updated_at = NOW();"
-    built.statements[6].should eq "ALTER TABLE users ALTER COLUMN updated_at SET NOT NULL;"
+    built.statements[3].should eq "CREATE UNIQUE INDEX users_age_index ON users USING btree (age);"
+    built.statements[4].should eq "CREATE INDEX users_num_index ON users USING btree (num);"
+    built.statements[5].should eq "UPDATE users SET email = 'noreply@lucky.com';"
+    built.statements[6].should eq "ALTER TABLE users ALTER COLUMN email SET NOT NULL;"
+    built.statements[7].should eq "UPDATE users SET updated_at = NOW();"
+    built.statements[8].should eq "ALTER TABLE users ALTER COLUMN updated_at SET NOT NULL;"
   end
 
   it "does not build statements if nothing is altered" do
