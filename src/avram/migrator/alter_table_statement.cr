@@ -188,8 +188,11 @@ class Avram::Migrator::AlterTableStatement
     rename {{old_association_name}}_id, {{new_association_name}}_id
   end
 
-  def remove(name : Symbol)
-    dropped_rows << "  DROP #{name.to_s}"
+  macro remove(name)
+    {% unless name.is_a?(SymbolLiteral) %}
+      {% raise symbol_expected_message % {"remove", name} %}
+    {% end %}
+    dropped_rows << "  DROP #{{{name}}}"
   end
 
   macro remove_belongs_to(association_name)
