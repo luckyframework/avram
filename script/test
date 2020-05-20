@@ -23,6 +23,8 @@ then
     $COMPOSE lucky db.migrate
     $COMPOSE lucky db.migrations.status
     $COMPOSE lucky db.reset
+    $COMPOSE lucky db.drop
+    $COMPOSE lucky db.setup
 fi
 
 printf "\nRunning specs\n\n"
