@@ -14,7 +14,7 @@ $COMPOSE lucky db.migrate
 
 if [ $# -eq 0 ]
 then
-    # Integratioin test various tasks
+    # Integration test various tasks
     printf "\nRolling back to 20180802180356\n"
     $COMPOSE lucky db.rollback_to 20180802180356
     printf "\nRolling back remainder\n"
