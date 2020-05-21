@@ -45,6 +45,9 @@ abstract class Avram::SaveOperation(T) < Avram::Operation
     T.name.underscore
   end
 
+  def run
+  end
+
   # :nodoc:
   def log_failed_save
     Avram::SaveFailedLog.dexter.warn do

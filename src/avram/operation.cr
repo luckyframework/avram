@@ -3,13 +3,7 @@ require "./define_attribute"
 require "./save_operation_errors"
 require "./param_key_override"
 
-class Avram::VirtualForm
-  macro inherited
-    {% raise "Avram::VirtualForm has been renamed to Avram::Operation. Please inherit from Avram::Operation." %}
-  end
-end
-
-class Avram::Operation
+abstract class Avram::Operation
   include Avram::DefineAttribute
   include Avram::Validations
   include Avram::SaveOperationErrors
@@ -18,11 +12,21 @@ class Avram::Operation
   @params : Avram::Paramable
   getter params
 
-  def initialize(@params)
+  def self.run
+    params = Avram::Params.new
+    run(params) do |operation, value|
+      yield operation, value
+    end
   end
 
-  def initialize
-    @params = Avram::Params.new
+  def self.run(params : Avram::Paramable)
+    operation = self.new(params)
+    yield operation, operation.run
+  end
+
+  abstract def run
+
+  def initialize(@params : Avram::Paramable)
   end
 
   def valid?

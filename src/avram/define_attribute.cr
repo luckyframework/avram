@@ -34,17 +34,15 @@ module Avram::DefineAttribute
 
   ensure_base_attributes_method_is_present
 
-  macro allow_virtual(*args, **named_args)
-    {% raise "'allow_virtual' has been renamed to 'attribute'" %}
-  end
-
-  macro virtual(*args, **named_args)
-    {% raise "'virtual' has been renamed to 'attribute'" %}
-  end
-
   macro attribute(type_declaration)
     {% if type_declaration.type.is_a?(Union) %}
-      {% raise "attribute must use just one type" %}
+      {% 
+      error = "attribute '#{type_declaration.var}' must use just one type. Got #{type_declaration.type}."
+      if type_declaration.type.resolve.nilable?
+        error = error + "\nNo need to make the type nilable, all attributes have a nil value by default."
+      end
+      raise error
+      %}
     {% end %}
 
     {% ATTRIBUTES << type_declaration %}
