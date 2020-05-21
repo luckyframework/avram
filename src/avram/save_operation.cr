@@ -10,7 +10,6 @@ require "./inherit_column_attributes"
 
 abstract class Avram::SaveOperation(T) < Avram::Operation
   include Avram::NeedyInitializerAndSaveMethods
-  include Avram::Callbacks
   include Avram::DatabaseValidations
   include Avram::NestedSaveOperation
   include Avram::MarkAsFailed

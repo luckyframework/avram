@@ -1,4 +1,11 @@
 module Avram::Callbacks
+  macro included
+    def before_run
+    end
+  
+    def after_run(object)
+    end
+  end
   # Run the given method before saving or creating
   #
   # This runs before saving and before the database transaction is started.
@@ -24,6 +31,18 @@ module Avram::Callbacks
     end
   end
 
+  macro before_run(method_name)
+    def before_run
+      {% if @type.methods.map(&.name).includes?(:before_run.id) %}
+        previous_def
+      {% else %}
+        super
+      {% end %}
+
+      {{ method_name.id }}
+    end
+  end
+
   # Run the given block before saving or creating
   #
   # This runs before saving and before the database transaction is started.
@@ -38,6 +57,18 @@ module Avram::Callbacks
   macro before_save
     def before_save
       {% if @type.methods.map(&.name).includes?(:before_save.id) %}
+        previous_def
+      {% else %}
+        super
+      {% end %}
+
+      {{ yield }}
+    end
+  end
+
+  macro before_run
+    def before_run
+      {% if @type.methods.map(&.name).includes?(:before_run.id) %}
         previous_def
       {% else %}
         super
@@ -80,6 +111,33 @@ module Avram::Callbacks
     end
   end
 
+  #TODO: write after_save with a block
+
+  macro after_run(method_name)
+    def after_run(object)
+      {% if @type.methods.map(&.name).includes?(:after_run.id) %}
+        previous_def
+      {% else %}
+        super
+      {% end %}
+
+      {{ method_name.id }}(object)
+    end
+  end
+
+  macro after_run(&block)
+    def after_run(object)
+      {% if @type.methods.map(&.name).includes?(:after_run.id) %}
+        previous_def
+      {% else %}
+        super
+      {% end %}
+
+      {{ block.args.first }} = object
+      {{ block.body }}
+    end
+  end
+
   # Run the given method after save and after successful transaction commit
   #
   # The newly saved record will be passed to the method.
@@ -106,43 +164,14 @@ module Avram::Callbacks
     end
   end
 
-  {% for callback_without_block in [:after_save, :after_commit] %}
-    # :nodoc:
-    macro {{ callback_without_block.id }}
-      \{% raise <<-ERROR
-        '{{callback_without_block.id}}' does not accept a block. Instead give it a method name to run.
+  #TODO: write after_commit with a block
 
-        Example:
-
-            {{callback_without_block.id}} run_something
-
-            def run_something(newly_saved_record)
-              # Do something
-            end
-        ERROR
-      %}
-      # Will never be called but must be there so that the macro accepts a block:
-      \{{ yield }}
-    end
-  {% end %}
-
-  {% for removed_callback in [:create, :update] %}
-    # :nodoc:
-    macro after_{{ removed_callback.id }}(method_name)
-      \{% raise "'after_{{removed_callback.id}}' has been removed" %}
-    end
-
-    # :nodoc:
-    macro before_{{ removed_callback.id }}(method_name)
-      \{% raise "'before_{{removed_callback.id}}' has been removed" %}
-    end
-  {% end %}
 
   # :nodoc:
   macro before(callback_method)
     {% raise <<-ERROR
 
-      'before' is not a valid SaveOperation callback.
+      'before' is not a valid Operation callback.
 
       Try this...
 

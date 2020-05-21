@@ -17,7 +17,7 @@ private class OperationWithAttributes < Avram::Operation
 end
 
 
-describe "attribute in operations" do
+describe "Avram::Operation attributes" do
   it "is a PermittedAttribute" do
     OperationWithAttributes.run do |operation, value|
       operation.title.should be_a(Avram::PermittedAttribute(String?))
