@@ -16,32 +16,32 @@ class Avram::SaveOperationTemplate
     end
 
     class ::{{ type }}::SaveOperation < Avram::SaveOperation({{ type }})
-      {% if primary_key_type.id == UUID.id %}
-        before_save set_uuid
+    #   {% if primary_key_type.id == UUID.id %}
+    #     before_save set_uuid
 
-        def set_uuid
-          id.value ||= UUID.random()
-        end
-      {% end %}
+    #     def set_uuid
+    #       id.value ||= UUID.random()
+    #     end
+    #   {% end %}
 
-      def database
-        {{ type }}.database
-      end
+    #   def database
+    #     {{ type }}.database
+    #   end
 
-      macro inherited
-        FOREIGN_KEY = "{{ type.stringify.underscore.id }}_id"
-      end
+    #   macro inherited
+    #     FOREIGN_KEY = "{{ type.stringify.underscore.id }}_id"
+    #   end
 
-      def table_name
-        :{{ table_name }}
-      end
+    #   def table_name
+    #     :{{ table_name }}
+    #   end
 
-      def primary_key_name
-        :{{ primary_key_name.id }}
-      end
+    #   def primary_key_name
+    #     :{{ primary_key_name.id }}
+    #   end
 
-      add_column_attributes({{ primary_key_type }}, {{ columns }})
-      add_cast_value_methods({{ columns }})
+    #   add_column_attributes({{ primary_key_type }}, {{ columns }})
+    #   add_cast_value_methods({{ columns }})
     end
   end
 end

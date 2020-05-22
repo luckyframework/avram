@@ -19,4 +19,15 @@ describe "Avram::Operation needs", focus: true do
       operation.id.should eq 3
     end
   end
+
+  it "sets up named args on run when params are passed in" do
+    params = Avram::Params.new({"title" => "test", "published" => "true"})
+    OperationWithNeeds.run(params, tags: ["one", "two"], id: 3) do |operation, value|
+      value.should eq "one, two"
+      operation.tags.should eq ["one", "two"]
+      operation.id.should eq 3
+      operation.title.value.should eq "test"
+      operation.published.value.should eq true
+    end
+  end
 end

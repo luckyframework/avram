@@ -1,6 +1,6 @@
 require "./validations"
 require "./define_attribute"
-require "./save_operation_errors"
+require "./operation_errors"
 require "./param_key_override"
 
 abstract class Avram::Operation
@@ -8,7 +8,7 @@ abstract class Avram::Operation
   include Avram::Callbacks
   include Avram::NeedyInitializer
   include Avram::Validations
-  include Avram::SaveOperationErrors
+  include Avram::OperationErrors
   include Avram::ParamKeyOverride
 
   @params : Avram::Paramable

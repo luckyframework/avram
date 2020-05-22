@@ -1,8 +1,8 @@
 require "file_utils"
 require "spec"
 require "../src/avram"
-require "./support/base_model"
-require "./support/**"
+#require "./support/base_model"
+#require "./support/**"
 require "../config/*"
 
 backend = Log::IOBackend.new(STDERR)
