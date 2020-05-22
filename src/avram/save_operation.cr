@@ -9,7 +9,7 @@ require "./param_key_override"
 require "./inherit_column_attributes"
 
 abstract class Avram::SaveOperation(T) < Avram::Operation
-  include Avram::NeedyInitializerAndSaveMethods
+  include Avram::SaveMethods
   include Avram::DatabaseValidations
   include Avram::NestedSaveOperation
   include Avram::MarkAsFailed
@@ -21,19 +21,16 @@ abstract class Avram::SaveOperation(T) < Avram::Operation
     Unperformed
   end
 
-  @save_status = SaveStatus::Unperformed
-
   macro inherited
     @valid : Bool = true
     @@permitted_param_keys = [] of String
     @@schema_class = T
   end
 
-  property save_status
+  property save_status : SaveStatus = SaveStatus::Unperformed
 
   @record : T?
-  @params : Avram::Paramable
-  getter :record, :params
+  getter :record
 
   abstract def table_name
   abstract def attributes
@@ -185,11 +182,6 @@ abstract class Avram::SaveOperation(T) < Avram::Operation
   # Return true if the operation has run and the record failed to save
   def save_failed?
     save_status == SaveStatus::SaveFailed
-  end
-
-  # :nodoc:
-  macro fillable(*args)
-    {% raise "'fillable' has been renamed to 'permit_columns'" %}
   end
 
   macro permit_columns(*attribute_names)

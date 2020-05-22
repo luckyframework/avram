@@ -6,6 +6,7 @@ require "./param_key_override"
 abstract class Avram::Operation
   include Avram::DefineAttribute
   include Avram::Callbacks
+  include Avram::NeedyInitializer
   include Avram::Validations
   include Avram::SaveOperationErrors
   include Avram::ParamKeyOverride
@@ -13,15 +14,15 @@ abstract class Avram::Operation
   @params : Avram::Paramable
   getter params
 
-  def self.run
+  def self.run(*args, **named_args)
     params = Avram::Params.new
-    run(params) do |operation, value|
+    run(params, *args, **named_args) do |operation, value|
       yield operation, value
     end
   end
 
-  def self.run(params : Avram::Paramable)
-    operation = self.new(params)
+  def self.run(params : Avram::Paramable, *args, **named_args)
+    operation = self.new(params, *args, **named_args)
     operation.before_run
     value = operation.run
     operation.after_run(value)
