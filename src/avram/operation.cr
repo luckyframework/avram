@@ -25,7 +25,11 @@ abstract class Avram::Operation
     operation = self.new(params, *args, **named_args)
     operation.before_run
     value = operation.run
-    operation.after_run(value)
+    if operation.valid?
+      operation.after_run(value)
+    else
+      value = nil
+    end
     yield operation, value
   end
 

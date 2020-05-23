@@ -121,11 +121,11 @@ module Avram::Validations
     end
   end
 
-  # Validate the size of the attribute is within a `min` and/or `max`
+  # Validate the length of a `String` is within a `min` and/or `max`
   #
   # ```
-  # validate_size_of age, min: 18, max: 100
-  # validate_size_of account_balance, min: 500
+  # validate_size_of username, min: 3, max: 8
+  # validate_size_of student_essay, min: 5000
   # ```
   def validate_size_of(
     attribute : Avram::Attribute,
@@ -148,6 +148,36 @@ module Avram::Validations
 
       if !max.nil? && size > max
         attribute.add_error "is too long"
+      end
+    end
+  end
+
+  def validate_size_of(
+    attribute : Avram::Attribute(Int32?),
+    min = nil,
+    max = nil,
+    allow_nil : Bool = false
+  )
+    if !min.nil? && !max.nil? && min > max
+      raise ImpossibleValidation.new(
+        attribute: attribute.name,
+        message: "size greater than #{min} but less than #{max}")
+    end
+
+    value = attribute.value
+
+    unless allow_nil && value.nil?
+      if value.nil?
+        attribute.add_error "can't be nil"
+      else
+        size = value.to_i
+        if !min.nil? && size < min
+          attribute.add_error "is too low"
+        end
+  
+        if !max.nil? && size > max
+          attribute.add_error "is too high"
+        end
       end
     end
   end
