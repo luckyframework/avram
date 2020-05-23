@@ -14,6 +14,14 @@ abstract class Avram::Operation
   @params : Avram::Paramable
   getter params
 
+  # Yields the instance of the operation, and the return value from
+  # the `run` instance method.
+  #
+  # ```
+  # MyOperation.run do |operation, value|
+  #  # operation is complete
+  # end
+  # ```
   def self.run(*args, **named_args)
     params = Avram::Params.new
     run(params, *args, **named_args) do |operation, value|
@@ -21,6 +29,14 @@ abstract class Avram::Operation
     end
   end
 
+  # Yields the instance of the operation, and the return value from
+  # the `run` instance method.
+  #
+  # ```
+  # MyOperation.run(params) do |operation, value|
+  #  # operation is complete
+  # end
+  # ```
   def self.run(params : Avram::Paramable, *args, **named_args)
     operation = self.new(params, *args, **named_args)
     operation.before_run

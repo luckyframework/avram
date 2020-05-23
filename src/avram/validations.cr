@@ -152,6 +152,12 @@ module Avram::Validations
     end
   end
 
+  # Validate the size of the attribute is within a `min` and/or `max`
+  #
+  # ```
+  # validate_size_of age, min: 21, max: 35
+  # validate_size_of bank_account, min: 50
+  # ```
   def validate_size_of(
     attribute : Avram::Attribute(Int32?),
     min = nil,
