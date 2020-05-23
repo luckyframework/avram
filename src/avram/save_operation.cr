@@ -1,58 +1,53 @@
-# require "./operation"
-# require "./database_validations"
-# require "./callbacks"
+require "./database_validations"
 # require "./nested_save_operation"
-# require "./needy_initializer_and_save_methods"
-# require "./define_attribute"
 # require "./mark_as_failed"
-# require "./param_key_override"
-# require "./inherit_column_attributes"
+require "./inherit_column_attributes"
 
 abstract class Avram::SaveOperation(T) < Avram::Operation
 #   include Avram::SaveMethods
-#   include Avram::DatabaseValidations
+  include Avram::DatabaseValidations
 #   include Avram::NestedSaveOperation
 #   include Avram::MarkAsFailed
-#   include Avram::InheritColumnAttributes
+  include Avram::InheritColumnAttributes
 
-#   enum SaveStatus
-#     Saved
-#     SaveFailed
-#     Unperformed
-#   end
+  enum SaveStatus
+    Saved
+    SaveFailed
+    Unperformed
+  end
 
-#   macro inherited
-#     @valid : Bool = true
-#     @@permitted_param_keys = [] of String
-#     @@schema_class = T
-#   end
+  macro inherited
+    @valid : Bool = true
+    @@permitted_param_keys = [] of String
+    @@schema_class = T
+  end
 
-#   property save_status : SaveStatus = SaveStatus::Unperformed
+  property save_status : SaveStatus = SaveStatus::Unperformed
 
-#   @record : T?
-#   getter :record
+  @record : T?
+  getter :record
 
-#   abstract def table_name
-#   abstract def attributes
-#   abstract def primary_key_name
-#   abstract def database
+  abstract def table_name
+  abstract def attributes
+  abstract def primary_key_name
+  abstract def database
 
-#   def self.param_key
-#     T.name.underscore
-#   end
+  def self.param_key
+    T.name.underscore
+  end
 
   def run
   end
 
-#   # :nodoc:
-#   def log_failed_save
-#     Avram::SaveFailedLog.dexter.warn do
-#       {
-#         failed_to_save:    self.class.name.to_s,
-#         validation_errors: error_messages_as_string,
-#       }
-#     end
-#   end
+  # :nodoc:
+  def log_failed_save
+    Avram::SaveFailedLog.dexter.warn do
+      {
+        failed_to_save:    self.class.name.to_s,
+        validation_errors: error_messages_as_string,
+      }
+    end
+  end
 
 #   private def error_messages_as_string
 #     errors.map do |attribute_name, messages|

@@ -56,16 +56,6 @@ module Avram::NeedyInitializer
     #   email: email
     {% attribute_params = "" %}
 
-    {% if @type.constant :COLUMN_ATTRIBUTES %}
-      {% for attribute in COLUMN_ATTRIBUTES.uniq %}
-        {% attribute_method_args = attribute_method_args + "#{attribute[:name]} : #{attribute[:type]} | Nothing" %}
-        {% if attribute[:nilable] %}{% attribute_method_args = attribute_method_args + " | Nil" %}{% end %}
-        {% attribute_method_args = attribute_method_args + " = Nothing.new,\n" %}
-
-        {% attribute_params = attribute_params + "#{attribute[:name]}: #{attribute[:name]},\n" %}
-      {% end %}
-    {% end %}
-
     {% for attribute in ATTRIBUTES %}
       {% attribute_method_args = attribute_method_args + "#{attribute.var} : #{attribute.type} | Nothing = Nothing.new,\n" %}
       {% attribute_params = attribute_params + "#{attribute.var}: #{attribute.var},\n" %}
@@ -92,14 +82,6 @@ module Avram::NeedyInitializer
     end
 
     def set_attributes({{ attribute_method_args.id }})
-      {% if @type.constant :COLUMN_ATTRIBUTES %}
-        {% for attribute in COLUMN_ATTRIBUTES.uniq %}
-          unless {{ attribute[:name] }}.is_a? Nothing
-            self.{{ attribute[:name] }}.value = {{ attribute[:name] }}
-          end
-        {% end %}
-      {% end %}
-
       {% for attribute in ATTRIBUTES %}
         unless {{ attribute.var }}.is_a? Nothing
           self.{{ attribute.var }}.value = {{ attribute.var }}
