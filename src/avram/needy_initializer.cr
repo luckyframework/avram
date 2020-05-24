@@ -81,6 +81,14 @@ module Avram::NeedyInitializer
       set_attributes({{ attribute_params.id }})
     end
 
+    def initialize(
+        {{ needs_method_args.id }}
+        {{ attribute_method_args.id }}
+      )
+      @params = Avram::Params.new
+      set_attributes({{ attribute_params.id }})
+    end
+
     def set_attributes({{ attribute_method_args.id }})
       {% for attribute in ATTRIBUTES %}
         unless {{ attribute.var }}.is_a? Nothing

@@ -1,22 +1,22 @@
 require "../spec_helper"
 
-# private class SaveUser < User::SaveOperation
-#   attribute should_not_override_permitted_columns : String
-#   permit_columns :name, :nickname, :joined_at, :age
-#   attribute set_from_init : String
-#   before_save prepare
+private class SaveUser < User::SaveOperation
+  attribute should_not_override_permitted_columns : String
+  permit_columns :name, :nickname, :joined_at, :age
+  attribute set_from_init : String
+  before_save prepare
 
-#   def prepare
-#     validate_required name, joined_at, age
-#   end
-# end
+  def prepare
+    validate_required name, joined_at, age
+  end
+end
 
-# private class SaveLimitedUser < User::SaveOperation
-#   permit_columns :name
-# end
+private class SaveLimitedUser < User::SaveOperation
+  permit_columns :name
+end
 
-# private class SaveTask < Task::SaveOperation
-# end
+private class SaveTask < Task::SaveOperation
+end
 
 # private class ValidSaveOperationWithoutParams < Post::SaveOperation
 #   before_save prepare
@@ -30,33 +30,33 @@ require "../spec_helper"
 #   permit_columns :name
 # end
 
-# private class ValueColumnModel < BaseModel
-#   table :value_column_model do
-#     column value : String
-#   end
-# end
+private class ValueColumnModel < BaseModel
+  table :value_column_model do
+    column value : String
+  end
+end
 
 # private class ValueColumnModelSaveOperation < ValueColumnModel::SaveOperation
 #   permit_columns value
 # end
 
-# private class ParamKeySaveOperation < ValueColumnModel::SaveOperation
-#   param_key :custom_param
-# end
+private class ParamKeySaveOperation < ValueColumnModel::SaveOperation
+  param_key :custom_param
+end
 
 describe Avram::SaveOperation do
-#   it "allows overriding the param_key" do
-#     ParamKeySaveOperation.param_key.should eq "custom_param"
-#   end
+  it "allows overriding the param_key" do
+    ParamKeySaveOperation.param_key.should eq "custom_param"
+  end
 
-#   it "generates the correct param_key based on the model class" do
-#     SaveLimitedUser.param_key.should eq "user"
-#   end
+  it "generates the correct param_key based on the model class" do
+    SaveLimitedUser.param_key.should eq "user"
+  end
 
-#   it "add required_attributes method" do
-#     operation = SaveTask.new
-#     operation.required_attributes.should eq({operation.title})
-#   end
+  # it "add required_attributes method" do
+  #   operation = SaveTask.new
+  #   operation.required_attributes.should eq({operation.title})
+  # end
 
 #   it "can save empty arrays" do
 #     bucket = BucketBox.create
@@ -66,53 +66,53 @@ describe Avram::SaveOperation do
 #     bucket.names.should eq([] of String)
 #   end
 
-#   it "set params if passed in" do
-#     now = Time.utc.at_beginning_of_minute
-#     user = SaveUser.create!(name: "Dan", age: 34, joined_at: now)
-#     user.name.should eq "Dan"
-#     user.age.should eq 34
-#     user.joined_at.should eq now
+  it "set params if passed in" do
+    now = Time.utc.at_beginning_of_minute
+    # user = SaveUser.create!(name: "Dan", age: 34, joined_at: now)
+    # user.name.should eq "Dan"
+    # user.age.should eq 34
+    # user.joined_at.should eq now
 
-#     SaveUser.create(name: "Dan", age: 34, joined_at: now) do |operation, user|
-#       user = user.not_nil!
-#       user.name.should eq "Dan"
-#       user.age.should eq 34
-#       user.joined_at.should eq now
-#     end
+    SaveUser.create(name: "Dan", age: 34, joined_at: now) do |operation, user|
+      user = user.not_nil!
+      user.name.should eq "Dan"
+      user.age.should eq 34
+      user.joined_at.should eq now
+    end
 
-#     user = UserBox.new.name("New").age(20).joined_at(Time.utc).create
-#     joined_at = 1.day.ago.at_beginning_of_minute.to_utc
-#     SaveUser.update(user, name: "New", age: 20, joined_at: joined_at) do |operation, user|
-#       user.name.should eq "New"
-#       user.age.should eq 20
-#       user.joined_at.should eq joined_at
-#     end
+    # user = UserBox.new.name("New").age(20).joined_at(Time.utc).create
+    # joined_at = 1.day.ago.at_beginning_of_minute.to_utc
+    # SaveUser.update(user, name: "New", age: 20, joined_at: joined_at) do |operation, user|
+    #   user.name.should eq "New"
+    #   user.age.should eq 20
+    #   user.joined_at.should eq joined_at
+    # end
 
-#     user = UserBox.new.name("New").age(20).joined_at(Time.utc).create
-#     user = SaveUser.update!(user, name: "New", age: 20, joined_at: joined_at)
-#     user.name.should eq "New"
-#     user.age.should eq 20
-#     user.joined_at.should eq joined_at
-#   end
+    # user = UserBox.new.name("New").age(20).joined_at(Time.utc).create
+    # user = SaveUser.update!(user, name: "New", age: 20, joined_at: joined_at)
+    # user.name.should eq "New"
+    # user.age.should eq 20
+    # user.joined_at.should eq joined_at
+  end
 
-#   it "automatically runs validations for required attributes" do
-#     operation = SaveTask.new
+  # it "automatically runs validations for required attributes" do
+  #   operation = SaveTask.new
 
-#     operation.valid?
+  #   operation.valid?
 
-#     operation.valid?.should be_false
-#     operation.title.errors.size.should eq 1
-#     operation.body.errors.size.should eq 0
-#   end
+  #   operation.valid?.should be_false
+  #   operation.title.errors.size.should eq 1
+  #   operation.body.errors.size.should eq 0
+  # end
 
-#   it "treats nil changes as nil and not an empty string" do
-#     user = UserBox.build
-#     operation = SaveUser.new(user)
-#     operation.name.value = nil
+  # it "treats nil changes as nil and not an empty string" do
+  #   user = UserBox.build
+  #   operation = SaveUser.new(user)
+  #   operation.name.value = nil
 
-#     operation.changes.has_key?(:name).should be_true
-#     operation.changes[:name].should be_nil
-#   end
+  #   operation.changes.has_key?(:name).should be_true
+  #   operation.changes[:name].should be_nil
+  # end
 
 #   describe "#errors" do
 #     it "includes errors for all operation attributes" do

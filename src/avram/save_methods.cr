@@ -64,11 +64,6 @@ module Avram::SaveMethods
       {% end %}
     {% end %}
 
-    {% for attribute in ATTRIBUTES %}
-      {% attribute_method_args = attribute_method_args + "#{attribute.var} : #{attribute.type} | Nothing = Nothing.new,\n" %}
-      {% attribute_params = attribute_params + "#{attribute.var}: #{attribute.var},\n" %}
-    {% end %}
-
     generate_initializer({{ attribute_method_args }}, {{ attribute_params }})
     generate_save_methods({{ attribute_method_args }}, {{ attribute_params }})
   end
@@ -81,24 +76,21 @@ module Avram::SaveMethods
       {% end %}
       {{ attribute_method_args.id }}
     )
-      operation = new(
+
+      run(
         {% if with_params %}params,{% end %}
         {% for type_declaration in OPERATION_NEEDS %}
           {{ type_declaration.var }},
         {% end %}
         {{ attribute_params.id }}
-      )
-
-      {% if with_bang %}
-        operation.save!
-      {% else %}
-        if operation.save
-          yield operation, operation.record
+      ) do |operation, record|
+        if record
+          yield operation, record
         else
           operation.log_failed_save
           yield operation, nil
         end
-      {% end %}
+      end
     end
   end
 

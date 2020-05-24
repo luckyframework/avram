@@ -29,6 +29,11 @@ abstract class Avram::Operation
     end
   end
 
+  def self.run!(*args, **named_args)
+    params = Avram::Params.new
+    run!(params, *args, **named_args)
+  end
+
   # Yields the instance of the operation, and the return value from
   # the `run` instance method.
   #
@@ -49,9 +54,23 @@ abstract class Avram::Operation
     yield operation, value
   end
 
+  def self.run!(params : Avram::Paramable, *args, **named_args)
+    operation = self.new(params, *args, **named_args)
+    operation.before_run
+    value = operation.run
+    if operation.valid?
+      operation.after_run(value)
+    else
+      value = nil
+    end
+    raise Avram::FailedOperation.new("The operation failed to return a value") unless value
+    operation
+  end
+
   abstract def run
 
-  def initialize(@params : Avram::Paramable)
+  def initialize
+    @params = Avram::Params.new
   end
 
   def valid?
