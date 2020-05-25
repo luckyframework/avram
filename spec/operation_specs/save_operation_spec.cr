@@ -1,22 +1,32 @@
 require "../spec_helper"
 
-private class SaveUser < User::SaveOperation
-  attribute should_not_override_permitted_columns : String
-  permit_columns :name, :nickname, :joined_at, :age
-  attribute set_from_init : String
-  before_save prepare
-
-  def prepare
-    validate_required name, joined_at, age
+private class ValueColumnModel < BaseModel
+  table :value_column_model do
+    column value : String
   end
+end
+
+private class ParamKeySaveOperation < ValueColumnModel::SaveOperation
+  param_key :custom_param
 end
 
 private class SaveLimitedUser < User::SaveOperation
   permit_columns :name
 end
 
-private class SaveTask < Task::SaveOperation
-end
+# private class SaveUser < User::SaveOperation
+#   attribute should_not_override_permitted_columns : String
+#   permit_columns :name, :nickname, :joined_at, :age
+#   attribute set_from_init : String
+#   before_save prepare
+
+#   def prepare
+#     validate_required name, joined_at, age
+#   end
+# end
+
+# private class SaveTask < Task::SaveOperation
+# end
 
 # private class ValidSaveOperationWithoutParams < Post::SaveOperation
 #   before_save prepare
@@ -30,19 +40,11 @@ end
 #   permit_columns :name
 # end
 
-private class ValueColumnModel < BaseModel
-  table :value_column_model do
-    column value : String
-  end
-end
+
 
 # private class ValueColumnModelSaveOperation < ValueColumnModel::SaveOperation
 #   permit_columns value
 # end
-
-private class ParamKeySaveOperation < ValueColumnModel::SaveOperation
-  param_key :custom_param
-end
 
 describe Avram::SaveOperation do
   it "allows overriding the param_key" do
@@ -51,6 +53,26 @@ describe Avram::SaveOperation do
 
   it "generates the correct param_key based on the model class" do
     SaveLimitedUser.param_key.should eq "user"
+  end
+
+  describe "permit_columns" do
+    it "ignores params that are not permitted" do
+      params = Avram::Params.new({"name" => "someone", "nickname" => "nothing"})
+      SaveLimitedUser.run(params) do |operation, value|
+        operation.changes.has_key?(:nickname).should be_false
+        operation.changes[:name]?.should eq "someone"
+      end
+    end
+
+    it "returns a Avram::PermittedAttribute" do
+      params = Avram::Params.new({"name" => "someone", "nickname" => "nothing"})
+      SaveLimitedUser.run(params) do |operation, value|
+        operation.nickname.value.should be_nil
+        operation.nickname.is_a?(Avram::Attribute).should be_true
+        operation.name.value.should eq "someone"
+        operation.name.is_a?(Avram::PermittedAttribute).should be_true
+      end
+    end
   end
 
   # it "add required_attributes method" do
@@ -73,12 +95,12 @@ describe Avram::SaveOperation do
     # user.age.should eq 34
     # user.joined_at.should eq now
 
-    SaveUser.create(name: "Dan", age: 34, joined_at: now) do |operation, user|
-      user = user.not_nil!
-      user.name.should eq "Dan"
-      user.age.should eq 34
-      user.joined_at.should eq now
-    end
+    # SaveUser.create(name: "Dan", age: 34, joined_at: now) do |operation, user|
+    #   user = user.not_nil!
+    #   user.name.should eq "Dan"
+    #   user.age.should eq 34
+    #   user.joined_at.should eq now
+    # end
 
     # user = UserBox.new.name("New").age(20).joined_at(Time.utc).create
     # joined_at = 1.day.ago.at_beginning_of_minute.to_utc
@@ -190,22 +212,6 @@ describe Avram::SaveOperation do
 #       operation.joined_at.value.should be_nil
 #       operation.joined_at.param.should eq "this is not a time"
 #       operation.age.param.should eq "not an int"
-#     end
-#   end
-
-#   describe "permit_columns" do
-#     it "ignores params that are not permitted" do
-#       operation = SaveLimitedUser.new(Avram::Params.new({"name" => "someone", "nickname" => "nothing"}))
-#       operation.changes.has_key?(:nickname).should be_false
-#       operation.changes[:name]?.should eq "someone"
-#     end
-
-#     it "returns a Avram::PermittedAttribute" do
-#       operation = SaveLimitedUser.new(Avram::Params.new({"name" => "someone", "nickname" => "nothing"}))
-#       operation.nickname.value.should be_nil
-#       operation.nickname.is_a?(Avram::Attribute).should be_true
-#       operation.name.value.should eq "someone"
-#       operation.name.is_a?(Avram::PermittedAttribute).should be_true
 #     end
 #   end
 

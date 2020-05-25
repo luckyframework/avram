@@ -1,15 +1,8 @@
 require "./database_validations"
-# require "./nested_save_operation"
-require "./operation_save_status"
 require "./inherit_column_attributes"
-require "./operation_permit_columns"
 
 abstract class Avram::SaveOperation(T) < Avram::Operation
-  include Avram::OperationPermitColumns
-  include Avram::SaveMethods
   include Avram::DatabaseValidations
-#   include Avram::NestedSaveOperation
-  include Avram::OperationSaveStatus
   include Avram::InheritColumnAttributes
 
   macro inherited
@@ -31,49 +24,75 @@ abstract class Avram::SaveOperation(T) < Avram::Operation
   end
 
   def run
-    if valid? && (!persisted? || changes.any?)
-      save
-    elsif valid? && changes.empty?
-      mark_as_saved
-    else
-      mark_as_failed
+
+  end
+
+  def changes : Hash(Symbol, String?)
+    _changes = {} of Symbol => String?
+    column_attributes.each do |attribute|
+      if attribute.changed?
+        _changes[attribute.name] = cast_value(attribute.value)
+      end
     end
+    _changes
+  end
 
-    record
+  # Permit these columns from your model to be assign a value from params.
+  # 
+  # ```
+  # class SaveUser < Avram::SaveOperation
+  #   permit_columns :name, :email, :phone_number
+  # end
+  # ```
+  macro permit_columns(*attribute_names)
+    {% for attribute_name in attribute_names %}
+      {% if attribute_name.is_a?(TypeDeclaration) %}
+        {% raise <<-ERROR
+          Must use a Symbol or a bare word in 'permit_columns'. Instead, got: #{attribute_name}
+
+          Try this...
+
+            ▸ permit_columns #{attribute_name.var}
+
+          ERROR
+        %}
+      {% end %}
+      {% unless attribute_name.is_a?(SymbolLiteral) || attribute_name.is_a?(Call) %}
+        {% raise <<-ERROR
+          Must use a Symbol or a bare word in 'permit_columns'. Instead, got: #{attribute_name}
+
+          Try this...
+
+            ▸ Use a bare word (recommended): 'permit_columns name'
+            ▸ Use a Symbol: 'permit_columns :name'
+
+          ERROR
+        %}
+      {% end %}
+      {% if COLUMN_ATTRIBUTES.any? { |attribute| attribute[:name].id == attribute_name.id } %}
+        def {{ attribute_name.id }}
+          _{{ attribute_name.id }}.permitted
+        end
+
+        @@permitted_param_keys << "{{ attribute_name.id }}"
+      {% else %}
+        {% raise <<-ERROR
+          Can't permit '#{attribute_name}' because the column has not been defined on the model.
+
+          Try this...
+
+            ▸ Make sure you spelled the column correctly.
+            ▸ Add the column to the model if it doesn't exist.
+            ▸ Use 'attribute' if you want an attribute that is not saved to the database.
+
+          ERROR
+        %}
+      {% end %}
+    {% end %}
   end
 
   # :nodoc:
-  def log_failed_save
-    Avram::SaveFailedLog.dexter.warn do
-      {
-        failed_to_save:    self.class.name.to_s,
-        validation_errors: error_messages_as_string,
-      }
-    end
-  end
-
-  private def error_messages_as_string
-    errors.map do |attribute_name, messages|
-      "#{attribute_name} #{messages.join(", ")}"
-    end.join(". ")
-  end
-
-  # :nodoc:
-  def self.save(*args, **named_args, &block)
-    {% raise <<-ERROR
-      SaveOperations do not have a 'save' method.
-
-      Try this...
-
-        ▸ Use 'create' to create a brand new record.
-        ▸ Use 'update' to update an existing record.
-
-      ERROR
-    %}
-  end
-
-  # :nodoc:
-  macro add_column_attributes(primary_key_type, attributes)
+  macro add_column_attributes(primary_key_type, attributes))
     {% for attribute in attributes %}
       {% COLUMN_ATTRIBUTES << attribute %}
     {% end %}
@@ -96,11 +115,8 @@ abstract class Avram::SaveOperation(T) < Avram::Operation
       def {{ attribute[:name] }}=(_value)
         \{% raise <<-ERROR
           Can't set an attribute value with '{{attribute[:name]}} = '
-
           Try this...
-
             ▸ Use '.value' to set the value: '{{attribute[:name]}}.value = '
-
           ERROR
           %}
       end
@@ -160,28 +176,7 @@ abstract class Avram::SaveOperation(T) < Avram::Operation
     end
   end
 
-  # Runs `before_save` steps,
-  # required validation, then returns `true` if all attributes are valid.
-  def valid? : Bool
-    before_save
-
-    # These validations must be ran after all `before_save` callbacks have completed
-    # in the case that someone has set a required field in a `before_save`. If we run
-    # this in a `before_save` ourselves, the ordering would cause this to be ran first.
-    validate_required *required_attributes
-    attributes.all? &.valid?
-  end
-
-  def changes : Hash(Symbol, String?)
-    _changes = {} of Symbol => String?
-    column_attributes.each do |attribute|
-      if attribute.changed?
-        _changes[attribute.name] = cast_value(attribute.value)
-      end
-    end
-    _changes
-  end
-
+  # :nodoc:
   macro add_cast_value_methods(columns)
     private def cast_value(value : Nil)
       nil
@@ -195,96 +190,5 @@ abstract class Avram::SaveOperation(T) < Avram::Operation
       value.not_nil!.class.adapter.to_db(value.as({{ column[:type] }}))
     end
     {% end %}
-  end
-
-  def save : Bool
-    if valid? && (!persisted? || changes.any?)
-      transaction_committed = database.transaction do
-        insert_or_update
-        saved_record = record.not_nil!
-        after_save(saved_record)
-        true
-      end
-
-      if transaction_committed
-        saved_record = record.not_nil!
-        after_commit(saved_record)
-        mark_as_saved
-        true
-      else
-        mark_as_failed
-        false
-      end
-    elsif valid? && changes.empty?
-      mark_as_saved
-      true
-    else
-      mark_as_failed
-      false
-    end
-  end
-
-  def save! : T
-    if save
-      record.not_nil!
-    else
-      raise Avram::InvalidOperationError.new(operation: self)
-    end
-  end
-
-  def update! : T
-    save!
-  end
-
-  def persisted? : Bool
-    !!record_id
-  end
-
-  private def insert_or_update
-    if persisted?
-      update record_id
-    else
-      insert
-    end
-  end
-
-  private def record_id
-    @record.try &.id
-  end
-
-  def before_save; end
-
-  def after_save(_record : T); end
-
-  def after_commit(_record : T); end
-
-  private def insert : T
-    self.created_at.value ||= Time.utc if responds_to?(:created_at)
-    self.updated_at.value ||= Time.utc if responds_to?(:updated_at)
-    @record = database.run do |db|
-      db.query insert_sql.statement, args: insert_sql.args do |rs|
-        @record = @@schema_class.from_rs(rs).first
-      end
-    end
-  end
-
-  private def update(id) : T
-    self.updated_at.value = Time.utc if responds_to?(:updated_at)
-    @record = database.run do |db|
-      db.query update_query(id).statement_for_update(changes), args: update_query(id).args_for_update(changes) do |rs|
-        @record = @@schema_class.from_rs(rs).first
-      end
-    end
-  end
-
-  private def update_query(id)
-    Avram::QueryBuilder
-      .new(table_name)
-      .select(@@schema_class.column_names)
-      .where(Avram::Where::Equal.new(primary_key_name, id.to_s))
-  end
-
-  private def insert_sql
-    Avram::Insert.new(table_name, changes, @@schema_class.column_names)
   end
 end

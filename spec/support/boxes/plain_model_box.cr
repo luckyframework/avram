@@ -1,4 +1,4 @@
-class PlainModelBox < BaseBox
-  def initialize
-  end
-end
+# class PlainModelBox < BaseBox
+#   def initialize
+#   end
+# end
