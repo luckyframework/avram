@@ -11,7 +11,7 @@ abstract class Avram::SaveOperation(T) < Avram::Operation
     @@schema_class = T
   end
 
-  @record : T?
+  @record : T? = nil
   getter :record
 
   abstract def table_name
@@ -92,20 +92,9 @@ abstract class Avram::SaveOperation(T) < Avram::Operation
   end
 
   # :nodoc:
-  macro add_column_attributes(primary_key_type, attributes))
+  macro add_column_attributes(attributes)
     {% for attribute in attributes %}
       {% COLUMN_ATTRIBUTES << attribute %}
-    {% end %}
-
-    private def extract_changes_from_params
-      permitted_params.each do |key, value|
-        {% for attribute in attributes %}
-          set_{{ attribute[:name] }}_from_param value if key == {{ attribute[:name].stringify }}
-        {% end %}
-      end
-    end
-
-    {% for attribute in attributes %}
       @_{{ attribute[:name] }} : Avram::Attribute({{ attribute[:type] }}?)?
 
       def {{ attribute[:name] }}
@@ -152,6 +141,14 @@ abstract class Avram::SaveOperation(T) < Avram::Operation
         end
       end
     {% end %}
+
+    private def extract_changes_from_params
+      permitted_params.each do |key, value|
+        {% for attribute in attributes %}
+          set_{{ attribute[:name] }}_from_param value if key == {{ attribute[:name].stringify }}
+        {% end %}
+      end
+    end
 
     def attributes
       column_attributes + super

@@ -29,15 +29,20 @@ module Avram::NeedyInitializer
     end
 
     macro finished
-      setup_initializer
+      # @type is not correct in this method, but is in the macro we call below
+      # That is why this extrac macro was extracted. We need @type to get the
+      # attributes for this SaveOperation
+      generate_initializer_and_save_methods
     end
   end
 
-  macro setup_initializer
+  macro generate_initializer_and_save_methods
     # Build up a list of method arguments
     #
+    # These method arguments can be used in macros fro generating create/update/new
+    #
     # This way everything has a name and type and we don't have to rely on
-    # **named_args**. **named_args** are easy but you get horrible type errors.
+    # **named_args. **named_args** are easy but you get horrible type errors.
     #
     # attribute_method_args would look something like:
     #
@@ -56,24 +61,111 @@ module Avram::NeedyInitializer
     #   email: email
     {% attribute_params = "" %}
 
+    {% if @type.constant :COLUMN_ATTRIBUTES %}
+      {% for attribute in COLUMN_ATTRIBUTES.uniq %}
+        {% attribute_method_args = attribute_method_args + "#{attribute[:name]} : #{attribute[:type]} | Nothing" %}
+        {% if attribute[:nilable] %}{% attribute_method_args = attribute_method_args + " | Nil" %}{% end %}
+        {% attribute_method_args = attribute_method_args + " = Nothing.new,\n" %}
+
+        {% attribute_params = attribute_params + "#{attribute[:name]}: #{attribute[:name]},\n" %}
+      {% end %}
+    {% end %}
+
     {% for attribute in ATTRIBUTES %}
       {% attribute_method_args = attribute_method_args + "#{attribute.var} : #{attribute.type} | Nothing = Nothing.new,\n" %}
       {% attribute_params = attribute_params + "#{attribute.var}: #{attribute.var},\n" %}
     {% end %}
 
-    generate_initializers({{ attribute_method_args }}, {{ attribute_params }})
+    generate_initializer({{ attribute_method_args }}, {{ attribute_params }})
+    {% if @type.is_a?(Generic) %}
+      generate_save_methods({{ attribute_method_args }}, {{ attribute_params }})
+    {% end %}
+  end
+
+  macro generate_create(attribute_method_args, attribute_params, with_params, with_bang)
+    def self.create{% if with_bang %}!{% end %}(
+      {% if with_params %}params,{% end %}
+      {% for type_declaration in OPERATION_NEEDS %}
+        {{ type_declaration }},
+      {% end %}
+      {{ attribute_method_args.id }}
+    )
+      operation = new(
+        {% if with_params %}params,{% end %}
+        {% for type_declaration in OPERATION_NEEDS %}
+          {{ type_declaration.var }},
+        {% end %}
+        {{ attribute_params.id }}
+      )
+
+      {% if with_bang %}
+        operation.save!
+      {% else %}
+        if operation.save
+          yield operation, operation.record
+        else
+          operation.log_failed_save
+          yield operation, nil
+        end
+      {% end %}
+    end
+  end
+
+  macro generate_update(attribute_method_args, attribute_params, with_params, with_bang)
+    def self.update{% if with_bang %}!{% end %}(
+        record : T,
+        {% if with_params %}with params,{% end %}
+        {% for type_declaration in OPERATION_NEEDS %}
+          {{ type_declaration }},
+        {% end %}
+        {{ attribute_method_args.id }}
+      )
+      operation = new(
+        record,
+        {% if with_params %}params,{% end %}
+        {% for type_declaration in OPERATION_NEEDS %}
+          {{ type_declaration.var }},
+        {% end %}
+        {{ attribute_params.id }}
+      )
+
+      {% if with_bang %}
+        operation.update!
+      {% else %}
+        if operation.save
+          yield operation, operation.record.not_nil!
+        else
+          operation.log_failed_save
+          yield operation, operation.record.not_nil!
+        end
+      {% end %}
+    end
+  end
+
+  macro generate_save_methods(attribute_method_args, attribute_params)
+    generate_create({{ attribute_method_args }}, {{ attribute_params }}, with_params: true, with_bang: false)
+    generate_create({{ attribute_method_args }}, {{ attribute_params }}, with_params: true, with_bang: true)
+    generate_create({{ attribute_method_args }}, {{ attribute_params }}, with_params: false, with_bang: true)
+    generate_create({{ attribute_method_args }}, {{ attribute_params }}, with_params: false, with_bang: false)
+
+    generate_update({{ attribute_method_args }}, {{ attribute_params }}, with_params: true, with_bang: false)
+    generate_update({{ attribute_method_args }}, {{ attribute_params }}, with_params: true, with_bang: true)
+    generate_update({{ attribute_method_args }}, {{ attribute_params }}, with_params: false, with_bang: true)
+    generate_update({{ attribute_method_args }}, {{ attribute_params }}, with_params: false, with_bang: false)
   end
 
   private class Nothing
   end
 
-  macro generate_initializers(attribute_method_args, attribute_params)
+  macro generate_initializer(attribute_method_args, attribute_params)
     {% needs_method_args = "" %}
     {% for type_declaration in OPERATION_NEEDS %}
       {% needs_method_args = needs_method_args + "@#{type_declaration},\n" %}
     {% end %}
 
+    {% if @type.is_a?(Generic) %}
     def initialize(
+        @record : T,
         @params : Avram::Paramable,
         {{ needs_method_args.id }}
         {{ attribute_method_args.id }}
@@ -82,9 +174,27 @@ module Avram::NeedyInitializer
     end
 
     def initialize(
+      @record : T,
+      {{ needs_method_args.id }}
+      {{ attribute_method_args.id }}
+    )
+      @params = Avram::Params.new
+      set_attributes({{ attribute_params.id }})
+    end
+    {% end %}
+
+    def initialize(
+        @params : Avram::Paramable,
         {{ needs_method_args.id }}
         {{ attribute_method_args.id }}
-      )
+    )
+      set_attributes({{ attribute_params.id }})
+    end
+
+    def initialize(
+        {{ needs_method_args.id }}
+        {{ attribute_method_args.id }}
+    )
       @params = Avram::Params.new
       set_attributes({{ attribute_params.id }})
     end
@@ -94,6 +204,15 @@ module Avram::NeedyInitializer
         unless {{ attribute.var }}.is_a? Nothing
           self.{{ attribute.var }}.value = {{ attribute.var }}
         end
+      {% end %}
+      {% if @type.constant :COLUMN_ATTRIBUTES %}
+        {% for attribute in COLUMN_ATTRIBUTES.uniq %}
+          unless {{ attribute[:name] }}.is_a? Nothing
+            self.{{ attribute[:name] }}.value = {{ attribute[:name] }}
+          end
+        {% end %}
+
+        extract_changes_from_params
       {% end %}
     end
   end
