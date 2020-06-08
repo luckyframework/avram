@@ -52,7 +52,7 @@ abstract class Avram::Model
   #
   # This method will return a new model instance with the
   # latest data from the database. Note that this does
-  # **note** change the original instance, so you may need to
+  # **not** change the original instance, so you may need to
   # assign the result to a variable or work directly with the return value.
   #
   # Example:
@@ -65,7 +65,7 @@ abstract class Avram::Model
   # user.name
   # # Will return "Updated"
   # user.reload.name # Will be "Updated"
-  # Will still be "Original" since the 'user' is the same model instance.
+  # # Will still be "Original" since the 'user' is the same model instance.
   # user.name
   #
   # Instead re-assign the variable. Now 'name' will return "Updated" since
