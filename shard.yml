@@ -1,7 +1,7 @@
 name: avram
-version: 0.14.0
+version: 0.14.1
 
-crystal: 0.34.0
+crystal: 0.34
 
 targets:
   lucky.gen.migration:
@@ -19,7 +19,7 @@ dependencies:
     version: ~> 0.21.0
   pg:
     github: will/crystal-pg
-    version: ~> 0.21.0
+    version: ~> 0.21.1
   habitat:
     github: luckyframework/habitat
     version: ~> 0.4.0
