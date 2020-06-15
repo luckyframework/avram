@@ -47,6 +47,15 @@ describe Avram::Model do
 
       post.tags.should eq [tag]
     end
+
+    it "count through associations" do
+      tag = TagBox.create
+      post = PostBox.create
+      _different_tag = TagBox.create
+      TaggingBox.new.tag_id(tag.id).post_id(post.id).create
+
+      post.tags_count.should eq 1
+    end
   end
 
   describe "has_one" do
