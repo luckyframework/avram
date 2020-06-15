@@ -103,6 +103,13 @@ describe Avram::Model do
 
         LineItemQuery.new.find(item.id).scans.should eq [scan]
       end
+
+      it "gets amount of records" do
+        item = LineItemBox.create
+        scan = ScanBox.new.line_item_id(item.id).create
+
+        item.scans_count.should eq 1
+      end
     end
 
     describe "has_many through a join table" do
