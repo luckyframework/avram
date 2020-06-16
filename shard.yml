@@ -1,7 +1,7 @@
 name: avram
-version: 0.14.1
+version: 0.15.0
 
-crystal: 0.34
+crystal: 0.35
 
 targets:
   lucky.gen.migration:
@@ -16,7 +16,7 @@ dependencies:
     version: 0.1.0
   lucky_cli:
     github: luckyframework/lucky_cli
-    version: ~> 0.21.0
+    branch: pcs/crystal-0.35
   pg:
     github: will/crystal-pg
     version: ~> 0.21.1
@@ -28,7 +28,7 @@ dependencies:
     version: ~> 0.2.0
   dexter:
     github: luckyframework/dexter
-    version: ~> 0.2.0
+    version: ~> 0.3.0
   shell-table:
     github: luckyframework/shell-table.cr
     branch: refactor/setter
