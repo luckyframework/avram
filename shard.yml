@@ -16,7 +16,7 @@ dependencies:
     version: 0.1.0
   lucky_cli:
     github: luckyframework/lucky_cli
-    branch: pcs/crystal-0.35
+    version: ~> 0.22.0
   pg:
     github: will/crystal-pg
     version: ~> 0.21.1
