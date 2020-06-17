@@ -355,6 +355,21 @@ describe "Avram::SaveOperation" do
         end
       end
     end
+
+    context "when there's default values in the table" do
+      it "saves with all of the default values" do
+        ModelWithDefaultValues::SaveOperation.create do |operation, record|
+          record.should_not eq nil
+          r = record.not_nil!
+          r.greeting.should eq "Hello there!"
+          r.admin.should eq false
+          r.age.should eq 30
+          r.money.should eq 3.5
+          r.published_at.should be_a Time
+          r.drafted_at.should be_a Time
+        end
+      end
+    end
   end
 
   describe ".create!" do
