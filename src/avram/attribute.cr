@@ -5,7 +5,12 @@ class Avram::Attribute(T)
   getter :param_key
   @errors = [] of String
 
-  def initialize(@name : Symbol, @param : String?, @value : T, @param_key : String)
+  def initialize(
+    @name : Symbol,
+    @param : Avram::Uploadable | String?,
+    @value : T,
+    @param_key : String
+  )
     @original_value = @value
   end
 
@@ -55,7 +60,7 @@ class Avram::Attribute(T)
   end
 
   private def ensure_no_blank(value : T)
-    if value.is_a?(String) && value.blank?
+    if value.is_a?(Avram::Uploadable | String) && value.blank?
       nil
     else
       value
