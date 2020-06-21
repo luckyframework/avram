@@ -133,14 +133,18 @@ describe "file_attribute in operation" do
     operation.valid?.should be_false
   end
 
-  # it "can still save to the database" do
-  #   params = {"thumb" => Avram::UploadedFile.new("thumb.png")}
-  #   operation = operation(params)
-  #   operation.setup_required_database_columns
-  #   operation.save.should eq true
-  # end
+  it "can still save to the database" do
+    params = {"thumb" => Avram::UploadedFile.new("thumb.png")}
+    operation = upload_operation(params)
+    operation.setup_required_database_columns
+    operation.save.should eq true
+  end
 end
 
 private def operation(attrs = {} of String => String)
   Operation.new(Avram::Params.new(attrs))
+end
+
+private def upload_operation(attrs = {} of String => Avram::Uploadable)
+  Operation.new(Avram::UploadParams.new(attrs))
 end
