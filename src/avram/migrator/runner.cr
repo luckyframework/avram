@@ -144,12 +144,12 @@ class Avram::Migrator::Runner
     "sudo apt-get update && sudo apt-get install postgresql postgresql-contrib".colorize(:green)
   end
 
-  def self.run(command : String)
+  def self.run(command : String, output : IO = STDOUT)
     error_messages = IO::Memory.new
     ENV["PGPASSWORD"] = self.db_password if self.db_password
     result = Process.run command,
       shell: true,
-      output: STDOUT,
+      output: output,
       error: error_messages
     ENV.delete("PGPASSWORD") if self.db_password
     unless result.success?
