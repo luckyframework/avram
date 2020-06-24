@@ -17,8 +17,8 @@ end
 
 describe Avram::Factory do
   it "works" do
-    Avram::Factory.create(User)
-    Avram::Factory.create(SignInCredential)
-    pp! Avram::Factory.create(User, :weirdo)
+    Avram::Factory.create(User).name.should eq "Test User"
+    Avram::Factory.create(SignInCredential).user.name.should eq "Test User"
+    Avram::Factory.create(User, :weirdo).name.should eq "User Test"
   end
 end
