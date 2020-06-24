@@ -2,7 +2,7 @@ class Avram::Factory
   macro register(klass, &block)
     {% operation = "#{klass.id}::SaveOperation".id %}
 
-    class {{klass}}Factory
+    class Avram::Private::{{klass}}Factory
 
       getter operation : {{ operation }} = {{ operation }}.new
 
@@ -28,6 +28,6 @@ class Avram::Factory
   end
 
   macro create(klass)
-    {{klass}}Factory.create
+    Avram::Private::{{klass}}Factory.create
   end
 end
