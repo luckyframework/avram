@@ -1,5 +1,5 @@
 class Avram::Factory
-  macro register(klass, &block)
+  macro register(klass)
     {% operation = "#{klass.id}::SaveOperation".id %}
 
     class Avram::Private::{{klass}}Factory
@@ -10,12 +10,9 @@ class Avram::Factory
       def initialize(@traits)
       end
 
-      def self.create(traits : Array(Symbol))
-        new(traits).create
-      end
-
       def create : {{ klass }}
-        {{ block.body }}
+        {{ yield }}
+        with self yield
         operation = {{ operation }}.new
         property_setters.each { |k,v| v.call(operation) }
         model = operation.save!
@@ -61,12 +58,13 @@ class Avram::Factory
     {% end %}
   end
 
-  macro create(klass, *traits)
+  macro create(klass, *traits, &block)
     {% if traits.empty? %}
     passed_traits = [] of Symbol
     {% else %}
     passed_traits = [{{*traits}}]
     {% end %}
-    Avram::Private::{{klass}}Factory.create(passed_traits)
+    factory = Avram::Private::{{klass}}Factory.new(passed_traits)
+    factory.create {% if block %}{{block}}{% else %}{}{% end %}
   end
 end
