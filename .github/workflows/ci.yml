@@ -50,5 +50,9 @@ jobs:
           key: ${{ runner.os }}-crystal
       - name: Run integration test
         run: ./script/integration_test
+        env:
+          DATABASE_URL: postgres://lucky:developer@localhost:5432/avram_dev
       - name: Run tests
         run: crystal spec
+        env:
+          DATABASE_URL: postgres://lucky:developer@localhost:5432/avram_dev
