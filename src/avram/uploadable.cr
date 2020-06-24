@@ -1,20 +1,50 @@
+# Include this module in classes that represent an uploaded file from a form
 module Avram::Uploadable
-  abstract def tempfile : File
-  abstract def metadata : HTTP::FormData::FileMetadata
-  # Typically, this should return the filename as found in the `metadata`.
-  abstract def filename : String
-  # This should test if the filename is a blank string.
-  abstract def blank? : Bool
+  getter name : String
+  getter tempfile : File
+  getter metadata : HTTP::FormData::FileMetadata
+
+  macro included
+    # :nodoc:
+    def initialize(file : Avram::Uploadable)
+      @name = file.name
+      @tempfile = file.tempfile
+      @metadata = file.metadata
+    end
+  end
+
+  # Returns the path of the File as a String
+  #
+  # ```
+  # uploaded_file_object.path # => String
+  # ```
+  def path : String
+    @tempfile.path
+  end
+
+  # Returns the original file name as a String
+  #
+  # ```
+  # uploaded_file_object.filename # => String
+  # ```
+  def filename : String
+    metadata.filename.to_s
+  end
+
+  # If no file was selected in the form's file input, this will return `true`
+  #
+  # ```
+  # uploaded_file_object.blank? # => Bool
+  # ```
+  def blank? : Bool
+    filename.blank?
+  end
 
   module Lucky
     include Avram::Type
 
     def parse(value : Avram::Uploadable)
       SuccessfulCast(Avram::Uploadable).new(value)
-    end
-
-    def parse(values : Array(Avram::Uploadable))
-      SuccessfulCast(Array(Avram::Uploadable)).new(values)
     end
 
     def parse(value : String?)

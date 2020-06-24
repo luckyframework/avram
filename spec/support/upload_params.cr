@@ -1,16 +1,16 @@
-class Avram::UploadParams < Avram::Params
+class UploadParams < Avram::Params
   include Avram::Paramable
 
-  @uploads : Hash(String, Avram::UploadedFile) = {} of String => Avram::UploadedFile
+  @uploads : Hash(String, UploadedFile) = {} of String => UploadedFile
 
   def initialize(@uploads)
   end
 
-  def nested_file?(key) : Hash(String, Avram::UploadedFile)
+  def nested_file?(key) : Hash(String, UploadedFile)
     @uploads
   end
 
-  def nested_file(key) : Hash(String, Avram::UploadedFile)
+  def nested_file(key) : Hash(String, UploadedFile)
     @uploads
   end
 end

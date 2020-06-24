@@ -5,7 +5,7 @@ private class Operation < Post::SaveOperation
   attribute terms_of_service : Bool
   attribute best_kind_of_bear : String = "black bear"
   attribute default_is_false : Bool = false
-  file_attribute :thumb
+  attribute thumb : UploadedFile
 
   before_save prepare
 
@@ -134,7 +134,7 @@ describe "file_attribute in operation" do
   end
 
   it "can still save to the database" do
-    params = {"thumb" => Avram::UploadedFile.new("thumb.png")}
+    params = {"thumb" => UploadedFile.new("thumb.png")}
     operation = upload_operation(params)
     operation.setup_required_database_columns
     operation.save.should eq true
@@ -146,5 +146,5 @@ private def operation(attrs = {} of String => String)
 end
 
 private def upload_operation(attrs = {} of String => Avram::Uploadable)
-  Operation.new(Avram::UploadParams.new(attrs))
+  Operation.new(UploadParams.new(attrs))
 end

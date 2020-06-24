@@ -21,7 +21,7 @@ describe "Avram::Attribute" do
     end
 
     it "returns nil for empty uploads" do
-      empty_upload = Avram::Attribute.new(name: :empty_upload, param: nil, value: Avram::UploadedFile.new(""), param_key: "test_form")
+      empty_upload = Avram::Attribute.new(name: :empty_upload, param: nil, value: UploadedFile.new(""), param_key: "test_form")
       empty_upload.value.should be_nil
     end
   end
@@ -38,7 +38,7 @@ describe "Avram::Attribute" do
     end
 
     it "returns nil for empty uploads" do
-      empty_upload = Avram::Attribute.new(name: :empty_upload, param: nil, value: Avram::UploadedFile.new(""), param_key: "test_form")
+      empty_upload = Avram::Attribute.new(name: :empty_upload, param: nil, value: UploadedFile.new(""), param_key: "test_form")
       empty_upload.original_value.should be_nil
     end
   end
