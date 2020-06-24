@@ -66,7 +66,7 @@ module Avram::DefineAttribute
                       end
     %}
 
-    @_{{ name }} : Avram::Attribute({{type}}?)?
+    @_{{ name }} : Avram::Attribute({{ type }}?)?
 
     ensure_base_attributes_method_is_present
 
@@ -79,7 +79,7 @@ module Avram::DefineAttribute
     end
 
     private def _{{ name }}
-      @_{{ name }} ||= Avram::Attribute({{type}}?).new(
+      @_{{ name }} ||= Avram::Attribute({{ type }}?).new(
         name: :{{ name }},
         param: {{ name }}_param,
         value: {{ default_value }},
@@ -114,7 +114,7 @@ module Avram::DefineAttribute
       parse_result = {{ type }}::Lucky.parse({{ name }}_param)
       if parse_result.is_a? Avram::Type::SuccessfulCast
         {% if is_uploadable %}
-          attribute.value = if parse_result.value.class == {{target_type}}
+          attribute.value = if parse_result.value.class == {{ target_type }}
                               parse_result.value
                             else
                               {{ target_type }}.new(parse_result.value)
