@@ -37,12 +37,14 @@ jobs:
           apt-get update
           apt-get -yqq install libpq-dev postgresql-client
       - uses: actions/checkout@v2
-      - name: Run setup script
-        run: ./script/setup
+      - name: Install shards
+        run: shards install
       - name: Cache Crystal
         uses: actions/cache@v1
         with:
           path: ~/.cache/crystal
           key: ${{ runner.os }}-crystal
+      - name: Run integration test
+        run: ./script/integration_test
       - name: Run tests
-        run: ./script/test
+        run: crystal spec
