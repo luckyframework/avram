@@ -21,3 +21,13 @@ class CommentForCustomPost < BaseModel
       foreign_key: :post_id
   end
 end
+
+class CustomComment < BaseModel
+  skip_default_columns
+
+  table do
+    primary_key custom_id : UUID
+    timestamps
+    column body : String
+  end
+end
