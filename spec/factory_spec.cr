@@ -7,9 +7,13 @@ Avram::Factory.register(User) do
   joined_at { Time.utc }
 end
 
+Avram::Factory.register(SignInCredential) do
+  user
+end
+
 describe Avram::Factory do
   it "works" do
-    user = Avram::Factory.create(User)
-    pp! user
+    Avram::Factory.create(User)
+    Avram::Factory.create(SignInCredential)
   end
 end
