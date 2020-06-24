@@ -5,9 +5,13 @@ class Avram::Factory
     class Avram::Private::{{klass}}Factory
       getter property_setters = {} of String => Proc({{operation}}, Nil)
       getter association_setters = {} of String => Proc({{klass}}, Nil)
+      getter traits : Array(Symbol)
 
-      def self.create
-        new.create {{ block }}
+      def initialize(@traits)
+      end
+
+      def self.create(traits : Array(Symbol))
+        new(traits).create {{ block }}
       end
 
       def create : {{ klass }}
@@ -17,6 +21,12 @@ class Avram::Factory
         model = operation.save!
         association_setters.each { |k,v| v.call(model) }
         model
+      end
+
+      def trait(name)
+        if traits.includes?(name)
+          with self yield
+        end
       end
 
       Avram::Factory.setup_instance_methods({{ operation }})
@@ -51,7 +61,12 @@ class Avram::Factory
     {% end %}
   end
 
-  macro create(klass)
-    Avram::Private::{{klass}}Factory.create
+  macro create(klass, *traits)
+    {% if traits.empty? %}
+    passed_traits = [] of Symbol
+    {% else %}
+    passed_traits = [{{*traits}}]
+    {% end %}
+    Avram::Private::{{klass}}Factory.create(passed_traits)
   end
 end
