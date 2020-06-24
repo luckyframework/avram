@@ -23,7 +23,7 @@ jobs:
       image: crystallang/crystal:0.35.0
     services:
       postgres:
-        image: postgres
+        image: postgres:10-alpine
         env:
           POSTGRES_USER: lucky
           POSTGRES_PASSWORD: developer
@@ -55,4 +55,5 @@ jobs:
       - name: Run tests
         run: crystal spec
         env:
+          BACKUP_DATABASE_URL: postgres://lucky:developer@postgres:5432/sample_backup
           DATABASE_URL: postgres://lucky:developer@postgres:5432/avram_dev
