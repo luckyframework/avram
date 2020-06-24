@@ -11,11 +11,11 @@ class Avram::Factory
       end
 
       def self.create(traits : Array(Symbol))
-        new(traits).create {{ block }}
+        new(traits).create
       end
 
       def create : {{ klass }}
-        with self yield
+        {{ block.body }}
         operation = {{ operation }}.new
         property_setters.each { |k,v| v.call(operation) }
         model = operation.save!
