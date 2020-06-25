@@ -1,5 +1,5 @@
 class Db::Create < LuckyCli::Task
-  alias AM = Avram::Migrator
+  alias Migrator = Avram::Migrator
   summary "Create the database"
 
   def initialize(@quiet : Bool = false)
@@ -20,9 +20,9 @@ class Db::Create < LuckyCli::Task
   end
 
   def call
-    AM::Runner.run("psql -q -l #{connection_url}", output: IO::Memory.new)
-    AM.run do
-      AM::Runner.create_db(@quiet)
+    attempt_to_connect
+    Migrator.run do
+      Migrator::Runner.create_db(@quiet)
     end
   rescue
     uri = URI.parse(connection_url)
@@ -32,10 +32,14 @@ class Db::Create < LuckyCli::Task
   private def connection_url : String
     Avram::PostgresURL.build(
       database: "",
-      hostname: AM::Runner.db_host.to_s,
-      username: AM::Runner.db_user.to_s,
-      password: AM::Runner.db_password.to_s,
-      port: AM::Runner.db_port.to_s
+      hostname: Migrator::Runner.db_host.to_s,
+      username: Migrator::Runner.db_user.to_s,
+      password: Migrator::Runner.db_password.to_s,
+      port: Migrator::Runner.db_port.to_s
     )
+  end
+
+  private def attempt_to_connect
+    Migrator::Runner.run("psql -q -l #{connection_url}", output: IO::Memory.new)
   end
 end
