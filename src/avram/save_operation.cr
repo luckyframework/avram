@@ -15,6 +15,7 @@ abstract class Avram::SaveOperation(T) < Avram::Operation
   include Avram::NestedSaveOperation
   include Avram::MarkAsFailed
   include Avram::InheritColumnAttributes
+  include Avram::InheritAssociations
 
   enum SaveStatus
     Saved
@@ -161,6 +162,13 @@ abstract class Avram::SaveOperation(T) < Avram::Operation
         {% end %}
       )
     end
+  end
+
+  # :nodoc:
+  macro add_associations(associations)
+    {% for association in associations %}
+      {% ASSOCIATIONS << association %}
+    {% end %}
   end
 
   # Runs `before_save` steps,
