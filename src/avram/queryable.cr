@@ -1,5 +1,6 @@
 module Avram::Queryable(T)
   include Enumerable(T)
+  def_clone
 
   abstract def id
 
@@ -42,14 +43,6 @@ module Avram::Queryable(T)
     @query ||= Avram::QueryBuilder
       .new(table: @@table_name)
       .select(@@schema_class.column_names)
-  end
-
-  def clone : self
-    original_query = query
-    instance = self.class.new
-    instance.query.clone(original_query)
-    preloads.each { |preload| instance.add_preload(&preload) }
-    instance
   end
 
   def distinct : self
