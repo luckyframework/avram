@@ -121,6 +121,10 @@ module Avram::Queryable(T)
   abstract def update : Int64
 
   def join(join_clause : Avram::Join::SqlClause) : self
+    clone.join!(join_clause)
+  end
+
+  protected def join!(join_clause : Avram::Join::SqlClause) : self
     query.join(join_clause)
     self
   end

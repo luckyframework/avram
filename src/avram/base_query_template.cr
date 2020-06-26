@@ -108,10 +108,11 @@ class Avram::BaseQueryTemplate
                 )
               )
             {% elsif assoc[:through] %}
-              {{ join_type.downcase.id }}_join_{{ assoc[:through].id }}
-              __yield_where_{{ assoc[:through].id }} do |join_query|
-                join_query.{{ join_type.downcase.id }}_join_{{ assoc[:table_name] }}
-              end
+              clone
+                .{{ join_type.downcase.id }}_join_{{ assoc[:through].id }}
+                .__yield_where_{{ assoc[:through].id }} do |join_query|
+                  join_query.{{ join_type.downcase.id }}_join_{{ assoc[:table_name] }}
+                end
             {% else %}
               join(
                 Avram::Join::{{ join_type.id }}.new(
@@ -127,17 +128,24 @@ class Avram::BaseQueryTemplate
 
 
         def where_{{ assoc[:table_name] }}(assoc_query : {{ assoc[:type] }}::BaseQuery, auto_inner_join : Bool = true)
-          join_{{ assoc[:table_name] }} if auto_inner_join
-          query.merge(assoc_query.query)
-          self
+          new_instance = if auto_inner_join
+                           join_{{ assoc[:table_name] }}
+                         else
+                           clone
+                         end
+
+          new_instance.query.merge(assoc_query.query)
+          new_instance
         end
 
         # :nodoc:
         # Used internally for has_many through queries
         def __yield_where_{{ assoc[:table_name] }}
           assoc_query = yield {{ assoc[:type] }}::BaseQuery.new
-          query.merge(assoc_query.query)
-          self
+          new_instance = clone
+          new_instance.query.merge(assoc_query.query)
+
+          new_instance
         end
 
         def {{ assoc[:table_name] }}
