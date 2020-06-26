@@ -55,6 +55,10 @@ module Avram::Queryable(T)
   end
 
   def reset_order : self
+    clone.reset_order!
+  end
+
+  protected def reset_order! : self
     query.reset_order
     self
   end
