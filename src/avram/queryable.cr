@@ -46,39 +46,19 @@ module Avram::Queryable(T)
   end
 
   def distinct : self
-    clone.distinct!
-  end
-
-  protected def distinct! : self
-    query.distinct
-    self
+    clone.tap &.query.distinct
   end
 
   def reset_order : self
-    clone.reset_order!
-  end
-
-  protected def reset_order! : self
-    query.reset_order
-    self
+    clone.tap &.query.reset_order
   end
 
   def reset_limit : self
-    clone.reset_limit!
-  end
-
-  protected def reset_limit! : self
-    query.limit(nil)
-    self
+    clone.tap &.query.limit(nil)
   end
 
   def reset_offset : self
-    clone.reset_offset!
-  end
-
-  protected def reset_offset! : self
-    query.offset(nil)
-    self
+    clone.tap &.query.offset(nil)
   end
 
   def distinct_on(&block) : self
@@ -121,12 +101,7 @@ module Avram::Queryable(T)
   abstract def update : Int64
 
   def join(join_clause : Avram::Join::SqlClause) : self
-    clone.join!(join_clause)
-  end
-
-  protected def join!(join_clause : Avram::Join::SqlClause) : self
-    query.join(join_clause)
-    self
+    clone.tap &.query.join(join_clause)
   end
 
   def where(column : Symbol, value) : self
