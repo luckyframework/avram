@@ -105,8 +105,7 @@ module Avram::Queryable(T)
   end
 
   def where(column : Symbol, value) : self
-    query.where(Avram::Where::Equal.new(column, value.to_s))
-    self
+    clone.tap &.query.where(Avram::Where::Equal.new(column, value.to_s))
   end
 
   def where(statement : String, *bind_vars) : self
@@ -114,8 +113,7 @@ module Avram::Queryable(T)
   end
 
   def where(statement : String, *, args bind_vars : Array) : self
-    query.raw_where(Avram::Where::Raw.new(statement, args: bind_vars))
-    self
+    clone.tap &.query.raw_where(Avram::Where::Raw.new(statement, args: bind_vars))
   end
 
   def order_by(column, direction) : self
