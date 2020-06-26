@@ -46,6 +46,10 @@ module Avram::Queryable(T)
   end
 
   def distinct : self
+    clone.distinct!
+  end
+
+  protected def distinct! : self
     query.distinct
     self
   end
