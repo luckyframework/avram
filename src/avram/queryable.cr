@@ -64,6 +64,10 @@ module Avram::Queryable(T)
   end
 
   def reset_limit : self
+    clone.reset_limit!
+  end
+
+  protected def reset_limit! : self
     query.limit(nil)
     self
   end
