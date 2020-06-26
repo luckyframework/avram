@@ -131,8 +131,7 @@ module Avram::Queryable(T)
   end
 
   def none : self
-    query.where(Avram::Where::Equal.new("1", "0"))
-    self
+    clone.tap &.query.where(Avram::Where::Equal.new("1", "0"))
   end
 
   def limit(amount) : self
