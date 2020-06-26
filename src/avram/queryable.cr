@@ -140,8 +140,7 @@ module Avram::Queryable(T)
   end
 
   def offset(amount) : self
-    query.offset(amount)
-    self
+    clone.tap &.query.offset(amount)
   end
 
   def find(id)
