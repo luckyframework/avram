@@ -102,6 +102,10 @@ module Avram::Queryable(T)
   # UserQuery.new.age.lt(21).delete
   # ```
   def delete : Int64
+    clone.delete!
+  end
+
+  protected def delete! : Int64
     query.delete
     database.exec(query.statement, args: query.args).rows_affected
   end
