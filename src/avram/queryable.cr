@@ -73,6 +73,10 @@ module Avram::Queryable(T)
   end
 
   def reset_offset : self
+    clone.reset_offset!
+  end
+
+  protected def reset_offset! : self
     query.offset(nil)
     self
   end
