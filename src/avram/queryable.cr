@@ -118,8 +118,7 @@ module Avram::Queryable(T)
 
   def order_by(column, direction) : self
     direction = Avram::OrderBy::Direction.parse(direction.to_s)
-    query.order_by(Avram::OrderBy.new(column, direction))
-    self
+    clone.tap &.query.order_by(Avram::OrderBy.new(column, direction))
   rescue e : ArgumentError
     raise "#{e.message}. Accepted values are: :asc, :desc"
   end
