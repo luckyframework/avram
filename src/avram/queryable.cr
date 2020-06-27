@@ -165,8 +165,8 @@ module Avram::Queryable(T)
   end
 
   def select_count : Int64
-    query.select_count
-    exec_scalar.as(Int64)
+    new_instance = clone.tap &.query.select_count
+    new_instance.exec_scalar.as(Int64)
   rescue e : DB::NoResultsError
     0_i64
   end
