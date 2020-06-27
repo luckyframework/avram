@@ -20,8 +20,10 @@ class JSONQuery < Blob::BaseQuery
   end
 end
 
-class ArrayQuery < Bucket::BaseQuery
+class BucketQuery < Bucket::BaseQuery
 end
+
+alias ArrayQuery = BucketQuery
 
 describe Avram::Query do
   it "can chain scope methods" do

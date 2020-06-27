@@ -1,6 +1,5 @@
 module Avram::Queryable(T)
   include Enumerable(T)
-  def_clone
 
   abstract def id
 
@@ -134,8 +133,7 @@ module Avram::Queryable(T)
   end
 
   def limit(amount) : self
-    query.limit(amount)
-    self
+    clone.tap &.query.limit(amount)
   end
 
   def offset(amount) : self

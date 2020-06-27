@@ -4,6 +4,7 @@ class Avram::BaseQueryTemplate
       private class Nothing
       end
 
+      def_clone
       include Avram::Queryable({{ type }})
 
       def database : Avram::Database.class
