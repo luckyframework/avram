@@ -145,8 +145,10 @@ module Avram::Queryable(T)
   end
 
   def first?
-    ordered_query.limit(1)
-    results.first?
+    with_ordered_query
+      .limit(1)
+      .results
+      .first?
   end
 
   def first
@@ -154,8 +156,11 @@ module Avram::Queryable(T)
   end
 
   def last?
-    ordered_query.reverse_order.limit(1)
-    results.first?
+    with_ordered_query
+      .tap(&.query.reverse_order)
+      .limit(1)
+      .results
+      .first?
   end
 
   def last
@@ -197,11 +202,11 @@ module Avram::Queryable(T)
     database.scalar query.statement, args: query.args, queryable: @@schema_class.name
   end
 
-  private def ordered_query
+  private def with_ordered_query
     if query.ordered?
-      query
+      clone
     else
-      id.asc_order.query
+      clone.id.asc_order
     end
   end
 

@@ -129,6 +129,16 @@ describe Avram::Query do
     it "returns nil if no record found" do
       UserQuery.new.first?.should be_nil
     end
+
+    it "doesn't mutate the original query" do
+      UserBox.new.name("name").create
+      query = UserQuery.new.name("name")
+      original_query_sql = query.to_sql
+
+      query.first?
+
+      query.to_sql.should eq original_query_sql
+    end
   end
 
   describe ".last" do
@@ -197,6 +207,16 @@ describe Avram::Query do
 
     it "returns nil if last record is not found" do
       UserQuery.new.last?.should be_nil
+    end
+
+    it "doesn't mutate the original query" do
+      UserBox.new.name("name").create
+      query = UserQuery.new.name("name")
+      original_query_sql = query.to_sql
+
+      query.last?
+
+      query.to_sql.should eq original_query_sql
     end
   end
 
