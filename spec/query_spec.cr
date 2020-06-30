@@ -30,44 +30,52 @@ describe Avram::Query do
     ChainedQuery.new.young.named("Paul")
   end
 
-  it "can select distinct" do
-    query = UserQuery.new.distinct.query
+  describe "#destinct" do
+    it "selects distinct" do
+      query = UserQuery.new.distinct.query
 
-    query.statement.should eq "SELECT DISTINCT #{User::COLUMN_SQL} FROM users"
-    query.args.should eq [] of String
+      query.statement.should eq "SELECT DISTINCT #{User::COLUMN_SQL} FROM users"
+      query.args.should eq [] of String
+    end
   end
 
-  it "can reset order" do
-    query = UserQuery.new.order_by(:some_column, :asc).reset_order.query
+  describe "#reset_order" do
+    it "resets the order" do
+      query = UserQuery.new.order_by(:some_column, :asc).reset_order.query
 
-    query.statement.should eq "SELECT #{User::COLUMN_SQL} FROM users"
-    query.args.should eq [] of String
+      query.statement.should eq "SELECT #{User::COLUMN_SQL} FROM users"
+      query.args.should eq [] of String
+    end
   end
 
-  it "can reset where on a specific column" do
-    query = UserQuery.new.name("Purcell").age(35).reset_where(&.name).query
+  describe "#reset_where" do
+    it "resets where on a specific column" do
+      query = UserQuery.new.name("Purcell").age(35).reset_where(&.name).query
 
-    query.statement.should eq "SELECT #{User::COLUMN_SQL} FROM users WHERE users.age = $1"
-    query.args.should eq ["35"] of String
+      query.statement.should eq "SELECT #{User::COLUMN_SQL} FROM users WHERE users.age = $1"
+      query.args.should eq ["35"] of String
+    end
   end
 
-  it "can select distinct on a specific column" do
-    UserBox.new.name("Purcell").age(22).create
-    UserBox.new.name("Purcell").age(84).create
-    UserBox.new.name("Griffiths").age(55).create
-    UserBox.new.name("Griffiths").age(75).create
-    queryable = UserQuery.new.distinct_on(&.name).order_by(:name, :asc).order_by(:age, :asc)
-    query = queryable.query
+  describe "#distinct_on" do
+    it "selects distinct on a specific column" do
+      UserBox.new.name("Purcell").age(22).create
+      UserBox.new.name("Purcell").age(84).create
+      UserBox.new.name("Griffiths").age(55).create
+      UserBox.new.name("Griffiths").age(75).create
+      queryable = UserQuery.new.distinct_on(&.name).order_by(:name, :asc).order_by(:age, :asc)
+      query = queryable.query
 
-    query.statement.should eq "SELECT DISTINCT ON (users.name) #{User::COLUMN_SQL} FROM users ORDER BY name ASC, age ASC"
-    query.args.should eq [] of String
-    results = queryable.results
-    first = results.first
-    second = results.last
-    first.name.should eq "Griffiths"
-    first.age.should eq 55
-    second.name.should eq "Purcell"
-    second.age.should eq 22
+      query.statement.should eq "SELECT DISTINCT ON (users.name) #{User::COLUMN_SQL} FROM users ORDER BY name ASC, age ASC"
+      query.args.should eq [] of String
+      results = queryable.results
+      first = results.first
+      second = results.last
+      first.name.should eq "Griffiths"
+      first.age.should eq 55
+      second.name.should eq "Purcell"
+      second.age.should eq 22
+    end
   end
 
   describe ".first" do
