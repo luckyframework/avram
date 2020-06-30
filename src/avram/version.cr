@@ -1,3 +1,3 @@
 module Avram
-  VERSION = "0.14.0"
+  VERSION = "0.16.0"
 end
