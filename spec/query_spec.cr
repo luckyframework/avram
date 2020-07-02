@@ -30,12 +30,21 @@ describe Avram::Query do
     ChainedQuery.new.young.named("Paul")
   end
 
-  describe "#destinct" do
+  describe "#distinct" do
     it "selects distinct" do
       query = UserQuery.new.distinct.query
 
       query.statement.should eq "SELECT DISTINCT #{User::COLUMN_SQL} FROM users"
       query.args.should eq [] of String
+    end
+
+    it "clones the original query" do
+      query = UserQuery.new.name("name")
+      original_query_sql = query.to_sql
+
+      query.distinct
+
+      query.to_sql.should eq original_query_sql
     end
   end
 
