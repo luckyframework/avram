@@ -139,7 +139,6 @@ describe Avram::Query do
     end
 
     it "clones the original query" do
-      UserBox.new.name("name").create
       query = UserQuery.new.name("name")
       original_query_sql = query.to_sql
 
@@ -218,7 +217,6 @@ describe Avram::Query do
     end
 
     it "clones the original query" do
-      UserBox.new.name("name").create
       query = UserQuery.new.name("name")
       original_query_sql = query.to_sql
 
