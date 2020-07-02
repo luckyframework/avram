@@ -417,6 +417,15 @@ describe Avram::Query do
 
       query.statement.should eq "SELECT #{User::COLUMN_SQL} FROM users ORDER BY name ASC"
     end
+
+    it "doesn't mutate the query" do
+      query = UserQuery.new.name("name")
+      original_query_sql = query.to_sql
+
+      query.order_by(:name, :asc)
+
+      query.to_sql.should eq original_query_sql
+    end
   end
 
   describe "#none" do
@@ -426,6 +435,15 @@ describe Avram::Query do
       query = UserQuery.new.none
 
       query.results.size.should eq 0
+    end
+
+    it "doesn't mutate the query" do
+      query = UserQuery.new.name("name")
+      original_query_sql = query.to_sql
+
+      query.none
+
+      query.to_sql.should eq original_query_sql
     end
   end
 
@@ -450,6 +468,15 @@ describe Avram::Query do
       min = UserQuery.new.age.select_min
       min.should be_nil
     end
+
+    it "doesn't mutate the query" do
+      query = UserQuery.new.name("name")
+      original_query_sql = query.to_sql
+
+      query.age.select_min
+
+      query.to_sql.should eq original_query_sql
+    end
   end
 
   describe "#select_max" do
@@ -472,6 +499,15 @@ describe Avram::Query do
     it "returns nil if no records" do
       max = UserQuery.new.age.select_max
       max.should be_nil
+    end
+
+    it "doesn't mutate the query" do
+      query = UserQuery.new.name("name")
+      original_query_sql = query.to_sql
+
+      query.age.select_max
+
+      query.to_sql.should eq original_query_sql
     end
   end
 
@@ -496,6 +532,15 @@ describe Avram::Query do
       UserBox.create &.age(3)
       average = UserQuery.new.age.gte(2).age.select_average
       average.should eq 2.5
+    end
+
+    it "doesn't mutate the query" do
+      query = UserQuery.new.name("name")
+      original_query_sql = query.to_sql
+
+      query.age.select_average
+
+      query.to_sql.should eq original_query_sql
     end
   end
 
