@@ -119,6 +119,10 @@ module Avram::Queryable(T)
     clone.tap &.query.raw_where(Avram::Where::Raw.new(statement, args: bind_vars))
   end
 
+  def where(sql_clause : Avram::Where::SqlClause) : self
+    clone.tap &.query.where(sql_clause)
+  end
+
   def order_by(column, direction) : self
     direction = Avram::OrderBy::Direction.parse(direction.to_s)
     order_by(Avram::OrderBy.new(column, direction))

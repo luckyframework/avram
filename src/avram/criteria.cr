@@ -173,9 +173,13 @@ class Avram::Criteria(T, V)
   end
 
   private def add_clause(sql_clause) : T
-    sql_clause = build_sql_clause(sql_clause)
-    rows.query.where(sql_clause)
-    rows
+    rows.where(build_sql_clause(sql_clause))
+  end
+
+  private def add_clauses(sql_clauses : Array(Avram::Where::SqlClause)) : T
+    sql_clauses.reduce(rows) do |r, sql_clause|
+      r.where(build_sql_clause(sql_clause))
+    end
   end
 
   private def build_sql_clause(sql_clause : Avram::Where::SqlClause) : Avram::Where::SqlClause
