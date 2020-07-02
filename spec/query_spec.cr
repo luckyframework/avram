@@ -316,8 +316,8 @@ describe Avram::Query do
     end
 
     it "doesn't mutate the query" do
-      user = UserBox.new.name("name").create
-      query = UserQuery.new.name("name")
+      user = UserBox.new.create
+      query = UserQuery.new
       original_query_sql = query.to_sql
 
       query.find(user.id)
