@@ -38,7 +38,7 @@ describe Avram::Query do
       query.args.should eq [] of String
     end
 
-    it "clones the original query" do
+    it "doesn't mutate the query" do
       query = UserQuery.new.name("name")
       original_query_sql = query.to_sql
 
@@ -147,7 +147,7 @@ describe Avram::Query do
       UserQuery.new.first?.should be_nil
     end
 
-    it "clones the original query" do
+    it "doesn't mutate the query" do
       query = UserQuery.new.name("name")
       original_query_sql = query.to_sql
 
@@ -225,7 +225,7 @@ describe Avram::Query do
       UserQuery.new.last?.should be_nil
     end
 
-    it "clones the original query" do
+    it "doesn't mutate the query" do
       query = UserQuery.new.name("name")
       original_query_sql = query.to_sql
 
