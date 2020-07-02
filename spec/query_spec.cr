@@ -571,6 +571,15 @@ describe Avram::Query do
       query_sum = UserQuery.new.age.select_sum
       query_sum.should be_nil
     end
+
+    it "doesn't mutate the query" do
+      query = UserQuery.new.name("name")
+      original_query_sql = query.to_sql
+
+      query.total_score.select_sum
+
+      query.to_sql.should eq original_query_sql
+    end
   end
 
   describe "#select_sum for Int64 column" do
@@ -688,6 +697,15 @@ describe Avram::Query do
     it "returns 0 if postgres returns no results" do
       query = UserQuery.new.distinct_on(&.name).average_score.gt(5).group(&.name).group(&.id).select_count
       query.should eq 0
+    end
+
+    it "doesn't mutate the query" do
+      query = UserQuery.new.name("name")
+      original_query_sql = query.to_sql
+
+      query.select_count
+
+      query.to_sql.should eq original_query_sql
     end
   end
 
