@@ -61,9 +61,11 @@ module Avram::Queryable(T)
   end
 
   def distinct_on(&block) : self
-    criteria = yield self
+    new_instance = clone
+    criteria = yield new_instance
     criteria.private_distinct_on
-    self
+
+    new_instance
   end
 
   def reset_where(&block) : self
