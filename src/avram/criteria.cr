@@ -176,8 +176,8 @@ class Avram::Criteria(T, V)
 
   private def add_clause(sql_clause) : T
     sql_clause = build_sql_clause(sql_clause)
-
-    rows.clone.tap &.query.where(sql_clause)
+    rows.query.where(sql_clause)
+    rows
   end
 
   private def build_sql_clause(sql_clause : Avram::Where::SqlClause) : Avram::Where::SqlClause
