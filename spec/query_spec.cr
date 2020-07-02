@@ -1027,6 +1027,15 @@ describe Avram::Query do
       result.should eq 2
       ChainedQuery.new.select_count.should eq 0
     end
+
+    it "doesn't mutate the query" do
+      query = UserQuery.new.name("name")
+      original_query_sql = query.to_sql
+
+      query.delete
+
+      query.to_sql.should eq original_query_sql
+    end
   end
 
   describe "#asc_order" do
@@ -1045,6 +1054,15 @@ describe Avram::Query do
       query = Post::BaseQuery.new.published_at.asc_order(:nulls_last)
 
       query.to_sql[0].should contain "ORDER BY posts.published_at ASC NULLS LAST"
+    end
+
+    it "doesn't mutate the query" do
+      query = UserQuery.new.name("name")
+      original_query_sql = query.to_sql
+
+      query.name.asc_order
+
+      query.to_sql.should eq original_query_sql
     end
   end
 
@@ -1146,6 +1164,15 @@ describe Avram::Query do
       companies.query.args.should eq ["123.45", "678.901"]
       companies.first.should eq company
     end
+
+    it "doesn't mutate the query" do
+      query = UserQuery.new.name("name")
+      original_query_sql = query.to_sql
+
+      query.age.between(1, 3)
+
+      query.to_sql.should eq original_query_sql
+    end
   end
 
   describe "#group" do
@@ -1165,6 +1192,15 @@ describe Avram::Query do
       expect_raises(PQ::PQError, /column "users\.id" must appear in the GROUP BY/) do
         users.map(&.name).should contain "Pam"
       end
+    end
+
+    it "doesn't mutate the query" do
+      query = UserQuery.new.name("name")
+      original_query_sql = query.to_sql
+
+      query.group(&.age)
+
+      query.to_sql.should eq original_query_sql
     end
   end
 
@@ -1233,6 +1269,15 @@ describe Avram::Query do
       users.query.limit.should eq 10
       users.reset_limit.query.limit.should eq nil
     end
+
+    it "doesn't mutate the query" do
+      query = UserQuery.new.limit(10)
+      original_query_sql = query.to_sql
+
+      query.reset_limit
+
+      query.to_sql.should eq original_query_sql
+    end
   end
 
   describe "#reset_offset" do
@@ -1240,6 +1285,15 @@ describe Avram::Query do
       users = UserQuery.new.offset(10)
       users.query.offset.should eq 10
       users.reset_offset.query.offset.should eq nil
+    end
+
+    it "doesn't mutate the query" do
+      query = UserQuery.new.offset(10)
+      original_query_sql = query.to_sql
+
+      query.reset_offset
+
+      query.to_sql.should eq original_query_sql
     end
   end
 end
