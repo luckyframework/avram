@@ -123,6 +123,10 @@ module Avram::Queryable(T)
     clone.tap &.query.where(sql_clause)
   end
 
+  def merge_query(query_to_merge : Avram::QueryBuilder)
+    clone.tap &.query.merge(query_to_merge)
+  end
+
   def order_by(column, direction) : self
     direction = Avram::OrderBy::Direction.parse(direction.to_s)
     order_by(Avram::OrderBy.new(column, direction))
