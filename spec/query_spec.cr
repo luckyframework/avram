@@ -55,6 +55,15 @@ describe Avram::Query do
       query.statement.should eq "SELECT #{User::COLUMN_SQL} FROM users"
       query.args.should eq [] of String
     end
+
+    it "doesn't mutate the query" do
+      query = UserQuery.new.order_by(:name, :asc)
+      original_query_sql = query.to_sql
+
+      query.reset_order
+
+      query.to_sql.should eq original_query_sql
+    end
   end
 
   describe "#reset_where" do
@@ -63,6 +72,15 @@ describe Avram::Query do
 
       query.statement.should eq "SELECT #{User::COLUMN_SQL} FROM users WHERE users.age = $1"
       query.args.should eq ["35"] of String
+    end
+
+    it "doesn't mutate the query" do
+      query = UserQuery.new.name("name").age(35)
+      original_query_sql = query.to_sql
+
+      query.reset_where(&.name)
+
+      query.to_sql.should eq original_query_sql
     end
   end
 
@@ -84,6 +102,15 @@ describe Avram::Query do
       first.age.should eq 55
       second.name.should eq "Purcell"
       second.age.should eq 22
+    end
+
+    it "doesn't mutate the query" do
+      query = UserQuery.new.name("name")
+      original_query_sql = query.to_sql
+
+      query.distinct_on(&.name)
+
+      query.to_sql.should eq original_query_sql
     end
   end
 
@@ -287,6 +314,16 @@ describe Avram::Query do
         UserQuery.new.find("id")
       end
     end
+
+    it "doesn't mutate the query" do
+      user = UserBox.new.name("name").create
+      query = UserQuery.new.name("name")
+      original_query_sql = query.to_sql
+
+      query.find(user.id)
+
+      query.to_sql.should eq original_query_sql
+    end
   end
 
   describe "#where" do
@@ -319,6 +356,15 @@ describe Avram::Query do
         UserQuery.new.where("name = ?", "bound", "extra")
       end
     end
+
+    it "doesn't mutate the query" do
+      query = UserQuery.new.where(:first_name, "Paul")
+      original_query_sql = query.to_sql
+
+      query.where(:last_name, "Smith")
+
+      query.to_sql.should eq original_query_sql
+    end
   end
 
   describe "#limit" do
@@ -337,6 +383,15 @@ describe Avram::Query do
 
       users.results.size.should eq(1)
     end
+
+    it "doesn't mutate the query" do
+      query = UserQuery.new.name("name")
+      original_query_sql = query.to_sql
+
+      query.limit(2)
+
+      query.to_sql.should eq original_query_sql
+    end
   end
 
   describe "#offset" do
@@ -344,6 +399,15 @@ describe Avram::Query do
       query = UserQuery.new.offset(2).query
 
       query.statement.should eq "SELECT #{User::COLUMN_SQL} FROM users OFFSET 2"
+    end
+
+    it "doesn't mutate the query" do
+      query = UserQuery.new.name("name")
+      original_query_sql = query.to_sql
+
+      query.offset(2)
+
+      query.to_sql.should eq original_query_sql
     end
   end
 
