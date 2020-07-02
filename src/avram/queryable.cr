@@ -127,9 +127,11 @@ module Avram::Queryable(T)
   end
 
   def group(&block) : self
-    criteria = yield self
+    new_instance = clone
+    criteria = yield new_instance
     criteria.private_group
-    self
+
+    new_instance
   end
 
   def none : self
