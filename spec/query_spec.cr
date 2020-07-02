@@ -138,7 +138,7 @@ describe Avram::Query do
       UserQuery.new.first?.should be_nil
     end
 
-    it "doesn't mutate the original query" do
+    it "clones the original query" do
       UserBox.new.name("name").create
       query = UserQuery.new.name("name")
       original_query_sql = query.to_sql
@@ -217,7 +217,7 @@ describe Avram::Query do
       UserQuery.new.last?.should be_nil
     end
 
-    it "doesn't mutate the original query" do
+    it "clones the original query" do
       UserBox.new.name("name").create
       query = UserQuery.new.name("name")
       original_query_sql = query.to_sql
