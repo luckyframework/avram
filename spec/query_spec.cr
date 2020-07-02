@@ -20,11 +20,6 @@ class JSONQuery < Blob::BaseQuery
   end
 end
 
-class BucketQuery < Bucket::BaseQuery
-end
-
-alias ArrayQuery = BucketQuery
-
 describe Avram::Query do
   it "can chain scope methods" do
     ChainedQuery.new.young.named("Paul")
@@ -932,6 +927,7 @@ describe Avram::Query do
         bucket = BucketBox.new.names(["pumpkin", "zucchini"]).create
 
         query = ArrayQuery.new.names(["pumpkin", "zucchini"])
+        query = BucketQuery.new.names(["pumpkin", "zucchini"])
         query.to_sql.should eq ["SELECT #{Bucket::COLUMN_SQL} FROM buckets WHERE buckets.names = $1", "{\"pumpkin\",\"zucchini\"}"]
         result = query.first
         result.should eq bucket
