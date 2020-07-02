@@ -939,7 +939,7 @@ describe Avram::Query do
     end
   end
 
-  describe "#truncate" do
+  describe ".truncate" do
     it "truncates the table" do
       10.times { UserBox.create }
       UserQuery.new.select_count.should eq 10
