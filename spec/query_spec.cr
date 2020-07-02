@@ -743,6 +743,15 @@ describe Avram::Query do
         results.map(&.name).should eq ["Joyce"]
       end
     end
+
+    it "doesn't mutate the query" do
+      query = UserQuery.new.name("name")
+      original_query_sql = query.to_sql
+
+      query.age.not.eq(5)
+
+      query.to_sql.should eq original_query_sql
+    end
   end
 
   describe "#in" do
@@ -760,6 +769,15 @@ describe Avram::Query do
       results = UserQuery.new.name.not.in(["Mikias"])
       results.map(&.name).should eq [] of String
     end
+
+    it "doesn't mutate the query" do
+      query = UserQuery.new.name("name")
+      original_query_sql = query.to_sql
+
+      query.age.in([1, 2, 3])
+
+      query.to_sql.should eq original_query_sql
+    end
   end
 
   describe "#join methods for associations" do
@@ -774,6 +792,15 @@ describe Avram::Query do
       result.post.should eq post
     end
 
+    it "doesn't mutate the query when inner joining on belongs to" do
+      query = Comment::BaseQuery.new
+      original_query_sql = query.to_sql
+
+      query.join_posts
+
+      query.to_sql.should eq original_query_sql
+    end
+
     it "inner join on has many" do
       post = PostBox.create
       comment = CommentBox.new.post_id(post.id).create
@@ -783,6 +810,15 @@ describe Avram::Query do
 
       result = query.first
       result.comments.first.should eq comment
+    end
+
+    it "doesn't mutate the query when inner joining on has_many" do
+      query = Post::BaseQuery.new
+      original_query_sql = query.to_sql
+
+      query.join_comments
+
+      query.to_sql.should eq original_query_sql
     end
 
     it "multiple inner joins on has many through" do
@@ -795,6 +831,15 @@ describe Avram::Query do
 
       result = query.first
       result.tags.first.should eq tag
+    end
+
+    it "doesn't mutate the query when inner joining multiple inner joins on has many through" do
+      query = Post::BaseQuery.new
+      original_query_sql = query.to_sql
+
+      query.join_tags
+
+      query.to_sql.should eq original_query_sql
     end
   end
 
@@ -809,6 +854,15 @@ describe Avram::Query do
       result.should eq employee
     end
 
+    it "doesn't mutate the query when left joining on belongs to" do
+      query = Employee::BaseQuery.new
+      original_query_sql = query.to_sql
+
+      query.left_join_managers
+
+      query.to_sql.should eq original_query_sql
+    end
+
     it "left join on has many" do
       post = PostBox.create
 
@@ -819,6 +873,15 @@ describe Avram::Query do
       result.should eq post
     end
 
+    it "doesn't mutate the query when left joining on has many" do
+      query = Post::BaseQuery.new
+      original_query_sql = query.to_sql
+
+      query.left_join_comments
+
+      query.to_sql.should eq original_query_sql
+    end
+
     it "multiple left joins on has many through" do
       post = PostBox.create
 
@@ -827,6 +890,15 @@ describe Avram::Query do
 
       result = query.first
       result.should eq post
+    end
+
+    it "doesn't mutate the query when left joining on has many through" do
+      query = Post::BaseQuery.new
+      original_query_sql = query.to_sql
+
+      query.left_join_tags
+
+      query.to_sql.should eq original_query_sql
     end
   end
 
