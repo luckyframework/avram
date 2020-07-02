@@ -155,7 +155,7 @@ module Avram::Queryable(T)
   end
 
   def find(id)
-    clone.id(id).limit(1).first? || raise RecordNotFoundError.new(model: @@table_name, id: id.to_s)
+    id(id).limit(1).first? || raise RecordNotFoundError.new(model: @@table_name, id: id.to_s)
   end
 
   def first?
