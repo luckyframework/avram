@@ -709,37 +709,39 @@ describe Avram::Query do
     end
   end
 
-  describe "#not with an argument" do
-    it "negates the given where condition as 'equal'" do
-      UserBox.new.name("Paul").create
+  describe "#not" do
+    context "with an argument" do
+      it "negates the given where condition as 'equal'" do
+        UserBox.new.name("Paul").create
 
-      results = UserQuery.new.name.not.eq("not existing").results
-      results.should eq UserQuery.new.results
+        results = UserQuery.new.name.not.eq("not existing").results
+        results.should eq UserQuery.new.results
 
-      results = UserQuery.new.name.not.eq("Paul").results
-      results.should eq [] of User
+        results = UserQuery.new.name.not.eq("Paul").results
+        results.should eq [] of User
 
-      UserBox.new.name("Alex").create
-      UserBox.new.name("Sarah").create
-      results = UserQuery.new.name.lower.not.eq("alex").results
-      results.map(&.name).should eq ["Paul", "Sarah"]
-    end
-  end
-
-  describe "#not with no arguments" do
-    it "negates any previous condition" do
-      UserBox.new.name("Paul").create
-
-      results = UserQuery.new.name.not.eq("Paul").results
-      results.should eq [] of User
+        UserBox.new.name("Alex").create
+        UserBox.new.name("Sarah").create
+        results = UserQuery.new.name.lower.not.eq("alex").results
+        results.map(&.name).should eq ["Paul", "Sarah"]
+      end
     end
 
-    it "can be used with operators" do
-      UserBox.new.age(33).name("Joyce").create
-      UserBox.new.age(34).name("Jil").create
+    context "with no arguments" do
+      it "negates any previous condition" do
+        UserBox.new.name("Paul").create
 
-      results = UserQuery.new.age.not.gt(33).results
-      results.map(&.name).should eq ["Joyce"]
+        results = UserQuery.new.name.not.eq("Paul").results
+        results.should eq [] of User
+      end
+
+      it "can be used with operators" do
+        UserBox.new.age(33).name("Joyce").create
+        UserBox.new.age(34).name("Jil").create
+
+        results = UserQuery.new.age.not.gt(33).results
+        results.map(&.name).should eq ["Joyce"]
+      end
     end
   end
 
