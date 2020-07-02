@@ -418,6 +418,12 @@ describe Avram::Query do
       query.statement.should eq "SELECT #{User::COLUMN_SQL} FROM users ORDER BY name ASC"
     end
 
+    it "returns a nice error when trying to order by a weird direction" do
+      expect_raises(Exception, /Accepted values are: :asc, :desc/) do
+        Post::BaseQuery.new.order_by(:published_at, :sideways)
+      end
+    end
+
     it "doesn't mutate the query" do
       query = UserQuery.new.name("name")
       original_query_sql = query.to_sql
@@ -841,7 +847,7 @@ describe Avram::Query do
     end
   end
 
-  describe "truncate" do
+  describe "#truncate" do
     it "truncates the table" do
       10.times { UserBox.create }
       UserQuery.new.select_count.should eq 10
@@ -850,7 +856,7 @@ describe Avram::Query do
     end
   end
 
-  describe "update" do
+  describe "#update" do
     it "updates records when wheres are added" do
       UserBox.create &.available_for_hire(false)
       UserBox.create &.available_for_hire(false)
@@ -907,7 +913,7 @@ describe Avram::Query do
     end
   end
 
-  describe "delete" do
+  describe "#delete" do
     it "deletes user records that are young" do
       UserBox.new.name("Tony").age(48).create
       UserBox.new.name("Peter").age(15).create
@@ -931,7 +937,7 @@ describe Avram::Query do
     end
   end
 
-  describe "ordering" do
+  describe "#asc_order" do
     it "orders by a joined table" do
       query = Post::BaseQuery.new.where_comments(Comment::BaseQuery.new.created_at.asc_order)
       query.to_sql[0].should contain "ORDER BY comments.created_at ASC"
@@ -948,15 +954,9 @@ describe Avram::Query do
 
       query.to_sql[0].should contain "ORDER BY posts.published_at ASC NULLS LAST"
     end
-
-    it "returns a nice error when trying to order by a weird direction" do
-      expect_raises(Exception, /Accepted values are: :asc, :desc/) do
-        Post::BaseQuery.new.order_by(:published_at, :sideways)
-      end
-    end
   end
 
-  describe "cloning queries" do
+  describe "#clone" do
     it "leaves the original query unaffected" do
       original_query = ChainedQuery.new.young
       new_query = original_query.clone.named("bruce wayne").joined_at.asc_order
