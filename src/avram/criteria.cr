@@ -7,13 +7,11 @@ class Avram::Criteria(T, V)
   end
 
   def desc_order(null_sorting : Avram::OrderBy::NullSorting = :default) : T
-    rows.query.order_by(Avram::OrderBy.new(column, :desc, null_sorting))
-    rows
+    rows.order_by(Avram::OrderBy.new(column, :desc, null_sorting))
   end
 
   def asc_order(null_sorting : Avram::OrderBy::NullSorting = :default) : T
-    rows.query.order_by(Avram::OrderBy.new(column, :asc, null_sorting))
-    rows
+    rows.order_by(Avram::OrderBy.new(column, :asc, null_sorting))
   end
 
   def eq(value) : T
