@@ -159,10 +159,9 @@ describe Avram::Query do
       UserBox.new.name("First").create
       UserBox.new.name("Last").create
 
-      user = (user_query = UserQuery.new).first?
+      user = UserQuery.new.first?
       user.should_not be_nil
       user.not_nil!.name.should eq "First"
-      user_query.query.statement.should eq "SELECT #{User::COLUMN_SQL} FROM users ORDER BY users.id ASC LIMIT 1"
     end
 
     it "returns nil if no record found" do
@@ -237,10 +236,9 @@ describe Avram::Query do
       UserBox.new.name("First").create
       UserBox.new.name("Last").create
 
-      last = (user_query = UserQuery.new).last?
+      last = UserQuery.new.last?
       last.should_not be_nil
       last && last.name.should eq "Last"
-      user_query.query.statement.should eq "SELECT #{User::COLUMN_SQL} FROM users ORDER BY users.id DESC LIMIT 1"
     end
 
     it "returns nil if last record is not found" do
