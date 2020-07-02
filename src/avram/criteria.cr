@@ -127,18 +127,21 @@ class Avram::Criteria(T, V)
   end
 
   def select_min : V | Nil
-    rows.query.select_min(column)
-    rows.exec_scalar.as(V | Nil)
+    new_instance = rows.clone
+    new_instance.query.select_min(column)
+    new_instance.exec_scalar.as(V | Nil)
   end
 
   def select_max : V | Nil
-    rows.query.select_max(column)
-    rows.exec_scalar.as(V | Nil)
+    new_instance = rows.clone
+    new_instance.query.select_max(column)
+    new_instance.exec_scalar.as(V | Nil)
   end
 
   def select_average : Float64?
-    rows.query.select_average(column)
-    rows.exec_scalar.as(PG::Numeric | Nil).try &.to_f64
+    new_instance = rows.clone
+    new_instance.query.select_average(column)
+    new_instance.exec_scalar.as(PG::Numeric | Nil).try &.to_f64
   end
 
   def select_average! : Float64
@@ -146,8 +149,9 @@ class Avram::Criteria(T, V)
   end
 
   def select_sum
-    rows.query.select_sum(column)
-    rows.exec_scalar
+    new_instance = rows.clone
+    new_instance.query.select_sum(column)
+    new_instance.exec_scalar
   end
 
   def in(values) : T
@@ -172,8 +176,8 @@ class Avram::Criteria(T, V)
 
   private def add_clause(sql_clause) : T
     sql_clause = build_sql_clause(sql_clause)
-    rows.query.where(sql_clause)
-    rows
+
+    rows.clone.tap &.query.where(sql_clause)
   end
 
   private def build_sql_clause(sql_clause : Avram::Where::SqlClause) : Avram::Where::SqlClause
