@@ -125,21 +125,15 @@ class Avram::Criteria(T, V)
   end
 
   def select_min : V | Nil
-    new_instance = rows.clone
-    new_instance.query.select_min(column)
-    new_instance.exec_scalar.as(V | Nil)
+    rows.exec_scalar(&.select_min(column)).as(V | Nil)
   end
 
   def select_max : V | Nil
-    new_instance = rows.clone
-    new_instance.query.select_max(column)
-    new_instance.exec_scalar.as(V | Nil)
+    rows.exec_scalar(&.select_max(column)).as(V | Nil)
   end
 
   def select_average : Float64?
-    new_instance = rows.clone
-    new_instance.query.select_average(column)
-    new_instance.exec_scalar.as(PG::Numeric | Nil).try &.to_f64
+    rows.exec_scalar(&.select_average(column)).as(PG::Numeric | Nil).try &.to_f64
   end
 
   def select_average! : Float64
@@ -147,9 +141,7 @@ class Avram::Criteria(T, V)
   end
 
   def select_sum
-    new_instance = rows.clone
-    new_instance.query.select_sum(column)
-    new_instance.exec_scalar
+    rows.exec_scalar(&.select_sum(column))
   end
 
   def in(values) : T

@@ -175,6 +175,7 @@ module Avram::Queryable(T)
 
   def last?
     with_ordered_query
+      .clone
       .tap(&.query.reverse_order)
       .limit(1)
       .results
@@ -186,8 +187,7 @@ module Avram::Queryable(T)
   end
 
   def select_count : Int64
-    new_instance = clone.tap &.query.select_count
-    new_instance.exec_scalar.as(Int64)
+    exec_scalar(&.select_count).as(Int64)
   rescue e : DB::NoResultsError
     0_i64
   end
@@ -216,15 +216,16 @@ module Avram::Queryable(T)
     end
   end
 
-  def exec_scalar
+  def exec_scalar(&block)
+    new_query = yield query.clone
     database.scalar query.statement, args: query.args, queryable: @@schema_class.name
   end
 
-  private def with_ordered_query
+  private def with_ordered_query : self
     if query.ordered?
-      clone
+      self
     else
-      clone.id.asc_order
+      id.asc_order
     end
   end
 
