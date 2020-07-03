@@ -83,8 +83,8 @@ module Avram::Queryable(T)
   end
 
   protected def delete! : Int64
-    query.delete
-    database.exec(query.statement, args: query.args).rows_affected
+    new_query = query.clone.delete
+    database.exec(new_query.statement, args: new_query.args).rows_affected
   end
 
   # Update the records using the query's where clauses, or all records if no wheres are added.
