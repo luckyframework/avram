@@ -61,19 +61,13 @@ module Avram::Queryable(T)
   end
 
   def distinct_on(&block) : self
-    new_instance = clone
-    criteria = yield new_instance
+    criteria = yield clone
     criteria.private_distinct_on
-
-    new_instance
   end
 
   def reset_where(&block) : self
-    new_instance = clone
-    criteria = yield new_instance
+    criteria = yield clone
     criteria.private_reset_where
-
-    new_instance
   end
 
   # Delete the records using the query's where clauses, or all records if no wheres are added.
@@ -139,11 +133,8 @@ module Avram::Queryable(T)
   end
 
   def group(&block) : self
-    new_instance = clone
-    criteria = yield new_instance
+    criteria = yield clone
     criteria.private_group
-
-    new_instance
   end
 
   def none : self

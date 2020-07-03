@@ -150,18 +150,18 @@ class Avram::Criteria(T, V)
   end
 
   # :nodoc:
-  def private_distinct_on : Avram::QueryBuilder
-    rows.query.distinct_on(column)
+  def private_distinct_on : T
+    rows.tap &.query.distinct_on(column)
   end
 
   # :nodoc:
-  def private_group : Avram::QueryBuilder
-    rows.query.group_by(column)
+  def private_group : T
+    rows.tap &.query.group_by(column)
   end
 
   # :nodoc:
-  def private_reset_where : Avram::QueryBuilder
-    rows.query.reset_where(column)
+  def private_reset_where : T
+    rows.tap &.query.reset_where(column)
   end
 
   private def add_clause(sql_clause) : T
