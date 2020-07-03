@@ -117,7 +117,7 @@ module Avram::Queryable(T)
     clone.tap &.query.where(sql_clause)
   end
 
-  def merge_query(query_to_merge : Avram::QueryBuilder)
+  def merge_query(query_to_merge : Avram::QueryBuilder) : self
     clone.tap &.query.merge(query_to_merge)
   end
 
@@ -128,7 +128,7 @@ module Avram::Queryable(T)
     raise "#{e.message}. Accepted values are: :asc, :desc"
   end
 
-  def order_by(order : Avram::OrderBy)
+  def order_by(order : Avram::OrderBy) : self
     clone.tap &.query.order_by(order)
   end
 
