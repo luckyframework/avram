@@ -117,7 +117,7 @@ module Avram
     private def macos_postgres_tools_link
       "https://postgresapp.com/documentation/cli-tools.html".colorize(:green)
     end
-  
+
     private def linux_postgres_installation_instructions
       "sudo apt-get update && sudo apt-get install postgresql postgresql-contrib".colorize(:green)
     end
@@ -127,7 +127,7 @@ module Avram
     def initialize(original_message : String)
       error = String.build do |message|
         message << <<-ERROR
-        Creating the database failed. It looks like Postgres is not running.
+        It looks like Postgres is not running.
   
         Message from Postgres:
   
