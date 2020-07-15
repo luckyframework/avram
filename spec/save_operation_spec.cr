@@ -388,7 +388,9 @@ describe "Avram::SaveOperation" do
       end
 
       it "overrides all of the defaults through params" do
-        params = Avram::Params.new({"greeting" => "Hi", "admin" => "true", "age" => "4", "money" => "100.23", "published_at" => 1.day.ago.to_s, "drafted_at" => 1.week.ago.to_s})
+        published_at = 1.day.ago.to_utc.at_beginning_of_day
+        drafted_at = 1.week.ago.to_utc.at_beginning_of_day
+        params = Avram::Params.new({"greeting" => "Hi", "admin" => "true", "age" => "4", "money" => "100.23", "published_at" => published_at.to_s, "drafted_at" => drafted_at.to_s})
         OverrideDefaults.create(params) do |operation, record|
           record.should_not eq nil
           r = record.not_nil!
@@ -396,8 +398,8 @@ describe "Avram::SaveOperation" do
           r.admin.should eq true
           r.age.should eq 4
           r.money.should eq 100.23
-          r.published_at.should be_a Time
-          r.drafted_at.should be_a Time
+          r.published_at.should eq published_at
+          r.drafted_at.should eq drafted_at
         end
       end
     end
