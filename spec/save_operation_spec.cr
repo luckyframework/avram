@@ -375,7 +375,6 @@ describe "Avram::SaveOperation" do
       end
 
       it "allows you to override the default values" do
-        # params = Avram::Params.new({"greeting" => "A fancy hat"})
         ModelWithDefaultValues::SaveOperation.create(greeting: "A fancy hat") do |operation, record|
           record.should_not eq nil
           r = record.not_nil!
