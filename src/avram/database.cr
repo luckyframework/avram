@@ -169,5 +169,16 @@ abstract class Avram::Database
         db.exec statement
       end
     end
+
+    def delete
+      table_names = database.table_names
+      return if table_names.empty?
+      table_names.each do |t|
+        statement = ("DELETE FROM #{t}")
+        database.run do |db|
+          db.exec statement
+        end
+      end
+    end
   end
 end
