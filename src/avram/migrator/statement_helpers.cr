@@ -60,8 +60,8 @@ module Avram::Migrator::StatementHelpers
     prepared_statements << Avram::Migrator::AlterExtensionStatement.new(name, to: to).build
   end
 
-  def create_function(name : String, body : String)
-    prepared_statements << Avram::Migrator::CreateFunctionStatement.new(name, body: body).build
+  def create_function(name : String, body : String, returns : String = "trigger")
+    prepared_statements << Avram::Migrator::CreateFunctionStatement.new(name, body: body, returns: returns).build
   end
 
   def drop_function(name : String)
