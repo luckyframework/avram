@@ -8,7 +8,7 @@ describe Avram::Migrator::CreateFunctionStatement do
     END IF;
     RETURN NEW;
     SQL
-    statement = Avram::Migrator::CreateFunctionStatement.new(:set_updated_at, sql)
+    statement = Avram::Migrator::CreateFunctionStatement.new("set_updated_at", sql)
 
     full_statement = statement.build
     full_statement.should contain "CREATE OR REPLACE FUNCTION set_updated_at()"

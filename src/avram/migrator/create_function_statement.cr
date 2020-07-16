@@ -1,9 +1,9 @@
 class Avram::Migrator::CreateFunctionStatement
-  def initialize(@name : String | Symbol, @body : String, @returns : String = "trigger")
+  def initialize(@name : String, @body : String, @returns : String = "trigger")
   end
 
   def function_name
-    if @name.to_s.ends_with?(')')
+    if @name.ends_with?(')')
       @name
     else
       "#{@name}()"
