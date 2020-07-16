@@ -31,14 +31,6 @@ struct Time
         FailedCast.new
     end
 
-    def parse(value : Symbol) : SuccessfulCast(Time) | FailedCast
-      if value == :now
-        parse(Time.utc)
-      else
-        FailedCast.new
-      end
-    end
-
     def self.try_parsing_with_default_formatters(value : String)
       TIME_FORMATS.find do |format|
         begin

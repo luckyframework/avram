@@ -3,7 +3,7 @@
 class ModelWithDefaultValues < BaseModel
   table :test_defaults do
     column greeting : String = "Hello there!"
-    column drafted_at : Time = :now
+    column drafted_at : Time = Time.utc
     column published_at : Time = 1.day.from_now
     column admin : Bool = false
     column age : Int32 = 30
