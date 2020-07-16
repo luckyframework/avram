@@ -33,6 +33,11 @@ abstract class Avram::Database
     new.truncate
   end
 
+  # Run a SQL `DELETE` on all tables in the database
+  def self.delete
+    new.delete
+  end
+
   # Wrap the block in a database transaction
   #
   # ```
