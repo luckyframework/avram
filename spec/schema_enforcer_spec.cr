@@ -6,6 +6,12 @@ private class ModelWithMissingButSimilarlyNamedColumn < BaseModel
   end
 end
 
+private class ModelWithPerfectlyNormalColumns < BaseModel
+  table :test_defaults do
+    column greeting : String = "Hello there!"
+  end
+end
+
 private class ModelWithOptionalAttributeOnRequiredColumn < BaseModel
   table :users do
     column name : String?
@@ -44,6 +50,11 @@ describe Avram::SchemaEnforcer do
   it "does not enforce schema if 'skip_schema_enforcer' is enabled" do
     # Should not raise
     TempTable.ensure_correct_column_mappings!
+  end
+
+  it "does not raise an error when the columns have defaults" do
+    # Should not raise
+    ModelWithPerfectlyNormalColumns.ensure_correct_column_mappings!
   end
 
   it "does not add abstract models" do

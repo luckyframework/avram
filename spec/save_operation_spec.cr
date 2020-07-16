@@ -49,6 +49,10 @@ private class ParamKeySaveOperation < ValueColumnModel::SaveOperation
   param_key :custom_param
 end
 
+private class OverrideDefaults < ModelWithDefaultValues::SaveOperation
+  permit_columns :greeting, :drafted_at, :published_at, :admin, :age, :money
+end
+
 describe "Avram::SaveOperation" do
   it "allows overriding the param_key" do
     ParamKeySaveOperation.param_key.should eq "custom_param"
@@ -352,6 +356,50 @@ describe "Avram::SaveOperation" do
         SaveLineItem.create params do |operation, record|
           operation.saved?.should be_true
           record.should be_a(LineItem)
+        end
+      end
+    end
+
+    context "when there's default values in the table" do
+      it "saves with all of the default values" do
+        ModelWithDefaultValues::SaveOperation.create do |operation, record|
+          record.should_not eq nil
+          r = record.not_nil!
+          r.greeting.should eq "Hello there!"
+          r.admin.should eq false
+          r.age.should eq 30
+          r.money.should eq 3.5
+          r.published_at.should be_a Time
+          r.drafted_at.should be_a Time
+        end
+      end
+
+      it "allows you to override the default values" do
+        ModelWithDefaultValues::SaveOperation.create(greeting: "A fancy hat") do |operation, record|
+          record.should_not eq nil
+          r = record.not_nil!
+          r.greeting.should eq "A fancy hat"
+          r.admin.should eq false
+          r.age.should eq 30
+          r.money.should eq 3.5
+          r.published_at.should be_a Time
+          r.drafted_at.should be_a Time
+        end
+      end
+
+      it "overrides all of the defaults through params" do
+        published_at = 1.day.ago.to_utc.at_beginning_of_day
+        drafted_at = 1.week.ago.to_utc.at_beginning_of_day
+        params = Avram::Params.new({"greeting" => "Hi", "admin" => "true", "age" => "4", "money" => "100.23", "published_at" => published_at.to_s, "drafted_at" => drafted_at.to_s})
+        OverrideDefaults.create(params) do |operation, record|
+          record.should_not eq nil
+          r = record.not_nil!
+          r.greeting.should eq "Hi"
+          r.admin.should eq true
+          r.age.should eq 4
+          r.money.should eq 100.23
+          r.published_at.should eq published_at
+          r.drafted_at.should eq drafted_at
         end
       end
     end
