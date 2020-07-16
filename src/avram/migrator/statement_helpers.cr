@@ -63,4 +63,8 @@ module Avram::Migrator::StatementHelpers
   def create_function(name : String, body : String)
     prepared_statements << Avram::Migrator::CreateFunctionStatement.new(name, body: body).build
   end
+
+  def drop_function(name : String)
+    prepared_statements << Avram::Migrator::DropFunctionStatement.new(name).build
+  end
 end
