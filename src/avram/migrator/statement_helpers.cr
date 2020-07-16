@@ -59,4 +59,8 @@ module Avram::Migrator::StatementHelpers
   def update_extension(name : String, to : String? = nil)
     prepared_statements << Avram::Migrator::AlterExtensionStatement.new(name, to: to).build
   end
+
+  def create_function(name : Symbol, function_body : String)
+    prepared_statements << Avram::Migrator::CreateFunctionStatement.new(name, body: function_body).build
+  end
 end
