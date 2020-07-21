@@ -5,6 +5,8 @@ private class Operation < Post::SaveOperation
   attribute terms_of_service : Bool
   attribute best_kind_of_bear : String = "black bear"
   attribute default_is_false : Bool = false
+  file_attribute :thumb
+
   before_save prepare
 
   def prepare
@@ -25,6 +27,7 @@ describe "attribute in operations" do
 
   it "generates a list of attributes" do
     operation.attributes.map(&.name).should eq [
+      :thumb,
       :default_is_false,
       :best_kind_of_bear,
       :terms_of_service,
@@ -107,6 +110,41 @@ describe "attribute in operations" do
   end
 end
 
+describe "file_attribute in operation" do
+  it "is a PermittedAttribute" do
+    operation.thumb.should be_a(Avram::PermittedAttribute(Avram::Uploadable?))
+    operation.thumb.name.should eq(:thumb)
+    operation.thumb.param_key.should eq("post")
+  end
+
+  it "is included in the list of attributes" do
+    operation.attributes.map(&.name).should contain(:thumb)
+  end
+
+  it "gracefully handles invalid params" do
+    operation = operation({"thumb" => "not a file"})
+    operation.thumb.value.should be_nil
+    operation.thumb.errors.first.should eq "is invalid"
+  end
+
+  it "includes file attribute errors when calling SaveOperation#valid?" do
+    operation = operation({"thumb" => "not a file"})
+    operation.setup_required_database_columns
+    operation.valid?.should be_false
+  end
+
+  it "can still save to the database" do
+    params = {"thumb" => Avram::UploadedFile.new("thumb.png")}
+    operation = upload_operation(params)
+    operation.setup_required_database_columns
+    operation.save.should eq true
+  end
+end
+
 private def operation(attrs = {} of String => String)
   Operation.new(Avram::Params.new(attrs))
+end
+
+private def upload_operation(attrs = {} of String => Avram::Uploadable)
+  Operation.new(Avram::UploadParams.new(attrs))
 end

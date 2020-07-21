@@ -19,6 +19,11 @@ describe "Avram::Attribute" do
       empty_array = Avram::Attribute.new(name: :empty_array, param: nil, value: [] of String, param_key: "test_form")
       empty_array.value.should_not be_nil
     end
+
+    it "returns nil for empty uploads" do
+      empty_upload = Avram::Attribute.new(name: :empty_upload, param: nil, value: Avram::UploadedFile.new(""), param_key: "test_form")
+      empty_upload.value.should be_nil
+    end
   end
 
   describe "#original_value" do
@@ -30,6 +35,11 @@ describe "Avram::Attribute" do
     it "does not return nil on empty arrays" do
       empty_array = Avram::Attribute.new(name: :empty_array, param: nil, value: [] of String, param_key: "test_form")
       empty_array.original_value.should_not be_nil
+    end
+
+    it "returns nil for empty uploads" do
+      empty_upload = Avram::Attribute.new(name: :empty_upload, param: nil, value: Avram::UploadedFile.new(""), param_key: "test_form")
+      empty_upload.original_value.should be_nil
     end
   end
 
