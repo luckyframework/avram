@@ -83,6 +83,10 @@ abstract class Avram::Database
     DatabaseCleaner.new(self).truncate
   end
 
+  protected def delete
+    DatabaseCleaner.new(self).delete
+  end
+
   protected def rollback
     raise Avram::Rollback.new
   end
