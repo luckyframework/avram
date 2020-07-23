@@ -111,7 +111,7 @@ module Avram::DefineAttribute
     @_{{ name }} : Avram::Attribute(Avram::Uploadable?)?
 
     ensure_base_attributes_method_is_present
-    
+
     def attributes
       ([{{ name }}] + previous_def + super).uniq
     end
