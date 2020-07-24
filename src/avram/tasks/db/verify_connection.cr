@@ -20,10 +20,10 @@ class Db::VerifyConnection < LuckyCli::Task
   end
 
   def call
-    begin
-      DB.open(Avram::Migrator::Runner.database_url) do |db|
-      end
-      puts "✔ Connection verified" unless quiet?
+    DB.open(Avram::Migrator::Runner.database_url) do |_db|
+    end
+    puts "✔ Connection verified" unless quiet?
+
     rescue PQ::ConnectionError | DB::ConnectionRefused
       raise <<-ERROR
       Unable to connect to Postgres for database '#{Avram.settings.database_to_migrate}'.
@@ -44,6 +44,5 @@ class Db::VerifyConnection < LuckyCli::Task
         ▸ Then run 'lucky db.verify_connection' to make sure it can connect.
 
       ERROR
-    end
   end
 end

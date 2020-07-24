@@ -44,6 +44,7 @@ module Avram
     getter errors : Hash(Symbol, Array(String))
 
     def initialize(operation)
+      # ameba:disable Lint/ShadowingOuterLocalVar
       message = String.build do |message|
         message << "Could not save #{operation.class.name}."
         message << "\n"

@@ -1,4 +1,5 @@
 module LazyLoadHelpers
+  # ameba:disable Style/RedundantBegin
   private def with_lazy_load(enabled)
     begin
       Avram.configure do |settings|

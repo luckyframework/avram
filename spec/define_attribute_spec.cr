@@ -103,7 +103,8 @@ describe "attribute in operations" do
       operation.terms_of_service.value.should be_nil
       post.should_not be_nil
 
-      Operation.update(post.not_nil!, best_kind_of_bear: "koala bear") do |operation, post|
+      # ameba:disable Lint/ShadowingOuterLocalVar
+      Operation.update(post.not_nil!, best_kind_of_bear: "koala bear") do |operation, _post|
         operation.best_kind_of_bear.value.should eq("koala bear")
       end
     end

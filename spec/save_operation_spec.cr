@@ -82,7 +82,8 @@ describe "Avram::SaveOperation" do
     user.age.should eq 34
     user.joined_at.should eq now
 
-    SaveUser.create(name: "Dan", age: 34, joined_at: now) do |operation, user|
+    # ameba:disable Lint/ShadowingOuterLocalVar
+    SaveUser.create(name: "Dan", age: 34, joined_at: now) do |_operation, user|
       user = user.not_nil!
       user.name.should eq "Dan"
       user.age.should eq 34
@@ -91,7 +92,9 @@ describe "Avram::SaveOperation" do
 
     user = UserBox.new.name("New").age(20).joined_at(Time.utc).create
     joined_at = 1.day.ago.at_beginning_of_minute.to_utc
-    SaveUser.update(user, name: "New", age: 20, joined_at: joined_at) do |operation, user|
+
+    # ameba:disable Lint/ShadowingOuterLocalVar
+    SaveUser.update(user, name: "New", age: 20, joined_at: joined_at) do |_operation, user|
       user.name.should eq "New"
       user.age.should eq 20
       user.joined_at.should eq joined_at
@@ -362,7 +365,7 @@ describe "Avram::SaveOperation" do
 
     context "when there's default values in the table" do
       it "saves with all of the default values" do
-        ModelWithDefaultValues::SaveOperation.create do |operation, record|
+        ModelWithDefaultValues::SaveOperation.create do |_operation, record|
           record.should_not eq nil
           r = record.not_nil!
           r.greeting.should eq "Hello there!"
@@ -375,7 +378,7 @@ describe "Avram::SaveOperation" do
       end
 
       it "allows you to override the default values" do
-        ModelWithDefaultValues::SaveOperation.create(greeting: "A fancy hat") do |operation, record|
+        ModelWithDefaultValues::SaveOperation.create(greeting: "A fancy hat") do |_operation, record|
           record.should_not eq nil
           r = record.not_nil!
           r.greeting.should eq "A fancy hat"
@@ -391,7 +394,7 @@ describe "Avram::SaveOperation" do
         published_at = 1.day.ago.to_utc.at_beginning_of_day
         drafted_at = 1.week.ago.to_utc.at_beginning_of_day
         params = Avram::Params.new({"greeting" => "Hi", "admin" => "true", "age" => "4", "money" => "100.23", "published_at" => published_at.to_s, "drafted_at" => drafted_at.to_s})
-        OverrideDefaults.create(params) do |operation, record|
+        OverrideDefaults.create(params) do |_operation, record|
           record.should_not eq nil
           r = record.not_nil!
           r.greeting.should eq "Hi"
@@ -452,7 +455,7 @@ describe "Avram::SaveOperation" do
       UserBox.new.name("Old Name").create
       user = UserQuery.new.first
       params = Avram::Params.new({} of String => String)
-      SaveUser.update user, with: params do |operation, record|
+      SaveUser.update user, with: params do |operation, _record|
         operation.saved?.should be_true
       end
     end

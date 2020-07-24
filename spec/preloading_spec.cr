@@ -30,7 +30,7 @@ end
 describe "Preloading" do
   it "can disable lazy loading" do
     with_lazy_load(enabled: false) do
-      post = PostBox.create
+      PostBox.create
 
       posts = Post::BaseQuery.new
 
@@ -55,7 +55,7 @@ describe "Preloading" do
     with_lazy_load(enabled: false) do
       SignInCredential::BaseQuery.times_called = 0
       user = UserBox.create
-      sign_in_credential = SignInCredentialBox.create &.user_id(user.id)
+      SignInCredentialBox.create &.user_id(user.id)
 
       user = User::BaseQuery.new.preload_sign_in_credential(
         SignInCredential::BaseQuery.new.preload_user
@@ -68,7 +68,7 @@ describe "Preloading" do
 
   it "preloads optional has_one" do
     with_lazy_load(enabled: false) do
-      user = UserBox.create
+      UserBox.create
       user = User::BaseQuery.new.preload_sign_in_credential.first
       user.sign_in_credential.should be_nil
 
@@ -96,7 +96,9 @@ describe "Preloading" do
       post = PostBox.create
       another_post = PostBox.create
       comment = CommentBox.create &.post_id(post.id)
-      _should_not_be_preloaded = CommentBox.create &.post_id(another_post.id)
+
+      # ameba:disable Lint/UselessAssign
+      should_not_be_preloaded = CommentBox.create &.post_id(another_post.id)
 
       posts = Post::BaseQuery.new.preload_comments.limit(1)
 
@@ -122,7 +124,8 @@ describe "Preloading" do
   it "preloads has_many through" do
     with_lazy_load(enabled: false) do
       tag = TagBox.create
-      _unused_tag = TagBox.create
+      # ameba:disable Lint/UselessAssign
+      unused_tag = TagBox.create
       post = PostBox.create
       other_post = PostBox.create
       TaggingBox.create &.tag_id(tag.id).post_id(post.id)
@@ -140,7 +143,8 @@ describe "Preloading" do
       item = LineItemBox.create
       other_item = LineItemBox.create
       product = ProductBox.create
-      _unused_product = ProductBox.create
+      # ameba:disable Lint/UselessAssign
+      unused_product = ProductBox.create
       LineItemProductBox.create &.line_item_id(item.id).product_id(product.id)
       LineItemProductBox.create &.line_item_id(other_item.id).product_id(product.id)
 
@@ -165,7 +169,7 @@ describe "Preloading" do
   it "works with nested preloads" do
     with_lazy_load(enabled: false) do
       post = PostBox.create
-      comment = CommentBox.create &.post_id(post.id)
+      CommentBox.create &.post_id(post.id)
 
       posts = Post::BaseQuery.new.preload_comments(
         Comment::BaseQuery.new.preload_post
@@ -177,7 +181,7 @@ describe "Preloading" do
 
   it "uses an empty array if there are no associated records" do
     with_lazy_load(enabled: false) do
-      post = PostBox.create
+      PostBox.create
 
       posts = Post::BaseQuery.new.preload_comments
 
@@ -189,7 +193,7 @@ describe "Preloading" do
     with_lazy_load(enabled: false) do
       Post::BaseQuery.times_called = 0
       post = PostBox.create
-      comment = CommentBox.create &.post_id(post.id)
+      CommentBox.create &.post_id(post.id)
 
       comments = Comment::BaseQuery.new.preload_post
 
@@ -217,14 +221,14 @@ describe "Preloading" do
 
   context "getting results for preloads multiple times" do
     it "does not fail for belongs_to" do
-      employee = EmployeeBox.create
+      EmployeeBox.create
       employees = Employee::BaseQuery.new.preload_manager
 
       2.times { employees.results }
     end
 
     it "does not fail for has_many" do
-      post = PostBox.create
+      PostBox.create
 
       posts = Post::BaseQuery.new.preload_comments
 
@@ -232,7 +236,7 @@ describe "Preloading" do
     end
 
     it "does not fail for has_one" do
-      admin = AdminBox.create
+      AdminBox.create
 
       admin = Admin::BaseQuery.new.preload_sign_in_credential
 
@@ -240,7 +244,7 @@ describe "Preloading" do
     end
 
     it "does not fail for has_many through" do
-      post = PostBox.create
+      PostBox.create
 
       posts = Post::BaseQuery.new.preload_tags
 
@@ -250,7 +254,7 @@ describe "Preloading" do
 
   it "preloads uuid belongs_to" do
     item = LineItemBox.create
-    price = PriceBox.new.line_item_id(item.id).create
+    PriceBox.new.line_item_id(item.id).create
 
     PriceQuery.new.preload_line_item.first.line_item.should eq item
   end

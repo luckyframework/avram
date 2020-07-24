@@ -97,7 +97,7 @@ class Avram::QueryBuilder
   end
 
   private def set_sql_clause(params)
-    "SET " + params.map do |key, value|
+    "SET " + params.map do |key, _value|
       "#{key} = #{next_prepared_statement_placeholder}"
     end.join(", ")
   end

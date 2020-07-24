@@ -22,7 +22,7 @@ describe Avram::Migrator::DropIndexStatement do
     it "raises Exception" do
       message = Regex.new("No name or columns specified for drop_index")
       expect_raises(Exception, message) do
-        statement = Avram::Migrator::DropIndexStatement.new(:users).build
+        Avram::Migrator::DropIndexStatement.new(:users).build
       end
     end
   end
