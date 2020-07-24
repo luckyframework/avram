@@ -6,7 +6,7 @@ abstract class Avram::Database
 
   macro inherited
     Habitat.create do
-      setting url : String, example: %(Avram::PostgresURL.build(database: "my_database", username: "postgres"))
+      setting credentials : Avram::PostgresURL, example: %(Avram::PostgresURL.build(database: "my_database", username: "postgres") or Avram::PostgresURL.parse(ENV["DB_URL"]))
     end
   end
 
@@ -53,12 +53,12 @@ abstract class Avram::Database
     end
   end
 
-  def self.url
-    new.url
+  def self.credentials
+    settings.credentials
   end
 
   protected def url
-    settings.url
+    settings.credentials.url
   end
 
   # :nodoc:
