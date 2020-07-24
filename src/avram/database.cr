@@ -33,6 +33,11 @@ abstract class Avram::Database
     new.truncate
   end
 
+  # Run a SQL `DELETE` on all tables in the database
+  def self.delete
+    new.delete
+  end
+
   # Wrap the block in a database transaction
   #
   # ```
@@ -76,6 +81,10 @@ abstract class Avram::Database
 
   protected def truncate
     DatabaseCleaner.new(self).truncate
+  end
+
+  protected def delete
+    DatabaseCleaner.new(self).delete
   end
 
   protected def rollback
@@ -167,6 +176,17 @@ abstract class Avram::Database
       statement = ("TRUNCATE TABLE #{table_names.map { |name| name }.join(", ")} RESTART IDENTITY CASCADE;")
       database.run do |db|
         db.exec statement
+      end
+    end
+
+    def delete
+      table_names = database.table_names
+      return if table_names.empty?
+      table_names.each do |t|
+        statement = ("DELETE FROM #{t}")
+        database.run do |db|
+          db.exec statement
+        end
       end
     end
   end
