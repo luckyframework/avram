@@ -17,19 +17,19 @@ class Avram::Migrator::Runner
   end
 
   def self.db_host
-    credentials.hostname
+    credentials.hostname.presence
   end
 
   def self.db_port
-    credentials.port
+    credentials.port.presence
   end
 
   def self.db_user
-    credentials.username
+    credentials.username.presence
   end
 
   def self.db_password
-    credentials.password
+    credentials.password.presence
   end
 
   def self.migrations

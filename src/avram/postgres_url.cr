@@ -12,7 +12,7 @@ class Avram::PostgresURL
   )
   end
 
-  def self.void
+  def self.void : PostgresURL
     build(database: "unused")
   end
 
@@ -57,9 +57,9 @@ class Avram::PostgresURL
     if @database.empty?
       raise InvalidDatabaseNameError.new("The database name specified was blank. Be sure to set a value.")
     end
-    @database = "/#{database}" unless database.starts_with?('/')
+    @database = database[1..-1] if database.starts_with?('/')
 
-    io << database
+    io << "/#{database}"
   end
 
   private def set_url_port(io)
