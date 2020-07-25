@@ -18,4 +18,37 @@ describe Avram::PostgresURL do
       Avram::PostgresURL.parse(nil).should eq nil
     end
   end
+
+  it "builds a unix socket URL" do
+    creds = Avram::PostgresURL.build(database: "test_db")
+
+    creds.url.should eq "postgres:///test_db"
+  end
+
+  it "allows for query string options" do
+    creds = Avram::PostgresURL.build(
+      database: "test",
+      username: "user",
+      query: "initial_pool_size=5&retry_attempts=4")
+
+    creds.url.should eq "postgres://user@/test?initial_pool_size=5&retry_attempts=4"
+  end
+
+  it "has access to the url without the query params" do
+    creds = Avram::PostgresURL.build(
+      database: "test",
+      username: "user",
+      query: "initial_pool_size=5&retry_attempts=4")
+
+    creds.url_without_query_params.should eq "postgres://user@/test"
+    creds.url.should eq "postgres://user@/test?initial_pool_size=5&retry_attempts=4"
+  end
+
+  describe "void" do
+    it "returns an unused url" do
+      creds = Avram::PostgresURL.void
+
+      creds.url.should eq "postgres:///unused"
+    end
+  end
 end

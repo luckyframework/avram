@@ -1,6 +1,6 @@
 class Avram::PostgresURL
   getter database, username, password, hostname, port, query
-  property url : String = ""
+  getter url : String = ""
 
   def initialize(
     @database : String,
@@ -10,6 +10,10 @@ class Avram::PostgresURL
     @port : String = "",
     @query : String = ""
   )
+  end
+
+  def self.void
+    build(database: "unused")
   end
 
   def self.build(**args) : PostgresURL
@@ -33,43 +37,46 @@ class Avram::PostgresURL
   end
 
   def build
-    sanitize_inputs
-    self.url = String.build do |io|
+    @url = String.build do |io|
       set_url_protocol(io)
       set_url_creds(io)
       set_url_host(io)
       set_url_port(io)
       set_url_db(io)
+      set_url_query(io)
     end
     self
   end
 
-  private def sanitize_inputs
-    @database = database.strip
-    @database = database[1..-1] if database.starts_with?('/')
-    if @database.empty?
-      raise InvalidDatabaseNameError.new("The database name specified was blank. Be sure to set a value.")
-    end
-    @hostname = hostname.strip
-    @username = username.strip
-    @password = password.strip
-    @port = port.strip
-    @query = query.strip
+  def url_without_query_params
+    @url.sub("?#{@query}", "")
   end
 
   private def set_url_db(io)
-    io << "/#{database}"
+    @database = database.strip
+    if @database.empty?
+      raise InvalidDatabaseNameError.new("The database name specified was blank. Be sure to set a value.")
+    end
+    @database = "/#{database}" unless database.starts_with?('/')
+
+    io << database
   end
 
   private def set_url_port(io)
+    @port = port.strip
+
     io << ":#{port}" unless port.empty?
   end
 
   private def set_url_host(io)
+    @hostname = hostname.strip
+
     io << hostname unless hostname.empty?
   end
 
   private def set_url_creds(io)
+    @username = username.strip
+    @password = password.strip
     io << URI.encode_www_form(username) unless username.empty?
     io << ":#{URI.encode_www_form(password)}" unless password.empty?
     io << "@" unless username.empty?
@@ -77,5 +84,11 @@ class Avram::PostgresURL
 
   private def set_url_protocol(io)
     io << "postgres://"
+  end
+
+  private def set_url_query(io)
+    @query = query.strip
+
+    io << "?#{query}" unless query.empty?
   end
 end
