@@ -1,4 +1,4 @@
-class Avram::PostgresURL
+class Avram::Credentials
   getter database, username, password, hostname, port, query
   getter url : String = ""
 
@@ -12,11 +12,11 @@ class Avram::PostgresURL
   )
   end
 
-  def self.void : PostgresURL
+  def self.void : Credentials
     build(database: "unused")
   end
 
-  def self.build(**args) : PostgresURL
+  def self.build(**args) : Credentials
     new(**args).build
   end
 
@@ -24,7 +24,7 @@ class Avram::PostgresURL
     nil
   end
 
-  def self.parse(url : String) : PostgresURL
+  def self.parse(url : String) : Credentials
     uri = URI.parse(url)
     build(
       database: uri.path.to_s,
