@@ -1,14 +1,13 @@
 class Avram::Credentials
-  getter database, username, password, hostname, port, query
   getter url : String = ""
 
   def initialize(
     @database : String,
-    @hostname : String = "",
-    @username : String = "",
-    @password : String = "",
-    @port : String = "",
-    @query : String = ""
+    @hostname : String? = nil,
+    @username : String? = nil,
+    @password : String? = nil,
+    @port : Int32? = nil,
+    @query : String? = nil
   )
   end
 
@@ -28,15 +27,15 @@ class Avram::Credentials
     uri = URI.parse(url)
     build(
       database: uri.path.to_s,
-      hostname: uri.host.to_s,
-      username: uri.user.to_s,
-      password: uri.password.to_s,
-      port: uri.port.to_s,
-      query: uri.query.to_s
+      hostname: uri.host,
+      username: uri.user,
+      password: uri.password,
+      port: uri.port,
+      query: uri.query
     )
   end
 
-  def build
+  def build : Credentials
     @url = String.build do |io|
       set_url_protocol(io)
       set_url_creds(io)
@@ -48,38 +47,70 @@ class Avram::Credentials
     self
   end
 
-  def url_without_query_params
+  def database : String
+    @database = @database.strip
+    @database = @database[1..-1] if @database.starts_with?('/')
+
+    if @database.empty?
+      raise InvalidDatabaseNameError.new("The database name specified was blank. Be sure to set a value.")
+    end
+
+    @database
+  end
+
+  def hostname : String?
+    @hostname.try(&.strip).presence
+  end
+
+  def username : String?
+    @username.try(&.strip).presence
+  end
+
+  def password : String?
+    @password.try(&.strip).presence
+  end
+
+  def port : Int32?
+    @port
+  end
+
+  def query : String?
+    @query.try(&.strip).presence
+  end
+
+  def url_without_query_params : String
     @url.sub("?#{@query}", "")
   end
 
   private def set_url_db(io)
-    @database = database.strip
-    if @database.empty?
-      raise InvalidDatabaseNameError.new("The database name specified was blank. Be sure to set a value.")
-    end
-    @database = database[1..-1] if database.starts_with?('/')
-
     io << "/#{database}"
   end
 
   private def set_url_port(io)
-    @port = port.strip
-
-    io << ":#{port}" unless port.empty?
+    port.try do |the_port|
+      io << ":#{the_port}"
+    end
   end
 
   private def set_url_host(io)
-    @hostname = hostname.strip
-
-    io << hostname unless hostname.empty?
+    hostname.try do |host|
+      io << host
+    end
   end
 
   private def set_url_creds(io)
-    @username = username.strip
-    @password = password.strip
-    io << URI.encode_www_form(username) unless username.empty?
-    io << ":#{URI.encode_www_form(password)}" unless password.empty?
-    io << "@" unless username.empty?
+    set_at = false
+    username.try do |user|
+      io << URI.encode_www_form(user)
+      set_at = true
+    end
+
+    password.try do |pass|
+      io << ":#{URI.encode_www_form(pass)}"
+      set_at = true
+    end
+
+    io << "@" if set_at
   end
 
   private def set_url_protocol(io)
@@ -87,8 +118,8 @@ class Avram::Credentials
   end
 
   private def set_url_query(io)
-    @query = query.strip
-
-    io << "?#{query}" unless query.empty?
+    query.try do |q|
+      io << "?#{query}"
+    end
   end
 end
