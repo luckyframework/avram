@@ -75,36 +75,46 @@ describe "Avram::SaveOperation" do
     bucket.names.should eq([] of String)
   end
 
-  it "set params if passed in" do
-    now = Time.utc.at_beginning_of_minute
-    user = SaveUser.create!(name: "Dan", age: 34, joined_at: now)
-    user.name.should eq "Dan"
-    user.age.should eq 34
-    user.joined_at.should eq now
-
-    # ameba:disable Lint/ShadowingOuterLocalVar
-    SaveUser.create(name: "Dan", age: 34, joined_at: now) do |_operation, user|
-      user = user.not_nil!
+  describe ".create" do
+    it "sets params if passed in" do
+      now = Time.utc.at_beginning_of_minute
+      user = SaveUser.create!(name: "Dan", age: 34, joined_at: now)
       user.name.should eq "Dan"
       user.age.should eq 34
       user.joined_at.should eq now
     end
 
-    user = UserBox.new.name("New").age(20).joined_at(Time.utc).create
-    joined_at = 1.day.ago.at_beginning_of_minute.to_utc
+    it "passes params to the block" do
+      now = Time.utc.at_beginning_of_minute
+      SaveUser.create(name: "Dan", age: 34, joined_at: now) do |_operation, user|
+        user = user.not_nil!
+        user.name.should eq "Dan"
+        user.age.should eq 34
+        user.joined_at.should eq now
+      end
+    end
+  end
 
-    # ameba:disable Lint/ShadowingOuterLocalVar
-    SaveUser.update(user, name: "New", age: 20, joined_at: joined_at) do |_operation, user|
+  describe ".update" do
+    it "sets params if passed it" do
+      joined_at = 1.day.ago.at_beginning_of_minute.to_utc
+      user = UserBox.new.name("New").age(20).joined_at(Time.utc).create
+      user = SaveUser.update!(user, name: "New", age: 20, joined_at: joined_at)
       user.name.should eq "New"
       user.age.should eq 20
       user.joined_at.should eq joined_at
     end
 
-    user = UserBox.new.name("New").age(20).joined_at(Time.utc).create
-    user = SaveUser.update!(user, name: "New", age: 20, joined_at: joined_at)
-    user.name.should eq "New"
-    user.age.should eq 20
-    user.joined_at.should eq joined_at
+    it "passes params to the block" do
+      user_box = UserBox.new.name("New").age(20).joined_at(Time.utc).create
+      joined_at = 1.day.ago.at_beginning_of_minute.to_utc
+
+      SaveUser.update(user_box, name: "New", age: 20, joined_at: joined_at) do |_operation, user|
+        user.name.should eq "New"
+        user.age.should eq 20
+        user.joined_at.should eq joined_at
+      end
+    end
   end
 
   it "automatically runs validations for required attributes" do

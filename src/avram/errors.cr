@@ -44,13 +44,12 @@ module Avram
     getter errors : Hash(Symbol, Array(String))
 
     def initialize(operation)
-      # ameba:disable Lint/ShadowingOuterLocalVar
-      message = String.build do |message|
-        message << "Could not save #{operation.class.name}."
-        message << "\n"
-        message << "\n"
+      message = String.build do |string|
+        string << "Could not save #{operation.class.name}."
+        string << "\n"
+        string << "\n"
         operation.errors.each do |attribute_name, errors|
-          message << "  ▸ #{attribute_name}: #{errors.join(", ")}\n"
+          string << "  ▸ #{attribute_name}: #{errors.join(", ")}\n"
         end
       end
       @errors = operation.errors

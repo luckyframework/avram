@@ -55,12 +55,11 @@ module Avram::SchemaEnforcer
       if table_missing?
         best_match = Levenshtein::Finder.find @table_name.to_s, @table_names, tolerance: 2
 
-        # ameba:disable Lint/ShadowingOuterLocalVar
-        message = String.build do |message|
-          message << "#{@model_class.to_s.colorize.bold} wants to use the '#{table_name.colorize.bold}' table but it is missing.\n"
+        message = String.build do |string|
+          string << "#{@model_class.to_s.colorize.bold} wants to use the '#{table_name.colorize.bold}' table but it is missing.\n"
 
           if best_match
-            message << <<-TEXT
+            string << <<-TEXT
 
             If you meant for #{model_class.to_s.colorize.bold} to use the '#{best_match.colorize.yellow.bold}' table, try this...
 
@@ -73,7 +72,7 @@ module Avram::SchemaEnforcer
             TEXT
           end
 
-          message << <<-TEXT
+          string << <<-TEXT
 
           If you need to create the '#{table_name}' table...
 
@@ -87,7 +86,7 @@ module Avram::SchemaEnforcer
 
           TEXT
 
-          message << <<-TEXT
+          string << <<-TEXT
 
           Or, you can skip schema checks for this model:
 
