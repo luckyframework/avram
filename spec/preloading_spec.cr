@@ -97,8 +97,7 @@ describe "Preloading" do
       another_post = PostBox.create
       comment = CommentBox.create &.post_id(post.id)
 
-      # ameba:disable Lint/UselessAssign
-      _should_not_be_preloaded = CommentBox.create &.post_id(another_post.id)
+      CommentBox.create &.post_id(another_post.id) # should not be preloaded
 
       posts = Post::BaseQuery.new.preload_comments.limit(1)
 
@@ -124,7 +123,7 @@ describe "Preloading" do
   it "preloads has_many through" do
     with_lazy_load(enabled: false) do
       tag = TagBox.create
-      _unused_tag = TagBox.create # ameba:disable Lint/UselessAssign
+      TagBox.create # unused tag
       post = PostBox.create
       other_post = PostBox.create
       TaggingBox.create &.tag_id(tag.id).post_id(post.id)
@@ -142,7 +141,7 @@ describe "Preloading" do
       item = LineItemBox.create
       other_item = LineItemBox.create
       product = ProductBox.create
-      _unused_product = ProductBox.create # ameba:disable Lint/UselessAssign
+      ProductBox.create # unused product
       LineItemProductBox.create &.line_item_id(item.id).product_id(product.id)
       LineItemProductBox.create &.line_item_id(other_item.id).product_id(product.id)
 
