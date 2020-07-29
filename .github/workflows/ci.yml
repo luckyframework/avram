@@ -17,6 +17,16 @@ jobs:
         run: shards install
       - name: Format
         run: crystal tool format --check src spec config
+  ameba:
+    runs-on: ubuntu-latest
+    container:
+      image: crystallang/crystal:0.35.0
+    steps:
+      - uses: actions/checkout@v1
+      - name: Install shards
+        run: shards install
+      - name: Analyze
+        run: crystal bin/ameba.cr
   specs:
     runs-on: ubuntu-latest
     container:
