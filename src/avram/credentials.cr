@@ -119,7 +119,7 @@ class Avram::Credentials
 
   private def set_url_query(io)
     query.try do |q|
-      io << "?#{query}"
+      io << "?#{q}"
     end
   end
 end
