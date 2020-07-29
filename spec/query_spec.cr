@@ -593,7 +593,7 @@ describe Avram::Query do
   describe "#join methods for associations" do
     it "inner join on belongs to" do
       post = PostBox.create
-      comment = CommentBox.new.post_id(post.id).create
+      CommentBox.new.post_id(post.id).create
 
       query = Comment::BaseQuery.new.join_posts
       query.to_sql.should eq ["SELECT comments.custom_id, comments.created_at, comments.updated_at, comments.body, comments.post_id FROM comments INNER JOIN posts ON comments.post_id = posts.custom_id"]
@@ -616,7 +616,7 @@ describe Avram::Query do
     it "multiple inner joins on has many through" do
       post = PostBox.create
       tag = TagBox.create
-      tagging = TaggingBox.new.post_id(post.id).tag_id(tag.id).create
+      TaggingBox.new.post_id(post.id).tag_id(tag.id).create
 
       query = Post::BaseQuery.new.join_tags
       query.to_sql.should eq ["SELECT posts.custom_id, posts.created_at, posts.updated_at, posts.title, posts.published_at FROM posts INNER JOIN taggings ON posts.custom_id = taggings.post_id INNER JOIN tags ON taggings.tag_id = tags.custom_id"]
@@ -859,7 +859,7 @@ describe Avram::Query do
     it "clones nested preloads" do
       Avram.temp_config(lazy_load_enabled: false) do
         item = LineItemBox.create
-        price = PriceBox.create &.line_item_id(item.id).in_cents(500)
+        PriceBox.create &.line_item_id(item.id).in_cents(500)
         product = ProductBox.create
         LineItemProductBox.create &.line_item_id(item.id).product_id(product.id)
 
@@ -912,9 +912,9 @@ describe Avram::Query do
 
   describe "#group" do
     it "groups" do
-      user = UserBox.create &.age(25).name("Michael")
-      user = UserBox.create &.age(25).name("Dwight")
-      user = UserBox.create &.age(21).name("Jim")
+      UserBox.create &.age(25).name("Michael")
+      UserBox.create &.age(25).name("Dwight")
+      UserBox.create &.age(21).name("Jim")
 
       users = UserQuery.new.group(&.age).group(&.id)
       users.query.statement.should eq "SELECT #{User::COLUMN_SQL} FROM users GROUP BY users.age, users.id"
@@ -944,7 +944,7 @@ describe Avram::Query do
     describe "when you query from the has_one side" do
       it "returns a record" do
         line_item = LineItemBox.create &.name("Thing 1")
-        price = PriceBox.create &.in_cents(100).line_item_id(line_item.id)
+        PriceBox.create &.in_cents(100).line_item_id(line_item.id)
 
         query = LineItemQuery.new.where_price(PriceQuery.new.in_cents(100))
         query.first.should eq line_item

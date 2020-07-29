@@ -7,7 +7,7 @@ describe "Lazy loading associations" do
     post = PostBox.create
     comment = CommentBox.new.post_id(post.id).create
     tag = TagBox.create
-    tagging = TaggingBox.new.post_id(post.id).tag_id(tag.id).create
+    TaggingBox.new.post_id(post.id).tag_id(tag.id).create
 
     post.comments!.should eq([comment])
     post.tags!.should eq([tag])

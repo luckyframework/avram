@@ -54,7 +54,7 @@ describe "Avram::Attribute" do
 
   it "can accept custom callable messages" do
     attribute = Avram::Attribute.new(name: :attr_name, param: nil, value: "fake", param_key: "na")
-    attribute.add_error ->(attribute_name : String, attribute_value : String) { "#{attribute_name} message from Proc" }
+    attribute.add_error ->(attribute_name : String, _attribute_value : String) { "#{attribute_name} message from Proc" }
     attribute.add_error CallableMessage.new
 
     attribute.errors.should eq([

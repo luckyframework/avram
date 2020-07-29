@@ -55,9 +55,9 @@ class Avram::Migrator::DropIndexStatement
     columns = @columns
 
     if columns.is_a? Array
-      return columns
+      columns
     else
-      return [columns]
+      [columns]
     end
   end
 

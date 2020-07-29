@@ -103,8 +103,8 @@ describe "attribute in operations" do
       operation.terms_of_service.value.should be_nil
       post.should_not be_nil
 
-      Operation.update(post.not_nil!, best_kind_of_bear: "koala bear") do |operation, post|
-        operation.best_kind_of_bear.value.should eq("koala bear")
+      Operation.update(post.not_nil!, best_kind_of_bear: "koala bear") do |op, _post|
+        op.best_kind_of_bear.value.should eq("koala bear")
       end
     end
   end
