@@ -9,13 +9,29 @@ describe Avram::Credentials do
 
   it "raises an InvalidDatabaseNameError when the database name is blank" do
     expect_raises(Avram::InvalidDatabaseNameError) do
-      Avram::Credentials.parse?("")
+      Avram::Credentials.parse("")
+    end
+  end
+
+  describe "parse?" do
+    it "returns nil when there's nothing to parse" do
+      Avram::Credentials.parse?(nil).should eq nil
+    end
+
+    it "returns a proper url when provided a connection string" do
+      conn = "postgres://user@/test?initial_pool_size=5&retry_attempts=4"
+      creds = Avram::Credentials.parse?(conn)
+
+      creds.not_nil!.url.should eq conn
     end
   end
 
   describe "parse" do
-    it "returns nil when there's nothing to parse" do
-      Avram::Credentials.parse?(nil).should eq nil
+    it "returns a proper url when provided a connection string" do
+      conn = "postgres://user@/test?initial_pool_size=5&retry_attempts=4"
+      creds = Avram::Credentials.parse(conn)
+
+      creds.url.should eq conn
     end
   end
 

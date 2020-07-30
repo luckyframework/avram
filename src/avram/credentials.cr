@@ -20,13 +20,24 @@ class Avram::Credentials
 
   # Parse a postgres connection string URL. This may come from an
   # environment variable.
+  # Returns `nil` if no `connection_url` is provided.
   #
   # ```crystal
-  # Avram::Credentials(ENV["DB_URL"]?)
+  # Avram::Credentials.parse?(ENV["DB_URL"]?)
   # ```
   def self.parse?(connection_url : String?) : Credentials?
     return nil if connection_url.nil?
-    uri = URI.parse(connection_url.as(String))
+    parse(connection_url.as(String))
+  end
+
+  # Parse a postgres connection string URL. This may come from an
+  # environment variable.
+  #
+  # ```crystal
+  # Avram::Credentials.parse(ENV["DB_URL"])
+  # ```
+  def self.parse(connection_url : String) : Credentials
+    uri = URI.parse(connection_url)
     new(
       database: uri.path.to_s,
       hostname: uri.host,
