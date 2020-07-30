@@ -138,4 +138,7 @@ module Avram
       ERROR
     end
   end
+
+  class InvalidDatabaseNameError < AvramError
+  end
 end

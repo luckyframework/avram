@@ -13,32 +13,35 @@ class Avram::Migrator::Runner
   end
 
   def self.db_name
-    (URI.parse(database_url).path || "")[1..-1]
+    credentials.database
   end
 
   def self.db_host
-    host = URI.parse(database_url).host
-    host unless host.blank?
+    credentials.hostname
   end
 
   def self.db_port
-    URI.parse(database_url).port
+    credentials.port
   end
 
   def self.db_user
-    URI.parse(database_url).user
+    credentials.username
   end
 
   def self.db_password
-    URI.parse(database_url).password
+    credentials.password
   end
 
   def self.migrations
     @@migrations
   end
 
+  def self.credentials
+    Avram.settings.database_to_migrate.credentials
+  end
+
   def self.database_url
-    Avram.settings.database_to_migrate.url
+    credentials.url
   end
 
   def self.cmd_args
