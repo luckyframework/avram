@@ -2,7 +2,7 @@ require "./spec_helper"
 
 describe Avram::Credentials do
   it "strips space and newlines from the username" do
-    creds = Avram::Credentials.build(database: "test", username: " oops\n")
+    creds = Avram::Credentials.new(database: "test", username: " oops\n")
 
     creds.username.should eq "oops"
   end
@@ -20,13 +20,13 @@ describe Avram::Credentials do
   end
 
   it "builds a unix socket URL" do
-    creds = Avram::Credentials.build(database: "test_db")
+    creds = Avram::Credentials.new(database: "test_db")
 
     creds.url.should eq "postgres:///test_db"
   end
 
   it "allows for query string options" do
-    creds = Avram::Credentials.build(
+    creds = Avram::Credentials.new(
       database: "test",
       username: "user",
       query: "initial_pool_size=5&retry_attempts=4")
@@ -35,7 +35,7 @@ describe Avram::Credentials do
   end
 
   it "has access to the url without the query params" do
-    creds = Avram::Credentials.build(
+    creds = Avram::Credentials.new(
       database: "test",
       username: "user",
       query: "initial_pool_size=5&retry_attempts=4")

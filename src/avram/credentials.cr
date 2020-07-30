@@ -1,5 +1,5 @@
 class Avram::Credentials
-  getter url : String = ""
+  getter url : String
 
   def initialize(
     @database : String,
@@ -9,14 +9,11 @@ class Avram::Credentials
     @port : Int32? = nil,
     @query : String? = nil
   )
+    @url = build_url
   end
 
   def self.void : Credentials
-    build(database: "unused")
-  end
-
-  def self.build(**args) : Credentials
-    new(**args).build
+    new(database: "unused")
   end
 
   def self.parse(nothing : Nil)
@@ -25,7 +22,7 @@ class Avram::Credentials
 
   def self.parse(url : String) : Credentials
     uri = URI.parse(url)
-    build(
+    new(
       database: uri.path.to_s,
       hostname: uri.host,
       username: uri.user,
@@ -33,18 +30,6 @@ class Avram::Credentials
       port: uri.port,
       query: uri.query
     )
-  end
-
-  def build : Credentials
-    @url = String.build do |io|
-      set_url_protocol(io)
-      set_url_creds(io)
-      set_url_host(io)
-      set_url_port(io)
-      set_url_db(io)
-      set_url_query(io)
-    end
-    self
   end
 
   def database : String
@@ -79,7 +64,18 @@ class Avram::Credentials
   end
 
   def url_without_query_params : String
-    @url.sub("?#{@query}", "")
+    url.sub("?#{@query}", "")
+  end
+
+  private def build_url
+    String.build do |io|
+      set_url_protocol(io)
+      set_url_creds(io)
+      set_url_host(io)
+      set_url_port(io)
+      set_url_db(io)
+      set_url_query(io)
+    end
   end
 
   private def set_url_db(io)
