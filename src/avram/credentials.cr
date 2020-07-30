@@ -12,16 +12,21 @@ class Avram::Credentials
     @url = build_url
   end
 
+  # Used when you need to configure credentials,
+  # but no database connection is made.
   def self.void : Credentials
     new(database: "unused")
   end
 
-  def self.parse(nothing : Nil)
-    nil
-  end
-
-  def self.parse(url : String) : Credentials
-    uri = URI.parse(url)
+  # Parse a postgres connection string URL. This may come from an
+  # environment variable.
+  #
+  # ```crystal
+  # Avram::Credentials(ENV["DB_URL"]?)
+  # ```
+  def self.parse?(connection_url : String?) : Credentials?
+    return nil if connection_url.nil?
+    uri = URI.parse(connection_url.as(String))
     new(
       database: uri.path.to_s,
       hostname: uri.host,
@@ -32,6 +37,7 @@ class Avram::Credentials
     )
   end
 
+  # The name of the database you want to connect to
   def database : String
     @database = @database.strip
     @database = @database[1..-1] if @database.starts_with?('/')
@@ -63,6 +69,8 @@ class Avram::Credentials
     @query.try(&.strip).presence
   end
 
+  # Returns the postgres connection string without
+  # any query params.
   def url_without_query_params : String
     url.sub("?#{@query}", "")
   end
