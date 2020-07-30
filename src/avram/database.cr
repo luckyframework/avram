@@ -6,7 +6,7 @@ abstract class Avram::Database
 
   macro inherited
     Habitat.create do
-      setting credentials : Avram::Credentials, example: %(Avram::Credentials.build(database: "my_database", username: "postgres") or Avram::Credentials.parse(ENV["DB_URL"]))
+      setting credentials : Avram::Credentials, example: %(Avram::Credentials.new(database: "my_database", username: "postgres") or Avram::Credentials.parse(ENV["DB_URL"]))
     end
   end
 
