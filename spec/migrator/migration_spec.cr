@@ -55,12 +55,12 @@ class MigrationWithFunctionAndTrigger::V996 < Avram::Migrator::Migration::V1
     RETURN NEW;
     SQL
 
-    create_trigger table_for(User), "touch_updated_at"
+    create_trigger table_for(User), "trigger_touch_updated_at", "touch_updated_at"
   end
 
   def rollback
     drop_function "touch_updated_at"
-    drop_trigger :users, "touch_updated_at"
+    drop_trigger :users, "trigger_touch_updated_at"
   end
 end
 

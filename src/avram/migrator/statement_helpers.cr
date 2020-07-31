@@ -71,24 +71,22 @@ module Avram::Migrator::StatementHelpers
   # Drop any existing trigger by this name first before creating.
   # Postgres does not support updating or replacing a trigger as of version 12
   #
-  # Creates a new TRIGGER named the same as the `function_name` prefixed with "trigger" on the table `table_name`.
+  # Creates a new TRIGGER named `name` on the table `table_name`.
   # `function_name` - The PG function to run from this trigger.
   # `callback` - When to run this trigger (BEFORE or AFTER). Default `:before`
   # `on` - The operation(s) for this trigger (INSERT, UPDATE, DELETE). Default is `[:update]`
   #
   # ```crystal
-  # create_trigger(:users, "set_timestamps")
+  # create_trigger(:users, "trigger_set_timestamps", "set_timestamps")
   # # => CREATE TRIGGER trigger_set_timestamps BEFORE UPDATE ON users FOR EACH ROW EXECUTE PROCEDURE set_timestamps();
   # ```
-  def create_trigger(table_name : Symbol, function_name : String, callback : Symbol = :before, on : Array(Symbol) = [:update])
-    name = "trigger_#{function_name}"
+  def create_trigger(table_name : Symbol, name : String, function_name : String, callback : Symbol = :before, on : Array(Symbol) = [:update])
     drop_trigger(table_name, name)
     prepared_statements << Avram::Migrator::CreateTriggerStatement.new(table_name, name, function_name, callback, on).build
   end
 
   # Drop the tigger `name` for the table `table_name`
   def drop_trigger(table_name : Symbol, name : String)
-    name = "trigger_#{name}" unless name.starts_with?("trigger")
     prepared_statements << Avram::Migrator::DropTriggerStatement.new(table_name, name).build
   end
 end
