@@ -5,9 +5,11 @@ require "./support/base_model"
 require "./support/**"
 require "../config/*"
 
+Pulsar.enable_test_mode!
+
 backend = Log::IOBackend.new(STDERR)
 backend.formatter = Dexter::JSONLogFormatter.proc
-Log.builder.bind("avram.*", :error, Log::IOBackend.new(STDERR))
+Log.builder.bind("avram.*", :error, backend)
 
 Db::Create.new(quiet: true).call
 Db::Migrate.new(quiet: true).call

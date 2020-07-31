@@ -55,12 +55,10 @@ class Avram::BaseQueryTemplate
           end
         {% end %}
 
-        database.run do |db|
-          db.exec(
-            query.statement_for_update(_changes, return_columns: false),
-            args: query.args_for_update(_changes)
-          ).rows_affected
-        end
+        database.exec(
+          query.statement_for_update(_changes, return_columns: false),
+          args: query.args_for_update(_changes)
+        ).rows_affected
       end
 
       {% for column in columns %}
