@@ -20,7 +20,7 @@ class Avram::SaveOperationTemplate
         before_save :set_uuid
 
         def set_uuid
-          id.value ||= UUID.random()
+          {{ primary_key_name.id }}.value ||= UUID.random()
         end
       {% end %}
 

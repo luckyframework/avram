@@ -76,12 +76,12 @@ describe "polymorphic belongs to" do
 
   describe "required (default)" do
     it "validates that exactly one polymorphic belongs to is allowed" do
-      operation = PolymorphicEvent::SaveOperation.create(task_id: 1, task_list_id: 1) do |operation, _event|
+      PolymorphicEvent::SaveOperation.create(task_id: 1, task_list_id: 1) do |operation, _event|
         operation.valid?.should be_false
         operation.task_list_id.errors.should eq(["must be blank"])
       end
 
-      operation = PolymorphicEvent::SaveOperation.create do |operation, _event|
+      PolymorphicEvent::SaveOperation.create do |operation, _event|
         operation.valid?.should be_false
         operation.task_id.errors.should eq(["at least one 'eventable' must be filled"])
       end
@@ -97,13 +97,13 @@ describe "polymorphic belongs to" do
 
   describe "optional" do
     it "allows not setting a polymorphic association" do
-      operation = OptionalPolymorphicEvent::SaveOperation.create do |operation, _event|
+      OptionalPolymorphicEvent::SaveOperation.create do |operation, _event|
         operation.valid?.should be_true
       end
     end
 
     it "validates that at most one polymorphic belongs to is allowed" do
-      operation = OptionalPolymorphicEvent::SaveOperation.create(task_id: 1, task_list_id: 1) do |operation, _event|
+      OptionalPolymorphicEvent::SaveOperation.create(task_id: 1, task_list_id: 1) do |operation, _event|
         operation.valid?.should be_false
         operation.task_list_id.errors.should eq(["must be blank"])
       end

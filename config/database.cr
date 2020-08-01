@@ -7,7 +7,7 @@ class DatabaseWithIncorrectSettings < Avram::Database
 end
 
 TestDatabase.configure do |settings|
-  settings.url = ENV["DATABASE_URL"]? || Avram::PostgresURL.build(
+  settings.credentials = Avram::Credentials.parse?(ENV["DATABASE_URL"]?) || Avram::Credentials.new(
     hostname: "db",
     database: database_name,
     username: "lucky",
@@ -16,7 +16,7 @@ TestDatabase.configure do |settings|
 end
 
 DatabaseWithIncorrectSettings.configure do |settings|
-  settings.url = Avram::PostgresURL.build(
+  settings.credentials = Avram::Credentials.new(
     hostname: "db",
     database: database_name,
     username: "incorrect"

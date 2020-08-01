@@ -13,32 +13,35 @@ class Avram::Migrator::Runner
   end
 
   def self.db_name
-    (URI.parse(database_url).path || "")[1..-1]
+    credentials.database
   end
 
   def self.db_host
-    host = URI.parse(database_url).host
-    host unless host.blank?
+    credentials.hostname
   end
 
   def self.db_port
-    URI.parse(database_url).port
+    credentials.port
   end
 
   def self.db_user
-    URI.parse(database_url).user
+    credentials.username
   end
 
   def self.db_password
-    URI.parse(database_url).password
+    credentials.password
   end
 
   def self.migrations
     @@migrations
   end
 
+  def self.credentials
+    Avram.settings.database_to_migrate.credentials
+  end
+
   def self.database_url
-    Avram.settings.database_to_migrate.url
+    credentials.url
   end
 
   def self.cmd_args
@@ -71,32 +74,9 @@ class Avram::Migrator::Runner
         puts "Already created #{self.db_name.colorize(:green)}"
       end
     elsif (message = e.message) && (message.includes?("createdb: not found") || message.includes?("No command 'createdb' found"))
-      raise <<-ERROR
-      #{message}
-
-      Try this...
-
-        ▸ If you are on macOS  you can install postgres tools from #{macos_postgres_tools_link}
-        ▸ If you are on linux you can try running #{linux_postgres_installation_instructions}
-        ▸ If you are on CI or some servers, there may already be a database created so you don't need this command"
-
-
-      ERROR
+      raise PGClientNotInstalledError.new(message)
     elsif (message = e.message) && message.includes?("could not connect to database template")
-      raise <<-ERROR
-      Creating the database failed. It looks like Postgres is not running.
-
-      Message from Postgres:
-
-        #{message}
-
-      Try this...
-
-        ▸ Make sure Postgres is running
-        ▸ Check your database configuration settings
-
-
-      ERROR
+      raise PGNotRunningError.new(message)
     else
       raise e
     end
@@ -136,20 +116,12 @@ class Avram::Migrator::Runner
     SQL
   end
 
-  private def self.macos_postgres_tools_link
-    "https://postgresapp.com/documentation/cli-tools.html".colorize(:green)
-  end
-
-  private def self.linux_postgres_installation_instructions
-    "sudo apt-get update && sudo apt-get install postgresql postgresql-contrib".colorize(:green)
-  end
-
-  def self.run(command : String)
+  def self.run(command : String, output : IO = STDOUT)
     error_messages = IO::Memory.new
     ENV["PGPASSWORD"] = self.db_password if self.db_password
     result = Process.run command,
       shell: true,
-      output: STDOUT,
+      output: output,
       error: error_messages
     ENV.delete("PGPASSWORD") if self.db_password
     unless result.success?

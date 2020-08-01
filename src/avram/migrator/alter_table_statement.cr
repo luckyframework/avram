@@ -163,7 +163,7 @@ class Avram::Migrator::AlterTableStatement
 
   def add_fill_existing_with_statements(column : Symbol | String, type, value)
     @fill_existing_with_statements += [
-      "UPDATE #{@table_name} SET #{column} = #{value.to_s};",
+      "UPDATE #{@table_name} SET #{column} = #{value};",
       "ALTER TABLE #{@table_name} ALTER COLUMN #{column} SET NOT NULL;",
     ]
   end

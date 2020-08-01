@@ -1,7 +1,7 @@
 name: avram
-version: 0.14.0
+version: 0.16.1
 
-crystal: 0.34.0
+crystal: 0.35.0
 
 targets:
   lucky.gen.migration:
@@ -16,22 +16,27 @@ dependencies:
     version: 0.1.0
   lucky_cli:
     github: luckyframework/lucky_cli
-    version: ~> 0.21.0
+    version: ~> 0.23.0
   pg:
     github: will/crystal-pg
     version: ~> 0.21.0
   habitat:
     github: luckyframework/habitat
-    version: ~> 0.4.0
+    version: ~> 0.4.4
   wordsmith:
     github: luckyframework/wordsmith
     version: ~> 0.2.0
   dexter:
     github: luckyframework/dexter
-    version: ~> 0.2.0
+    version: ~> 0.3.1
   shell-table:
     github: luckyframework/shell-table.cr
     branch: refactor/setter
+
+development_dependencies:
+  ameba:
+    github: crystal-ameba/ameba
+    version: ~> 0.13.1
 
 scripts:
   postinstall: script/precompile_tasks

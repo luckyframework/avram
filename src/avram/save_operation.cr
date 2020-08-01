@@ -114,8 +114,25 @@ abstract class Avram::SaveOperation(T) < Avram::Operation
         @_{{ attribute[:name] }} ||= Avram::Attribute({{ attribute[:type] }}?).new(
           name: :{{ attribute[:name].id }},
           param: permitted_params["{{ attribute[:name] }}"]?,
-          value: @record.try(&.{{ attribute[:name] }}),
+          value: @record.try(&.{{ attribute[:name] }}) || default_value_for_{{ attribute[:name] }},
           param_key: self.class.param_key)
+      end
+
+      private def default_value_for_{{ attribute[:name] }}
+        {% if attribute[:value] || attribute[:value] == false %}
+          {% if attribute[:type].is_a?(Generic) %}
+            parse_result = {{ attribute[:type].type_vars.first }}::Lucky.parse([{{ attribute[:value] }}])
+          {% else %}
+            parse_result = {{ attribute[:type] }}::Lucky.parse({{ attribute[:value] }})
+          {% end %}
+          if parse_result.is_a? Avram::Type::SuccessfulCast
+            parse_result.value.as({{ attribute[:type] }})
+          else
+            nil
+          end
+        {% else %}
+          nil
+        {% end %}
       end
 
       def permitted_params
