@@ -42,7 +42,7 @@ describe Avram::Model do
     it "joins the two associations" do
       tag = TagBox.create
       post = PostBox.create
-      _different_tag = TagBox.create
+      TagBox.create
       TaggingBox.new.tag_id(tag.id).post_id(post.id).create
 
       post.tags.should eq [tag]

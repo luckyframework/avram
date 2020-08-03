@@ -44,12 +44,12 @@ module Avram
     getter errors : Hash(Symbol, Array(String))
 
     def initialize(operation)
-      message = String.build do |message|
-        message << "Could not save #{operation.class.name}."
-        message << "\n"
-        message << "\n"
+      message = String.build do |string|
+        string << "Could not save #{operation.class.name}."
+        string << "\n"
+        string << "\n"
         operation.errors.each do |attribute_name, errors|
-          message << "  ▸ #{attribute_name}: #{errors.join(", ")}\n"
+          string << "  ▸ #{attribute_name}: #{errors.join(", ")}\n"
         end
       end
       @errors = operation.errors
@@ -92,5 +92,53 @@ module Avram
       end
       super error
     end
+  end
+
+  class PGClientNotInstalledError < AvramError
+    def initialize(original_message : String)
+      super <<-ERROR
+      Message from Postgres:
+
+        #{original_message}
+
+      Try this...
+
+        ▸ If you are on macOS  you can install postgres tools from #{macos_postgres_tools_link}
+        ▸ If you are on linux you can try running #{linux_postgres_installation_instructions}
+        ▸ If you are on CI or some servers, there may already be a database created so you don't need this command"
+
+
+      ERROR
+    end
+
+    private def macos_postgres_tools_link
+      "https://postgresapp.com/documentation/cli-tools.html".colorize(:green)
+    end
+
+    private def linux_postgres_installation_instructions
+      "sudo apt-get update && sudo apt-get install postgresql postgresql-contrib".colorize(:green)
+    end
+  end
+
+  class PGNotRunningError < AvramError
+    def initialize(original_message : String)
+      super <<-ERROR
+      It looks like Postgres is not running.
+
+      Message from Postgres:
+
+        #{original_message}
+
+      Try this...
+
+        ▸ Make sure Postgres is running
+        ▸ Check your database configuration settings
+
+
+      ERROR
+    end
+  end
+
+  class InvalidDatabaseNameError < AvramError
   end
 end

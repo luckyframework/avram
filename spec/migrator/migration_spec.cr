@@ -46,6 +46,24 @@ class MigrationWithAlterAndFillExisting::V997 < Avram::Migrator::Migration::V1
   end
 end
 
+class MigrationWithFunctionAndTrigger::V996 < Avram::Migrator::Migration::V1
+  def migrate
+    create_function "touch_updated_at", <<-SQL
+    IF NEW.updated_at IS NULL OR NEW.updated_at = OLD.updated_at THEN
+      NEW.updated_at := now();
+    END IF;
+    RETURN NEW;
+    SQL
+
+    create_trigger table_for(User), "trigger_touch_updated_at", "touch_updated_at"
+  end
+
+  def rollback
+    drop_function "touch_updated_at"
+    drop_trigger :users, "trigger_touch_updated_at"
+  end
+end
+
 describe Avram::Migrator::Migration::V1 do
   it "executes statements in a transaction" do
     expect_raises Exception, %(relation "table_does_not_exist" does not exist) do
@@ -81,6 +99,18 @@ describe Avram::Migrator::Migration::V1 do
       ensure
         MigrationWithAlterAndFillExisting::V997.new.down(quiet: true)
       end
+    end
+  end
+
+  describe "helper statements" do
+    it "appends function and trigger statments to prepared statements" do
+      migration = MigrationWithFunctionAndTrigger::V996.new
+      migration.migrate
+      sql = migration.prepared_statements.join("\n")
+
+      sql.should contain "CREATE OR REPLACE FUNCTION touch_updated_at"
+      sql.should contain "DROP TRIGGER IF EXISTS trigger_touch_updated_at"
+      sql.should contain "CREATE TRIGGER trigger_touch_updated_at"
     end
   end
 end

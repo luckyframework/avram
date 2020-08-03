@@ -16,7 +16,7 @@ if [ $# -eq 0 ]
 then
     printf "\nChecking that tasks build correctly\n\n"
     $COMPOSE shards build
-    
+
     printf "\nChecking code formatting\n\n"
     if ! $COMPOSE crystal tool format --check src spec config > /dev/null; then
         printf "\nCode is not formatted.\n"

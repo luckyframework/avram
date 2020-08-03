@@ -31,8 +31,7 @@ end
 describe "Query associations" do
   it "can query associations" do
     post_with_matching_comment = PostBox.create
-    matching_comment = CommentBox
-      .new
+    CommentBox.new
       .body("matching")
       .post_id(post_with_matching_comment.id)
       .create
@@ -55,15 +54,13 @@ describe "Query associations" do
 
   it "can query associations with inner_join specified" do
     post_with_matching_comment = PostBox.create
-    matching_comment = CommentBox
-      .new
+    CommentBox.new
       .body("matching")
       .post_id(post_with_matching_comment.id)
       .create
 
     post_without_matching_comment = PostBox.create
-    CommentBox
-      .new
+    CommentBox.new
       .body("not-matching")
       .post_id(post_without_matching_comment.id)
       .create
@@ -77,15 +74,13 @@ describe "Query associations" do
 
   it "can query associations with left_join specified" do
     post_with_matching_comment = PostBox.create
-    matching_comment = CommentBox
-      .new
+    CommentBox.new
       .body("matching")
       .post_id(post_with_matching_comment.id)
       .create
 
     post_without_matching_comment = PostBox.create
-    CommentBox
-      .new
+    CommentBox.new
       .body("not-matching")
       .post_id(post_without_matching_comment.id)
       .create
@@ -99,15 +94,13 @@ describe "Query associations" do
 
   it "can query associations with right_join specified" do
     post_with_matching_comment = PostBox.create
-    matching_comment = CommentBox
-      .new
+    CommentBox.new
       .body("matching")
       .post_id(post_with_matching_comment.id)
       .create
 
     post_without_matching_comment = PostBox.create
-    CommentBox
-      .new
+    CommentBox.new
       .body("not-matching")
       .post_id(post_without_matching_comment.id)
       .create
@@ -121,15 +114,13 @@ describe "Query associations" do
 
   it "can query associations with full_join specified" do
     post_with_matching_comment = PostBox.create
-    matching_comment = CommentBox
-      .new
+    CommentBox.new
       .body("matching")
       .post_id(post_with_matching_comment.id)
       .create
 
     post_without_matching_comment = PostBox.create
-    CommentBox
-      .new
+    CommentBox.new
       .body("not-matching")
       .post_id(post_without_matching_comment.id)
       .create
