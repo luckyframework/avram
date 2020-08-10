@@ -83,6 +83,24 @@ module Avram::Associations::HasMany
       @_preloaded_{{ assoc_name }} || lazy_load_{{ assoc_name }}
     end
 
+    def {{ assoc_name.id }}_count : Int64
+      {% if through %}
+        {{ model }}::BaseQuery
+          .new
+          .join_{{ through.id }}
+          .__yield_where_{{ through.id }} do |through_query|
+            through_query.{{ foreign_key.id }}(id)
+          end
+          .preload_{{ through.id }}
+          .select_count
+      {% else %}
+        {{ model }}::BaseQuery
+          .new
+          .{{ foreign_key }}(id)
+          .select_count
+      {% end %}
+    end
+
     private def maybe_lazy_load_{{ assoc_name }}  : Array({{ model }})?
       if lazy_load_enabled?
         lazy_load_{{ assoc_name }}
