@@ -309,6 +309,17 @@ class Avram::QueryBuilder
     self
   end
 
+  def or(&block : Avram::QueryBuilder -> Avram::QueryBuilder)
+    if @wheres.empty? && @raw_wheres.empty?
+      raise Avram::InvalidQueryError.new("Cannot call `or` before calling a `where`")
+    end
+
+    @wheres.last.conjunction = Avram::Where::Conjunction::Or if @wheres.any?
+    @raw_wheres.last.conjunction = Avram::Where::Conjunction::Or if @raw_wheres.any?
+    block.call(self)
+    self
+  end
+
   @_wheres_sql : String?
 
   private def wheres_sql
@@ -317,16 +328,22 @@ class Avram::QueryBuilder
 
   private def joined_wheres_queries
     if wheres.any? || raw_wheres.any?
-      statements = wheres.map do |sql_clause|
-        if sql_clause.is_a?(Avram::Where::NullSqlClause)
+      statements = wheres.flat_map do |sql_clause|
+        clause = if sql_clause.is_a?(Avram::Where::NullSqlClause)
           sql_clause.prepare
         else
           sql_clause.prepare(next_prepared_statement_placeholder)
         end
-      end
-      statements += raw_wheres.map(&.to_sql)
 
-      "WHERE " + statements.join(" AND ")
+        [clause, sql_clause.conjunction.to_s]
+      end
+
+      statements += raw_wheres.flat_map {|raw| [raw.to_sql, raw.conjunction.to_s] }
+
+      # Remove the last floating conjunction
+      statements.pop
+
+      "WHERE " + statements.join(" ")
     end
   end
 

@@ -302,6 +302,37 @@ describe Avram::QueryBuilder do
       query.args.should eq ["Paul"]
     end
   end
+
+  describe "#or" do
+    it "builds the proper SQL for a simple OR query" do
+      query = new_query
+        .where(Avram::Where::Equal.new(:name, "Paul"))
+        .or(&.where(Avram::Where::Equal.new(:name, "Peter")))
+
+      query.statement.should eq "SELECT * FROM users WHERE name = $1 OR name = $2"
+      query.args.should eq ["Paul", "Peter"]
+    end
+
+    it "builds the proper SQL for a more complex OR query" do
+      # query = new_query
+      #   .where(Avram::Where::Equal.new(:name, "Paul"))
+      #   .or(
+      #     &.where(Avram::Where::Equal.new(:name, "Peter"))
+      #      .where(Avram::Where::GreaterThan.new(:age, "40"))
+      #      .or(&.where(Avram::Where::LessThan.new(:age, "30")))
+
+      # query.statement.should eq "SELECT * FROM users WHERE name = $1 OR (name = $2 AND age > $3 OR (age < $4))"
+      # "SELECT * FROM users WHERE name = $1 OR name = $2 AND age > $3 OR age < $4"
+      # "SELECT * FROM users WHERE name = $1 OR ((name = $2 AND age > $3) OR age < $4)"
+      # "SELECT * FROM users WHERE name = $1 OR (name = $2 AND (age > $3 OR age < $4))"
+    end
+
+    it "raises an excception when called without a previous where clause" do
+      expect_raises(Avram::InvalidQueryError, "Cannot call `or` before calling a `where`") do
+        new_query.or(&.where(Avram::Where::Equal.new(:name, "Peter")))
+      end
+    end
+  end
 end
 
 private def new_query
