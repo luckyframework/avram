@@ -8,7 +8,32 @@ abstract class Avram::Box
       {% operation = @type.name.gsub(/Box/, "::SaveOperation").id %}
       @operation : {{ operation }} = {{ operation }}.new
       setup_attribute_shortcuts({{ operation }})
+      setup_attribute_helpers({{ operation }})
     {% end %}
+  end
+
+  macro setup_attribute_helpers(operation)
+    alias PARAMS_TYPES = NamedTuple(
+      {% for attribute in operation.resolve.constant(:COLUMN_ATTRIBUTES) %}
+      {{ attribute[:name] }}: {{ attribute[:type] }} | Nil,
+      {% end %}
+    )
+
+    def attributes
+      {
+        {% for attribute in operation.resolve.constant(:COLUMN_ATTRIBUTES) %}
+          {{ attribute[:name] }}: operation.{{ attribute[:name] }}.value,
+        {% end %}
+      }
+    end
+
+    def assign_attributes(overwrite = NamedTuple.new)
+      {% for attribute in operation.resolve.constant(:COLUMN_ATTRIBUTES) %}
+      overwrite[:{{ attribute[:name] }}]?.try do |value|
+        {{ attribute[:name] }}(value.as({{ attribute[:type] }}))
+      end
+      {% end %}
+    end
   end
 
   macro setup_attribute_shortcuts(operation)
@@ -24,12 +49,22 @@ abstract class Avram::Box
     {% raise "'Box.save' has been renamed to 'Box.create' to match 'SaveOperation.create'" %}
   end
 
-  def self.create
-    new.create
+  def self.create(overwrite = NamedTuple.new)
+    object = new()
+    object.assign_attributes(overwrite)
+    object.create
   end
 
-  def self.create
-    yield(new).create
+  def self.params(overwrite = NamedTuple.new)
+    object = new()
+    object.assign_attributes(overwrite)
+    object.attributes
+  end
+
+  def self.create(overwrite = NamedTuple.new)
+    object = new()
+    object.assign_attributes(overwrite)
+    yield(object).create
   end
 
   def create

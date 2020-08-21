@@ -5,6 +5,18 @@ describe Avram::Box do
     PlainModelBox.create.id.should_not be_nil
   end
 
+  describe "params" do
+    it "generate a named_tuple with attributes" do
+      params = TagBox.params
+      params.should eq({custom_id: nil, created_at: nil, updated_at: nil, name: "name-8"})
+    end
+
+    it "overwrite attributes passing a named tuple" do
+      params = TagBox.params({name: "new name"})
+      params.should eq({custom_id: nil, created_at: nil, updated_at: nil, name: "new name"})
+    end
+  end
+
   describe "Sequences" do
     it "increases a value every time it's called" do
       BaseBox::SEQUENCES["name"] = 0
