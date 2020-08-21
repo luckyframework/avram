@@ -203,18 +203,18 @@ abstract class Avram::Model
     end
   end
 
-  # Setup [database mapping](http://crystal-lang.github.io/crystal-db/api/0.5.0/DB.html#mapping%28properties%2Cstrict%3Dtrue%29-macro) for the model's columns.
+  # Setup [database mapping](http://crystal-lang.github.io/crystal-db/api/latest/DB.html) for the model's columns.
   #
-  # NOTE: Avram::Migrator saves `Float` columns as numeric which need to be
-  # converted from [PG::Numeric](https://github.com/will/crystal-pg/blob/master/src/pg/numeric.cr) back to `Float64` using a `convertor`
-  # class.
+  # NOTE: Avram::Migrator saves `Float` columns as numeric which are converted
+  # in the avram/charms/float64_extensions.cr file
   macro setup_db_mapping(columns, *args, **named_args)
     DB.mapping({
       {% for column in columns %}
         {{column[:name]}}: {
           {% if column[:type].id == Float64.id %}
             type: PG::Numeric,
-            convertor: Float64Converter,
+          {% elsif column[:type].id == Array(Float64).id %}
+            type: Array(PG::Numeric),
           {% else %}
             {% if column[:type].is_a?(Generic) %}
             type: {{column[:type]}},
@@ -226,12 +226,6 @@ abstract class Avram::Model
         },
       {% end %}
     })
-  end
-
-  module Float64Converter
-    def self.from_rs(rs)
-      rs.read(PG::Numeric).to_f
-    end
   end
 
   macro setup_getters(columns, *args, **named_args)

@@ -15,4 +15,10 @@ describe "Array Columns" do
     BucketBox.new.numbers([1, 2, 3]).create
     BucketQuery.new.numbers([1]).select_count.should eq 0
   end
+
+  it "handles Array(Float64)" do
+    BucketBox.create &.floaty_numbers([1.1, 2.2, 3.3, 4.4])
+    bucket = BucketQuery.new.last
+    bucket.floaty_numbers.should eq([1.1, 2.2, 3.3, 4.4])
+  end
 end
