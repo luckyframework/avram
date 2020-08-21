@@ -330,15 +330,15 @@ class Avram::QueryBuilder
     if wheres.any? || raw_wheres.any?
       statements = wheres.flat_map do |sql_clause|
         clause = if sql_clause.is_a?(Avram::Where::NullSqlClause)
-          sql_clause.prepare
-        else
-          sql_clause.prepare(next_prepared_statement_placeholder)
-        end
+                   sql_clause.prepare
+                 else
+                   sql_clause.prepare(next_prepared_statement_placeholder)
+                 end
 
         [clause, sql_clause.conjunction.to_s]
       end
 
-      statements += raw_wheres.flat_map {|raw| [raw.to_sql, raw.conjunction.to_s] }
+      statements += raw_wheres.flat_map { |raw| [raw.to_sql, raw.conjunction.to_s] }
 
       # Remove the last floating conjunction
       statements.pop
