@@ -176,9 +176,7 @@ abstract class Avram::Model
   end
 
   def delete
-    self.class.database.run do |db|
-      db.exec "DELETE FROM #{@@table_name} WHERE #{primary_key_name} = #{escape_primary_key(id)}"
-    end
+    self.class.database.exec "DELETE FROM #{@@table_name} WHERE #{primary_key_name} = #{escape_primary_key(id)}"
   end
 
   private def escape_primary_key(id : Int64 | Int32 | Int16)
