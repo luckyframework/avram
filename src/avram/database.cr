@@ -52,10 +52,57 @@ abstract class Avram::Database
     end
   end
 
-  def self.run
-    new.run do |*yield_args|
-      yield *yield_args
+  # Methods without a block
+  {% for crystal_db_alias in [:exec, :scalar, :query, :query_all, :query_one, :query_each] %}
+    # Same as crystal-db's `DB::QueryMethods#{{ crystal_db_alias.id }}` but with instrumentation
+    def {{ crystal_db_alias.id }}(query, *args_, args : Array? = nil, queryable : String? = nil, **named_args)
+      publish_query_event(query, args_, args, queryable) do
+        run do |db|
+          db.{{ crystal_db_alias.id }}(query, *args_, args: args)
+        end
+      end
     end
+
+    # Same as crystal-db's `DB::QueryMethods#{{ crystal_db_alias.id }}` but with instrumentation
+    def self.{{ crystal_db_alias.id }}(query, *args_, args : Array? = nil, queryable : String? = nil, **named_args)
+      new.{{ crystal_db_alias.id }}(query, *args_, args: args, queryable: queryable)
+    end
+  {% end %}
+
+  # Methods with a block
+  {% for crystal_db_alias in [:query, :query_all, :query_one, :query_each] %}
+    # Same as crystal-db's `DB::QueryMethods#{{ crystal_db_alias }}` but with instrumentation
+    def {{ crystal_db_alias.id }}(query, *args_, args : Array? = nil, queryable : String? = nil, **named_args)
+      publish_query_event(query, args_, args, queryable) do
+        run do |db|
+          db.{{ crystal_db_alias.id }}(query, *args_, args: args) do |*yield_args|
+            yield *yield_args
+          end
+        end
+      end
+    end
+
+    # Same as crystal-db's `DB::QueryMethods#{{ crystal_db_alias }}` but with instrumentation
+    def self.{{ crystal_db_alias.id }}(query, *args_, args : Array? = nil, queryable : String? = nil, **named_args)
+      new.{{ crystal_db_alias.id }}(query, *args_, args: args, queryable: queryable) do |*yield_args|
+        yield *yield_args
+      end
+    end
+  {% end %}
+
+  def publish_query_event(query, args_, args, queryable)
+    logging_args = DB::EnumerableConcat.build(args_, args).to_s
+    Avram::Events::QueryEvent.publish(query: query, args: logging_args, queryable: queryable) do
+      yield
+    end
+  rescue e : PQ::PQError
+    Avram::Events::FailedQueryEvent.publish(
+      error_message: e.message.to_s,
+      query: query,
+      queryable: queryable,
+      args: logging_args
+    )
+    raise e
   end
 
   def self.credentials
@@ -64,6 +111,12 @@ abstract class Avram::Database
 
   protected def url
     settings.credentials.url
+  end
+
+  def self.run
+    new.run do |*yield_args|
+      yield *yield_args
+    end
   end
 
   # :nodoc:
@@ -174,9 +227,7 @@ abstract class Avram::Database
       table_names = database.table_names
       return if table_names.empty?
       statement = ("TRUNCATE TABLE #{table_names.map { |name| name }.join(", ")} RESTART IDENTITY CASCADE;")
-      database.run do |db|
-        db.exec statement
-      end
+      database.exec statement
     end
 
     def delete
@@ -184,9 +235,7 @@ abstract class Avram::Database
       return if table_names.empty?
       table_names.each do |t|
         statement = ("DELETE FROM #{t}")
-        database.run do |db|
-          db.exec statement
-        end
+        database.exec statement
       end
     end
   end
