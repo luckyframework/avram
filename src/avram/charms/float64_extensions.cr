@@ -27,6 +27,10 @@ struct Float64
       SuccessfulCast(Float64).new(value.to_f)
     end
 
+    def parse(values : Array(PG::Numeric))
+      SuccessfulCast(Array(Float64)).new values.map(&.to_f)
+    end
+
     def parse(value : String)
       SuccessfulCast(Float64).new value.to_f64
     rescue ArgumentError
