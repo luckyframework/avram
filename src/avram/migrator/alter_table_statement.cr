@@ -76,7 +76,7 @@ class Avram::Migrator::AlterTableStatement
   end
 
   # Adds a references column and index given a model class and references option.
-  macro add_belongs_to(type_declaration, on_delete, references = nil, foreign_key_type = Int64)
+  macro add_belongs_to(type_declaration, on_delete, references = nil, foreign_key_type = Int64, fill_existing_with = nil)
     {% unless type_declaration.is_a?(TypeDeclaration) %}
       {% raise "add_belongs_to expected a type declaration like 'user : User', instead got: '#{type_declaration}'" %}
     {% end %}
@@ -98,6 +98,14 @@ class Avram::Migrator::AlterTableStatement
     )
     .set_references(references: %table_name.to_s, on_delete: {{ on_delete }})
     .build_add_statement_for_alter
+
+    {% if fill_existing_with && fill_existing_with != :nothing %}
+      add_fill_existing_with_statements(
+        column: {{ foreign_key_name.stringify }},
+        type: {{ foreign_key_type }},
+        value: Avram::Migrator::Columns::{{ foreign_key_type }}Column.prepare_value_for_database({{ fill_existing_with }})
+      )
+    {% end %}
 
     add_index :{{ foreign_key_name }}
   end
