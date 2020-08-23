@@ -112,7 +112,7 @@ abstract class Avram::SaveOperation(T) < Avram::Operation
         @_{{ attribute[:name] }} ||= Avram::Attribute({{ attribute[:type] }}?).new(
           name: :{{ attribute[:name].id }},
           param: permitted_params["{{ attribute[:name] }}"]?,
-          value: @record.try(&.{{ attribute[:name] }}) || default_value_for_{{ attribute[:name] }},
+          value: @record.try(&.{{ attribute[:name] }}).nil? ? default_value_for_{{ attribute[:name] }} : @record.try(&.{{ attribute[:name] }}),
           param_key: self.class.param_key)
       end
 
