@@ -53,6 +53,10 @@ private class OverrideDefaults < ModelWithDefaultValues::SaveOperation
   permit_columns :greeting, :drafted_at, :published_at, :admin, :age, :money
 end
 
+private class SavePost < Post::SaveOperation
+  permit_columns :title, :published_at
+end
+
 describe "Avram::SaveOperation" do
   it "allows overriding the param_key" do
     ParamKeySaveOperation.param_key.should eq "custom_param"
@@ -73,6 +77,18 @@ describe "Avram::SaveOperation" do
     bucket = Bucket::SaveOperation.update!(bucket, names: [] of String)
 
     bucket.names.should eq([] of String)
+  end
+
+  it "ignores empty params on nilable fields" do
+    avram_params = Avram::Params.new({"title" => "Test", "published_at" => ""})
+
+    SavePost.create(avram_params) do |operation, post|
+      operation.errors.should be_empty
+      operation.valid?.should eq true
+      post.should_not be_nil
+      post.not_nil!.published_at.should eq nil
+      post.not_nil!.title.should eq "Test"
+    end
   end
 
   describe ".create" do

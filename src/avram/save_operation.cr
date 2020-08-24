@@ -153,6 +153,11 @@ abstract class Avram::SaveOperation(T) < Avram::Operation
       end
 
       def set_{{ attribute[:name] }}_from_param(_value)
+        {% if attribute[:nilable] %}
+          # The type is nilable, but if the value is blank, it will return a FailedCast
+          # in types like `Time?` or `Int32?`, etc...
+          return nil if _value.blank?
+        {% end %}
         {% if attribute[:type].is_a?(Generic) %}
           # Pass `_value` in as an Array. Currently only single values are supported.
           # TODO: Update this once Lucky params support Arrays natively
