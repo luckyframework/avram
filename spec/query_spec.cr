@@ -688,7 +688,7 @@ describe Avram::Query do
         bucket = BucketBox.new.names(["pumpkin", "zucchini"]).create
 
         query = ArrayQuery.new.names(["pumpkin", "zucchini"])
-        query.to_sql.should eq ["SELECT buckets.id, buckets.created_at, buckets.updated_at, buckets.bools, buckets.small_numbers, buckets.numbers, buckets.big_numbers, buckets.names FROM buckets WHERE buckets.names = $1", "{\"pumpkin\",\"zucchini\"}"]
+        query.to_sql.should eq ["SELECT #{Bucket::COLUMN_SQL} FROM buckets WHERE buckets.names = $1", "{\"pumpkin\",\"zucchini\"}"]
         result = query.first
         result.should eq bucket
       end
@@ -958,7 +958,7 @@ describe Avram::Query do
       query.to_prepared_sql.should eq(%{SELECT posts.custom_id, posts.created_at, posts.updated_at, posts.title, posts.published_at FROM posts WHERE posts.title = 'The Short Post'})
 
       query = Bucket::BaseQuery.new.names(["Larry", "Moe", "Curly"]).numbers([1, 2, 3])
-      query.to_prepared_sql.should eq(%{SELECT buckets.id, buckets.created_at, buckets.updated_at, buckets.bools, buckets.small_numbers, buckets.numbers, buckets.big_numbers, buckets.names FROM buckets WHERE buckets.names = '{"Larry","Moe","Curly"}' AND buckets.numbers = '{1,2,3}'})
+      query.to_prepared_sql.should eq(%{SELECT #{Bucket::COLUMN_SQL} FROM buckets WHERE buckets.names = '{"Larry","Moe","Curly"}' AND buckets.numbers = '{1,2,3}'})
 
       query = Blob::BaseQuery.new.doc(JSON::Any.new({"properties" => JSON::Any.new("sold")}))
       query.to_prepared_sql.should eq(%{SELECT blobs.id, blobs.created_at, blobs.updated_at, blobs.doc FROM blobs WHERE blobs.doc = '{"properties":"sold"}'})

@@ -46,12 +46,23 @@ abstract class Avram::SaveOperation(T) < Avram::Operation
   end
 
   # :nodoc:
-  def log_failed_save
-    Avram::SaveFailedLog.dexter.warn do
-      {
-        failed_to_save:    self.class.name.to_s,
-        validation_errors: error_messages_as_string,
-      }
+  def published_save_failed_event
+    Avram::Events::SaveFailedEvent.publish(
+      operation_class: self.class.name,
+      attributes: generic_attributes
+    )
+  end
+
+  def generic_attributes
+    attributes.map do |attr|
+      Avram::GenericAttribute.new(
+        name: attr.name,
+        param: attr.param.try(&.to_s),
+        value: attr.value.try(&.to_s),
+        original_value: attr.original_value.try(&.to_s),
+        param_key: attr.param_key,
+        errors: attr.errors
+      )
     end
   end
 
@@ -292,6 +303,10 @@ abstract class Avram::SaveOperation(T) < Avram::Operation
         saved_record = record.not_nil!
         after_commit(saved_record)
         self.save_status = SaveStatus::Saved
+        Avram::Events::SaveSuccessEvent.publish(
+          operation_class: self.class.name,
+          attributes: generic_attributes
+        )
         true
       else
         mark_as_failed
@@ -343,19 +358,15 @@ abstract class Avram::SaveOperation(T) < Avram::Operation
   private def insert : T
     self.created_at.value ||= Time.utc if responds_to?(:created_at)
     self.updated_at.value ||= Time.utc if responds_to?(:updated_at)
-    @record = database.run do |db|
-      db.query insert_sql.statement, args: insert_sql.args do |rs|
-        @record = @@schema_class.from_rs(rs).first
-      end
+    @record = database.query insert_sql.statement, args: insert_sql.args do |rs|
+      @record = @@schema_class.from_rs(rs).first
     end
   end
 
   private def update(id) : T
     self.updated_at.value = Time.utc if responds_to?(:updated_at)
-    @record = database.run do |db|
-      db.query update_query(id).statement_for_update(changes), args: update_query(id).args_for_update(changes) do |rs|
-        @record = @@schema_class.from_rs(rs).first
-      end
+    @record = database.query update_query(id).statement_for_update(changes), args: update_query(id).args_for_update(changes) do |rs|
+      @record = @@schema_class.from_rs(rs).first
     end
   end
 

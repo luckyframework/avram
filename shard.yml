@@ -32,6 +32,9 @@ dependencies:
   shell-table:
     github: luckyframework/shell-table.cr
     branch: refactor/setter
+  pulsar:
+    github: luckyframework/pulsar
+    version: ~> 0.2.0
 
 development_dependencies:
   ameba:
