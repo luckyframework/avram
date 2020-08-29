@@ -5,15 +5,15 @@ describe Avram::Box do
     PlainModelBox.create.id.should_not be_nil
   end
 
-  describe "params" do
+  describe "build_attributes" do
     it "generate a named_tuple with attributes" do
-      params = TagBox.params
-      params.should eq({custom_id: nil, created_at: nil, updated_at: nil, name: "name-8"})
+      attributes = TagBox.build_attributes
+      attributes.should eq({custom_id: nil, created_at: nil, updated_at: nil, name: "name-8"})
     end
 
     it "overwrite attributes passing a named tuple" do
-      params = TagBox.params({name: "new name"})
-      params.should eq({custom_id: nil, created_at: nil, updated_at: nil, name: "new name"})
+      attributes = TagBox.build_attributes(&.name("new name"))
+      attributes.should eq({custom_id: nil, created_at: nil, updated_at: nil, name: "new name"})
     end
   end
 

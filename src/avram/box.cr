@@ -8,32 +8,8 @@ abstract class Avram::Box
       {% operation = @type.name.gsub(/Box/, "::SaveOperation").id %}
       @operation : {{ operation }} = {{ operation }}.new
       setup_attribute_shortcuts({{ operation }})
-      setup_attribute_helpers({{ operation }})
+      setup_attributes({{ operation }})
     {% end %}
-  end
-
-  macro setup_attribute_helpers(operation)
-    alias PARAMS_TYPES = NamedTuple(
-      {% for attribute in operation.resolve.constant(:COLUMN_ATTRIBUTES) %}
-      {{ attribute[:name] }}: {{ attribute[:type] }} | Nil,
-      {% end %}
-    )
-
-    def attributes
-      {
-        {% for attribute in operation.resolve.constant(:COLUMN_ATTRIBUTES) %}
-          {{ attribute[:name] }}: operation.{{ attribute[:name] }}.value,
-        {% end %}
-      }
-    end
-
-    def assign_attributes(overwrite = NamedTuple.new)
-      {% for attribute in operation.resolve.constant(:COLUMN_ATTRIBUTES) %}
-      overwrite[:{{ attribute[:name] }}]?.try do |value|
-        {{ attribute[:name] }}(value.as({{ attribute[:type] }}))
-      end
-      {% end %}
-    end
   end
 
   macro setup_attribute_shortcuts(operation)
@@ -45,26 +21,34 @@ abstract class Avram::Box
     {% end %}
   end
 
+  macro setup_attributes(operation)
+    def attributes
+      {
+        {% for attribute in operation.resolve.constant(:COLUMN_ATTRIBUTES) %}
+          {{ attribute[:name] }}: operation.{{ attribute[:name] }}.value,
+        {% end %}
+      }
+    end
+  end
+
   def self.save
     {% raise "'Box.save' has been renamed to 'Box.create' to match 'SaveOperation.create'" %}
   end
 
-  def self.create(overwrite = NamedTuple.new)
-    object = new()
-    object.assign_attributes(overwrite)
-    object.create
+  def self.build_attributes
+    yield(new).attributes
   end
 
-  def self.params(overwrite = NamedTuple.new)
-    object = new()
-    object.assign_attributes(overwrite)
-    object.attributes
+  def self.build_attributes
+    new.attributes
   end
 
-  def self.create(overwrite = NamedTuple.new)
-    object = new()
-    object.assign_attributes(overwrite)
-    yield(object).create
+  def self.create
+    new.create
+  end
+
+  def self.create
+    yield(new).create
   end
 
   def create
