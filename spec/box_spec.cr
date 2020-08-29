@@ -7,11 +7,12 @@ describe Avram::Box do
 
   describe "build_attributes" do
     it "generate a named_tuple with attributes" do
+      BaseBox::SEQUENCES["name"] = 0
       attributes = TagBox.build_attributes
-      attributes.should eq({custom_id: nil, created_at: nil, updated_at: nil, name: "name-8"})
+      attributes.should eq({custom_id: nil, created_at: nil, updated_at: nil, name: "name-1"})
     end
 
-    it "overwrite attributes passing a named tuple" do
+    it "overwrite attributes using a block" do
       attributes = TagBox.build_attributes(&.name("new name"))
       attributes.should eq({custom_id: nil, created_at: nil, updated_at: nil, name: "new name"})
     end
