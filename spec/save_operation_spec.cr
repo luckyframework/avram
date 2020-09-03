@@ -79,16 +79,13 @@ describe "Avram::SaveOperation" do
     bucket.names.should eq([] of String)
   end
 
-  it "ignores empty params on nilable fields" do
+  it "treats empty strings as nil for Time? types instead of failing to parse" do
     avram_params = Avram::Params.new({"title" => "Test", "published_at" => ""})
 
-    SavePost.create(avram_params) do |operation, post|
-      operation.errors.should be_empty
-      operation.valid?.should eq true
-      post.should_not be_nil
-      post.not_nil!.published_at.should eq nil
-      post.not_nil!.title.should eq "Test"
-    end
+    post = SavePost.create!(avram_params)
+
+    post.published_at.should eq nil
+    post.title.should eq "Test"
   end
 
   describe ".create" do
