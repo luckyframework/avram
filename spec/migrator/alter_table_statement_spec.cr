@@ -77,7 +77,7 @@ describe Avram::Migrator::AlterTableStatement do
         add_belongs_to post : Post?, on_delete: :restrict
         add_belongs_to category_label : CategoryLabel, on_delete: :nullify, references: :custom_table
         add_belongs_to employee : User, on_delete: :cascade
-        add_belongs_to line_item : LineItem, on_delete: :cascade, foreign_key_type: UUID
+        add_belongs_to line_item : LineItem, on_delete: :cascade, foreign_key_type: UUID, fill_existing_with: "a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11"
       end
 
       built.statements.first.should eq <<-SQL
@@ -94,6 +94,7 @@ describe Avram::Migrator::AlterTableStatement do
       built.statements[3].should eq "CREATE INDEX comments_category_label_id_index ON comments USING btree (category_label_id);"
       built.statements[4].should eq "CREATE INDEX comments_employee_id_index ON comments USING btree (employee_id);"
       built.statements[5].should eq "CREATE INDEX comments_line_item_id_index ON comments USING btree (line_item_id);"
+      built.statements[6].should eq "UPDATE comments SET line_item_id = 'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11';"
     end
 
     it "raises error when on_delete strategy is invalid or nil" do
