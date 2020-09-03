@@ -153,6 +153,12 @@ abstract class Avram::SaveOperation(T) < Avram::Operation
       end
 
       def set_{{ attribute[:name] }}_from_param(_value)
+        # In nilable types, `nil` is ok, and non-nilable types we will get the
+        # "is required" error.
+        if _value.blank?
+          {{ attribute[:name] }}.value = nil
+          return
+        end
         {% if attribute[:type].is_a?(Generic) %}
           # Pass `_value` in as an Array. Currently only single values are supported.
           # TODO: Update this once Lucky params support Arrays natively
