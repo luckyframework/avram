@@ -135,7 +135,7 @@ describe Avram::Migrator::AlterTableStatement do
         built = Avram::Migrator::AlterTableStatement.new(:comments).build do
           add_belongs_to line_item : LineItem, on_delete: :cascade, foreign_key_type: UUID, fill_existing_with: "a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11"
         end
-  
+
         built.statements.size.should eq 4
         built.statements[0].should eq "ALTER TABLE comments\n  ADD line_item_id uuid NOT NULL REFERENCES line_items ON DELETE CASCADE;"
         built.statements[1].should eq "CREATE INDEX comments_line_item_id_index ON comments USING btree (line_item_id);"
