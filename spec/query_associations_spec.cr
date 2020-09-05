@@ -147,7 +147,7 @@ describe "Query associations" do
     staff.to_sql[0].should contain "named_spaced_staffs"
   end
 
-  it "can query with potentially unnecessary joins" do
+  it "handles potential joins over the table queried" do
     item = LineItemBox.create
     product = ProductBox.create
     line_item_product = LineItemProductBox.create &.line_item_id(item.id).product_id(product.id)
@@ -162,7 +162,7 @@ describe "Query associations" do
     result.should eq(line_item_product)
   end
 
-  it "can query with potentially unnecessary joins again" do
+  it "handles duplicate joins" do
     item = LineItemBox.create
     product = ProductBox.create
     line_item_product = LineItemProductBox.create &.line_item_id(item.id).product_id(product.id)
