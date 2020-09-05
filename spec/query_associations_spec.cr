@@ -161,4 +161,19 @@ describe "Query associations" do
 
     result.should eq(line_item_product)
   end
+
+  it "can query with potentially unnecessary joins again" do
+    item = LineItemBox.create
+    product = ProductBox.create
+    line_item_product = LineItemProductBox.create &.line_item_id(item.id).product_id(product.id)
+
+    line_item_query = LineItemQuery.new
+      .id(item.id)
+      .where_line_items_products(LineItemProductQuery.new.id(line_item_product.id))
+    result = ProductQuery.new
+      .where_line_items(line_item_query)
+      .find(product.id)
+
+    result.should eq(product)
+  end
 end

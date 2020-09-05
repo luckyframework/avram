@@ -274,7 +274,7 @@ class Avram::QueryBuilder
   end
 
   def join(join_clause : Avram::Join::SqlClause)
-    if join_clause.to != table
+    if join_clause.to != table && @joins.none? { |join| join.to == join_clause.to }
       @joins << join_clause
     end
     self
