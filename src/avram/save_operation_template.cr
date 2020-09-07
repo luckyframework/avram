@@ -40,7 +40,7 @@ class Avram::SaveOperationTemplate
         :{{ primary_key_name.id }}
       end
 
-      add_column_attributes({{ primary_key_type }}, {{ columns }})
+      add_column_attributes({{ columns }})
       add_cast_value_methods({{ columns }})
     end
   end
