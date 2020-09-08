@@ -224,9 +224,10 @@ describe Avram::Query do
       UserBox.new.name("First").create
       UserBox.new.name("Last").create
 
-      last = UserQuery.last?
-      last.should_not be_nil
-      last && last.name.should eq "Last"
+      user = UserQuery.last?
+
+      user.should_not be_nil
+      user.not_nil!.name.should eq "Last"
     end
 
     it "returns nil if last record is not found" do
