@@ -924,7 +924,6 @@ describe Avram::Query do
       it "returns 1 result" do
         bucket = BucketBox.new.names(["pumpkin", "zucchini"]).create
 
-        query = ArrayQuery.new.names(["pumpkin", "zucchini"])
         query = BucketQuery.new.names(["pumpkin", "zucchini"])
         query.to_sql.should eq ["SELECT #{Bucket::COLUMN_SQL} FROM buckets WHERE buckets.names = $1", "{\"pumpkin\",\"zucchini\"}"]
         result = query.first

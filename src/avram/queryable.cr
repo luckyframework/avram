@@ -209,7 +209,7 @@ module Avram::Queryable(T)
 
   def exec_scalar(&block)
     new_query = yield query.clone
-    database.scalar query.statement, args: query.args, queryable: @@schema_class.name
+    database.scalar new_query.statement, args: new_query.args, queryable: @@schema_class.name
   end
 
   private def with_ordered_query : self
