@@ -59,7 +59,7 @@ module Avram::DatabaseValidations(T)
     message : Avram::Attribute::ErrorMessage = "is already taken"
   )
     attribute.value.try do |value|
-      if build_validation_query(attribute.name, attribute.value).first?
+      if build_validation_query(attribute.name, value).first?
         attribute.add_error message
       end
     end
