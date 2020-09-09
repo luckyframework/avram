@@ -270,8 +270,8 @@ describe Avram::QueryBuilder do
         .order_by(Avram::OrderBy.new(:id, :asc))
         .limit(1)
         .offset(2)
-      cloned_query = new_query
-        .clone(old_query)
+      cloned_query = old_query
+        .clone
         .where(Avram::Where::GreaterThan.new(:age, "20"))
         .limit(10)
         .offset(5)

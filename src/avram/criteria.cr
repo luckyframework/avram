@@ -7,13 +7,11 @@ class Avram::Criteria(T, V)
   end
 
   def desc_order(null_sorting : Avram::OrderBy::NullSorting = :default) : T
-    rows.query.order_by(Avram::OrderBy.new(column, :desc, null_sorting))
-    rows
+    rows.order_by(Avram::OrderBy.new(column, :desc, null_sorting))
   end
 
   def asc_order(null_sorting : Avram::OrderBy::NullSorting = :default) : T
-    rows.query.order_by(Avram::OrderBy.new(column, :asc, null_sorting))
-    rows
+    rows.order_by(Avram::OrderBy.new(column, :asc, null_sorting))
   end
 
   def eq(value) : T
@@ -127,18 +125,15 @@ class Avram::Criteria(T, V)
   end
 
   def select_min : V | Nil
-    rows.query.select_min(column)
-    rows.exec_scalar.as(V | Nil)
+    rows.exec_scalar(&.select_min(column)).as(V | Nil)
   end
 
   def select_max : V | Nil
-    rows.query.select_max(column)
-    rows.exec_scalar.as(V | Nil)
+    rows.exec_scalar(&.select_max(column)).as(V | Nil)
   end
 
   def select_average : Float64?
-    rows.query.select_average(column)
-    rows.exec_scalar.as(PG::Numeric | Nil).try &.to_f64
+    rows.exec_scalar(&.select_average(column)).as(PG::Numeric | Nil).try &.to_f64
   end
 
   def select_average! : Float64
@@ -146,8 +141,7 @@ class Avram::Criteria(T, V)
   end
 
   def select_sum
-    rows.query.select_sum(column)
-    rows.exec_scalar
+    rows.exec_scalar(&.select_sum(column))
   end
 
   def in(values) : T
@@ -156,24 +150,28 @@ class Avram::Criteria(T, V)
   end
 
   # :nodoc:
-  def private_distinct_on : Avram::QueryBuilder
-    rows.query.distinct_on(column)
+  def private_distinct_on : T
+    rows.tap &.query.distinct_on(column)
   end
 
   # :nodoc:
-  def private_group : Avram::QueryBuilder
-    rows.query.group_by(column)
+  def private_group : T
+    rows.tap &.query.group_by(column)
   end
 
   # :nodoc:
-  def private_reset_where : Avram::QueryBuilder
-    rows.query.reset_where(column)
+  def private_reset_where : T
+    rows.tap &.query.reset_where(column)
   end
 
   private def add_clause(sql_clause) : T
-    sql_clause = build_sql_clause(sql_clause)
-    rows.query.where(sql_clause)
-    rows
+    rows.where(build_sql_clause(sql_clause))
+  end
+
+  private def add_clauses(sql_clauses : Array(Avram::Where::SqlClause)) : T
+    sql_clauses.reduce(rows) do |r, sql_clause|
+      r.where(build_sql_clause(sql_clause))
+    end
   end
 
   private def build_sql_clause(sql_clause : Avram::Where::SqlClause) : Avram::Where::SqlClause
