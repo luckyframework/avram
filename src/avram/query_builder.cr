@@ -309,8 +309,7 @@ class Avram::QueryBuilder
 
   private def joined_wheres_queries
     if wheres.any? || raw_wheres.any?
-      statements = wheres.map(&.prepare(->next_prepared_statement_placeholder))
-      statements += raw_wheres.map(&.to_sql)
+      statements = (wheres + raw_wheres).map(&.prepare(->next_prepared_statement_placeholder))
 
       "WHERE " + statements.join(" AND ")
     end
@@ -321,7 +320,7 @@ class Avram::QueryBuilder
   end
 
   def raw_wheres
-    @raw_wheres.uniq(&.to_sql)
+    @raw_wheres.uniq(&.prepare(->{"unused"}))
   end
 
   private def prepared_statement_values

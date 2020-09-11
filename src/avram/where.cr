@@ -189,7 +189,7 @@ module Avram::Where
       @clause = build_clause(statement, bind_vars)
     end
 
-    def to_sql
+    def prepare(_placeholder_supplier : Proc(String))
       @clause
     end
 
