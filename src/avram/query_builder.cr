@@ -320,7 +320,7 @@ class Avram::QueryBuilder
   end
 
   def raw_wheres
-    @raw_wheres.uniq(&.prepare(->{"unused"}))
+    @raw_wheres.uniq
   end
 
   private def prepared_statement_values

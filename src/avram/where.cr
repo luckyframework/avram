@@ -205,6 +205,14 @@ module Avram::Where
       self
     end
 
+    def ==(other : Raw)
+      prepare(->{"unused"}) == other.prepare(->{"unused"})
+    end
+
+    def ==(other)
+      false
+    end
+
     private def ensure_enough_bind_variables_for!(statement, bind_vars)
       bindings = statement.chars.select(&.== '?')
       if bindings.size != bind_vars.size
