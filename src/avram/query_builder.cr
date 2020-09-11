@@ -325,7 +325,7 @@ class Avram::QueryBuilder
 
   private def prepared_statement_values
     wheres.compact_map do |sql_clause|
-      sql_clause.value unless sql_clause.is_a?(Avram::Where::NullSqlClause)
+      sql_clause.value if sql_clause.is_a?(Avram::Where::ValueHoldingSqlClause)
     end
   end
 
