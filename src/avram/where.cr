@@ -16,6 +16,14 @@ module Avram::Where
     def clone
       self
     end
+
+    def ==(other : SqlClause)
+      (prepare(->{"unusued"}) + value.to_s) == (other.prepare(->{"unused"}) + other.value.to_s)
+    end
+
+    def ==(other)
+      false
+    end
   end
 
   abstract class NullSqlClause < SqlClause

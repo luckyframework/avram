@@ -316,7 +316,7 @@ class Avram::QueryBuilder
   end
 
   def wheres
-    @wheres.uniq { |where| where.prepare(->{"unused"}) + where.value.to_s }
+    @wheres.uniq
   end
 
   def raw_wheres
