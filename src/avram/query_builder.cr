@@ -313,7 +313,7 @@ class Avram::QueryBuilder
         if sql_clause.is_a?(Avram::Where::NullSqlClause)
           sql_clause.prepare
         else
-          sql_clause.prepare(next_prepared_statement_placeholder)
+          sql_clause.prepare(->next_prepared_statement_placeholder)
         end
       end
       statements += raw_wheres.map(&.to_sql)
@@ -323,7 +323,7 @@ class Avram::QueryBuilder
   end
 
   def wheres
-    @wheres.uniq { |where| where.prepare(prepared_statement_placeholder: "unused") + where.value.to_s }
+    @wheres.uniq { |where| where.prepare(->{"unused"}) + where.value.to_s }
   end
 
   def raw_wheres

@@ -9,8 +9,8 @@ module Avram::Where
     abstract def operator : String
     abstract def negated : SqlClause
 
-    def prepare(prepared_statement_placeholder : String)
-      "#{column} #{operator} #{prepared_statement_placeholder}"
+    def prepare(placeholder_supplier : Proc(String))
+      "#{column} #{operator} #{placeholder_supplier.call}"
     end
 
     def clone
@@ -158,8 +158,8 @@ module Avram::Where
       NotIn.new(@column, @value)
     end
 
-    def prepare(prepared_statement_placeholder : String)
-      "#{column} #{operator} (#{prepared_statement_placeholder})"
+    def prepare(placeholder_supplier : Proc(String))
+      "#{column} #{operator} (#{placeholder_supplier.call})"
     end
   end
 
@@ -172,8 +172,8 @@ module Avram::Where
       In.new(@column, @value)
     end
 
-    def prepare(prepared_statement_placeholder : String)
-      "#{column} #{operator} (#{prepared_statement_placeholder})"
+    def prepare(placeholder_supplier : Proc(String))
+      "#{column} #{operator} (#{placeholder_supplier.call})"
     end
   end
 
