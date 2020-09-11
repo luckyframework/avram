@@ -309,13 +309,7 @@ class Avram::QueryBuilder
 
   private def joined_wheres_queries
     if wheres.any? || raw_wheres.any?
-      statements = wheres.map do |sql_clause|
-        if sql_clause.is_a?(Avram::Where::NullSqlClause)
-          sql_clause.prepare
-        else
-          sql_clause.prepare(->next_prepared_statement_placeholder)
-        end
-      end
+      statements = wheres.map(&.prepare(->next_prepared_statement_placeholder))
       statements += raw_wheres.map(&.to_sql)
 
       "WHERE " + statements.join(" AND ")

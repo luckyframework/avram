@@ -24,7 +24,7 @@ module Avram::Where
     def initialize(@column : Symbol | String)
     end
 
-    def prepare
+    def prepare(_placeholder_supplier : Proc(String))
       "#{column} #{operator} #{@value}"
     end
   end
