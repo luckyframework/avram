@@ -21,7 +21,7 @@ module Avram::Where
     end
 
     def ==(other : SqlClause)
-      prepare(->{"unusued"}) == other.prepare(->{"unused"})
+      prepare(->{"unused"}) == other.prepare(->{"unused"})
     end
 
     def ==(other)
@@ -36,7 +36,7 @@ module Avram::Where
     end
 
     def ==(other : ValueHoldingSqlClause)
-      (prepare(->{"unusued"}) + value.to_s) == (other.prepare(->{"unused"}) + other.value.to_s)
+      (prepare(->{"unused"}) + value.to_s) == (other.prepare(->{"unused"}) + other.value.to_s)
     end
 
     def ==(other : SqlClause)
