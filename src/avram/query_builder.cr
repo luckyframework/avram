@@ -7,7 +7,6 @@ class Avram::QueryBuilder
   @limit : Int32?
   @offset : Int32?
   @wheres = [] of Avram::Where::Condition
-  @raw_wheres = [] of Avram::Where::Condition
   @joins = [] of Avram::Join::SqlClause
   @orders = [] of Avram::OrderBy
   @groups = [] of ColumnName
@@ -36,14 +35,10 @@ class Avram::QueryBuilder
     sql
   end
 
-  # Merges the wheres, raw wheres, joins, and orders from the passed in query
+  # Merges the wheres, joins, and orders from the passed in query
   def merge(query_to_merge : Avram::QueryBuilder)
     query_to_merge.wheres.each do |where|
       where(where)
-    end
-
-    query_to_merge.raw_wheres.each do |where|
-      raw_where(where)
     end
 
     query_to_merge.joins.each do |join|
@@ -296,8 +291,8 @@ class Avram::QueryBuilder
     self
   end
 
-  def raw_where(where_clause : Avram::Where::Condition)
-    @raw_wheres << where_clause
+  def raw_where(where_clause : Avram::Where::Raw)
+    @wheres << where_clause
     self
   end
 
@@ -308,8 +303,8 @@ class Avram::QueryBuilder
   end
 
   private def joined_wheres_queries
-    if wheres.any? || raw_wheres.any?
-      statements = (wheres + raw_wheres).map(&.prepare(->next_prepared_statement_placeholder))
+    if wheres.any?
+      statements = wheres.map(&.prepare(->next_prepared_statement_placeholder))
 
       "WHERE " + statements.join(" AND ")
     end
@@ -320,7 +315,7 @@ class Avram::QueryBuilder
   end
 
   def raw_wheres
-    @raw_wheres.uniq
+    wheres.select(&.is_a?(Avram::Where::Raw))
   end
 
   private def prepared_statement_values
