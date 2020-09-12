@@ -6,7 +6,7 @@ class Avram::QueryBuilder
   getter distinct_on : ColumnName | Nil = nil
   @limit : Int32?
   @offset : Int32?
-  @wheres = [] of Avram::Where::SqlClause
+  @wheres = [] of Avram::Where::Condition
   @raw_wheres = [] of Avram::Where::Raw
   @joins = [] of Avram::Join::SqlClause
   @orders = [] of Avram::OrderBy
@@ -153,7 +153,7 @@ class Avram::QueryBuilder
   end
 
   def reset_where(column : ColumnName)
-    @wheres.reject! { |clause| clause.column.to_s == column.to_s }
+    @wheres.reject! { |clause| clause.is_a?(Avram::Where::SqlClause) && clause.column.to_s == column.to_s }
     self
   end
 
@@ -291,7 +291,7 @@ class Avram::QueryBuilder
     joins.map(&.to_sql).join(" ")
   end
 
-  def where(where_clause : Avram::Where::SqlClause)
+  def where(where_clause : Avram::Where::Condition)
     @wheres << where_clause
     self
   end

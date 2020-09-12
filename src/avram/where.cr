@@ -1,5 +1,9 @@
 module Avram::Where
-  abstract class SqlClause
+  abstract class Condition
+    abstract def prepare(placeholder_supplier : Proc(String)) : String
+  end
+
+  abstract class SqlClause < Condition
     getter column : Symbol | String
 
     def initialize(@column)
@@ -8,7 +12,7 @@ module Avram::Where
     abstract def operator : String
     abstract def negated : SqlClause
 
-    def prepare(placeholder_supplier : Proc(String))
+    def prepare(placeholder_supplier : Proc(String)) : String
       "#{column} #{operator} #{placeholder_supplier.call}"
     end
 
@@ -194,7 +198,7 @@ module Avram::Where
     end
   end
 
-  class Raw
+  class Raw < Condition
     @clause : String
 
     def self.new(statement : String, *bind_vars)
@@ -206,7 +210,7 @@ module Avram::Where
       @clause = build_clause(statement, bind_vars)
     end
 
-    def prepare(_placeholder_supplier : Proc(String))
+    def prepare(_placeholder_supplier : Proc(String)) : String
       @clause
     end
 
