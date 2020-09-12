@@ -2,6 +2,14 @@ module Avram::Where
   abstract class Condition
     abstract def prepare(placeholder_supplier : Proc(String)) : String
 
+    def ==(other : Condition)
+      prepare(->{"unused"}) == other.prepare(->{"unused"})
+    end
+
+    def ==(other)
+      false
+    end
+
     def clone
       self
     end
@@ -19,14 +27,6 @@ module Avram::Where
     def prepare(placeholder_supplier : Proc(String)) : String
       "#{column} #{operator} #{placeholder_supplier.call}"
     end
-
-    def ==(other : SqlClause)
-      prepare(->{"unused"}) == other.prepare(->{"unused"})
-    end
-
-    def ==(other)
-      false
-    end
   end
 
   abstract class ValueHoldingSqlClause < SqlClause
@@ -39,7 +39,7 @@ module Avram::Where
       (prepare(->{"unused"}) + value.to_s) == (other.prepare(->{"unused"}) + other.value.to_s)
     end
 
-    def ==(other : SqlClause)
+    def ==(other : Condition)
       false
     end
   end
@@ -212,14 +212,6 @@ module Avram::Where
 
     def prepare(_placeholder_supplier : Proc(String)) : String
       @clause
-    end
-
-    def ==(other : Raw)
-      prepare(->{"unused"}) == other.prepare(->{"unused"})
-    end
-
-    def ==(other)
-      false
     end
 
     private def ensure_enough_bind_variables_for!(statement, bind_vars)
