@@ -7,7 +7,7 @@ class Avram::QueryBuilder
   @limit : Int32?
   @offset : Int32?
   @wheres = [] of Avram::Where::Condition
-  @raw_wheres = [] of Avram::Where::Raw
+  @raw_wheres = [] of Avram::Where::Condition
   @joins = [] of Avram::Join::SqlClause
   @orders = [] of Avram::OrderBy
   @groups = [] of ColumnName
@@ -296,7 +296,7 @@ class Avram::QueryBuilder
     self
   end
 
-  def raw_where(where_clause : Avram::Where::Raw)
+  def raw_where(where_clause : Avram::Where::Condition)
     @raw_wheres << where_clause
     self
   end
