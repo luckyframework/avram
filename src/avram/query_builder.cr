@@ -293,8 +293,7 @@ class Avram::QueryBuilder
 
   @[Deprecated("Use `#where` instead.")]
   def raw_where(where_clause : Avram::Where::Raw)
-    @wheres << where_clause
-    self
+    where(where_clause)
   end
 
   @_wheres_sql : String?
