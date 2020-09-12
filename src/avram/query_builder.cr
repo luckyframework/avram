@@ -291,6 +291,7 @@ class Avram::QueryBuilder
     self
   end
 
+  @[Deprecated("Use `#where` instead.")]
   def raw_where(where_clause : Avram::Where::Raw)
     @wheres << where_clause
     self
@@ -314,6 +315,7 @@ class Avram::QueryBuilder
     @wheres.uniq
   end
 
+  @[Deprecated("Use `#wheres` instead. Raw wheres are included.")]
   def raw_wheres
     wheres.select(&.is_a?(Avram::Where::Raw))
   end
