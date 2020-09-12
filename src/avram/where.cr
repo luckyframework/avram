@@ -1,6 +1,10 @@
 module Avram::Where
   abstract class Condition
     abstract def prepare(placeholder_supplier : Proc(String)) : String
+
+    def clone
+      self
+    end
   end
 
   abstract class SqlClause < Condition
@@ -14,10 +18,6 @@ module Avram::Where
 
     def prepare(placeholder_supplier : Proc(String)) : String
       "#{column} #{operator} #{placeholder_supplier.call}"
-    end
-
-    def clone
-      self
     end
 
     def ==(other : SqlClause)
@@ -212,10 +212,6 @@ module Avram::Where
 
     def prepare(_placeholder_supplier : Proc(String)) : String
       @clause
-    end
-
-    def clone
-      self
     end
 
     def ==(other : Raw)
