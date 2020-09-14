@@ -16,6 +16,14 @@ private class SaveUser < User::SaveOperation
   end
 end
 
+private class SaveUserWithFalseValueValidations < User::SaveOperation
+  permit_columns :nickname, :available_for_hire
+
+  before_save do
+    validate_required nickname, available_for_hire
+  end
+end
+
 private class SaveLimitedUser < User::SaveOperation
   permit_columns :name
 end
@@ -428,6 +436,17 @@ describe "Avram::SaveOperation" do
           r.drafted_at.should eq drafted_at
         end
       end
+
+      it "updates with a record that has defaults" do
+        model = ModelWithDefaultValuesBox.create
+        params = Avram::Params.new({"greeting" => "Hi"})
+        OverrideDefaults.update(model, params) do |_operation, record|
+          record.should_not eq nil
+          r = record.not_nil!
+          r.greeting.should eq "Hi"
+          r.admin.should eq false
+        end
+      end
     end
   end
 
@@ -550,6 +569,20 @@ describe "Avram::SaveOperation" do
         SaveLineItem.update(line_item, Avram::Params.new({"name" => "Another pair of shoes"})) do |operation, record|
           operation.saved?.should be_true
           record.id.should eq line_item.id
+        end
+      end
+    end
+
+    context "when the default is false, but the field is required" do
+      it "passes required validation as 'false' is a valid Boolean value" do
+        user = UserBox.create &.nickname("oopsie").available_for_hire(false)
+        params = Avram::Params.new({"nickname" => "falsey mcfalserson"})
+        SaveUserWithFalseValueValidations.update(user, params) do |operation, record|
+          record.should_not eq nil
+          r = record.not_nil!
+          operation.errors.should eq({} of Symbol => Array(String))
+          r.nickname.should eq "falsey mcfalserson"
+          r.available_for_hire.should eq false
         end
       end
     end
