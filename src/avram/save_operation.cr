@@ -11,7 +11,7 @@ require "./inherit_column_attributes"
 abstract class Avram::SaveOperation(T) < Avram::Operation
   include Avram::NeedyInitializerAndSaveMethods
   include Avram::Callbacks
-  include Avram::DatabaseValidations
+  include Avram::DatabaseValidations(T)
   include Avram::NestedSaveOperation
   include Avram::MarkAsFailed
   include Avram::InheritColumnAttributes
@@ -87,7 +87,7 @@ abstract class Avram::SaveOperation(T) < Avram::Operation
   end
 
   # :nodoc:
-  macro add_column_attributes(primary_key_type, attributes)
+  macro add_column_attributes(attributes)
     {% for attribute in attributes %}
       {% COLUMN_ATTRIBUTES << attribute %}
     {% end %}

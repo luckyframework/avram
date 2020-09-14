@@ -1,8 +1,5 @@
 require "./spec_helper"
 
-private class BucketQuery < Bucket::BaseQuery
-end
-
 describe "Array Columns" do
   it "fails when passing a single value to an array query" do
     BucketBox.new.numbers([1, 2, 3]).create

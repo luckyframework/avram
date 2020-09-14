@@ -12,6 +12,10 @@ module Avram::Where
     def prepare(prepared_statement_placeholder : String)
       "#{column} #{operator} #{prepared_statement_placeholder}"
     end
+
+    def clone
+      self
+    end
   end
 
   abstract class NullSqlClause < SqlClause
@@ -187,6 +191,10 @@ module Avram::Where
 
     def to_sql
       @clause
+    end
+
+    def clone
+      self
     end
 
     private def ensure_enough_bind_variables_for!(statement, bind_vars)
