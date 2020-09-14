@@ -1,13 +1,11 @@
 require "./errors"
-require "./queryable"
 
 module Avram::PrimaryKeyQueryable(T)
   abstract def id
   abstract def id(id_val)
+  abstract def query
 
   macro included
-    include Avram::Queryable(T)
-
     def self.find(id)
       new.find(id)
     end
