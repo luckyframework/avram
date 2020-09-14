@@ -118,6 +118,8 @@ abstract class Avram::Model
 
     {{ yield }}
 
+    validate_primary_key
+
     setup({{table_name}})
     {% MACRO_CHECKS[:setup_complete] = true %}
   end
@@ -142,6 +144,22 @@ abstract class Avram::Model
       def id
         {{ type_declaration.var.id }}
       end
+    {% end %}
+  end
+
+  macro validate_primary_key
+    {% if !@type.has_constant? "PRIMARY_KEY_TYPE" %}
+      \{% raise <<-ERROR
+        No primary key was specified.
+
+        Example:
+
+          table do
+            primary_key id : Int64
+            ...
+          end
+        ERROR
+      %}
     {% end %}
   end
 
