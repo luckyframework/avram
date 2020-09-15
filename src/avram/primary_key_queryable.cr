@@ -1,10 +1,6 @@
 require "./errors"
 
 module Avram::PrimaryKeyQueryable(T)
-  abstract def id
-  abstract def id(id_val)
-  abstract def query
-
   macro included
     def self.find(id)
       new.find(id)
