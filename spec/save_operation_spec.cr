@@ -439,13 +439,9 @@ describe "Avram::SaveOperation" do
 
       it "updates with a record that has defaults" do
         model = ModelWithDefaultValuesBox.create
-        params = Avram::Params.new({"greeting" => "Hi"})
-        OverrideDefaults.update(model, params) do |_operation, record|
-          record.should_not eq nil
-          r = record.not_nil!
-          r.greeting.should eq "Hi"
-          r.admin.should eq false
-        end
+        record = OverrideDefaults.update!(model, greeting: "Hi")
+        record.greeting.should eq "Hi"
+        record.admin.should eq false
       end
     end
   end
@@ -573,14 +569,14 @@ describe "Avram::SaveOperation" do
       end
     end
 
-    context "when the default is false, but the field is required" do
-      it "passes required validation as 'false' is a valid Boolean value" do
+    context "when the default is false and the field is required" do
+      it "is valid since 'false' is a valid Boolean value" do
         user = UserBox.create &.nickname("oopsie").available_for_hire(false)
         params = Avram::Params.new({"nickname" => "falsey mcfalserson"})
         SaveUserWithFalseValueValidations.update(user, params) do |operation, record|
           record.should_not eq nil
           r = record.not_nil!
-          operation.errors.should eq({} of Symbol => Array(String))
+          operation.valid?.should be_true
           r.nickname.should eq "falsey mcfalserson"
           r.available_for_hire.should eq false
         end
