@@ -18,7 +18,7 @@ end
 describe Avram::Operation do
   describe "run" do
     it "returns the last statement from the run method" do
-      TestOperation.run do |operation, value|
+      TestOperation.run do |_operation, value|
         value.should eq "Lucky Test"
       end
     end
@@ -44,7 +44,7 @@ describe Avram::Operation do
   end
 
   describe "valid?" do
-    it "returns true when there's no attributes defined" do
+    it "returns true when there's nothing to validate" do
       TestOperation.run do |operation, value|
         operation.valid?.should eq true
       end

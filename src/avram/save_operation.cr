@@ -2,11 +2,7 @@ require "./database_validations"
 require "./inherit_column_attributes"
 
 abstract class Avram::SaveOperation(T) < Avram::Operation
-  include Avram::NeedyInitializerAndSaveMethods
-  include Avram::Callbacks
   include Avram::DatabaseValidations(T)
-  include Avram::NestedSaveOperation
-  include Avram::MarkAsFailed
   include Avram::InheritColumnAttributes
 
   macro inherited
@@ -25,6 +21,10 @@ abstract class Avram::SaveOperation(T) < Avram::Operation
 
   def self.param_key
     T.name.underscore
+  end
+
+  def run
+
   end
 
   # :nodoc:
