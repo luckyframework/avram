@@ -37,17 +37,65 @@ private class OperationWithCallbacks < Avram::Operation
   end
 end
 
+private class SaveOperationWithCallbacks < Post::SaveOperation
+  include TestableOperation
 
-describe "Avram::Operation callbacks" do
-  it "runs before_run and after_run callbacks" do
-    OperationWithCallbacks.run do |operation, value|
-      operation.callbacks_that_ran.should contain "before_run_update_number"
-      operation.callbacks_that_ran.should contain "before_run_in_a_block"
-      value.should eq 4
-      operation.number.value.should eq 4
-      operation.number.original_value.should eq 1
-      operation.callbacks_that_ran.should contain "after_run_notify_complete is 4"
-      operation.callbacks_that_ran.should contain "after_run_in_a_block with 4"
+  before_save :set_title
+  before_save { mark_callback("before_save_in_a_block") }
+
+  after_save :notify_save_complete
+  after_save do |saved_post|
+    mark_callback("after_save_in_a_block with #{saved_post.title}")
+  end
+
+  after_commit :notify_commit_complete
+  after_commit do |saved_post|
+    mark_callback("after_commit_in_a_block with #{saved_post.title}")
+  end
+
+  private def set_title
+    mark_callback("before_save_update_title")
+    title.value = "Saved Post"
+  end
+
+  private def notify_save_complete(saved_post)
+    mark_callback("after_save_notify_save_complete with #{saved_post.title}")
+  end
+
+  private def notify_commit_complete(saved_post)
+    mark_callback("after_commit_notify_commit_complete with #{saved_post.title}")
+  end
+end
+
+
+describe "Avram::Callbacks" do
+
+  describe "Avram::Operation" do
+    it "runs before_run and after_run callbacks" do
+      OperationWithCallbacks.run do |operation, value|
+        operation.callbacks_that_ran.should contain "before_run_update_number"
+        operation.callbacks_that_ran.should contain "before_run_in_a_block"
+        value.should eq 4
+        operation.number.value.should eq 4
+        operation.number.original_value.should eq 1
+        operation.callbacks_that_ran.should contain "after_run_notify_complete is 4"
+        operation.callbacks_that_ran.should contain "after_run_in_a_block with 4"
+      end
+    end
+  end
+
+  describe "Avram::SaveOperation" do
+    it "runs before_save, after_save, and after_commit callbacks" do
+      SaveOperationWithCallbacks.create do |operation, post|
+        operation.callbacks_that_ran.should contain "before_save_update_title"
+        operation.callbacks_that_ran.should contain "before_save_in_a_block"
+        post.should_not eq nil
+        post.not_nil!.title.should eq "Saved Post"
+        operation.callbacks_that_ran.should contain "after_save_notify_save_complete with Saved Post"
+        operation.callbacks_that_ran.should contain "after_save_in_a_block with Saved Post"
+        operation.callbacks_that_ran.should contain "after_commit_notify_commit_complete with Saved Post"
+        operation.callbacks_that_ran.should contain "after_commit_in_a_block with Saved Post"
+      end
     end
   end
 

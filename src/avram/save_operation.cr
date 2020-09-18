@@ -40,13 +40,13 @@ abstract class Avram::SaveOperation(T) < Avram::Operation
       transaction_committed = database.transaction do
         insert_or_update
         saved_record = record.not_nil!
-        #after_save(saved_record)
+        after_save(saved_record)
         true
       end
 
       if transaction_committed
         saved_record = record.not_nil!
-        #after_commit(saved_record)
+        after_commit(saved_record)
         mark_as_saved
         Avram::Events::SaveSuccessEvent.publish(
           operation_class: self.class.name,
