@@ -6,6 +6,7 @@ class Avram::BaseQueryTemplate
 
       def_clone
       include Avram::Queryable({{ type }})
+      include Avram::PrimaryKeyQueryable({{ type }})
 
       def database : Avram::Database.class
         {{ type }}.database

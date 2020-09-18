@@ -1,8 +1,6 @@
 module Avram::Queryable(T)
   include Enumerable(T)
 
-  abstract def id
-
   @query : Avram::QueryBuilder?
   setter query
 
@@ -15,10 +13,6 @@ module Avram::Queryable(T)
 
     def self.all
       new
-    end
-
-    def self.find(id)
-      new.find(id)
     end
 
     def self.first
@@ -149,10 +143,6 @@ module Avram::Queryable(T)
     clone.tap &.query.offset(amount)
   end
 
-  def find(id)
-    id(id).limit(1).first? || raise RecordNotFoundError.new(model: @@table_name, id: id.to_s)
-  end
-
   def first?
     with_ordered_query
       .limit(1)
@@ -213,11 +203,7 @@ module Avram::Queryable(T)
   end
 
   private def with_ordered_query : self
-    if query.ordered?
-      self
-    else
-      id.asc_order
-    end
+    self
   end
 
   def to_sql
