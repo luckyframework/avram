@@ -4,15 +4,17 @@ private class OperationWithValidations < Avram::Operation
   attribute title : String
   attribute size : Int32
   attribute dontcha_know : Bool = false
+  attribute valid_false : Bool
 
   before_run :run_some_validations
- 
+
   def run
     title.value
   end
 
   private def run_some_validations
     validate_required title
+    validate_required valid_false
     validate_size_of size, min: 4, max: 12
     validate_acceptance_of dontcha_know
   end
@@ -274,7 +276,7 @@ describe Avram::Validations do
 
   context "Operation with validations" do
     it "is valid when validations pass" do
-      params = Avram::Params.new({"title" => "Make the tacos", "size" => "6", "dontcha_know" => "true"})
+      params = Avram::Params.new({"title" => "Make the tacos", "size" => "6", "dontcha_know" => "true", "valid_false" => "false"})
       OperationWithValidations.run(params) do |operation, value|
         operation.errors.should be_empty
         operation.valid?.should eq true
