@@ -19,7 +19,7 @@ end
 
 describe "Avram::Operation attributes" do
   it "is a PermittedAttribute" do
-    OperationWithAttributes.run do |operation, value|
+    OperationWithAttributes.run do |operation, _value|
       operation.title.should be_a(Avram::PermittedAttribute(String?))
       operation.title.name.should eq(:title)
       operation.title.param_key.should eq("data")
@@ -27,28 +27,28 @@ describe "Avram::Operation attributes" do
   end
 
   it "generates a list of attributes" do
-    OperationWithAttributes.run do |operation, value|
+    OperationWithAttributes.run do |operation, _value|
       operation.attributes.map(&.name).should eq [:thing, :checked, :count, :title]
     end
   end
 
-  it "sets a default value of nil" do
-    OperationWithAttributes.run do |operation, value|
+  it "has a value of nil when no default is given" do
+    OperationWithAttributes.run do |operation, _value|
       operation.title.value.should eq nil
       operation.count.value.should eq nil
     end
   end
 
-  it "assigns the default value to an attribute if one is set and no param is given" do
-    OperationWithAttributes.run do |operation, value|
+  it "assigns a default value to an attribute" do
+    OperationWithAttributes.run do |operation, _value|
       operation.checked.value.should eq false
       operation.thing.value.should eq "taco"
     end
   end
 
-  it "overrides the default value with a param if one is given" do
+  it "overrides the default value with a param value" do
     params = Avram::Params.new({"checked" => "true", "title" => "Random Food", "count" => "4"})
-    OperationWithAttributes.run(params) do |operation, value|
+    OperationWithAttributes.run(params) do |operation, _value|
       operation.title.value.should eq "Random Food"
       operation.count.value.should eq 4
       operation.checked.value.should eq true
@@ -57,7 +57,7 @@ describe "Avram::Operation attributes" do
 
   it "sets the attribute value to nil if the param is an empty string" do
     params = Avram::Params.new({"title" => "", "thing" => ""})
-    OperationWithAttributes.run(params) do |operation, value|
+    OperationWithAttributes.run(params) do |operation, _value|
       operation.title.value.should eq nil
       operation.thing.value.should eq nil
     end
@@ -65,7 +65,7 @@ describe "Avram::Operation attributes" do
 
   it "sets the param and value based on the passed in params" do
     params = Avram::Params.new({"title" => "secret"})
-    OperationWithAttributes.run(params) do |operation, value|
+    OperationWithAttributes.run(params) do |operation, _value|
       operation.title.value.should eq "secret"
       operation.title.param.should eq "secret"
     end
@@ -73,7 +73,7 @@ describe "Avram::Operation attributes" do
 
   it "allows you to update an attribute value" do
     params = Avram::Params.new({"count" => "16"})
-    OperationWithAttributes.run(params) do |operation, value|
+    OperationWithAttributes.run(params) do |operation, _value|
       operation.count.value.should eq 16
       operation.update_count
       operation.count.value.should eq 4
@@ -83,19 +83,19 @@ describe "Avram::Operation attributes" do
 
   it "parses the value using the declared type" do
     params = Avram::Params.new({"checked" => "1"})
-    OperationWithAttributes.run(params) do |operation, value|
+    OperationWithAttributes.run(params) do |operation, _value|
       operation.checked.value.should eq true
     end
-    
+
     params = Avram::Params.new({"checked" => "0"})
-    OperationWithAttributes.run(params) do |operation, value|
+    OperationWithAttributes.run(params) do |operation, _value|
       operation.checked.value.should eq false
     end
   end
 
-  it "gracefully handles invalid params" do
+  it "handles invalid params" do
     params = Avram::Params.new({"count" => "one"})
-    OperationWithAttributes.run(params) do |operation, value|
+    OperationWithAttributes.run(params) do |operation, _value|
       operation.count.value.should eq nil
       operation.count.errors.first.should eq "is invalid"
     end
