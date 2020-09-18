@@ -4,7 +4,7 @@ module TestableOperation
   macro included
     @callbacks_that_ran = [] of String
     getter callbacks_that_ran
-    
+
     def mark_callback(callback_name : String)
       @callbacks_that_ran << callback_name
     end
