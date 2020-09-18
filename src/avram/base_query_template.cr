@@ -6,6 +6,7 @@ class Avram::BaseQueryTemplate
 
       def_clone
       include Avram::Queryable({{ type }})
+      include Avram::PrimaryKeyQueryable({{ type }})
 
       def database : Avram::Database.class
         {{ type }}.database
@@ -96,7 +97,7 @@ class Avram::BaseQueryTemplate
                   from: @@table_name,
                   to: :{{ assoc[:table_name] }},
                   primary_key: {{ assoc[:foreign_key] }},
-                  foreign_key: primary_key_name
+                  foreign_key: {{ assoc[:type] }}::PRIMARY_KEY_NAME
                 )
               )
             {% elsif assoc[:relationship_type] == :has_one %}
