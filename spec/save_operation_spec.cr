@@ -438,7 +438,7 @@ describe "Avram::SaveOperation" do
       end
 
       it "updates with a record that has defaults" do
-        model = ModelWithDefaultValuesBox.create
+        model = ModelWithDefaultValues::SaveOperation.create!
         record = OverrideDefaults.update!(model, greeting: "Hi")
         record.greeting.should eq "Hi"
         record.admin.should eq false
