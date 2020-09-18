@@ -54,8 +54,9 @@ module Avram::SaveMethods
         {{ attribute_params.id }}
       )
 
-      yield operation, nil
-      
+      record = operation.run
+
+      yield operation, record
     end
   end
 
@@ -68,7 +69,6 @@ module Avram::SaveMethods
         {% end %}
         {{ attribute_method_args.id }}
       )
-      
     end
   end
 
@@ -89,8 +89,6 @@ module Avram::SaveMethods
     {% for type_declaration in OPERATION_NEEDS %}
       {% needs_method_args = needs_method_args + "@#{type_declaration},\n" %}
     {% end %}
-
-    {% puts "needs_method_args #{needs_method_args}" %}
 
     def initialize(
       @record : T,
