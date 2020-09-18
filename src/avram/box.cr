@@ -3,13 +3,14 @@
 
 #   SEQUENCES = {} of String => Int32
 
-#   macro inherited
-#     {% unless @type.abstract? %}
-#       {% operation = @type.name.gsub(/Box/, "::SaveOperation").id %}
-#       @operation : {{ operation }} = {{ operation }}.new
-#       setup_attribute_shortcuts({{ operation }})
-#     {% end %}
-#   end
+  macro inherited
+    {% unless @type.abstract? %}
+      {% operation = @type.name.gsub(/Box/, "::SaveOperation").id %}
+      @operation : {{ operation }} = {{ operation }}.new
+      setup_attribute_shortcuts({{ operation }})
+      setup_attributes({{ operation }})
+    {% end %}
+  end
 
 #   macro setup_attribute_shortcuts(operation)
 #     {% for attribute in operation.resolve.constant(:COLUMN_ATTRIBUTES) %}
@@ -20,13 +21,31 @@
 #     {% end %}
 #   end
 
-#   def self.save
-#     {% raise "'Box.save' has been renamed to 'Box.create' to match 'SaveOperation.create'" %}
-#   end
+  macro setup_attributes(operation)
+    def attributes
+      {
+        {% for attribute in operation.resolve.constant(:COLUMN_ATTRIBUTES) %}
+          {{ attribute[:name] }}: operation.{{ attribute[:name] }}.value,
+        {% end %}
+      }
+    end
+  end
 
-#   def self.create
-#     new.create
-#   end
+  def self.save
+    {% raise "'Box.save' has been renamed to 'Box.create' to match 'SaveOperation.create'" %}
+  end
+
+  def self.build_attributes
+    yield(new).attributes
+  end
+
+  def self.build_attributes
+    new.attributes
+  end
+
+  def self.create
+    new.create
+  end
 
 #   def self.create
 #     yield(new).create

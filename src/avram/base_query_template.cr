@@ -4,6 +4,7 @@ class Avram::BaseQueryTemplate
       private class Nothing
       end
 
+      def_clone
       include Avram::Queryable({{ type }})
 
       def database : Avram::Database.class
@@ -55,12 +56,10 @@ class Avram::BaseQueryTemplate
           end
         {% end %}
 
-        database.run do |db|
-          db.exec(
-            query.statement_for_update(_changes, return_columns: false),
-            args: query.args_for_update(_changes)
-          ).rows_affected
-        end
+        database.exec(
+          query.statement_for_update(_changes, return_columns: false),
+          args: query.args_for_update(_changes)
+        ).rows_affected
       end
 
       {% for column in columns %}
@@ -111,9 +110,9 @@ class Avram::BaseQueryTemplate
               )
             {% elsif assoc[:through] %}
               {{ join_type.downcase.id }}_join_{{ assoc[:through].id }}
-              __yield_where_{{ assoc[:through].id }} do |join_query|
-                join_query.{{ join_type.downcase.id }}_join_{{ assoc[:table_name] }}
-              end
+                .__yield_where_{{ assoc[:through].id }} do |join_query|
+                  join_query.{{ join_type.downcase.id }}_join_{{ assoc[:table_name] }}
+                end
             {% else %}
               join(
                 Avram::Join::{{ join_type.id }}.new(
@@ -129,17 +128,18 @@ class Avram::BaseQueryTemplate
 
 
         def where_{{ assoc[:table_name] }}(assoc_query : {{ assoc[:type] }}::BaseQuery, auto_inner_join : Bool = true)
-          join_{{ assoc[:table_name] }} if auto_inner_join
-          query.merge(assoc_query.query)
-          self
+          if auto_inner_join
+            join_{{ assoc[:table_name] }}.merge_query(assoc_query.query)
+          else
+            merge_query(assoc_query.query)
+          end
         end
 
         # :nodoc:
         # Used internally for has_many through queries
         def __yield_where_{{ assoc[:table_name] }}
           assoc_query = yield {{ assoc[:type] }}::BaseQuery.new
-          query.merge(assoc_query.query)
-          self
+          merge_query(assoc_query.query)
         end
 
         def {{ assoc[:table_name] }}

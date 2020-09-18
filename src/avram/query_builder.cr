@@ -1,4 +1,6 @@
 class Avram::QueryBuilder
+  def_clone
+
   alias ColumnName = Symbol | String
   getter table
   getter distinct_on : ColumnName | Nil = nil
@@ -55,16 +57,6 @@ class Avram::QueryBuilder
     query_to_merge.groups.each do |group|
       group_by(group)
     end
-  end
-
-  # Similar to `merge`, but includes ALL query parts
-  def clone(query_to_merge : Avram::QueryBuilder)
-    merge(query_to_merge)
-    self.select(query_to_merge.selects)
-    distinct if query_to_merge.distinct?
-    distinct_on(query_to_merge.distinct_on.to_s) if query_to_merge.has_distinct_on?
-    limit(query_to_merge.limit)
-    offset(query_to_merge.offset)
   end
 
   def statement

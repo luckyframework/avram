@@ -2,7 +2,11 @@ require "./database_validations"
 require "./inherit_column_attributes"
 
 abstract class Avram::SaveOperation(T) < Avram::Operation
-  include Avram::DatabaseValidations
+  include Avram::NeedyInitializerAndSaveMethods
+  include Avram::Callbacks
+  include Avram::DatabaseValidations(T)
+  include Avram::NestedSaveOperation
+  include Avram::MarkAsFailed
   include Avram::InheritColumnAttributes
 
   macro inherited
@@ -23,8 +27,25 @@ abstract class Avram::SaveOperation(T) < Avram::Operation
     T.name.underscore
   end
 
-  def run
+  # :nodoc:
+  def published_save_failed_event
+    Avram::Events::SaveFailedEvent.publish(
+      operation_class: self.class.name,
+      attributes: generic_attributes
+    )
+  end
 
+  def generic_attributes
+    attributes.map do |attr|
+      Avram::GenericAttribute.new(
+        name: attr.name,
+        param: attr.param.try(&.to_s),
+        value: attr.value.try(&.to_s),
+        original_value: attr.original_value.try(&.to_s),
+        param_key: attr.param_key,
+        errors: attr.errors
+      )
+    end
   end
 
   def changes : Hash(Symbol, String?)
@@ -38,7 +59,7 @@ abstract class Avram::SaveOperation(T) < Avram::Operation
   end
 
   # Permit these columns from your model to be assign a value from params.
-  # 
+  #
   # ```
   # class SaveUser < Avram::SaveOperation
   #   permit_columns :name, :email, :phone_number
@@ -144,6 +165,12 @@ abstract class Avram::SaveOperation(T) < Avram::Operation
       end
 
       def set_{{ attribute[:name] }}_from_param(_value)
+        # In nilable types, `nil` is ok, and non-nilable types we will get the
+        # "is required" error.
+        if _value.blank?
+          {{ attribute[:name] }}.value = nil
+          return
+        end
         {% if attribute[:type].is_a?(Generic) %}
           # Pass `_value` in as an Array. Currently only single values are supported.
           # TODO: Update this once Lucky params support Arrays natively
@@ -204,5 +231,96 @@ abstract class Avram::SaveOperation(T) < Avram::Operation
       value.not_nil!.class.adapter.to_db(value.as({{ column[:type] }}))
     end
     {% end %}
+  end
+
+  def save : Bool
+    if valid? && (!persisted? || changes.any?)
+      transaction_committed = database.transaction do
+        insert_or_update
+        saved_record = record.not_nil!
+        after_save(saved_record)
+        true
+      end
+
+      if transaction_committed
+        saved_record = record.not_nil!
+        after_commit(saved_record)
+        self.save_status = SaveStatus::Saved
+        Avram::Events::SaveSuccessEvent.publish(
+          operation_class: self.class.name,
+          attributes: generic_attributes
+        )
+        true
+      else
+        mark_as_failed
+        false
+      end
+    elsif valid? && changes.empty?
+      self.save_status = SaveStatus::Saved
+      true
+    else
+      mark_as_failed
+      false
+    end
+  end
+
+  def save! : T
+    if save
+      record.not_nil!
+    else
+      raise Avram::InvalidOperationError.new(operation: self)
+    end
+  end
+
+  def update! : T
+    save!
+  end
+
+  def persisted? : Bool
+    !!record_id
+  end
+
+  private def insert_or_update
+    if persisted?
+      update record_id
+    else
+      insert
+    end
+  end
+
+  private def record_id
+    @record.try &.id
+  end
+
+  def before_save; end
+
+  def after_save(_record : T); end
+
+  def after_commit(_record : T); end
+
+  private def insert : T
+    self.created_at.value ||= Time.utc if responds_to?(:created_at)
+    self.updated_at.value ||= Time.utc if responds_to?(:updated_at)
+    @record = database.query insert_sql.statement, args: insert_sql.args do |rs|
+      @record = @@schema_class.from_rs(rs).first
+    end
+  end
+
+  private def update(id) : T
+    self.updated_at.value = Time.utc if responds_to?(:updated_at)
+    @record = database.query update_query(id).statement_for_update(changes), args: update_query(id).args_for_update(changes) do |rs|
+      @record = @@schema_class.from_rs(rs).first
+    end
+  end
+
+  private def update_query(id)
+    Avram::QueryBuilder
+      .new(table_name)
+      .select(@@schema_class.column_names)
+      .where(Avram::Where::Equal.new(primary_key_name, id.to_s))
+  end
+
+  private def insert_sql
+    Avram::Insert.new(table_name, changes, @@schema_class.column_names)
   end
 end

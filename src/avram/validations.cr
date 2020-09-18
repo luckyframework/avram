@@ -180,7 +180,7 @@ module Avram::Validations
         if !min.nil? && size < min
           attribute.add_error "is too low"
         end
-  
+
         if !max.nil? && size > max
           attribute.add_error "is too high"
         end

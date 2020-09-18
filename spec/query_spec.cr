@@ -20,52 +20,93 @@ class JSONQuery < Blob::BaseQuery
   end
 end
 
-class ArrayQuery < Bucket::BaseQuery
-end
-
 describe Avram::Query do
   it "can chain scope methods" do
     ChainedQuery.new.young.named("Paul")
   end
 
-  it "can select distinct" do
-    query = UserQuery.new.distinct.query
+  describe "#distinct" do
+    it "selects distinct" do
+      query = UserQuery.new.distinct.query
 
-    query.statement.should eq "SELECT DISTINCT #{User::COLUMN_SQL} FROM users"
-    query.args.should eq [] of String
+      query.statement.should eq "SELECT DISTINCT #{User::COLUMN_SQL} FROM users"
+      query.args.should eq [] of String
+    end
+
+    it "doesn't mutate the query" do
+      query = UserQuery.new.name("name")
+      original_query_sql = query.to_sql
+
+      query.distinct
+
+      query.to_sql.should eq original_query_sql
+    end
   end
 
-  it "can reset order" do
-    query = UserQuery.new.order_by(:some_column, :asc).reset_order.query
+  describe "#reset_order" do
+    it "resets the order" do
+      query = UserQuery.new.order_by(:some_column, :asc).reset_order.query
 
-    query.statement.should eq "SELECT #{User::COLUMN_SQL} FROM users"
-    query.args.should eq [] of String
+      query.statement.should eq "SELECT #{User::COLUMN_SQL} FROM users"
+      query.args.should eq [] of String
+    end
+
+    it "doesn't mutate the query" do
+      query = UserQuery.new.order_by(:name, :asc)
+      original_query_sql = query.to_sql
+
+      query.reset_order
+
+      query.to_sql.should eq original_query_sql
+    end
   end
 
-  it "can reset where on a specific column" do
-    query = UserQuery.new.name("Purcell").age(35).reset_where(&.name).query
+  describe "#reset_where" do
+    it "resets where on a specific column" do
+      query = UserQuery.new.name("Purcell").age(35).reset_where(&.name).query
 
-    query.statement.should eq "SELECT #{User::COLUMN_SQL} FROM users WHERE users.age = $1"
-    query.args.should eq ["35"] of String
+      query.statement.should eq "SELECT #{User::COLUMN_SQL} FROM users WHERE users.age = $1"
+      query.args.should eq ["35"] of String
+    end
+
+    it "doesn't mutate the query" do
+      query = UserQuery.new.name("name").age(35)
+      original_query_sql = query.to_sql
+
+      query.reset_where(&.name)
+
+      query.to_sql.should eq original_query_sql
+    end
   end
 
-  it "can select distinct on a specific column" do
-    UserBox.new.name("Purcell").age(22).create
-    UserBox.new.name("Purcell").age(84).create
-    UserBox.new.name("Griffiths").age(55).create
-    UserBox.new.name("Griffiths").age(75).create
-    queryable = UserQuery.new.distinct_on(&.name).order_by(:name, :asc).order_by(:age, :asc)
-    query = queryable.query
+  describe "#distinct_on" do
+    it "selects distinct on a specific column" do
+      UserBox.new.name("Purcell").age(22).create
+      UserBox.new.name("Purcell").age(84).create
+      UserBox.new.name("Griffiths").age(55).create
+      UserBox.new.name("Griffiths").age(75).create
+      queryable = UserQuery.new.distinct_on(&.name).order_by(:name, :asc).order_by(:age, :asc)
+      query = queryable.query
 
-    query.statement.should eq "SELECT DISTINCT ON (users.name) #{User::COLUMN_SQL} FROM users ORDER BY name ASC, age ASC"
-    query.args.should eq [] of String
-    results = queryable.results
-    first = results.first
-    second = results.last
-    first.name.should eq "Griffiths"
-    first.age.should eq 55
-    second.name.should eq "Purcell"
-    second.age.should eq 22
+      query.statement.should eq "SELECT DISTINCT ON (users.name) #{User::COLUMN_SQL} FROM users ORDER BY name ASC, age ASC"
+      query.args.should eq [] of String
+      results = queryable.results
+      first = results.first
+      second = results.last
+      first.name.should eq "Griffiths"
+      first.age.should eq 55
+      second.name.should eq "Purcell"
+      second.age.should eq 22
+    end
+
+    it "doesn't mutate the query" do
+      query = UserQuery.new.name("name")
+      original_query_sql = query.to_sql
+
+      query.distinct_on(&.name)
+
+      query.to_sql.should eq original_query_sql
+    end
   end
 
   describe ".first" do
@@ -118,14 +159,25 @@ describe Avram::Query do
       UserBox.new.name("First").create
       UserBox.new.name("Last").create
 
-      user = (user_query = UserQuery.new).first?
+      user = UserQuery.new.first?
+      user_query = Avram::Events::QueryEvent.logged_events.last.query
+
       user.should_not be_nil
       user.not_nil!.name.should eq "First"
-      user_query.query.statement.should eq "SELECT #{User::COLUMN_SQL} FROM users ORDER BY users.id ASC LIMIT 1"
+      user_query.should eq "SELECT #{User::COLUMN_SQL} FROM users ORDER BY users.id ASC LIMIT 1"
     end
 
     it "returns nil if no record found" do
       UserQuery.new.first?.should be_nil
+    end
+
+    it "doesn't mutate the query" do
+      query = UserQuery.new.name("name")
+      original_query_sql = query.to_sql
+
+      query.first?
+
+      query.to_sql.should eq original_query_sql
     end
   end
 
@@ -172,9 +224,10 @@ describe Avram::Query do
       UserBox.new.name("First").create
       UserBox.new.name("Last").create
 
-      last = UserQuery.last?
-      last.should_not be_nil
-      last && last.name.should eq "Last"
+      user = UserQuery.last?
+
+      user.should_not be_nil
+      user.not_nil!.name.should eq "Last"
     end
 
     it "returns nil if last record is not found" do
@@ -187,14 +240,25 @@ describe Avram::Query do
       UserBox.new.name("First").create
       UserBox.new.name("Last").create
 
-      last = (user_query = UserQuery.new).last?
-      last.should_not be_nil
-      last && last.name.should eq "Last"
-      user_query.query.statement.should eq "SELECT #{User::COLUMN_SQL} FROM users ORDER BY users.id DESC LIMIT 1"
+      user = UserQuery.new.last?
+      user_query = Avram::Events::QueryEvent.logged_events.last.query
+
+      user.should_not be_nil
+      user.not_nil!.name.should eq "Last"
+      user_query.should eq "SELECT #{User::COLUMN_SQL} FROM users ORDER BY users.id DESC LIMIT 1"
     end
 
     it "returns nil if last record is not found" do
       UserQuery.new.last?.should be_nil
+    end
+
+    it "doesn't mutate the query" do
+      query = UserQuery.new.name("name")
+      original_query_sql = query.to_sql
+
+      query.last?
+
+      query.to_sql.should eq original_query_sql
     end
   end
 
@@ -250,6 +314,16 @@ describe Avram::Query do
         UserQuery.new.find("id")
       end
     end
+
+    it "doesn't mutate the query" do
+      user = UserBox.new.create
+      query = UserQuery.new
+      original_query_sql = query.to_sql
+
+      query.find(user.id)
+
+      query.to_sql.should eq original_query_sql
+    end
   end
 
   describe "#where" do
@@ -282,6 +356,15 @@ describe Avram::Query do
         UserQuery.new.where("name = ?", "bound", "extra")
       end
     end
+
+    it "doesn't mutate the query" do
+      query = UserQuery.new.where(:first_name, "Paul")
+      original_query_sql = query.to_sql
+
+      query.where(:last_name, "Smith")
+
+      query.to_sql.should eq original_query_sql
+    end
   end
 
   describe "#limit" do
@@ -300,6 +383,15 @@ describe Avram::Query do
 
       users.results.size.should eq(1)
     end
+
+    it "doesn't mutate the query" do
+      query = UserQuery.new.name("name")
+      original_query_sql = query.to_sql
+
+      query.limit(2)
+
+      query.to_sql.should eq original_query_sql
+    end
   end
 
   describe "#offset" do
@@ -308,6 +400,15 @@ describe Avram::Query do
 
       query.statement.should eq "SELECT #{User::COLUMN_SQL} FROM users OFFSET 2"
     end
+
+    it "doesn't mutate the query" do
+      query = UserQuery.new.name("name")
+      original_query_sql = query.to_sql
+
+      query.offset(2)
+
+      query.to_sql.should eq original_query_sql
+    end
   end
 
   describe "#order_by" do
@@ -315,6 +416,21 @@ describe Avram::Query do
       query = UserQuery.new.order_by(:name, :asc).query
 
       query.statement.should eq "SELECT #{User::COLUMN_SQL} FROM users ORDER BY name ASC"
+    end
+
+    it "returns a nice error when trying to order by a weird direction" do
+      expect_raises(Exception, /Accepted values are: :asc, :desc/) do
+        Post::BaseQuery.new.order_by(:published_at, :sideways)
+      end
+    end
+
+    it "doesn't mutate the query" do
+      query = UserQuery.new.name("name")
+      original_query_sql = query.to_sql
+
+      query.order_by(:name, :asc)
+
+      query.to_sql.should eq original_query_sql
     end
   end
 
@@ -325,6 +441,15 @@ describe Avram::Query do
       query = UserQuery.new.none
 
       query.results.size.should eq 0
+    end
+
+    it "doesn't mutate the query" do
+      query = UserQuery.new.name("name")
+      original_query_sql = query.to_sql
+
+      query.none
+
+      query.to_sql.should eq original_query_sql
     end
   end
 
@@ -349,6 +474,15 @@ describe Avram::Query do
       min = UserQuery.new.age.select_min
       min.should be_nil
     end
+
+    it "doesn't mutate the query" do
+      query = UserQuery.new.name("name")
+      original_query_sql = query.to_sql
+
+      query.age.select_min
+
+      query.to_sql.should eq original_query_sql
+    end
   end
 
   describe "#select_max" do
@@ -371,6 +505,15 @@ describe Avram::Query do
     it "returns nil if no records" do
       max = UserQuery.new.age.select_max
       max.should be_nil
+    end
+
+    it "doesn't mutate the query" do
+      query = UserQuery.new.name("name")
+      original_query_sql = query.to_sql
+
+      query.age.select_max
+
+      query.to_sql.should eq original_query_sql
     end
   end
 
@@ -396,6 +539,15 @@ describe Avram::Query do
       average = UserQuery.new.age.gte(2).age.select_average
       average.should eq 2.5
     end
+
+    it "doesn't mutate the query" do
+      query = UserQuery.new.name("name")
+      original_query_sql = query.to_sql
+
+      query.age.select_average
+
+      query.to_sql.should eq original_query_sql
+    end
   end
 
   describe "#select_average!" do
@@ -418,6 +570,15 @@ describe Avram::Query do
     it "returns nil if there are no records" do
       query_sum = UserQuery.new.age.select_sum
       query_sum.should be_nil
+    end
+
+    it "doesn't mutate the query" do
+      query = UserQuery.new.name("name")
+      original_query_sql = query.to_sql
+
+      query.total_score.select_sum
+
+      query.to_sql.should eq original_query_sql
     end
   end
 
@@ -537,39 +698,59 @@ describe Avram::Query do
       query = UserQuery.new.distinct_on(&.name).average_score.gt(5).group(&.name).group(&.id).select_count
       query.should eq 0
     end
-  end
 
-  describe "#not with an argument" do
-    it "negates the given where condition as 'equal'" do
-      UserBox.new.name("Paul").create
+    it "doesn't mutate the query" do
+      query = UserQuery.new.name("name")
+      original_query_sql = query.to_sql
 
-      results = UserQuery.new.name.not.eq("not existing").results
-      results.should eq UserQuery.new.results
+      query.select_count
 
-      results = UserQuery.new.name.not.eq("Paul").results
-      results.should eq [] of User
-
-      UserBox.new.name("Alex").create
-      UserBox.new.name("Sarah").create
-      results = UserQuery.new.name.lower.not.eq("alex").results
-      results.map(&.name).should eq ["Paul", "Sarah"]
+      query.to_sql.should eq original_query_sql
     end
   end
 
-  describe "#not with no arguments" do
-    it "negates any previous condition" do
-      UserBox.new.name("Paul").create
+  describe "#not" do
+    context "with an argument" do
+      it "negates the given where condition as 'equal'" do
+        UserBox.new.name("Paul").create
 
-      results = UserQuery.new.name.not.eq("Paul").results
-      results.should eq [] of User
+        results = UserQuery.new.name.not.eq("not existing").results
+        results.should eq UserQuery.new.results
+
+        results = UserQuery.new.name.not.eq("Paul").results
+        results.should eq [] of User
+
+        UserBox.new.name("Alex").create
+        UserBox.new.name("Sarah").create
+        results = UserQuery.new.name.lower.not.eq("alex").results
+        results.map(&.name).should eq ["Paul", "Sarah"]
+      end
     end
 
-    it "can be used with operators" do
-      UserBox.new.age(33).name("Joyce").create
-      UserBox.new.age(34).name("Jil").create
+    context "with no arguments" do
+      it "negates any previous condition" do
+        UserBox.new.name("Paul").create
 
-      results = UserQuery.new.age.not.gt(33).results
-      results.map(&.name).should eq ["Joyce"]
+        results = UserQuery.new.name.not.eq("Paul").results
+        results.should eq [] of User
+      end
+
+      it "can be used with operators" do
+        UserBox.new.age(33).name("Joyce").create
+        UserBox.new.age(34).name("Jil").create
+
+        results = UserQuery.new.age.not.gt(33).results
+        results.map(&.name).should eq ["Joyce"]
+      end
+    end
+
+    it "doesn't mutate the query" do
+      query = UserQuery.new.name("name")
+      original_query_sql = query.to_sql
+
+      query.age.not.eq(5)
+
+      query.to_sql.should eq original_query_sql
     end
   end
 
@@ -588,6 +769,15 @@ describe Avram::Query do
       results = UserQuery.new.name.not.in(["Mikias"])
       results.map(&.name).should eq [] of String
     end
+
+    it "doesn't mutate the query" do
+      query = UserQuery.new.name("name")
+      original_query_sql = query.to_sql
+
+      query.age.in([1, 2, 3])
+
+      query.to_sql.should eq original_query_sql
+    end
   end
 
   describe "#join methods for associations" do
@@ -602,6 +792,15 @@ describe Avram::Query do
       result.post.should eq post
     end
 
+    it "doesn't mutate the query when inner joining on belongs to" do
+      query = Comment::BaseQuery.new
+      original_query_sql = query.to_sql
+
+      query.join_posts
+
+      query.to_sql.should eq original_query_sql
+    end
+
     it "inner join on has many" do
       post = PostBox.create
       comment = CommentBox.new.post_id(post.id).create
@@ -611,6 +810,15 @@ describe Avram::Query do
 
       result = query.first
       result.comments.first.should eq comment
+    end
+
+    it "doesn't mutate the query when inner joining on has_many" do
+      query = Post::BaseQuery.new
+      original_query_sql = query.to_sql
+
+      query.join_comments
+
+      query.to_sql.should eq original_query_sql
     end
 
     it "multiple inner joins on has many through" do
@@ -623,6 +831,15 @@ describe Avram::Query do
 
       result = query.first
       result.tags.first.should eq tag
+    end
+
+    it "doesn't mutate the query when inner joining multiple inner joins on has many through" do
+      query = Post::BaseQuery.new
+      original_query_sql = query.to_sql
+
+      query.join_tags
+
+      query.to_sql.should eq original_query_sql
     end
   end
 
@@ -637,6 +854,15 @@ describe Avram::Query do
       result.should eq employee
     end
 
+    it "doesn't mutate the query when left joining on belongs to" do
+      query = Employee::BaseQuery.new
+      original_query_sql = query.to_sql
+
+      query.left_join_managers
+
+      query.to_sql.should eq original_query_sql
+    end
+
     it "left join on has many" do
       post = PostBox.create
 
@@ -647,6 +873,15 @@ describe Avram::Query do
       result.should eq post
     end
 
+    it "doesn't mutate the query when left joining on has many" do
+      query = Post::BaseQuery.new
+      original_query_sql = query.to_sql
+
+      query.left_join_comments
+
+      query.to_sql.should eq original_query_sql
+    end
+
     it "multiple left joins on has many through" do
       post = PostBox.create
 
@@ -655,6 +890,15 @@ describe Avram::Query do
 
       result = query.first
       result.should eq post
+    end
+
+    it "doesn't mutate the query when left joining on has many through" do
+      query = Post::BaseQuery.new
+      original_query_sql = query.to_sql
+
+      query.left_join_tags
+
+      query.to_sql.should eq original_query_sql
     end
   end
 
@@ -687,15 +931,15 @@ describe Avram::Query do
       it "returns 1 result" do
         bucket = BucketBox.new.names(["pumpkin", "zucchini"]).create
 
-        query = ArrayQuery.new.names(["pumpkin", "zucchini"])
-        query.to_sql.should eq ["SELECT buckets.id, buckets.created_at, buckets.updated_at, buckets.bools, buckets.small_numbers, buckets.numbers, buckets.big_numbers, buckets.names FROM buckets WHERE buckets.names = $1", "{\"pumpkin\",\"zucchini\"}"]
+        query = BucketQuery.new.names(["pumpkin", "zucchini"])
+        query.to_sql.should eq ["SELECT #{Bucket::COLUMN_SQL} FROM buckets WHERE buckets.names = $1", "{\"pumpkin\",\"zucchini\"}"]
         result = query.first
         result.should eq bucket
       end
     end
   end
 
-  describe "truncate" do
+  describe ".truncate" do
     it "truncates the table" do
       10.times { UserBox.create }
       UserQuery.new.select_count.should eq 10
@@ -704,7 +948,7 @@ describe Avram::Query do
     end
   end
 
-  describe "update" do
+  describe "#update" do
     it "updates records when wheres are added" do
       UserBox.create &.available_for_hire(false)
       UserBox.create &.available_for_hire(false)
@@ -761,7 +1005,7 @@ describe Avram::Query do
     end
   end
 
-  describe "delete" do
+  describe "#delete" do
     it "deletes user records that are young" do
       UserBox.new.name("Tony").age(48).create
       UserBox.new.name("Peter").age(15).create
@@ -783,9 +1027,18 @@ describe Avram::Query do
       result.should eq 2
       ChainedQuery.new.select_count.should eq 0
     end
+
+    it "doesn't mutate the query" do
+      query = UserQuery.new.name("name")
+      original_query_sql = query.to_sql
+
+      query.delete
+
+      query.to_sql.should eq original_query_sql
+    end
   end
 
-  describe "ordering" do
+  describe "#asc_order" do
     it "orders by a joined table" do
       query = Post::BaseQuery.new.where_comments(Comment::BaseQuery.new.created_at.asc_order)
       query.to_sql[0].should contain "ORDER BY comments.created_at ASC"
@@ -803,14 +1056,17 @@ describe Avram::Query do
       query.to_sql[0].should contain "ORDER BY posts.published_at ASC NULLS LAST"
     end
 
-    it "returns a nice error when trying to order by a weird direction" do
-      expect_raises(Exception, /Accepted values are: :asc, :desc/) do
-        Post::BaseQuery.new.order_by(:published_at, :sideways)
-      end
+    it "doesn't mutate the query" do
+      query = UserQuery.new.name("name")
+      original_query_sql = query.to_sql
+
+      query.name.asc_order
+
+      query.to_sql.should eq original_query_sql
     end
   end
 
-  describe "cloning queries" do
+  describe "#clone" do
     it "leaves the original query unaffected" do
       original_query = ChainedQuery.new.young
       new_query = original_query.clone.named("bruce wayne").joined_at.asc_order
@@ -908,6 +1164,15 @@ describe Avram::Query do
       companies.query.args.should eq ["123.45", "678.901"]
       companies.first.should eq company
     end
+
+    it "doesn't mutate the query" do
+      query = UserQuery.new.name("name")
+      original_query_sql = query.to_sql
+
+      query.age.between(1, 3)
+
+      query.to_sql.should eq original_query_sql
+    end
   end
 
   describe "#group" do
@@ -927,6 +1192,15 @@ describe Avram::Query do
       expect_raises(PQ::PQError, /column "users\.id" must appear in the GROUP BY/) do
         users.map(&.name).should contain "Pam"
       end
+    end
+
+    it "doesn't mutate the query" do
+      query = UserQuery.new.name("name")
+      original_query_sql = query.to_sql
+
+      query.group(&.age)
+
+      query.to_sql.should eq original_query_sql
     end
   end
 
@@ -958,7 +1232,7 @@ describe Avram::Query do
       query.to_prepared_sql.should eq(%{SELECT posts.custom_id, posts.created_at, posts.updated_at, posts.title, posts.published_at FROM posts WHERE posts.title = 'The Short Post'})
 
       query = Bucket::BaseQuery.new.names(["Larry", "Moe", "Curly"]).numbers([1, 2, 3])
-      query.to_prepared_sql.should eq(%{SELECT buckets.id, buckets.created_at, buckets.updated_at, buckets.bools, buckets.small_numbers, buckets.numbers, buckets.big_numbers, buckets.names FROM buckets WHERE buckets.names = '{"Larry","Moe","Curly"}' AND buckets.numbers = '{1,2,3}'})
+      query.to_prepared_sql.should eq(%{SELECT #{Bucket::COLUMN_SQL} FROM buckets WHERE buckets.names = '{"Larry","Moe","Curly"}' AND buckets.numbers = '{1,2,3}'})
 
       query = Blob::BaseQuery.new.doc(JSON::Any.new({"properties" => JSON::Any.new("sold")}))
       query.to_prepared_sql.should eq(%{SELECT blobs.id, blobs.created_at, blobs.updated_at, blobs.doc FROM blobs WHERE blobs.doc = '{"properties":"sold"}'})
@@ -995,6 +1269,15 @@ describe Avram::Query do
       users.query.limit.should eq 10
       users.reset_limit.query.limit.should eq nil
     end
+
+    it "doesn't mutate the query" do
+      query = UserQuery.new.limit(10)
+      original_query_sql = query.to_sql
+
+      query.reset_limit
+
+      query.to_sql.should eq original_query_sql
+    end
   end
 
   describe "#reset_offset" do
@@ -1002,6 +1285,15 @@ describe Avram::Query do
       users = UserQuery.new.offset(10)
       users.query.offset.should eq 10
       users.reset_offset.query.offset.should eq nil
+    end
+
+    it "doesn't mutate the query" do
+      query = UserQuery.new.offset(10)
+      original_query_sql = query.to_sql
+
+      query.reset_offset
+
+      query.to_sql.should eq original_query_sql
     end
   end
 end
