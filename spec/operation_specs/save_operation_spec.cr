@@ -11,7 +11,7 @@ private class ParamKeySaveOperation < ValueColumnModel::SaveOperation
 end
 
 private class SaveLimitedUser < User::SaveOperation
-  permit_columns :name
+  #permit_columns :name
 end
 
 # private class SaveUser < User::SaveOperation
@@ -28,13 +28,13 @@ end
 # private class SaveTask < Task::SaveOperation
 # end
 
-# private class ValidSaveOperationWithoutParams < Post::SaveOperation
-#   before_save prepare
+private class ValidSaveOperationWithoutParams < Post::SaveOperation
+  before_save prepare
 
-#   def prepare
-#     title.value = "My Title"
-#   end
-# end
+  def prepare
+    title.value = "My Title"
+  end
+end
 
 # private class SaveLineItem < LineItem::SaveOperation
 #   permit_columns :name
@@ -47,33 +47,44 @@ end
 # end
 
 describe Avram::SaveOperation do
-  it "allows overriding the param_key" do
-    ParamKeySaveOperation.param_key.should eq "custom_param"
+  describe "param_key" do
+    it "allows overriding the param_key" do
+      ParamKeySaveOperation.param_key.should eq "custom_param"
+    end
+
+    it "generates the correct param_key based on the model class" do
+      SaveLimitedUser.param_key.should eq "user"
+    end
   end
 
-  it "generates the correct param_key based on the model class" do
-    SaveLimitedUser.param_key.should eq "user"
-  end
-
-  describe "permit_columns" do
-    it "ignores params that are not permitted" do
-      params = Avram::Params.new({"name" => "someone", "nickname" => "nothing"})
-      SaveLimitedUser.create(params) do |operation, value|
-        operation.changes.has_key?(:nickname).should be_false
-        operation.changes[:name]?.should eq "someone"
+  describe "create" do
+    it "can create without params" do
+      ValidSaveOperationWithoutParams.create do |operation, record|
+        operation.saved?.should be_true
+        record.is_a?(Post).should be_true
       end
     end
-
-    it "returns a Avram::PermittedAttribute" do
-      params = Avram::Params.new({"name" => "someone", "nickname" => "nothing"})
-      # SaveLimitedUser.run(params) do |operation, value|
-      #   operation.nickname.value.should be_nil
-      #   operation.nickname.is_a?(Avram::Attribute).should be_true
-      #   operation.name.value.should eq "someone"
-      #   operation.name.is_a?(Avram::PermittedAttribute).should be_true
-      # end
-    end
   end
+
+  # describe "permit_columns" do
+  #   it "ignores params that are not permitted" do
+  #     params = Avram::Params.new({"name" => "someone", "nickname" => "nothing"})
+  #     SaveLimitedUser.create(params) do |operation, value|
+  #       operation.changes.has_key?(:nickname).should be_false
+  #       operation.changes[:name]?.should eq "someone"
+  #     end
+  #   end
+
+  #   it "returns a Avram::PermittedAttribute" do
+  #     params = Avram::Params.new({"name" => "someone", "nickname" => "nothing"})
+  #     # SaveLimitedUser.run(params) do |operation, value|
+  #     #   operation.nickname.value.should be_nil
+  #     #   operation.nickname.is_a?(Avram::Attribute).should be_true
+  #     #   operation.name.value.should eq "someone"
+  #     #   operation.name.is_a?(Avram::PermittedAttribute).should be_true
+  #     # end
+  #   end
+  # end
 
   # it "add required_attributes method" do
   #   operation = SaveTask.new

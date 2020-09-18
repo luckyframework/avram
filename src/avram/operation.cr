@@ -1,7 +1,8 @@
 require "./validations"
 require "./define_attribute"
-require "./operation_errors"
-require "./param_key_override"
+require "./operation_mixins/operation_errors"
+require "./operation_mixins/param_key_override"
+require "./operation_mixins/needy_initializer"
 
 abstract class Avram::Operation
   include Avram::DefineAttribute
@@ -12,7 +13,7 @@ abstract class Avram::Operation
   include Avram::ParamKeyOverride
 
   @params : Avram::Paramable
-  getter params
+  getter :params
 
   # Yields the instance of the operation, and the return value from
   # the `run` instance method.

@@ -2,8 +2,17 @@ module Avram::Callbacks
   macro included
     def before_run
     end
-  
-    def after_run(object)
+
+    def after_run(_object)
+    end
+
+    def before_save
+    end
+
+    def after_save(_record : T)
+    end
+
+    def after_commit(_record : T)
     end
   end
   # Run the given method before saving or creating
@@ -126,7 +135,7 @@ module Avram::Callbacks
   end
 
   macro after_run(&block)
-    {% 
+    {%
       if block.args.size != 1
         raise <<-ERR
         The 'after_run' callback requires only 1 block arg to be passed.
