@@ -12,7 +12,7 @@ private class OperationWithNeeds < Avram::Operation
 end
 
 describe "Avram::Operation needs" do
-  it "sets up named args on run" do
+  it "sets up named args on run for needs" do
     OperationWithNeeds.run(tags: ["one", "two"], id: 3) do |operation, value|
       value.should eq "one, two"
       operation.tags.should eq ["one", "two"]
@@ -20,7 +20,7 @@ describe "Avram::Operation needs" do
     end
   end
 
-  it "sets up named args on run when params are passed in" do
+  it "allows params to be passed in along with named args for needs" do
     params = Avram::Params.new({"title" => "test", "published" => "true"})
     OperationWithNeeds.run(params, tags: ["one", "two"], id: 3) do |operation, value|
       value.should eq "one, two"
