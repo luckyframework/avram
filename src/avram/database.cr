@@ -177,67 +177,23 @@ abstract class Avram::Database
     transactions.delete(Fiber.current.object_id)
   end
 
-  def table_names
-    tables_with_schema(excluding: "migrations")
-  end
-
-  def tables_with_schema(excluding : String)
-    select_rows <<-SQL
-    SELECT table_name
-    FROM information_schema.tables
-    WHERE table_schema='public'
-    AND table_type='BASE TABLE'
-    AND table_name != '#{excluding}';
-    SQL
-  end
-
-  def select_rows(statement)
-    rows = [] of String
-
-    run do |db|
-      db.query statement do |rs|
-        rs.each do
-          rows << rs.read(String)
-        end
-      end
-    end
-
-    rows
-  end
-
-  def table_columns(table_name)
-    statement = <<-SQL
-    SELECT column_name as name, is_nullable::boolean as nilable
-    FROM information_schema.columns
-    WHERE table_schema = 'public'
-      AND table_name = '#{table_name}'
-    SQL
-
-    run { |db| db.query_all statement, as: TableColumn }
-  end
-
-  class TableColumn
-    DB.mapping({
-      name:    String,
-      nilable: Bool,
-    })
-  end
-
   class DatabaseCleaner
-    private getter database
+    private getter database : Avram::Database
+    private getter database_info : Avram::Database::DatabaseInfo
 
-    def initialize(@database : Avram::Database)
+    def initialize(@database)
+      @database_info = database.class.database_info
     end
 
     def truncate
-      table_names = database.table_names
+      table_names = database_info.table_names
       return if table_names.empty?
       statement = ("TRUNCATE TABLE #{table_names.map { |name| name }.join(", ")} RESTART IDENTITY CASCADE;")
       database.exec statement
     end
 
     def delete
-      table_names = database.table_names
+      table_names = database_info.table_names
       return if table_names.empty?
       table_names.each do |t|
         statement = ("DELETE FROM #{t}")
