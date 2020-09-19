@@ -38,6 +38,12 @@ abstract class Avram::Database
     new.delete
   end
 
+  @@database_info : DatabaseInfo?
+
+  def self.database_info : DatabaseInfo
+    @@database_info ||= DatabaseInfo.load(self)
+  end
+
   # Wrap the block in a database transaction
   #
   # ```
