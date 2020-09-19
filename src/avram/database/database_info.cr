@@ -15,9 +15,9 @@ module Avram
        AND tables.table_schema = columns.table_schema
      WHERE columns.table_schema='public';
      SQL
-      columns = database.query(sql) { |rs| ColumnInfo.from_rs(rs) }
+      column_infos = database.query(sql) { |rs| ColumnInfo.from_rs(rs) }
 
-      grouped = columns.group_by(&.table)
+      grouped = column_infos.group_by(&.table)
       grouped.each do |table, columns|
         columns.each { |c| table.columns << c }
       end
