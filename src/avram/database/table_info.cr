@@ -1,6 +1,5 @@
 module Avram
   struct Database::TableInfo
-
     getter table_name : String
     getter table_type : String
     getter table_schema : String
@@ -9,7 +8,8 @@ module Avram
     def initialize(
       @table_name,
       @table_type,
-      @table_schema)
+      @table_schema
+    )
     end
 
     def table?
