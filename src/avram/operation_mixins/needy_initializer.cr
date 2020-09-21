@@ -29,17 +29,14 @@ module Avram::NeedyInitializer
     end
 
     macro finished
-      # @type is not correct in this method, but is in the macro we call below
-      # That is why this extrac macro was extracted. We need @type to get the
-      # attributes for this SaveOperation
-      generate_initializer_and_save_methods
+      # This is called at the end so @type will be of the subclass,
+      # and not the parent abstract class.
+      generate_initializers
     end
   end
 
-  macro generate_initializer_and_save_methods
+  macro generate_initializers
     # Build up a list of method arguments
-    #
-    # These method arguments can be used in macros fro generating create/update/new
     #
     # This way everything has a name and type and we don't have to rely on
     # **named_args. **named_args** are easy but you get horrible type errors.
@@ -62,14 +59,11 @@ module Avram::NeedyInitializer
     {% attribute_params = "" %}
 
     {% for attribute in ATTRIBUTES %}
-      {% attribute_method_args = attribute_method_args + "#{attribute.var} : #{attribute.type} | Nothing = Nothing.new,\n" %}
+      {% attribute_method_args = attribute_method_args + "#{attribute.var} : #{attribute.type} | Avram::Nothing = Avram::Nothing.new,\n" %}
       {% attribute_params = attribute_params + "#{attribute.var}: #{attribute.var},\n" %}
     {% end %}
 
     generate_initializer({{ attribute_method_args }}, {{ attribute_params }})
-  end
-
-  private class Nothing
   end
 
   macro generate_initializer(attribute_method_args, attribute_params)
@@ -96,7 +90,7 @@ module Avram::NeedyInitializer
 
     def set_attributes({{ attribute_method_args.id }})
       {% for attribute in ATTRIBUTES %}
-        unless {{ attribute.var }}.is_a? Nothing
+        unless {{ attribute.var }}.is_a? Avram::Nothing
           self.{{ attribute.var }}.value = {{ attribute.var }}
         end
       {% end %}

@@ -1,5 +1,6 @@
 require "./validations"
-require "./define_attribute"
+require "./operation_mixins/callbacks"
+require "./operation_mixins/define_attribute"
 require "./operation_mixins/operation_errors"
 require "./operation_mixins/param_key_override"
 require "./operation_mixins/needy_initializer"

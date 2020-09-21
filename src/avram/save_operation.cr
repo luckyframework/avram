@@ -1,11 +1,20 @@
+require "./validations"
+require "./operation_mixins/callbacks"
+require "./operation_mixins/define_attribute"
+require "./operation_mixins/operation_errors"
+require "./operation_mixins/param_key_override"
 require "./operation_mixins/operation_save_status"
 require "./operation_mixins/save_methods"
 require "./operation_mixins/inherit_column_attributes"
 
-abstract class Avram::SaveOperation(T) < Avram::Operation
+abstract class Avram::SaveOperation(T)
+  include Avram::Callbacks
+  include Avram::DefineAttribute
+  include Avram::ParamKeyOverride
   include Avram::OperationSaveStatus
-  include Avram::SaveMethods
   include Avram::InheritColumnAttributes
+  include Avram::SaveMethods
+  include Avram::Validations
 
   macro inherited
     @@permitted_param_keys = [] of String
@@ -15,14 +24,18 @@ abstract class Avram::SaveOperation(T) < Avram::Operation
   @record : T?
   getter :record
 
+  @params : Avram::Paramable
+  getter :params
+
   def self.param_key
     T.name.underscore
   end
 
-  def run
-    before_save
+  def initialize(@params)
+  end
 
-    save!
+  def initialize
+    @params = Avram::Params.new
   end
 
   # Runs required validation,
@@ -36,6 +49,7 @@ abstract class Avram::SaveOperation(T) < Avram::Operation
   end
 
   def save : Bool
+    before_save
     if valid? && (!persisted? || changes.any?)
       transaction_committed = database.transaction do
         insert_or_update
@@ -101,6 +115,14 @@ abstract class Avram::SaveOperation(T) < Avram::Operation
         errors: attr.errors
       )
     end
+  end
+
+   # :nodoc:
+   def published_save_failed_event
+    Avram::Events::SaveFailedEvent.publish(
+      operation_class: self.class.name,
+      attributes: generic_attributes
+    )
   end
 
   private def record_id
