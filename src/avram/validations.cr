@@ -187,5 +187,4 @@ module Avram::Validations
       end
     end
   end
-
 end

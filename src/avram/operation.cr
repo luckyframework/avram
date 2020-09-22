@@ -21,7 +21,7 @@ abstract class Avram::Operation
   #
   # ```
   # MyOperation.run do |operation, value|
-  #  # operation is complete
+  #   # operation is complete
   # end
   # ```
   def self.run(*args, **named_args)
@@ -41,7 +41,7 @@ abstract class Avram::Operation
   #
   # ```
   # MyOperation.run(params) do |operation, value|
-  #  # operation is complete
+  #   # operation is complete
   # end
   # ```
   def self.run(params : Avram::Paramable, *args, **named_args)

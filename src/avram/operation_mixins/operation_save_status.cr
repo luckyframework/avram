@@ -1,5 +1,4 @@
 module Avram::OperationSaveStatus
-
   macro included
     enum SaveStatus
       Saved
@@ -29,5 +28,4 @@ module Avram::OperationSaveStatus
   def mark_as_saved
     self.save_status = Avram::SaveOperation::SaveStatus::Saved
   end
-
 end

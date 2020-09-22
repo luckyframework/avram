@@ -31,7 +31,6 @@ private class SavePostWithAttributes < Post::SaveOperation
   end
 end
 
-
 describe "Avram::Operation attributes" do
   it "is a PermittedAttribute" do
     OperationWithAttributes.run do |operation, _value|
@@ -189,7 +188,7 @@ describe "Avram::Operation attributes" do
     end
 
     SavePostWithAttributes.create(author: "Pseud Onym", reviewed: true) do |operation, _value|
-      operation.comment_count .value.should eq nil
+      operation.comment_count.value.should eq nil
       operation.author.value.should eq "Pseud Onym"
       operation.reviewed.value.should eq true
     end

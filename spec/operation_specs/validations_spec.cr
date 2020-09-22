@@ -37,7 +37,6 @@ private def attribute(value)
   Avram::Attribute.new(value: value, param: nil, param_key: "fake", name: :fake)
 end
 
-
 describe Avram::Validations do
   describe "validate_at_most_one_filled" do
     it "marks filled attribute as invalid if more than one is filled" do
@@ -310,6 +309,5 @@ describe Avram::Validations do
   end
 
   context "SaveOperation with validations" do
-
   end
 end

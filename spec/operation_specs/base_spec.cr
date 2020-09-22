@@ -14,7 +14,6 @@ private class TestOperationWithParamKey < Avram::Operation
   end
 end
 
-
 describe Avram::Operation do
   describe "run" do
     it "returns the last statement from the run method" do
@@ -45,7 +44,7 @@ describe Avram::Operation do
 
   describe "valid?" do
     it "returns true when there's nothing to validate" do
-      TestOperation.run do |operation, value|
+      TestOperation.run do |operation, _value|
         operation.valid?.should eq true
       end
     end

@@ -67,9 +67,7 @@ private class SaveOperationWithCallbacks < Post::SaveOperation
   end
 end
 
-
 describe "Avram::Callbacks" do
-
   describe "Avram::Operation" do
     it "runs before_run and after_run callbacks" do
       OperationWithCallbacks.run do |operation, value|
@@ -98,5 +96,4 @@ describe "Avram::Callbacks" do
       end
     end
   end
-
 end

@@ -198,7 +198,6 @@ module Avram::SaveOperationCallbacks
     end
   end
 
-
   # :nodoc:
   macro before(callback_method)
     {% raise <<-ERROR

@@ -37,11 +37,11 @@ module Avram::DefineAttribute
   macro attribute(type_declaration)
     {% if type_declaration.type.is_a?(Union) %}
       {%
-      error = "attribute '#{type_declaration.var}' must use just one type. Got #{type_declaration.type}."
-      if type_declaration.type.resolve.nilable?
-        error = error + "\nNo need to make the type nilable, all attributes have a nil value by default."
-      end
-      raise error
+        error = "attribute '#{type_declaration.var}' must use just one type. Got #{type_declaration.type}."
+        if type_declaration.type.resolve.nilable?
+          error = error + "\nNo need to make the type nilable, all attributes have a nil value by default."
+        end
+        raise error
       %}
     {% end %}
 

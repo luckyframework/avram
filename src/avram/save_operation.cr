@@ -120,8 +120,8 @@ abstract class Avram::SaveOperation(T)
     end
   end
 
-   # :nodoc:
-   def published_save_failed_event
+  # :nodoc:
+  def published_save_failed_event
     Avram::Events::SaveFailedEvent.publish(
       operation_class: self.class.name,
       attributes: generic_attributes
