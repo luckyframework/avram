@@ -44,6 +44,10 @@ private class ValueColumnModelSaveOperation < ValueColumnModel::SaveOperation
   permit_columns value
 end
 
+private class SavePost < Post::SaveOperation
+  permit_columns :title, :published_at
+end
+
 private def now_as_string
   Time.utc.to_s("%FT%X%z")
 end
@@ -521,5 +525,14 @@ describe Avram::SaveOperation do
 
     operation.changes.has_key?(:name).should be_true
     operation.changes[:name].should be_nil
+  end
+
+  it "treats empty strings as nil for Time? types instead of failing to parse" do
+    avram_params = Avram::Params.new({"title" => "Test", "published_at" => ""})
+
+    post = SavePost.create!(avram_params)
+
+    post.published_at.should eq nil
+    post.title.should eq "Test"
   end
 end
