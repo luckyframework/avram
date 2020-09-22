@@ -132,7 +132,7 @@ module Avram::SaveMethods
       )
 
       {% if with_bang %}
-        operation.update!
+        operation.save!
       {% else %}
         if operation.save
           yield operation, operation.record.not_nil!

@@ -7,6 +7,7 @@ require "./operation_mixins/param_key_override"
 require "./operation_mixins/operation_save_status"
 require "./operation_mixins/save_methods"
 require "./operation_mixins/inherit_column_attributes"
+require "./operation_mixins/permittable_columns"
 
 abstract class Avram::SaveOperation(T)
   include Avram::SaveOperationCallbacks
@@ -18,6 +19,7 @@ abstract class Avram::SaveOperation(T)
   include Avram::Validations
   include Avram::DatabaseValidations(T)
   include Avram::OperationErrors
+  include Avram::PermittableColumns
 
   macro inherited
     @@permitted_param_keys = [] of String

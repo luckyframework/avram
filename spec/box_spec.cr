@@ -59,4 +59,14 @@ describe Avram::Box do
       tags.last.name.should eq "new-tag-2"
     end
   end
+
+  it "allows overriding updated_at and created_at on create" do
+    user = UserBox.new
+      .created_at(Time.utc(2018, 1, 1, 10, 20, 30))
+      .updated_at(Time.utc(2018, 1, 1, 20, 30, 40))
+      .create
+
+    user.created_at.should eq Time.utc(2018, 1, 1, 10, 20, 30)
+    user.updated_at.should eq Time.utc(2018, 1, 1, 20, 30, 40)
+  end
 end
