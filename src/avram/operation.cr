@@ -1,5 +1,5 @@
 require "./validations"
-require "./operation_mixins/callbacks"
+require "./operation_mixins/operation_callbacks"
 require "./operation_mixins/define_attribute"
 require "./operation_mixins/operation_errors"
 require "./operation_mixins/param_key_override"
@@ -7,7 +7,7 @@ require "./operation_mixins/needy_initializer"
 
 abstract class Avram::Operation
   include Avram::DefineAttribute
-  include Avram::Callbacks
+  include Avram::OperationCallbacks
   include Avram::NeedyInitializer
   include Avram::Validations
   include Avram::OperationErrors

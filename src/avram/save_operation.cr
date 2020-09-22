@@ -1,5 +1,5 @@
 require "./validations"
-require "./operation_mixins/callbacks"
+require "./operation_mixins/save_operation_callbacks"
 require "./operation_mixins/define_attribute"
 require "./operation_mixins/operation_errors"
 require "./operation_mixins/param_key_override"
@@ -8,7 +8,7 @@ require "./operation_mixins/save_methods"
 require "./operation_mixins/inherit_column_attributes"
 
 abstract class Avram::SaveOperation(T)
-  include Avram::Callbacks
+  include Avram::SaveOperationCallbacks
   include Avram::DefineAttribute
   include Avram::ParamKeyOverride
   include Avram::OperationSaveStatus

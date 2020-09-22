@@ -1,18 +1,9 @@
-module Avram::Callbacks
+module Avram::OperationCallbacks
   macro included
     def before_run
     end
 
     def after_run(_object)
-    end
-
-    def before_save
-    end
-
-    def after_save(_record : T) forall T
-    end
-
-    def after_commit(_record : T) forall T
     end
   end
 
@@ -29,18 +20,6 @@ module Avram::Callbacks
   #   validate_required name, age
   # end
   # ```
-  macro before_save(method_name)
-    def before_save
-      {% if @type.methods.map(&.name).includes?(:before_save.id) %}
-        previous_def
-      {% else %}
-        super
-      {% end %}
-
-      {{ method_name.id }}
-    end
-  end
-
   macro before_run(method_name)
     def before_run
       {% if @type.methods.map(&.name).includes?(:before_run.id) %}
@@ -64,18 +43,6 @@ module Avram::Callbacks
   #   validate_required name, age
   # end
   # ```
-  macro before_save
-    def before_save
-      {% if @type.methods.map(&.name).includes?(:before_save.id) %}
-        previous_def
-      {% else %}
-        super
-      {% end %}
-
-      {{ yield }}
-    end
-  end
-
   macro before_run
     def before_run
       {% if @type.methods.map(&.name).includes?(:before_run.id) %}
@@ -109,18 +76,6 @@ module Avram::Callbacks
   # > background jobs, or charge payments. Since the transaction could be rolled
   # > back the record may not be persisted to the database.
   # > Instead use `after_commit`
-  macro after_save(method_name)
-    def after_save(object : T)
-      {% if @type.methods.map(&.name).includes?(:after_save.id) %}
-        previous_def
-      {% else %}
-        super
-      {% end %}
-
-      {{ method_name.id }}(object)
-    end
-  end
-
   macro after_run(method_name)
     def after_run(object)
       {% if @type.methods.map(&.name).includes?(:after_run.id) %}
@@ -152,32 +107,6 @@ module Avram::Callbacks
   # > background jobs, or charge payments. Since the transaction could be rolled
   # > back the record may not be persisted to the database.
   # > Instead use `after_commit`
-  macro after_save(&block)
-    {%
-      if block.args.size != 1
-        raise <<-ERR
-        The 'after_save' callback requires only 1 block arg to be passed.
-
-        Example:
-
-          after_save do |saved_user|
-            some_method(saved_user)
-          end
-        ERR
-      end
-    %}
-    def after_save(object : T)
-      {% if @type.methods.map(&.name).includes?(:after_save.id) %}
-        previous_def
-      {% else %}
-        super
-      {% end %}
-
-      {{ block.args.first }} = object
-      {{ block.body }}
-    end
-  end
-
   macro after_run(&block)
     {%
       if block.args.size != 1
@@ -202,69 +131,6 @@ module Avram::Callbacks
     end
   end
 
-  # Run the given method after save and after successful transaction commit
-  #
-  # The newly saved record will be passed to the method.
-  #
-  # ```
-  # class SaveComment < Comment::SaveOperation
-  #   after_commit notify_post_author
-  #
-  #   private def notify_post_author(comment : Comment)
-  #     NewCommentNotificationEmail.new(comment, to: comment.author!).deliver_now
-  #   end
-  # end
-  # ```
-  macro after_commit(method_name)
-    def after_commit(object : T)
-      {% if @type.methods.map(&.name).includes?(:after_commit.id) %}
-        previous_def
-      {% else %}
-        super
-      {% end %}
-
-      {{ method_name.id }}(object)
-    end
-  end
-
-  # Run the given block after save and after successful transaction commit
-  #
-  # The newly saved record will be passed to the method.
-  #
-  # ```
-  # class SaveComment < Comment::SaveOperation
-  #   after_commit do |comment|
-  #     NewCommentNotificationEmail.new(comment, to: comment.author!).deliver_now
-  #   end
-  # end
-  # ```
-  macro after_commit(&block)
-    {%
-      if block.args.size != 1
-        raise <<-ERR
-        The 'after_commit' callback requires only 1 block arg to be passed.
-
-        Example:
-
-          after_commit do |saved_user|
-            some_method(saved_user)
-          end
-        ERR
-      end
-    %}
-    def after_commit(object : T)
-      {% if @type.methods.map(&.name).includes?(:after_commit.id) %}
-        previous_def
-      {% else %}
-        super
-      {% end %}
-
-      {{ block.args.first }} = object
-      {{ block.body }}
-    end
-  end
-
-
   # :nodoc:
   macro before(callback_method)
     {% raise <<-ERROR
@@ -273,7 +139,7 @@ module Avram::Callbacks
 
       Try this...
 
-        ▸ before_save #{callback_method.id}
+        ▸ before_run #{callback_method.id}
 
       ERROR
     %}
