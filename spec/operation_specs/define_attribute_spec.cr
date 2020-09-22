@@ -6,6 +6,7 @@ private class OperationWithAttributes < Avram::Operation
   attribute count : Int32
   attribute checked : Bool = false
   attribute thing : String = "taco"
+  file_attribute :thumb
 
   def update_count
     count.value = 4
@@ -21,6 +22,7 @@ private class SavePostWithAttributes < Post::SaveOperation
   attribute comment_count : Int32
   attribute reviewed : Bool = false
   attribute author : String = "J.K. Simmons"
+  file_attribute :thumb
 
   before_save do
     title.value = "Example Title"
@@ -48,13 +50,13 @@ describe "Avram::Operation attributes" do
 
   it "generates a list of attributes" do
     OperationWithAttributes.run do |operation, _value|
-      operation.attributes.map(&.name).should eq [:thing, :checked, :count, :title]
+      operation.attributes.map(&.name).should eq [:thumb, :thing, :checked, :count, :title]
     end
   end
 
   it "generates a list of attributes with inherited columns for SaveOperations" do
     SavePostWithAttributes.create do |operation, _value|
-      operation.attributes.map(&.name).should eq [:author, :reviewed, :comment_count, :custom_id, :created_at, :updated_at, :title, :published_at]
+      operation.attributes.map(&.name).should eq [:thumb, :author, :reviewed, :comment_count, :custom_id, :created_at, :updated_at, :title, :published_at]
     end
   end
 
@@ -191,6 +193,44 @@ describe "Avram::Operation attributes" do
       operation.comment_count.value.should eq nil
       operation.author.value.should eq "Pseud Onym"
       operation.reviewed.value.should eq true
+    end
+  end
+
+  describe "file_attribute" do
+    it "is a PermittedAttribute" do
+      OperationWithAttributes.run do |operation, _value|
+        operation.thumb.should be_a(Avram::PermittedAttribute(Avram::Uploadable?))
+        operation.thumb.name.should eq(:thumb)
+        operation.thumb.param_key.should eq("data")
+      end
+    end
+
+    it "is included in the list of attributes" do
+      OperationWithAttributes.run do |operation, _value|
+        operation.attributes.map(&.name).should contain(:thumb)
+      end
+    end
+
+    it "gracefully handles invalid params" do
+      params = Avram::Params.new({"thumb" => "not a file"})
+      OperationWithAttributes.run(params) do |operation, _value|
+        operation.thumb.value.should be_nil
+        operation.thumb.errors.first.should eq "is invalid"
+      end
+    end
+
+    it "includes file attribute errors when calling SaveOperation#valid?" do
+      params = Avram::Params.new({"thumb" => "not a file"})
+      SavePostWithAttributes.create(params) do |operation, _value|
+        operation.valid?.should be_false
+      end
+    end
+
+    it "can still save to the database" do
+      params = Avram::UploadParams.new({"thumb" => Avram::UploadedFile.new("thumb.png")})
+      SavePostWithAttributes.create(params) do |_operation, post|
+        post.should_not eq nil
+      end
     end
   end
 end
