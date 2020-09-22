@@ -1,4 +1,5 @@
 require "./validations"
+require "./database_validations"
 require "./operation_mixins/save_operation_callbacks"
 require "./operation_mixins/define_attribute"
 require "./operation_mixins/operation_errors"
@@ -15,6 +16,7 @@ abstract class Avram::SaveOperation(T)
   include Avram::InheritColumnAttributes
   include Avram::SaveMethods
   include Avram::Validations
+  include Avram::DatabaseValidations(T)
   include Avram::OperationErrors
 
   macro inherited

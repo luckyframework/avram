@@ -20,6 +20,19 @@ private class OperationWithValidations < Avram::Operation
   end
 end
 
+private class UniquenessSaveOperation < User::SaveOperation
+  before_save do
+    validate_uniqueness_of name
+    validate_uniqueness_of nickname, query: UserQuery.new.nickname.lower
+  end
+end
+
+private class UniquenessWithCustomMessageSaveOperation < User::SaveOperation
+  before_save do
+    validate_uniqueness_of name, message: "cannot be used"
+  end
+end
+
 private def attribute(value)
   Avram::Attribute.new(value: value, param: nil, param_key: "fake", name: :fake)
 end
@@ -109,27 +122,28 @@ describe Avram::Validations do
   end
 
   describe "validate_uniqueness_of" do
-#     it "validates that a new record is unique with a query or without one" do
-#       existing_user = UserBox.new.name("Sally").nickname("Sal").create
-#       operation = UniquenessSaveOperation.new
-#       operation.name.value = existing_user.name
-#       operation.nickname.value = existing_user.nickname.not_nil!.downcase
+    it "validates that a new record is unique with a query or without one" do
+      existing_user = UserBox.new.name("Sally").nickname("Sal").create
+      operation = UniquenessSaveOperation.new
+      operation.name.value = existing_user.name
+      operation.nickname.value = existing_user.nickname.not_nil!.downcase
 
-#       operation.valid?
+      operation.before_save
+      operation.valid?
 
-#       operation.name.errors.should contain "is already taken"
-#       operation.nickname.errors.should contain "is already taken"
-#     end
+      operation.name.errors.should contain "is already taken"
+      operation.nickname.errors.should contain "is already taken"
+    end
 
-#     it "ignores the existing record on update" do
-#       existing_user = UserBox.new.name("Sally").create
-#       operation = UniquenessSaveOperation.new(existing_user)
-#       operation.name.value = existing_user.name
+    it "ignores the existing record on update" do
+      existing_user = UserBox.new.name("Sally").create
+      operation = UniquenessSaveOperation.new(existing_user)
+      operation.name.value = existing_user.name
 
-#       operation.valid?
+      operation.valid?
 
-#       operation.name.errors.should_not contain "is already taken"
-#     end
+      operation.name.errors.should_not contain "is already taken"
+    end
   end
 
   describe "validates with custom messages" do
@@ -141,12 +155,12 @@ describe Avram::Validations do
       empty_attribute.errors.should eq(["ugh"])
     end
 
-#     it "validates custom message for validate_uniqueness_of" do
-#       existing_user = UserBox.create
-#       UniquenessWithCustomMessageSaveOperation.create(name: existing_user.name) do |operation, _user|
-#         operation.name.errors.should eq(["cannot be used"])
-#       end
-#     end
+    it "validates custom message for validate_uniqueness_of" do
+      existing_user = UserBox.create
+      UniquenessWithCustomMessageSaveOperation.create(name: existing_user.name) do |operation, _user|
+        operation.name.errors.should eq(["cannot be used"])
+      end
+    end
 
     it "validates custom message for validate_inclusion_of" do
       state_attribute = attribute("Iowa")
@@ -293,5 +307,9 @@ describe Avram::Validations do
         operation.errors[:dontcha_know].should contain "must be accepted"
       end
     end
+  end
+
+  context "SaveOperation with validations" do
+
   end
 end
