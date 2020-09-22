@@ -204,7 +204,7 @@ describe Avram::SaveOperation do
         UserBox.new.name("Old Name").create
         user = UserQuery.new.first
         params = Avram::Params.new({} of String => String)
-        SaveUser.update user, with: params do |operation, record|
+        SaveUser.update user, with: params do |operation, _record|
           operation.saved?.should be_true
         end
       end
@@ -265,7 +265,7 @@ describe Avram::SaveOperation do
   describe ".permit_columns" do
     it "ignores params that are not permitted" do
       params = Avram::Params.new({"name" => "someone", "nickname" => "nothing"})
-      SaveLimitedUser.create(params) do |operation, value|
+      SaveLimitedUser.create(params) do |operation, _value|
         operation.changes.has_key?(:nickname).should be_false
         operation.changes[:name]?.should eq "someone"
       end
@@ -273,7 +273,7 @@ describe Avram::SaveOperation do
 
     it "returns a Avram::PermittedAttribute" do
       params = Avram::Params.new({"name" => "someone", "nickname" => "nothing"})
-      SaveLimitedUser.create(params) do |operation, value|
+      SaveLimitedUser.create(params) do |operation, _value|
         operation.nickname.value.should be_nil
         operation.nickname.is_a?(Avram::Attribute).should be_true
         operation.name.value.should eq "someone"
@@ -492,8 +492,8 @@ describe Avram::SaveOperation do
     user.age.should eq 34
     user.joined_at.should eq now
 
-    SaveUser.create(name: "Dan", age: 34, joined_at: now) do |operation, user|
-      user = user.not_nil!
+    SaveUser.create(name: "Dan", age: 34, joined_at: now) do |_operation, new_user|
+      user = new_user.not_nil!
       user.name.should eq "Dan"
       user.age.should eq 34
       user.joined_at.should eq now
@@ -501,10 +501,10 @@ describe Avram::SaveOperation do
 
     user = UserBox.new.name("New").age(20).joined_at(Time.utc).create
     joined_at = 1.day.ago.at_beginning_of_minute.to_utc
-    SaveUser.update(user, name: "New", age: 20, joined_at: joined_at) do |operation, user|
-      user.name.should eq "New"
-      user.age.should eq 20
-      user.joined_at.should eq joined_at
+    SaveUser.update(user, name: "New", age: 20, joined_at: joined_at) do |_operation, new_user|
+      new_user.name.should eq "New"
+      new_user.age.should eq 20
+      new_user.joined_at.should eq joined_at
     end
 
     user = UserBox.new.name("New").age(20).joined_at(Time.utc).create
