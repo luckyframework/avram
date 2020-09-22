@@ -21,9 +21,9 @@ class Avram::SaveOperationTemplate
         {{ type }}.database
       end
 
-      # macro inherited
-      #   FOREIGN_KEY = "{{ type.stringify.underscore.id }}_id"
-      # end
+      macro inherited
+        FOREIGN_KEY = "{{ type.stringify.underscore.id }}_id"
+      end
 
       def table_name
         :{{ table_name }}
