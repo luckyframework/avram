@@ -1,4 +1,4 @@
-# class LineItemProductBox < BaseBox
-#   def initialize
-#   end
-# end
+class LineItemProductBox < BaseBox
+  def initialize
+  end
+end

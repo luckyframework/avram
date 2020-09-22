@@ -1,2 +1,2 @@
-# class TaggingBox < BaseBox
-# end
+class TaggingBox < BaseBox
+end

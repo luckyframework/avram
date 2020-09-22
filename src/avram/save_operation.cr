@@ -15,6 +15,7 @@ abstract class Avram::SaveOperation(T)
   include Avram::InheritColumnAttributes
   include Avram::SaveMethods
   include Avram::Validations
+  include Avram::OperationErrors
 
   macro inherited
     @@permitted_param_keys = [] of String

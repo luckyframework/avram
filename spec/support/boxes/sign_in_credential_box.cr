@@ -1,4 +1,4 @@
-# class SignInCredentialBox < BaseBox
-#   def initialize
-#   end
-# end
+class SignInCredentialBox < BaseBox
+  def initialize
+  end
+end
