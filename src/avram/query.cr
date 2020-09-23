@@ -5,7 +5,8 @@ abstract class Avram::Query
 
   # runs a SQL `TRUNCATE` on the current table
   def self.truncate
-    new.database.exec "TRUNCATE TABLE #{@@table_name}"
+    query = new
+    query.database.exec "TRUNCATE TABLE #{query.table_name}"
   end
 
   private def escape_sql(value : Int32)

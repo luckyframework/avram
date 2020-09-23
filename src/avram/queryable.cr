@@ -34,7 +34,7 @@ module Avram::Queryable(T)
 
   def query
     @query ||= Avram::QueryBuilder
-      .new(table: @@table_name)
+      .new(table: table_name)
       .select(@@schema_class.column_names)
   end
 
@@ -151,7 +151,7 @@ module Avram::Queryable(T)
   end
 
   def first
-    first? || raise RecordNotFoundError.new(model: @@table_name, query: :first)
+    first? || raise RecordNotFoundError.new(model: table_name, query: :first)
   end
 
   def last?
@@ -164,7 +164,7 @@ module Avram::Queryable(T)
   end
 
   def last
-    last? || raise RecordNotFoundError.new(model: @@table_name, query: :last)
+    last? || raise RecordNotFoundError.new(model: table_name, query: :last)
   end
 
   def select_count : Int64
