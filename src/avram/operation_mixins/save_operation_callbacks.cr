@@ -35,6 +35,12 @@ module Avram::SaveOperationCallbacks
     end
   end
 
+  # Redefines the given `method_name` to do nothing
+  macro skip_before_save(method_name)
+    def {{ method_name.id }}
+    end
+  end
+
   # Run the given block before saving or creating
   #
   # This runs before saving and before the database transaction is started.
@@ -88,6 +94,12 @@ module Avram::SaveOperationCallbacks
       {% end %}
 
       {{ method_name.id }}(object)
+    end
+  end
+
+  # Redefines the given `method_name` method to do nothing
+  macro skip_after_save(method_name)
+    def {{ method_name.id }}(object)
     end
   end
 
@@ -158,6 +170,12 @@ module Avram::SaveOperationCallbacks
       {% end %}
 
       {{ method_name.id }}(object)
+    end
+  end
+
+  # Redefines the given `method_name` method to do nothing
+  macro skip_after_commit(method_name)
+    def {{ method_name.id }}(object)
     end
   end
 

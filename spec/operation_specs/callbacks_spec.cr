@@ -67,6 +67,12 @@ private class SaveOperationWithCallbacks < Post::SaveOperation
   end
 end
 
+private class UpdateOperationWithSkipCallbacks < SaveOperationWithCallbacks
+  skip_before_save :set_title
+  skip_after_save :notify_save_complete
+  skip_after_commit :notify_commit_complete
+end
+
 describe "Avram::Callbacks" do
   describe "Avram::Operation" do
     it "runs before_run and after_run callbacks" do
@@ -93,6 +99,17 @@ describe "Avram::Callbacks" do
         operation.callbacks_that_ran.should contain "after_save_in_a_block with Saved Post"
         operation.callbacks_that_ran.should contain "after_commit_notify_commit_complete with Saved Post"
         operation.callbacks_that_ran.should contain "after_commit_in_a_block with Saved Post"
+      end
+    end
+
+    it "only runs before_save callbacks when the record has no changes" do
+      post = PostBox.create &.title("Existing Post")
+
+      UpdateOperationWithSkipCallbacks.update(post) do |operation, updated_post|
+        operation.callbacks_that_ran.should_not contain "before_save_update_title"
+        operation.callbacks_that_ran.should contain "before_save_in_a_block"
+        updated_post.should_not eq nil
+        updated_post.not_nil!.title.should eq "Existing Post"
       end
     end
   end
