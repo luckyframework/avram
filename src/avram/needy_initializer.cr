@@ -9,8 +9,7 @@ module Avram::NeedyInitializer
 
   macro needs(type_declaration)
     {% OPERATION_NEEDS << type_declaration %}
-    @{{ type_declaration.var }} : {{ type_declaration.type }}
-    property {{ type_declaration.var }}
+    property {{ type_declaration.var }} : {{ type_declaration.type }}
   end
 
   macro inherit_needs
