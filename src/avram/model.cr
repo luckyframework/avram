@@ -224,24 +224,18 @@ abstract class Avram::Model
   # NOTE: Avram::Migrator saves `Float` columns as numeric which are converted
   # in the avram/charms/float64_extensions.cr file
   macro setup_db_mapping(columns, *args, **named_args)
-    DB.mapping({
-      {% for column in columns %}
-        {{column[:name]}}: {
-          {% if column[:type].id == Float64.id %}
-            type: PG::Numeric,
-          {% elsif column[:type].id == Array(Float64).id %}
-            type: Array(PG::Numeric),
-          {% else %}
-            {% if column[:type].is_a?(Generic) %}
-            type: {{column[:type]}},
-            {% else %}
-            type: {{column[:type]}}::Lucky::ColumnType,
-            {% end %}
-          {% end %}
-          nilable: {{column[:nilable]}},
-        },
+    include DB::Serializable
+    {% for column in columns %}
+      {% column_type = nil %}
+      {% if column[:type].id == Float64.id %}
+        {% column_type = PG::Numeric %}
+      {% elsif column[:type].id == Array(Float64).id %}
+        {% column_type = Array(PG::Numeric) %}
+      {% elsif column[:type].is_a?(Generic) %}
+        {% column_type = column[:type] %}
       {% end %}
-    })
+      property {{ column[:name] }} : {% if column_type.is_a?(NilLiteral) %}{{column[:type]}}::Lucky::ColumnType{% else %}{{column_type}}{% end %}{{(column[:nilable] ? "?" : "").id}}
+    {% end %}
   end
 
   macro setup_getters(columns, *args, **named_args)

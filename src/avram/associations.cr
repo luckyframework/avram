@@ -21,6 +21,7 @@ module Avram::Associations
 
     @_{{ assoc_name }}_preloaded : Bool = false
     private getter? _{{ assoc_name }}_preloaded
+    @[DB::Field(ignore: true)]
     private getter _preloaded_{{ assoc_name }} : {{ model }}?
   end
 

@@ -70,6 +70,7 @@ module Avram::Associations::HasMany
   end
 
   private macro define_has_many_lazy_loading(assoc_name, model, foreign_key, through)
+    @[DB::Field(ignore: true)]
     @_preloaded_{{ assoc_name }} : Array({{ model }})?
     setter _preloaded_{{ assoc_name }}
 
