@@ -24,6 +24,18 @@ module Avram::Callbacks
     end
   end
 
+  macro before_run(method_name)
+    def before_run
+      {% if @type.methods.map(&.name).includes?(:before_run.id) %}
+        previous_def
+      {% else %}
+        super
+      {% end %}
+
+      {{ method_name.id }}
+    end
+  end
+
   # Run the given block before saving or creating
   #
   # This runs before saving and before the database transaction is started.
@@ -38,6 +50,18 @@ module Avram::Callbacks
   macro before_save
     def before_save
       {% if @type.methods.map(&.name).includes?(:before_save.id) %}
+        previous_def
+      {% else %}
+        super
+      {% end %}
+
+      {{ yield }}
+    end
+  end
+
+  macro before_run
+    def before_run
+      {% if @type.methods.map(&.name).includes?(:before_run.id) %}
         previous_def
       {% else %}
         super
@@ -77,6 +101,55 @@ module Avram::Callbacks
       {% end %}
 
       {{ method_name.id }}(object)
+    end
+  end
+
+  macro after_run(method_name)
+    def after_run(object)
+      {% if @type.methods.map(&.name).includes?(:after_run.id) %}
+        previous_def
+      {% else %}
+        super
+      {% end %}
+
+      {{ method_name.id }}(object)
+    end
+  end
+
+  # Run the given block after the operation runs
+  #
+  # The return value from `run` will be passed to this block.
+  #
+  # ```
+  # class GenerateReport < Avram::Operation
+  #   after_run do |value|
+  #     value == "some report"
+  #   end
+  #
+  #   def run
+  #     "some report"
+  #   end
+  # end
+  # ```
+  macro after_run(&block)
+    {%
+      if block.args.size != 1
+        raise <<-ERR
+        The 'after_run' callback requires only 1 block arg to be passed.
+        Example:
+          after_run { |value| some_method(value) }
+        ERR
+      end
+    %}
+    def after_run(object)
+      {% if @type.methods.map(&.name).includes?(:after_run.id) %}
+        previous_def
+      {% else %}
+        super
+      {% end %}
+
+      {{ block.args.first }} = object
+      {{ block.body }}
     end
   end
 

@@ -7,6 +7,18 @@ private class TestOperation < Avram::Operation
   def validate
     validate_required name
   end
+
+  def run
+    "Lucky Test"
+  end
+end
+
+private class TestOperationWithParamKey < Avram::Operation
+  param_key :custom_key
+
+  def run
+    "Custom Key Test"
+  end
 end
 
 private class TestOperationWithMultipleValidations < Avram::Operation
@@ -16,6 +28,10 @@ private class TestOperationWithMultipleValidations < Avram::Operation
   def validate
     validate_required name
     validate_old_enough age
+  end
+
+  def run
+    "Custom Key Test"
   end
 
   private def validate_old_enough(age_attribute)
@@ -35,13 +51,54 @@ end
 
 private class CanUseSameVirtualAttributeTwiceInOperation < Avram::Operation
   attribute name : String
+
+  def run
+  end
 end
 
 private class ParamKeySaveOperation < Avram::Operation
   param_key :custom_param
+
+  def run
+  end
 end
 
 describe Avram::Operation do
+  describe "run" do
+    it "returns the last statement from the run method" do
+      TestOperation.run do |_operation, value|
+        value.should eq "Lucky Test"
+      end
+    end
+
+    it "has access to the raw params passed in" do
+      params = Avram::Params.new({"page" => "1", "per" => "50"})
+      TestOperationWithParamKey.run(params) do |operation, value|
+        operation.params.should eq params
+        operation.params.get("page").should eq "1"
+        value.should eq "Custom Key Test"
+      end
+    end
+  end
+
+  describe "param_key" do
+    it "has a param_key based on the name of the operation" do
+      TestOperation.param_key.should eq "test_operation"
+    end
+
+    it "sets a custom param key with the param_key macro" do
+      TestOperationWithParamKey.param_key.should eq "custom_key"
+    end
+  end
+
+  describe "valid?" do
+    it "returns true when there's nothing to validate" do
+      TestOperation.run do |operation, _value|
+        operation.valid?.should eq true
+      end
+    end
+  end
+
   it "has create/update args for non column attributes" do
     UserWithVirtual.create(password: "p@ssword") do |operation, _user|
       operation.password.value = "p@ssword"
