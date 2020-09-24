@@ -13,6 +13,18 @@ private class TestOperation < Avram::Operation
   end
 end
 
+private class FailingTestOperation < Avram::Operation
+  attribute name : String
+
+  before_run do
+    validate_required name
+  end
+
+  def run
+    nil
+  end
+end
+
 private class TestOperationWithParamKey < Avram::Operation
   param_key :custom_key
 
@@ -164,6 +176,18 @@ describe Avram::Operation do
         :name => ["is required"],
         :age  => ["is not old enough"],
       })
+    end
+
+    it "raises FailedOperation when the operation returns nil" do
+      expect_raises(Avram::FailedOperation, "The operation failed to return a value") do
+        FailingTestOperation.run!(Avram::Params.new({"name" => "Mario"}))
+      end
+    end
+
+    it "raises FailedOperation when the operation has validation errors" do
+      expect_raises(Avram::FailedOperation, "The operation failed to return a value") do
+        FailingTestOperation.run!
+      end
     end
   end
 end

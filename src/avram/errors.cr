@@ -141,4 +141,8 @@ module Avram
 
   class InvalidDatabaseNameError < AvramError
   end
+
+  # Used when `Avram::Operation` fails.
+  class FailedOperation < AvramError
+  end
 end

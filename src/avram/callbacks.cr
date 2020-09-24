@@ -1,12 +1,12 @@
 module Avram::Callbacks
-  # Run the given method before saving or creating
+  # Run the given method before saving or creating for `SaveOperation`
   #
   # This runs before saving and before the database transaction is started.
   # You can set defaults, validate, or perform any other setup necessary for
   # saving.
   #
   # ```
-  # before_save run_validations
+  # before_save :run_validations
   #
   # private def run_validations
   #   validate_required name, age
@@ -24,6 +24,15 @@ module Avram::Callbacks
     end
   end
 
+  # Run the given method before `run` is called on an `Operation`.
+  #
+  # ```
+  # before_run :validate_inputs
+  #
+  # private def validate_inputs
+  #   validate_required data
+  # end
+  # ```
   macro before_run(method_name)
     def before_run
       {% if @type.methods.map(&.name).includes?(:before_run.id) %}
@@ -36,7 +45,7 @@ module Avram::Callbacks
     end
   end
 
-  # Run the given block before saving or creating
+  # Run the given block before saving or creating for `SaveOperation`
   #
   # This runs before saving and before the database transaction is started.
   # You can set defaults, validate, or perform any other setup necessary for
@@ -59,6 +68,13 @@ module Avram::Callbacks
     end
   end
 
+  # Run the given block before `run` is called on an `Operation`.
+  #
+  # ```
+  # before_run do
+  #   validate_required data
+  # end
+  # ```
   macro before_run
     def before_run
       {% if @type.methods.map(&.name).includes?(:before_run.id) %}
@@ -104,6 +120,16 @@ module Avram::Callbacks
     end
   end
 
+  # Run the given method after `run` is called on an `Operation`.
+  # The return value of the `run` method is passed to `method_name`.
+  #
+  # ```
+  # after_run :log_entry
+  #
+  # private def log_entry(value)
+  #   log_stuff(value)
+  # end
+  # ```
   macro after_run(method_name)
     def after_run(object)
       {% if @type.methods.map(&.name).includes?(:after_run.id) %}
@@ -135,7 +161,7 @@ module Avram::Callbacks
     {%
       if block.args.size != 1
         raise <<-ERR
-        The 'after_run' callback requires only 1 block arg to be passed.
+        The 'after_run' callback requires exactly 1 block arg to be passed.
         Example:
           after_run { |value| some_method(value) }
         ERR
