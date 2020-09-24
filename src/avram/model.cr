@@ -24,7 +24,6 @@ abstract class Avram::Model
     {% end %}
   end
 
-  register_setup_step Avram::Model.setup_initialize
   register_setup_step Avram::Model.setup_getters
   register_setup_step Avram::Model.setup_column_names_method
   register_setup_step Avram::BaseQueryTemplate.setup
@@ -202,15 +201,6 @@ abstract class Avram::Model
 
   private def escape_primary_key(id : UUID)
     PG::EscapeHelper.escape_literal(id.to_s)
-  end
-
-  macro setup_initialize(columns, *args, **named_args)
-    def initialize(
-        {% for column in columns %}
-          @{{column[:name]}},
-        {% end %}
-      )
-    end
   end
 
   macro setup_getters(columns, *args, **named_args)

@@ -37,61 +37,6 @@ describe Avram::Model do
     user.should_not eq(post)
   end
 
-  it "sets up initializers based on the columns" do
-    now = Time.utc
-
-    user = User.new id: 123_i64,
-      name: "Name",
-      age: 24,
-      year_born: 1990_i16,
-      joined_at: now,
-      created_at: now,
-      updated_at: now,
-      nickname: "nick",
-      total_score: nil,
-      average_score: nil,
-      available_for_hire: nil
-
-    user.name.should eq "Name"
-    user.age.should eq 24
-    user.year_born.should eq 1990_i16
-    user.joined_at.should eq now
-    user.updated_at.should eq now
-    user.created_at.should eq now
-    user.nickname.should eq "nick"
-    user.available_for_hire.should be_nil
-    user.available_for_hire?.should be_false
-  end
-
-  it "can be used for params" do
-    now = Time.utc
-
-    user = User.new id: 123_i64,
-      name: "Name",
-      age: 24,
-      year_born: 1990_i16,
-      joined_at: now,
-      created_at: now,
-      updated_at: now,
-      nickname: "nick",
-      total_score: nil,
-      average_score: nil,
-      available_for_hire: nil
-
-    user.to_param.should eq "123"
-  end
-
-  it "sets up getters that parse the values" do
-    user = QueryMe.new id: 123_i64,
-      created_at: Time.utc,
-      updated_at: Time.utc,
-      age: 30,
-      email: " Foo@bar.com "
-
-    user.email.should be_a(CustomEmail)
-    user.email.to_s.should eq "foo@bar.com"
-  end
-
   describe "reload" do
     it "can reload a model" do
       user = UserBox.create &.name("Original Name")
@@ -156,11 +101,6 @@ describe Avram::Model do
   end
 
   describe "models with uuids" do
-    it "sets up initializers accepting uuid strings" do
-      uuid = UUID.new("a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11")
-      LineItem.new(uuid.to_s, Time.utc, Time.utc, "hello")
-    end
-
     it "can be saved" do
       uuid_regexp = /\w+/
       LineItemBox.create

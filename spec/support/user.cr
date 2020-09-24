@@ -12,6 +12,20 @@ class User < BaseModel
     column available_for_hire : Bool?
     has_one sign_in_credential : SignInCredential?
   end
+
+  def initialize(
+    @id,
+    @created_at,
+    @updated_at,
+    @joined_at,
+    @age,
+    @year_born,
+    @name,
+    @nickname,
+    @total_score,
+    @average_score,
+    @available_for_hire)
+  end
 end
 
 class UserQuery < User::BaseQuery
