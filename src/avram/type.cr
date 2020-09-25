@@ -34,7 +34,7 @@ module Avram::Type
   end
 
   def to_db(values : Array(T)) forall T
-    PQ::Param.encode_array(values)
+    Array(T).adapter.to_db(values)
   end
 
   def to_db(value)
