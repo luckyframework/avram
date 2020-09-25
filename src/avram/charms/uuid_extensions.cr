@@ -7,10 +7,8 @@ struct UUID
     Avram::Type::FailedCast.new
   end
 
-  module LuckyConverter
-    def self.from_rs(rs)
-      rs.read(String?).try { |uuid| UUID.new(uuid) }
-    end
+  def self.from_rs(rs)
+    rs.read(String?).try { |uuid| UUID.new(uuid) }
   end
 
   module Lucky

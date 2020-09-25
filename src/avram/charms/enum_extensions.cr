@@ -18,6 +18,10 @@ macro avram_enum(enum_name, &block)
       Avram::Type::SuccessfulCast({{ enum_name }}).new({{ enum_name }}.new(value))
     end
 
+    def self.from_rs(rs)
+      rs.read(Int32?).try { |i| {{ enum_name }}.new(i) }
+    end
+
     getter :enum
 
     # You may need to prefix with {{ @type }}
@@ -38,12 +42,6 @@ macro avram_enum(enum_name, &block)
 
     def to_s
       @enum.value.to_s
-    end
-
-    module LuckyConverter
-      def self.from_rs(rs)
-        rs.read(Int32?).try { |i| {{ enum_name }}.new(i) }
-      end
     end
 
     module Lucky

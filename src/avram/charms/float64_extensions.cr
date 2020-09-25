@@ -23,10 +23,8 @@ struct Float64
     Avram::Type::SuccessfulCast(Float64).new value.to_f64
   end
 
-  module LuckyConverter
-    def self.from_rs(rs)
-      rs.read(PG::Numeric?).try &.to_f
-    end
+  def self.from_rs(rs)
+    rs.read(PG::Numeric?).try &.to_f
   end
 
   module Lucky

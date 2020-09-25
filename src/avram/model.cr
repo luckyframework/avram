@@ -216,9 +216,9 @@ abstract class Avram::Model
 
     @[DB::Field(
       {% if data_type.is_a?(Generic) && Array.has_constant?("#{data_type.type_vars.first}LuckyConverter") %}
-        converter: {{data_type.name}}::{{data_type.type_vars.first}}LuckyConverter,
-      {% elsif !data_type.is_a?(Generic) && data_type.resolve.has_constant?("LuckyConverter") %}
-        converter: {{data_type}}::LuckyConverter,
+        converter: Array::{{data_type.type_vars.first}}LuckyConverter,
+      {% elsif !data_type.is_a?(Generic) && data_type.resolve.class.has_method?("from_rs") %}
+        converter: {{data_type}},
       {% end %}
     )]
     property {{ type_declaration }}
