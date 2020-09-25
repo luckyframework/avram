@@ -7,6 +7,10 @@ struct UUID
     alias ColumnType = String
     include Avram::Type
 
+    def from_rs(rs)
+      rs.read(String?).try { |uuid| UUID.new(uuid) }
+    end
+
     def parse(value : UUID)
       SuccessfulCast(UUID).new(value)
     end

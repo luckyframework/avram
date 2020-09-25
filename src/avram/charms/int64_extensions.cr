@@ -7,8 +7,12 @@ struct Int64
     alias ColumnType = Int64
     include Avram::Type
 
-    def from_db!(value : Int64)
+    def from_rs(value : Int64)
       value
+    end
+
+    def from_rs(rs : PG::ResultSet)
+      rs.read(Int64?)
     end
 
     def parse(value : Int64)

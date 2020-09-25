@@ -7,12 +7,16 @@ struct Float64
     alias ColumnType = Float64
     include Avram::Type
 
-    def from_db!(value : Float64)
+    def from_rs(value : Float64)
       value
     end
 
-    def from_db!(value : PG::Numeric)
+    def from_rs(value : PG::Numeric)
       value.to_f
+    end
+
+    def from_rs(rs : PG::ResultSet)
+      rs.read(PG::Numeric?).try &.to_f
     end
 
     def parse(value : Float64)

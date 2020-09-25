@@ -7,6 +7,10 @@ struct Bool
     alias ColumnType = Bool
     include Avram::Type
 
+    def from_rs(rs : PG::ResultSet)
+      rs.read(Bool?)
+    end
+
     def parse(value : String)
       if %w(true 1).includes? value
         SuccessfulCast(Bool).new true

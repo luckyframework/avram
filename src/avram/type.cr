@@ -3,7 +3,7 @@ module Avram::Type
     extend self
   end
 
-  def from_db!(value)
+  def from_rs(value)
     parse!(value)
   end
 

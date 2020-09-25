@@ -30,8 +30,12 @@ macro avram_enum(enum_name, &block)
       alias ColumnType = Int32
       include Avram::Type
 
-      def from_db!(value : Int32)
+      def from_rs(value : Int32)
         {{ enum_name }}.new(value)
+      end
+
+      def from_rs(rs : PG::ResultSet)
+        rs.read(Int32?).try { |i| {{ enum_name }}.new(i) }
       end
 
       def parse(value : Avram{{ enum_name }})

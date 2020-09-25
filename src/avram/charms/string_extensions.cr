@@ -7,6 +7,10 @@ class String
     alias ColumnType = String
     include Avram::Type
 
+    def from_rs(rs : PG::ResultSet)
+      rs.read(String?)
+    end
+
     def parse(value : String)
       SuccessfulCast(String).new(value)
     end
