@@ -18,4 +18,10 @@ describe "Array Columns" do
     bucket = BucketQuery.new.last
     bucket.floaty_numbers.should eq([1.1, 2.2, 3.3, 4.4])
   end
+
+  it "handles optional Array" do
+    BucketBox.create &.numbers(nil)
+    bucket = BucketQuery.new.last
+    bucket.numbers.should be_nil
+  end
 end

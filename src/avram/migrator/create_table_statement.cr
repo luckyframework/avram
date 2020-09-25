@@ -77,22 +77,20 @@ class Avram::Migrator::CreateTableStatement
   end
 
   macro add(type_declaration, default = nil, index = false, unique = false, using = :btree, **type_options)
-    {% if type_declaration.type.is_a?(Union) %}
-      {% type = type_declaration.type.types.first %}
+    {% type = type_declaration.type %}
+    {% nilable = false %}
+    {% array = false %}
+    {% if type.is_a?(Union) %}
+      {% type = type.types.first %}
       {% nilable = true %}
-      {% array = false %}
-    {% elsif type_declaration.type.is_a?(Generic) %}
-      {% type = type_declaration.type.type_vars.first %}
-      {% nilable = false %}
+    {% end %}
+    {% if type.is_a?(Generic) %}
+      {% type = type.type_vars.first %}
       {% array = true %}
-    {% else %}
-      {% type = type_declaration.type %}
-      {% nilable = false %}
-      {% array = false %}
     {% end %}
 
     rows << Avram::Migrator::Columns::{{ type }}Column(
-    {% if array %}Array({% end %}{{ type }}{% if array %}){% end %}
+    {% if array %}Array({{ type }}){% else %}{{ type }}{% end %}
     ).new(
       name: {{ type_declaration.var.stringify }},
       nilable: {{ nilable }},
