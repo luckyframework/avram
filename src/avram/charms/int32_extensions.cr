@@ -7,22 +7,10 @@ struct Int32
     Avram::Type::FailedCast.new
   end
 
-  def self.parse_attribute(value : Int32)
-    Avram::Type::SuccessfulCast(Int32).new(value)
-  end
-
   def self.parse_attribute(value : Int64)
     Avram::Type::SuccessfulCast(Int32).new value.to_i32
   rescue OverflowError
     Avram::Type::FailedCast.new
-  end
-
-  def self.parse_attribute(values : Array(Int32))
-    Avram::Type::SuccessfulCast(Array(Int32)).new values
-  end
-
-  def self.adapter
-    self
   end
 
   module Lucky

@@ -1,20 +1,12 @@
 struct JSON::Any
   extend Avram::Type
 
-  def self.parse_attribute(value : JSON::Any)
-    Avram::Type::SuccessfulCast(JSON::Any).new value
-  end
-
   def self.parse_attribute(value)
     Avram::Type::SuccessfulCast(JSON::Any).new JSON.parse(value.to_json)
   end
 
   def self.to_db(value)
     value.to_json
-  end
-
-  def self.adapter
-    self
   end
 
   module Lucky

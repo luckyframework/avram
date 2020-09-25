@@ -4,10 +4,6 @@ macro avram_enum(enum_name, &block)
   end
 
   class {{ enum_name }}
-    def self.adapter
-      self
-    end
-
     extend Avram::Type
 
     def self.parse_attribute(value : Avram{{ enum_name }})

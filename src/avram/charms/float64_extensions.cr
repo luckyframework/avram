@@ -1,18 +1,6 @@
 struct Float64
   extend Avram::Type
 
-  def self.adapter
-    self
-  end
-
-  def self.parse_attribute(value : Float64)
-    Avram::Type::SuccessfulCast(Float64).new(value)
-  end
-
-  def self.parse_attribute(values : Array(Float64))
-    Avram::Type::SuccessfulCast(Array(Float64)).new values
-  end
-
   def self.parse_attribute(value : PG::Numeric)
     Avram::Type::SuccessfulCast(Float64).new(value.to_f)
   end

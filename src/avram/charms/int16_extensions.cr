@@ -1,14 +1,6 @@
 struct Int16
   extend Avram::Type
 
-  def self.parse_attribute(value : Int16)
-    Avram::Type::SuccessfulCast(Int16).new(value)
-  end
-
-  def self.parse_attribute(values : Array(Int16))
-    Avram::Type::SuccessfulCast(Array(Int16)).new values
-  end
-
   def self.parse_attribute(value : String)
     Avram::Type::SuccessfulCast(Int16).new value.to_i16
   rescue ArgumentError
@@ -19,10 +11,6 @@ struct Int16
     Avram::Type::SuccessfulCast(Int16).new value.to_i16
   rescue OverflowError
     Avram::Type::FailedCast.new
-  end
-
-  def self.adapter
-    self
   end
 
   module Lucky

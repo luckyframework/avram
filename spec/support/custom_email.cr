@@ -1,20 +1,12 @@
 class CustomEmail
   extend Avram::Type
 
-  def self.parse_attribute(value : CustomEmail)
-    Avram::Type::SuccessfulCast(CustomEmail).new(value)
-  end
-
   def self.parse_attribute(value : String)
     Avram::Type::SuccessfulCast(CustomEmail).new(CustomEmail.new(value))
   end
 
   def self.to_db(value : String)
     CustomEmail.new(value).to_s
-  end
-
-  def self.to_db(value : CustomEmail)
-    value.to_s
   end
 
   def initialize(@email : String)

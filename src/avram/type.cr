@@ -1,6 +1,18 @@
 module Avram::Type
+  def adapter
+    self
+  end
+
   def parse_attribute(value : Nil)
     SuccessfulCast(Nil).new(nil)
+  end
+
+  def parse_attribute(value : self)
+    SuccessfulCast(self).new(value)
+  end
+
+  def parse_attribute(values : Array(self))
+    SuccessfulCast(Array(self)).new(values)
   end
 
   def parse_attribute(values : Array(String))

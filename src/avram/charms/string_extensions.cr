@@ -1,18 +1,6 @@
 class String
   extend Avram::Type
 
-  def self.parse_attribute(value : String)
-    Avram::Type::SuccessfulCast(String).new(value)
-  end
-
-  def self.parse_attribute(values : Array(String))
-    Avram::Type::SuccessfulCast(Array(String)).new(values)
-  end
-
-  def self.adapter
-    self
-  end
-
   module Lucky
     alias ColumnType = String
 

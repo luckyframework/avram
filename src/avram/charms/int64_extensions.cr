@@ -1,14 +1,6 @@
 struct Int64
   extend Avram::Type
 
-  def self.parse_attribute(value : Int64)
-    Avram::Type::SuccessfulCast(Int64).new(value)
-  end
-
-  def self.parse_attribute(values : Array(Int64))
-    Avram::Type::SuccessfulCast(Array(Int64)).new values
-  end
-
   def self.parse_attribute(value : String)
     Avram::Type::SuccessfulCast(Int64).new value.to_i64
   rescue ArgumentError
@@ -17,10 +9,6 @@ struct Int64
 
   def self.parse_attribute(value : Int32)
     Avram::Type::SuccessfulCast(Int64).new value.to_i64
-  end
-
-  def self.adapter
-    self
   end
 
   module Lucky

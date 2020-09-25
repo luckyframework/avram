@@ -1,14 +1,6 @@
 module Avram::Uploadable
   extend Avram::Type
 
-  def self.parse_attribute(value : Avram::Uploadable)
-    Avram::Type::SuccessfulCast(Avram::Uploadable).new(value)
-  end
-
-  def self.parse_attribute(values : Array(Avram::Uploadable))
-    Avram::Type::SuccessfulCast(Array(Avram::Uploadable)).new(values)
-  end
-
   def self.parse_attribute(value : String?)
     Avram::Type::FailedCast.new
   end

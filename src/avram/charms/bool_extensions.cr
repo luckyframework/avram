@@ -11,18 +11,6 @@ struct Bool
     end
   end
 
-  def self.parse_attribute(value : Bool)
-    Avram::Type::SuccessfulCast(Bool).new value
-  end
-
-  def self.parse_attribute(values : Array(Bool))
-    Avram::Type::SuccessfulCast(Array(Bool)).new values
-  end
-
-  def self.adapter
-    self
-  end
-
   module Lucky
     alias ColumnType = Bool
 

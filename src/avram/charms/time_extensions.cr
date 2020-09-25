@@ -45,18 +45,6 @@ struct Time
     end
   end
 
-  def self.parse_attribute(value : Time)
-    Avram::Type::SuccessfulCast(Time).new value
-  end
-
-  def self.parse_attribute(values : Array(Time))
-    Avram::Type::SuccessfulCast(Array(Time)).new values
-  end
-
-  def self.adapter
-    self
-  end
-
   module Lucky
     alias ColumnType = Time
 
