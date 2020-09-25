@@ -1,31 +1,32 @@
 struct Int16
+  extend Avram::Type
+
+  def self.parse_attribute(value : Int16)
+    Avram::Type::SuccessfulCast(Int16).new(value)
+  end
+
+  def self.parse_attribute(values : Array(Int16))
+    Avram::Type::SuccessfulCast(Array(Int16)).new values
+  end
+
+  def self.parse_attribute(value : String)
+    Avram::Type::SuccessfulCast(Int16).new value.to_i16
+  rescue ArgumentError
+    Avram::Type::FailedCast.new
+  end
+
+  def self.parse_attribute(value : Int32)
+    Avram::Type::SuccessfulCast(Int16).new value.to_i16
+  rescue OverflowError
+    Avram::Type::FailedCast.new
+  end
+
   def self.adapter
-    Lucky
+    self
   end
 
   module Lucky
     alias ColumnType = Int16
-    include Avram::Type
-
-    def parse(value : Int16)
-      SuccessfulCast(Int16).new(value)
-    end
-
-    def parse(values : Array(Int16))
-      SuccessfulCast(Array(Int16)).new values
-    end
-
-    def parse(value : String)
-      SuccessfulCast(Int16).new value.to_i16
-    rescue ArgumentError
-      FailedCast.new
-    end
-
-    def parse(value : Int32)
-      SuccessfulCast(Int16).new value.to_i16
-    rescue OverflowError
-      FailedCast.new
-    end
 
     class Criteria(T, V) < Avram::Criteria(T, V)
       include Avram::BetweenCriteria(T, V)

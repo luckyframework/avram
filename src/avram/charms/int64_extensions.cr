@@ -1,29 +1,30 @@
 struct Int64
+  extend Avram::Type
+
+  def self.parse_attribute(value : Int64)
+    Avram::Type::SuccessfulCast(Int64).new(value)
+  end
+
+  def self.parse_attribute(values : Array(Int64))
+    Avram::Type::SuccessfulCast(Array(Int64)).new values
+  end
+
+  def self.parse_attribute(value : String)
+    Avram::Type::SuccessfulCast(Int64).new value.to_i64
+  rescue ArgumentError
+    Avram::Type::FailedCast.new
+  end
+
+  def self.parse_attribute(value : Int32)
+    Avram::Type::SuccessfulCast(Int64).new value.to_i64
+  end
+
   def self.adapter
-    Lucky
+    self
   end
 
   module Lucky
     alias ColumnType = Int64
-    include Avram::Type
-
-    def parse(value : Int64)
-      SuccessfulCast(Int64).new(value)
-    end
-
-    def parse(values : Array(Int64))
-      SuccessfulCast(Array(Int64)).new values
-    end
-
-    def parse(value : String)
-      SuccessfulCast(Int64).new value.to_i64
-    rescue ArgumentError
-      FailedCast.new
-    end
-
-    def parse(value : Int32)
-      SuccessfulCast(Int64).new value.to_i64
-    end
 
     class Criteria(T, V) < Avram::Criteria(T, V)
       include Avram::BetweenCriteria(T, V)

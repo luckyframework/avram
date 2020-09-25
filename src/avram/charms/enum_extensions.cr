@@ -5,7 +5,21 @@ macro avram_enum(enum_name, &block)
 
   class {{ enum_name }}
     def self.adapter
-      Lucky
+      self
+    end
+
+    extend Avram::Type
+
+    def self.parse_attribute(value : Avram{{ enum_name }})
+      Avram::Type::SuccessfulCast({{ enum_name }}).new(value)
+    end
+
+    def self.parse_attribute(value : String)
+      Avram::Type::SuccessfulCast({{ enum_name }}).new({{ enum_name }}.new(value.to_i))
+    end
+
+    def self.parse_attribute(value : Int32)
+      Avram::Type::SuccessfulCast({{ enum_name }}).new({{ enum_name }}.new(value))
     end
 
     getter :enum
@@ -38,19 +52,6 @@ macro avram_enum(enum_name, &block)
 
     module Lucky
       alias ColumnType = Int32
-      include Avram::Type
-
-      def parse(value : Avram{{ enum_name }})
-        SuccessfulCast({{ enum_name }}).new(value)
-      end
-
-      def parse(value : String)
-        SuccessfulCast({{ enum_name }}).new({{ enum_name }}.new(value.to_i))
-      end
-
-      def parse(value : Int32)
-        SuccessfulCast({{ enum_name }}).new({{ enum_name }}.new(value))
-      end
 
       class Criteria(T, V) < Int32::Lucky::Criteria(T, V)
       end

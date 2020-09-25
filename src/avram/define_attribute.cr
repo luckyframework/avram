@@ -92,7 +92,7 @@ module Avram::DefineAttribute
     end
 
     def set_{{ name }}_from_param(attribute : Avram::Attribute)
-      parse_result = {{ type }}::Lucky.parse({{ name }}_param)
+      parse_result = {{ type }}.parse_attribute({{ name }}_param)
       if parse_result.is_a? Avram::Type::SuccessfulCast
         attribute.value = parse_result.value
       else
@@ -145,7 +145,7 @@ module Avram::DefineAttribute
     end
 
     def set_{{ name }}_from_param(attribute : Avram::Attribute)
-      parse_result = Avram::Uploadable::Lucky.parse({{ name }}_param)
+      parse_result = Avram::Uploadable.parse_attribute({{ name }}_param)
       if parse_result.is_a? Avram::Type::SuccessfulCast
         attribute.value = parse_result.value
       else

@@ -81,7 +81,7 @@ class Avram::Criteria(T, V)
   end
 
   private def perform_eq(value) : T
-    add_clause(Avram::Where::Equal.new(column, V::Lucky.to_db!(value)))
+    add_clause(Avram::Where::Equal.new(column, V.to_db!(value)))
   end
 
   def nilable_eq(value) : T
@@ -109,19 +109,19 @@ class Avram::Criteria(T, V)
   end
 
   def gt(value) : T
-    add_clause(Avram::Where::GreaterThan.new(column, V::Lucky.to_db!(value)))
+    add_clause(Avram::Where::GreaterThan.new(column, V.to_db!(value)))
   end
 
   def gte(value) : T
-    add_clause(Avram::Where::GreaterThanOrEqualTo.new(column, V::Lucky.to_db!(value)))
+    add_clause(Avram::Where::GreaterThanOrEqualTo.new(column, V.to_db!(value)))
   end
 
   def lt(value) : T
-    add_clause(Avram::Where::LessThan.new(column, V::Lucky.to_db!(value)))
+    add_clause(Avram::Where::LessThan.new(column, V.to_db!(value)))
   end
 
   def lte(value) : T
-    add_clause(Avram::Where::LessThanOrEqualTo.new(column, V::Lucky.to_db!(value)))
+    add_clause(Avram::Where::LessThanOrEqualTo.new(column, V.to_db!(value)))
   end
 
   def select_min : V | Nil
@@ -145,7 +145,7 @@ class Avram::Criteria(T, V)
   end
 
   def in(values) : T
-    values = values.map { |value| V::Lucky.to_db!(value) }
+    values = values.map { |value| V.to_db!(value) }
     add_clause(Avram::Where::In.new(column, values))
   end
 

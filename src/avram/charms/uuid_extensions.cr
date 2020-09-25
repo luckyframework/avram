@@ -1,6 +1,22 @@
 struct UUID
+  extend Avram::Type
+
+  def self.parse_attribute(value : UUID)
+    Avram::Type::SuccessfulCast(UUID).new(value)
+  end
+
+  def self.parse_attribute(values : Array(UUID))
+    Avram::Type::SuccessfulCast(Array(UUID)).new values
+  end
+
+  def self.parse_attribute(value : String)
+    Avram::Type::SuccessfulCast(UUID).new(UUID.new(value))
+  rescue
+    Avram::Type::FailedCast.new
+  end
+
   def self.adapter
-    Lucky
+    self
   end
 
   module LuckyConverter
@@ -11,21 +27,6 @@ struct UUID
 
   module Lucky
     alias ColumnType = String
-    include Avram::Type
-
-    def parse(value : UUID)
-      SuccessfulCast(UUID).new(value)
-    end
-
-    def parse(values : Array(UUID))
-      SuccessfulCast(Array(UUID)).new values
-    end
-
-    def parse(value : String)
-      SuccessfulCast(UUID).new(UUID.new(value))
-    rescue
-      FailedCast.new
-    end
 
     class Criteria(T, V) < Avram::Criteria(T, V)
     end

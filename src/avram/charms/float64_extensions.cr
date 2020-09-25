@@ -1,6 +1,38 @@
 struct Float64
+  extend Avram::Type
+
   def self.adapter
-    Lucky
+    self
+  end
+
+  def self.parse_attribute(value : Float64)
+    Avram::Type::SuccessfulCast(Float64).new(value)
+  end
+
+  def self.parse_attribute(values : Array(Float64))
+    Avram::Type::SuccessfulCast(Array(Float64)).new values
+  end
+
+  def self.parse_attribute(value : PG::Numeric)
+    Avram::Type::SuccessfulCast(Float64).new(value.to_f)
+  end
+
+  def self.parse_attribute(values : Array(PG::Numeric))
+    Avram::Type::SuccessfulCast(Array(Float64)).new values.map(&.to_f)
+  end
+
+  def self.parse_attribute(value : String)
+    Avram::Type::SuccessfulCast(Float64).new value.to_f64
+  rescue ArgumentError
+    Avram::Type::FailedCast.new
+  end
+
+  def self.parse_attribute(value : Int32)
+    Avram::Type::SuccessfulCast(Float64).new value.to_f64
+  end
+
+  def self.parse_attribute(value : Int64)
+    Avram::Type::SuccessfulCast(Float64).new value.to_f64
   end
 
   module LuckyConverter
@@ -11,37 +43,6 @@ struct Float64
 
   module Lucky
     alias ColumnType = Float64
-    include Avram::Type
-
-    def parse(value : Float64)
-      SuccessfulCast(Float64).new(value)
-    end
-
-    def parse(values : Array(Float64))
-      SuccessfulCast(Array(Float64)).new values
-    end
-
-    def parse(value : PG::Numeric)
-      SuccessfulCast(Float64).new(value.to_f)
-    end
-
-    def parse(values : Array(PG::Numeric))
-      SuccessfulCast(Array(Float64)).new values.map(&.to_f)
-    end
-
-    def parse(value : String)
-      SuccessfulCast(Float64).new value.to_f64
-    rescue ArgumentError
-      FailedCast.new
-    end
-
-    def parse(value : Int32)
-      SuccessfulCast(Float64).new value.to_f64
-    end
-
-    def parse(value : Int64)
-      SuccessfulCast(Float64).new value.to_f64
-    end
 
     class Criteria(T, V) < Avram::Criteria(T, V)
       include Avram::BetweenCriteria(T, V)
