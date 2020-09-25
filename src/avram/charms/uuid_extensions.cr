@@ -3,13 +3,15 @@ struct UUID
     Lucky
   end
 
+  module LuckyConverter
+    def self.from_rs(rs)
+      rs.read(String?).try { |uuid| UUID.new(uuid) }
+    end
+  end
+
   module Lucky
     alias ColumnType = String
     include Avram::Type
-
-    def from_rs(rs)
-      rs.read(String?).try { |uuid| UUID.new(uuid) }
-    end
 
     def parse(value : UUID)
       SuccessfulCast(UUID).new(value)

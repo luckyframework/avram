@@ -3,13 +3,15 @@ struct Float64
     Lucky
   end
 
+  module LuckyConverter
+    def self.from_rs(rs)
+      rs.read(PG::Numeric?).try &.to_f
+    end
+  end
+
   module Lucky
     alias ColumnType = Float64
     include Avram::Type
-
-    def from_rs(rs : PG::ResultSet)
-      rs.read(PG::Numeric?).try &.to_f
-    end
 
     def parse(value : Float64)
       SuccessfulCast(Float64).new(value)

@@ -26,13 +26,15 @@ macro avram_enum(enum_name, &block)
 
     forward_missing_to @enum
 
+    module LuckyConverter
+      def self.from_rs(rs)
+        rs.read(Int32?).try { |i| {{ enum_name }}.new(i) }
+      end
+    end
+
     module Lucky
       alias ColumnType = Int32
       include Avram::Type
-
-      def from_rs(rs : PG::ResultSet)
-        rs.read(Int32?).try { |i| {{ enum_name }}.new(i) }
-      end
 
       def parse(value : Avram{{ enum_name }})
         SuccessfulCast({{ enum_name }}).new(value)
