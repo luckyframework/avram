@@ -3,10 +3,6 @@ module Avram::Type
     extend self
   end
 
-  def from_rs(value)
-    parse!(value)
-  end
-
   def parse(value : Nil)
     SuccessfulCast(Nil).new(nil)
   end

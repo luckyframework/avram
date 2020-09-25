@@ -7,10 +7,6 @@ struct Int32
     alias ColumnType = Int32
     include Avram::Type
 
-    def from_rs(value : Int32)
-      value
-    end
-
     def from_rs(value : PG::ResultSet)
       value.read(Int32?)
     end

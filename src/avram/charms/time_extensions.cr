@@ -18,10 +18,6 @@ struct Time
       Time::Format::ISO_8601_TIME,
     ]
 
-    def from_rs(value : Time)
-      value
-    end
-
     def from_rs(rs : PG::ResultSet)
       rs.read(Time?)
     end
