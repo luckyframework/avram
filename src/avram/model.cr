@@ -213,9 +213,9 @@ abstract class Avram::Model
     {% if type_declaration.value || type_declaration.value == false %}
       {% value = type_declaration.value %}
     {% end %}
-    {% if data_type.is_a?(Generic) %}
+    {% if data_type.is_a?(Generic) && data_type.id == Array(Float64).id %}
     @[DB::Field(converter: {{data_type.name}}::Lucky::{{data_type.type_vars.first}})]
-    {% elsif ![Int16.id, Int32.id, Int64.id, Bool.id, String.id, Time.id, JSON::Any.id].includes? data_type.resolve.id %}
+    {% elsif !data_type.is_a?(Generic) && ![Int16.id, Int32.id, Int64.id, Bool.id, String.id, Time.id, JSON::Any.id].includes? data_type.resolve.id %}
     @[DB::Field(converter: {{data_type}}::Lucky)]
     {% end %}
     property {{ type_declaration }}
