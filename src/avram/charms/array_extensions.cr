@@ -1,8 +1,4 @@
 class Array(T)
-  def self.adapter
-    self
-  end
-
   def self.to_db(values : Array(T))
     PQ::Param.encode_array(values)
   end

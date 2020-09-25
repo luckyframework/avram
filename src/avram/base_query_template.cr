@@ -55,7 +55,7 @@ class Avram::BaseQueryTemplate
           elsif {{ column[:name] }}.is_a?(Nothing)
             nil
           else
-            value = {{ column[:name] }}.not_nil!.class.adapter.to_db({{ column[:name] }}).to_s
+            value = {{ column[:name] }}.not_nil!.class.to_db({{ column[:name] }}).to_s
             _changes[:{{ column[:name] }}] = value
           end
         {% end %}

@@ -1,7 +1,4 @@
 module Avram::Type
-  def adapter
-    self
-  end
 
   def parse_attribute(value : Nil)
     SuccessfulCast(Nil).new(nil)
@@ -34,7 +31,7 @@ module Avram::Type
   end
 
   def to_db(values : Array(T)) forall T
-    Array(T).adapter.to_db(values)
+    Array(T).to_db(values)
   end
 
   def to_db(value)
