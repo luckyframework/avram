@@ -24,7 +24,8 @@ class User < BaseModel
     @nickname,
     @total_score,
     @average_score,
-    @available_for_hire)
+    @available_for_hire
+  )
   end
 end
 

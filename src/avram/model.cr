@@ -213,7 +213,7 @@ abstract class Avram::Model
     {% if type_declaration.value || type_declaration.value == false %}
       {% value = type_declaration.value %}
     {% end %}
-    
+
     @[DB::Field(
       {% if data_type.is_a?(Generic) && Array.has_constant?("#{data_type.type_vars.first}LuckyConverter") %}
         converter: {{data_type.name}}::{{data_type.type_vars.first}}LuckyConverter,
