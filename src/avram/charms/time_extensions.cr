@@ -59,10 +59,6 @@ struct Time
       SuccessfulCast(Array(Time)).new values
     end
 
-    def to_db(value : Time)
-      value.to_s
-    end
-
     class Criteria(T, V) < Avram::Criteria(T, V)
       include Avram::BetweenCriteria(T, V)
     end

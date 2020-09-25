@@ -25,14 +25,6 @@ struct Int64
       SuccessfulCast(Int64).new value.to_i64
     end
 
-    def to_db(value : Int64)
-      value.to_s
-    end
-
-    def to_db(values : Array(Int64))
-      PQ::Param.encode_array(values)
-    end
-
     class Criteria(T, V) < Avram::Criteria(T, V)
       include Avram::BetweenCriteria(T, V)
 

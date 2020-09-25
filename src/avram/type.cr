@@ -25,6 +25,14 @@ module Avram::Type
     nil
   end
 
+  def to_db(values : Array(T)) forall T
+    PQ::Param.encode_array(values)
+  end
+
+  def to_db(value)
+    value.to_s
+  end
+
   def to_db!(value)
     parsed_value = parse!(value)
     to_db(parsed_value)

@@ -27,14 +27,6 @@ struct Int16
       FailedCast.new
     end
 
-    def to_db(value : Int16)
-      value.to_s
-    end
-
-    def to_db(values : Array(Int16))
-      PQ::Param.encode_array(values)
-    end
-
     class Criteria(T, V) < Avram::Criteria(T, V)
       include Avram::BetweenCriteria(T, V)
 

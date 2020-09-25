@@ -27,10 +27,6 @@ struct UUID
       FailedCast.new
     end
 
-    def to_db(value : UUID)
-      value.to_s
-    end
-
     class Criteria(T, V) < Avram::Criteria(T, V)
     end
   end

@@ -26,6 +26,10 @@ macro avram_enum(enum_name, &block)
 
     forward_missing_to @enum
 
+    def to_s
+      @enum.value.to_s
+    end
+
     module LuckyConverter
       def self.from_rs(rs)
         rs.read(Int32?).try { |i| {{ enum_name }}.new(i) }
@@ -46,14 +50,6 @@ macro avram_enum(enum_name, &block)
 
       def parse(value : Int32)
         SuccessfulCast({{ enum_name }}).new({{ enum_name }}.new(value))
-      end
-
-      def to_db(value : Int32)
-        value.to_s
-      end
-
-      def to_db(value : {{ enum_name }})
-        value.value.to_s
       end
 
       class Criteria(T, V) < Int32::Lucky::Criteria(T, V)

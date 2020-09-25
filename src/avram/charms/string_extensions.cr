@@ -15,14 +15,6 @@ class String
       SuccessfulCast(Array(String)).new(values)
     end
 
-    def to_db(value : String)
-      value
-    end
-
-    def to_db(values : Array(String))
-      PQ::Param.encode_array(values)
-    end
-
     class Criteria(T, V) < Avram::Criteria(T, V)
       @upper = false
       @lower = false
