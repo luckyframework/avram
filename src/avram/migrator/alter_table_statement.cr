@@ -112,18 +112,17 @@ class Avram::Migrator::AlterTableStatement
   end
 
   macro add(type_declaration, index = false, using = :btree, unique = false, default = nil, fill_existing_with = nil, **type_options)
-    {% if type_declaration.type.is_a?(Union) %}
-      {% type = type_declaration.type.types.first %}
+    {% type = type_declaration.type %}
+    {% nilable = false %}
+    {% array = false %}
+    {% should_fill_existing = fill_existing_with && (fill_existing_with != :nothing) %}
+    {% if type.is_a?(Union) %}
+      {% type = type.types.first %}
       {% nilable = true %}
-      {% array = false %}
-    {% elsif type_declaration.type.is_a?(Generic) %}
-      {% type = type_declaration.type.type_vars.first %}
-      {% nilable = false %}
+    {% end %}
+    {% if type.is_a?(Generic) %}
+      {% type = type.type_vars.first %}
       {% array = true %}
-    {% else %}
-      {% type = type_declaration.type %}
-      {% nilable = (fill_existing_with != nil) && (fill_existing_with != :nothing) %}
-      {% array = false %}
     {% end %}
 
     {% if !nilable && default == nil && fill_existing_with == nil %}
@@ -133,9 +132,9 @@ class Avram::Migrator::AlterTableStatement
 
         Try one of these...
 
-          ▸ add #{type_declaration.var} : #{type}, default: "Something"
-          ▸ add #{type_declaration.var} : #{type}, fill_existing_with: "Something"
-          ▸ add #{type_declaration.var} : #{type}, fill_existing_with: :nothing
+          ▸ add #{type_declaration}, default: "Something"
+          ▸ add #{type_declaration}, fill_existing_with: "Something"
+          ▸ add #{type_declaration}, fill_existing_with: :nothing
         ERROR
       %}
     {% end %}
@@ -145,10 +144,10 @@ class Avram::Migrator::AlterTableStatement
     {% end %}
 
     rows << Avram::Migrator::Columns::{{ type }}Column(
-    {% if array %}Array({% end %}{{ type }}{% if array %}){% end %}
+    {% if array %}Array({{ type }}){% else %}{{ type }}{% end %}
     ).new(
       name: {{ type_declaration.var.stringify }},
-      nilable: {{ nilable }},
+      nilable: {{ nilable || should_fill_existing }},
       default: {{ default }},
       {{ **type_options }}
     )
@@ -157,12 +156,12 @@ class Avram::Migrator::AlterTableStatement
     {% end %}
     .build_add_statement_for_alter
 
-    {% if fill_existing_with && fill_existing_with != :nothing %}
+    {% if should_fill_existing %}
       add_fill_existing_with_statements(
         column: {{ type_declaration.var.stringify }},
         type: {{ type }},
         value: Avram::Migrator::Columns::{{ type }}Column.prepare_value_for_database({{ fill_existing_with }}),
-        nilable: {{ type_declaration.type.is_a?(Union) }}
+        nilable: {{ nilable }}
       )
     {% end %}
 
