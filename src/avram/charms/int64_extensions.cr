@@ -7,10 +7,6 @@ struct Int64
     alias ColumnType = Int64
     include Avram::Type
 
-    def from_db!(value : Int64)
-      value
-    end
-
     def parse(value : Int64)
       SuccessfulCast(Int64).new(value)
     end

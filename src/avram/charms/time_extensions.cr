@@ -18,10 +18,6 @@ struct Time
       Time::Format::ISO_8601_TIME,
     ]
 
-    def from_db!(value : Time)
-      value
-    end
-
     def parse(value : String) : SuccessfulCast(Time) | FailedCast
       # Prefer user defined string formats
       try_parsing_with_string_formats(value) ||

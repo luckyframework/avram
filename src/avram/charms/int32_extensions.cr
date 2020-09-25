@@ -7,10 +7,6 @@ struct Int32
     alias ColumnType = Int32
     include Avram::Type
 
-    def from_db!(value : Int32)
-      value
-    end
-
     def parse(value : String)
       SuccessfulCast(Int32).new value.to_i
     rescue ArgumentError

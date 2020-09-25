@@ -4,4 +4,10 @@ class Array(T)
   def self.adapter
     T::Lucky
   end
+
+  module Float64LuckyConverter
+    def self.from_rs(rs)
+      rs.read(Array(PG::Numeric)?).try &.map &.to_f
+    end
+  end
 end
