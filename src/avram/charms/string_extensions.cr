@@ -2,8 +2,6 @@ class String
   extend Avram::Type
 
   module Lucky
-    alias ColumnType = String
-
     class Criteria(T, V) < Avram::Criteria(T, V)
       @upper = false
       @lower = false

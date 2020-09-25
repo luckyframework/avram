@@ -12,8 +12,6 @@ struct Bool
   end
 
   module Lucky
-    alias ColumnType = Bool
-
     class Criteria(T, V) < Avram::Criteria(T, V)
     end
   end

@@ -25,8 +25,6 @@ class CustomEmail
   end
 
   module Lucky
-    alias ColumnType = String
-
     class Criteria(T, V) < String::Lucky::Criteria(T, V)
       @upper = false
       @lower = false

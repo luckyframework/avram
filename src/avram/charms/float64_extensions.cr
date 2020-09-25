@@ -30,8 +30,6 @@ struct Float64
   end
 
   module Lucky
-    alias ColumnType = Float64
-
     class Criteria(T, V) < Avram::Criteria(T, V)
       include Avram::BetweenCriteria(T, V)
 

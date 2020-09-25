@@ -12,8 +12,6 @@ struct Int64
   end
 
   module Lucky
-    alias ColumnType = Int64
-
     class Criteria(T, V) < Avram::Criteria(T, V)
       include Avram::BetweenCriteria(T, V)
 

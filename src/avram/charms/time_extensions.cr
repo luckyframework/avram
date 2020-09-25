@@ -46,8 +46,6 @@ struct Time
   end
 
   module Lucky
-    alias ColumnType = Time
-
     class Criteria(T, V) < Avram::Criteria(T, V)
       include Avram::BetweenCriteria(T, V)
     end

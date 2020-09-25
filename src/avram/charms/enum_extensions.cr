@@ -47,8 +47,6 @@ macro avram_enum(enum_name, &block)
     end
 
     module Lucky
-      alias ColumnType = Int32
-
       class Criteria(T, V) < Int32::Lucky::Criteria(T, V)
       end
     end

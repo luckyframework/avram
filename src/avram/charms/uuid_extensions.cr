@@ -14,8 +14,6 @@ struct UUID
   end
 
   module Lucky
-    alias ColumnType = String
-
     class Criteria(T, V) < Avram::Criteria(T, V)
     end
   end

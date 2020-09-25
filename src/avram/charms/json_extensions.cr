@@ -10,8 +10,6 @@ struct JSON::Any
   end
 
   module Lucky
-    alias ColumnType = JSON::Any
-
     class Criteria(T, V) < Avram::Criteria(T, V)
     end
   end
