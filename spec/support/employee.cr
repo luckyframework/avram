@@ -1,3 +1,5 @@
+require "./manager"
+
 class Employee < BaseModel
   table do
     column name : String

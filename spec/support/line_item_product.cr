@@ -1,3 +1,5 @@
+require "./product"
+
 class LineItemProduct < BaseModel
   skip_default_columns
 

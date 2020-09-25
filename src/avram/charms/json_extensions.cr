@@ -7,10 +7,6 @@ struct JSON::Any
     alias ColumnType = JSON::Any
     include Avram::Type
 
-    def from_rs(rs : PG::ResultSet)
-      rs.read(JSON::Any?)
-    end
-
     def parse(value : JSON::Any)
       SuccessfulCast(JSON::Any).new value
     end

@@ -215,7 +215,7 @@ abstract class Avram::Model
     {% end %}
     {% if data_type.is_a?(Generic) %}
     @[DB::Field(converter: {{data_type.name}}::Lucky::{{data_type.type_vars.first}})]
-    {% else %}
+    {% elsif ![Int16.id, Int32.id, Int64.id, Bool.id, String.id, Time.id, JSON::Any.id].includes? data_type.resolve.id %}
     @[DB::Field(converter: {{data_type}}::Lucky)]
     {% end %}
     property {{ type_declaration }}

@@ -18,10 +18,6 @@ struct Time
       Time::Format::ISO_8601_TIME,
     ]
 
-    def from_rs(rs : PG::ResultSet)
-      rs.read(Time?)
-    end
-
     def parse(value : String) : SuccessfulCast(Time) | FailedCast
       # Prefer user defined string formats
       try_parsing_with_string_formats(value) ||

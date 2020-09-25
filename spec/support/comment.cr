@@ -1,3 +1,5 @@
+require "./post"
+
 class Comment < BaseModel
   skip_default_columns
 
