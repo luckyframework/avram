@@ -1,10 +1,6 @@
 class String
   extend Avram::Type
 
-  def self._to_db(values : Array(String))
-    PQ::Param.encode_array(values)
-  end
-
   module Lucky
     alias ColumnType = String
 

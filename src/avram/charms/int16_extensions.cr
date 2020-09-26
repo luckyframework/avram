@@ -17,10 +17,6 @@ struct Int16
     Avram::Type::FailedCast.new
   end
 
-  def self._to_db(values : Array(Int16))
-    PQ::Param.encode_array(values)
-  end
-
   module Lucky
     alias ColumnType = Int16
 

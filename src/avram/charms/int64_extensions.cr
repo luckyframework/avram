@@ -15,10 +15,6 @@ struct Int64
     Avram::Type::SuccessfulCast(Int64).new value.to_i64
   end
 
-  def self._to_db(values : Array(Int64))
-    PQ::Param.encode_array(values)
-  end
-
   module Lucky
     alias ColumnType = Int64
 

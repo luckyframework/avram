@@ -31,10 +31,6 @@ struct Float64
     Avram::Type::SuccessfulCast(Float64).new value.to_f64
   end
 
-  def self._to_db(values : Array(Float64))
-    PQ::Param.encode_array(values)
-  end
-
   module Lucky
     alias ColumnType = Float64
 

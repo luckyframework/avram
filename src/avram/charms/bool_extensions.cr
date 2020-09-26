@@ -11,10 +11,6 @@ struct Bool
     end
   end
 
-  def self._to_db(values : Array(Bool))
-    PQ::Param.encode_array(values)
-  end
-
   module Lucky
     alias ColumnType = Bool
 
