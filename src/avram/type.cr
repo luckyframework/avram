@@ -21,7 +21,7 @@ module Avram::Type
       values = casts.map { |c| c.as(Avram::Type::SuccessfulCast).value }
       _parse_attribute(values)
     else
-     Avram::Type::FailedCast.new
+      Avram::Type::FailedCast.new
     end
   end
 
