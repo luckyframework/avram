@@ -9,10 +9,6 @@ class CustomEmail
     CustomEmail.new(value).to_s
   end
 
-  def self._to_db(value : CustomEmail)
-    value.to_s
-  end
-
   def initialize(@email : String)
   end
 

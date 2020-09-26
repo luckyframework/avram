@@ -49,10 +49,6 @@ struct Time
     end
   end
 
-  def self._to_db(value : Time)
-    value.to_s
-  end
-
   module Lucky
     alias ColumnType = Time
 

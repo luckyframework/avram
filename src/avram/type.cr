@@ -33,6 +33,10 @@ module Avram::Type
     nil
   end
 
+  def _to_db(value : self)
+    value.to_s
+  end
+
   def _to_db!(value)
     parsed_value = _parse_attribute!(value)
     _to_db(parsed_value)

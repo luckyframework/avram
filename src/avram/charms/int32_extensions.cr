@@ -17,10 +17,6 @@ struct Int32
     Avram::Type::FailedCast.new
   end
 
-  def self._to_db(value : Int32)
-    value.to_s
-  end
-
   def self._to_db(values : Array(Int32))
     PQ::Param.encode_array(values)
   end

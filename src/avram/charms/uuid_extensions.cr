@@ -7,10 +7,6 @@ struct UUID
     Avram::Type::FailedCast.new
   end
 
-  def self._to_db(value : UUID)
-    value.to_s
-  end
-
   module Lucky
     alias ColumnType = String
 
