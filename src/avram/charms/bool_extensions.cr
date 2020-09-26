@@ -25,11 +25,11 @@ struct Bool
      Avram::Type::SuccessfulCast(Array(Bool)).new values
     end
 
-    def self.to_db(value : Bool)
+    def self._to_db(value : Bool)
       value.to_s
     end
 
-    def self.to_db(values : Array(Bool))
+    def self._to_db(values : Array(Bool))
       PQ::Param.encode_array(values)
     end
 

@@ -20,7 +20,7 @@ describe "UUID column type" do
   describe ".to_db" do
     it "turns the uuid into a string" do
       uuid = UUID.new("a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11")
-      UUID::Lucky.to_db(uuid).should eq "a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11"
+      UUID::Lucky._to_db(uuid).should eq "a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11"
     end
   end
 end

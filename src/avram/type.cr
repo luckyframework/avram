@@ -1,5 +1,5 @@
 module Avram::Type
-  def from_db!(value)
+  def _from_db!(value)
     _parse_attribute!(value)
   end
 
@@ -21,13 +21,13 @@ module Avram::Type
     _parse_attribute(value).as(Avram::Type::SuccessfulCast).value
   end
 
-  def to_db(value : Nil)
+  def _to_db(value : Nil)
     nil
   end
 
-  def to_db!(value)
+  def _to_db!(value)
     parsed_value = _parse_attribute!(value)
-    to_db(parsed_value)
+    _to_db(parsed_value)
   end
 
   class SuccessfulCast(T)

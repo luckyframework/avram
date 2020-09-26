@@ -15,11 +15,11 @@ class String
      Avram::Type::SuccessfulCast(Array(String)).new(values)
     end
 
-    def self.to_db(value : String)
+    def self._to_db(value : String)
       value
     end
 
-    def self.to_db(values : Array(String))
+    def self._to_db(values : Array(String))
       PQ::Param.encode_array(values)
     end
 

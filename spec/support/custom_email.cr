@@ -26,11 +26,11 @@ class CustomEmail
       Avram::Type::SuccessfulCast(CustomEmail).new(CustomEmail.new(value))
     end
 
-    def self.to_db(value : String)
+    def self._to_db(value : String)
       CustomEmail.new(value).to_s
     end
 
-    def self.to_db(value : CustomEmail)
+    def self._to_db(value : CustomEmail)
       value.to_s
     end
 

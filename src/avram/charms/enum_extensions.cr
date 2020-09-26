@@ -30,7 +30,7 @@ macro avram_enum(enum_name, &block)
       alias ColumnType = Int32
       extend Avram::Type
 
-      def self.from_db!(value : Int32)
+      def self._from_db!(value : Int32)
         {{ enum_name }}.new(value)
       end
 
@@ -46,11 +46,11 @@ macro avram_enum(enum_name, &block)
        Avram::Type::SuccessfulCast({{ enum_name }}).new({{ enum_name }}.new(value))
       end
 
-      def self.to_db(value : Int32)
+      def self._to_db(value : Int32)
         value.to_s
       end
 
-      def self.to_db(value : {{ enum_name }})
+      def self._to_db(value : {{ enum_name }})
         value.value.to_s
       end
 

@@ -7,7 +7,7 @@ struct JSON::Any
     alias ColumnType = JSON::Any
     extend Avram::Type
 
-    def self.from_db!(value : JSON::Any)
+    def self._from_db!(value : JSON::Any)
       value
     end
 
@@ -19,7 +19,7 @@ struct JSON::Any
      Avram::Type::SuccessfulCast(JSON::Any).new JSON.parse(value.to_json)
     end
 
-    def self.to_db(value)
+    def self._to_db(value)
       value.to_json
     end
 

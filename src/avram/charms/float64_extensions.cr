@@ -7,11 +7,11 @@ struct Float64
     alias ColumnType = Float64
     extend Avram::Type
 
-    def self.from_db!(value : Float64)
+    def self._from_db!(value : Float64)
       value
     end
 
-    def self.from_db!(value : PG::Numeric)
+    def self._from_db!(value : PG::Numeric)
       value.to_f
     end
 
@@ -45,11 +45,11 @@ struct Float64
      Avram::Type::SuccessfulCast(Float64).new value.to_f64
     end
 
-    def self.to_db(value : Float64)
+    def self._to_db(value : Float64)
       value.to_s
     end
 
-    def self.to_db(values : Array(Float64))
+    def self._to_db(values : Array(Float64))
       PQ::Param.encode_array(values)
     end
 

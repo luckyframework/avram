@@ -7,7 +7,7 @@ struct Int64
     alias ColumnType = Int64
     extend Avram::Type
 
-    def self.from_db!(value : Int64)
+    def self._from_db!(value : Int64)
       value
     end
 
@@ -29,11 +29,11 @@ struct Int64
      Avram::Type::SuccessfulCast(Int64).new value.to_i64
     end
 
-    def self.to_db(value : Int64)
+    def self._to_db(value : Int64)
       value.to_s
     end
 
-    def self.to_db(values : Array(Int64))
+    def self._to_db(values : Array(Int64))
       PQ::Param.encode_array(values)
     end
 

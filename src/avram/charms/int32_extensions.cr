@@ -7,7 +7,7 @@ struct Int32
     alias ColumnType = Int32
     extend Avram::Type
 
-    def self.from_db!(value : Int32)
+    def self._from_db!(value : Int32)
       value
     end
 
@@ -31,11 +31,11 @@ struct Int32
      Avram::Type::SuccessfulCast(Array(Int32)).new values
     end
 
-    def self.to_db(value : Int32)
+    def self._to_db(value : Int32)
       value.to_s
     end
 
-    def self.to_db(values : Array(Int32))
+    def self._to_db(values : Array(Int32))
       PQ::Param.encode_array(values)
     end
 

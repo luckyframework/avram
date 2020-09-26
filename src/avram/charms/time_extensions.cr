@@ -18,7 +18,7 @@ struct Time
       Time::Format::ISO_8601_TIME,
     ]
 
-    def self.from_db!(value : Time)
+    def self._from_db!(value : Time)
       value
     end
 
@@ -63,7 +63,7 @@ struct Time
      Avram::Type::SuccessfulCast(Array(Time)).new values
     end
 
-    def self.to_db(value : Time)
+    def self._to_db(value : Time)
       value.to_s
     end
 

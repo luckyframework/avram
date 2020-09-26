@@ -21,7 +21,7 @@ struct UUID
      Avram::Type::FailedCast.new
     end
 
-    def self.to_db(value : UUID)
+    def self._to_db(value : UUID)
       value.to_s
     end
 

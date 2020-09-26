@@ -290,11 +290,11 @@ abstract class Avram::SaveOperation(T) < Avram::Operation
     end
 
     {% for column in columns %}
-    # pass `value` to it's `Lucky.to_db` for parsing.
+    # pass `value` to it's `Lucky._to_db` for parsing.
     # In most cases, that's just calling `to_s`, but in the case of an Array,
     # `value` is passed to `PQ::Param` to properly encode `[true]` to `{t}`, etc...
     private def cast_value(value : {{ column[:type] }})
-      value.not_nil!.class.adapter.to_db(value.as({{ column[:type] }}))
+      value.not_nil!.class.adapter._to_db(value.as({{ column[:type] }}))
     end
     {% end %}
   end
