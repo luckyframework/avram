@@ -133,9 +133,9 @@ abstract class Avram::SaveOperation(T) < Avram::Operation
       private def default_value_for_{{ attribute[:name] }}
         {% if attribute[:value] || attribute[:value] == false %}
           {% if attribute[:type].is_a?(Generic) %}
-            parse_result = {{ attribute[:type].type_vars.first }}::Lucky._parse_attribute([{{ attribute[:value] }}])
+            parse_result = {{ attribute[:type].type_vars.first }}._parse_attribute([{{ attribute[:value] }}])
           {% else %}
-            parse_result = {{ attribute[:type] }}::Lucky._parse_attribute({{ attribute[:value] }})
+            parse_result = {{ attribute[:type] }}._parse_attribute({{ attribute[:value] }})
           {% end %}
           if parse_result.is_a? Avram::Type::SuccessfulCast
             parse_result.value.as({{ attribute[:type] }})
@@ -165,9 +165,9 @@ abstract class Avram::SaveOperation(T) < Avram::Operation
         {% if attribute[:type].is_a?(Generic) %}
           # Pass `_value` in as an Array. Currently only single values are supported.
           # TODO: Update this once Lucky params support Arrays natively
-          parse_result = {{ attribute[:type].type_vars.first }}::Lucky._parse_attribute([_value])
+          parse_result = {{ attribute[:type].type_vars.first }}._parse_attribute([_value])
         {% else %}
-          parse_result = {{ attribute[:type] }}::Lucky._parse_attribute(_value)
+          parse_result = {{ attribute[:type] }}._parse_attribute(_value)
         {% end %}
         if parse_result.is_a? Avram::Type::SuccessfulCast
           {{ attribute[:name] }}.value = parse_result.value.as({{ attribute[:type] }})

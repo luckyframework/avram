@@ -1,27 +1,28 @@
 class String
+  extend Avram::Type
+
+  def self._parse_attribute(value : String)
+    Avram::Type::SuccessfulCast(String).new(value)
+  end
+
+  def self._parse_attribute(values : Array(String))
+    Avram::Type::SuccessfulCast(Array(String)).new(values)
+  end
+
+  def self._to_db(value : String)
+    value
+  end
+
+  def self._to_db(values : Array(String))
+    PQ::Param.encode_array(values)
+  end
+
   def self.adapter
-    Lucky
+    self
   end
 
   module Lucky
     alias ColumnType = String
-    extend Avram::Type
-
-    def self._parse_attribute(value : String)
-     Avram::Type::SuccessfulCast(String).new(value)
-    end
-
-    def self._parse_attribute(values : Array(String))
-     Avram::Type::SuccessfulCast(Array(String)).new(values)
-    end
-
-    def self._to_db(value : String)
-      value
-    end
-
-    def self._to_db(values : Array(String))
-      PQ::Param.encode_array(values)
-    end
 
     class Criteria(T, V) < Avram::Criteria(T, V)
       @upper = false

@@ -4,8 +4,34 @@ macro avram_enum(enum_name, &block)
   end
 
   class {{ enum_name }}
+    extend Avram::Type
+
+    def self._from_db!(value : Int32)
+      {{ enum_name }}.new(value)
+    end
+
+    def self._parse_attribute(value : Avram{{ enum_name }})
+    Avram::Type::SuccessfulCast({{ enum_name }}).new(value)
+    end
+
+    def self._parse_attribute(value : String)
+    Avram::Type::SuccessfulCast({{ enum_name }}).new({{ enum_name }}.new(value.to_i))
+    end
+
+    def self._parse_attribute(value : Int32)
+    Avram::Type::SuccessfulCast({{ enum_name }}).new({{ enum_name }}.new(value))
+    end
+
+    def self._to_db(value : Int32)
+      value.to_s
+    end
+
+    def self._to_db(value : {{ enum_name }})
+      value.value.to_s
+    end
+
     def self.adapter
-      Lucky
+      self
     end
 
     getter :enum
@@ -28,31 +54,6 @@ macro avram_enum(enum_name, &block)
 
     module Lucky
       alias ColumnType = Int32
-      extend Avram::Type
-
-      def self._from_db!(value : Int32)
-        {{ enum_name }}.new(value)
-      end
-
-      def self._parse_attribute(value : Avram{{ enum_name }})
-       Avram::Type::SuccessfulCast({{ enum_name }}).new(value)
-      end
-
-      def self._parse_attribute(value : String)
-       Avram::Type::SuccessfulCast({{ enum_name }}).new({{ enum_name }}.new(value.to_i))
-      end
-
-      def self._parse_attribute(value : Int32)
-       Avram::Type::SuccessfulCast({{ enum_name }}).new({{ enum_name }}.new(value))
-      end
-
-      def self._to_db(value : Int32)
-        value.to_s
-      end
-
-      def self._to_db(value : {{ enum_name }})
-        value.value.to_s
-      end
 
       class Criteria(T, V) < Int32::Lucky::Criteria(T, V)
       end

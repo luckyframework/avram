@@ -1,43 +1,44 @@
 struct Int16
+  extend Avram::Type
+
+  def self._from_db!(value : Int16)
+    value
+  end
+
+  def self._parse_attribute(value : Int16)
+    Avram::Type::SuccessfulCast(Int16).new(value)
+  end
+
+  def self._parse_attribute(values : Array(Int16))
+    Avram::Type::SuccessfulCast(Array(Int16)).new values
+  end
+
+  def self._parse_attribute(value : String)
+    Avram::Type::SuccessfulCast(Int16).new value.to_i16
+  rescue ArgumentError
+    Avram::Type::FailedCast.new
+  end
+
+  def self._parse_attribute(value : Int32)
+    Avram::Type::SuccessfulCast(Int16).new value.to_i16
+  rescue OverflowError
+    Avram::Type::FailedCast.new
+  end
+
+  def self._to_db(value : Int16)
+    value.to_s
+  end
+
+  def self._to_db(values : Array(Int16))
+    PQ::Param.encode_array(values)
+  end
+
   def self.adapter
-    Lucky
+    self
   end
 
   module Lucky
     alias ColumnType = Int16
-    extend Avram::Type
-
-    def self._from_db!(value : Int16)
-      value
-    end
-
-    def self._parse_attribute(value : Int16)
-     Avram::Type::SuccessfulCast(Int16).new(value)
-    end
-
-    def self._parse_attribute(values : Array(Int16))
-     Avram::Type::SuccessfulCast(Array(Int16)).new values
-    end
-
-    def self._parse_attribute(value : String)
-     Avram::Type::SuccessfulCast(Int16).new value.to_i16
-    rescue ArgumentError
-     Avram::Type::FailedCast.new
-    end
-
-    def self._parse_attribute(value : Int32)
-     Avram::Type::SuccessfulCast(Int16).new value.to_i16
-    rescue OverflowError
-     Avram::Type::FailedCast.new
-    end
-
-    def self._to_db(value : Int16)
-      value.to_s
-    end
-
-    def self._to_db(values : Array(Int16))
-      PQ::Param.encode_array(values)
-    end
 
     class Criteria(T, V) < Avram::Criteria(T, V)
       include Avram::BetweenCriteria(T, V)

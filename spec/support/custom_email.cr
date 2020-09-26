@@ -1,4 +1,22 @@
 class CustomEmail
+  extend Avram::Type
+
+  def self._parse_attribute(value : CustomEmail)
+    Avram::Type::SuccessfulCast(CustomEmail).new(value)
+  end
+
+  def self._parse_attribute(value : String)
+    Avram::Type::SuccessfulCast(CustomEmail).new(CustomEmail.new(value))
+  end
+
+  def self._to_db(value : String)
+    CustomEmail.new(value).to_s
+  end
+
+  def self._to_db(value : CustomEmail)
+    value.to_s
+  end
+
   def initialize(@email : String)
   end
 
@@ -16,23 +34,6 @@ class CustomEmail
 
   module Lucky
     alias ColumnType = String
-    extend Avram::Type
-
-    def self._parse_attribute(value : CustomEmail)
-      Avram::Type::SuccessfulCast(CustomEmail).new(value)
-    end
-
-    def self._parse_attribute(value : String)
-      Avram::Type::SuccessfulCast(CustomEmail).new(CustomEmail.new(value))
-    end
-
-    def self._to_db(value : String)
-      CustomEmail.new(value).to_s
-    end
-
-    def self._to_db(value : CustomEmail)
-      value.to_s
-    end
 
     class Criteria(T, V) < String::Lucky::Criteria(T, V)
       @upper = false

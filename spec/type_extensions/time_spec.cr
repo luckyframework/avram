@@ -12,14 +12,14 @@ describe "Time column type" do
         http_date:            "Sun, 14 Feb 2016 21:00:00 GMT",
       }
       times.each do |_format, item|
-        result = Time::Lucky._parse_attribute(item)
+        result = Time._parse_attribute(item)
         result.should be_a(Avram::Type::SuccessfulCast(Time))
       end
     end
 
     it "allows adding other formats" do
       Avram.temp_config(time_formats: ["%Y-%B-%-d"]) do
-        result = Time::Lucky._parse_attribute("2017-January-30")
+        result = Time._parse_attribute("2017-January-30")
 
         result.should be_a(Avram::Type::SuccessfulCast(Time))
         value = result.as(Avram::Type::SuccessfulCast(Time)).value
@@ -32,13 +32,13 @@ describe "Time column type" do
     it "casts a Time successfully" do
       time = Time.local
 
-      result = Time::Lucky._parse_attribute(time)
+      result = Time._parse_attribute(time)
 
       result.value.should eq(time)
     end
 
     it "can't cast an invalid value" do
-      result = Time::Lucky._parse_attribute("oh no")
+      result = Time._parse_attribute("oh no")
 
       result.should be_a(Avram::Type::FailedCast)
     end
