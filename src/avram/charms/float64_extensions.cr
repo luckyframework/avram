@@ -5,51 +5,51 @@ struct Float64
 
   module Lucky
     alias ColumnType = Float64
-    include Avram::Type
+    extend Avram::Type
 
-    def from_db!(value : Float64)
+    def self.from_db!(value : Float64)
       value
     end
 
-    def from_db!(value : PG::Numeric)
+    def self.from_db!(value : PG::Numeric)
       value.to_f
     end
 
-    def parse(value : Float64)
-      SuccessfulCast(Float64).new(value)
+    def self.parse(value : Float64)
+     Avram::Type::SuccessfulCast(Float64).new(value)
     end
 
-    def parse(values : Array(Float64))
-      SuccessfulCast(Array(Float64)).new values
+    def self.parse(values : Array(Float64))
+     Avram::Type::SuccessfulCast(Array(Float64)).new values
     end
 
-    def parse(value : PG::Numeric)
-      SuccessfulCast(Float64).new(value.to_f)
+    def self.parse(value : PG::Numeric)
+     Avram::Type::SuccessfulCast(Float64).new(value.to_f)
     end
 
-    def parse(values : Array(PG::Numeric))
-      SuccessfulCast(Array(Float64)).new values.map(&.to_f)
+    def self.parse(values : Array(PG::Numeric))
+     Avram::Type::SuccessfulCast(Array(Float64)).new values.map(&.to_f)
     end
 
-    def parse(value : String)
-      SuccessfulCast(Float64).new value.to_f64
+    def self.parse(value : String)
+     Avram::Type::SuccessfulCast(Float64).new value.to_f64
     rescue ArgumentError
-      FailedCast.new
+     Avram::Type::FailedCast.new
     end
 
-    def parse(value : Int32)
-      SuccessfulCast(Float64).new value.to_f64
+    def self.parse(value : Int32)
+     Avram::Type::SuccessfulCast(Float64).new value.to_f64
     end
 
-    def parse(value : Int64)
-      SuccessfulCast(Float64).new value.to_f64
+    def self.parse(value : Int64)
+     Avram::Type::SuccessfulCast(Float64).new value.to_f64
     end
 
-    def to_db(value : Float64)
+    def self.to_db(value : Float64)
       value.to_s
     end
 
-    def to_db(values : Array(Float64))
+    def self.to_db(values : Array(Float64))
       PQ::Param.encode_array(values)
     end
 

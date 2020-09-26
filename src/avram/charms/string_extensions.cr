@@ -5,21 +5,21 @@ class String
 
   module Lucky
     alias ColumnType = String
-    include Avram::Type
+    extend Avram::Type
 
-    def parse(value : String)
-      SuccessfulCast(String).new(value)
+    def self.parse(value : String)
+     Avram::Type::SuccessfulCast(String).new(value)
     end
 
-    def parse(values : Array(String))
-      SuccessfulCast(Array(String)).new(values)
+    def self.parse(values : Array(String))
+     Avram::Type::SuccessfulCast(Array(String)).new(values)
     end
 
-    def to_db(value : String)
+    def self.to_db(value : String)
       value
     end
 
-    def to_db(values : Array(String))
+    def self.to_db(values : Array(String))
       PQ::Param.encode_array(values)
     end
 

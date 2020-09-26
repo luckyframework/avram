@@ -5,31 +5,31 @@ struct Bool
 
   module Lucky
     alias ColumnType = Bool
-    include Avram::Type
+    extend Avram::Type
 
-    def parse(value : String)
+    def self.parse(value : String)
       if %w(true 1).includes? value
-        SuccessfulCast(Bool).new true
+       Avram::Type::SuccessfulCast(Bool).new true
       elsif %w(false 0).includes? value
-        SuccessfulCast(Bool).new false
+       Avram::Type::SuccessfulCast(Bool).new false
       else
-        FailedCast.new
+       Avram::Type::FailedCast.new
       end
     end
 
-    def parse(value : Bool)
-      SuccessfulCast(Bool).new value
+    def self.parse(value : Bool)
+     Avram::Type::SuccessfulCast(Bool).new value
     end
 
-    def parse(values : Array(Bool))
-      SuccessfulCast(Array(Bool)).new values
+    def self.parse(values : Array(Bool))
+     Avram::Type::SuccessfulCast(Array(Bool)).new values
     end
 
-    def to_db(value : Bool)
+    def self.to_db(value : Bool)
       value.to_s
     end
 
-    def to_db(values : Array(Bool))
+    def self.to_db(values : Array(Bool))
       PQ::Param.encode_array(values)
     end
 

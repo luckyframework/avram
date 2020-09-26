@@ -28,29 +28,29 @@ macro avram_enum(enum_name, &block)
 
     module Lucky
       alias ColumnType = Int32
-      include Avram::Type
+      extend Avram::Type
 
-      def from_db!(value : Int32)
+      def self.from_db!(value : Int32)
         {{ enum_name }}.new(value)
       end
 
-      def parse(value : Avram{{ enum_name }})
-        SuccessfulCast({{ enum_name }}).new(value)
+      def self.parse(value : Avram{{ enum_name }})
+       Avram::Type::SuccessfulCast({{ enum_name }}).new(value)
       end
 
-      def parse(value : String)
-        SuccessfulCast({{ enum_name }}).new({{ enum_name }}.new(value.to_i))
+      def self.parse(value : String)
+       Avram::Type::SuccessfulCast({{ enum_name }}).new({{ enum_name }}.new(value.to_i))
       end
 
-      def parse(value : Int32)
-        SuccessfulCast({{ enum_name }}).new({{ enum_name }}.new(value))
+      def self.parse(value : Int32)
+       Avram::Type::SuccessfulCast({{ enum_name }}).new({{ enum_name }}.new(value))
       end
 
-      def to_db(value : Int32)
+      def self.to_db(value : Int32)
         value.to_s
       end
 
-      def to_db(value : {{ enum_name }})
+      def self.to_db(value : {{ enum_name }})
         value.value.to_s
       end
 

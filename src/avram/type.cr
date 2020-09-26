@@ -1,28 +1,24 @@
 module Avram::Type
-  macro included
-    extend self
-  end
-
   def from_db!(value)
     parse!(value)
   end
 
   def parse(value : Nil)
-    SuccessfulCast(Nil).new(nil)
+    Avram::Type::SuccessfulCast(Nil).new(nil)
   end
 
   def parse(values : Array(String))
     casts = values.map { |value| parse(value) }
-    if casts.all?(&.is_a?(SuccessfulCast))
-      values = casts.map { |c| c.as(SuccessfulCast).value }
+    if casts.all?(&.is_a?(Avram::Type::SuccessfulCast))
+      values = casts.map { |c| c.as(Avram::Type::SuccessfulCast).value }
       parse(values)
     else
-      FailedCast.new
+     Avram::Type::FailedCast.new
     end
   end
 
   def parse!(value)
-    parse(value).as(SuccessfulCast).value
+    parse(value).as(Avram::Type::SuccessfulCast).value
   end
 
   def to_db(value : Nil)

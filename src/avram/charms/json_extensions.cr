@@ -5,21 +5,21 @@ struct JSON::Any
 
   module Lucky
     alias ColumnType = JSON::Any
-    include Avram::Type
+    extend Avram::Type
 
-    def from_db!(value : JSON::Any)
+    def self.from_db!(value : JSON::Any)
       value
     end
 
-    def parse(value : JSON::Any)
-      SuccessfulCast(JSON::Any).new value
+    def self.parse(value : JSON::Any)
+     Avram::Type::SuccessfulCast(JSON::Any).new value
     end
 
-    def parse(value)
-      SuccessfulCast(JSON::Any).new JSON.parse(value.to_json)
+    def self.parse(value)
+     Avram::Type::SuccessfulCast(JSON::Any).new JSON.parse(value.to_json)
     end
 
-    def to_db(value)
+    def self.to_db(value)
       value.to_json
     end
 

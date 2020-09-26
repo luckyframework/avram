@@ -7,18 +7,18 @@ module Avram::Uploadable
   abstract def blank? : Bool
 
   module Lucky
-    include Avram::Type
+    extend Avram::Type
 
-    def parse(value : Avram::Uploadable)
-      SuccessfulCast(Avram::Uploadable).new(value)
+    def self.parse(value : Avram::Uploadable)
+     Avram::Type::SuccessfulCast(Avram::Uploadable).new(value)
     end
 
-    def parse(values : Array(Avram::Uploadable))
-      SuccessfulCast(Array(Avram::Uploadable)).new(values)
+    def self.parse(values : Array(Avram::Uploadable))
+     Avram::Type::SuccessfulCast(Array(Avram::Uploadable)).new(values)
     end
 
-    def parse(value : String?)
-      FailedCast.new
+    def self.parse(value : String?)
+     Avram::Type::FailedCast.new
     end
   end
 end

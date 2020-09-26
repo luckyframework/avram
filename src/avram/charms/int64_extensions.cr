@@ -5,35 +5,35 @@ struct Int64
 
   module Lucky
     alias ColumnType = Int64
-    include Avram::Type
+    extend Avram::Type
 
-    def from_db!(value : Int64)
+    def self.from_db!(value : Int64)
       value
     end
 
-    def parse(value : Int64)
-      SuccessfulCast(Int64).new(value)
+    def self.parse(value : Int64)
+     Avram::Type::SuccessfulCast(Int64).new(value)
     end
 
-    def parse(values : Array(Int64))
-      SuccessfulCast(Array(Int64)).new values
+    def self.parse(values : Array(Int64))
+     Avram::Type::SuccessfulCast(Array(Int64)).new values
     end
 
-    def parse(value : String)
-      SuccessfulCast(Int64).new value.to_i64
+    def self.parse(value : String)
+     Avram::Type::SuccessfulCast(Int64).new value.to_i64
     rescue ArgumentError
-      FailedCast.new
+     Avram::Type::FailedCast.new
     end
 
-    def parse(value : Int32)
-      SuccessfulCast(Int64).new value.to_i64
+    def self.parse(value : Int32)
+     Avram::Type::SuccessfulCast(Int64).new value.to_i64
     end
 
-    def to_db(value : Int64)
+    def self.to_db(value : Int64)
       value.to_s
     end
 
-    def to_db(values : Array(Int64))
+    def self.to_db(values : Array(Int64))
       PQ::Param.encode_array(values)
     end
 

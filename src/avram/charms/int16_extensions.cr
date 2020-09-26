@@ -5,37 +5,37 @@ struct Int16
 
   module Lucky
     alias ColumnType = Int16
-    include Avram::Type
+    extend Avram::Type
 
-    def from_db!(value : Int16)
+    def self.from_db!(value : Int16)
       value
     end
 
-    def parse(value : Int16)
-      SuccessfulCast(Int16).new(value)
+    def self.parse(value : Int16)
+     Avram::Type::SuccessfulCast(Int16).new(value)
     end
 
-    def parse(values : Array(Int16))
-      SuccessfulCast(Array(Int16)).new values
+    def self.parse(values : Array(Int16))
+     Avram::Type::SuccessfulCast(Array(Int16)).new values
     end
 
-    def parse(value : String)
-      SuccessfulCast(Int16).new value.to_i16
+    def self.parse(value : String)
+     Avram::Type::SuccessfulCast(Int16).new value.to_i16
     rescue ArgumentError
-      FailedCast.new
+     Avram::Type::FailedCast.new
     end
 
-    def parse(value : Int32)
-      SuccessfulCast(Int16).new value.to_i16
+    def self.parse(value : Int32)
+     Avram::Type::SuccessfulCast(Int16).new value.to_i16
     rescue OverflowError
-      FailedCast.new
+     Avram::Type::FailedCast.new
     end
 
-    def to_db(value : Int16)
+    def self.to_db(value : Int16)
       value.to_s
     end
 
-    def to_db(values : Array(Int16))
+    def self.to_db(values : Array(Int16))
       PQ::Param.encode_array(values)
     end
 
