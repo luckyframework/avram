@@ -18,11 +18,11 @@ class CustomEmail
     alias ColumnType = String
     extend Avram::Type
 
-    def self.parse(value : CustomEmail)
+    def self._parse_attribute(value : CustomEmail)
       Avram::Type::SuccessfulCast(CustomEmail).new(value)
     end
 
-    def self.parse(value : String)
+    def self._parse_attribute(value : String)
       Avram::Type::SuccessfulCast(CustomEmail).new(CustomEmail.new(value))
     end
 

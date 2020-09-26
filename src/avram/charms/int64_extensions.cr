@@ -11,21 +11,21 @@ struct Int64
       value
     end
 
-    def self.parse(value : Int64)
+    def self._parse_attribute(value : Int64)
      Avram::Type::SuccessfulCast(Int64).new(value)
     end
 
-    def self.parse(values : Array(Int64))
+    def self._parse_attribute(values : Array(Int64))
      Avram::Type::SuccessfulCast(Array(Int64)).new values
     end
 
-    def self.parse(value : String)
+    def self._parse_attribute(value : String)
      Avram::Type::SuccessfulCast(Int64).new value.to_i64
     rescue ArgumentError
      Avram::Type::FailedCast.new
     end
 
-    def self.parse(value : Int32)
+    def self._parse_attribute(value : Int32)
      Avram::Type::SuccessfulCast(Int64).new value.to_i64
     end
 

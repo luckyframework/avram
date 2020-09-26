@@ -34,15 +34,15 @@ macro avram_enum(enum_name, &block)
         {{ enum_name }}.new(value)
       end
 
-      def self.parse(value : Avram{{ enum_name }})
+      def self._parse_attribute(value : Avram{{ enum_name }})
        Avram::Type::SuccessfulCast({{ enum_name }}).new(value)
       end
 
-      def self.parse(value : String)
+      def self._parse_attribute(value : String)
        Avram::Type::SuccessfulCast({{ enum_name }}).new({{ enum_name }}.new(value.to_i))
       end
 
-      def self.parse(value : Int32)
+      def self._parse_attribute(value : Int32)
        Avram::Type::SuccessfulCast({{ enum_name }}).new({{ enum_name }}.new(value))
       end
 

@@ -9,15 +9,15 @@ module Avram::Uploadable
   module Lucky
     extend Avram::Type
 
-    def self.parse(value : Avram::Uploadable)
+    def self._parse_attribute(value : Avram::Uploadable)
      Avram::Type::SuccessfulCast(Avram::Uploadable).new(value)
     end
 
-    def self.parse(values : Array(Avram::Uploadable))
+    def self._parse_attribute(values : Array(Avram::Uploadable))
      Avram::Type::SuccessfulCast(Array(Avram::Uploadable)).new(values)
     end
 
-    def self.parse(value : String?)
+    def self._parse_attribute(value : String?)
      Avram::Type::FailedCast.new
     end
   end

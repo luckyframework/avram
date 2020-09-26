@@ -7,15 +7,15 @@ struct UUID
     alias ColumnType = String
     extend Avram::Type
 
-    def self.parse(value : UUID)
+    def self._parse_attribute(value : UUID)
      Avram::Type::SuccessfulCast(UUID).new(value)
     end
 
-    def self.parse(values : Array(UUID))
+    def self._parse_attribute(values : Array(UUID))
      Avram::Type::SuccessfulCast(Array(UUID)).new values
     end
 
-    def self.parse(value : String)
+    def self._parse_attribute(value : String)
      Avram::Type::SuccessfulCast(UUID).new(UUID.new(value))
     rescue
      Avram::Type::FailedCast.new

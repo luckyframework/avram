@@ -22,7 +22,7 @@ struct Time
       value
     end
 
-    def self.parse(value : String) : Avram::Type::SuccessfulCast(Time) |Avram::Type::FailedCast
+    def self._parse_attribute(value : String) : Avram::Type::SuccessfulCast(Time) |Avram::Type::FailedCast
       # Prefer user defined string formats
       try_parsing_with_string_formats(value) ||
         # Then try default formats
@@ -55,11 +55,11 @@ struct Time
       end
     end
 
-    def self.parse(value : Time)
+    def self._parse_attribute(value : Time)
      Avram::Type::SuccessfulCast(Time).new value
     end
 
-    def self.parse(values : Array(Time))
+    def self._parse_attribute(values : Array(Time))
      Avram::Type::SuccessfulCast(Array(Time)).new values
     end
 

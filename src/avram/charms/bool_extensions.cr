@@ -7,7 +7,7 @@ struct Bool
     alias ColumnType = Bool
     extend Avram::Type
 
-    def self.parse(value : String)
+    def self._parse_attribute(value : String)
       if %w(true 1).includes? value
        Avram::Type::SuccessfulCast(Bool).new true
       elsif %w(false 0).includes? value
@@ -17,11 +17,11 @@ struct Bool
       end
     end
 
-    def self.parse(value : Bool)
+    def self._parse_attribute(value : Bool)
      Avram::Type::SuccessfulCast(Bool).new value
     end
 
-    def self.parse(values : Array(Bool))
+    def self._parse_attribute(values : Array(Bool))
      Avram::Type::SuccessfulCast(Array(Bool)).new values
     end
 

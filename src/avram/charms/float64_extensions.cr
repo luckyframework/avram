@@ -15,33 +15,33 @@ struct Float64
       value.to_f
     end
 
-    def self.parse(value : Float64)
+    def self._parse_attribute(value : Float64)
      Avram::Type::SuccessfulCast(Float64).new(value)
     end
 
-    def self.parse(values : Array(Float64))
+    def self._parse_attribute(values : Array(Float64))
      Avram::Type::SuccessfulCast(Array(Float64)).new values
     end
 
-    def self.parse(value : PG::Numeric)
+    def self._parse_attribute(value : PG::Numeric)
      Avram::Type::SuccessfulCast(Float64).new(value.to_f)
     end
 
-    def self.parse(values : Array(PG::Numeric))
+    def self._parse_attribute(values : Array(PG::Numeric))
      Avram::Type::SuccessfulCast(Array(Float64)).new values.map(&.to_f)
     end
 
-    def self.parse(value : String)
+    def self._parse_attribute(value : String)
      Avram::Type::SuccessfulCast(Float64).new value.to_f64
     rescue ArgumentError
      Avram::Type::FailedCast.new
     end
 
-    def self.parse(value : Int32)
+    def self._parse_attribute(value : Int32)
      Avram::Type::SuccessfulCast(Float64).new value.to_f64
     end
 
-    def self.parse(value : Int64)
+    def self._parse_attribute(value : Int64)
      Avram::Type::SuccessfulCast(Float64).new value.to_f64
     end
 

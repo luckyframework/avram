@@ -11,23 +11,23 @@ struct Int32
       value
     end
 
-    def self.parse(value : String)
+    def self._parse_attribute(value : String)
      Avram::Type::SuccessfulCast(Int32).new value.to_i
     rescue ArgumentError
      Avram::Type::FailedCast.new
     end
 
-    def self.parse(value : Int32)
+    def self._parse_attribute(value : Int32)
      Avram::Type::SuccessfulCast(Int32).new(value)
     end
 
-    def self.parse(value : Int64)
+    def self._parse_attribute(value : Int64)
      Avram::Type::SuccessfulCast(Int32).new value.to_i32
     rescue OverflowError
      Avram::Type::FailedCast.new
     end
 
-    def self.parse(values : Array(Int32))
+    def self._parse_attribute(values : Array(Int32))
      Avram::Type::SuccessfulCast(Array(Int32)).new values
     end
 

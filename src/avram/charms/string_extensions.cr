@@ -7,11 +7,11 @@ class String
     alias ColumnType = String
     extend Avram::Type
 
-    def self.parse(value : String)
+    def self._parse_attribute(value : String)
      Avram::Type::SuccessfulCast(String).new(value)
     end
 
-    def self.parse(values : Array(String))
+    def self._parse_attribute(values : Array(String))
      Avram::Type::SuccessfulCast(Array(String)).new(values)
     end
 
