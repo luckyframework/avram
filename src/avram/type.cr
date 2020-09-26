@@ -38,13 +38,11 @@ module Avram::Type
   end
 
   def _to_db!(value : Array(T)) forall T
-    parsed_value = _parse_attribute!(value)
-    Array._to_db(parsed_value)
+    Array._to_db(_parse_attribute!(value))
   end
 
   def _to_db!(value)
-    parsed_value = _parse_attribute!(value)
-    _to_db(parsed_value)
+    _to_db(_parse_attribute!(value))
   end
 
   class SuccessfulCast(T)
