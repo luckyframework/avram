@@ -11,14 +11,6 @@ struct Bool
     end
   end
 
-  def self._parse_attribute(value : Bool)
-    Avram::Type::SuccessfulCast(Bool).new value
-  end
-
-  def self._parse_attribute(values : Array(Bool))
-    Avram::Type::SuccessfulCast(Array(Bool)).new values
-  end
-
   def self._to_db(value : Bool)
     value.to_s
   end

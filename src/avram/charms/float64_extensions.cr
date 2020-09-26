@@ -9,14 +9,6 @@ struct Float64
     value.to_f
   end
 
-  def self._parse_attribute(value : Float64)
-    Avram::Type::SuccessfulCast(Float64).new(value)
-  end
-
-  def self._parse_attribute(values : Array(Float64))
-    Avram::Type::SuccessfulCast(Array(Float64)).new values
-  end
-
   def self._parse_attribute(value : PG::Numeric)
     Avram::Type::SuccessfulCast(Float64).new(value.to_f)
   end

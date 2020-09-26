@@ -1,10 +1,6 @@
 class CustomEmail
   extend Avram::Type
 
-  def self._parse_attribute(value : CustomEmail)
-    Avram::Type::SuccessfulCast(CustomEmail).new(value)
-  end
-
   def self._parse_attribute(value : String)
     Avram::Type::SuccessfulCast(CustomEmail).new(CustomEmail.new(value))
   end

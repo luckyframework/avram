@@ -49,14 +49,6 @@ struct Time
     end
   end
 
-  def self._parse_attribute(value : Time)
-    Avram::Type::SuccessfulCast(Time).new value
-  end
-
-  def self._parse_attribute(values : Array(Time))
-    Avram::Type::SuccessfulCast(Array(Time)).new values
-  end
-
   def self._to_db(value : Time)
     value.to_s
   end

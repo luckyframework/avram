@@ -5,10 +5,6 @@ struct JSON::Any
     value
   end
 
-  def self._parse_attribute(value : JSON::Any)
-    Avram::Type::SuccessfulCast(JSON::Any).new value
-  end
-
   def self._parse_attribute(value)
     Avram::Type::SuccessfulCast(JSON::Any).new JSON.parse(value.to_json)
   end

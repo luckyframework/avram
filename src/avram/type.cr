@@ -7,6 +7,14 @@ module Avram::Type
     Avram::Type::SuccessfulCast(Nil).new(nil)
   end
 
+  def _parse_attribute(value : self)
+    Avram::Type::SuccessfulCast(self).new(value)
+  end
+
+  def _parse_attribute(values : Array(self))
+    Avram::Type::SuccessfulCast(Array(self)).new(values)
+  end
+
   def _parse_attribute(values : Array(String))
     casts = values.map { |value| _parse_attribute(value) }
     if casts.all?(&.is_a?(Avram::Type::SuccessfulCast))
