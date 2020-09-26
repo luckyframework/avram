@@ -61,10 +61,6 @@ struct Time
     value.to_s
   end
 
-  def self.adapter
-    self
-  end
-
   module Lucky
     alias ColumnType = Time
 

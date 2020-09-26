@@ -30,10 +30,6 @@ macro avram_enum(enum_name, &block)
       value.value.to_s
     end
 
-    def self.adapter
-      self
-    end
-
     getter :enum
 
     # You may need to prefix with {{ @type }}

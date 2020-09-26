@@ -47,10 +47,6 @@ struct Float64
     PQ::Param.encode_array(values)
   end
 
-  def self.adapter
-    self
-  end
-
   module Lucky
     alias ColumnType = Float64
 

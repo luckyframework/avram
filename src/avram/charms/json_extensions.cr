@@ -17,10 +17,6 @@ struct JSON::Any
     value.to_json
   end
 
-  def self.adapter
-    self
-  end
-
   module Lucky
     alias ColumnType = JSON::Any
 

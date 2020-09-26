@@ -1,4 +1,8 @@
 module Avram::Type
+  def adapter
+    self
+  end
+
   def _from_db!(value)
     _parse_attribute!(value)
   end
