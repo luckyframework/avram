@@ -12,10 +12,6 @@ struct Time
     Time::Format::ISO_8601_TIME,
   ]
 
-  def self._from_db!(value : Time)
-    value
-  end
-
   def self._parse_attribute(value : String) : Avram::Type::SuccessfulCast(Time) | Avram::Type::FailedCast
     # Prefer user defined string formats
     _try_parsing_with_string_formats(value) ||

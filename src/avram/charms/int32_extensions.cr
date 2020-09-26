@@ -1,10 +1,6 @@
 struct Int32
   extend Avram::Type
 
-  def self._from_db!(value : Int32)
-    value
-  end
-
   def self._parse_attribute(value : String)
     Avram::Type::SuccessfulCast(Int32).new value.to_i
   rescue ArgumentError

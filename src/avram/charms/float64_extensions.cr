@@ -1,10 +1,6 @@
 struct Float64
   extend Avram::Type
 
-  def self._from_db!(value : Float64)
-    value
-  end
-
   def self._from_db!(value : PG::Numeric)
     value.to_f
   end
