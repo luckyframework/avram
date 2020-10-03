@@ -23,11 +23,11 @@ macro avram_enum(enum_name, &block)
     def initialize(enum_value : String)
       @enum = Avram{{ enum_name }}.from_value(enum_value.to_i)
     end
-    
+
     def to_s
       @enum.to_s
     end
-    
+
     def to_i
       @enum.to_i
     end
