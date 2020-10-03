@@ -25,7 +25,7 @@ describe "Enum" do
     issue.status.opened?.should eq(true)
     issue.status.value.should eq(0)
   end
-  
+
   it "access enum to_s and to_i" do
     issue = IssueBox.create
 
