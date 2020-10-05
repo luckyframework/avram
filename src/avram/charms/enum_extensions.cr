@@ -23,7 +23,7 @@ macro avram_enum(enum_name, &block)
     def initialize(enum_value : String)
       @enum = Avram{{ enum_name }}.from_value(enum_value.to_i)
     end
-    
+
     delegate to_s, to_i, to: @enum
 
     forward_missing_to @enum
