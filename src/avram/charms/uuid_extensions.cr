@@ -4,7 +4,7 @@ struct UUID
   end
 
   module Lucky
-    alias ColumnType = String
+    alias ColumnType = UUID
     include Avram::Type
 
     def parse(value : UUID)
