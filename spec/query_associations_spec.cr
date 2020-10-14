@@ -1,5 +1,11 @@
 require "./spec_helper"
 
+class LineItemProductQuery < LineItemProduct::BaseQuery
+end
+
+class ProductQuery < Product::BaseQuery
+end
+
 # Ensure it works with inherited query classes
 class CommentQuery < Comment::BaseQuery
   def body_eq(value)
@@ -139,5 +145,35 @@ describe "Query associations" do
 
     staff = NamedSpaced::Staff::BaseQuery.new
     staff.to_sql[0].should contain "named_spaced_staffs"
+  end
+
+  it "handles potential joins over the table queried" do
+    item = LineItemBox.create
+    product = ProductBox.create
+    line_item_product = LineItemProductBox.create &.line_item_id(item.id).product_id(product.id)
+
+    line_item_query = LineItemQuery.new
+      .id(item.id)
+      .where_products(ProductQuery.new.id(product.id))
+    result = LineItemProductQuery.new
+      .where_line_items(line_item_query)
+      .find(line_item_product.id)
+
+    result.should eq(line_item_product)
+  end
+
+  it "handles duplicate joins" do
+    item = LineItemBox.create
+    product = ProductBox.create
+    line_item_product = LineItemProductBox.create &.line_item_id(item.id).product_id(product.id)
+
+    line_item_query = LineItemQuery.new
+      .id(item.id)
+      .where_line_items_products(LineItemProductQuery.new.id(line_item_product.id))
+    result = ProductQuery.new
+      .where_line_items(line_item_query)
+      .find(product.id)
+
+    result.should eq(product)
   end
 end
