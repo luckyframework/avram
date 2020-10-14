@@ -158,15 +158,14 @@ describe Avram::Model do
   describe "models with uuids" do
     it "sets up initializers accepting uuid strings" do
       uuid = UUID.new("a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11")
-      LineItem.new(uuid.to_s, Time.utc, Time.utc, "hello")
+      LineItem.new(uuid, Time.utc, Time.utc, "hello")
     end
 
     it "can be saved" do
-      uuid_regexp = /\w+/
       LineItemBox.create
 
       item = LineItemQuery.new.first
-      item.id.to_s.should match(uuid_regexp)
+      item.id.should be_a UUID
     end
 
     it "can be deleted" do
