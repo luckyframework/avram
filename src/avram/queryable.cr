@@ -104,7 +104,7 @@ module Avram::Queryable(T)
   end
 
   def where(statement : String, *, args bind_vars : Array) : self
-    clone.tap &.query.raw_where(Avram::Where::Raw.new(statement, args: bind_vars))
+    clone.tap &.query.where(Avram::Where::Raw.new(statement, args: bind_vars))
   end
 
   def where(sql_clause : Avram::Where::SqlClause) : self
