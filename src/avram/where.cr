@@ -45,7 +45,7 @@ module Avram::Where
   end
 
   abstract class NullSqlClause < SqlClause
-    def prepare(_placeholder_supplier : Proc(String))
+    def prepare(_placeholder_supplier : Proc(String)) : String
       "#{column} #{operator} NULL"
     end
   end
@@ -179,7 +179,7 @@ module Avram::Where
       NotIn.new(column, value)
     end
 
-    def prepare(placeholder_supplier : Proc(String))
+    def prepare(placeholder_supplier : Proc(String)) : String
       "#{column} #{operator} (#{placeholder_supplier.call})"
     end
   end
@@ -193,7 +193,7 @@ module Avram::Where
       In.new(column, value)
     end
 
-    def prepare(placeholder_supplier : Proc(String))
+    def prepare(placeholder_supplier : Proc(String)) : String
       "#{column} #{operator} (#{placeholder_supplier.call})"
     end
   end
