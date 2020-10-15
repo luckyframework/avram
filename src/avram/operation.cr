@@ -69,7 +69,7 @@ abstract class Avram::Operation
   # value = MyOperation.run!(params)
   # ```
   def self.run!(params : Avram::Paramable, *args, **named_args)
-    run(params, *args, **named_args) do |operation, value|
+    run(params, *args, **named_args) do |_operation, value|
       raise Avram::FailedOperation.new("The operation failed to return a value") unless value
       value
     end
