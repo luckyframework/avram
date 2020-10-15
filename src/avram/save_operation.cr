@@ -1,4 +1,3 @@
-require "./operation"
 require "./database_validations"
 require "./callbacks"
 require "./nested_save_operation"
@@ -7,8 +6,16 @@ require "./define_attribute"
 require "./mark_as_failed"
 require "./param_key_override"
 require "./inherit_column_attributes"
+require "./validations"
+require "./define_attribute"
+require "./save_operation_errors"
+require "./param_key_override"
 
-abstract class Avram::SaveOperation(T) < Avram::Operation
+abstract class Avram::SaveOperation(T)
+  include Avram::DefineAttribute
+  include Avram::Validations
+  include Avram::SaveOperationErrors
+  include Avram::ParamKeyOverride
   include Avram::NeedyInitializerAndSaveMethods
   include Avram::Callbacks
   include Avram::DatabaseValidations(T)
@@ -43,6 +50,13 @@ abstract class Avram::SaveOperation(T) < Avram::Operation
 
   def self.param_key
     T.name.underscore
+  end
+
+  def initialize(@params)
+  end
+
+  def initialize
+    @params = Avram::Params.new
   end
 
   # :nodoc:
