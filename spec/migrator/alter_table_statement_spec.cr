@@ -41,7 +41,7 @@ describe Avram::Migrator::AlterTableStatement do
       ADD updated_at timestamptz,
       ADD future_time timestamptz NOT NULL DEFAULT '#{Time.local.to_utc}',
       ADD new_id uuid NOT NULL DEFAULT '46d9b2f0-0718-4d4c-a5a1-5af81d5b11e0',
-      ADD numbers int[] NOT NULL,
+      ADD numbers int[],
       DROP old_column,
       DROP employee_id;
     SQL

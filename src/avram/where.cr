@@ -1,16 +1,13 @@
 module Avram::Where
-  abstract class SqlClause
-    getter :column
-    getter :value
+  abstract class Condition
+    abstract def prepare(placeholder_supplier : Proc(String)) : String
 
-    def initialize(@column : Symbol | String, @value : String | Array(String) | Array(Int32))
+    def ==(other : Condition)
+      prepare(->{ "unused" }) == other.prepare(->{ "unused" })
     end
 
-    abstract def operator : String
-    abstract def negated : SqlClause
-
-    def prepare(prepared_statement_placeholder : String)
-      "#{column} #{operator} #{prepared_statement_placeholder}"
+    def ==(other)
+      false
     end
 
     def clone
@@ -18,14 +15,38 @@ module Avram::Where
     end
   end
 
-  abstract class NullSqlClause < SqlClause
-    @value = "NULL"
+  abstract class SqlClause < Condition
+    getter column : Symbol | String
 
-    def initialize(@column : Symbol | String)
+    def initialize(@column)
     end
 
-    def prepare
-      "#{column} #{operator} #{@value}"
+    abstract def operator : String
+    abstract def negated : SqlClause
+
+    def prepare(placeholder_supplier : Proc(String)) : String
+      "#{column} #{operator} #{placeholder_supplier.call}"
+    end
+  end
+
+  abstract class ValueHoldingSqlClause < SqlClause
+    getter value : String | Array(String) | Array(Int32)
+
+    def initialize(@column, @value)
+    end
+
+    def ==(other : ValueHoldingSqlClause)
+      (prepare(->{ "unused" }) + value.to_s) == (other.prepare(->{ "unused" }) + other.value.to_s)
+    end
+
+    def ==(other : Condition)
+      false
+    end
+  end
+
+  abstract class NullSqlClause < SqlClause
+    def prepare(_placeholder_supplier : Proc(String)) : String
+      "#{column} #{operator} NULL"
     end
   end
 
@@ -35,7 +56,7 @@ module Avram::Where
     end
 
     def negated : NotNull
-      NotNull.new(@column)
+      NotNull.new(column)
     end
   end
 
@@ -45,139 +66,139 @@ module Avram::Where
     end
 
     def negated : Null
-      Null.new(@column)
+      Null.new(column)
     end
   end
 
-  class Equal < SqlClause
+  class Equal < ValueHoldingSqlClause
     def operator : String
       "="
     end
 
     def negated : NotEqual
-      NotEqual.new(@column, @value)
+      NotEqual.new(column, value)
     end
   end
 
-  class NotEqual < SqlClause
+  class NotEqual < ValueHoldingSqlClause
     def operator : String
       "!="
     end
 
     def negated : Equal
-      Equal.new(@column, @value)
+      Equal.new(column, value)
     end
   end
 
-  class GreaterThan < SqlClause
+  class GreaterThan < ValueHoldingSqlClause
     def operator : String
       ">"
     end
 
     def negated : LessThanOrEqualTo
-      LessThanOrEqualTo.new(@column, @value)
+      LessThanOrEqualTo.new(column, value)
     end
   end
 
-  class GreaterThanOrEqualTo < SqlClause
+  class GreaterThanOrEqualTo < ValueHoldingSqlClause
     def operator : String
       ">="
     end
 
     def negated : LessThan
-      LessThan.new(@column, @value)
+      LessThan.new(column, value)
     end
   end
 
-  class LessThan < SqlClause
+  class LessThan < ValueHoldingSqlClause
     def operator : String
       "<"
     end
 
     def negated : GreaterThanOrEqualTo
-      GreaterThanOrEqualTo.new(@column, @value)
+      GreaterThanOrEqualTo.new(column, value)
     end
   end
 
-  class LessThanOrEqualTo < SqlClause
+  class LessThanOrEqualTo < ValueHoldingSqlClause
     def operator : String
       "<="
     end
 
     def negated : GreaterThan
-      GreaterThan.new(@column, @value)
+      GreaterThan.new(column, value)
     end
   end
 
-  class Like < SqlClause
+  class Like < ValueHoldingSqlClause
     def operator : String
       "LIKE"
     end
 
     def negated : NotLike
-      NotLike.new(@column, @value)
+      NotLike.new(column, value)
     end
   end
 
-  class Ilike < SqlClause
+  class Ilike < ValueHoldingSqlClause
     def operator : String
       "ILIKE"
     end
 
     def negated : NotIlike
-      NotIlike.new(@column, @value)
+      NotIlike.new(column, value)
     end
   end
 
-  class NotLike < SqlClause
+  class NotLike < ValueHoldingSqlClause
     def operator : String
       "NOT LIKE"
     end
 
     def negated : Like
-      Like.new(@column, @value)
+      Like.new(column, value)
     end
   end
 
-  class NotIlike < SqlClause
+  class NotIlike < ValueHoldingSqlClause
     def operator : String
       "NOT ILIKE"
     end
 
     def negated : Ilike
-      Ilike.new(@column, @value)
+      Ilike.new(column, value)
     end
   end
 
-  class In < SqlClause
+  class In < ValueHoldingSqlClause
     def operator : String
       "= ANY"
     end
 
     def negated : NotIn
-      NotIn.new(@column, @value)
+      NotIn.new(column, value)
     end
 
-    def prepare(prepared_statement_placeholder : String)
-      "#{column} #{operator} (#{prepared_statement_placeholder})"
+    def prepare(placeholder_supplier : Proc(String)) : String
+      "#{column} #{operator} (#{placeholder_supplier.call})"
     end
   end
 
-  class NotIn < SqlClause
+  class NotIn < ValueHoldingSqlClause
     def operator : String
       "!= ALL"
     end
 
     def negated : In
-      In.new(@column, @value)
+      In.new(column, value)
     end
 
-    def prepare(prepared_statement_placeholder : String)
-      "#{column} #{operator} (#{prepared_statement_placeholder})"
+    def prepare(placeholder_supplier : Proc(String)) : String
+      "#{column} #{operator} (#{placeholder_supplier.call})"
     end
   end
 
-  class Raw
+  class Raw < Condition
     @clause : String
 
     def self.new(statement : String, *bind_vars)
@@ -189,12 +210,8 @@ module Avram::Where
       @clause = build_clause(statement, bind_vars)
     end
 
-    def to_sql
+    def prepare(_placeholder_supplier : Proc(String)) : String
       @clause
-    end
-
-    def clone
-      self
     end
 
     private def ensure_enough_bind_variables_for!(statement, bind_vars)
