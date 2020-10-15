@@ -13,13 +13,7 @@ module Avram::Callbacks
   # end
   # ```
   macro before_save(method_name)
-    def before_save
-      {% if @type.methods.map(&.name).includes?(:before_save.id) %}
-        previous_def
-      {% else %}
-        super
-      {% end %}
-
+    before_save do
       {{ method_name.id }}
     end
   end
@@ -34,13 +28,7 @@ module Avram::Callbacks
   # end
   # ```
   macro before_run(method_name)
-    def before_run
-      {% if @type.methods.map(&.name).includes?(:before_run.id) %}
-        previous_def
-      {% else %}
-        super
-      {% end %}
-
+    before_run do
       {{ method_name.id }}
     end
   end
@@ -131,13 +119,7 @@ module Avram::Callbacks
   # end
   # ```
   macro after_run(method_name)
-    def after_run(object)
-      {% if @type.methods.map(&.name).includes?(:after_run.id) %}
-        previous_def
-      {% else %}
-        super
-      {% end %}
-
+    after_run do |object|
       {{ method_name.id }}(object)
     end
   end
@@ -167,14 +149,14 @@ module Avram::Callbacks
         ERR
       end
     %}
-    def after_run(object)
+    def after_run(%object)
       {% if @type.methods.map(&.name).includes?(:after_run.id) %}
         previous_def
       {% else %}
         super
       {% end %}
 
-      {{ block.args.first }} = object
+      {{ block.args.first }} = %object
       {{ block.body }}
     end
   end
