@@ -27,7 +27,7 @@ describe "Array" do
   end
 
   it "parses Array(Float64) from Array(String)" do
-    result = Float64::Lucky.parse(["3.1415"])
-    result.value.should eq([3.1415])
+    result = Float64::Lucky.parse!(["3.1415"])
+    result.should eq([3.1415])
   end
 end
