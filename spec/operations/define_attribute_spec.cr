@@ -1,4 +1,4 @@
-require "./spec_helper"
+require "../spec_helper"
 
 private class OperationWithAttributes < Avram::Operation
   param_key :data
