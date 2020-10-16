@@ -271,18 +271,6 @@ module Avram::Callbacks
     end
   end
 
-  {% for removed_callback in [:create, :update] %}
-    # :nodoc:
-    macro after_{{ removed_callback.id }}(method_name)
-      \{% raise "'after_{{removed_callback.id}}' has been removed" %}
-    end
-
-    # :nodoc:
-    macro before_{{ removed_callback.id }}(method_name)
-      \{% raise "'before_{{removed_callback.id}}' has been removed" %}
-    end
-  {% end %}
-
   # :nodoc:
   macro before(callback_method)
     {% raise <<-ERROR
