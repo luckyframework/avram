@@ -13,10 +13,6 @@ module Avram::NeedyInitializerAndSaveMethods
     property {{ type_declaration.var }}
   end
 
-  macro needs(type_declaration, on)
-    {% on.raise "The 'on' option is no longer supported. Please use needs without 'on' instead." %}
-  end
-
   macro inherit_needs
     \{% if !@type.constant(:OPERATION_NEEDS) %}
       OPERATION_NEEDS = [] of Nil
