@@ -214,11 +214,9 @@ abstract class Avram::SaveOperation(T)
     end
   end
 
-  # Runs `before_save` steps,
-  # required validation, then returns `true` if all attributes are valid.
+  # Runs required validation,
+  # then returns `true` if all attributes are valid.
   def valid? : Bool
-    before_save
-
     # These validations must be ran after all `before_save` callbacks have completed
     # in the case that someone has set a required field in a `before_save`. If we run
     # this in a `before_save` ourselves, the ordering would cause this to be ran first.
@@ -314,6 +312,7 @@ abstract class Avram::SaveOperation(T)
   end
 
   def save : Bool
+    before_save
     if valid? && (!persisted? || changes.any?)
       transaction_committed = database.transaction do
         insert_or_update
