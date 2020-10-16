@@ -1,4 +1,4 @@
-require "./spec_helper"
+require "../spec_helper"
 
 private class SaveUser < User::SaveOperation
   # There was a bug where adding a non-database attribute would make it so
@@ -13,6 +13,14 @@ private class SaveUser < User::SaveOperation
 
   def prepare
     validate_required name, joined_at, age
+  end
+end
+
+private class SaveUserWithFalseValueValidations < User::SaveOperation
+  permit_columns :nickname, :available_for_hire
+
+  before_save do
+    validate_required nickname, available_for_hire
   end
 end
 
@@ -49,6 +57,14 @@ private class ParamKeySaveOperation < ValueColumnModel::SaveOperation
   param_key :custom_param
 end
 
+private class OverrideDefaults < ModelWithDefaultValues::SaveOperation
+  permit_columns :greeting, :drafted_at, :published_at, :admin, :age, :money
+end
+
+private class SavePost < Post::SaveOperation
+  permit_columns :title, :published_at
+end
+
 describe "Avram::SaveOperation" do
   it "allows overriding the param_key" do
     ParamKeySaveOperation.param_key.should eq "custom_param"
@@ -71,33 +87,55 @@ describe "Avram::SaveOperation" do
     bucket.names.should eq([] of String)
   end
 
-  it "set params if passed in" do
-    now = Time.utc.at_beginning_of_minute
-    user = SaveUser.create!(name: "Dan", age: 34, joined_at: now)
-    user.name.should eq "Dan"
-    user.age.should eq 34
-    user.joined_at.should eq now
+  it "treats empty strings as nil for Time? types instead of failing to parse" do
+    avram_params = Avram::Params.new({"title" => "Test", "published_at" => ""})
 
-    SaveUser.create(name: "Dan", age: 34, joined_at: now) do |operation, user|
-      user = user.not_nil!
+    post = SavePost.create!(avram_params)
+
+    post.published_at.should eq nil
+    post.title.should eq "Test"
+  end
+
+  describe ".create" do
+    it "sets params if passed in" do
+      now = Time.utc.at_beginning_of_minute
+      user = SaveUser.create!(name: "Dan", age: 34, joined_at: now)
       user.name.should eq "Dan"
       user.age.should eq 34
       user.joined_at.should eq now
     end
 
-    user = UserBox.new.name("New").age(20).joined_at(Time.utc).create
-    joined_at = 1.day.ago.at_beginning_of_minute.to_utc
-    SaveUser.update(user, name: "New", age: 20, joined_at: joined_at) do |operation, user|
+    it "passes params to the block" do
+      now = Time.utc.at_beginning_of_minute
+      SaveUser.create(name: "Dan", age: 34, joined_at: now) do |_operation, user|
+        user = user.not_nil!
+        user.name.should eq "Dan"
+        user.age.should eq 34
+        user.joined_at.should eq now
+      end
+    end
+  end
+
+  describe ".update" do
+    it "sets params if passed it" do
+      joined_at = 1.day.ago.at_beginning_of_minute.to_utc
+      user = UserBox.new.name("New").age(20).joined_at(Time.utc).create
+      user = SaveUser.update!(user, name: "New", age: 20, joined_at: joined_at)
       user.name.should eq "New"
       user.age.should eq 20
       user.joined_at.should eq joined_at
     end
 
-    user = UserBox.new.name("New").age(20).joined_at(Time.utc).create
-    user = SaveUser.update!(user, name: "New", age: 20, joined_at: joined_at)
-    user.name.should eq "New"
-    user.age.should eq 20
-    user.joined_at.should eq joined_at
+    it "passes params to the block" do
+      user_box = UserBox.new.name("New").age(20).joined_at(Time.utc).create
+      joined_at = 1.day.ago.at_beginning_of_minute.to_utc
+
+      SaveUser.update(user_box, name: "New", age: 20, joined_at: joined_at) do |_operation, user|
+        user.name.should eq "New"
+        user.age.should eq 20
+        user.joined_at.should eq joined_at
+      end
+    end
   end
 
   it "automatically runs validations for required attributes" do
@@ -355,6 +393,57 @@ describe "Avram::SaveOperation" do
         end
       end
     end
+
+    context "when there's default values in the table" do
+      it "saves with all of the default values" do
+        ModelWithDefaultValues::SaveOperation.create do |_operation, record|
+          record.should_not eq nil
+          r = record.not_nil!
+          r.greeting.should eq "Hello there!"
+          r.admin.should eq false
+          r.age.should eq 30
+          r.money.should eq 3.5
+          r.published_at.should be_a Time
+          r.drafted_at.should be_a Time
+        end
+      end
+
+      it "allows you to override the default values" do
+        ModelWithDefaultValues::SaveOperation.create(greeting: "A fancy hat") do |_operation, record|
+          record.should_not eq nil
+          r = record.not_nil!
+          r.greeting.should eq "A fancy hat"
+          r.admin.should eq false
+          r.age.should eq 30
+          r.money.should eq 3.5
+          r.published_at.should be_a Time
+          r.drafted_at.should be_a Time
+        end
+      end
+
+      it "overrides all of the defaults through params" do
+        published_at = 1.day.ago.to_utc.at_beginning_of_day
+        drafted_at = 1.week.ago.to_utc.at_beginning_of_day
+        params = Avram::Params.new({"greeting" => "Hi", "admin" => "true", "age" => "4", "money" => "100.23", "published_at" => published_at.to_s, "drafted_at" => drafted_at.to_s})
+        OverrideDefaults.create(params) do |_operation, record|
+          record.should_not eq nil
+          r = record.not_nil!
+          r.greeting.should eq "Hi"
+          r.admin.should eq true
+          r.age.should eq 4
+          r.money.should eq 100.23
+          r.published_at.should eq published_at
+          r.drafted_at.should eq drafted_at
+        end
+      end
+
+      it "updates with a record that has defaults" do
+        model = ModelWithDefaultValues::SaveOperation.create!
+        record = OverrideDefaults.update!(model, greeting: "Hi")
+        record.greeting.should eq "Hi"
+        record.admin.should eq false
+      end
+    end
   end
 
   describe ".create!" do
@@ -404,7 +493,7 @@ describe "Avram::SaveOperation" do
       UserBox.new.name("Old Name").create
       user = UserQuery.new.first
       params = Avram::Params.new({} of String => String)
-      SaveUser.update user, with: params do |operation, record|
+      SaveUser.update user, with: params do |operation, _record|
         operation.saved?.should be_true
       end
     end
@@ -476,6 +565,20 @@ describe "Avram::SaveOperation" do
         SaveLineItem.update(line_item, Avram::Params.new({"name" => "Another pair of shoes"})) do |operation, record|
           operation.saved?.should be_true
           record.id.should eq line_item.id
+        end
+      end
+    end
+
+    context "when the default is false and the field is required" do
+      it "is valid since 'false' is a valid Boolean value" do
+        user = UserBox.create &.nickname("oopsie").available_for_hire(false)
+        params = Avram::Params.new({"nickname" => "falsey mcfalserson"})
+        SaveUserWithFalseValueValidations.update(user, params) do |operation, record|
+          record.should_not eq nil
+          r = record.not_nil!
+          operation.valid?.should be_true
+          r.nickname.should eq "falsey mcfalserson"
+          r.available_for_hire.should eq false
         end
       end
     end

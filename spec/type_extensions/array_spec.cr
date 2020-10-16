@@ -25,4 +25,9 @@ describe "Array" do
     result = Int64::Lucky.parse!(["1000"])
     result.should eq([1000_i64])
   end
+
+  it "parses Array(Float64) from Array(String)" do
+    result = Float64::Lucky.parse(["3.1415"])
+    result.value.should eq([3.1415])
+  end
 end

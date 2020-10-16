@@ -1,4 +1,4 @@
-require "./spec_helper"
+require "../spec_helper"
 
 private class SaveBusiness < Business::SaveOperation
   permit_columns name
@@ -45,6 +45,14 @@ private class NestedParams
   end
 
   def get(key)
+    raise "Not implemented"
+  end
+
+  def nested_file?(key)
+    raise "Not implemented"
+  end
+
+  def nested_file(key)
     raise "Not implemented"
   end
 end

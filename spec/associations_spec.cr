@@ -42,10 +42,19 @@ describe Avram::Model do
     it "joins the two associations" do
       tag = TagBox.create
       post = PostBox.create
-      _different_tag = TagBox.create
+      TagBox.create
       TaggingBox.new.tag_id(tag.id).post_id(post.id).create
 
       post.tags.should eq [tag]
+    end
+
+    it "count through associations" do
+      tag = TagBox.create
+      post = PostBox.create
+      TagBox.create
+      TaggingBox.new.tag_id(tag.id).post_id(post.id).create
+
+      post.tags_count.should eq 1
     end
   end
 
@@ -102,6 +111,13 @@ describe Avram::Model do
         scan = ScanBox.new.line_item_id(item.id).create
 
         LineItemQuery.new.find(item.id).scans.should eq [scan]
+      end
+
+      it "gets amount of records" do
+        item = LineItemBox.create
+        ScanBox.new.line_item_id(item.id).create
+
+        item.scans_count.should eq 1
       end
     end
 

@@ -17,8 +17,8 @@ describe "Time column type" do
         space_separated_yaml: "2001-12-14 21:59:43.10 -5",
         http_date:            "Sun, 14 Feb 2016 21:00:00 GMT",
       }
-      times.each do |_format, time|
-        result = Time::Lucky.parse(time)
+      times.each do |_format, item|
+        result = Time::Lucky.parse(item)
         result.should be_a(Avram::Type::SuccessfulCast(Time))
       end
     end

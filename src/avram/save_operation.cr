@@ -1,4 +1,3 @@
-require "./operation"
 require "./database_validations"
 require "./callbacks"
 require "./nested_save_operation"
@@ -7,11 +6,19 @@ require "./define_attribute"
 require "./mark_as_failed"
 require "./param_key_override"
 require "./inherit_column_attributes"
+require "./validations"
+require "./define_attribute"
+require "./save_operation_errors"
+require "./param_key_override"
 
-abstract class Avram::SaveOperation(T) < Avram::Operation
+abstract class Avram::SaveOperation(T)
+  include Avram::DefineAttribute
+  include Avram::Validations
+  include Avram::SaveOperationErrors
+  include Avram::ParamKeyOverride
   include Avram::NeedyInitializerAndSaveMethods
   include Avram::Callbacks
-  include Avram::DatabaseValidations
+  include Avram::DatabaseValidations(T)
   include Avram::NestedSaveOperation
   include Avram::MarkAsFailed
   include Avram::InheritColumnAttributes
@@ -45,13 +52,31 @@ abstract class Avram::SaveOperation(T) < Avram::Operation
     T.name.underscore
   end
 
+  def initialize(@params)
+  end
+
+  def initialize
+    @params = Avram::Params.new
+  end
+
   # :nodoc:
-  def log_failed_save
-    Avram::SaveFailedLog.dexter.warn do
-      {
-        failed_to_save:    self.class.name.to_s,
-        validation_errors: error_messages_as_string,
-      }
+  def published_save_failed_event
+    Avram::Events::SaveFailedEvent.publish(
+      operation_class: self.class.name,
+      attributes: generic_attributes
+    )
+  end
+
+  def generic_attributes
+    attributes.map do |attr|
+      Avram::GenericAttribute.new(
+        name: attr.name,
+        param: attr.param.try(&.to_s),
+        value: attr.value.try(&.to_s),
+        original_value: attr.original_value.try(&.to_s),
+        param_key: attr.param_key,
+        errors: attr.errors
+      )
     end
   end
 
@@ -76,7 +101,7 @@ abstract class Avram::SaveOperation(T) < Avram::Operation
   end
 
   # :nodoc:
-  macro add_column_attributes(primary_key_type, attributes)
+  macro add_column_attributes(attributes)
     {% for attribute in attributes %}
       {% COLUMN_ATTRIBUTES << attribute %}
     {% end %}
@@ -109,11 +134,31 @@ abstract class Avram::SaveOperation(T) < Avram::Operation
       end
 
       private def _{{ attribute[:name] }}
+        record_value = @record.try(&.{{ attribute[:name] }})
+        value = record_value.nil? ? default_value_for_{{ attribute[:name] }} : record_value
+
         @_{{ attribute[:name] }} ||= Avram::Attribute({{ attribute[:type] }}?).new(
           name: :{{ attribute[:name].id }},
           param: permitted_params["{{ attribute[:name] }}"]?,
-          value: @record.try(&.{{ attribute[:name] }}),
+          value: value,
           param_key: self.class.param_key)
+      end
+
+      private def default_value_for_{{ attribute[:name] }}
+        {% if attribute[:value] || attribute[:value] == false %}
+          {% if attribute[:type].is_a?(Generic) %}
+            parse_result = {{ attribute[:type].type_vars.first }}::Lucky.parse([{{ attribute[:value] }}])
+          {% else %}
+            parse_result = {{ attribute[:type] }}::Lucky.parse({{ attribute[:value] }})
+          {% end %}
+          if parse_result.is_a? Avram::Type::SuccessfulCast
+            parse_result.value.as({{ attribute[:type] }})
+          else
+            nil
+          end
+        {% else %}
+          nil
+        {% end %}
       end
 
       def permitted_params
@@ -125,6 +170,12 @@ abstract class Avram::SaveOperation(T) < Avram::Operation
       end
 
       def set_{{ attribute[:name] }}_from_param(_value)
+        # In nilable types, `nil` is ok, and non-nilable types we will get the
+        # "is required" error.
+        if _value.blank?
+          {{ attribute[:name] }}.value = nil
+          return
+        end
         {% if attribute[:type].is_a?(Generic) %}
           # Pass `_value` in as an Array. Currently only single values are supported.
           # TODO: Update this once Lucky params support Arrays natively
@@ -163,11 +214,9 @@ abstract class Avram::SaveOperation(T) < Avram::Operation
     end
   end
 
-  # Runs `before_save` steps,
-  # required validation, then returns `true` if all attributes are valid.
+  # Runs required validation,
+  # then returns `true` if all attributes are valid.
   def valid? : Bool
-    before_save
-
     # These validations must be ran after all `before_save` callbacks have completed
     # in the case that someone has set a required field in a `before_save`. If we run
     # this in a `before_save` ourselves, the ordering would cause this to be ran first.
@@ -263,6 +312,7 @@ abstract class Avram::SaveOperation(T) < Avram::Operation
   end
 
   def save : Bool
+    before_save
     if valid? && (!persisted? || changes.any?)
       transaction_committed = database.transaction do
         insert_or_update
@@ -275,6 +325,10 @@ abstract class Avram::SaveOperation(T) < Avram::Operation
         saved_record = record.not_nil!
         after_commit(saved_record)
         self.save_status = SaveStatus::Saved
+        Avram::Events::SaveSuccessEvent.publish(
+          operation_class: self.class.name,
+          attributes: generic_attributes
+        )
         true
       else
         mark_as_failed
@@ -326,19 +380,15 @@ abstract class Avram::SaveOperation(T) < Avram::Operation
   private def insert : T
     self.created_at.value ||= Time.utc if responds_to?(:created_at)
     self.updated_at.value ||= Time.utc if responds_to?(:updated_at)
-    @record = database.run do |db|
-      db.query insert_sql.statement, args: insert_sql.args do |rs|
-        @record = @@schema_class.from_rs(rs).first
-      end
+    @record = database.query insert_sql.statement, args: insert_sql.args do |rs|
+      @record = @@schema_class.from_rs(rs).first
     end
   end
 
   private def update(id) : T
     self.updated_at.value = Time.utc if responds_to?(:updated_at)
-    @record = database.run do |db|
-      db.query update_query(id).statement_for_update(changes), args: update_query(id).args_for_update(changes) do |rs|
-        @record = @@schema_class.from_rs(rs).first
-      end
+    @record = database.query update_query(id).statement_for_update(changes), args: update_query(id).args_for_update(changes) do |rs|
+      @record = @@schema_class.from_rs(rs).first
     end
   end
 

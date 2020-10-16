@@ -1,0 +1,26 @@
+#!/bin/sh
+
+# Exit if any subcommand fails
+set -e
+
+printf "\nRunning tasks\n\n"
+
+lucky db.drop
+lucky db.create
+lucky db.migrate
+
+# If there were no errors, continue the test
+if [ $# -eq 0 ]
+then
+    # Integration test various tasks
+    printf "\nRolling back to 20180802180356\n"
+    lucky db.rollback_to 20180802180356
+    printf "\nRolling back remainder\n"
+    lucky db.rollback_all
+    lucky db.migrate.one
+    lucky db.migrate
+    lucky db.migrations.status
+    lucky db.reset
+    lucky db.drop
+    lucky db.setup
+fi

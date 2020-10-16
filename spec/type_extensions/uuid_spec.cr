@@ -12,7 +12,6 @@ describe "UUID column type" do
     end
 
     it "casts a string successfully" do
-      uuid = UUID.new("a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11")
       UUID::Lucky.parse("a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11")
         .should be_a(Avram::Type::SuccessfulCast(UUID))
     end

@@ -24,6 +24,6 @@ Finally, don't forget that it is human to make mistakes! We all do. Let’s work
 Thanks to the CocoaPods Code of Conduct, Bundler Code of Conduct, JSConf Code of Conduct, and Contributor Covenant for inspiration and ideas.
 
 ## License
-To the extent possible under law, the thoughtbot team has waived all copyright and related or neighboring rights to thoughtbot Code of Conduct. This work is published from the United States. 
+To the extent possible under law, the thoughtbot team has waived all copyright and related or neighboring rights to thoughtbot Code of Conduct. This work is published from the United States.
 
 [homepage](https://thoughtbot.com/open-source-code-of-conduct)

@@ -5,9 +5,11 @@ require "./support/base_model"
 require "./support/**"
 require "../config/*"
 
+Pulsar.enable_test_mode!
+
 backend = Log::IOBackend.new(STDERR)
 backend.formatter = Dexter::JSONLogFormatter.proc
-Log.builder.bind("avram.*", :error, Log::IOBackend.new(STDERR))
+Log.builder.bind("avram.*", :error, backend)
 
 Db::Create.new(quiet: true).call
 Db::Migrate.new(quiet: true).call
@@ -21,7 +23,7 @@ class SampleBackupDatabase < Avram::Database
 end
 
 SampleBackupDatabase.configure do |settings|
-  settings.url = ENV["BACKUP_DATABASE_URL"]? || Avram::PostgresURL.build(
+  settings.credentials = Avram::Credentials.parse?(ENV["BACKUP_DATABASE_URL"]?) || Avram::Credentials.new(
     hostname: "db",
     database: "sample_backup",
     username: "lucky",

@@ -17,19 +17,26 @@ require "./index_statement_helpers"
 # DropIndexStatement.new(:users, [:email, :username] if_exists: true, on_delete: :cascade).build
 # # => "DROP INDEX IF EXISTS users_email_username_index CASCADE;"
 # ```
+#
+# For index by name:
+#
+# ```
+# DropIndexStatement.new(:users, name: :custom_index_name).build
+# # => "DROP INDEX custom_index_name;"
+# ```
 class Avram::Migrator::DropIndexStatement
   include Avram::Migrator::IndexStatementHelpers
 
   ALLOWED_ON_DELETE_STRATEGIES = %i[cascade restrict]
 
-  def initialize(@table : Symbol, @columns : Columns, @if_exists = false, @on_delete = :do_nothing)
+  def initialize(@table : Symbol, @columns : Columns? = nil, @if_exists = false, @on_delete = :do_nothing, @name : String? | Symbol? = nil)
   end
 
   def build
     String.build do |index|
       index << "DROP INDEX"
       index << " IF EXISTS" if @if_exists
-      index << " #{@table}_#{columns.join("_")}_index"
+      index << " #{index_name}"
       index << on_delete_strategy(@on_delete)
     end
   end
@@ -48,9 +55,17 @@ class Avram::Migrator::DropIndexStatement
     columns = @columns
 
     if columns.is_a? Array
-      return columns
+      columns
     else
-      return [columns]
+      [columns]
+    end
+  end
+
+  private def index_name
+    if @name || @columns
+      @name.to_s.presence || "#{@table}_#{columns.join("_")}_index"
+    else
+      raise "No name or columns specified for drop_index"
     end
   end
 end
