@@ -1,5 +1,21 @@
 module Avram::Where
+  enum Conjunction
+    And
+    Or
+
+    def to_s
+      case self
+      when .and?
+        "AND"
+      when .or?
+        "OR"
+      end
+    end
+  end
+
   abstract class Condition
+    property conjunction : Conjunction = Conjunction::And
+
     abstract def prepare(placeholder_supplier : Proc(String)) : String
 
     def ==(other : Condition)
@@ -16,22 +32,7 @@ module Avram::Where
   end
 
   abstract class SqlClause < Condition
-    enum Conjunction
-      And
-      Or
-
-      def to_s
-        case self
-        when .and?
-          "AND"
-        when .or?
-          "OR"
-        end
-      end
-    end
-
     getter column : Symbol | String
-    property conjunction : Conjunction = Conjunction::And
 
     def initialize(@column)
     end
@@ -215,7 +216,6 @@ module Avram::Where
 
   class Raw < Condition
     @clause : String
-    property conjunction : Conjunction = Conjunction::And
 
     def self.new(statement : String, *bind_vars)
       new(statement, args: bind_vars.to_a)
