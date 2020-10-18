@@ -35,6 +35,10 @@ module Avram::Join
     def default_foreign_key
       Wordsmith::Inflector.singularize(@from) + "_id"
     end
+
+    def clone
+      self
+    end
   end
 
   class Inner < SqlClause

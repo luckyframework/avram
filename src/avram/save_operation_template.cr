@@ -1,10 +1,5 @@
 class Avram::SaveOperationTemplate
   macro setup(type, columns, table_name, primary_key_type, primary_key_name, *args, **named_args)
-    class ::{{ type }}::BaseForm
-      macro inherited
-        \{% raise "BaseForm has been renamed to SaveOperation. Please inherit from {{ type }}::SaveOperation." %}
-      end
-    end
 
     # This makes it easy for plugins and extensions to use the base SaveOperation
     def base_query_class : ::{{ type }}::BaseQuery.class
@@ -40,7 +35,7 @@ class Avram::SaveOperationTemplate
         :{{ primary_key_name.id }}
       end
 
-      add_column_attributes({{ primary_key_type }}, {{ columns }})
+      add_column_attributes({{ columns }})
       add_cast_value_methods({{ columns }})
     end
   end

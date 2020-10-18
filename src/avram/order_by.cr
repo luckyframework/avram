@@ -15,6 +15,8 @@ module Avram
       DESC
     end
 
+    def_clone
+
     getter column
     getter direction
     getter nulls

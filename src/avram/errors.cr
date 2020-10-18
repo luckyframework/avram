@@ -144,4 +144,8 @@ module Avram
 
   class InvalidQueryError < AvramError
   end
+
+  # Used when `Avram::Operation` fails.
+  class FailedOperation < AvramError
+  end
 end

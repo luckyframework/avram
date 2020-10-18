@@ -8,6 +8,7 @@ abstract class Avram::Box
       {% operation = @type.name.gsub(/Box/, "::SaveOperation").id %}
       @operation : {{ operation }} = {{ operation }}.new
       setup_attribute_shortcuts({{ operation }})
+      setup_attributes({{ operation }})
     {% end %}
   end
 
@@ -20,8 +21,26 @@ abstract class Avram::Box
     {% end %}
   end
 
+  macro setup_attributes(operation)
+    def attributes
+      {
+        {% for attribute in operation.resolve.constant(:COLUMN_ATTRIBUTES) %}
+          {{ attribute[:name] }}: operation.{{ attribute[:name] }}.value,
+        {% end %}
+      }
+    end
+  end
+
   def self.save
     {% raise "'Box.save' has been renamed to 'Box.create' to match 'SaveOperation.create'" %}
+  end
+
+  def self.build_attributes
+    yield(new).attributes
+  end
+
+  def self.build_attributes
+    new.attributes
   end
 
   def self.create

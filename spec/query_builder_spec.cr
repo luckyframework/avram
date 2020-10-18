@@ -1,20 +1,19 @@
 require "./spec_helper"
 
 describe Avram::QueryBuilder do
-  it "ensures uniqueness for where, raw_where, orders, and joins" do
+  it "ensures uniqueness for where, orders, and joins" do
     query = new_query
       .where(Avram::Where::Equal.new(:name, "Paul"))
       .where(Avram::Where::Equal.new(:name, "Paul"))
-      .raw_where(Avram::Where::Raw.new("name = ?", "Mikias"))
-      .raw_where(Avram::Where::Raw.new("name = ?", "Mikias"))
-      .raw_where(Avram::Where::Raw.new("name = ?", args: ["Mikias"]))
+      .where(Avram::Where::Raw.new("name = ?", "Mikias"))
+      .where(Avram::Where::Raw.new("name = ?", "Mikias"))
+      .where(Avram::Where::Raw.new("name = ?", args: ["Mikias"]))
       .join(Avram::Join::Inner.new(:users, :posts))
       .join(Avram::Join::Inner.new(:users, :posts))
       .order_by(Avram::OrderBy.new(:my_column, :asc))
       .order_by(Avram::OrderBy.new(:my_column, :asc))
 
-    query.wheres.size.should eq(1)
-    query.raw_wheres.size.should eq(1)
+    query.wheres.size.should eq(2)
     query.joins.size.should eq(1)
     query.statement.should eq "SELECT * FROM users INNER JOIN posts ON users.id = posts.user_id WHERE name = $1 AND name = 'Mikias' ORDER BY my_column ASC"
     query.args.should eq ["Paul"]
@@ -87,9 +86,9 @@ describe Avram::QueryBuilder do
 
   it "accepts raw where clauses" do
     query = new_query
-      .raw_where(Avram::Where::Raw.new("name = ?", "Mikias"))
-      .raw_where(Avram::Where::Raw.new("age > ?", 26))
-      .raw_where(Avram::Where::Raw.new("age < ?", args: [30]))
+      .where(Avram::Where::Raw.new("name = ?", "Mikias"))
+      .where(Avram::Where::Raw.new("age > ?", 26))
+      .where(Avram::Where::Raw.new("age < ?", args: [30]))
       .limit(1)
     query.statement.should eq "SELECT * FROM users WHERE name = 'Mikias' AND age > 26 AND age < 30 LIMIT 1"
     query.args.empty?.should be_true
@@ -250,8 +249,8 @@ describe Avram::QueryBuilder do
         .order_by(Avram::OrderBy.new(:id, :asc))
         .limit(1)
         .offset(2)
-      cloned_query = new_query
-        .clone(old_query)
+      cloned_query = old_query
+        .clone
         .where(Avram::Where::GreaterThan.new(:age, "20"))
         .limit(10)
         .offset(5)

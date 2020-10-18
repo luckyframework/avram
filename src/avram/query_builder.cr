@@ -1,11 +1,12 @@
 class Avram::QueryBuilder
+  def_clone
+
   alias ColumnName = Symbol | String
   getter table
   getter distinct_on : ColumnName | Nil = nil
   @limit : Int32?
   @offset : Int32?
-  @wheres = [] of Avram::Where::SqlClause
-  @raw_wheres = [] of Avram::Where::Raw
+  @wheres = [] of Avram::Where::Condition
   @joins = [] of Avram::Join::SqlClause
   @orders = [] of Avram::OrderBy
   @groups = [] of ColumnName
@@ -34,14 +35,10 @@ class Avram::QueryBuilder
     sql
   end
 
-  # Merges the wheres, raw wheres, joins, and orders from the passed in query
+  # Merges the wheres, joins, and orders from the passed in query
   def merge(query_to_merge : Avram::QueryBuilder)
     query_to_merge.wheres.each do |where|
       where(where)
-    end
-
-    query_to_merge.raw_wheres.each do |where|
-      raw_where(where)
     end
 
     query_to_merge.joins.each do |join|
@@ -55,16 +52,6 @@ class Avram::QueryBuilder
     query_to_merge.groups.each do |group|
       group_by(group)
     end
-  end
-
-  # Similar to `merge`, but includes ALL query parts
-  def clone(query_to_merge : Avram::QueryBuilder)
-    merge(query_to_merge)
-    self.select(query_to_merge.selects)
-    distinct if query_to_merge.distinct?
-    distinct_on(query_to_merge.distinct_on.to_s) if query_to_merge.has_distinct_on?
-    limit(query_to_merge.limit)
-    offset(query_to_merge.offset)
   end
 
   def statement
@@ -161,7 +148,7 @@ class Avram::QueryBuilder
   end
 
   def reset_where(column : ColumnName)
-    @wheres.reject! { |clause| clause.column.to_s == column.to_s }
+    @wheres.reject! { |clause| clause.is_a?(Avram::Where::SqlClause) && clause.column.to_s == column.to_s }
     self
   end
 
@@ -287,7 +274,9 @@ class Avram::QueryBuilder
   end
 
   def join(join_clause : Avram::Join::SqlClause)
-    @joins << join_clause
+    if join_clause.to != table && @joins.none? { |join| join.to == join_clause.to }
+      @joins << join_clause
+    end
     self
   end
 
@@ -299,14 +288,14 @@ class Avram::QueryBuilder
     joins.map(&.to_sql).join(" ")
   end
 
-  def where(where_clause : Avram::Where::SqlClause)
+  def where(where_clause : Avram::Where::Condition)
     @wheres << where_clause
     self
   end
 
+  @[Deprecated("Use `#where` instead.")]
   def raw_where(where_clause : Avram::Where::Raw)
-    @raw_wheres << where_clause
-    self
+    where(where_clause)
   end
 
   def or(&block : Avram::QueryBuilder -> Avram::QueryBuilder)
@@ -327,18 +316,12 @@ class Avram::QueryBuilder
   end
 
   private def joined_wheres_queries
-    if wheres.any? || raw_wheres.any?
+    if wheres.any?
       statements = wheres.flat_map do |sql_clause|
-        clause = if sql_clause.is_a?(Avram::Where::NullSqlClause)
-                   sql_clause.prepare
-                 else
-                   sql_clause.prepare(next_prepared_statement_placeholder)
-                 end
+        clause = sql_clause.prepare(->next_prepared_statement_placeholder)
 
         [clause, sql_clause.conjunction.to_s]
       end
-
-      statements += raw_wheres.flat_map { |raw| [raw.to_sql, raw.conjunction.to_s] }
 
       # Remove the last floating conjunction
       statements.pop
@@ -348,16 +331,17 @@ class Avram::QueryBuilder
   end
 
   def wheres
-    @wheres.uniq { |where| where.prepare(prepared_statement_placeholder: "unused") + where.value.to_s }
+    @wheres.uniq
   end
 
+  @[Deprecated("Use `#wheres` instead. Raw wheres are included.")]
   def raw_wheres
-    @raw_wheres.uniq(&.to_sql)
+    wheres.select(&.is_a?(Avram::Where::Raw))
   end
 
   private def prepared_statement_values
     wheres.compact_map do |sql_clause|
-      sql_clause.value unless sql_clause.is_a?(Avram::Where::NullSqlClause)
+      sql_clause.value if sql_clause.is_a?(Avram::Where::ValueHoldingSqlClause)
     end
   end
 

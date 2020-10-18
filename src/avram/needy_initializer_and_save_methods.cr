@@ -13,10 +13,6 @@ module Avram::NeedyInitializerAndSaveMethods
     property {{ type_declaration.var }}
   end
 
-  macro needs(type_declaration, on)
-    {% on.raise "The 'on' option is no longer supported. Please use needs without 'on' instead." %}
-  end
-
   macro inherit_needs
     \{% if !@type.constant(:OPERATION_NEEDS) %}
       OPERATION_NEEDS = [] of Nil
@@ -84,7 +80,30 @@ module Avram::NeedyInitializerAndSaveMethods
     generate_save_methods({{ attribute_method_args }}, {{ attribute_params }})
   end
 
+  macro hash_is_not_allowed_helpful_error(method)
+    {% raise <<-ERROR
+      You can't pass a Hash directly to #{method.id}. Instead pass named arguments, or convert the hash to params.
+
+      Try this...
+
+        * Pass named arguments - #{@type}.#{method.id}(title: "My Title")
+        * Convert hash to params - Avram::Params.new({"title" => "My Title"})
+
+      ERROR
+    %}
+  end
+
   macro generate_create(attribute_method_args, attribute_params, with_params, with_bang)
+    def self.create{% if with_bang %}!{% end %}(
+      params : Hash, **named_args
+    )
+      {% if with_bang %}
+      {% else %}
+        yield nil, nil
+      {% end %}
+      hash_is_not_allowed_helpful_error(:create{% if with_bang %}!{% end %})
+    end
+
     def self.create{% if with_bang %}!{% end %}(
       {% if with_params %}params,{% end %}
       {% for type_declaration in OPERATION_NEEDS %}
@@ -106,7 +125,7 @@ module Avram::NeedyInitializerAndSaveMethods
         if operation.save
           yield operation, operation.record
         else
-          operation.log_failed_save
+          operation.published_save_failed_event
           yield operation, nil
         end
       {% end %}
@@ -114,6 +133,18 @@ module Avram::NeedyInitializerAndSaveMethods
   end
 
   macro generate_update(attribute_method_args, attribute_params, with_params, with_bang)
+    def self.update{% if with_bang %}!{% end %}(
+      record : T,
+      params : Hash,
+      **named_args
+    )
+      {% if with_bang %}
+      {% else %}
+        yield nil, nil
+      {% end %}
+      hash_is_not_allowed_helpful_error(:update{% if with_bang %}!{% end %})
+    end
+
     def self.update{% if with_bang %}!{% end %}(
         record : T,
         {% if with_params %}with params,{% end %}
@@ -137,7 +168,7 @@ module Avram::NeedyInitializerAndSaveMethods
         if operation.save
           yield operation, operation.record.not_nil!
         else
-          operation.log_failed_save
+          operation.published_save_failed_event
           yield operation, operation.record.not_nil!
         end
       {% end %}

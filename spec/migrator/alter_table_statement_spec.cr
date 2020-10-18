@@ -41,7 +41,7 @@ describe Avram::Migrator::AlterTableStatement do
       ADD updated_at timestamptz,
       ADD future_time timestamptz NOT NULL DEFAULT '#{Time.local.to_utc}',
       ADD new_id uuid NOT NULL DEFAULT '46d9b2f0-0718-4d4c-a5a1-5af81d5b11e0',
-      ADD numbers int[] NOT NULL,
+      ADD numbers int[],
       DROP old_column,
       DROP employee_id;
     SQL
@@ -52,6 +52,8 @@ describe Avram::Migrator::AlterTableStatement do
     built.statements[6].should eq "ALTER TABLE users ALTER COLUMN email SET NOT NULL;"
     built.statements[7].should eq "UPDATE users SET updated_at = NOW();"
     built.statements[8].should eq "ALTER TABLE users ALTER COLUMN updated_at SET NOT NULL;"
+    built.statements[9].should eq "UPDATE users SET numbers = '{1}';"
+    built.statements[10].should eq "ALTER TABLE users ALTER COLUMN numbers SET NOT NULL;"
   end
 
   it "does not build statements if nothing is altered" do
@@ -70,6 +72,29 @@ describe Avram::Migrator::AlterTableStatement do
     built.statements[1].should eq "ALTER TABLE users ALTER COLUMN age SET DATA TYPE decimal(1,2);"
   end
 
+  describe "fill_existing_with" do
+    it "fills existing with value and sets column to be non-null for non-null types" do
+      built = Avram::Migrator::AlterTableStatement.new(:users).build do
+        add confirmed_at : Time, fill_existing_with: :now
+      end
+
+      built.statements.size.should eq 3
+      built.statements[0].should eq "ALTER TABLE users\n  ADD confirmed_at timestamptz;"
+      built.statements[1].should eq "UPDATE users SET confirmed_at = NOW();"
+      built.statements[2].should eq "ALTER TABLE users ALTER COLUMN confirmed_at SET NOT NULL;"
+    end
+
+    it "fills existing with value and leaves column optional for nilable types" do
+      built = Avram::Migrator::AlterTableStatement.new(:users).build do
+        add confirmed_at : Time?, fill_existing_with: :now
+      end
+
+      built.statements.size.should eq 2
+      built.statements[0].should eq "ALTER TABLE users\n  ADD confirmed_at timestamptz;"
+      built.statements[1].should eq "UPDATE users SET confirmed_at = NOW();"
+    end
+  end
+
   describe "associations" do
     it "can create associations" do
       built = Avram::Migrator::AlterTableStatement.new(:comments).build do
@@ -77,7 +102,7 @@ describe Avram::Migrator::AlterTableStatement do
         add_belongs_to post : Post?, on_delete: :restrict
         add_belongs_to category_label : CategoryLabel, on_delete: :nullify, references: :custom_table
         add_belongs_to employee : User, on_delete: :cascade
-        add_belongs_to line_item : LineItem, on_delete: :cascade, foreign_key_type: UUID
+        add_belongs_to line_item : LineItem, on_delete: :cascade, foreign_key_type: UUID, fill_existing_with: "a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11"
       end
 
       built.statements.first.should eq <<-SQL
@@ -94,6 +119,7 @@ describe Avram::Migrator::AlterTableStatement do
       built.statements[3].should eq "CREATE INDEX comments_category_label_id_index ON comments USING btree (category_label_id);"
       built.statements[4].should eq "CREATE INDEX comments_employee_id_index ON comments USING btree (employee_id);"
       built.statements[5].should eq "CREATE INDEX comments_line_item_id_index ON comments USING btree (line_item_id);"
+      built.statements[6].should eq "UPDATE comments SET line_item_id = 'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11';"
     end
 
     it "raises error when on_delete strategy is invalid or nil" do
@@ -101,6 +127,31 @@ describe Avram::Migrator::AlterTableStatement do
         Avram::Migrator::AlterTableStatement.new(:users).build do
           add_belongs_to user : User, on_delete: :cascad
         end
+      end
+    end
+
+    describe "fill_existing_with" do
+      it "fills existing with value and sets column to be non-null for non-null types" do
+        built = Avram::Migrator::AlterTableStatement.new(:comments).build do
+          add_belongs_to line_item : LineItem, on_delete: :cascade, foreign_key_type: UUID, fill_existing_with: "a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11"
+        end
+
+        built.statements.size.should eq 4
+        built.statements[0].should eq "ALTER TABLE comments\n  ADD line_item_id uuid NOT NULL REFERENCES line_items ON DELETE CASCADE;"
+        built.statements[1].should eq "CREATE INDEX comments_line_item_id_index ON comments USING btree (line_item_id);"
+        built.statements[2].should eq "UPDATE comments SET line_item_id = 'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11';"
+        built.statements[3].should eq "ALTER TABLE comments ALTER COLUMN line_item_id SET NOT NULL;"
+      end
+
+      it "fills existing with value and leaves column optional for nilable types" do
+        built = Avram::Migrator::AlterTableStatement.new(:comments).build do
+          add_belongs_to line_item : LineItem?, on_delete: :cascade, foreign_key_type: UUID, fill_existing_with: "a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11"
+        end
+
+        built.statements.size.should eq 3
+        built.statements[0].should eq "ALTER TABLE comments\n  ADD line_item_id uuid REFERENCES line_items ON DELETE CASCADE;"
+        built.statements[1].should eq "CREATE INDEX comments_line_item_id_index ON comments USING btree (line_item_id);"
+        built.statements[2].should eq "UPDATE comments SET line_item_id = 'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11';"
       end
     end
   end

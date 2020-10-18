@@ -34,14 +34,6 @@ module Avram::DefineAttribute
 
   ensure_base_attributes_method_is_present
 
-  macro allow_virtual(*args, **named_args)
-    {% raise "'allow_virtual' has been renamed to 'attribute'" %}
-  end
-
-  macro virtual(*args, **named_args)
-    {% raise "'virtual' has been renamed to 'attribute'" %}
-  end
-
   macro attribute(type_declaration)
     {% if type_declaration.type.is_a?(Union) %}
       {% raise "attribute must use just one type" %}

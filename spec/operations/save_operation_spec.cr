@@ -1,4 +1,4 @@
-require "./spec_helper"
+require "../spec_helper"
 
 private class SaveUser < User::SaveOperation
   # There was a bug where adding a non-database attribute would make it so
@@ -13,6 +13,14 @@ private class SaveUser < User::SaveOperation
 
   def prepare
     validate_required name, joined_at, age
+  end
+end
+
+private class SaveUserWithFalseValueValidations < User::SaveOperation
+  permit_columns :nickname, :available_for_hire
+
+  before_save do
+    validate_required nickname, available_for_hire
   end
 end
 
@@ -53,6 +61,10 @@ private class OverrideDefaults < ModelWithDefaultValues::SaveOperation
   permit_columns :greeting, :drafted_at, :published_at, :admin, :age, :money
 end
 
+private class SavePost < Post::SaveOperation
+  permit_columns :title, :published_at
+end
+
 describe "Avram::SaveOperation" do
   it "allows overriding the param_key" do
     ParamKeySaveOperation.param_key.should eq "custom_param"
@@ -73,6 +85,15 @@ describe "Avram::SaveOperation" do
     bucket = Bucket::SaveOperation.update!(bucket, names: [] of String)
 
     bucket.names.should eq([] of String)
+  end
+
+  it "treats empty strings as nil for Time? types instead of failing to parse" do
+    avram_params = Avram::Params.new({"title" => "Test", "published_at" => ""})
+
+    post = SavePost.create!(avram_params)
+
+    post.published_at.should eq nil
+    post.title.should eq "Test"
   end
 
   describe ".create" do
@@ -415,6 +436,13 @@ describe "Avram::SaveOperation" do
           r.drafted_at.should eq drafted_at
         end
       end
+
+      it "updates with a record that has defaults" do
+        model = ModelWithDefaultValues::SaveOperation.create!
+        record = OverrideDefaults.update!(model, greeting: "Hi")
+        record.greeting.should eq "Hi"
+        record.admin.should eq false
+      end
     end
   end
 
@@ -537,6 +565,20 @@ describe "Avram::SaveOperation" do
         SaveLineItem.update(line_item, Avram::Params.new({"name" => "Another pair of shoes"})) do |operation, record|
           operation.saved?.should be_true
           record.id.should eq line_item.id
+        end
+      end
+    end
+
+    context "when the default is false and the field is required" do
+      it "is valid since 'false' is a valid Boolean value" do
+        user = UserBox.create &.nickname("oopsie").available_for_hire(false)
+        params = Avram::Params.new({"nickname" => "falsey mcfalserson"})
+        SaveUserWithFalseValueValidations.update(user, params) do |operation, record|
+          record.should_not eq nil
+          r = record.not_nil!
+          operation.valid?.should be_true
+          r.nickname.should eq "falsey mcfalserson"
+          r.available_for_hire.should eq false
         end
       end
     end

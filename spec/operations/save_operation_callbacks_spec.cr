@@ -1,11 +1,20 @@
-require "./spec_helper"
+require "../spec_helper"
+
+module TestableOperation
+  macro included
+    @callbacks_that_ran = [] of String
+    getter callbacks_that_ran
+
+    def mark_callback(callback_name : String)
+      @callbacks_that_ran << callback_name
+    end
+  end
+end
 
 private class CallbacksSaveOperation < Post::SaveOperation
+  include TestableOperation
   needs rollback : Bool = false
   needs skip_set_required : Bool = false
-
-  @callbacks_that_ran = [] of String
-  getter callbacks_that_ran
 
   before_save setup_required_attributes
 
@@ -74,14 +83,49 @@ private class SaveLineItemSub < SaveLineItemBase
   end
 end
 
-describe "Avram::SaveOperation callbacks" do
-  it "does not run after_* callbacks if just validating" do
-    operation = CallbacksSaveOperation.new
-    operation.callbacks_that_ran.should eq([] of String)
+private class SaveOperationWithCallbacks < Post::SaveOperation
+  include TestableOperation
 
+  before_save :set_title
+  before_save { mark_callback("before_save_in_a_block") }
+
+  after_save :notify_save_complete
+  after_save do |saved_post|
+    mark_callback("after_save_in_a_block with #{saved_post.title}")
+  end
+
+  after_commit :notify_commit_complete
+  after_commit do |saved_post|
+    mark_callback("after_commit_in_a_block with #{saved_post.title}")
+  end
+
+  private def set_title
+    mark_callback("before_save_update_title")
+    title.value = "Saved Post"
+  end
+
+  private def notify_save_complete(saved_post)
+    mark_callback("after_save_notify_save_complete with #{saved_post.title}")
+  end
+
+  private def notify_commit_complete(saved_post)
+    mark_callback("after_commit_notify_commit_complete with #{saved_post.title}")
+  end
+end
+
+private class UpdateOperationWithSkipCallbacks < SaveOperationWithCallbacks
+  permit_columns :title
+  skip_before_save :set_title
+  skip_after_save :notify_save_complete
+  skip_after_commit :notify_commit_complete
+end
+
+describe "Avram::SaveOperation callbacks" do
+  it "does not run any callbacks if just validating" do
+    operation = CallbacksSaveOperation.new
     operation.valid?
 
-    operation.callbacks_that_ran.should eq(["before_save", "before_save_again"])
+    operation.callbacks_that_ran.should eq([] of String)
   end
 
   it "runs all callbacks when saving successfully" do
@@ -115,12 +159,13 @@ describe "Avram::SaveOperation callbacks" do
     ])
   end
 
-  it "runs before_save validations on required fields" do
+  it "runs before_save when validations fail" do
     operation = CallbacksSaveOperation.new(skip_set_required: true)
     operation.callbacks_that_ran.should eq([] of String)
 
-    operation.valid?.should eq false
+    operation.save
 
+    operation.valid?.should eq false
     operation.callbacks_that_ran.should eq(["before_save", "before_save_again"])
   end
 
@@ -131,6 +176,22 @@ describe "Avram::SaveOperation callbacks" do
       operation.loaded.should be_true
       operation.saved?.should be_true
       record.should be_a(LineItem)
+    end
+  end
+
+  it "skips running specified callbacks" do
+    post = PostBox.create &.title("Existing Post")
+    params = Avram::Params.new({"title" => "A fancy post"})
+
+    UpdateOperationWithSkipCallbacks.update(post, params) do |operation, updated_post|
+      updated_post.should_not eq nil
+      updated_post.not_nil!.title.should eq "A fancy post"
+
+      operation.callbacks_that_ran.should eq([
+        "before_save_in_a_block",
+        "after_save_in_a_block with A fancy post",
+        "after_commit_in_a_block with A fancy post",
+      ])
     end
   end
 end

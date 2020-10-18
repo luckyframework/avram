@@ -107,7 +107,7 @@ describe Avram::Validations do
       operation.name.value = existing_user.name
       operation.nickname.value = existing_user.nickname.not_nil!.downcase
 
-      operation.valid?
+      operation.save
 
       operation.name.errors.should contain "is already taken"
       operation.nickname.errors.should contain "is already taken"
