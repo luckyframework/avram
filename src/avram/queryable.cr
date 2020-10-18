@@ -120,7 +120,6 @@ module Avram::Queryable(T)
   def or(&block) : self
     query.or &.itself
     yield self
-    self
   end
 
   def order_by(column, direction) : self

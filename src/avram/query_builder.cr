@@ -306,7 +306,6 @@ class Avram::QueryBuilder
     @wheres.last.conjunction = Avram::Where::Conjunction::Or
 
     block.call(self)
-    self
   end
 
   @_wheres_sql : String?
@@ -316,8 +315,8 @@ class Avram::QueryBuilder
   end
 
   private def joined_wheres_queries
-    if @wheres.any?
-      statements = @wheres.flat_map do |sql_clause|
+    if wheres.any?
+      statements = wheres.flat_map do |sql_clause|
         clause = sql_clause.prepare(->next_prepared_statement_placeholder)
 
         [clause, sql_clause.conjunction.to_s]
