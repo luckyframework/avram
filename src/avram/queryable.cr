@@ -115,6 +115,13 @@ module Avram::Queryable(T)
     clone.tap &.query.merge(query_to_merge)
   end
 
+  # Run the `or` block first to grab the last WHERE clause and set its
+  # conjunction to OR. Then call yield to set the next set of ORs
+  def or(&block) : self
+    query.or &.itself
+    yield self
+  end
+
   def order_by(column, direction) : self
     direction = Avram::OrderBy::Direction.parse(direction.to_s)
     order_by(Avram::OrderBy.new(column, direction))

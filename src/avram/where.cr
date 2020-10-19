@@ -1,5 +1,21 @@
 module Avram::Where
+  enum Conjunction
+    And
+    Or
+
+    def to_s
+      case self
+      when .and?
+        "AND"
+      when .or?
+        "OR"
+      end
+    end
+  end
+
   abstract class Condition
+    property conjunction : Conjunction = Conjunction::And
+
     abstract def prepare(placeholder_supplier : Proc(String)) : String
 
     def ==(other : Condition)
