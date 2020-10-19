@@ -12,15 +12,16 @@ module Avram::SchemaEnforcer
         {% end %}
       ]
 
+      database_info = {{ type }}.database.database_info
       EnsureExistingTable.new(
         model_class: {{ type }},
         table_name: :{{table_name}},
-        database: {{ type }}.database
+        database_info: database_info
       ).ensure_exists!
       EnsureMatchingColumns.new(
         model_class: {{ type }},
         table_name: :{{table_name}},
-        database: {{ type }}.database
+        database_info: database_info
       ).ensure_matches! attributes
     end
 
@@ -42,21 +43,19 @@ module Avram::SchemaEnforcer
   end
 
   class EnsureExistingTable
-    private getter table_name, model_class
-    @table_names : Array(String)
+    private getter table_name : Symbol
+    private getter model_class : Avram::Model.class
+    private getter database_info : Database::DatabaseInfo
 
-    def initialize(@model_class : Avram::Model.class,
-                   @table_name : Symbol,
-                   @database : Avram::Database.class)
-      @table_names = @database.new.tables_with_schema(excluding: "migrations")
+    def initialize(@model_class, @table_name, @database_info)
     end
 
     def ensure_exists!
       if table_missing?
-        best_match = Levenshtein::Finder.find @table_name.to_s, @table_names, tolerance: 2
+        best_match = Levenshtein::Finder.find table_name.to_s, database_info.table_names, tolerance: 2
 
         message = String.build do |string|
-          string << "#{@model_class.to_s.colorize.bold} wants to use the '#{table_name.colorize.bold}' table but it is missing.\n"
+          string << "#{model_class.to_s.colorize.bold} wants to use the '#{table_name.colorize.bold}' table but it is missing.\n"
 
           if best_match
             string << <<-TEXT
@@ -104,24 +103,20 @@ module Avram::SchemaEnforcer
     end
 
     private def table_missing?
-      !@table_names.includes?(@table_name.to_s)
+      !database_info.table?(table_name.to_s)
     end
   end
 
   class EnsureMatchingColumns
-    private getter model_class, table_name
-    @columns_map = Hash(String, Bool).new
+    private getter model_class : Avram::Model.class
+    private getter table_name : Symbol
+    private getter table_info : Database::TableInfo
     @missing_columns = [] of String
     @optional_attribute_errors = [] of String
     @required_attribute_errors = [] of String
 
-    def initialize(@model_class : Avram::Model.class,
-                   @table_name : Symbol,
-                   @database : Avram::Database.class)
-      columns = @database.new.table_columns(table_name)
-      columns.each do |column|
-        @columns_map[column.name] = column.nilable
-      end
+    def initialize(@model_class, @table_name, database_info : Avram::Database::DatabaseInfo)
+      @table_info = database_info.table(table_name.to_s).not_nil!
     end
 
     def ensure_matches!(attributes)
@@ -137,15 +132,15 @@ module Avram::SchemaEnforcer
     end
 
     private def check_column_matches(attribute)
-      unless @columns_map.has_key? attribute[:name].to_s
-        @missing_columns << missing_attribute_error(@table_name, @columns_map.keys, attribute)
+      unless column = table_info.column(attribute[:name].to_s)
+        @missing_columns << missing_attribute_error(table_info.table_name, table_info.column_names, attribute)
         return
       end
 
-      if !attribute[:nilable] && @columns_map[attribute[:name].to_s]
-        @required_attribute_errors << required_attribute_error(@table_name, attribute)
-      elsif attribute[:nilable] && !@columns_map[attribute[:name].to_s]
-        @optional_attribute_errors << optional_attribute_error(@table_name, attribute)
+      if !attribute[:nilable] && column.nilable?
+        @required_attribute_errors << required_attribute_error(table_info.table_name, attribute)
+      elsif attribute[:nilable] && !column.nilable?
+        @optional_attribute_errors << optional_attribute_error(table_info.table_name, attribute)
       end
     end
 
