@@ -2,6 +2,7 @@ abstract class Avram::Database
   alias FiberId = UInt64
 
   @@db : DB::Database? = nil
+  @@lock = Mutex.new
   class_getter transactions = {} of FiberId => DB::Transaction
 
   macro inherited
@@ -130,8 +131,12 @@ abstract class Avram::Database
     yield current_transaction.try(&.connection) || db
   end
 
-  private def db
-    @@db ||= Avram::Connection.new(url, database_class: self.class).open
+  private def db : DB::Database
+    @@db ||= @@lock.synchronize do
+      # check @@db again because a previous request could have set it after
+      # the first time it was checked
+      @@db || Avram::Connection.new(url, database_class: self.class).open
+    end
   end
 
   private def current_transaction : DB::Transaction?
