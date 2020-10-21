@@ -18,12 +18,6 @@ module Avram::Callbacks
     end
   end
 
-  # Redefines the given `method_name` to do nothing
-  macro skip_before_save(method_name)
-    def {{ method_name.id }}
-    end
-  end
-
   # Run the given method before `run` is called on an `Operation`.
   #
   # ```
@@ -105,12 +99,6 @@ module Avram::Callbacks
   macro after_save(method_name)
     after_save do |object|
       {{ method_name.id }}(object)
-    end
-  end
-
-  # Redefines the given `method_name` method to do nothing
-  macro skip_after_save(method_name)
-    def {{ method_name.id }}(_object)
     end
   end
 
@@ -227,12 +215,6 @@ module Avram::Callbacks
   macro after_commit(method_name)
     after_commit do |object|
       {{ method_name.id }}(object)
-    end
-  end
-
-  # Redefines the given `method_name` method to do nothing
-  macro skip_after_commit(method_name)
-    def {{ method_name.id }}(_object)
     end
   end
 

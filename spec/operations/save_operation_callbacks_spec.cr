@@ -115,9 +115,6 @@ end
 
 private class UpdateOperationWithSkipCallbacks < SaveOperationWithCallbacks
   permit_columns :title
-  skip_before_save :set_title
-  skip_after_save :notify_save_complete
-  skip_after_commit :notify_commit_complete
 end
 
 describe "Avram::SaveOperation callbacks" do
