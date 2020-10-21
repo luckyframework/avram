@@ -80,13 +80,13 @@ module Avram::NeedyInitializerAndSaveMethods
     generate_save_methods({{ attribute_method_args }}, {{ attribute_params }})
   end
 
-  macro hash_is_not_allowed_helpful_error(method)
+  macro hash_is_not_allowed_helpful_error(method, additional_args = nil)
     {% raise <<-ERROR
       You can't pass a Hash directly to #{method.id}. Instead pass named arguments, or convert the hash to params.
 
       Try this...
 
-        * Use named arguments (recommended)  - #{@type}.#{method.id}(title: "My Title")
+        * Use named arguments (recommended) - #{@type}.#{method.id}(#{additional_args.id if additional_args}title: "My Title")
         * Convert hash to params (not as safe) - Avram::Params.new({"title" => "My Title"})
 
       ERROR
@@ -142,7 +142,7 @@ module Avram::NeedyInitializerAndSaveMethods
       {% else %}
         yield nil, nil
       {% end %}
-      hash_is_not_allowed_helpful_error(:update{% if with_bang %}!{% end %})
+      hash_is_not_allowed_helpful_error(:update{% if with_bang %}!{% end %}, additional_args: "record, ")
     end
 
     def self.update{% if with_bang %}!{% end %}(
