@@ -232,6 +232,18 @@ describe "Preloading" do
       2.times { posts.results }
     end
 
+    it "does not fail for has_many with custom query" do
+      post = PostBox.create
+      _another_post = PostBox.create
+      comment = CommentBox.create &.post_id(post.id)
+
+      posts = Post::BaseQuery.new.preload_comments(
+        Comment::BaseQuery.new.id.not.eq(comment.id)
+      )
+
+      2.times { posts.results }
+    end
+
     it "does not fail for has_one" do
       AdminBox.create
 
