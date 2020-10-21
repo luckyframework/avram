@@ -86,17 +86,29 @@ end
 private class SaveOperationWithCallbacks < Post::SaveOperation
   include TestableOperation
 
-  before_save :set_title
+  before_save :set_title, if: :title_is_needed?
   before_save { mark_callback("before_save_in_a_block") }
 
-  after_save :notify_save_complete
+  after_save :notify_save_complete, unless: :already_notified?
   after_save do |saved_post|
     mark_callback("after_save_in_a_block with #{saved_post.title}")
   end
 
-  after_commit :notify_commit_complete
+  after_commit :notify_commit_complete, if: :finalize_commit?
   after_commit do |saved_post|
     mark_callback("after_commit_in_a_block with #{saved_post.title}")
+  end
+
+  private def title_is_needed?
+    true
+  end
+
+  private def already_notified?
+    false
+  end
+
+  private def finalize_commit?
+    true
   end
 
   private def set_title
@@ -115,6 +127,34 @@ end
 
 private class UpdateOperationWithSkipCallbacks < SaveOperationWithCallbacks
   permit_columns :title
+
+  before_save(unless: :skip_callback) { mark_callback("before_save_in_a_block2") }
+  after_save(unless: :skip_callback) do |saved_post|
+    mark_callback("after_save_in_a_block with #{saved_post.title}2")
+  end
+  after_commit(unless: :skip_callback) do |saved_post|
+    mark_callback("after_commit_in_a_block with #{saved_post.title}2")
+  end
+
+  # skip all the blocks
+  private def skip_callback
+    true
+  end
+
+  # skip before_save :set_title
+  private def title_is_needed?
+    false
+  end
+
+  # skip after_save :notify_save_complete
+  private def already_notified?
+    true
+  end
+
+  # skip after_commit :notify_commit_complete
+  private def finalize_commit?
+    false
+  end
 end
 
 describe "Avram::SaveOperation callbacks" do
