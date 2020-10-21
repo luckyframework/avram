@@ -1,5 +1,5 @@
 module Avram::Associations::BelongsTo
-  macro belongs_to(type_declaration, foreign_key = nil, table = nil)
+  macro belongs_to(type_declaration, foreign_key = nil)
     {% assoc_name = type_declaration.var %}
 
     {% if type_declaration.type.is_a?(Union) %}
@@ -14,14 +14,10 @@ module Avram::Associations::BelongsTo
       {% foreign_key = "#{assoc_name}_id".id %}
     {% end %}
 
-    {% if !table %}
-      {% table = run("../../run_macros/infer_table_name.cr", model.id) %}
-    {% end %}
-
     column {{ foreign_key.id }} : {{ model }}::PrimaryKeyType{% if nilable %}?{% end %}
 
     association \
-      table_name: :{{ table.id }},
+      assoc_name: :{{ assoc_name.id }},
       type: {{ model }},
       foreign_key: :{{ foreign_key.id }},
       relationship_type: :belongs_to

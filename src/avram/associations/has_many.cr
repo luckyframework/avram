@@ -12,7 +12,7 @@ module Avram::Associations::HasMany
     {% foreign_key = foreign_key.id %}
 
     association \
-      table_name: :{{ assoc_name }},
+      assoc_name: :{{ assoc_name }},
       type: {{ type_declaration.type }},
       foreign_key: :{{ foreign_key }},
       through: {{ through }},

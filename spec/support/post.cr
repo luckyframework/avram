@@ -25,5 +25,6 @@ class PostWithCustomTable < BaseModel
 
     column title : String
     column published_at : Time?
+    has_many comments_for_custom_post : CommentForCustomPost, foreign_key: "post_id"
   end
 end
