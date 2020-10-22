@@ -1,7 +1,13 @@
 module Avram::Associations::HasMany
-  macro has_many(type_declaration, through = nil, foreign_key = nil)
+  macro has_many(type_declaration, through = nil, source = nil, foreign_key = nil)
     {% if !through.is_a?(NilLiteral) && !through.is_a?(SymbolLiteral) %}
       {% through.raise "The association name for 'through' must be a Symbol. Instead, got: #{through}" %}
+    {% end %}
+    {% if !source.is_a?(NilLiteral) && !source.is_a?(SymbolLiteral) %}
+      {% source.raise "The value for 'source' must be a Symbol. Instead, got: #{source}" %}
+    {% end %}
+    {% if !source.is_a?(NilLiteral) && through.is_a?(NilLiteral) %}
+      {% source.raise "Source must only be specified when defining a has many through relationship." %}
     {% end %}
     {% assoc_name = type_declaration.var %}
 
@@ -16,6 +22,7 @@ module Avram::Associations::HasMany
       type: {{ type_declaration.type }},
       foreign_key: :{{ foreign_key }},
       through: {{ through }},
+      source: {{ source }},
       relationship_type: :has_many
 
     {% model = type_declaration.type %}

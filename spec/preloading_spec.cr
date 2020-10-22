@@ -145,10 +145,10 @@ describe "Preloading" do
       LineItemProductBox.create &.line_item_id(item.id).product_id(product.id)
       LineItemProductBox.create &.line_item_id(other_item.id).product_id(product.id)
 
-      item_products = LineItemQuery.new.preload_products.results.first.products
+      associated_products = LineItemQuery.new.preload_associated_products.results.first.associated_products
 
-      item_products.size.should eq(1)
-      item_products.should eq([product])
+      associated_products.size.should eq(1)
+      associated_products.should eq([product])
     end
   end
 

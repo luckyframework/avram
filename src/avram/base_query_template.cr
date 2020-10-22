@@ -112,8 +112,12 @@ class Avram::BaseQueryTemplate
             {% elsif assoc[:through] %}
               {{ join_type.downcase.id }}_join_{{ assoc[:through].id }}
                 .__yield_where_{{ assoc[:through].id }} do |join_query|
-                  {% singular_association_name = run("../run_macros/singularize_word.cr", assoc[:assoc_name]) %}
-                  join_query.{{ join_type.downcase.id }}_join_{{ singular_association_name.id }}
+                  {% if assoc[:source].is_a?(NilLiteral) %}
+                    {% singular_association_name = run("../run_macros/singularize_word.cr", assoc[:assoc_name]) %}
+                    join_query.{{ join_type.downcase.id }}_join_{{ singular_association_name.id }}
+                  {% else %}
+                    join_query.{{ join_type.downcase.id }}_join_{{ assoc[:source].id }}
+                  {% end %}
                 end
             {% else %}
               join(

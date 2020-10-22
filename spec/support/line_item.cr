@@ -8,7 +8,7 @@ class LineItem < BaseModel
     has_one price : Price?
     has_many scans : Scan
     has_many line_items_products : LineItemProduct
-    has_many products : Product, through: :line_items_products
+    has_many associated_products : Product, through: :line_items_products, source: :product
   end
 end
 
