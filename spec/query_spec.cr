@@ -367,6 +367,22 @@ describe Avram::Query do
     end
   end
 
+  describe "#or" do
+    it "chains ors" do
+      query = UserQuery.new.age(26).or(&.age(32)).or(&.age(59)).query
+
+      query.statement.should eq "SELECT #{User::COLUMN_SQL} FROM users WHERE users.age = $1 OR users.age = $2 OR users.age = $3"
+      query.args.should eq ["26", "32", "59"]
+    end
+
+    it "nests AND conjunctions inside of OR blocks" do
+      query = UserQuery.new.age(26).or(&.age(32).name("Pat")).or(&.age(59)).query
+
+      query.statement.should eq "SELECT #{User::COLUMN_SQL} FROM users WHERE users.age = $1 OR users.age = $2 AND users.name = $3 OR users.age = $4"
+      query.args.should eq ["26", "32", "Pat", "59"]
+    end
+  end
+
   describe "#limit" do
     it "adds a limit clause" do
       queryable = UserQuery.new.limit(2)

@@ -2,6 +2,7 @@ abstract class Avram::Database
   alias FiberId = UInt64
 
   @@db : DB::Database? = nil
+  @@lock = Mutex.new
   class_getter transactions = {} of FiberId => DB::Transaction
 
   macro inherited
@@ -36,6 +37,12 @@ abstract class Avram::Database
   # Run a SQL `DELETE` on all tables in the database
   def self.delete
     new.delete
+  end
+
+  @@database_info : DatabaseInfo?
+
+  def self.database_info : DatabaseInfo
+    @@database_info ||= DatabaseInfo.load(self)
   end
 
   # Wrap the block in a database transaction
@@ -124,8 +131,12 @@ abstract class Avram::Database
     yield current_transaction.try(&.connection) || db
   end
 
-  private def db
-    @@db ||= Avram::Connection.new(url, database_class: self.class).open
+  private def db : DB::Database
+    @@db ||= @@lock.synchronize do
+      # check @@db again because a previous request could have set it after
+      # the first time it was checked
+      @@db || Avram::Connection.new(url, database_class: self.class).open
+    end
   end
 
   private def current_transaction : DB::Transaction?
@@ -171,67 +182,23 @@ abstract class Avram::Database
     transactions.delete(Fiber.current.object_id)
   end
 
-  def table_names
-    tables_with_schema(excluding: "migrations")
-  end
-
-  def tables_with_schema(excluding : String)
-    select_rows <<-SQL
-    SELECT table_name
-    FROM information_schema.tables
-    WHERE table_schema='public'
-    AND table_type='BASE TABLE'
-    AND table_name != '#{excluding}';
-    SQL
-  end
-
-  def select_rows(statement)
-    rows = [] of String
-
-    run do |db|
-      db.query statement do |rs|
-        rs.each do
-          rows << rs.read(String)
-        end
-      end
-    end
-
-    rows
-  end
-
-  def table_columns(table_name)
-    statement = <<-SQL
-    SELECT column_name as name, is_nullable::boolean as nilable
-    FROM information_schema.columns
-    WHERE table_schema = 'public'
-      AND table_name = '#{table_name}'
-    SQL
-
-    run { |db| db.query_all statement, as: TableColumn }
-  end
-
-  class TableColumn
-    DB.mapping({
-      name:    String,
-      nilable: Bool,
-    })
-  end
-
   class DatabaseCleaner
-    private getter database
+    private getter database : Avram::Database
+    private getter database_info : Avram::Database::DatabaseInfo
 
-    def initialize(@database : Avram::Database)
+    def initialize(@database)
+      @database_info = database.class.database_info
     end
 
     def truncate
-      table_names = database.table_names
+      table_names = database_info.table_names
       return if table_names.empty?
       statement = ("TRUNCATE TABLE #{table_names.map { |name| name }.join(", ")} RESTART IDENTITY CASCADE;")
       database.exec statement
     end
 
     def delete
-      table_names = database.table_names
+      table_names = database_info.table_names
       return if table_names.empty?
       table_names.each do |t|
         statement = ("DELETE FROM #{t}")

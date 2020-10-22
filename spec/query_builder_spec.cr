@@ -122,8 +122,7 @@ describe Avram::QueryBuilder do
   describe "updating" do
     it "inserts with a hash of String" do
       params = {:first_name => "Paul", :last_name => nil}
-      query = Avram::QueryBuilder
-        .new(table: :users)
+      query = new_query
         .where(Avram::Where::Equal.new(:id, "1"))
         .limit(1)
 
@@ -133,9 +132,7 @@ describe Avram::QueryBuilder do
   end
 
   it "can be counted" do
-    query = Avram::QueryBuilder
-      .new(table: :users)
-      .select_count
+    query = new_query.select_count
 
     query.statement.should eq "SELECT COUNT(*) FROM users"
     query.args.should eq [] of String
@@ -156,36 +153,28 @@ describe Avram::QueryBuilder do
   end
 
   it "can get the min" do
-    query = Avram::QueryBuilder
-      .new(table: :users)
-      .select_min(:age)
+    query = new_query.select_min(:age)
 
     query.statement.should eq "SELECT MIN(age) FROM users"
     query.args.should eq [] of String
   end
 
   it "can get the max" do
-    query = Avram::QueryBuilder
-      .new(table: :users)
-      .select_max(:age)
+    query = new_query.select_max(:age)
 
     query.statement.should eq "SELECT MAX(age) FROM users"
     query.args.should eq [] of String
   end
 
   it "can get the average" do
-    query = Avram::QueryBuilder
-      .new(table: :users)
-      .select_average(:age)
+    query = new_query.select_average(:age)
 
     query.statement.should eq "SELECT AVG(age) FROM users"
     query.args.should eq [] of String
   end
 
   it "can sum a column" do
-    query = Avram::QueryBuilder
-      .new(table: :users)
-      .select_sum(:age)
+    query = new_query.select_sum(:age)
 
     query.statement.should eq "SELECT SUM(age) FROM users"
     query.args.should eq [] of String
@@ -193,17 +182,14 @@ describe Avram::QueryBuilder do
 
   describe "#select" do
     it "specifies columns to be selected" do
-      query = Avram::QueryBuilder
-        .new(table: :users)
-        .select([:name, :age])
+      query = new_query.select([:name, :age])
 
       query.statement.should eq "SELECT users.name, users.age FROM users"
     end
   end
 
   it "can be joined" do
-    query = Avram::QueryBuilder
-      .new(table: :users)
+    query = new_query
       .join(Avram::Join::Inner.new(:users, :posts))
       .limit(1)
 
@@ -212,8 +198,7 @@ describe Avram::QueryBuilder do
 
   describe "#reverse_order" do
     it "reverses the order of the query" do
-      query = Avram::QueryBuilder
-        .new(table: :users)
+      query = new_query
         .order_by(Avram::OrderBy.new(:id, :asc))
         .reverse_order
 
@@ -221,8 +206,7 @@ describe Avram::QueryBuilder do
     end
 
     it "reverses both directions" do
-      query = Avram::QueryBuilder
-        .new(table: :users)
+      query = new_query
         .order_by(Avram::OrderBy.new(:id, :asc))
         .order_by(Avram::OrderBy.new(:name, :desc))
         .reverse_order
@@ -235,9 +219,7 @@ describe Avram::QueryBuilder do
     end
 
     it "does nothing if there is no order" do
-      query = Avram::QueryBuilder
-        .new(table: :users)
-        .reverse_order
+      query = new_query.reverse_order
 
       query.statement.should eq "SELECT * FROM users"
     end
@@ -245,16 +227,14 @@ describe Avram::QueryBuilder do
 
   describe "#ordered" do
     it "returns true if the query is ordered" do
-      query = Avram::QueryBuilder
-        .new(table: :users)
+      query = new_query
         .order_by(Avram::OrderBy.new(:id, :asc))
 
       query.ordered?.should eq true
     end
 
     it "returns false if the query is not ordered" do
-      query = Avram::QueryBuilder
-        .new(table: :users)
+      query = new_query
 
       query.ordered?.should eq false
     end
@@ -283,16 +263,13 @@ describe Avram::QueryBuilder do
 
   describe "grouped?" do
     it "returns true when there's a grouping" do
-      query = Avram::QueryBuilder
-        .new(table: :users)
-        .group_by(:id)
+      query = new_query.group_by(:id)
 
       query.grouped?.should eq true
     end
 
     it "returns false when there's no groups" do
-      query = Avram::QueryBuilder
-        .new(table: :users)
+      query = new_query
 
       query.grouped?.should eq false
     end
@@ -300,24 +277,21 @@ describe Avram::QueryBuilder do
 
   describe "group_by" do
     it "groups by a column" do
-      query = Avram::QueryBuilder
-        .new(table: :users)
+      query = new_query
         .group_by(:name)
 
       query.statement.should eq "SELECT * FROM users GROUP BY name"
     end
 
     it "groups by multiple columns" do
-      query = Avram::QueryBuilder
-        .new(table: :users)
+      query = new_query
         .group_by(:age)
         .group_by(:average_score)
       query.statement.should eq "SELECT * FROM users GROUP BY age, average_score"
     end
 
     it "groups in the proper order with other query parts" do
-      query = Avram::QueryBuilder
-        .new(table: :users)
+      query = new_query
         .where(Avram::Where::Equal.new(:name, "Paul"))
         .order_by(Avram::OrderBy.new(:name, :desc))
         .group_by(:age)
@@ -325,6 +299,23 @@ describe Avram::QueryBuilder do
         .limit(10)
       query.statement.should eq "SELECT * FROM users WHERE name = $1 GROUP BY age, average_score ORDER BY name DESC LIMIT 10"
       query.args.should eq ["Paul"]
+    end
+  end
+
+  describe "#or" do
+    it "builds the proper SQL for a simple OR query" do
+      query = new_query
+        .where(Avram::Where::Equal.new(:name, "Paul"))
+        .or(&.where(Avram::Where::Equal.new(:name, "Peter")))
+
+      query.statement.should eq "SELECT * FROM users WHERE name = $1 OR name = $2"
+      query.args.should eq ["Paul", "Peter"]
+    end
+
+    it "raises an excception when called without a previous where clause" do
+      expect_raises(Avram::InvalidQueryError, "Cannot call `or` before calling a `where`") do
+        new_query.or(&.where(Avram::Where::Equal.new(:name, "Peter")))
+      end
     end
   end
 end
