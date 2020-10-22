@@ -128,16 +128,16 @@ end
 private class UpdateOperationWithSkipCallbacks < SaveOperationWithCallbacks
   permit_columns :title
 
-  before_save(unless: :skip_callback) { mark_callback("before_save_in_a_block2") }
-  after_save(unless: :skip_callback) do |saved_post|
+  before_save(unless: :skip_callback?) { mark_callback("before_save_in_a_block2") }
+  after_save(unless: :skip_callback?) do |saved_post|
     mark_callback("after_save_in_a_block with #{saved_post.title}2")
   end
-  after_commit(unless: :skip_callback) do |saved_post|
+  after_commit(unless: :skip_callback?) do |saved_post|
     mark_callback("after_commit_in_a_block with #{saved_post.title}2")
   end
 
   # skip all the blocks
-  private def skip_callback
+  private def skip_callback?
     true
   end
 
