@@ -113,8 +113,15 @@ class Avram::BaseQueryTemplate
               {{ join_type.downcase.id }}_join_{{ assoc[:through].id }}
                 .__yield_where_{{ assoc[:through].id }} do |join_query|
                   {% if assoc[:source].is_a?(NilLiteral) %}
-                    {% singular_association_name = run("../run_macros/singularize_word.cr", assoc[:assoc_name]) %}
-                    join_query.{{ join_type.downcase.id }}_join_{{ singular_association_name.id }}
+                    # check if the join query has a has_many joins method (default)
+                    if join_query.responds_to?(:{{ join_type.downcase.id }}_join_{{ assoc[:assoc_name].id }})
+                      # through a has_many association
+                      join_query.{{ join_type.downcase.id }}_join_{{ assoc[:assoc_name].id }}
+                    else
+                      # through a belongs_to association
+                      {% singular_association_name = run("../run_macros/singularize_word.cr", assoc[:assoc_name]) %}
+                      join_query.{{ join_type.downcase.id }}_join_{{ singular_association_name.id }}
+                    end
                   {% else %}
                     join_query.{{ join_type.downcase.id }}_join_{{ assoc[:source].id }}
                   {% end %}
