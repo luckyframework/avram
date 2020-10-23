@@ -38,8 +38,4 @@ class Avram::Params
   def nested_file(key) : Hash(String, String)
     @hash
   end
-
-  def has_key_for?(operation : Avram::Operation.class | Avram::SaveOperation.class) : Bool
-    nested?(operation.param_key).any?
-  end
 end
