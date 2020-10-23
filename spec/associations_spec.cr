@@ -63,7 +63,7 @@ describe Avram::Model do
     it "count has_many through has_many associations" do
       manager = ManagerBox.create
       employee = EmployeeBox.new.manager_id(manager.id).create
-      business_sale = BusinessSaleBox.new.employee_id(employee.id).create
+      BusinessSaleBox.new.employee_id(employee.id).create
 
       manager.business_sales_count.should eq 1
     end

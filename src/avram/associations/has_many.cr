@@ -142,7 +142,6 @@ module Avram::Associations::HasMany
           # assume that the association is a has_many through a has_many association
           temp_query.preload_{{ singular_through.id }}.results
         end
-          
       {% else %}
         {{ model }}::BaseQuery
           .new
