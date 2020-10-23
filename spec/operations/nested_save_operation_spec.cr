@@ -55,6 +55,10 @@ private class NestedParams
   def nested_file(key)
     raise "Not implemented"
   end
+
+  def has_key_for?(operation : Avram::Operation.class | Avram::SaveOperation.class) : Bool
+    nested?(operation.param_key).any?
+  end
 end
 
 describe "Avram::SaveOperation with nested operation" do
