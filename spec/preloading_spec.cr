@@ -120,7 +120,7 @@ describe "Preloading" do
     end
   end
 
-  it "preloads has_many through" do
+  it "preloads has_many through a belongs_to relationship" do
     with_lazy_load(enabled: false) do
       tag = TagBox.create
       TagBox.create # unused tag
@@ -133,6 +133,19 @@ describe "Preloading" do
 
       post_tags.size.should eq(1)
       post_tags.should eq([tag])
+    end
+  end
+
+  it "preloads has_many through a has_many relationship" do
+    with_lazy_load(enabled: false) do
+      manager = ManagerBox.create
+      employee = EmployeeBox.new.manager_id(manager.id).create
+      business_sale = BusinessSaleBox.new.employee_id(employee.id).create
+
+      business_sales = Manager::BaseQuery.new.preload_business_sales.find(manager.id).business_sales
+
+      business_sales.size.should eq(1)
+      business_sales.should eq([business_sale])
     end
   end
 

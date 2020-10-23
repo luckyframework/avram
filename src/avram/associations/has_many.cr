@@ -19,12 +19,16 @@ module Avram::Associations::HasMany
       relationship_type: :has_many
 
     {% model = type_declaration.type %}
+    {% singular_through = nil %}
+    {% if !through.is_a?(NilLiteral) %}
+      {% singular_through = run("../../run_macros/singularize_word.cr", through) %}
+    {% end %}
 
-    define_has_many_lazy_loading({{ assoc_name }}, {{ model }}, {{ foreign_key }}, {{ through }})
-    define_has_many_base_query({{ assoc_name }}, {{ model }}, {{ foreign_key }}, {{through}})
+    define_has_many_lazy_loading({{ assoc_name }}, {{ model }}, {{ foreign_key }}, {{ through }}, {{ singular_through }})
+    define_has_many_base_query({{ assoc_name }}, {{ model }}, {{ foreign_key }}, {{ through }}, {{ singular_through }})
   end
 
-  private macro define_has_many_base_query(assoc_name, model, foreign_key, through)
+  private macro define_has_many_base_query(assoc_name, model, foreign_key, through, singular_through)
     class BaseQuery
       def preload_{{ assoc_name }}
         preload_{{ assoc_name }}({{ model }}::BaseQuery.new)
@@ -37,20 +41,36 @@ module Avram::Associations::HasMany
             {{ assoc_name }} = {} of {{ model }}::PrimaryKeyType => Array({{ model }})
           else
           {% if through %}
-            all_{{ assoc_name }} = preload_query
+            temp_query = preload_query
               .dup
               .join_{{ through.id }}
               .__yield_where_{{ through.id }} do |through_query|
                 through_query.{{ foreign_key.id }}.in(ids)
               end
-              .preload_{{ through.id }}
-              .distinct
+
+            # check if the association is a has_many through a belongs_to association
+            all_{{ assoc_name }} = if temp_query.responds_to?(:preload_{{ through.id }})
+              # the association is a has_many through a belongs_to association
+              temp_query.preload_{{ through.id }}.distinct
+            else
+              # assume that the association is a has_many through a has_many association
+              temp_query.preload_{{ singular_through.id }}.distinct
+            end
 
             {{ assoc_name }} = {} of {{ model }}::PrimaryKeyType => Array({{ model }})
             all_{{ assoc_name }}.each do |item|
-              item.{{ through.id }}.each do |item_through|
-                {{ assoc_name }}[item_through.{{ foreign_key }}] ||= Array({{ model }}).new
-                {{ assoc_name }}[item_through.{{ foreign_key }}] << item
+              if item.responds_to?(:{{ through.id }})
+                # has_many
+                item.{{ through.id }}.each do |item_through|
+                  {{ assoc_name }}[item_through.{{ foreign_key }}] ||= Array({{ model }}).new
+                  {{ assoc_name }}[item_through.{{ foreign_key }}] << item
+                end
+              else
+                # belongs_to
+                item.{{ singular_through.id }}.try do |item_through|
+                  {{ assoc_name }}[item_through.{{ foreign_key }}.not_nil!] ||= Array({{ model }}).new
+                  {{ assoc_name }}[item_through.{{ foreign_key }}.not_nil!] << item
+                end
               end
             end
           {% else %}
@@ -69,7 +89,7 @@ module Avram::Associations::HasMany
     end
   end
 
-  private macro define_has_many_lazy_loading(assoc_name, model, foreign_key, through)
+  private macro define_has_many_lazy_loading(assoc_name, model, foreign_key, through, singular_through)
     @_preloaded_{{ assoc_name }} : Array({{ model }})?
     setter _preloaded_{{ assoc_name }}
 
@@ -108,14 +128,21 @@ module Avram::Associations::HasMany
 
     private def lazy_load_{{ assoc_name }} : Array({{ model }})
       {% if through %}
-        {{ model }}::BaseQuery
+        temp_query = {{ model }}::BaseQuery
           .new
           .join_{{ through.id }}
           .__yield_where_{{ through.id }} do |through_query|
             through_query.{{ foreign_key.id }}(id)
           end
-          .preload_{{ through.id }}
-          .results
+        # check if the association is a has_many through a belongs_to association
+        if temp_query.responds_to?(:preload_{{ through.id }})
+          # the association is a has_many through a belongs_to association
+          temp_query.preload_{{ through.id }}.results
+        else
+          # assume that the association is a has_many through a has_many association
+          temp_query.preload_{{ singular_through.id }}.results
+        end
+          
       {% else %}
         {{ model }}::BaseQuery
           .new

@@ -15,11 +15,14 @@ describe Avram::Model do
     it "gets the related records for nilable association that exists" do
       manager = ManagerBox.create
       employee = EmployeeBox.new.manager_id(manager.id).create
+      business_sale = BusinessSaleBox.new.employee_id(employee.id).create
 
       manager = Manager::BaseQuery.new.find(manager.id)
 
       manager.employees.to_a.should eq [employee]
       employee.manager.should eq manager
+      employee.business_sales.should eq [business_sale]
+      manager.business_sales.should eq [business_sale]
     end
 
     it "returns nil for nilable association that doesn't exist" do
@@ -48,13 +51,21 @@ describe Avram::Model do
       post.tags.should eq [tag]
     end
 
-    it "count through associations" do
+    it "count has_many through belongs_to associations" do
       tag = TagBox.create
       post = PostBox.create
       TagBox.create
       TaggingBox.new.tag_id(tag.id).post_id(post.id).create
 
       post.tags_count.should eq 1
+    end
+
+    it "count has_many through has_many associations" do
+      manager = ManagerBox.create
+      employee = EmployeeBox.new.manager_id(manager.id).create
+      business_sale = BusinessSaleBox.new.employee_id(employee.id).create
+
+      manager.business_sales_count.should eq 1
     end
   end
 
