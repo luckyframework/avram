@@ -2,10 +2,12 @@ require "./queryable"
 
 abstract class Avram::Query
   abstract def database : Avram::Database.class
+  abstract def table_name
 
   # runs a SQL `TRUNCATE` on the current table
   def self.truncate
-    new.database.exec "TRUNCATE TABLE #{@@table_name}"
+    query = new
+    query.database.exec "TRUNCATE TABLE #{query.table_name}"
   end
 
   private def escape_sql(value : Int32)
