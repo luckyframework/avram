@@ -29,18 +29,15 @@ abstract class Avram::SaveOperation(T)
     Unperformed
   end
 
-  @save_status = SaveStatus::Unperformed
-
   macro inherited
-    @valid : Bool = true
     @@permitted_param_keys = [] of String
   end
 
-  property save_status
-
+  @valid : Bool = true
   @record : T?
   @params : Avram::Paramable
   getter :record, :params
+  property save_status : SaveStatus = SaveStatus::Unperformed
 
   abstract def attributes
 
