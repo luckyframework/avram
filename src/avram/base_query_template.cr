@@ -16,10 +16,6 @@ class Avram::BaseQueryTemplate
         {{ table_name.id.symbolize }}
       end
 
-      def query_class
-
-      end
-
       @@schema_class = {{ type }}
 
       # If not using default 'id' primary key
