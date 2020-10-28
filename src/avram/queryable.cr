@@ -35,7 +35,7 @@ module Avram::Queryable(T)
   def query
     @query ||= Avram::QueryBuilder
       .new(table: table_name)
-      .select(@@schema_class.column_names)
+      .select(schema_class.column_names)
   end
 
   def distinct : self
@@ -199,14 +199,14 @@ module Avram::Queryable(T)
   end
 
   private def exec_query
-    database.query query.statement, args: query.args, queryable: @@schema_class.name do |rs|
-      @@schema_class.from_rs(rs)
+    database.query query.statement, args: query.args, queryable: schema_class.name do |rs|
+      schema_class.from_rs(rs)
     end
   end
 
   def exec_scalar(&block)
     new_query = yield query.clone
-    database.scalar new_query.statement, args: new_query.args, queryable: @@schema_class.name
+    database.scalar new_query.statement, args: new_query.args, queryable: schema_class.name
   end
 
   private def with_ordered_query : self
