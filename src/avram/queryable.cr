@@ -32,6 +32,22 @@ module Avram::Queryable(T)
     end
   end
 
+  def schema_class
+    T
+  end
+
+  def database : Avram::Database.class
+    schema_class.database
+  end
+
+  def table_name
+    schema_class.table_name
+  end
+
+  def primary_key_name
+    schema_class.primary_key_name
+  end
+
   def query
     @query ||= Avram::QueryBuilder
       .new(table: table_name)

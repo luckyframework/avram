@@ -8,18 +8,6 @@ class Avram::BaseQueryTemplate
       include Avram::Queryable({{ type }})
       include Avram::PrimaryKeyQueryable({{ type }})
 
-      def database : Avram::Database.class
-        {{ type }}.database
-      end
-
-      def table_name
-        {{ table_name.id.symbolize }}
-      end
-
-      def schema_class
-        {{ type }}
-      end
-
       # If not using default 'id' primary key
       {% if primary_key_name.id != "id".id %}
         # Then point 'id' to the primary key
@@ -27,10 +15,6 @@ class Avram::BaseQueryTemplate
           {{ primary_key_name.id }}(*args, **named_args)
         end
       {% end %}
-
-      def primary_key_name
-        :{{ primary_key_name.id }}
-      end
 
       macro generate_criteria_method(query_class, name, type)
         def \{{ name }}
