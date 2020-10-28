@@ -1,7 +1,5 @@
 module Avram
-  # = Lucky Record Errors
-  #
-  # Generic Lucky Record exception class.
+  # Generic Avram exception class.
   class AvramError < Exception
   end
 
@@ -21,7 +19,7 @@ module Avram
     end
   end
 
-  # Raised when Lucky Record cannot find a record by given id
+  # Raised when Avram cannot find a record by given id
   class RecordNotFoundError < AvramError
     def initialize(model : Symbol, id : String)
       super "Could not find #{model} with id of #{id}"
