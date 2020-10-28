@@ -43,10 +43,7 @@ abstract class Avram::SaveOperation(T)
   @params : Avram::Paramable
   getter :record, :params
 
-  abstract def table_name
   abstract def attributes
-  abstract def primary_key_name
-  abstract def database
 
   def self.param_key
     T.name.underscore
@@ -57,6 +54,18 @@ abstract class Avram::SaveOperation(T)
 
   def initialize
     @params = Avram::Params.new
+  end
+
+  def database
+    T.database
+  end
+
+  def table_name
+    T.table_name
+  end
+
+  def primary_key_name
+    T.primary_key_name
   end
 
   # :nodoc:
