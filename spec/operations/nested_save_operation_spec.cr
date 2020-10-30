@@ -14,9 +14,7 @@ private class SaveBusiness < Business::SaveOperation
   end
 end
 
-private class NestedParams
-  include Avram::Paramable
-
+private class NestedParams < Avram::FakeParams
   @business : Hash(String, String) = {} of String => String
   @email_address : Hash(String, String) = {} of String => String
   @tax_id : Hash(String, String) = {} of String => String
@@ -34,26 +32,6 @@ private class NestedParams
     else
       raise "What is this key!? #{key}"
     end
-  end
-
-  def nested(key : String) : Hash(String, String)
-    nested?(key)
-  end
-
-  def get?(key)
-    raise "Not implemented"
-  end
-
-  def get(key)
-    raise "Not implemented"
-  end
-
-  def nested_file?(key)
-    raise "Not implemented"
-  end
-
-  def nested_file(key)
-    raise "Not implemented"
   end
 end
 

@@ -18,9 +18,7 @@ end
 private class SaveUser < User::SaveOperation
 end
 
-private class NestedParams
-  include Avram::Paramable
-
+private class NestedParams < Avram::FakeParams
   @data : Hash(String, String) = {} of String => String
 
   def initialize(@data)
@@ -32,26 +30,6 @@ private class NestedParams
     else
       {} of String => String
     end
-  end
-
-  def nested(key : String) : Hash(String, String)
-    nested?(key)
-  end
-
-  def get?(key)
-    raise "Not implemented"
-  end
-
-  def get(key)
-    raise "Not implemented"
-  end
-
-  def nested_file?(key)
-    raise "Not implemented"
-  end
-
-  def nested_file(key)
-    raise "Not implemented"
   end
 end
 
