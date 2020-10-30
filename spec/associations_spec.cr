@@ -51,7 +51,7 @@ describe Avram::Model do
       post.tags.should eq [tag]
     end
 
-    it "count has_many through belongs_to associations" do
+    it "counts has_many through belongs_to associations" do
       tag = TagBox.create
       post = PostBox.create
       TagBox.create
@@ -60,7 +60,7 @@ describe Avram::Model do
       post.tags_count.should eq 1
     end
 
-    it "count has_many through has_many associations" do
+    it "counts has_many through has_many associations" do
       manager = ManagerBox.create
       employee = EmployeeBox.new.manager_id(manager.id).create
       BusinessSaleBox.new.employee_id(employee.id).create
