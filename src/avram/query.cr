@@ -3,7 +3,7 @@ require "./queryable"
 abstract class Avram::Query(T)
   # runs a SQL `TRUNCATE` on the current table
   def self.truncate
-    query = new
+    query = self.new
     query.database.exec "TRUNCATE TABLE #{query.table_name}"
   end
 

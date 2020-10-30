@@ -33,7 +33,6 @@ abstract class Avram::SaveOperation(T)
     @@permitted_param_keys = [] of String
   end
 
-  @valid : Bool = true
   @record : T?
   @params : Avram::Paramable
   getter :record, :params
