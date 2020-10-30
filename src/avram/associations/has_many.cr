@@ -91,7 +91,6 @@ module Avram::Associations::HasMany
           .__yield_where_{{ through.id }} do |through_query|
             through_query.{{ foreign_key.id }}(id)
           end
-          .preload_{{ through.id }}
           .select_count
       {% else %}
         {{ model }}::BaseQuery
