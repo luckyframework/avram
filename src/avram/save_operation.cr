@@ -29,24 +29,16 @@ abstract class Avram::SaveOperation(T)
     Unperformed
   end
 
-  @save_status = SaveStatus::Unperformed
-
   macro inherited
-    @valid : Bool = true
     @@permitted_param_keys = [] of String
-    @@schema_class = T
   end
-
-  property save_status
 
   @record : T?
   @params : Avram::Paramable
   getter :record, :params
+  property save_status : SaveStatus = SaveStatus::Unperformed
 
-  abstract def table_name
   abstract def attributes
-  abstract def primary_key_name
-  abstract def database
 
   def self.param_key
     T.name.underscore
@@ -58,6 +50,8 @@ abstract class Avram::SaveOperation(T)
   def initialize
     @params = Avram::Params.new
   end
+
+  delegate :database, :table_name, :primary_key_name, to: T
 
   # :nodoc:
   def published_save_failed_event
@@ -381,25 +375,25 @@ abstract class Avram::SaveOperation(T)
     self.created_at.value ||= Time.utc if responds_to?(:created_at)
     self.updated_at.value ||= Time.utc if responds_to?(:updated_at)
     @record = database.query insert_sql.statement, args: insert_sql.args do |rs|
-      @record = @@schema_class.from_rs(rs).first
+      @record = T.from_rs(rs).first
     end
   end
 
   private def update(id) : T
     self.updated_at.value = Time.utc if responds_to?(:updated_at)
     @record = database.query update_query(id).statement_for_update(changes), args: update_query(id).args_for_update(changes) do |rs|
-      @record = @@schema_class.from_rs(rs).first
+      @record = T.from_rs(rs).first
     end
   end
 
   private def update_query(id)
     Avram::QueryBuilder
       .new(table_name)
-      .select(@@schema_class.column_names)
+      .select(T.column_names)
       .where(Avram::Where::Equal.new(primary_key_name, id.to_s))
   end
 
   private def insert_sql
-    Avram::Insert.new(table_name, changes, @@schema_class.column_names)
+    Avram::Insert.new(table_name, changes, T.column_names)
   end
 end

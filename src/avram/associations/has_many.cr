@@ -25,7 +25,7 @@ module Avram::Associations::HasMany
   end
 
   private macro define_has_many_base_query(assoc_name, model, foreign_key, through)
-    class BaseQuery < Avram::Query
+    class BaseQuery < Avram::Query({{ @type.id }})
       def preload_{{ assoc_name }}
         preload_{{ assoc_name }}({{ model }}::BaseQuery.new)
       end

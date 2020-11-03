@@ -1,23 +1,12 @@
 class Avram::BaseQueryTemplate
   macro setup(type, columns, associations, table_name, primary_key_name, *args, **named_args)
-    class ::{{ type }}::BaseQuery < Avram::Query
+    class ::{{ type }}::BaseQuery < Avram::Query({{ type }})
       private class Nothing
       end
 
       def_clone
       include Avram::Queryable({{ type }})
       include Avram::PrimaryKeyQueryable({{ type }})
-
-      def database : Avram::Database.class
-        {{ type }}.database
-      end
-
-      def query_class
-
-      end
-
-      @@table_name = :{{ table_name }}
-      @@schema_class = {{ type }}
 
       # If not using default 'id' primary key
       {% if primary_key_name.id != "id".id %}
@@ -27,13 +16,9 @@ class Avram::BaseQueryTemplate
         end
       {% end %}
 
-      def primary_key_name
-        :{{ primary_key_name.id }}
-      end
-
       macro generate_criteria_method(query_class, name, type)
         def \{{ name }}
-          column_name = "#{@@table_name}.\{{ name }}"
+          column_name = "#{table_name}.\{{ name }}"
           \{{ type }}::Lucky::Criteria(\{{ query_class }}, \{{ type }}).new(self, column_name)
         end
       end
@@ -94,7 +79,7 @@ class Avram::BaseQueryTemplate
             {% if assoc[:relationship_type] == :belongs_to %}
               join(
                 Avram::Join::{{ join_type.id }}.new(
-                  from: @@table_name,
+                  from: table_name,
                   to: :{{ assoc[:table_name] }},
                   primary_key: {{ assoc[:foreign_key] }},
                   foreign_key: {{ assoc[:type] }}::PRIMARY_KEY_NAME
@@ -103,7 +88,7 @@ class Avram::BaseQueryTemplate
             {% elsif assoc[:relationship_type] == :has_one %}
               join(
                 Avram::Join::{{ join_type.id }}.new(
-                  from: @@table_name,
+                  from: table_name,
                   to: {{ assoc[:type] }}::TABLE_NAME,
                   foreign_key: :{{ assoc[:foreign_key] }},
                   primary_key: primary_key_name
@@ -117,7 +102,7 @@ class Avram::BaseQueryTemplate
             {% else %}
               join(
                 Avram::Join::{{ join_type.id }}.new(
-                  from: @@table_name,
+                  from: table_name,
                   to: :{{ assoc[:table_name] }},
                   foreign_key: {{ assoc[:foreign_key] }},
                   primary_key: primary_key_name
