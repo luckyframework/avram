@@ -51,17 +51,7 @@ abstract class Avram::SaveOperation(T)
     @params = Avram::Params.new
   end
 
-  def database
-    T.database
-  end
-
-  def table_name
-    T.table_name
-  end
-
-  def primary_key_name
-    T.primary_key_name
-  end
+  delegate :database, :table_name, :primary_key_name, to: T
 
   # :nodoc:
   def published_save_failed_event

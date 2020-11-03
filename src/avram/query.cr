@@ -7,20 +7,10 @@ abstract class Avram::Query(T)
     query.database.exec "TRUNCATE TABLE #{query.table_name}"
   end
 
+  delegate :database, :table_name, :primary_key_name, to: T
+
   def schema_class
     T
-  end
-
-  def database : Avram::Database.class
-    schema_class.database
-  end
-
-  def table_name
-    schema_class.table_name
-  end
-
-  def primary_key_name
-    schema_class.primary_key_name
   end
 
   private def escape_sql(value : Int32)
