@@ -5,6 +5,7 @@ private class OperationWithNeeds < Avram::Operation
   needs id : Int32
   attribute title : String
   attribute published : Bool = false
+  file_attribute :image
 
   def run
     tags.join(", ")
@@ -29,6 +30,8 @@ private class NeedsSaveOperation < Needs::SaveOperation
   needs created_by : String
   needs nilable_value : String?
   needs optional : String = "bar"
+  attribute not_db_related : Int32
+  file_attribute :image
 end
 
 describe "Avram::Operation needs" do
@@ -48,6 +51,13 @@ describe "Avram::Operation needs" do
       operation.id.should eq 3
       operation.title.value.should eq "test"
       operation.published.value.should eq true
+    end
+  end
+
+  it "sets up named args for file_attribute" do
+    uploaded_file = Avram::UploadedFile.new("thumb.png")
+    OperationWithNeeds.run(tags: ["one", "two"], id: 3, image: uploaded_file) do |operation, _value|
+      operation.image.value.should be_a Avram::Uploadable
     end
   end
 end
@@ -72,12 +82,15 @@ describe "Avram::SaveOperation needs" do
   end
 
   it "also generates named args for other attributes" do
-    NeedsSaveOperation.create(name: "Jane", nilable_value: "not nil", optional: "bar", created_by: "Jane") do |operation, _record|
+    uploaded_file = Avram::UploadedFile.new("thumb.png")
+    NeedsSaveOperation.create(name: "Jane", nilable_value: "not nil", optional: "bar", created_by: "Jane", not_db_related: 4, image: uploaded_file) do |operation, _record|
       # Problem seems to be that params override passed in val
       operation.name.value.should eq("Jane")
       operation.nilable_value.should eq("not nil")
       operation.created_by.should eq("Jane")
       operation.optional.should eq("bar")
+      operation.not_db_related.value.should eq(4)
+      operation.image.value.not_nil!.filename.should eq "thumb.png"
     end
   end
 end
