@@ -100,30 +100,7 @@ module Avram::DefineAttribute
 
     {% name = key.id %}
 
-    @_{{ name }} : Avram::Attribute(Avram::Uploadable?)?
-
-    ensure_base_attributes_method_is_present
-
-    def attributes
-      ([{{ name }}] + previous_def + super).uniq
-    end
-
-    def {{ name }}
-      _{{ name }}.permitted
-    end
-
-    private def _{{ name }}
-      @_{{ name }} ||= Avram::Attribute(Avram::Uploadable?).new(
-        name: :{{ name }},
-        param: {{ name }}_param,
-        value: nil,
-        param_key: self.class.param_key
-      ).tap do |attribute|
-        if {{ name }}_param_given?
-          set_{{ name }}_from_param(attribute)
-        end
-      end
-    end
+    attribute {{ name }} : Avram::Uploadable
 
     private def {{ name }}_param
       if file = params.nested_file?(self.class.param_key)
@@ -134,15 +111,6 @@ module Avram::DefineAttribute
     private def {{ name }}_param_given?
       file = params.nested_file?(self.class.param_key)
       file && file.has_key?("{{ name }}")
-    end
-
-    def set_{{ name }}_from_param(attribute : Avram::Attribute)
-      parse_result = Avram::Uploadable::Lucky.parse({{ name }}_param)
-      if parse_result.is_a? Avram::Type::SuccessfulCast
-        attribute.value = parse_result.value
-      else
-        attribute.add_error "is invalid"
-      end
     end
   end
 end
