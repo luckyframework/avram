@@ -20,7 +20,7 @@ class JSONQuery < Blob::BaseQuery
   end
 end
 
-describe Avram::Query do
+describe Avram::Queryable do
   it "can chain scope methods" do
     ChainedQuery.new.young.named("Paul")
   end

@@ -4,6 +4,8 @@ module Avram::Queryable(T)
   @query : Avram::QueryBuilder?
   setter query
 
+  delegate :database, :table_name, :primary_key_name, to: T
+
   macro included
     def self.new_with_existing_query(query : Avram::QueryBuilder)
       new.tap do |queryable|
@@ -30,6 +32,15 @@ module Avram::Queryable(T)
     def self.last?
       new.last?
     end
+
+    def self.truncate
+      query = self.new
+      query.database.exec "TRUNCATE TABLE #{query.table_name}"
+    end
+  end
+
+  def schema_class
+    T
   end
 
   def query
@@ -211,6 +222,14 @@ module Avram::Queryable(T)
 
   private def with_ordered_query : self
     self
+  end
+
+  private def escape_sql(value : Int32)
+    value
+  end
+
+  private def escape_sql(value : String)
+    PG::EscapeHelper.escape_literal(value)
   end
 
   def to_sql
