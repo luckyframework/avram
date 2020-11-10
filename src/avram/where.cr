@@ -18,14 +18,6 @@ module Avram::Where
 
     abstract def prepare(placeholder_supplier : Proc(String)) : String
 
-    def ==(other : Condition)
-      prepare(->{ "unused" }) == other.prepare(->{ "unused" })
-    end
-
-    def ==(other)
-      false
-    end
-
     def clone
       self
     end
@@ -49,14 +41,6 @@ module Avram::Where
     getter value : String | Array(String) | Array(Int32)
 
     def initialize(@column, @value)
-    end
-
-    def ==(other : ValueHoldingSqlClause)
-      (prepare(->{ "unused" }) + value.to_s) == (other.prepare(->{ "unused" }) + other.value.to_s)
-    end
-
-    def ==(other : Condition)
-      false
     end
   end
 
