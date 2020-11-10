@@ -17,7 +17,7 @@ describe Avram::QueryBuilder do
       .where(Avram::Where::Equal.new(:name, "Paul"))
       .where(Avram::Where::Equal.new(:age, "18"))
       .or(&.where(Avram::Where::Equal.new(:name, "Paul"))
-            .where(Avram::Where::Equal.new(:age, "100")))
+        .where(Avram::Where::Equal.new(:age, "100")))
 
     query.statement.should eq "SELECT * FROM users WHERE name = $1 AND age = $2 OR name = $3 AND age = $4"
   end
