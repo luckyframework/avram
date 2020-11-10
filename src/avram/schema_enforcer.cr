@@ -2,27 +2,12 @@ module Avram::SchemaEnforcer
   ALL_MODELS     = [] of Avram::Model.class
   MODELS_TO_SKIP = [] of String # Stringified class name
 
-  macro setup(table_name, columns, type, *args, **named_args)
+  macro setup(type, *args, **named_args)
     def self.ensure_correct_column_mappings!
       return if Avram::SchemaEnforcer::MODELS_TO_SKIP.includes?(self.name)
 
-      attributes = [
-        {% for attribute in columns %}
-          { name: :{{attribute[:name]}}, nilable: {{ attribute[:nilable] }}, type: {{ attribute[:type] }} },
-        {% end %}
-      ]
-
-      database_info = {{ type }}.database.database_info
-      EnsureExistingTable.new(
-        model_class: {{ type }},
-        table_name: :{{table_name}},
-        database_info: database_info
-      ).ensure_exists!
-      EnsureMatchingColumns.new(
-        model_class: {{ type }},
-        table_name: :{{table_name}},
-        database_info: database_info
-      ).ensure_matches! attributes
+      EnsureExistingTable.new(model_class: {{ type.id }}).validate!
+      EnsureMatchingColumns.new(model_class: {{ type.id }}).validate!
     end
 
     {% if !type.resolve.abstract? %}
@@ -42,27 +27,35 @@ module Avram::SchemaEnforcer
     {% Avram::SchemaEnforcer::MODELS_TO_SKIP << @type.stringify %}
   end
 
-  class EnsureExistingTable
-    private getter table_name : Symbol
+  abstract class Validation
     private getter model_class : Avram::Model.class
-    private getter database_info : Database::DatabaseInfo
+    private getter database_info : Avram::Database::DatabaseInfo
 
-    def initialize(@model_class, @table_name, @database_info)
+    def initialize(@model_class)
+      @database_info = @model_class.database.database_info
     end
 
-    def ensure_exists!
+    abstract def validate!
+
+    private def table_name
+      model_class.table_name.to_s
+    end
+  end
+
+  class EnsureExistingTable < Validation
+    def validate!
       if table_missing?
-        best_match = Levenshtein::Finder.find table_name.to_s, database_info.table_names, tolerance: 2
+        best_match = Levenshtein::Finder.find table_name, database_info.table_names, tolerance: 2
 
         message = String.build do |string|
-          string << "#{model_class.to_s.colorize.bold} wants to use the '#{table_name.colorize.bold}' table but it is missing.\n"
+          string << "#{model_class.name.colorize.bold} wants to use the '#{table_name.colorize.bold}' table but it is missing.\n"
 
           if best_match
             string << <<-TEXT
 
-            If you meant for #{model_class.to_s.colorize.bold} to use the '#{best_match.colorize.yellow.bold}' table, try this...
+            If you meant for #{model_class.name.colorize.bold} to use the '#{best_match.colorize.yellow.bold}' table, try this...
 
-              ▸ Change the table name in #{model_class.to_s.colorize.bold}:
+              ▸ Change the table name in #{model_class.name.colorize.bold}:
 
                   table :#{best_match.colorize.bold} do
                     # ..columns
@@ -77,7 +70,7 @@ module Avram::SchemaEnforcer
 
             ▸ Generate a migration:
 
-                lucky gen.migration Create#{Wordsmith::Inflector.pluralize(model_class.name.to_s)}
+                lucky gen.migration Create#{Wordsmith::Inflector.pluralize(model_class.name)}
 
             ▸ Create the table in the migration:
 
@@ -89,7 +82,7 @@ module Avram::SchemaEnforcer
 
           Or, you can skip schema checks for this model:
 
-              class #{model_class} < BaseModel
+              class #{model_class.name} < BaseModel
                 # Great for models used in migrations, or for legacy schemas
                 skip_schema_enforcer
               end
@@ -103,24 +96,23 @@ module Avram::SchemaEnforcer
     end
 
     private def table_missing?
-      !database_info.table?(table_name.to_s)
+      !database_info.table?(table_name)
     end
   end
 
-  class EnsureMatchingColumns
-    private getter model_class : Avram::Model.class
-    private getter table_name : Symbol
+  class EnsureMatchingColumns < Validation
     private getter table_info : Database::TableInfo
     @missing_columns = [] of String
     @optional_attribute_errors = [] of String
     @required_attribute_errors = [] of String
 
-    def initialize(@model_class, @table_name, database_info : Avram::Database::DatabaseInfo)
-      @table_info = database_info.table(table_name.to_s).not_nil!
+    def initialize(model_class)
+      super
+      @table_info = database_info.table(table_name).not_nil!
     end
 
-    def ensure_matches!(attributes)
-      attributes.each do |attribute|
+    def validate!
+      model_class.columns.each do |attribute|
         check_column_matches attribute
       end
 
@@ -149,7 +141,7 @@ module Avram::SchemaEnforcer
     end
 
     private def missing_attribute_error(table_name, column_names, missing_attribute)
-      message = "#{model_class.to_s.colorize.bold} wants to use the column '#{missing_attribute[:name].to_s.colorize.bold}' but it does not exist."
+      message = "#{model_class.name.colorize.bold} wants to use the column '#{missing_attribute[:name].to_s.colorize.bold}' but it does not exist."
       best_match = Levenshtein::Finder.find missing_attribute[:name].to_s, column_names, tolerance: 2
 
       if best_match
@@ -162,7 +154,7 @@ module Avram::SchemaEnforcer
 
           ▸ Generate a migration:
 
-              lucky gen.migration Add#{Wordsmith::Inflector.classify(missing_attribute[:name])}To#{Wordsmith::Inflector.pluralize(model_class)}
+              lucky gen.migration Add#{Wordsmith::Inflector.classify(missing_attribute[:name])}To#{Wordsmith::Inflector.pluralize(model_class.name)}
 
           ▸ Add the column to the migration:
 
@@ -176,7 +168,7 @@ module Avram::SchemaEnforcer
 
         Or, you can skip schema checks for this model:
 
-            class #{model_class} < BaseModel
+            class #{model_class.name} < BaseModel
               # Great for models used in migrations, or for legacy schemas
               skip_schema_enforcer
             end
@@ -190,9 +182,9 @@ module Avram::SchemaEnforcer
 
     private def optional_attribute_error(table_name, attribute)
       <<-ERROR
-      #{model_class.to_s.colorize.bold} has defined '#{attribute[:name].to_s.colorize.bold}' as nilable (#{attribute[:type]}?), but the database column does not allow nils.
+      #{model_class.name.colorize.bold} has defined '#{attribute[:name].to_s.colorize.bold}' as nilable (#{attribute[:type]}?), but the database column does not allow nils.
 
-      Either mark the column as required in #{model_class.to_s.colorize.bold}:
+      Either mark the column as required in #{model_class.name.colorize.bold}:
 
         #{"# Remove the '?'".colorize.dim}
         column #{attribute[:name]} : #{attribute[:type]}
@@ -201,7 +193,7 @@ module Avram::SchemaEnforcer
 
         ▸ Generate a migration:
 
-            lucky gen.migration Make#{model_class}#{Wordsmith::Inflector.classify(attribute[:name])}Optional
+            lucky gen.migration Make#{model_class.name}#{Wordsmith::Inflector.classify(attribute[:name])}Optional
 
         ▸ Make the column optional:
 
@@ -209,7 +201,7 @@ module Avram::SchemaEnforcer
 
       Alternatively, you can skip schema checks for this model:
 
-          class #{model_class} < BaseModel
+          class #{model_class.name} < BaseModel
             # Great for models used in migrations, or for legacy schemas
             skip_schema_enforcer
           end
@@ -220,9 +212,9 @@ module Avram::SchemaEnforcer
 
     private def required_attribute_error(table_name, attribute)
       <<-ERROR
-      #{model_class.to_s.colorize.bold} has defined '#{attribute[:name].to_s.colorize.bold}' as required (#{attribute[:type]}), but the database column does allow nils.
+      #{model_class.name.colorize.bold} has defined '#{attribute[:name].to_s.colorize.bold}' as required (#{attribute[:type]}), but the database column does allow nils.
 
-      Either mark the column as optional in #{model_class.to_s.colorize.bold}:
+      Either mark the column as optional in #{model_class.name.colorize.bold}:
 
         #{"# Add '?' to the  end of the type".colorize.bold}
         column #{attribute[:name]} : #{attribute[:type]}?
@@ -231,7 +223,7 @@ module Avram::SchemaEnforcer
 
         ▸ Generate a migration:
 
-            lucky gen.migration Make#{model_class}#{Wordsmith::Inflector.classify(attribute[:name])}Required
+            lucky gen.migration Make#{model_class.name}#{Wordsmith::Inflector.classify(attribute[:name])}Required
 
         ▸ Make the column required:
 
@@ -239,7 +231,7 @@ module Avram::SchemaEnforcer
 
       Alternatively, you can skip schema checks for this model:
 
-        class #{model_class} < BaseModel
+        class #{model_class.name} < BaseModel
           # Great for models used in migrations, or use with legacy schemas
           skip_schema_enforcer
         end
