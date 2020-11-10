@@ -2,18 +2,12 @@ module Avram::SchemaEnforcer
   ALL_MODELS     = [] of Avram::Model.class
   MODELS_TO_SKIP = [] of String # Stringified class name
 
-  macro setup(table_name, columns, type, *args, **named_args)
+  macro setup(type, *args, **named_args)
     def self.ensure_correct_column_mappings!
       return if Avram::SchemaEnforcer::MODELS_TO_SKIP.includes?(self.name)
 
-      attributes = [
-        {% for attribute in columns %}
-          { name: :{{attribute[:name]}}, nilable: {{ attribute[:nilable] }}, type: {{ attribute[:type].id }}.name },
-        {% end %}
-      ]
-
       EnsureExistingTable.new(model_class: {{ type.id }}).validate!
-      EnsureMatchingColumns.new(model_class: {{ type.id }}, attributes: attributes).validate!
+      EnsureMatchingColumns.new(model_class: {{ type.id }}).validate!
     end
 
     {% if !type.resolve.abstract? %}
@@ -108,18 +102,17 @@ module Avram::SchemaEnforcer
 
   class EnsureMatchingColumns < Validation
     private getter table_info : Database::TableInfo
-    private getter attributes : Array({name: Symbol, nilable: Bool, type: String})
     @missing_columns = [] of String
     @optional_attribute_errors = [] of String
     @required_attribute_errors = [] of String
 
-    def initialize(model_class, @attributes)
-      initialize model_class
+    def initialize(model_class)
+      super
       @table_info = database_info.table(table_name).not_nil!
     end
 
     def validate!
-      attributes.each do |attribute|
+      model_class.columns.each do |attribute|
         check_column_matches attribute
       end
 
