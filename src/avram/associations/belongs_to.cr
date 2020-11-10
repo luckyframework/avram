@@ -47,7 +47,7 @@ module Avram::Associations::BelongsTo
   end
 
   private macro define_belongs_to_base_query(assoc_name, model, foreign_key)
-    class BaseQuery < Avram::Query({{ @type.id }})
+    class BaseQuery
       def preload_{{ assoc_name }}
         preload_{{ assoc_name }}({{ model }}::BaseQuery.new)
       end
