@@ -133,4 +133,16 @@ class Avram::Migrator::CreateTableStatement
 
     add_index :{{ foreign_key_name }}
   end
+
+  macro belongs_to(type_declaration, *args, **named_args)
+    {% raise <<-ERROR
+      Unexpected call to `belongs_to` in a migration.
+      Found in #{type_declaration.filename.id}:#{type_declaration.line_number}:#{type_declaration.column_number}.
+
+      Did you mean to use 'add_belongs_to'?
+
+      'add_belongs_to #{type_declaration}, ...'
+      ERROR
+    %}
+  end
 end
