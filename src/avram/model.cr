@@ -8,8 +8,6 @@ abstract class Avram::Model
   include Avram::Polymorphic
   include Avram::SchemaEnforcer
 
-  class_getter table_name
-
   abstract def id
 
   macro inherited
@@ -187,8 +185,8 @@ abstract class Avram::Model
   end
 
   macro setup_table_name(table_name, *args, **named_args)
-    @@table_name = :{{table_name}}
-    TABLE_NAME = :{{table_name}}
+    class_getter table_name = {{ table_name.id.symbolize }}
+    TABLE_NAME = {{ table_name.id.symbolize }}
   end
 
   macro setup_initialize(columns, *args, **named_args)
