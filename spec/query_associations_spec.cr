@@ -154,9 +154,9 @@ describe "Query associations" do
 
     line_item_query = LineItemQuery.new
       .id(item.id)
-      .where_products(ProductQuery.new.id(product.id))
+      .where_associated_products(ProductQuery.new.id(product.id))
     result = LineItemProductQuery.new
-      .where_line_items(line_item_query)
+      .where_line_item(line_item_query)
       .find(line_item_product.id)
 
     result.should eq(line_item_product)

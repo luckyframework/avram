@@ -103,6 +103,7 @@ abstract class Avram::Model
     setup(Avram::Model.setup_db_mapping)
     setup(Avram::Model.setup_getters)
     setup(Avram::Model.setup_column_info_methods)
+    setup(Avram::Model.setup_association_queries)
     setup(Avram::BaseQueryTemplate.setup)
     setup(Avram::SaveOperationTemplate.setup)
     setup(Avram::SchemaEnforcer.setup)
@@ -216,6 +217,20 @@ abstract class Avram::Model
         },
       {% end %}
     })
+  end
+
+  macro setup_association_queries(associations, *args, **named_args)
+    {% for assoc in associations %}
+      def {{ assoc[:assoc_name] }}_query
+        {% if assoc[:type] == :has_many %}
+          {{ assoc[:type] }}::BaseQuery.new.{{ assoc[:foreign_key].id }}(id)
+        {% elsif assoc[:type] == :belongs_to %}
+          {{ assoc[:type] }}::BaseQuery.new.id({{ assoc[:foreign_key].id }})
+        {% else %}
+          {{ assoc[:type] }}::BaseQuery.new
+        {% end %}
+      end
+    {% end %}
   end
 
   macro setup_getters(columns, *args, **named_args)
