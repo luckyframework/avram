@@ -175,12 +175,20 @@ class Avram::Migrator::AlterTableStatement
     @fill_existing_with_statements << "ALTER TABLE #{@table_name} ALTER COLUMN #{column} SET NOT NULL;" unless nilable
   end
 
-  {% symbol_expected_message = "%s expected a symbol like ':user', instead got: '%s'" %}
-
   macro rename(old_name, new_name)
     {% for name in {old_name, new_name} %}
       {% unless name.is_a?(SymbolLiteral) %}
-        {% raise symbol_expected_message % {"rename", name} %}
+        {% raise <<-ERROR
+
+        rename expected a symbol like ':user', instead got: '#{name}'.
+
+        in: #{name.filename}:#{name.line_number}:#{name.column_number}
+
+        Try replacing...
+
+          ▸ '#{name}' with '#{name.var}'
+        ERROR
+        %}
       {% end %}
     {% end %}
     renamed_rows << "RENAME COLUMN #{{{old_name}}} TO #{{{new_name}}}"
@@ -189,7 +197,17 @@ class Avram::Migrator::AlterTableStatement
   macro rename_belongs_to(old_association_name, new_association_name)
     {% for association_name in {old_association_name, new_association_name} %}
       {% unless association_name.is_a?(SymbolLiteral) %}
-        {% raise symbol_expected_message % {"rename_belongs_to", association_name} %}
+        {% raise <<-ERROR
+
+        rename_belongs_to expected a symbol like ':user', instead got: '#{name}'.
+
+        in: #{name.filename}:#{name.line_number}:#{name.column_number}
+
+        Try replacing...
+
+          ▸ '#{name}' with '#{name.var}'
+        ERROR
+        %}
       {% end %}
     {% end %}
     rename {{old_association_name}}_id, {{new_association_name}}_id
@@ -197,14 +215,34 @@ class Avram::Migrator::AlterTableStatement
 
   macro remove(name)
     {% unless name.is_a?(SymbolLiteral) %}
-      {% raise symbol_expected_message % {"remove", name} %}
+      {% raise <<-ERROR
+
+        remove expected a symbol like ':user', instead got: '#{name}'.
+
+        in: #{name.filename}:#{name.line_number}:#{name.column_number}
+
+        Try replacing...
+
+          ▸ '#{name}' with '#{name.var}'
+        ERROR
+      %}
     {% end %}
     dropped_rows << "  DROP #{{{name}}}"
   end
 
   macro remove_belongs_to(association_name)
     {% unless association_name.is_a?(SymbolLiteral) %}
-      {% raise symbol_expected_message % {"remove_belongs_to", association_name} %}
+      {% raise <<-ERROR
+
+      remove_belongs_to expected a symbol like ':user', instead got: '#{name}'.
+
+      in: #{name.filename}:#{name.line_number}:#{name.column_number}
+
+      Try replacing...
+
+        ▸ '#{name}' with '#{name.var}'
+      ERROR
+      %}
     {% end %}
     remove {{ association_name }}_id
   end
