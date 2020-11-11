@@ -177,15 +177,21 @@ class Avram::Migrator::AlterTableStatement
 
   macro symbol_expected_error(action, name)
 
+    {% if name.is_a?(TypeDeclaration) %}
+      {% example = name.var %}
+    {% else %}
+      {% example = name.id %}
+    {% end %}
+
     {% raise <<-ERROR
 
-    #{action} expected a symbol like ':user', instead got: '#{name}'.
+    #{action} expected a symbol like #{example}, instead got: #{name}.
 
     in: #{name.filename}:#{name.line_number}:#{name.column_number}
 
     Try replacing...
 
-      ▸ '#{name}' with ':#{name.var}'
+      ▸ #{name} with :#{example}
     ERROR
     %}
   end
