@@ -185,7 +185,7 @@ class Avram::Migrator::AlterTableStatement
 
     Try replacing...
 
-      ▸ '#{name}' with '#{name.var}'
+      ▸ '#{name}' with ':#{name.var}'
     ERROR
     %}
   end
