@@ -35,7 +35,7 @@ module Avram::Associations::HasMany
           add_preload do |records|
             ids = records.map(&.id)
             {{ assoc_name }} = {} of {{ model }}::PrimaryKeyType => Array({{ model }})
-            if !ids.empty?
+            if ids.any?
               all_{{ assoc_name }} = preload_query
                 .join_{{ through.id }}
                 .__yield_where_{{ through.id }} do |through_query|
