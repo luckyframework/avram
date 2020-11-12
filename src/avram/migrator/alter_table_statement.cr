@@ -185,7 +185,7 @@ class Avram::Migrator::AlterTableStatement
 
     {% raise <<-ERROR
 
-    #{action} expected a symbol like #{example}, instead got: #{name}.
+    #{action} expected a symbol like :#{example}, instead got: #{name}.
 
     in: #{name.filename}:#{name.line_number}:#{name.column_number}
 
