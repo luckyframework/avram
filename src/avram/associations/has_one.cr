@@ -17,7 +17,7 @@ module Avram::Associations::HasOne
     {% foreign_key = foreign_key.id %}
 
     association \
-      table_name: :{{ type_declaration.var }},
+      assoc_name: :{{ type_declaration.var }},
       type: {{ model }},
       foreign_key: {{ foreign_key }},
       relationship_type: :has_one
