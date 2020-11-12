@@ -175,12 +175,31 @@ class Avram::Migrator::AlterTableStatement
     @fill_existing_with_statements << "ALTER TABLE #{@table_name} ALTER COLUMN #{column} SET NOT NULL;" unless nilable
   end
 
-  {% symbol_expected_message = "%s expected a symbol like ':user', instead got: '%s'" %}
+  macro symbol_expected_error(action, name)
+
+    {% if name.is_a?(TypeDeclaration) %}
+      {% example = name.var %}
+    {% else %}
+      {% example = name.id %}
+    {% end %}
+
+    {% raise <<-ERROR
+
+    #{action} expected a symbol like :#{example}, instead got: #{name}.
+
+    in: #{name.filename}:#{name.line_number}:#{name.column_number}
+
+    Try replacing...
+
+      ▸ #{name} with :#{example}
+    ERROR
+    %}
+  end
 
   macro rename(old_name, new_name)
     {% for name in {old_name, new_name} %}
       {% unless name.is_a?(SymbolLiteral) %}
-        {% raise symbol_expected_message % {"rename", name} %}
+        symbol_expected_error("rename", {{ name }})
       {% end %}
     {% end %}
     renamed_rows << "RENAME COLUMN #{{{old_name}}} TO #{{{new_name}}}"
@@ -189,7 +208,7 @@ class Avram::Migrator::AlterTableStatement
   macro rename_belongs_to(old_association_name, new_association_name)
     {% for association_name in {old_association_name, new_association_name} %}
       {% unless association_name.is_a?(SymbolLiteral) %}
-        {% raise symbol_expected_message % {"rename_belongs_to", association_name} %}
+        symbol_expected_error("rename_belongs_to", {{ name }})
       {% end %}
     {% end %}
     rename {{old_association_name}}_id, {{new_association_name}}_id
@@ -197,14 +216,14 @@ class Avram::Migrator::AlterTableStatement
 
   macro remove(name)
     {% unless name.is_a?(SymbolLiteral) %}
-      {% raise symbol_expected_message % {"remove", name} %}
+      symbol_expected_error("remove", {{ name }})
     {% end %}
     dropped_rows << "  DROP #{{{name}}}"
   end
 
   macro remove_belongs_to(association_name)
     {% unless association_name.is_a?(SymbolLiteral) %}
-      {% raise symbol_expected_message % {"remove_belongs_to", association_name} %}
+      symbol_expected_error("remove_belongs_to", {{ name }})
     {% end %}
     remove {{ association_name }}_id
   end
