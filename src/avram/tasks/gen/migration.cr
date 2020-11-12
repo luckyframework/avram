@@ -72,7 +72,9 @@ class Avram::Migrator::MigrationGenerator
     d.each_child { |x|
       if x.starts_with?(/[0-9]{14}_#{name.underscore}.cr/)
         raise <<-ERROR
-          Duplicate migration name
+          Migration name must be unique
+
+          Migration name: #{name.underscore}.cr already exists as: #{x}.
         ERROR
       end
     }
