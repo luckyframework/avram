@@ -21,7 +21,7 @@ module Avram::Associations::BelongsTo
     column {{ foreign_key.id }} : {{ model }}::PrimaryKeyType{% if nilable %}?{% end %}
 
     association \
-      table_name: :{{ table.id }},
+      assoc_name: :{{ table.id }},
       type: {{ model }},
       foreign_key: :{{ foreign_key.id }},
       relationship_type: :belongs_to
