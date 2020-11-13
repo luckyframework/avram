@@ -37,6 +37,7 @@ abstract class Avram::SaveOperation(T)
   @params : Avram::Paramable
   getter :record, :params
   property save_status : SaveStatus = SaveStatus::Unperformed
+  property valid : Bool = true
 
   abstract def attributes
 
@@ -210,7 +211,9 @@ abstract class Avram::SaveOperation(T)
 
   # Runs required validation,
   # then returns `true` if all attributes are valid.
+  # Set `valid` to false to force invalid state.
   def valid? : Bool
+    return false unless valid
     # These validations must be ran after all `before_save` callbacks have completed
     # in the case that someone has set a required field in a `before_save`. If we run
     # this in a `before_save` ourselves, the ordering would cause this to be ran first.

@@ -15,6 +15,7 @@ abstract class Avram::Operation
 
   @params : Avram::Paramable
   getter params
+  property valid : Bool = true
 
   # Yields the instance of the operation, and the return value from
   # the `run` instance method.
@@ -90,7 +91,10 @@ abstract class Avram::Operation
     @params = Avram::Params.new
   end
 
+  # Returns `true` if all attributes are valid.
+  # Set `valid` to false to force invalid state.
   def valid?
+    return false unless valid
     attributes.all? &.valid?
   end
 
