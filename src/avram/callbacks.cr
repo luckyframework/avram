@@ -405,11 +405,26 @@ module Avram::Callbacks
   macro before(callback_method)
     {% raise <<-ERROR
 
-      'before' is not a valid SaveOperation callback.
+      'before' is not a valid #{@type.name} callback.
 
       Try this...
 
         ▸ before_save #{callback_method.id}
+
+      ERROR
+    %}
+  end
+
+  # :nodoc:
+  macro before(&block)
+    {% raise <<-ERROR
+
+      'before' is not a valid #{@type.name} callback.
+
+      Try this...
+
+        ▸ before_save do
+          end
 
       ERROR
     %}
