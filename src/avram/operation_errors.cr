@@ -1,7 +1,7 @@
 module Avram::OperationErrors
   macro included
     @custom_errors : Hash(Symbol, Array(String)) = {} of Symbol => Array(String)
-    private property valid : Bool = true
+    getter :custom_errors
   end
 
   def errors : Hash(Symbol, Array(String))
@@ -18,7 +18,6 @@ module Avram::OperationErrors
   end
 
   def add_error(key : Symbol, message : String) : Nil
-    self.valid = false
     @custom_errors[key] ||= [] of String
     @custom_errors[key].push(message)
   end
