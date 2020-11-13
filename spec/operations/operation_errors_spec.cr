@@ -10,7 +10,6 @@ class SaveUserButNotReally < User::SaveOperation
       add_error(:failure, "Like, really quick")
     end
   end
-
 end
 
 class FailedOperation < Avram::Operation
