@@ -8,13 +8,13 @@ require "./param_key_override"
 require "./inherit_column_attributes"
 require "./validations"
 require "./define_attribute"
-require "./save_operation_errors"
+require "./operation_errors"
 require "./param_key_override"
 
 abstract class Avram::SaveOperation(T)
   include Avram::DefineAttribute
   include Avram::Validations
-  include Avram::SaveOperationErrors
+  include Avram::OperationErrors
   include Avram::ParamKeyOverride
   include Avram::NeedyInitializerAndSaveMethods
   include Avram::Callbacks
@@ -226,11 +226,6 @@ abstract class Avram::SaveOperation(T)
   # Return true if the operation has run and the record failed to save
   def save_failed?
     save_status == SaveStatus::SaveFailed
-  end
-
-  # :nodoc:
-  macro fillable(*args)
-    {% raise "'fillable' has been renamed to 'permit_columns'" %}
   end
 
   macro permit_columns(*attribute_names)
