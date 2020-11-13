@@ -15,7 +15,6 @@ abstract class Avram::Operation
 
   @params : Avram::Paramable
   getter params
-  property valid : Bool = true
 
   # Yields the instance of the operation, and the return value from
   # the `run` instance method.
