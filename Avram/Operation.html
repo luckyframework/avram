@@ -1537,6 +1537,11 @@
       </li>
     
       <li class="entry-summary">
+        <a href="#custom_errors:Hash(Symbol,Array(String))-instance-method" class="signature"><strong>#custom_errors</strong> : Hash(Symbol, Array(String))</a>
+        
+      </li>
+    
+      <li class="entry-summary">
         <a href="#params:Avram::Paramable-instance-method" class="signature"><strong>#params</strong> : Avram::Paramable</a>
         
       </li>
@@ -1548,6 +1553,8 @@
     
       <li class="entry-summary">
         <a href="#valid?-instance-method" class="signature"><strong>#valid?</strong></a>
+        
+          <div class="summary"><p>Returns <code>true</code> if all attributes are valid, and there's no custom errors</p></div>
         
       </li>
     
@@ -1600,6 +1607,11 @@
 
   <h3>Instance methods inherited from module <code><a href="../Avram/OperationErrors.html">Avram::OperationErrors</a></code></h3>
   
+  
+    <a href="../Avram/OperationErrors.html#add_error(key:Symbol,message:String):Nil-instance-method" class="tooltip">
+      <span>add_error(key : Symbol, message : String) : Nil</span>
+    add_error</a>, 
+    
   
     <a href="../Avram/OperationErrors.html#errors:Hash(Symbol,Array(String))-instance-method" class="tooltip">
       <span>errors : Hash(Symbol, Array(String))</span>
@@ -1920,6 +1932,20 @@ or raise <code><a href="../Avram/FailedOperation.html">Avram::FailedOperation</a
       </div>
     </div>
   
+    <div class="entry-detail" id="custom_errors:Hash(Symbol,Array(String))-instance-method">
+      <div class="signature">
+        
+        def <strong>custom_errors</strong> : Hash(Symbol, <a href="../Array.html">Array</a>(<a href="../String.html">String</a>))
+
+        <a class="method-permalink" href="#custom_errors:Hash(Symbol,Array(String))-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+      </div>
+    </div>
+  
     <div class="entry-detail" id="params:Avram::Paramable-instance-method">
       <div class="signature">
         
@@ -1955,6 +1981,12 @@ or raise <code><a href="../Avram/FailedOperation.html">Avram::FailedOperation</a
 
         <a class="method-permalink" href="#valid?-instance-method">#</a>
       </div>
+      
+        <div class="doc">
+          
+          <p>Returns <code>true</code> if all attributes are valid,
+and there's no custom errors</p>
+        </div>
       
       <br/>
       <div>

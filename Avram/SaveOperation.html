@@ -1532,6 +1532,11 @@
       </li>
     
       <li class="entry-summary">
+        <a href="#custom_errors-instance-method" class="signature"><strong>#custom_errors</strong></a>
+        
+      </li>
+    
+      <li class="entry-summary">
         <a href="#database(*args,**options)-instance-method" class="signature"><strong>#database</strong>(*args, **options)</a>
         
       </li>
@@ -1623,7 +1628,7 @@
       <li class="entry-summary">
         <a href="#valid?:Bool-instance-method" class="signature"><strong>#valid?</strong> : Bool</a>
         
-          <div class="summary"><p>Runs required validation, then returns <code>true</code> if all attributes are valid.</p></div>
+          <div class="summary"><p>Runs required validation, then returns <code>true</code> if all attributes are valid, and there's no custom errors</p></div>
         
       </li>
     
@@ -1759,6 +1764,11 @@
 
   <h3>Instance methods inherited from module <code><a href="../Avram/OperationErrors.html">Avram::OperationErrors</a></code></h3>
   
+  
+    <a href="../Avram/OperationErrors.html#add_error(key:Symbol,message:String):Nil-instance-method" class="tooltip">
+      <span>add_error(key : Symbol, message : String) : Nil</span>
+    add_error</a>, 
+    
   
     <a href="../Avram/OperationErrors.html#errors:Hash(Symbol,Array(String))-instance-method" class="tooltip">
       <span>errors : Hash(Symbol, Array(String))</span>
@@ -2011,6 +2021,20 @@
         def <strong>changes</strong> : Hash(Symbol, <a href="../String.html">String</a>?)
 
         <a class="method-permalink" href="#changes:Hash(Symbol,String?)-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="custom_errors-instance-method">
+      <div class="signature">
+        
+        def <strong>custom_errors</strong>
+
+        <a class="method-permalink" href="#custom_errors-instance-method">#</a>
       </div>
       
       <br/>
@@ -2278,7 +2302,8 @@
         <div class="doc">
           
           <p>Runs required validation,
-then returns <code>true</code> if all attributes are valid.</p>
+then returns <code>true</code> if all attributes are valid,
+and there's no custom errors</p>
         </div>
       
       <br/>
