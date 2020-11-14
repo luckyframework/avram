@@ -90,8 +90,10 @@ abstract class Avram::Operation
     @params = Avram::Params.new
   end
 
+  # Returns `true` if all attributes are valid,
+  # and there's no custom errors
   def valid?
-    attributes.all? &.valid?
+    custom_errors.empty? && attributes.all?(&.valid?)
   end
 
   def self.param_key
