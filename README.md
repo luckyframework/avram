@@ -1,5 +1,6 @@
 # Avram
 
+[![API Documentation Website](https://img.shields.io/website?down_color=red&down_message=Offline&label=API%20Documentation&up_message=Online&url=https%3A%2F%2Fluckyframework.github.io%2Favram%2F)](https://luckyframework.github.io/avram)
 
 ### Why Avram?
 
@@ -22,9 +23,6 @@ dependencies:
 ```crystal
 require "avram"
 ```
-
-## Documenation
-[API (master)](https://luckyframework.github.io/avram/)
 
 ## Contributing
 
