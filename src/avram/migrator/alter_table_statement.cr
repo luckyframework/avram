@@ -1,19 +1,34 @@
-require "./column_default_helpers"
-require "./column_type_option_helpers"
 require "./index_statement_helpers"
-require "./references_helper"
+require "./missing_on_delete_with_belongs_to_error"
 
 class Avram::Migrator::AlterTableStatement
   include Avram::Migrator::IndexStatementHelpers
-  include Avram::Migrator::ColumnTypeOptionHelpers
-  include Avram::Migrator::ColumnDefaultHelpers
-  include Avram::Migrator::ReferencesHelper
+  include Avram::Migrator::MissingOnDeleteWithBelongsToError
 
   getter rows = [] of String
+  getter renamed_rows = [] of String
   getter dropped_rows = [] of String
   getter fill_existing_with_statements = [] of String
+  getter change_type_statements = [] of String
 
   def initialize(@table_name : Symbol)
+  end
+
+  macro change_type(type_declaration, **type_options)
+    {% if !type_declaration.is_a?(TypeDeclaration) %}
+      {% type_declaration.raise "Must pass a type declaration to 'change_type'. Example: change_type age : Int32" %}
+    {% end %}
+    %column = ::Avram::Migrator::Columns::{{ type_declaration.type }}Column({{ type_declaration.type }}).new(
+      name: {{ type_declaration.var.stringify }},
+      nilable: false,
+      default: nil,
+      {{ **type_options }}
+    )
+    add_change_type_statement %column
+  end
+
+  def add_change_type_statement(column : ::Avram::Migrator::Columns::Base)
+    change_type_statements << column.build_change_type_statement(@table_name)
   end
 
   # Accepts a block to alter a table using the `add` method. The generated sql
@@ -42,19 +57,26 @@ class Avram::Migrator::AlterTableStatement
   end
 
   def statements
-    [alter_statement] + index_statements + fill_existing_with_statements
+    alter_statements + change_type_statements + index_statements + fill_existing_with_statements
   end
 
-  def alter_statement
-    String.build do |statement|
-      statement << "ALTER TABLE #{@table_name}"
-      statement << "\n"
-      statement << (rows + dropped_rows).join(",\n")
+  def alter_statements : Array(String)
+    alterations = renamed_rows.map do |statement|
+      "ALTER TABLE #{@table_name} #{statement};"
     end
+    unless (rows + dropped_rows).empty?
+      alterations << String.build do |statement|
+        statement << "ALTER TABLE #{@table_name}"
+        statement << "\n"
+        statement << (rows + dropped_rows).join(",\n")
+        statement << ';'
+      end
+    end
+    alterations
   end
 
   # Adds a references column and index given a model class and references option.
-  macro add_belongs_to(type_declaration, on_delete, references = nil, foreign_key_type = Avram::Migrator::PrimaryKeyType::Serial)
+  macro add_belongs_to(type_declaration, on_delete, references = nil, foreign_key_type = Int64, fill_existing_with = nil, unique = false)
     {% unless type_declaration.is_a?(TypeDeclaration) %}
       {% raise "add_belongs_to expected a type declaration like 'user : User', instead got: '#{type_declaration}'" %}
     {% end %}
@@ -69,56 +91,78 @@ class Avram::Migrator::AlterTableStatement
     {% foreign_key_name = type_declaration.var + "_id" %}
     %table_name = {{ references }} || Wordsmith::Inflector.pluralize({{ underscored_class }})
 
-    add_index :{{ foreign_key_name }}
-    add_column :{{ foreign_key_name }},
-      type: {{ foreign_key_type }}.db_type,
-      optional: {{ optional }},
-      default: nil,
-      fill_existing_with: nil,
-      reference: %table_name,
-      on_delete: {{ on_delete }},
-      options: nil
-  end
+    rows << ::Avram::Migrator::Columns::{{ foreign_key_type }}Column({{ foreign_key_type }}).new(
+      name: {{ foreign_key_name.stringify }},
+      nilable: {{ optional }},
+      default: nil
+    )
+    .set_references(references: %table_name.to_s, on_delete: {{ on_delete }})
+    .build_add_statement_for_alter
 
-  macro add_belongs_to(_type_declaration, references = nil)
-    {% raise "Must use 'on_delete' when creating an add_belongs_to association.
-      Example: add_belongs_to user : User, on_delete: :cascade" %}
+    {% if fill_existing_with && fill_existing_with != :nothing %}
+      add_fill_existing_with_statements(
+        column: {{ foreign_key_name.stringify }},
+        type: {{ foreign_key_type }},
+        value: Avram::Migrator::Columns::{{ foreign_key_type }}Column.prepare_value_for_database({{ fill_existing_with }}),
+        nilable: {{ optional }}
+      )
+    {% end %}
+
+    add_index :{{ foreign_key_name }}, unique: {{ unique }}
   end
 
   macro add(type_declaration, index = false, using = :btree, unique = false, default = nil, fill_existing_with = nil, **type_options)
-    {% options = type_options.empty? ? nil : type_options %}
+    {% type = type_declaration.type %}
+    {% nilable = false %}
+    {% array = false %}
+    {% should_fill_existing = fill_existing_with && (fill_existing_with != :nothing) %}
+    {% if type.is_a?(Union) %}
+      {% type = type.types.first %}
+      {% nilable = true %}
+    {% end %}
+    {% if type.is_a?(Generic) %}
+      {% type = type.type_vars.first %}
+      {% array = true %}
+    {% end %}
 
-    {% if type_declaration.type.is_a?(Union) %}
-      add_column :{{ type_declaration.var }}, {{ type_declaration.type.types.first }}, true, {{ default }}, nil, options: {{ options }}
-    {% else %}
-      {% if default == nil && fill_existing_with == nil %}
-        {% raise <<-ERROR
+    {% if !nilable && default == nil && fill_existing_with == nil %}
+      {% raise <<-ERROR
 
-          You must provide a default value or use fill_existing_with when adding a required field to an existing table.
+        You must provide a default value or use fill_existing_with when adding a required column to an existing table.
 
-          Try one of these...
+        Try one of these...
 
-            ▸ add #{type_declaration.var} : #{type_declaration.type}, default: "Something"
-            ▸ add #{type_declaration.var} : #{type_declaration.type}, fill_existing_with: "Something"
-            ▸ add #{type_declaration.var} : #{type_declaration.type}, fill_existing_with: :nothing
-          ERROR
-        %}
-      {% end %}
+          ▸ add #{type_declaration}, default: "Something"
+          ▸ add #{type_declaration}, fill_existing_with: "Something"
+          ▸ add #{type_declaration}, fill_existing_with: :nothing
+        ERROR
+      %}
+    {% end %}
 
-      {% if default && fill_existing_with %}
-        {% type_declaration.raise "Cannot use both 'default' and 'fill_existing_with' arguments" %}
-      {% end %}
+    {% if default && fill_existing_with %}
+      {% type_declaration.raise "Cannot use both 'default' and 'fill_existing_with' arguments" %}
+    {% end %}
 
-      {% if fill_existing_with == :nothing %}
-        {% fill_existing_with = nil %}
-      {% end %}
+    rows << Avram::Migrator::Columns::{{ type }}Column(
+    {% if array %}Array({{ type }}){% else %}{{ type }}{% end %}
+    ).new(
+      name: {{ type_declaration.var.stringify }},
+      nilable: {{ nilable || should_fill_existing }},
+      default: {{ default }},
+      {{ **type_options }}
+    )
+    {% if array %}
+    .array!
+    {% end %}
+    .build_add_statement_for_alter
 
-      add_column :{{ type_declaration.var }},
-        type: {{ type_declaration.type }},
-        optional: false,
-        default: {{ default }},
-        fill_existing_with: {{ fill_existing_with }},
-        options: {{ options }}
+    {% if should_fill_existing %}
+      add_fill_existing_with_statements(
+        column: {{ type_declaration.var.stringify }},
+        type: {{ type }},
+        value: Avram::Migrator::Columns::{{ type }}Column.prepare_value_for_database({{ fill_existing_with }}),
+        nilable: {{ nilable }}
+      )
     {% end %}
 
     {% if index || unique %}
@@ -126,52 +170,61 @@ class Avram::Migrator::AlterTableStatement
     {% end %}
   end
 
-  def add_column(name : Symbol, type : ColumnType, optional = false, reference = nil, on_delete = :do_nothing, default : ColumnDefaultType? = nil, fill_existing_with : ColumnDefaultType? = nil, options : NamedTuple? = nil)
-    if options
-      column_type_with_options = column_type(type, **options)
-    else
-      column_type_with_options = column_type(type)
-    end
-
-    if fill_existing_with
-      optional = true
-      add_fill_existing_with_statements(name, type, fill_existing_with)
-    end
-
-    rows << String.build do |row|
-      row << "  ADD "
-      row << name.to_s
-      row << " "
-      row << column_type_with_options
-      row << null_fragment(optional)
-      row << default_value(type, default) unless default.nil?
-      row << references(reference, on_delete)
-    end
+  def add_fill_existing_with_statements(column : Symbol | String, type, value, nilable)
+    @fill_existing_with_statements << "UPDATE #{@table_name} SET #{column} = #{value};"
+    @fill_existing_with_statements << "ALTER TABLE #{@table_name} ALTER COLUMN #{column} SET NOT NULL;" unless nilable
   end
 
-  def add_fill_existing_with_statements(column : Symbol, type : ColumnType, value : ColumnDefaultType)
-    @fill_existing_with_statements += [
-      "UPDATE #{@table_name} SET #{column} = #{value_to_string(type, value)};",
-      "ALTER TABLE #{@table_name} ALTER COLUMN #{column} SET NOT NULL;",
-    ]
+  macro symbol_expected_error(action, name)
+
+    {% if name.is_a?(TypeDeclaration) %}
+      {% example = name.var %}
+    {% else %}
+      {% example = name.id %}
+    {% end %}
+
+    {% raise <<-ERROR
+
+    #{action} expected a symbol like :#{example}, instead got: #{name}.
+
+    in: #{name.filename}:#{name.line_number}:#{name.column_number}
+
+    Try replacing...
+
+      ▸ #{name} with :#{example}
+    ERROR
+    %}
   end
 
-  def remove(name : Symbol)
-    dropped_rows << "  DROP #{name.to_s}"
+  macro rename(old_name, new_name)
+    {% for name in {old_name, new_name} %}
+      {% unless name.is_a?(SymbolLiteral) %}
+        symbol_expected_error("rename", {{ name }})
+      {% end %}
+    {% end %}
+    renamed_rows << "RENAME COLUMN #{{{old_name}}} TO #{{{new_name}}}"
+  end
+
+  macro rename_belongs_to(old_association_name, new_association_name)
+    {% for association_name in {old_association_name, new_association_name} %}
+      {% unless association_name.is_a?(SymbolLiteral) %}
+        symbol_expected_error("rename_belongs_to", {{ name }})
+      {% end %}
+    {% end %}
+    rename {{old_association_name}}_id, {{new_association_name}}_id
+  end
+
+  macro remove(name)
+    {% unless name.is_a?(SymbolLiteral) %}
+      symbol_expected_error("remove", {{ name }})
+    {% end %}
+    dropped_rows << "  DROP #{{{name}}}"
   end
 
   macro remove_belongs_to(association_name)
     {% unless association_name.is_a?(SymbolLiteral) %}
-      {% raise "remove_belongs_to expected a symbol like ':user', instead got: '#{association_name}'" %}
+      symbol_expected_error("remove_belongs_to", {{ name }})
     {% end %}
     remove {{ association_name }}_id
-  end
-
-  def null_fragment(optional)
-    if optional
-      ""
-    else
-      " NOT NULL"
-    end
   end
 end

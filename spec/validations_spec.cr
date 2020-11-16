@@ -1,288 +1,265 @@
 require "./spec_helper"
 
-private class CallableMessage
-  include Avram::CallableErrorMessage
-
-  def initialize(@name = "")
-  end
-
-  def call(name, value)
-    "#{@name} says: #{name} of '#{value}' is invalid"
-  end
-end
-
-class UniquenessWithDatabaseBackedForm < User::BaseForm
-  fillable name
-
-  def prepare
+class UniquenessSaveOperation < User::SaveOperation
+  before_save do
     validate_uniqueness_of name
     validate_uniqueness_of nickname, query: UserQuery.new.nickname.lower
   end
 end
 
-private class TestValidationUser
-  include Avram::Validations
-  @_age : Avram::Field(Int32?)?
-  @_name : Avram::Field(String)?
-  @_city : Avram::Field(String)?
-  @_state : Avram::Field(String)?
-  @_name_confirmation : Avram::Field(String)?
-  @_terms : Avram::Field(Bool?)?
-
-  @name : String
-  @name_confirmation : String
-  @city : String
-  @state : String
-  @age : Int32?
-  @terms : Bool?
-
-  def initialize(@name = "", @name_confirmation = "", @age = nil, @terms = false, @city = "", @state = "")
+class UniquenessWithCustomMessageSaveOperation < User::SaveOperation
+  before_save do
+    validate_uniqueness_of name, message: "cannot be used"
   end
+end
 
-  def validate
-    validate_required name, age
-    validate_acceptance_of terms
-    self
-  end
-
-  def run_validate_required_when_value_is_false
-    validate_required terms
-  end
-
-  def run_validations_with_message
-    validate_required city, state, message: "ugh"
-    validate_inclusion_of state, in: ["CA, NY"], message: "that one's not allowed"
-    validate_confirmation_of name, with: name_confirmation, message: "name confirmation must match"
-    validate_uniqueness_of name, query: UserQuery.new.name, message: "cannot be used"
-  end
-
-  def run_validations_with_message_callables
-    validate_required city, state, message: ->(field_name : String, field_value : String) { "#{field_name} required message from Proc" }
-    validate_inclusion_of state, in: ["CA, NY"], message: CallableMessage.new(@name)
-  end
-
-  def run_confirmation_validations
-    validate_confirmation_of name, with: name_confirmation
-  end
-
-  def run_inclusion_validations
-    validate_inclusion_of name, in: ["Paul", "Pablo"]
-  end
-
-  def run_exact_size_validation
-    validate_size_of name, is: 2
-  end
-
-  def run_minimum_size_validation
-    validate_size_of name, min: 2
-  end
-
-  def run_maximum_size_validation
-    validate_size_of name, max: 4
-  end
-
-  def run_range_size_validation
-    validate_size_of name, min: 2, max: 5
-  end
-
-  def run_impossible_size_validation
-    validate_size_of name, min: 4, max: 1
-  end
-
-  macro column(type, name)
-    def {{ name }}
-      @_{{ name }} ||= Avram::Field({{ type }}).new(:{{ name }}, param: "", value: @{{ name }}, form_name: "blank")
-    end
-  end
-
-  column String, name
-  column String, name_confirmation
-  column String, city
-  column String, state
-  column Int32?, age
-  column Bool?, terms
+private def attribute(value)
+  Avram::Attribute.new(value: value, param: nil, param_key: "fake", name: :fake)
 end
 
 describe Avram::Validations do
+  describe "validate_at_most_one_filled" do
+    it "marks filled attribute as invalid if more than one is filled" do
+      filled_attribute = attribute("filled")
+      filled_attribute_2 = attribute("filled")
+      blank_attribute = attribute("")
+      Avram::Validations.validate_at_most_one_filled(filled_attribute, filled_attribute_2, blank_attribute)
+      filled_attribute.valid?.should be_true
+      blank_attribute.valid?.should be_true
+      filled_attribute_2.errors.should eq(["must be blank"])
+    end
+
+    it "does not mark any fields as invalid if just one is filled" do
+      filled_attribute = attribute("filled")
+      blank_attribute = attribute("")
+
+      Avram::Validations.validate_at_most_one_filled(filled_attribute, blank_attribute)
+
+      filled_attribute.valid?.should be_true
+      blank_attribute.valid?.should be_true
+    end
+  end
+
+  describe "validate_exactly_one_filled" do
+    it "marks filled attribute as invalid if more than one is filled" do
+      filled_attribute = attribute("filled")
+      filled_attribute_2 = attribute("filled")
+      blank_attribute = attribute("")
+      Avram::Validations.validate_exactly_one_filled(filled_attribute, filled_attribute_2, blank_attribute)
+      filled_attribute.valid?.should be_true
+      blank_attribute.valid?.should be_true
+      filled_attribute_2.errors.should eq(["must be blank"])
+    end
+
+    it "marks first field as invalid if no attributes are filled" do
+      first_blank_attribute = attribute(nil)
+      second_blank_attribute = attribute("")
+
+      Avram::Validations.validate_exactly_one_filled(first_blank_attribute, second_blank_attribute)
+
+      first_blank_attribute.errors.should eq(["at least one must be filled"])
+      second_blank_attribute.valid?.should be_true
+    end
+
+    it "fields are valid if only one is filled" do
+      filled_attribute = attribute("filled")
+      blank_attribute = attribute("")
+
+      Avram::Validations.validate_exactly_one_filled(filled_attribute, blank_attribute)
+
+      filled_attribute.valid?.should be_true
+      blank_attribute.valid?.should be_true
+    end
+  end
+
   describe "validate_required" do
-    it "validates multiple fields" do
-      validate(name: "", age: nil) do |user|
-        user.name.errors.should eq ["is required"]
-        user.age.errors.should eq ["is required"]
-      end
+    it "validates multiple attributes" do
+      empty_attribute = attribute("")
+      nil_attribute = attribute(nil)
+
+      Avram::Validations.validate_required(empty_attribute, nil_attribute)
+
+      empty_attribute.errors.should eq ["is required"]
+      nil_attribute.errors.should eq ["is required"]
     end
 
     it "adds no errors if things are present" do
-      validate(name: "Paul") do |user|
-        user.name.errors.empty?.should be_true
-      end
+      filled_attribute = attribute("Filled")
+
+      Avram::Validations.validate_required(filled_attribute)
+
+      filled_attribute.valid?.should be_true
     end
 
     it "adds no error if the value is 'false'" do
-      validate(terms: false) do |user|
-        user.terms.reset_errors
-        user.run_validate_required_when_value_is_false
-        user.terms.errors.empty?.should be_true
-      end
+      false_attribute = attribute(false)
 
-      validate(terms: nil) do |user|
-        user.terms.reset_errors
-        user.run_validate_required_when_value_is_false
-        user.terms.errors.should contain "is required"
-      end
+      Avram::Validations.validate_required false_attribute
+
+      false_attribute.valid?.should be_true
     end
   end
 
   describe "validate_uniqueness_of" do
     it "validates that a new record is unique with a query or without one" do
       existing_user = UserBox.new.name("Sally").nickname("Sal").create
-      form = UniquenessWithDatabaseBackedForm.new
-      form.name.value = existing_user.name
-      form.nickname.value = existing_user.nickname.not_nil!.downcase
+      operation = UniquenessSaveOperation.new
+      operation.name.value = existing_user.name
+      operation.nickname.value = existing_user.nickname.not_nil!.downcase
 
-      form.prepare
+      operation.save
 
-      form.name.errors.should contain "is already taken"
-      form.nickname.errors.should contain "is already taken"
+      operation.name.errors.should contain "is already taken"
+      operation.nickname.errors.should contain "is already taken"
     end
 
     it "ignores the existing record on update" do
       existing_user = UserBox.new.name("Sally").create
-      form = UniquenessWithDatabaseBackedForm.new(existing_user)
-      form.name.value = existing_user.name
+      operation = UniquenessSaveOperation.new(existing_user)
+      operation.name.value = existing_user.name
 
-      form.prepare
+      operation.valid?
 
-      form.name.errors.should_not contain "is already taken"
+      operation.name.errors.should_not contain "is already taken"
     end
   end
 
   describe "validates with custom messages" do
     it "validates custom message for validates_required" do
-      validate(city: "", state: "") do |user|
-        user.run_validations_with_message
-        user.city.errors.should contain "ugh"
-        user.state.errors.should contain "ugh"
-      end
+      empty_attribute = attribute("")
+
+      Avram::Validations.validate_required empty_attribute, message: "ugh"
+
+      empty_attribute.errors.should eq(["ugh"])
     end
 
     it "validates custom message for validate_uniqueness_of" do
       existing_user = UserBox.create
-      validate(name: existing_user.name) do |user|
-        user.run_validations_with_message
-        user.name.errors.should contain "cannot be used"
+      UniquenessWithCustomMessageSaveOperation.create(name: existing_user.name) do |operation, _user|
+        operation.name.errors.should eq(["cannot be used"])
       end
     end
 
     it "validates custom message for validate_inclusion_of" do
-      validate(state: "") do |user|
-        user.run_validations_with_message
-        user.state.errors.should contain "that one's not allowed"
-      end
+      state_attribute = attribute("Iowa")
+
+      Avram::Validations.validate_inclusion_of state_attribute, ["Utah"], message: "nope!"
+
+      state_attribute.errors.should eq(["nope!"])
     end
 
-    it "validates custom message for validate_inclusion_of" do
-      validate(name: "Paul") do |user|
-        user.run_validations_with_message
-        user.name.errors.empty?.should be_true
-        user.name_confirmation.errors.should contain "name confirmation must match"
-      end
+    it "validates custom message for validate_acceptance_of" do
+      false_attribute = attribute(false)
+
+      Avram::Validations.validate_acceptance_of false_attribute, message: "must be accepted"
+
+      false_attribute.errors.should eq(["must be accepted"])
     end
 
-    it "validates custom messages from callables" do
-      validate(name: "Paul", city: "", state: "") do |user|
-        user.run_validations_with_message_callables
-        user.city.errors.should contain "city required message from Proc"
-        user.state.errors.should contain "state required message from Proc"
-        user.state.errors.should contain "Paul says: state of '' is invalid"
-      end
+    it "validates custom message for validate_confirmation_of" do
+      first = attribute("first")
+      second = attribute("second")
+
+      Avram::Validations.validate_confirmation_of first, with: second, message: "not even close"
+
+      second.errors.should eq(["not even close"])
     end
   end
 
   describe "validate_acceptance_of" do
-    it "validates the field is true" do
-      validate(terms: false) do |user|
-        user.terms.errors.should eq ["must be accepted"]
-      end
+    it "validates the attribute value is true" do
+      false_attribute = attribute(false)
+      Avram::Validations.validate_acceptance_of false_attribute
+      false_attribute.errors.should eq(["must be accepted"])
 
-      validate(terms: nil) do |user|
-        user.terms.errors.should eq ["must be accepted"]
-      end
+      nil_attribute = attribute(nil)
+      Avram::Validations.validate_acceptance_of nil_attribute
+      nil_attribute.errors.should eq(["must be accepted"])
 
-      validate(terms: true) do |user|
-        user.terms.errors.empty?.should be_true
-      end
+      accepted_attribute = attribute(true)
+      Avram::Validations.validate_acceptance_of accepted_attribute
+      accepted_attribute.valid?.should be_true
     end
   end
 
   describe "validate_confirmation_of" do
-    it "validates the fields match" do
-      validate(name: "Paul", name_confirmation: "Pablo") do |user|
-        user.run_confirmation_validations
-        user.name_confirmation.errors.should eq ["must match"]
-      end
+    it "validates the attribute values match" do
+      first = attribute("first")
+      second = attribute("second")
+      Avram::Validations.validate_confirmation_of first, with: second
+      second.errors.should eq(["must match"])
 
-      validate(name: "Paul", name_confirmation: "Paul") do |user|
-        user.run_confirmation_validations
-        user.name.errors.empty?.should be_true
-      end
+      first = attribute("same")
+      second = attribute("same")
+      Avram::Validations.validate_confirmation_of first, with: second
+      second.valid?.should be_true
     end
   end
 
   describe "validate_inclusion_of" do
     it "validates" do
-      validate(name: "Not Paul") do |user|
-        user.run_inclusion_validations
-        user.name.errors.should eq ["is invalid"]
-      end
+      allowed_name = attribute("Jamie")
+      Avram::Validations.validate_inclusion_of(allowed_name, in: ["Jamie"])
+      allowed_name.valid?.should be_true
 
-      validate(name: "Paul") do |user|
-        user.run_inclusion_validations
-        user.name.errors.empty?.should be_true
-      end
+      forbidden_name = attribute("123123123")
+      Avram::Validations.validate_inclusion_of(forbidden_name, in: ["Jamie"])
+      forbidden_name.errors.should eq(["is invalid"])
+    end
 
-      validate(name: "Pablo") do |user|
-        user.run_inclusion_validations
-        user.name.errors.empty?.should be_true
-      end
+    it "can allow nil" do
+      nil_name = Avram::Attribute(String?).new(value: nil, param: nil, param_key: "fake", name: :fake)
+
+      Avram::Validations.validate_inclusion_of(nil_name, in: ["Jamie"], allow_nil: true)
+      nil_name.valid?.should be_true
+
+      Avram::Validations.validate_inclusion_of(nil_name, in: ["Jamie"], allow_nil: false)
+      nil_name.valid?.should be_false
+
+      Avram::Validations.validate_inclusion_of(nil_name, in: ["Jamie"])
+      nil_name.valid?.should be_false
     end
   end
 
   describe "validate_size_of" do
     it "validates" do
-      validate(name: "P") do |user|
-        user.run_exact_size_validation
-        user.name.errors.should eq ["is invalid"]
-      end
+      incorrect_size_attribute = attribute("P")
+      Avram::Validations.validate_size_of(incorrect_size_attribute, is: 2)
+      incorrect_size_attribute.errors.should eq(["is invalid"])
 
-      validate(name: "P") do |user|
-        user.run_minimum_size_validation
-        user.name.errors.should eq ["is too short"]
-      end
+      too_short_attribute = attribute("P")
+      Avram::Validations.validate_size_of(too_short_attribute, min: 2)
+      too_short_attribute.errors.should eq(["is too short"])
 
-      validate(name: "Pablo") do |user|
-        user.run_maximum_size_validation
-        user.name.errors.should eq ["is too long"]
-      end
+      too_long_attribute = attribute("Supercalifragilisticexpialidocious")
+      Avram::Validations.validate_size_of(too_long_attribute, max: 32)
+      too_long_attribute.errors.should eq(["is too long"])
 
-      validate(name: "Paul") do |user|
-        user.run_range_size_validation
-        user.name.errors.should eq [] of String
-      end
+      just_right_attribute = attribute("Goldilocks")
+      Avram::Validations.validate_size_of(just_right_attribute, is: 10)
+      just_right_attribute.valid?.should be_true
     end
 
     it "raises an error for an impossible condition" do
-      validate(name: "Paul") do |user|
-        expect_raises(Avram::ImpossibleValidation) do
-          user.run_impossible_size_validation
-        end
+      does_not_matter = attribute(nil)
+      expect_raises(Avram::ImpossibleValidation) do
+        Avram::Validations.validate_size_of does_not_matter, min: 4, max: 1
       end
     end
-  end
-end
 
-private def validate(**args)
-  user = TestValidationUser.new(**args)
-  user = user.validate
-  yield user
+    it "can allow nil" do
+      just_nil = attribute(nil)
+      Avram::Validations.validate_size_of(just_nil, is: 10, allow_nil: true)
+      just_nil.valid?.should be_true
+
+      Avram::Validations.validate_size_of(just_nil, min: 1, max: 2, allow_nil: true)
+      just_nil.valid?.should be_true
+
+      Avram::Validations.validate_size_of(just_nil, is: 10)
+      just_nil.valid?.should be_false
+
+      Avram::Validations.validate_size_of(just_nil, min: 1, max: 2)
+      just_nil.valid?.should be_false
+    end
+  end
 end

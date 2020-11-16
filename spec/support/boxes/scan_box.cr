@@ -1,5 +1,5 @@
 class ScanBox < BaseBox
   def initialize
-    scanned_at Time.now
+    scanned_at Time.utc
   end
 end

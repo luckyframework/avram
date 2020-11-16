@@ -1,6 +1,6 @@
 require "lucky_cli"
 require "./src/avram"
-require "./config/database"
+require "./config/*"
 require "./db/migrations/*"
 
 class Db::Reset < LuckyCli::Task
@@ -17,4 +17,5 @@ class Db::Reset < LuckyCli::Task
   end
 end
 
+Habitat.raise_if_missing_settings!
 LuckyCli::Runner.run

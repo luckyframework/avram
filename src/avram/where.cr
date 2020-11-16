@@ -1,198 +1,227 @@
 module Avram::Where
-  abstract class SqlClause
-    getter :column
-    getter :value
+  enum Conjunction
+    And
+    Or
 
-    def initialize(@column : Symbol | String, @value : String | Array(String) | Array(Int32))
+    def to_s
+      case self
+      when .and?
+        "AND"
+      when .or?
+        "OR"
+      end
+    end
+  end
+
+  abstract class Condition
+    property conjunction : Conjunction = Conjunction::And
+
+    abstract def prepare(placeholder_supplier : Proc(String)) : String
+
+    def clone
+      self
+    end
+  end
+
+  abstract class SqlClause < Condition
+    getter column : Symbol | String
+
+    def initialize(@column)
     end
 
     abstract def operator : String
     abstract def negated : SqlClause
 
-    def prepare(prepared_statement_placeholder : String)
-      "#{column} #{operator} #{prepared_statement_placeholder}"
+    def prepare(placeholder_supplier : Proc(String)) : String
+      "#{column} #{operator} #{placeholder_supplier.call}"
+    end
+  end
+
+  abstract class ValueHoldingSqlClause < SqlClause
+    getter value : String | Array(String) | Array(Int32)
+
+    def initialize(@column, @value)
     end
   end
 
   abstract class NullSqlClause < SqlClause
-    @value = "NULL"
-
-    def initialize(@column : Symbol | String)
-    end
-
-    def prepare
-      "#{column} #{operator} #{@value}"
+    def prepare(_placeholder_supplier : Proc(String)) : String
+      "#{column} #{operator} NULL"
     end
   end
 
   class Null < NullSqlClause
-    def operator
+    def operator : String
       "IS"
     end
 
     def negated : NotNull
-      NotNull.new(@column)
+      NotNull.new(column)
     end
   end
 
   class NotNull < NullSqlClause
-    def operator
+    def operator : String
       "IS NOT"
     end
 
     def negated : Null
-      Null.new(@column)
+      Null.new(column)
     end
   end
 
-  class Equal < SqlClause
-    def operator
+  class Equal < ValueHoldingSqlClause
+    def operator : String
       "="
     end
 
     def negated : NotEqual
-      NotEqual.new(@column, @value)
+      NotEqual.new(column, value)
     end
   end
 
-  class NotEqual < SqlClause
-    def operator
+  class NotEqual < ValueHoldingSqlClause
+    def operator : String
       "!="
     end
 
     def negated : Equal
-      Equal.new(@column, @value)
+      Equal.new(column, value)
     end
   end
 
-  class GreaterThan < SqlClause
-    def operator
+  class GreaterThan < ValueHoldingSqlClause
+    def operator : String
       ">"
     end
 
     def negated : LessThanOrEqualTo
-      LessThanOrEqualTo.new(@column, @value)
+      LessThanOrEqualTo.new(column, value)
     end
   end
 
-  class GreaterThanOrEqualTo < SqlClause
-    def operator
+  class GreaterThanOrEqualTo < ValueHoldingSqlClause
+    def operator : String
       ">="
     end
 
     def negated : LessThan
-      LessThan.new(@column, @value)
+      LessThan.new(column, value)
     end
   end
 
-  class LessThan < SqlClause
-    def operator
+  class LessThan < ValueHoldingSqlClause
+    def operator : String
       "<"
     end
 
     def negated : GreaterThanOrEqualTo
-      GreaterThanOrEqualTo.new(@column, @value)
+      GreaterThanOrEqualTo.new(column, value)
     end
   end
 
-  class LessThanOrEqualTo < SqlClause
-    def operator
+  class LessThanOrEqualTo < ValueHoldingSqlClause
+    def operator : String
       "<="
     end
 
     def negated : GreaterThan
-      GreaterThan.new(@column, @value)
+      GreaterThan.new(column, value)
     end
   end
 
-  class Like < SqlClause
-    def operator
+  class Like < ValueHoldingSqlClause
+    def operator : String
       "LIKE"
     end
 
     def negated : NotLike
-      NotLike.new(@column, @value)
+      NotLike.new(column, value)
     end
   end
 
-  class Ilike < SqlClause
-    def operator
+  class Ilike < ValueHoldingSqlClause
+    def operator : String
       "ILIKE"
     end
 
     def negated : NotIlike
-      NotIlike.new(@column, @value)
+      NotIlike.new(column, value)
     end
   end
 
-  class NotLike < SqlClause
-    def operator
+  class NotLike < ValueHoldingSqlClause
+    def operator : String
       "NOT LIKE"
     end
 
     def negated : Like
-      Like.new(@column, @value)
+      Like.new(column, value)
     end
   end
 
-  class NotIlike < SqlClause
-    def operator
+  class NotIlike < ValueHoldingSqlClause
+    def operator : String
       "NOT ILIKE"
     end
 
     def negated : Ilike
-      Ilike.new(@column, @value)
+      Ilike.new(column, value)
     end
   end
 
-  class In < SqlClause
-    def operator
+  class In < ValueHoldingSqlClause
+    def operator : String
       "= ANY"
     end
 
     def negated : NotIn
-      NotIn.new(@column, @value)
+      NotIn.new(column, value)
     end
 
-    def prepare(prepared_statement_placeholder : String)
-      "#{column} #{operator} (#{prepared_statement_placeholder})"
+    def prepare(placeholder_supplier : Proc(String)) : String
+      "#{column} #{operator} (#{placeholder_supplier.call})"
     end
   end
 
-  class NotIn < SqlClause
-    def operator
+  class NotIn < ValueHoldingSqlClause
+    def operator : String
       "!= ALL"
     end
 
     def negated : In
-      In.new(@column, @value)
+      In.new(column, value)
     end
 
-    def prepare(prepared_statement_placeholder : String)
-      "#{column} #{operator} (#{prepared_statement_placeholder})"
+    def prepare(placeholder_supplier : Proc(String)) : String
+      "#{column} #{operator} (#{placeholder_supplier.call})"
     end
   end
 
-  class Raw
+  class Raw < Condition
     @clause : String
 
-    def initialize(statement : String, *bind_vars)
-      ensure_enough_bind_variables_for!(statement, *bind_vars)
-      @clause = build_clause(statement, *bind_vars)
+    def self.new(statement : String, *bind_vars)
+      new(statement, args: bind_vars.to_a)
     end
 
-    def to_sql
+    def initialize(statement : String, *, args bind_vars : Array)
+      ensure_enough_bind_variables_for!(statement, bind_vars)
+      @clause = build_clause(statement, bind_vars)
+    end
+
+    def prepare(_placeholder_supplier : Proc(String)) : String
       @clause
     end
 
-    private def ensure_enough_bind_variables_for!(statement, *bind_vars)
+    private def ensure_enough_bind_variables_for!(statement, bind_vars)
       bindings = statement.chars.select(&.== '?')
       if bindings.size != bind_vars.size
         raise "wrong number of bind variables (#{bind_vars.size} for #{bindings.size}) in #{statement}"
       end
     end
 
-    private def build_clause(statement, *bind_vars)
+    private def build_clause(statement, bind_vars)
       bind_vars.each do |arg|
         if arg.is_a?(String) || arg.is_a?(Slice(UInt8))
           escaped = PG::EscapeHelper.escape_literal(arg)

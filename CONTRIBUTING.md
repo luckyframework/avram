@@ -50,7 +50,7 @@ already been submitted.
 * Please add tests if you changed code. Contributions without tests won't be accepted.
 * If you don't know how to add tests, please put in a PR and leave a comment
   asking for help. We love helping!
-* Please don't update the Gem version.
+* Please don't update the Shard version.
 
 [repo]: https://github.com/luckyframework/avram/tree/master
 [fork]: https://help.github.com/articles/fork-a-repo/

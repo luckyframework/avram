@@ -61,7 +61,7 @@ abstract class Avram::Migrator::Migration::V1
   end
 
   def migrated?
-    DB.open(Avram::Repo.settings.url) do |db|
+    DB.open(Avram::Migrator::Runner.database_url) do |db|
       db.query_one? "SELECT id FROM migrations WHERE version = $1", version, as: Int32
     end
   end
@@ -90,12 +90,22 @@ abstract class Avram::Migrator::Migration::V1
   # end
   # ```
   private def execute_in_transaction(statements : Array(String))
-    DB.open(Avram::Repo.settings.url) do |db|
+    DB.open(Avram::Migrator::Runner.database_url) do |db|
       db.transaction do |tx|
         statements.each { |s| tx.connection.exec s }
         yield tx
       end
     end
+  rescue e : PQ::PQError
+    raise <<-ERROR
+    There was a problem running this statement:
+
+      #{statements.join("\n")}
+
+    Problem:
+
+      #{e.message}
+    ERROR
   end
 
   def reset_prepared_statements

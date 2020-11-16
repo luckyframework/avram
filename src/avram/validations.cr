@@ -1,89 +1,154 @@
-require "./validations/**"
+require "./validations/callable_error_message"
 
+# A number of methods for validating Avram::Attributes
+#
+# This module is included in `Avram::Operation` and `Avram::SaveOperation`
 module Avram::Validations
-  private def validate_required(*fields, message = "is required")
-    fields.each do |field|
-      if field.value.blank? && field.value != false
-        field.add_error message
-      end
-    end
-  end
+  extend self
 
-  private def validate_acceptance_of(field : Field(Bool?), message = "must be accepted")
-    if field.value != true
-      field.add_error message
-    end
-  end
-
-  private def validate_confirmation_of(field, with confirmation_field, message = "must match")
-    if field.value != confirmation_field.value
-      confirmation_field.add_error message
-    end
-  end
-
-  private def validate_inclusion_of(field, in allowed_values, message = "is invalid")
-    if !allowed_values.includes? field.value
-      field.add_error message
-    end
-  end
-
-  private def validate_size_of(field, *, is exact_size, message = "is invalid")
-    if field.value.to_s.size != exact_size
-      field.add_error message
-    end
-  end
-
-  private def validate_size_of(field, min = nil, max = nil)
-    if !min.nil? && !max.nil? && min > max
-      raise ImpossibleValidation.new(field: field.name, message: "size greater than #{min} but less than #{max}")
-    end
-
-    size = field.value.to_s.size
-
-    if !min.nil? && size < min
-      field.add_error "is too short"
-    end
-
-    if !max.nil? && size > max
-      field.add_error "is too long"
-    end
-  end
-
-  private def validate_uniqueness_of(
-    field : Avram::Field,
-    query : Avram::Criteria,
-    message : String = "is already taken"
-  )
-    field.value.try do |value|
-      if query.eq(value).first?
-        field.add_error message
-      end
-    end
-  end
-
-  private def validate_uniqueness_of(
-    field : Avram::Field,
-    message : String = "is already taken"
-  )
-    field.value.try do |value|
-      if build_validation_query(field.name, field.value).first?
-        field.add_error message
-      end
-    end
-  end
-
-  # Must be included in the macro to get access to the generic T class
-  # in forms that save to the database.
+  # Validates that at most one attribute is filled
   #
-  # VirtualForms will also have access to this, but will fail if you try to use
-  # if because there is no T (model class).
-  macro included
-    private def build_validation_query(column_name, value) : T::BaseQuery
-      query = T::BaseQuery.new.where(column_name, value)
-      record.try(&.id).try do |id|
-        query = query.id.not.eq(id)
+  # If more than one attribute is filled it will mark all but the first filled
+  # field invalid.
+  def validate_at_most_one_filled(*attributes, message : Avram::Attribute::ErrorMessage = "must be blank")
+    present_attributes = attributes.reject(&.value.blank?)
+
+    if present_attributes.size > 1
+      present_attributes.skip(1).each(&.add_error(message))
+    end
+  end
+
+  # Validates that at exactly one attribute is filled
+  #
+  # This validation is used by `Avram::Polymorphic.polymorphic` to ensure
+  # that a required polymorphic association is set.
+  #
+  # If more than one attribute is filled it will mark all but the first filled
+  # field invalid.
+  #
+  # If no field is filled, the first field will be marked as invalid.
+  def validate_exactly_one_filled(*attributes, message : Avram::Attribute::ErrorMessage = "at least one must be filled")
+    validate_at_most_one_filled(*attributes)
+    present_attributes = attributes.reject(&.value.blank?)
+
+    if present_attributes.size.zero?
+      attributes.first.add_error(message)
+    end
+  end
+
+  # Validates that the passed in attributes have values
+  #
+  # You can pass in one or more attributes at a time. The attribute will be
+  # marked as invalid if the value is `nil`, or "blank" (empty strings or strings with just whitespace)
+  #
+  # `false` is not considered invalid.
+  #
+  # ```
+  # validate_required name, age, email
+  # ```
+  def validate_required(*attributes, message : Avram::Attribute::ErrorMessage = "is required")
+    attributes.each do |attribute|
+      if attribute.value.blank_for_validates_required?
+        attribute.add_error message
       end
-      query
+    end
+  end
+
+  # Validate whether an attribute was accepted (`true`)
+  #
+  # This validation is only for Boolean Attributes. The attribute will be marked
+  # as invalid for any value other than `true`.
+  def validate_acceptance_of(attribute : Avram::Attribute(Bool?), message : Avram::Attribute::ErrorMessage = "must be accepted")
+    if attribute.value != true
+      attribute.add_error message
+    end
+  end
+
+  # Validates that the values of two attributes are the same
+  #
+  # Takes two attributes and if the values are different the second attribute
+  # (`with`/`confirmation_attribute`) will be marked as invalid
+  #
+  # Example:
+  #
+  # ```
+  # validate_confirmation_of password, with: password_confirmation
+  # ```
+  #
+  # If `password_confirmation` does not match, it will be marked invalid.
+  def validate_confirmation_of(
+    attribute : Avram::Attribute(T),
+    with confirmation_attribute : Avram::Attribute(T),
+    message : Avram::Attribute::ErrorMessage = "must match"
+  ) forall T
+    if attribute.value != confirmation_attribute.value
+      confirmation_attribute.add_error message
+    end
+  end
+
+  # Validates that the attribute value is in a list of allowed values
+  #
+  # ```
+  # validate_inclusion_of state, in: ["NY", "MA"]
+  # ```
+  #
+  # This will mark `state` as invalid unless the value is `"NY"`, or `"MA"`.
+  def validate_inclusion_of(
+    attribute : Avram::Attribute(T),
+    in allowed_values : Enumerable(T),
+    message : Avram::Attribute::ErrorMessage = "is invalid",
+    allow_nil : Bool = false
+  ) forall T
+    unless allowed_values.includes? attribute.value
+      attribute.add_error message unless allow_nil && attribute.value.nil?
+    end
+  end
+
+  # Validate the size of a `String` is exactly a certain size
+  #
+  # ```
+  # validate_size_of api_key, is: 32
+  # ```
+  def validate_size_of(
+    attribute : Avram::Attribute,
+    *,
+    is exact_size,
+    message : Avram::Attribute::ErrorMessage = "is invalid",
+    allow_nil : Bool = false
+  )
+    if attribute.value.to_s.size != exact_size
+      attribute.add_error message unless allow_nil && attribute.value.nil?
+    end
+  end
+
+  # Validate the size of the attribute is within a `min` and/or `max`
+  #
+  # ```
+  # validate_size_of age, min: 18, max: 100
+  # validate_size_of account_balance, min: 500
+  # ```
+  def validate_size_of(
+    attribute : Avram::Attribute,
+    min = nil,
+    max = nil,
+    allow_nil : Bool = false
+  )
+    if !min.nil? && !max.nil? && min > max
+      raise ImpossibleValidation.new(
+        attribute: attribute.name,
+        message: "size greater than #{min} but less than #{max}")
+    end
+
+    unless allow_nil && attribute.value.nil?
+      size = attribute.value.to_s.size
+
+      if !min.nil? && size < min
+        attribute.add_error "is too short"
+      end
+
+      if !max.nil? && size > max
+        attribute.add_error "is too long"
+      end
     end
   end
 end

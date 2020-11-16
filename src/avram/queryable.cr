@@ -4,6 +4,8 @@ module Avram::Queryable(T)
   @query : Avram::QueryBuilder?
   setter query
 
+  delegate :database, :table_name, :primary_key_name, to: T
+
   macro included
     def self.new_with_existing_query(query : Avram::QueryBuilder)
       new.tap do |queryable|
@@ -13,10 +15,6 @@ module Avram::Queryable(T)
 
     def self.all
       new
-    end
-
-    def self.find(id)
-      new.find(id)
     end
 
     def self.first
@@ -34,85 +32,163 @@ module Avram::Queryable(T)
     def self.last?
       new.last?
     end
+
+    def self.truncate
+      query = self.new
+      query.database.exec "TRUNCATE TABLE #{query.table_name}"
+    end
+  end
+
+  def schema_class
+    T
   end
 
   def query
     @query ||= Avram::QueryBuilder
-      .new(table: @@table_name)
-      .select(@@schema_class.column_names)
+      .new(table: table_name)
+      .select(schema_class.column_names)
   end
 
-  def distinct
-    query.distinct
-    self
+  def distinct : self
+    clone.tap &.query.distinct
   end
 
-  def distinct_on(&block)
-    criteria = yield self
-    criteria.distinct_on
-    self
+  def reset_order : self
+    clone.tap &.query.reset_order
   end
 
-  def join(join_clause : Avram::Join::SqlClause)
-    query.join(join_clause)
-    self
+  def reset_limit : self
+    clone.tap &.query.limit(nil)
   end
 
-  def where(column : Symbol, value)
-    query.where(Avram::Where::Equal.new(column, value.to_s))
-    self
+  def reset_offset : self
+    clone.tap &.query.offset(nil)
   end
 
-  def where(statement : String, *bind_vars)
-    query.raw_where(Avram::Where::Raw.new(statement, *bind_vars))
-    self
+  def distinct_on(&block) : self
+    criteria = yield clone
+    criteria.private_distinct_on
   end
 
-  def order_by(column, direction)
-    query.order_by(column, direction)
-    self
+  def reset_where(&block) : self
+    criteria = yield clone
+    criteria.private_reset_where
   end
 
-  def none
-    query.where(Avram::Where::Equal.new("1", "0"))
-    self
+  # Delete the records using the query's where clauses, or all records if no wheres are added.
+  #
+  # Returns the number of deleted records as `Int64`.
+  #
+  # ```
+  # # DELETE FROM users WHERE age < 21
+  # UserQuery.new.age.lt(21).delete
+  # ```
+  def delete : Int64
+    clone.delete!
   end
 
-  def limit(amount)
-    query.limit(amount)
-    self
+  protected def delete! : Int64
+    new_query = query.clone.delete
+    database.exec(new_query.statement, args: new_query.args).rows_affected
   end
 
-  def offset(amount)
-    query.offset(amount)
-    self
+  # Update the records using the query's where clauses, or all records if no wheres are added.
+  #
+  # Returns the number of records updated as `Int64`.
+  #
+  # ```
+  # # Update all comments with the word "spam" as spam
+  # CommentQuery.new.body.ilike("spam").update(spam: true)
+  # ```
+  abstract def update : Int64
+
+  def join(join_clause : Avram::Join::SqlClause) : self
+    clone.tap &.query.join(join_clause)
   end
 
-  def find(id)
-    id(id).limit(1).first? || raise RecordNotFoundError.new(model: @@table_name, id: id.to_s)
+  def where(column : Symbol, value) : self
+    clone.tap &.query.where(Avram::Where::Equal.new(column, value.to_s))
+  end
+
+  def where(statement : String, *bind_vars) : self
+    where(statement, args: bind_vars.to_a)
+  end
+
+  def where(statement : String, *, args bind_vars : Array) : self
+    clone.tap &.query.where(Avram::Where::Raw.new(statement, args: bind_vars))
+  end
+
+  def where(sql_clause : Avram::Where::SqlClause) : self
+    clone.tap &.query.where(sql_clause)
+  end
+
+  def merge_query(query_to_merge : Avram::QueryBuilder) : self
+    clone.tap &.query.merge(query_to_merge)
+  end
+
+  # Run the `or` block first to grab the last WHERE clause and set its
+  # conjunction to OR. Then call yield to set the next set of ORs
+  def or(&block) : self
+    query.or &.itself
+    yield self
+  end
+
+  def order_by(column, direction) : self
+    direction = Avram::OrderBy::Direction.parse(direction.to_s)
+    order_by(Avram::OrderBy.new(column, direction))
+  rescue e : ArgumentError
+    raise "#{e.message}. Accepted values are: :asc, :desc"
+  end
+
+  def order_by(order : Avram::OrderBy) : self
+    clone.tap &.query.order_by(order)
+  end
+
+  def group(&block) : self
+    criteria = yield clone
+    criteria.private_group
+  end
+
+  def none : self
+    clone.tap &.query.where(Avram::Where::Equal.new("1", "0"))
+  end
+
+  def limit(amount) : self
+    clone.tap &.query.limit(amount)
+  end
+
+  def offset(amount) : self
+    clone.tap &.query.offset(amount)
   end
 
   def first?
-    query.limit(1)
-    results.first?
+    with_ordered_query
+      .limit(1)
+      .results
+      .first?
   end
 
   def first
-    first? || raise RecordNotFoundError.new(model: @@table_name, query: :first)
+    first? || raise RecordNotFoundError.new(model: table_name, query: :first)
   end
 
   def last?
-    ordered_query.reverse_order.limit(1)
-    results.first?
+    with_ordered_query
+      .clone
+      .tap(&.query.reverse_order)
+      .limit(1)
+      .results
+      .first?
   end
 
   def last
-    last? || raise RecordNotFoundError.new(model: @@table_name, query: :last)
+    last? || raise RecordNotFoundError.new(model: table_name, query: :last)
   end
 
   def select_count : Int64
-    query.select_count
-    exec_scalar.as(Int64)
+    exec_scalar(&.select_count).as(Int64)
+  rescue e : DB::NoResultsError
+    0_i64
   end
 
   def each
@@ -127,37 +203,40 @@ module Avram::Queryable(T)
     @preloads << block
   end
 
-  def results
-    records = exec_query
-
-    preloads.each(&.call(records))
-
-    records
+  def results : Array(T)
+    exec_query.tap do |records|
+      preloads.each(&.call(records))
+    end
   end
 
   private def exec_query
-    Avram::Repo.run do |db|
-      db.query query.statement, query.args do |rs|
-        @@schema_class.from_rs(rs)
-      end
+    database.query query.statement, args: query.args, queryable: schema_class.name do |rs|
+      schema_class.from_rs(rs)
     end
   end
 
-  def exec_scalar
-    Avram::Repo.run do |db|
-      db.scalar query.statement, query.args
-    end
+  def exec_scalar(&block)
+    new_query = yield query.clone
+    database.scalar new_query.statement, args: new_query.args, queryable: schema_class.name
   end
 
-  private def ordered_query
-    if query.ordered?
-      query
-    else
-      query.order_by(:id, :asc)
-    end
+  private def with_ordered_query : self
+    self
+  end
+
+  private def escape_sql(value : Int32)
+    value
+  end
+
+  private def escape_sql(value : String)
+    PG::EscapeHelper.escape_literal(value)
   end
 
   def to_sql
     query.to_sql
+  end
+
+  def to_prepared_sql
+    query.to_prepared_sql
   end
 end

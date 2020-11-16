@@ -1,13 +1,13 @@
 struct Bool
-  def blank?
-    false
+  def self.adapter
+    Lucky
   end
 
   module Lucky
     alias ColumnType = Bool
     include Avram::Type
 
-    def self.parse(value : String)
+    def parse(value : String)
       if %w(true 1).includes? value
         SuccessfulCast(Bool).new true
       elsif %w(false 0).includes? value
@@ -17,12 +17,20 @@ struct Bool
       end
     end
 
-    def self.parse(value : Bool)
+    def parse(value : Bool)
       SuccessfulCast(Bool).new value
     end
 
-    def self.to_db(value : Bool)
+    def parse(values : Array(Bool))
+      SuccessfulCast(Array(Bool)).new values
+    end
+
+    def to_db(value : Bool)
       value.to_s
+    end
+
+    def to_db(values : Array(Bool))
+      PQ::Param.encode_array(values)
     end
 
     class Criteria(T, V) < Avram::Criteria(T, V)

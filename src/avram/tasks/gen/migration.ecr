@@ -3,7 +3,13 @@ class <%= migration_class_name %> < Avram::Migrator::Migration::V1
     <%- if formatted_migrate_contents -%>
     <%= formatted_migrate_contents %>
     <%- else -%>
-    # create :things do
+    # Read more on migrations
+    # https://www.luckyframework.org/guides/database/migrations
+    #
+    # create table_for(Thing) do
+    #   primary_key id : Int64
+    #   add_timestamps
+    #
     #   add title : String
     #   add description : String?
     # end
@@ -18,7 +24,7 @@ class <%= migration_class_name %> < Avram::Migrator::Migration::V1
     <%- if formatted_rollback_contents -%>
     <%= formatted_rollback_contents %>
     <%- else -%>
-    # drop :things
+    # drop table_for(Thing)
     <%- end -%>
   end
 end

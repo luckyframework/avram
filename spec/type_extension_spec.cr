@@ -3,13 +3,17 @@ require "./spec_helper.cr"
 class CompanyQuery < Company::BaseQuery
 end
 
-class CompanyForm < Company::BaseForm
-  fillable :sales, :earnings
+class SaveCompany < Company::SaveOperation
+  permit_columns :sales, :earnings
+  before_save prepare
 
   def prepare
     validate_required sales
     validate_required earnings
   end
+end
+
+class MenuOptionQuery < MenuOption::BaseQuery
 end
 
 describe "TypeExtensions" do
@@ -25,9 +29,9 @@ describe "TypeExtensions" do
   end
 
   it "should convert params and save forms" do
-    form = CompanyForm.new({"sales" => "10", "earnings" => "10"})
-    form.sales.value.should eq 10_i64
-    form.earnings.value.should eq 10.0
+    operation = SaveCompany.new(Avram::Params.new({"sales" => "10", "earnings" => "10"}))
+    operation.sales.value.should eq 10_i64
+    operation.earnings.value.should eq 10.0
   end
 
   it "Int64 and Float64 should allow querying with Int32" do
@@ -37,5 +41,16 @@ describe "TypeExtensions" do
 
     using_earnings = CompanyQuery.new.earnings(1).first
     using_earnings.earnings.should eq 1.0
+  end
+
+  it "Int16 should allow querying with Int32" do
+    MenuOptionBox.create &.title("test").option_value(4_i16)
+    opt = MenuOptionQuery.new.option_value(4).first
+    opt.option_value.should eq 4_i16
+
+    # Any Int32 value above Int16::MAX will cause a FailedCase
+    # that will fail in Avram::Type#parse!
+    opt = MenuOptionQuery.new.option_value(32767).first?
+    opt.should eq nil
   end
 end

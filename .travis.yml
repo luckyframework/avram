@@ -1,7 +1,0 @@
-language: minimal
-before_install:
-  - scripts/setup
-script:
-  - scripts/test
-notifications:
-  email: false

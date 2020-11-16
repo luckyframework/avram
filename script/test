@@ -1,0 +1,28 @@
+#!/bin/sh
+
+# Exit if any subcommand fails
+set -e
+
+docker-compose up -d
+
+COMPOSE="docker-compose exec app"
+
+$COMPOSE ./script/integration_test
+
+printf "\nRunning specs\n\n"
+$COMPOSE crystal spec "$@"
+
+if [ $# -eq 0 ]
+then
+    printf "\nChecking that tasks build correctly\n\n"
+    $COMPOSE shards build
+
+    printf "\nChecking code formatting\n\n"
+    if ! $COMPOSE crystal tool format --check src spec config > /dev/null; then
+        printf "\nCode is not formatted.\n"
+        printf "\nFormat the code with: docker-compose run --rm app crystal tool format src spec config\n\n"
+        exit 1
+    fi
+fi
+
+docker-compose down

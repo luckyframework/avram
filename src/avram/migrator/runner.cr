@@ -13,37 +13,48 @@ class Avram::Migrator::Runner
   end
 
   def self.db_name
-    (URI.parse(Avram::Repo.settings.url).path || "")[1..-1]
+    credentials.database
   end
 
   def self.db_host
-    URI.parse(Avram::Repo.settings.url).host || "localhost"
+    credentials.hostname
   end
 
   def self.db_port
-    URI.parse(Avram::Repo.settings.url).port || "5432"
+    credentials.port
   end
 
   def self.db_user
-    URI.parse(Avram::Repo.settings.url).user
+    credentials.username
   end
 
   def self.db_password
-    URI.parse(Avram::Repo.settings.url).password
+    credentials.password
   end
 
   def self.migrations
     @@migrations
   end
 
+  def self.credentials
+    Avram.settings.database_to_migrate.credentials
+  end
+
+  def self.database_url
+    credentials.url
+  end
+
   def self.cmd_args
-    args = ""
-    args += "-U #{self.db_user} " if self.db_user
-    args += "-h #{self.db_host} -p #{self.db_port} #{self.db_name}"
+    String.build do |args|
+      args << "-U #{self.db_user}" if self.db_user
+      args << " -h #{self.db_host}" if self.db_host
+      args << " -p #{self.db_port}" if self.db_port
+      args << " #{self.db_name}"
+    end
   end
 
   def self.drop_db
-    run "dropdb #{self.cmd_args}"
+    run "dropdb #{cmd_args}"
   rescue e : Exception
     if (message = e.message) && message.includes?(%("#{self.db_name}" does not exist))
       puts "Already dropped #{self.db_name.colorize(:green)}"
@@ -53,7 +64,7 @@ class Avram::Migrator::Runner
   end
 
   def self.create_db(quiet? : Bool = false)
-    run "createdb #{self.cmd_args}"
+    run "createdb #{cmd_args}"
     unless quiet?
       puts "Done creating #{Avram::Migrator::Runner.db_name.colorize(:green)}"
     end
@@ -63,32 +74,54 @@ class Avram::Migrator::Runner
         puts "Already created #{self.db_name.colorize(:green)}"
       end
     elsif (message = e.message) && (message.includes?("createdb: not found") || message.includes?("No command 'createdb' found"))
-      raise <<-ERROR
-      #{message}
-
-        #{green_arrow} If you are on macOS  you can install postgres tools from #{macos_postgres_tools_link}
-        #{green_arrow} If you are on linux you can try running #{linux_postgres_installation_instructions}
-        #{green_arrow} If you are on CI or some servers, there may already be a database created so you don't need this command"
-      ERROR
+      raise PGClientNotInstalledError.new(message)
+    elsif (message = e.message) && message.includes?("could not connect to database template")
+      raise PGNotRunningError.new(message)
     else
       raise e
     end
   end
 
-  private def self.macos_postgres_tools_link
-    "https://postgresapp.com/documentation/cli-tools.html".colorize(:green)
+  def self.restore_db(restore_file : String, quiet : Bool = false)
+    if File.exists?(restore_file)
+      run "psql -q #{cmd_args} -v ON_ERROR_STOP=1 < #{restore_file}"
+      unless quiet
+        puts "Done restoring #{db_name.colorize(:green)}"
+      end
+    else
+      raise "Unable to locate the restore file: #{restore_file}"
+    end
   end
 
-  private def self.linux_postgres_installation_instructions
-    "sudo apt-get update && sudo apt-get install postgresql postgresql-contrib".colorize(:green)
+  def self.dump_db(dump_to : String = "db/structure.sql", quiet : Bool = false)
+    Db::VerifyConnection.new(quiet: true).call
+    run "pg_dump -s #{cmd_args} > #{dump_to}"
+    unless quiet
+      puts "Done dumping #{db_name.colorize(:green)}"
+    end
   end
 
-  def self.run(command : String)
+  def self.setup_migration_tracking_tables
+    DB.open(database_url) do |db|
+      db.exec create_table_for_tracking_migrations
+    end
+  end
+
+  private def self.create_table_for_tracking_migrations
+    <<-SQL
+    CREATE TABLE IF NOT EXISTS #{MIGRATIONS_TABLE_NAME} (
+      id serial PRIMARY KEY,
+      version bigint NOT NULL
+    )
+    SQL
+  end
+
+  def self.run(command : String, output : IO = STDOUT)
     error_messages = IO::Memory.new
     ENV["PGPASSWORD"] = self.db_password if self.db_password
     result = Process.run command,
       shell: true,
-      output: STDOUT,
+      output: output,
       error: error_messages
     ENV.delete("PGPASSWORD") if self.db_password
     unless result.success?
@@ -109,17 +142,26 @@ class Avram::Migrator::Runner
   end
 
   def rollback_all
-    setup_migration_tracking_tables
+    self.class.setup_migration_tracking_tables
     migrated_migrations.reverse.each &.new.down
   end
 
   def rollback_one
-    setup_migration_tracking_tables
+    self.class.setup_migration_tracking_tables
     if migrated_migrations.empty?
-      puts "Did nothing. No migration to roll back.".colorize(:green)
+      puts "Did not roll anything back because the database has no migrations.".colorize(:green)
     else
       migrated_migrations.last.new.down
     end
+  end
+
+  def rollback_to(last_version : Int64)
+    self.class.setup_migration_tracking_tables
+    subset = migrated_migrations.select do |mm|
+      mm.new.version.to_i64 > last_version
+    end
+    subset.reverse.each &.new.down
+    puts "Done rolling back to #{last_version}".colorize(:green)
   end
 
   def ensure_migrated!
@@ -136,17 +178,11 @@ class Avram::Migrator::Runner
     @@migrations.select &.new.pending?
   end
 
-  private def setup_migration_tracking_tables
-    DB.open(Avram::Repo.settings.url) do |db|
-      db.exec create_table_for_tracking_migrations
-    end
-  end
-
   private def prepare_for_migration
-    setup_migration_tracking_tables
+    self.class.setup_migration_tracking_tables
     if pending_migrations.empty?
       unless @quiet
-        puts "Did nothing. No pending migrations.".colorize(:green)
+        puts "Did not migrate anything because there are no pending migrations.".colorize(:green)
       end
     else
       yield
@@ -155,14 +191,5 @@ class Avram::Migrator::Runner
     raise "Unable to connect to the database. Please check your configuration.".colorize(:red).to_s
   rescue e : Exception
     raise "Unexpected error while running migrations: #{e.message}".colorize(:red).to_s
-  end
-
-  private def create_table_for_tracking_migrations
-    <<-SQL
-    CREATE TABLE IF NOT EXISTS #{MIGRATIONS_TABLE_NAME} (
-      id serial PRIMARY KEY,
-      version bigint NOT NULL
-    )
-    SQL
   end
 end

@@ -15,11 +15,11 @@ class Avram::Params
     end
   end
 
-  def nested?(key)
+  def nested?(key) : Hash(String, String)
     @hash
   end
 
-  def nested(key)
+  def nested(key) : Hash(String, String)
     @hash
   end
 
@@ -29,5 +29,13 @@ class Avram::Params
 
   def get(key)
     @hash[key]
+  end
+
+  def nested_file?(key) : Hash(String, String)
+    @hash
+  end
+
+  def nested_file(key) : Hash(String, String)
+    @hash
   end
 end

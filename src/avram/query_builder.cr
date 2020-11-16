@@ -1,22 +1,19 @@
 class Avram::QueryBuilder
+  def_clone
+
   alias ColumnName = Symbol | String
-  getter :table
+  getter table
+  getter distinct_on : ColumnName | Nil = nil
   @limit : Int32?
   @offset : Int32?
-  @wheres = [] of Avram::Where::SqlClause
-  @raw_wheres = [] of Avram::Where::Raw
-  @wheres_sql : String?
+  @wheres = [] of Avram::Where::Condition
   @joins = [] of Avram::Join::SqlClause
-  @orders = {
-    asc:  [] of Symbol | String,
-    desc: [] of Symbol | String,
-  }
+  @orders = [] of Avram::OrderBy
+  @groups = [] of ColumnName
   @selections : String = "*"
   @prepared_statement_placeholder = 0
   @distinct : Bool = false
-  @distinct_on : String | Symbol | Nil = nil
-
-  VALID_DIRECTIONS = [:asc, :desc]
+  @delete : Bool = false
 
   def initialize(@table : Symbol)
   end
@@ -25,12 +22,48 @@ class Avram::QueryBuilder
     [statement] + args
   end
 
-  def statement
-    join_sql [select_sql] + sql_condition_clauses
+  # Prepares the SQL statement by combining the `args` and `statement`
+  # in to a single `String`
+  def to_prepared_sql : String
+    params = args.map { |arg| "'#{String.new(PQ::Param.encode(arg).slice)}'" }
+    i = 0
+    sql = statement
+    sql.scan(/\$\d+/) do |match|
+      sql = sql.sub(match[0], params[i])
+      i += 1
+    end
+    sql
   end
 
-  def statement_for_update(params)
-    join_sql ["UPDATE #{table}", set_sql_clause(params)] + sql_condition_clauses + ["RETURNING #{@selections}"]
+  # Merges the wheres, joins, and orders from the passed in query
+  def merge(query_to_merge : Avram::QueryBuilder)
+    query_to_merge.wheres.each do |where|
+      where(where)
+    end
+
+    query_to_merge.joins.each do |join|
+      join(join)
+    end
+
+    query_to_merge.orders.each do |order|
+      order_by(order)
+    end
+
+    query_to_merge.groups.each do |group|
+      group_by(group)
+    end
+  end
+
+  def statement
+    join_sql [@delete ? delete_sql : select_sql] + sql_condition_clauses
+  end
+
+  def statement_for_update(params, return_columns returning? : Bool = true)
+    sql = ["UPDATE #{table}", set_sql_clause(params)]
+    sql += sql_condition_clauses
+    sql += ["RETURNING #{@selections}"] if returning?
+
+    join_sql sql
   end
 
   def args_for_update(params)
@@ -39,16 +72,19 @@ class Avram::QueryBuilder
 
   private def param_values(params)
     params.values.map do |value|
-      if value.nil?
+      case value
+      when Nil
         nil
+      when JSON::Any
+        value.to_json
       else
         value.to_s
       end
-    end
+    end.to_a
   end
 
   private def set_sql_clause(params)
-    "SET " + params.map do |key, value|
+    "SET " + params.map do |key, _value|
       "#{key} = #{next_prepared_statement_placeholder}"
     end.join(", ")
   end
@@ -64,7 +100,12 @@ class Avram::QueryBuilder
   end
 
   private def sql_condition_clauses
-    [joins_sql, wheres_sql, order_sql, limit_sql, offset_sql]
+    [joins_sql, wheres_sql, group_sql, order_sql, limit_sql, offset_sql]
+  end
+
+  def delete
+    @delete = true
+    self
   end
 
   def distinct
@@ -72,45 +113,81 @@ class Avram::QueryBuilder
     self
   end
 
-  def distinct_on(column : Symbol | String)
+  def distinct_on(column : ColumnName)
     @distinct_on = column
     self
   end
 
-  private def distinct?
-    @distinct || @distinct_on
+  def distinct?
+    @distinct || has_distinct_on?
   end
 
-  def limit(amount)
-    @limit = amount
+  def has_distinct_on?
+    !!@distinct_on
+  end
+
+  def limit
+    @limit
+  end
+
+  def limit(@limit)
     self
+  end
+
+  def offset
+    @offset
   end
 
   def offset(@offset)
     self
   end
 
-  def order_by(column, direction : Symbol)
-    raise "Direction must be :asc or :desc, got #{direction}" unless VALID_DIRECTIONS.includes?(direction)
-    @orders[direction] << column
+  def order_by(order : OrderBy)
+    @orders << order
     self
   end
 
+  def reset_where(column : ColumnName)
+    @wheres.reject! { |clause| clause.is_a?(Avram::Where::SqlClause) && clause.column.to_s == column.to_s }
+    self
+  end
+
+  def reset_order
+    @orders.clear
+  end
+
   def reverse_order
-    @orders = {
-      asc:  @orders[:desc],
-      desc: @orders[:asc],
-    }
+    @orders = @orders.map(&.reversed).reverse
     self
   end
 
   def order_sql
     if ordered?
-      "ORDER BY " + @orders.map do |direction, columns|
-        next if columns.empty?
-        "#{columns.join(", ")} #{direction.to_s.upcase}"
-      end.reject(&.nil?).join(", ")
+      "ORDER BY " + orders.map(&.prepare).join(", ")
     end
+  end
+
+  def orders
+    @orders.uniq!(&.column)
+  end
+
+  def group_by(column : ColumnName)
+    @groups << column
+    self
+  end
+
+  def group_sql
+    if grouped?
+      "GROUP BY " + groups.join(", ")
+    end
+  end
+
+  def groups
+    @groups
+  end
+
+  def grouped?
+    @groups.any?
   end
 
   def select_count
@@ -156,11 +233,13 @@ class Avram::QueryBuilder
     @limit || @offset
   end
 
-  private def reset_order
-    @orders.values.each(&.clear)
+  def selects
+    @selections
+      .split(", ")
+      .map { |column| column.split(".").last }
   end
 
-  def select(selection : Array(Symbol))
+  def select(selection : Array(ColumnName))
     @selections = selection
       .map { |column| "#{@table}.#{column}" }
       .join(", ")
@@ -168,16 +247,14 @@ class Avram::QueryBuilder
   end
 
   def ordered?
-    @orders.values.any? do |columns|
-      columns.any?
-    end
+    @orders.any?
   end
 
   private def select_sql
     String.build do |sql|
       sql << "SELECT "
       sql << "DISTINCT " if distinct?
-      sql << "ON (#{@distinct_on}) " if @distinct_on
+      sql << "ON (#{@distinct_on}) " if has_distinct_on?
       sql << @selections
       sql << " FROM "
       sql << table
@@ -197,51 +274,82 @@ class Avram::QueryBuilder
   end
 
   def join(join_clause : Avram::Join::SqlClause)
-    @joins << join_clause
+    if join_clause.to != table && @joins.none? { |join| join.to == join_clause.to }
+      @joins << join_clause
+    end
     self
   end
 
-  private def joins_sql
-    @joins.map(&.to_sql).join(" ")
+  def joins
+    @joins.uniq(&.to_sql)
   end
 
-  def where(where_clause : Avram::Where::SqlClause)
+  private def joins_sql
+    joins.map(&.to_sql).join(" ")
+  end
+
+  def where(where_clause : Avram::Where::Condition)
     @wheres << where_clause
     self
   end
 
+  @[Deprecated("Use `#where` instead.")]
   def raw_where(where_clause : Avram::Where::Raw)
-    @raw_wheres << where_clause
-    self
+    where(where_clause)
   end
 
+  def or(&block : Avram::QueryBuilder -> Avram::QueryBuilder)
+    if @wheres.empty?
+      raise Avram::InvalidQueryError.new("Cannot call `or` before calling a `where`")
+    end
+
+    @wheres.last.conjunction = Avram::Where::Conjunction::Or
+
+    block.call(self)
+  end
+
+  @_wheres_sql : String?
+
   private def wheres_sql
-    @wheres_sql ||= joined_wheres_queries
+    @_wheres_sql ||= joined_wheres_queries
   end
 
   private def joined_wheres_queries
-    if @wheres.any? || @raw_wheres.any?
-      statements = @wheres.map do |sql_clause|
-        if sql_clause.is_a?(Avram::Where::NullSqlClause)
-          sql_clause.prepare
-        else
-          sql_clause.prepare(next_prepared_statement_placeholder)
-        end
-      end
-      statements += @raw_wheres.map(&.to_sql)
+    if wheres.any?
+      statements = wheres.flat_map do |sql_clause|
+        clause = sql_clause.prepare(->next_prepared_statement_placeholder)
 
-      "WHERE " + statements.join(" AND ")
+        [clause, sql_clause.conjunction.to_s]
+      end
+
+      # Remove the last floating conjunction
+      statements.pop
+
+      "WHERE " + statements.join(" ")
     end
   end
 
+  def wheres
+    @wheres
+  end
+
+  @[Deprecated("Use `#wheres` instead. Raw wheres are included.")]
+  def raw_wheres
+    wheres.select(&.is_a?(Avram::Where::Raw))
+  end
+
   private def prepared_statement_values
-    @wheres.compact_map do |sql_clause|
-      sql_clause.value unless sql_clause.is_a?(Avram::Where::NullSqlClause)
+    wheres.compact_map do |sql_clause|
+      sql_clause.value if sql_clause.is_a?(Avram::Where::ValueHoldingSqlClause)
     end
   end
 
   private def next_prepared_statement_placeholder
     @prepared_statement_placeholder += 1
     "$#{@prepared_statement_placeholder}"
+  end
+
+  private def delete_sql
+    "DELETE FROM #{table}"
   end
 end

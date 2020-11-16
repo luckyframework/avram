@@ -22,6 +22,7 @@ class Avram::Migrator::MigrationGenerator
   def generate(@_version = @_version)
     ensure_camelcase_name
     make_migrations_folder_if_missing
+    ensure_unique
     File.write(file_path, contents)
     io.puts "Created #{migration_class_name.colorize(:green)} in .#{relative_file_path.colorize(:green)}"
   end
@@ -66,6 +67,19 @@ class Avram::Migrator::MigrationGenerator
     end
   end
 
+  private def ensure_unique
+    d = Dir.new(Dir.current + "/db/migrations")
+    d.each_child { |x|
+      if x.starts_with?(/[0-9]{14}_#{name.underscore}.cr/)
+        raise <<-ERROR
+          Migration name must be unique
+
+          Migration name: #{name.underscore}.cr already exists as: #{x}.
+        ERROR
+      end
+    }
+  end
+
   private def migration_class_name
     "#{name}::V#{version}"
   end
@@ -83,7 +97,7 @@ class Avram::Migrator::MigrationGenerator
   end
 
   private def version
-    @_version ||= Time.now.to_s("%Y%m%d%H%M%S")
+    @_version ||= Time.utc.to_s("%Y%m%d%H%M%S")
   end
 
   private def contents
@@ -96,6 +110,21 @@ class Gen::Migration < LuckyCli::Task
 
   Habitat.create do
     setting io : IO = STDOUT
+  end
+
+  def help_message
+    <<-TEXT
+    Generate a new migration using the passed in migration name.
+
+    The migration name must be CamelCase. No other options are available.
+
+    Examples:
+
+      lucky gen.migration CreateUsers
+      lucky gen.migration AddAgeToUsers
+      lucky gen.migration MakeUserNameOptional
+
+    TEXT
   end
 
   def self.silence_output

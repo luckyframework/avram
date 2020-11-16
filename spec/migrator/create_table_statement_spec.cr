@@ -7,21 +7,21 @@ describe Avram::Migrator::CreateTableStatement do
 
     built.statements.size.should eq 1
     built.statements.first.should eq <<-SQL
-    CREATE TABLE users (
-      id serial PRIMARY KEY,
-      created_at timestamptz NOT NULL,
-      updated_at timestamptz NOT NULL);
+    CREATE TABLE users (\n);
     SQL
   end
 
   it "can create tables" do
     built = Avram::Migrator::CreateTableStatement.new(:users).build do
+      primary_key id : Int32
+      add_timestamps
       add name : String
       add age : Int32
       add completed : Bool
       add joined_at : Time
-      add amount_paid : Float, precision: 10, scale: 2
+      add amount_paid : Float64, precision: 10, scale: 2
       add email : String?
+      add meta : JSON::Any?
       add reference : UUID
     end
 
@@ -37,22 +37,40 @@ describe Avram::Migrator::CreateTableStatement do
       joined_at timestamptz NOT NULL,
       amount_paid decimal(10,2) NOT NULL,
       email text,
+      meta jsonb,
       reference uuid NOT NULL);
     SQL
   end
 
-  it "can create tables with uuid primary keys" do
-    built = Avram::Migrator::CreateTableStatement.new(:users, Avram::Migrator::PrimaryKeyType::UUID).build do
-      add name : String
+  it "can create tables with other primary keys" do
+    built = Avram::Migrator::CreateTableStatement.new(:users).build do
+      primary_key id : UUID
     end
 
     built.statements.size.should eq 1
     built.statements.first.should eq <<-SQL
     CREATE TABLE users (
-      id uuid PRIMARY KEY,
-      created_at timestamptz NOT NULL,
-      updated_at timestamptz NOT NULL,
-      name text NOT NULL);
+      id uuid PRIMARY KEY);
+    SQL
+
+    built = Avram::Migrator::CreateTableStatement.new(:users).build do
+      primary_key custom_id_name : Int64
+    end
+
+    built.statements.size.should eq 1
+    built.statements.first.should eq <<-SQL
+    CREATE TABLE users (
+      custom_id_name bigserial PRIMARY KEY);
+    SQL
+
+    built = Avram::Migrator::CreateTableStatement.new(:users).build do
+      primary_key id : Int16
+    end
+
+    built.statements.size.should eq 1
+    built.statements.first.should eq <<-SQL
+    CREATE TABLE users (
+      id smallserial PRIMARY KEY);
     SQL
   end
 
@@ -62,26 +80,31 @@ describe Avram::Migrator::CreateTableStatement do
       add email : String?, default: "optional"
       add age : Int32, default: 1
       add num : Int64, default: 1
-      add amount_paid : Float, default: 1.0
+      add amount_paid : Float64, default: 1.0
       add completed : Bool, default: false
+      add meta : JSON::Any, default: JSON::Any.new(Hash(String, JSON::Any).new)
       add joined_at : Time, default: :now
-      add future_time : Time, default: Time.new
+      add future_time : Time, default: Time.local
+      add friend_count : Int16, default: 1
+      add friends : Array(String), default: ["Paul"]
+      add problems : Array(String), default: [] of String
     end
 
     built.statements.size.should eq 1
     built.statements.first.should eq <<-SQL
     CREATE TABLE users (
-      id serial PRIMARY KEY,
-      created_at timestamptz NOT NULL,
-      updated_at timestamptz NOT NULL,
       name text NOT NULL DEFAULT 'name',
       email text DEFAULT 'optional',
-      age int NOT NULL DEFAULT 1,
-      num bigint NOT NULL DEFAULT 1,
-      amount_paid decimal NOT NULL DEFAULT 1.0,
-      completed boolean NOT NULL DEFAULT false,
+      age int NOT NULL DEFAULT '1',
+      num bigint NOT NULL DEFAULT '1',
+      amount_paid decimal NOT NULL DEFAULT '1.0',
+      completed boolean NOT NULL DEFAULT 'false',
+      meta jsonb NOT NULL DEFAULT '{}',
       joined_at timestamptz NOT NULL DEFAULT NOW(),
-      future_time timestamptz NOT NULL DEFAULT '#{Time.new.to_utc}');
+      future_time timestamptz NOT NULL DEFAULT '#{Time.local.to_utc}',
+      friend_count smallint NOT NULL DEFAULT '1',
+      friends text[] NOT NULL DEFAULT '{"Paul"}',
+      problems text[] NOT NULL DEFAULT '{}');
     SQL
   end
 
@@ -98,9 +121,6 @@ describe Avram::Migrator::CreateTableStatement do
       built.statements.size.should eq 4
       built.statements.first.should eq <<-SQL
       CREATE TABLE users (
-        id serial PRIMARY KEY,
-        created_at timestamptz NOT NULL,
-        updated_at timestamptz NOT NULL,
         name text NOT NULL,
         age int NOT NULL,
         email text NOT NULL);
@@ -135,18 +155,15 @@ describe Avram::Migrator::CreateTableStatement do
         add_belongs_to post : Post?, on_delete: :restrict
         add_belongs_to category_label : CategoryLabel, on_delete: :nullify, references: :custom_table
         add_belongs_to employee : User, on_delete: :cascade
-        add_belongs_to line_item : LineItem, on_delete: :cascade, foreign_key_type: Avram::Migrator::PrimaryKeyType::UUID
+        add_belongs_to line_item : LineItem, on_delete: :cascade, foreign_key_type: UUID
       end
 
       built.statements.first.should eq <<-SQL
       CREATE TABLE comments (
-        id serial PRIMARY KEY,
-        created_at timestamptz NOT NULL,
-        updated_at timestamptz NOT NULL,
-        user_id int NOT NULL REFERENCES users ON DELETE CASCADE,
-        post_id int REFERENCES posts ON DELETE RESTRICT,
-        category_label_id int NOT NULL REFERENCES custom_table ON DELETE SET NULL,
-        employee_id int NOT NULL REFERENCES users ON DELETE CASCADE,
+        user_id bigint NOT NULL REFERENCES users ON DELETE CASCADE,
+        post_id bigint REFERENCES posts ON DELETE RESTRICT,
+        category_label_id bigint NOT NULL REFERENCES custom_table ON DELETE SET NULL,
+        employee_id bigint NOT NULL REFERENCES users ON DELETE CASCADE,
         line_item_id uuid NOT NULL REFERENCES line_items ON DELETE CASCADE);
       SQL
 
