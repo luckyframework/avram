@@ -7,6 +7,14 @@ abstract class Avram::FakeParams
     nested?(key)
   end
 
+  def many_nested?(key : String) : Array(Hash(String, String))
+    raise "Not implemented"
+  end
+
+  def many_nested(key : String) : Array(Hash(String, String))
+    raise "Not implemented"
+  end
+
   def get?(key)
     raise "Not implemented"
   end

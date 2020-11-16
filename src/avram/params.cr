@@ -23,6 +23,14 @@ class Avram::Params
     @hash
   end
 
+  def many_nested?(key) : Array(Hash(String, String))
+    [nested?(key)]
+  end
+
+  def many_nested(key) : Array(Hash(String, String))
+    [nested(key)]
+  end
+
   def get?(key)
     @hash[key]?
   end
