@@ -10,7 +10,7 @@ module QuerySpy
 
     def database : Avram::Database.class
       self.class.times_called += 1
-      previous_def
+      super
     end
   end
 end

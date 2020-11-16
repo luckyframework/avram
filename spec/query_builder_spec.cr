@@ -1,22 +1,25 @@
 require "./spec_helper"
 
 describe Avram::QueryBuilder do
-  it "ensures uniqueness for where, orders, and joins" do
+  it "ensures uniqueness for orders, and joins" do
     query = new_query
-      .where(Avram::Where::Equal.new(:name, "Paul"))
-      .where(Avram::Where::Equal.new(:name, "Paul"))
-      .where(Avram::Where::Raw.new("name = ?", "Mikias"))
-      .where(Avram::Where::Raw.new("name = ?", "Mikias"))
-      .where(Avram::Where::Raw.new("name = ?", args: ["Mikias"]))
       .join(Avram::Join::Inner.new(:users, :posts))
       .join(Avram::Join::Inner.new(:users, :posts))
       .order_by(Avram::OrderBy.new(:my_column, :asc))
       .order_by(Avram::OrderBy.new(:my_column, :asc))
 
-    query.wheres.size.should eq(2)
     query.joins.size.should eq(1)
-    query.statement.should eq "SELECT * FROM users INNER JOIN posts ON users.id = posts.user_id WHERE name = $1 AND name = 'Mikias' ORDER BY my_column ASC"
-    query.args.should eq ["Paul"]
+    query.statement.should eq "SELECT * FROM users INNER JOIN posts ON users.id = posts.user_id ORDER BY my_column ASC"
+  end
+
+  it "does not remove potentially duplicate where clauses" do
+    query = new_query
+      .where(Avram::Where::Equal.new(:name, "Paul"))
+      .where(Avram::Where::Equal.new(:age, "18"))
+      .or(&.where(Avram::Where::Equal.new(:name, "Paul"))
+        .where(Avram::Where::Equal.new(:age, "100")))
+
+    query.statement.should eq "SELECT * FROM users WHERE name = $1 AND age = $2 OR name = $3 AND age = $4"
   end
 
   it "can reset order" do

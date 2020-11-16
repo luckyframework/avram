@@ -330,7 +330,7 @@ class Avram::QueryBuilder
   end
 
   def wheres
-    @wheres.uniq
+    @wheres
   end
 
   @[Deprecated("Use `#wheres` instead. Raw wheres are included.")]

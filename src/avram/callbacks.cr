@@ -1,26 +1,74 @@
 module Avram::Callbacks
+  # :nodoc:
+  macro conditional_error_for_inline_callbacks(callback, method_name, condition)
+    \{%
+      raise <<-ERROR
+      You must pass a Symbol to `{{ condition.id }}` in {{ @type }}. The Symbol will reference a method you define.
+
+      Try this...
+
+        {{ callback.id }} {{ method_name.id }}, {{ condition.id }}: :check_condition?
+
+        def check_condition?
+          # return your bool value here
+        end
+      ERROR
+    %}
+  end
+
+  macro conditional_error_for_block_callbacks(callback, condition)
+    \{%
+    raise <<-ERROR
+    You must pass a Symbol to `{{ condition.id }}` in {{ @type }}. The Symbol will reference a method you define.
+
+    Try this...
+
+      {{ callback.id }}({{ condition.id }}: :check_condition?) do
+        # your callback block
+      end
+
+      def check_condition?
+        # return your bool value here
+      end
+    ERROR
+  %}
+  end
+
   # Run the given method before saving or creating for `SaveOperation`
   #
   # This runs before saving and before the database transaction is started.
   # You can set defaults, validate, or perform any other setup necessary for
   # saving.
   #
+  # Optionally you can pass an `if` or `unless` argument which allows you to
+  # run this conditionally. The symbol should reference a method you've defined
+  # that returns a truthy/falsey value
+  #
   # ```
   # before_save :run_validations
+  # before_save :validate_can_internet, unless: :too_cool_for_school?
   #
   # private def run_validations
   #   validate_required name, age
   # end
+  #
+  # private def validate_can_internet
+  #   validate_size_of age, min: 13
+  # end
+  #
+  # private def too_cool_for_school?
+  #   [true, false].sample
+  # end
   # ```
-  macro before_save(method_name)
-    before_save do
+  macro before_save(method_name, if _if = nil, unless _unless = nil)
+    {% unless _if.is_a?(SymbolLiteral) || _if.is_a?(NilLiteral) %}
+      conditional_error_for_inline_callbacks(:before_save, {{ method_name }}, :if)
+    {% end %}
+    {% unless _unless.is_a?(SymbolLiteral) || _unless.is_a?(NilLiteral) %}
+      conditional_error_for_inline_callbacks(:before_save, {{ method_name }}, :unless)
+    {% end %}
+    before_save(if: {{ _if }}, unless: {{ _unless }}) do
       {{ method_name.id }}
-    end
-  end
-
-  # Redefines the given `method_name` to do nothing
-  macro skip_before_save(method_name)
-    def {{ method_name.id }}
     end
   end
 
@@ -45,12 +93,30 @@ module Avram::Callbacks
   # You can set defaults, validate, or perform any other setup necessary for
   # saving.
   #
+  # Optionally you can pass an `if` or `unless` argument which allows you to
+  # run this conditionally. The symbol should reference a method you've defined
+  # that returns a truthy/falsey value
+  #
   # ```
-  # before_save do
+  # before_save(unless: :skip_callback?) do
   #   validate_required name, age
   # end
+  #
+  # private def skip_callback?
+  #   false
+  # end
   # ```
-  macro before_save
+  macro before_save(if _if = nil, unless _unless = nil)
+    {% if _if != nil && _unless != nil %}
+      {% raise "Your before_save callbacks should only specify `if` or `unless`, but not both." %}
+    {% end %}
+    {% unless _if.is_a?(SymbolLiteral) || _if.is_a?(NilLiteral) %}
+      conditional_error_for_block_callbacks(:before_save, :if)
+    {% end %}
+    {% unless _unless.is_a?(SymbolLiteral) || _unless.is_a?(NilLiteral) %}
+      conditional_error_for_block_callbacks(:before_save, :unless)
+    {% end %}
+
     def before_save
       {% if @type.methods.map(&.name).includes?(:before_save.id) %}
         previous_def
@@ -58,7 +124,17 @@ module Avram::Callbacks
         super
       {% end %}
 
-      {{ yield }}
+      {% if _if %}
+      if {{ _if.id }}
+        {{ yield }}
+      end
+      {% elsif _unless %}
+      unless {{ _unless.id }}
+        {{ yield }}
+      end
+      {% else %}
+        {{ yield }}
+      {% end %}
     end
   end
 
@@ -83,6 +159,10 @@ module Avram::Callbacks
 
   # Run the given method after save, but before transaction is committed
   #
+  # Optionally you can pass an `if` or `unless` argument which allows you to
+  # run this conditionally. The symbol should reference a method you've defined
+  # that returns a truthy/falsey value
+  #
   # This is a great place to do other database saves because if something goes
   # wrong the whole transaction would be rolled back.
   #
@@ -102,19 +182,23 @@ module Avram::Callbacks
   # > background jobs, or charge payments. Since the transaction could be rolled
   # > back the record may not be persisted to the database.
   # > Instead use `after_commit`
-  macro after_save(method_name)
-    after_save do |object|
+  macro after_save(method_name, if _if = nil, unless _unless = nil)
+    {% unless _if.is_a?(SymbolLiteral) || _if.is_a?(NilLiteral) %}
+      conditional_error_for_inline_callbacks(:after_save, {{ method_name }}, :if)
+    {% end %}
+    {% unless _unless.is_a?(SymbolLiteral) || _unless.is_a?(NilLiteral) %}
+      conditional_error_for_inline_callbacks(:after_save, {{ method_name }}, :unless)
+    {% end %}
+    after_save(if: {{ _if }}, unless: {{ _unless }}) do |object|
       {{ method_name.id }}(object)
     end
   end
 
-  # Redefines the given `method_name` method to do nothing
-  macro skip_after_save(method_name)
-    def {{ method_name.id }}(_object)
-    end
-  end
-
   # Run the given block after save, but before transaction is committed
+  #
+  # Optionally you can pass an `if` or `unless` argument which allows you to
+  # run this conditionally. The symbol should reference a method you've defined
+  # that returns a truthy/falsey value
   #
   # This is a great place to do other database saves because if something goes
   # wrong the whole transaction would be rolled back.
@@ -133,7 +217,16 @@ module Avram::Callbacks
   # > background jobs, or charge payments. Since the transaction could be rolled
   # > back the record may not be persisted to the database.
   # > Instead use `after_commit`
-  macro after_save(&block)
+  macro after_save(if _if = nil, unless _unless = nil, &block)
+    {% if _if != nil && _unless != nil %}
+      {% raise "Your after_save callbacks should only specify `if` or `unless`, but not both." %}
+    {% end %}
+    {% unless _if.is_a?(SymbolLiteral) || _if.is_a?(NilLiteral) %}
+      conditional_error_for_block_callbacks(:after_save, :if)
+    {% end %}
+    {% unless _unless.is_a?(SymbolLiteral) || _unless.is_a?(NilLiteral) %}
+      conditional_error_for_block_callbacks(:after_save, :unless)
+    {% end %}
     {%
       if block.args.size != 1
         raise <<-ERR
@@ -152,8 +245,20 @@ module Avram::Callbacks
         super
       {% end %}
 
-      {{ block.args.first }} = %object
-      {{ block.body }}
+      {% if _if %}
+      if {{ _if.id }}
+        {{ block.args.first }} = %object
+        {{ block.body }}
+      end
+      {% elsif _unless %}
+      unless {{ _unless.id }}
+        {{ block.args.first }} = %object
+        {{ block.body }}
+      end
+      {% else %}
+        {{ block.args.first }} = %object
+        {{ block.body }}
+      {% end %}
     end
   end
 
@@ -212,6 +317,10 @@ module Avram::Callbacks
 
   # Run the given method after save and after successful transaction commit
   #
+  # Optionally you can pass an `if` or `unless` argument which allows you to
+  # run this conditionally. The symbol should reference a method you've defined
+  # that returns a truthy/falsey value
+  #
   # The newly saved record will be passed to the method.
   #
   # ```
@@ -224,15 +333,15 @@ module Avram::Callbacks
   # end
   # ```
   #
-  macro after_commit(method_name)
-    after_commit do |object|
+  macro after_commit(method_name, if _if = nil, unless _unless = nil)
+    {% unless _if.is_a?(SymbolLiteral) || _if.is_a?(NilLiteral) %}
+      conditional_error_for_inline_callbacks(:after_commit, {{ method_name }}, :if)
+    {% end %}
+    {% unless _unless.is_a?(SymbolLiteral) || _unless.is_a?(NilLiteral) %}
+      conditional_error_for_inline_callbacks(:after_commit, {{ method_name }}, :unless)
+    {% end %}
+    after_commit(if: {{ _if }}, unless: {{ _unless }}) do |object|
       {{ method_name.id }}(object)
-    end
-  end
-
-  # Redefines the given `method_name` method to do nothing
-  macro skip_after_commit(method_name)
-    def {{ method_name.id }}(_object)
     end
   end
 
@@ -247,7 +356,16 @@ module Avram::Callbacks
   #   end
   # end
   # ```
-  macro after_commit(&block)
+  macro after_commit(if _if = nil, unless _unless = nil, &block)
+    {% if _if != nil && _unless != nil %}
+      {% raise "Your after_commit callbacks should only specify `if` or `unless`, but not both." %}
+    {% end %}
+    {% unless _if.is_a?(SymbolLiteral) || _if.is_a?(NilLiteral) %}
+      conditional_error_for_block_callbacks(:after_commit, :if)
+    {% end %}
+    {% unless _unless.is_a?(SymbolLiteral) || _unless.is_a?(NilLiteral) %}
+      conditional_error_for_block_callbacks(:after_commit, :unless)
+    {% end %}
     {%
       if block.args.size != 1
         raise <<-ERR
@@ -266,8 +384,20 @@ module Avram::Callbacks
         super
       {% end %}
 
-      {{ block.args.first }} = %object
-      {{ block.body }}
+      {% if _if %}
+      if {{ _if.id }}
+        {{ block.args.first }} = %object
+        {{ block.body }}
+      end
+      {% elsif _unless %}
+      unless {{ _unless.id }}
+        {{ block.args.first }} = %object
+        {{ block.body }}
+      end
+      {% else %}
+        {{ block.args.first }} = %object
+        {{ block.body }}
+      {% end %}
     end
   end
 
@@ -275,11 +405,26 @@ module Avram::Callbacks
   macro before(callback_method)
     {% raise <<-ERROR
 
-      'before' is not a valid SaveOperation callback.
+      'before' is not a valid #{@type.name} callback.
 
       Try this...
 
         ▸ before_save #{callback_method.id}
+
+      ERROR
+    %}
+  end
+
+  # :nodoc:
+  macro before(&block)
+    {% raise <<-ERROR
+
+      'before' is not a valid #{@type.name} callback.
+
+      Try this...
+
+        ▸ before_save do
+          end
 
       ERROR
     %}

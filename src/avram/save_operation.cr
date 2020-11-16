@@ -8,13 +8,13 @@ require "./param_key_override"
 require "./inherit_column_attributes"
 require "./validations"
 require "./define_attribute"
-require "./save_operation_errors"
+require "./operation_errors"
 require "./param_key_override"
 
 abstract class Avram::SaveOperation(T)
   include Avram::DefineAttribute
   include Avram::Validations
-  include Avram::SaveOperationErrors
+  include Avram::OperationErrors
   include Avram::ParamKeyOverride
   include Avram::NeedyInitializerAndSaveMethods
   include Avram::Callbacks
@@ -29,24 +29,16 @@ abstract class Avram::SaveOperation(T)
     Unperformed
   end
 
-  @save_status = SaveStatus::Unperformed
-
   macro inherited
-    @valid : Bool = true
     @@permitted_param_keys = [] of String
-    @@schema_class = T
   end
-
-  property save_status
 
   @record : T?
   @params : Avram::Paramable
   getter :record, :params
+  property save_status : SaveStatus = SaveStatus::Unperformed
 
-  abstract def table_name
   abstract def attributes
-  abstract def primary_key_name
-  abstract def database
 
   def self.param_key
     T.name.underscore
@@ -58,6 +50,8 @@ abstract class Avram::SaveOperation(T)
   def initialize
     @params = Avram::Params.new
   end
+
+  delegate :database, :table_name, :primary_key_name, to: T
 
   # :nodoc:
   def published_save_failed_event
@@ -215,13 +209,14 @@ abstract class Avram::SaveOperation(T)
   end
 
   # Runs required validation,
-  # then returns `true` if all attributes are valid.
+  # then returns `true` if all attributes are valid,
+  # and there's no custom errors
   def valid? : Bool
     # These validations must be ran after all `before_save` callbacks have completed
     # in the case that someone has set a required field in a `before_save`. If we run
     # this in a `before_save` ourselves, the ordering would cause this to be ran first.
     validate_required *required_attributes
-    attributes.all? &.valid?
+    custom_errors.empty? && attributes.all?(&.valid?)
   end
 
   # Returns true if the operation has run and saved the record successfully
@@ -232,11 +227,6 @@ abstract class Avram::SaveOperation(T)
   # Return true if the operation has run and the record failed to save
   def save_failed?
     save_status == SaveStatus::SaveFailed
-  end
-
-  # :nodoc:
-  macro fillable(*args)
-    {% raise "'fillable' has been renamed to 'permit_columns'" %}
   end
 
   macro permit_columns(*attribute_names)
@@ -381,25 +371,25 @@ abstract class Avram::SaveOperation(T)
     self.created_at.value ||= Time.utc if responds_to?(:created_at)
     self.updated_at.value ||= Time.utc if responds_to?(:updated_at)
     @record = database.query insert_sql.statement, args: insert_sql.args do |rs|
-      @record = @@schema_class.from_rs(rs).first
+      @record = T.from_rs(rs).first
     end
   end
 
   private def update(id) : T
     self.updated_at.value = Time.utc if responds_to?(:updated_at)
     @record = database.query update_query(id).statement_for_update(changes), args: update_query(id).args_for_update(changes) do |rs|
-      @record = @@schema_class.from_rs(rs).first
+      @record = T.from_rs(rs).first
     end
   end
 
   private def update_query(id)
     Avram::QueryBuilder
       .new(table_name)
-      .select(@@schema_class.column_names)
+      .select(T.column_names)
       .where(Avram::Where::Equal.new(primary_key_name, id.to_s))
   end
 
   private def insert_sql
-    Avram::Insert.new(table_name, changes, @@schema_class.column_names)
+    Avram::Insert.new(table_name, changes, T.column_names)
   end
 end

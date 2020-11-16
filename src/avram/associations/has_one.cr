@@ -17,7 +17,7 @@ module Avram::Associations::HasOne
     {% foreign_key = foreign_key.id %}
 
     association \
-      table_name: :{{ type_declaration.var }},
+      assoc_name: :{{ type_declaration.var }},
       type: {{ model }},
       foreign_key: {{ foreign_key }},
       relationship_type: :has_one
@@ -44,7 +44,7 @@ module Avram::Associations::HasOne
   end
 
   private macro define_has_one_base_query(assoc_name, model, foreign_key)
-    class BaseQuery < Avram::Query
+    class BaseQuery
       def preload_{{ assoc_name }}
         preload_{{ assoc_name }}({{ model }}::BaseQuery.new)
       end

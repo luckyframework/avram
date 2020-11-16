@@ -1,7 +1,10 @@
 require "file_utils"
 require "spec"
 require "../src/avram"
-require "./support/base_model"
+require "./support/models/base_model"
+require "./support/models/**"
+require "./support/boxes/base_box"
+require "./support/boxes/**"
 require "./support/**"
 require "../config/*"
 

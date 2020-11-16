@@ -98,8 +98,8 @@ describe Avram::Migrator::AlterTableStatement do
   describe "associations" do
     it "can create associations" do
       built = Avram::Migrator::AlterTableStatement.new(:comments).build do
-        add_belongs_to user : User, on_delete: :cascade
-        add_belongs_to post : Post?, on_delete: :restrict
+        add_belongs_to user : User, on_delete: :cascade, unique: true
+        add_belongs_to post : Post?, on_delete: :restrict, unique: false
         add_belongs_to category_label : CategoryLabel, on_delete: :nullify, references: :custom_table
         add_belongs_to employee : User, on_delete: :cascade
         add_belongs_to line_item : LineItem, on_delete: :cascade, foreign_key_type: UUID, fill_existing_with: "a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11"
@@ -114,7 +114,7 @@ describe Avram::Migrator::AlterTableStatement do
         ADD line_item_id uuid NOT NULL REFERENCES line_items ON DELETE CASCADE;
       SQL
 
-      built.statements[1].should eq "CREATE INDEX comments_user_id_index ON comments USING btree (user_id);"
+      built.statements[1].should eq "CREATE UNIQUE INDEX comments_user_id_index ON comments USING btree (user_id);"
       built.statements[2].should eq "CREATE INDEX comments_post_id_index ON comments USING btree (post_id);"
       built.statements[3].should eq "CREATE INDEX comments_category_label_id_index ON comments USING btree (category_label_id);"
       built.statements[4].should eq "CREATE INDEX comments_employee_id_index ON comments USING btree (employee_id);"

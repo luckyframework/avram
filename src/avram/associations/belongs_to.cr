@@ -21,7 +21,7 @@ module Avram::Associations::BelongsTo
     column {{ foreign_key.id }} : {{ model }}::PrimaryKeyType{% if nilable %}?{% end %}
 
     association \
-      table_name: :{{ table.id }},
+      assoc_name: :{{ table.id }},
       type: {{ model }},
       foreign_key: :{{ foreign_key.id }},
       relationship_type: :belongs_to
@@ -47,7 +47,7 @@ module Avram::Associations::BelongsTo
   end
 
   private macro define_belongs_to_base_query(assoc_name, model, foreign_key)
-    class BaseQuery < Avram::Query
+    class BaseQuery
       def preload_{{ assoc_name }}
         preload_{{ assoc_name }}({{ model }}::BaseQuery.new)
       end

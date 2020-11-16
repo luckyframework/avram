@@ -4,6 +4,8 @@ module Avram::Queryable(T)
   @query : Avram::QueryBuilder?
   setter query
 
+  delegate :database, :table_name, :primary_key_name, to: T
+
   macro included
     def self.new_with_existing_query(query : Avram::QueryBuilder)
       new.tap do |queryable|
@@ -30,12 +32,21 @@ module Avram::Queryable(T)
     def self.last?
       new.last?
     end
+
+    def self.truncate
+      query = self.new
+      query.database.exec "TRUNCATE TABLE #{query.table_name}"
+    end
+  end
+
+  def schema_class
+    T
   end
 
   def query
     @query ||= Avram::QueryBuilder
-      .new(table: @@table_name)
-      .select(@@schema_class.column_names)
+      .new(table: table_name)
+      .select(schema_class.column_names)
   end
 
   def distinct : self
@@ -158,7 +169,7 @@ module Avram::Queryable(T)
   end
 
   def first
-    first? || raise RecordNotFoundError.new(model: @@table_name, query: :first)
+    first? || raise RecordNotFoundError.new(model: table_name, query: :first)
   end
 
   def last?
@@ -171,7 +182,7 @@ module Avram::Queryable(T)
   end
 
   def last
-    last? || raise RecordNotFoundError.new(model: @@table_name, query: :last)
+    last? || raise RecordNotFoundError.new(model: table_name, query: :last)
   end
 
   def select_count : Int64
@@ -199,18 +210,26 @@ module Avram::Queryable(T)
   end
 
   private def exec_query
-    database.query query.statement, args: query.args, queryable: @@schema_class.name do |rs|
-      @@schema_class.from_rs(rs)
+    database.query query.statement, args: query.args, queryable: schema_class.name do |rs|
+      schema_class.from_rs(rs)
     end
   end
 
   def exec_scalar(&block)
     new_query = yield query.clone
-    database.scalar new_query.statement, args: new_query.args, queryable: @@schema_class.name
+    database.scalar new_query.statement, args: new_query.args, queryable: schema_class.name
   end
 
   private def with_ordered_query : self
     self
+  end
+
+  private def escape_sql(value : Int32)
+    value
+  end
+
+  private def escape_sql(value : String)
+    PG::EscapeHelper.escape_literal(value)
   end
 
   def to_sql
