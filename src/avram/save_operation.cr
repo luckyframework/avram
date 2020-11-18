@@ -277,13 +277,7 @@ abstract class Avram::SaveOperation(T)
   end
 
   def changes : Hash(Symbol, String?)
-    _changes = {} of Symbol => String?
-    column_attributes.each do |attribute|
-      if attribute.changed?
-        _changes[attribute.name] = cast_value(attribute.value)
-      end
-    end
-    _changes
+    attributes_to_hash(column_attributes.select(&.changed?))
   end
 
   macro add_cast_value_methods(columns)
@@ -390,6 +384,11 @@ abstract class Avram::SaveOperation(T)
   end
 
   private def insert_sql
-    Avram::Insert.new(table_name, changes, T.column_names)
+    insert_values = attributes_to_hash(column_attributes).compact
+    Avram::Insert.new(table_name, insert_values, T.column_names)
+  end
+
+  private def attributes_to_hash(attributes) : Hash(Symbol, String?)
+    attributes.map { |attribute| {attribute.name, cast_value(attribute.value)} }.to_h
   end
 end
