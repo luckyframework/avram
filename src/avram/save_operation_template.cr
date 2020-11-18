@@ -1,5 +1,5 @@
 class Avram::SaveOperationTemplate
-  macro setup(type, columns, table_name, primary_key_type, primary_key_name, *args, **named_args)
+  macro setup(type, columns, primary_key_type, primary_key_name, *args, **named_args)
 
     # This makes it easy for plugins and extensions to use the base SaveOperation
     def base_query_class : ::{{ type }}::BaseQuery.class
