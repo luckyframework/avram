@@ -184,22 +184,27 @@ abstract class Avram::Database
 
   class DatabaseCleaner
     private getter database : Avram::Database
-    private getter database_info : Avram::Database::DatabaseInfo
+    private getter table_names : Array(String)
 
     def initialize(@database)
-      @database_info = database.class.database_info
+      @table_names = database.class
+        .database_info
+        .table_infos
+        .select(&.table?)
+        .reject(&.migrations_table?)
+        .map(&.table_name)
     end
 
     def truncate
-      table_names = database_info.table_names
       return if table_names.empty?
+
       statement = ("TRUNCATE TABLE #{table_names.map { |name| name }.join(", ")} RESTART IDENTITY CASCADE;")
       database.exec statement
     end
 
     def delete
-      table_names = database_info.table_names
       return if table_names.empty?
+
       table_names.each do |t|
         statement = ("DELETE FROM #{t}")
         database.exec statement
