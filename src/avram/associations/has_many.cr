@@ -1,10 +1,28 @@
 module Avram::Associations::HasMany
   macro has_many(type_declaration, through = nil, foreign_key = nil)
     {% if !through.is_a?(NilLiteral) && (!through.is_a?(ArrayLiteral) || through.any? { |item| !item.is_a?(SymbolLiteral) }) %}
-      {% through.raise "'through' must be given an Array of Symbols. Instead, got: #{through}" %}
+      {% through.raise <<-ERROR
+      'through' on #{@type.name} must be given an Array(Symbol). Instead, got: #{through}
+
+      Example...
+         has_many comments : Comment
+         has_many related_authors : User, through: [:comments, :author]
+
+      Learn more about associations: https://luckyframework.org/guides/database/models#model-associations
+      ERROR
+      %}
     {% end %}
     {% if !through.is_a?(NilLiteral) && through.size < 2 %}
-      {% through.raise "'through' must have at least two items. Instead, got: #{through}" %}
+      {% through.raise <<-ERROR
+      'through' on #{@type.name} must be given at least two items. Instead, got: #{through}
+
+      Example...
+         has_many comments : Comment
+         has_many related_authors : User, through: [:comments, :author]
+
+      Learn more about associations: https://luckyframework.org/guides/database/models#model-associations
+      ERROR
+      %}
     {% end %}
     {% assoc_name = type_declaration.var %}
 
