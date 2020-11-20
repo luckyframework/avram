@@ -7,6 +7,7 @@ require "./support/boxes/base_box"
 require "./support/boxes/**"
 require "./support/**"
 require "../config/*"
+require "../db/migrations/**"
 
 Pulsar.enable_test_mode!
 
