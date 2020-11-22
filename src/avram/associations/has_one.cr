@@ -17,9 +17,9 @@ module Avram::Associations::HasOne
     {% foreign_key = foreign_key.id %}
 
     association \
-      assoc_name: :{{ type_declaration.var }},
+      assoc_name: :{{ assoc_name.id }},
       type: {{ model }},
-      foreign_key: {{ foreign_key }},
+      foreign_key: :{{ foreign_key.id }},
       relationship_type: :has_one
 
     Avram::Associations.__define_public_preloaded_getters({{ assoc_name }}, {{ model }}, {{ nilable }})

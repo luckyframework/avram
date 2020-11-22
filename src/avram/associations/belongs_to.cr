@@ -1,5 +1,5 @@
 module Avram::Associations::BelongsTo
-  macro belongs_to(type_declaration, foreign_key = nil, table = nil)
+  macro belongs_to(type_declaration, foreign_key = nil)
     {% assoc_name = type_declaration.var %}
 
     {% if type_declaration.type.is_a?(Union) %}
@@ -14,14 +14,10 @@ module Avram::Associations::BelongsTo
       {% foreign_key = "#{assoc_name}_id".id %}
     {% end %}
 
-    {% if !table %}
-      {% table = run("../../run_macros/infer_table_name.cr", model.id) %}
-    {% end %}
-
     column {{ foreign_key.id }} : {{ model }}::PrimaryKeyType{% if nilable %}?{% end %}
 
     association \
-      assoc_name: :{{ table.id }},
+      assoc_name: :{{ assoc_name.id }},
       type: {{ model }},
       foreign_key: :{{ foreign_key.id }},
       relationship_type: :belongs_to
@@ -44,12 +40,21 @@ module Avram::Associations::BelongsTo
         raise Avram::LazyLoadError.new {{ @type.name.stringify }}, {{ assoc_name.stringify }}
       end
     end
+
+    def {{ assoc_name.id }}_count : Int64
+      {{ foreign_key.id }}.nil? ? 0_i64 : 1_i64
+    end
   end
 
   private macro define_belongs_to_base_query(assoc_name, model, foreign_key)
     class BaseQuery
       def preload_{{ assoc_name }}
         preload_{{ assoc_name }}({{ model }}::BaseQuery.new)
+      end
+
+      def preload_{{ assoc_name }}
+        modified_query = yield {{ model }}::BaseQuery.new
+        preload_{{ assoc_name }}(modified_query)
       end
 
       def preload_{{ assoc_name }}(preload_query : {{ model }}::BaseQuery)

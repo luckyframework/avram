@@ -1,7 +1,28 @@
 module Avram::Associations::HasMany
   macro has_many(type_declaration, through = nil, foreign_key = nil)
-    {% if !through.is_a?(NilLiteral) && !through.is_a?(SymbolLiteral) %}
-      {% through.raise "The association name for 'through' must be a Symbol. Instead, got: #{through}" %}
+    {% if !through.is_a?(NilLiteral) && (!through.is_a?(ArrayLiteral) || through.any? { |item| !item.is_a?(SymbolLiteral) }) %}
+      {% through.raise <<-ERROR
+      'through' on #{@type.name} must be given an Array(Symbol). Instead, got: #{through}
+
+      Example...
+         has_many comments : Comment
+         has_many related_authors : User, through: [:comments, :author]
+
+      Learn more about associations: https://luckyframework.org/guides/database/models#model-associations
+      ERROR
+      %}
+    {% end %}
+    {% if !through.is_a?(NilLiteral) && through.size < 2 %}
+      {% through.raise <<-ERROR
+      'through' on #{@type.name} must be given at least two items. Instead, got: #{through}
+
+      Example...
+         has_many comments : Comment
+         has_many related_authors : User, through: [:comments, :author]
+
+      Learn more about associations: https://luckyframework.org/guides/database/models#model-associations
+      ERROR
+      %}
     {% end %}
     {% assoc_name = type_declaration.var %}
 
@@ -21,7 +42,7 @@ module Avram::Associations::HasMany
     {% model = type_declaration.type %}
 
     define_has_many_lazy_loading({{ assoc_name }}, {{ model }}, {{ foreign_key }}, {{ through }})
-    define_has_many_base_query({{ assoc_name }}, {{ model }}, {{ foreign_key }}, {{through}})
+    define_has_many_base_query({{ assoc_name }}, {{ model }}, {{ foreign_key }}, {{ through }})
   end
 
   private macro define_has_many_base_query(assoc_name, model, foreign_key, through)
@@ -30,29 +51,24 @@ module Avram::Associations::HasMany
         preload_{{ assoc_name }}({{ model }}::BaseQuery.new)
       end
 
+      def preload_{{ assoc_name }}
+        modified_query = yield {{ model }}::BaseQuery.new
+        preload_{{ assoc_name }}(modified_query)
+      end
+
       {% if through %}
         def preload_{{ assoc_name }}(preload_query : {{ model }}::BaseQuery)
+          preload_{{ through.first.id }} do |through_query|
+            through_query.preload_{{ through[1].id }}(preload_query)
+          end
           add_preload do |records|
-            ids = records.map(&.id)
-            {{ assoc_name }} = {} of {{ model }}::PrimaryKeyType => Array({{ model }})
-            if ids.any?
-              all_{{ assoc_name }} = preload_query
-                .join_{{ through.id }}
-                .__yield_where_{{ through.id }} do |through_query|
-                  through_query.{{ foreign_key.id }}.in(ids)
-                end
-                .preload_{{ through.id }}
-                .distinct
-
-              all_{{ assoc_name }}.each do |item|
-                item.{{ through.id }}.each do |item_through|
-                  {{ assoc_name }}[item_through.{{ foreign_key }}] ||= Array({{ model }}).new
-                  {{ assoc_name }}[item_through.{{ foreign_key }}] << item
-                end
-              end
-            end
             records.each do |record|
-              record._preloaded_{{ assoc_name }} = {{ assoc_name }}[record.id]? || [] of {{ model }}
+              throughs = record.{{ through.first.id }}
+              throughs = throughs.is_a?(Array) ? throughs : [throughs]
+              record._preloaded_{{ assoc_name }} = throughs.compact.flat_map do |through|
+                throughs1 = through.{{ through[1].id }}
+                throughs1.is_a?(Array) ? throughs1 : [throughs1]
+              end.compact
             end
           end
           self
@@ -94,13 +110,9 @@ module Avram::Associations::HasMany
 
     def {{ assoc_name.id }}_count : Int64
       {% if through %}
-        {{ model }}::BaseQuery
-          .new
-          .join_{{ through.id }}
-          .__yield_where_{{ through.id }} do |through_query|
-            through_query.{{ foreign_key.id }}(id)
-          end
-          .select_count
+        {{ through.first.id }}_query
+          .map(&.{{ through[1].id }}_count)
+          .sum
       {% else %}
         {{ model }}::BaseQuery
           .new
@@ -117,14 +129,12 @@ module Avram::Associations::HasMany
 
     private def lazy_load_{{ assoc_name }} : Array({{ model }})
       {% if through %}
-        {{ model }}::BaseQuery
-          .new
-          .join_{{ through.id }}
-          .__yield_where_{{ through.id }} do |through_query|
-            through_query.{{ foreign_key.id }}(id)
-          end
-          .preload_{{ through.id }}
-          .results
+        through_results = {{ through.first.id }}_query.preload_{{ through[1].id }}.results
+        through_results = through_results.is_a?(Array) ? through_results : [through_results]
+        through_results.compact.flat_map do |through_result|
+          assoc_results = through_result.{{ through[1].id }}
+          assoc_results.is_a?(Array) ? assoc_results : [assoc_results]
+        end.compact
       {% else %}
         {{ model }}::BaseQuery
           .new

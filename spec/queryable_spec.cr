@@ -801,7 +801,7 @@ describe Avram::Queryable do
       post = PostBox.create
       CommentBox.new.post_id(post.id).create
 
-      query = Comment::BaseQuery.new.join_posts
+      query = Comment::BaseQuery.new.join_post
       query.to_sql.should eq ["SELECT comments.custom_id, comments.created_at, comments.updated_at, comments.body, comments.post_id FROM comments INNER JOIN posts ON comments.post_id = posts.custom_id"]
 
       result = query.first
@@ -812,7 +812,7 @@ describe Avram::Queryable do
       query = Comment::BaseQuery.new
       original_query_sql = query.to_sql
 
-      query.join_posts
+      query.join_post
 
       query.to_sql.should eq original_query_sql
     end
@@ -863,7 +863,7 @@ describe Avram::Queryable do
     it "left join on belongs to" do
       employee = EmployeeBox.create
 
-      query = Employee::BaseQuery.new.left_join_managers
+      query = Employee::BaseQuery.new.left_join_manager
       query.to_sql.should eq ["SELECT employees.id, employees.created_at, employees.updated_at, employees.name, employees.manager_id FROM employees LEFT JOIN managers ON employees.manager_id = managers.id"]
 
       result = query.first
@@ -874,7 +874,7 @@ describe Avram::Queryable do
       query = Employee::BaseQuery.new
       original_query_sql = query.to_sql
 
-      query.left_join_managers
+      query.left_join_manager
 
       query.to_sql.should eq original_query_sql
     end
@@ -1226,7 +1226,7 @@ describe Avram::Queryable do
         line_item = LineItemBox.create &.name("Thing 1")
         price = PriceBox.create &.in_cents(100).line_item_id(line_item.id)
 
-        query = PriceQuery.new.where_line_items(LineItemQuery.new.name("Thing 1"))
+        query = PriceQuery.new.where_line_item(LineItemQuery.new.name("Thing 1"))
         query.first.should eq price
       end
     end
