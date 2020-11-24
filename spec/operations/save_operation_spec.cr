@@ -421,6 +421,14 @@ describe "Avram::SaveOperation" do
         end
       end
 
+      it "allows supplying a value that matches the default" do
+        result = Company::SaveOperation.create!(sales: 0_i64, earnings: 0_f64)
+        default_result = Company::SaveOperation.create!
+
+        result.sales.should eq default_result.sales
+        result.earnings.should eq default_result.earnings
+      end
+
       it "overrides all of the defaults through params" do
         published_at = 1.day.ago.to_utc.at_beginning_of_day
         drafted_at = 1.week.ago.to_utc.at_beginning_of_day

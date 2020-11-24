@@ -15,11 +15,14 @@ describe Avram::Model do
     it "gets the related records for nilable association that exists" do
       manager = ManagerBox.create
       employee = EmployeeBox.new.manager_id(manager.id).create
+      customer = CustomerBox.new.employee_id(employee.id).create
 
       manager = Manager::BaseQuery.new.find(manager.id)
 
       manager.employees.to_a.should eq [employee]
       employee.manager.should eq manager
+      employee.customers.should eq [customer]
+      manager.customers.should eq [customer]
     end
 
     it "returns nil for nilable association that doesn't exist" do
@@ -48,13 +51,21 @@ describe Avram::Model do
       post.tags.should eq [tag]
     end
 
-    it "count through associations" do
+    it "counts has_many through belongs_to associations" do
       tag = TagBox.create
       post = PostBox.create
       TagBox.create
       TaggingBox.new.tag_id(tag.id).post_id(post.id).create
 
       post.tags_count.should eq 1
+    end
+
+    it "counts has_many through has_many associations" do
+      manager = ManagerBox.create
+      employee = EmployeeBox.new.manager_id(manager.id).create
+      CustomerBox.new.employee_id(employee.id).create
+
+      manager.customers_count.should eq 1
     end
   end
 
@@ -102,6 +113,9 @@ describe Avram::Model do
         post = PostWithCustomTable::SaveOperation.create!(title: "foo")
         comment = CommentForCustomPost::SaveOperation.create!(body: "bar", post_id: post.id)
         comment.post_with_custom_table.should eq(post)
+
+        CommentForCustomPost::BaseQuery.new.where_post_with_custom_table(PostWithCustomTable::BaseQuery.new.id(post.id)).first.should eq(comment)
+        PostWithCustomTable::BaseQuery.new.where_comments_for_custom_post(CommentForCustomPost::BaseQuery.new.id(comment.id)).first.should eq(post)
       end
     end
 

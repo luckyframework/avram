@@ -31,5 +31,9 @@ module Avram
     def column(name : String) : ColumnInfo?
       columns.find(&.column_name.==(name))
     end
+
+    def migrations_table?
+      table_name == "migrations"
+    end
   end
 end

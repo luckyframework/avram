@@ -1,5 +1,5 @@
 class Avram::BaseQueryTemplate
-  macro setup(type, columns, associations, table_name, primary_key_name, *args, **named_args)
+  macro setup(type, columns, associations, primary_key_name, *args, **named_args)
     class ::{{ type }}::BaseQuery
       private class Nothing
       end
@@ -80,8 +80,8 @@ class Avram::BaseQueryTemplate
               join(
                 Avram::Join::{{ join_type.id }}.new(
                   from: table_name,
-                  to: :{{ assoc[:assoc_name] }},
-                  primary_key: {{ assoc[:foreign_key] }},
+                  to: {{ assoc[:type] }}::TABLE_NAME,
+                  primary_key: {{ assoc[:foreign_key].id.symbolize }},
                   foreign_key: {{ assoc[:type] }}::PRIMARY_KEY_NAME
                 )
               )
@@ -90,20 +90,20 @@ class Avram::BaseQueryTemplate
                 Avram::Join::{{ join_type.id }}.new(
                   from: table_name,
                   to: {{ assoc[:type] }}::TABLE_NAME,
-                  foreign_key: :{{ assoc[:foreign_key] }},
+                  foreign_key: {{ assoc[:foreign_key].id.symbolize }},
                   primary_key: primary_key_name
                 )
               )
             {% elsif assoc[:through] %}
-              {{ join_type.downcase.id }}_join_{{ assoc[:through].id }}
-                .__yield_where_{{ assoc[:through].id }} do |join_query|
-                  join_query.{{ join_type.downcase.id }}_join_{{ assoc[:assoc_name] }}
+              {{ join_type.downcase.id }}_join_{{ assoc[:through].first.id }}
+                .__yield_where_{{ assoc[:through].first.id }} do |join_query|
+                  join_query.{{ join_type.downcase.id }}_join_{{ assoc[:through][1].id }}
                 end
             {% else %}
               join(
                 Avram::Join::{{ join_type.id }}.new(
                   from: table_name,
-                  to: :{{ assoc[:assoc_name] }},
+                  to: {{ assoc[:type] }}::TABLE_NAME,
                   foreign_key: {{ assoc[:foreign_key] }},
                   primary_key: primary_key_name
                 )
