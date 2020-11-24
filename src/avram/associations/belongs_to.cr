@@ -48,6 +48,24 @@ module Avram::Associations::BelongsTo
 
   private macro define_belongs_to_base_query(assoc_name, model, foreign_key)
     class BaseQuery
+      def self.preload_{{ assoc_name }}(record, preload_query = {{ model }}::BaseQuery.new)
+        preload_{{ assoc_name }}(records: [record], preload_query: preload_query).first
+      end
+
+      def self.preload_{{ assoc_name }}(records : Enumerable, preload_query = {{ model }}::BaseQuery.new)
+        ids = records.compact_map(&.{{ foreign_key }})
+        empty_results = {} of {{ model }}::PrimaryKeyType => Array({{ model }})
+        {{ assoc_name }} = ids.empty? ? empty_results  : preload_query.dup.id.in(ids).results.group_by(&.id)
+        records.each do |record|
+          if (id = record.{{ foreign_key }})
+            record.__set_preloaded_{{ assoc_name }} {{ assoc_name }}[id]?.try(&.first?)
+          else
+            record.__set_preloaded_{{ assoc_name }} nil
+          end
+        end
+        records
+      end
+
       def preload_{{ assoc_name }}
         preload_{{ assoc_name }}({{ model }}::BaseQuery.new)
       end
@@ -59,21 +77,7 @@ module Avram::Associations::BelongsTo
 
       def preload_{{ assoc_name }}(preload_query : {{ model }}::BaseQuery)
         add_preload do |records|
-          ids = [] of {{ model }}::PrimaryKeyType
-          records.each do |record|
-            record.{{ foreign_key }}.try do |id|
-              ids << id
-            end
-          end
-          empty_results = {} of {{ model }}::PrimaryKeyType => Array({{ model }})
-          {{ assoc_name }} = ids.empty? ? empty_results  : preload_query.dup.id.in(ids).results.group_by(&.id)
-          records.each do |record|
-            if (id = record.{{ foreign_key }})
-              record.__set_preloaded_{{ assoc_name }} {{ assoc_name }}[id]?.try(&.first?)
-            else
-              record.__set_preloaded_{{ assoc_name }} nil
-            end
-          end
+          self.class.preload_{{ assoc_name }}(records, preload_query)
         end
         self
       end
