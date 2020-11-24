@@ -422,7 +422,7 @@ describe "Avram::SaveOperation" do
       end
 
       it "allows supplying a value that matches the default" do
-        result = Company::SaveOperation.create!(sales: 0_i64, earnings: 0_i64)
+        result = Company::SaveOperation.create!(sales: 0_i64, earnings: 0_f64)
         default_result = Company::SaveOperation.create!
 
         result.sales.should eq default_result.sales
