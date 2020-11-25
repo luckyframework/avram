@@ -6,7 +6,9 @@ module Avram
             columns.table_schema,
             columns.table_catalog,
             columns.column_name,
-            columns.is_nullable
+            columns.is_nullable,
+            columns.column_default,
+            columns.data_type
       FROM information_schema.columns as columns
       JOIN information_schema.tables as tables
         ON tables.table_name = columns.table_name
