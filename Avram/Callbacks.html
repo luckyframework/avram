@@ -1442,6 +1442,20 @@
       </li>
     
       <li class="entry-summary">
+        <a href="#after_completed(method_name)-macro" class="signature"><strong>after_completed</strong>(method_name)</a>
+        
+          <div class="summary"><p>Run the given method after the SaveOperation has completed everything.</p></div>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#after_completed(&block)-macro" class="signature"><strong>after_completed</strong>(&block)</a>
+        
+          <div class="summary"><p>Run the given block after save and after successful transaction commit This is the only SaveOperation callback that runs when no changes are made to an existing record.</p></div>
+        
+      </li>
+    
+      <li class="entry-summary">
         <a href="#after_run(method_name)-macro" class="signature"><strong>after_run</strong>(method_name)</a>
         
           <div class="summary"><p>Run the given method after <code>run</code> is called on an <code><a href="../Avram/Operation.html">Operation</a></code>.</p></div>
@@ -1576,6 +1590,67 @@ that returns a truthy/falsey value</p>
 <pre><code><span class="k">class</span> <span class="t">SaveComment</span> <span class="o">&lt;</span> <span class="t">Comment</span><span class="t">::</span><span class="t">SaveOperation</span>
   after_commit <span class="k">do</span> <span class="o">|</span>comment<span class="o">|</span>
     <span class="t">NewCommentNotificationEmail</span>.<span class="k">new</span>(comment, to: comment.author!).deliver_now
+  <span class="k">end</span>
+<span class="k">end</span></code></pre>
+        </div>
+      
+      <br/>
+      <div>
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="after_completed(method_name)-macro">
+      <div class="signature">
+        
+        macro <strong>after_completed</strong>(method_name)
+
+        <a class="method-permalink" href="#after_completed(method_name)-macro">#</a>
+      </div>
+      
+        <div class="doc">
+          
+          <p>Run the given method after the SaveOperation has completed everything.
+During normal operations, this runs after the <code><a href="../Avram/Callbacks.html#after_commit(method_name,if_if=nil,unless_unless=nil)-macro">after_commit</a></code>.
+This is the only SaveOperation callback that runs when no changes
+are made to an existing record.</p>
+
+<p>The record will be passed to the method.</p>
+
+<pre><code><span class="k">class</span> <span class="t">SaveComment</span> <span class="o">&lt;</span> <span class="t">Comment</span><span class="t">::</span><span class="t">SaveOperation</span>
+  after_completed pass_info_to_author
+
+  <span class="k">private</span> <span class="k">def</span> <span class="m">pass_info_to_author</span>(comment : <span class="t">Comment</span>)
+    <span class="t">SaveAuthor</span>
+  <span class="k">end</span>
+<span class="k">end</span></code></pre>
+        </div>
+      
+      <br/>
+      <div>
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="after_completed(&amp;block)-macro">
+      <div class="signature">
+        
+        macro <strong>after_completed</strong>(&block)
+
+        <a class="method-permalink" href="#after_completed(&block)-macro">#</a>
+      </div>
+      
+        <div class="doc">
+          
+          <p>Run the given block after save and after successful transaction commit
+This is the only SaveOperation callback that runs when no changes
+are made to an existing record.</p>
+
+<p>The record will be passed to the method.</p>
+
+<pre><code><span class="k">class</span> <span class="t">SaveComment</span> <span class="o">&lt;</span> <span class="t">Comment</span><span class="t">::</span><span class="t">SaveOperation</span>
+  after_completed <span class="k">do</span> <span class="o">|</span>comment<span class="o">|</span>
+
   <span class="k">end</span>
 <span class="k">end</span></code></pre>
         </div>
