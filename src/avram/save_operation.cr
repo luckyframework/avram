@@ -309,6 +309,7 @@ abstract class Avram::SaveOperation(T)
         saved_record = record.not_nil!
         after_commit(saved_record)
         self.save_status = SaveStatus::Saved
+        after_completed(saved_record)
         Avram::Events::SaveSuccessEvent.publish(
           operation_class: self.class.name,
           attributes: generic_attributes
@@ -320,6 +321,7 @@ abstract class Avram::SaveOperation(T)
       end
     elsif valid? && changes.empty?
       self.save_status = SaveStatus::Saved
+      after_completed(record.not_nil!)
       true
     else
       mark_as_failed
@@ -360,6 +362,8 @@ abstract class Avram::SaveOperation(T)
   def after_save(_record : T); end
 
   def after_commit(_record : T); end
+
+  def after_completed(_record : T); end
 
   private def insert : T
     self.created_at.value ||= Time.utc if responds_to?(:created_at)

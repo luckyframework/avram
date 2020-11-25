@@ -157,6 +157,19 @@ private class UpdateOperationWithSkipCallbacks < SaveOperationWithCallbacks
   end
 end
 
+private class UpdateOperationWithNoUpdates < Post::SaveOperation
+  include TestableOperation
+
+  after_completed :mark_operation_completed
+  after_completed do |_saved_post|
+    mark_callback("after_completed_in_a_block")
+  end
+
+  private def mark_operation_completed(_saved_post)
+    mark_callback("after_completed_called")
+  end
+end
+
 describe "Avram::SaveOperation callbacks" do
   it "does not run any callbacks if just validating" do
     operation = CallbacksSaveOperation.new
@@ -228,6 +241,16 @@ describe "Avram::SaveOperation callbacks" do
         "before_save_in_a_block",
         "after_save_in_a_block with A fancy post",
         "after_commit_in_a_block with A fancy post",
+      ])
+    end
+  end
+
+  it "runs after_completed callbacks even when nothing is being updated" do
+    post = PostBox.create
+    UpdateOperationWithNoUpdates.update(post) do |operation, _updated_post|
+      operation.callbacks_that_ran.should eq([
+        "after_completed_called",
+        "after_completed_in_a_block",
       ])
     end
   end
