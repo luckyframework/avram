@@ -6,10 +6,6 @@ class Comment::BaseQuery
   include QuerySpy
 end
 
-class SignInCredential::BaseQuery
-  include QuerySpy
-end
-
 describe "Preloading" do
   it "can disable lazy loading" do
     with_lazy_load(enabled: false) do
@@ -20,44 +16,6 @@ describe "Preloading" do
       expect_raises Avram::LazyLoadError do
         posts.first.comments
       end
-    end
-  end
-
-  it "preloads has_one" do
-    with_lazy_load(enabled: false) do
-      admin = AdminBox.create
-      sign_in_credential = SignInCredentialBox.create &.user_id(admin.id)
-
-      admin = Admin::BaseQuery.new.preload_sign_in_credential
-
-      admin.first.sign_in_credential.should eq sign_in_credential
-    end
-  end
-
-  it "preloads has_one with custom query and nested preload" do
-    with_lazy_load(enabled: false) do
-      SignInCredential::BaseQuery.times_called = 0
-      user = UserBox.create
-      SignInCredentialBox.create &.user_id(user.id)
-
-      user = User::BaseQuery.new.preload_sign_in_credential(
-        SignInCredential::BaseQuery.new.preload_user
-      ).first
-
-      user.sign_in_credential.not_nil!.user.should eq user
-      SignInCredential::BaseQuery.times_called.should eq 1
-    end
-  end
-
-  it "preloads optional has_one" do
-    with_lazy_load(enabled: false) do
-      UserBox.create
-      user = User::BaseQuery.new.preload_sign_in_credential.first
-      user.sign_in_credential.should be_nil
-
-      sign_in_credential = SignInCredentialBox.new.user_id(user.id).create
-      user = User::BaseQuery.new.preload_sign_in_credential.first
-      user.sign_in_credential.should eq sign_in_credential
     end
   end
 
@@ -216,14 +174,6 @@ describe "Preloading" do
       2.times { posts.results }
     end
 
-    it "does not fail for has_one" do
-      AdminBox.create
-
-      admin = Admin::BaseQuery.new.preload_sign_in_credential
-
-      2.times { admin.results }
-    end
-
     it "does not fail for has_many through" do
       PostBox.create
 
@@ -262,14 +212,6 @@ describe "Preloading" do
       posts.results
 
       Comment::BaseQuery.times_called.should eq 0
-    end
-
-    it "skips running the preload for has_one" do
-      SignInCredential::BaseQuery.times_called = 0
-      admin = Admin::BaseQuery.new.preload_sign_in_credential
-      admin.results
-
-      SignInCredential::BaseQuery.times_called.should eq 0
     end
   end
 end
