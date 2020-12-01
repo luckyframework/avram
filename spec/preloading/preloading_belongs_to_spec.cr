@@ -95,27 +95,41 @@ describe "Preloading belongs_to associations" do
     Post::BaseQuery.times_called.should eq 0
   end
 
-  it "works with existing record" do
-    with_lazy_load(enabled: false) do
-      post = PostBox.create
-      comment = CommentBox.create &.post_id(post.id)
+  context "with existing record" do
+    it "works" do
+      with_lazy_load(enabled: false) do
+        post = PostBox.create
+        comment = CommentBox.create &.post_id(post.id)
 
-      comment = Comment::BaseQuery.preload_post(comment)
+        comment = Comment::BaseQuery.preload_post(comment)
 
-      comment.post.should eq(post)
+        comment.post.should eq(post)
+      end
     end
-  end
 
-  it "works with multiple existing records" do
-    with_lazy_load(enabled: false) do
-      post = PostBox.create
-      comment1 = CommentBox.create &.post_id(post.id)
-      comment2 = CommentBox.create &.post_id(post.id)
+    it "works with multiple" do
+      with_lazy_load(enabled: false) do
+        post = PostBox.create
+        comment1 = CommentBox.create &.post_id(post.id)
+        comment2 = CommentBox.create &.post_id(post.id)
 
-      comments = Comment::BaseQuery.preload_post([comment1, comment2])
+        comments = Comment::BaseQuery.preload_post([comment1, comment2])
 
-      comments[0].post.should eq(post)
-      comments[1].post.should eq(post)
+        comments[0].post.should eq(post)
+        comments[1].post.should eq(post)
+      end
+    end
+
+    it "works with custom query" do
+      with_lazy_load(enabled: false) do
+        post = PostBox.create
+        comment = CommentBox.create &.post_id(post.id)
+        comment2 = CommentBox.create &.post_id(post.id)
+
+        comment = Comment::BaseQuery.preload_post(comment, Post::BaseQuery.new.preload_comments)
+
+        comment.post.comments.should eq([comment, comment2])
+      end
     end
   end
 end
