@@ -55,13 +55,11 @@ module Avram::Associations::BelongsTo
       def self.preload_{{ assoc_name }}(records : Enumerable, preload_query = {{ model }}::BaseQuery.new)
         ids = records.compact_map(&.{{ foreign_key }})
         empty_results = {} of {{ model }}::PrimaryKeyType => Array({{ model }})
-        {{ assoc_name }} = ids.empty? ? empty_results  : preload_query.dup.id.in(ids).results.group_by(&.id)
+        {{ assoc_name }} = ids.empty? ? empty_results  : preload_query.id.in(ids).results.group_by(&.id)
         records.each do |record|
-          if (id = record.{{ foreign_key }})
-            record.__set_preloaded_{{ assoc_name }} {{ assoc_name }}[id]?.try(&.first?)
-          else
-            record.__set_preloaded_{{ assoc_name }} nil
-          end
+          id = record.{{ foreign_key }}
+          assoc = id.nil? ? nil : {{ assoc_name }}[id]?.try(&.first?)
+          record.__set_preloaded_{{ assoc_name }}(assoc)
         end
         records
       end
@@ -77,7 +75,14 @@ module Avram::Associations::BelongsTo
 
       def preload_{{ assoc_name }}(preload_query : {{ model }}::BaseQuery)
         add_preload do |records|
-          self.class.preload_{{ assoc_name }}(records, preload_query)
+          ids = records.compact_map(&.{{ foreign_key }})
+          empty_results = {} of {{ model }}::PrimaryKeyType => Array({{ model }})
+          {{ assoc_name }} = ids.empty? ? empty_results  : preload_query.id.in(ids).results.group_by(&.id)
+          records.each do |record|
+            id = record.{{ foreign_key }}
+            assoc = id.nil? ? nil : {{ assoc_name }}[id]?.try(&.first?)
+            record.__set_preloaded_{{ assoc_name }}(assoc)
+          end
         end
         self
       end
