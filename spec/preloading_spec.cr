@@ -2,28 +2,11 @@ require "./spec_helper"
 
 include LazyLoadHelpers
 
-# NOTE: This is only for testing if this is called during a query
-# TODO: Remove once a proper mocking shard is built
-module QuerySpy
-  macro included
-    class_property times_called : Int32 = 0
-
-    def database : Avram::Database.class
-      self.class.times_called += 1
-      super
-    end
-  end
-end
-
 class Comment::BaseQuery
   include QuerySpy
 end
 
 class SignInCredential::BaseQuery
-  include QuerySpy
-end
-
-class Post::BaseQuery
   include QuerySpy
 end
 
@@ -212,44 +195,7 @@ describe "Preloading" do
     end
   end
 
-  it "preloads belongs_to" do
-    with_lazy_load(enabled: false) do
-      Post::BaseQuery.times_called = 0
-      post = PostBox.create
-      CommentBox.create &.post_id(post.id)
-
-      comments = Comment::BaseQuery.new.preload_post
-
-      comments.first.post.should eq(post)
-      Post::BaseQuery.times_called.should eq 1
-    end
-  end
-
-  it "preloads optional belongs_to" do
-    with_lazy_load(enabled: false) do
-      employee = EmployeeBox.create
-      manager = ManagerBox.create
-
-      employees = Employee::BaseQuery.new.preload_manager
-      employees.first.manager.should be_nil
-
-      Employee::SaveOperation.new(employee).tap do |operation|
-        operation.manager_id.value = manager.id
-        operation.update!
-      end
-      employees = Employee::BaseQuery.new.preload_manager
-      employees.first.manager.should eq(manager)
-    end
-  end
-
   context "getting results for preloads multiple times" do
-    it "does not fail for belongs_to" do
-      EmployeeBox.create
-      employees = Employee::BaseQuery.new.preload_manager
-
-      2.times { employees.results }
-    end
-
     it "does not fail for has_many" do
       PostBox.create
 
@@ -285,13 +231,6 @@ describe "Preloading" do
 
       2.times { posts.results }
     end
-  end
-
-  it "preloads uuid belongs_to" do
-    item = LineItemBox.create
-    PriceBox.new.line_item_id(item.id).create
-
-    PriceQuery.new.preload_line_item.first.line_item.should eq item
   end
 
   it "uses preloaded records if available, even if lazy load is enabled" do
@@ -331,14 +270,6 @@ describe "Preloading" do
       admin.results
 
       SignInCredential::BaseQuery.times_called.should eq 0
-    end
-
-    it "skips running the preload for belongs_to" do
-      Post::BaseQuery.times_called = 0
-      comments = Comment::BaseQuery.new.preload_post
-      comments.results
-
-      Post::BaseQuery.times_called.should eq 0
     end
   end
 end
