@@ -48,7 +48,7 @@ describe "Preloading has_one associations" do
   it "raises error if accessing association without preloading first" do
     with_lazy_load(enabled: false) do
       admin = AdminBox.create
-      sign_in_credential = SignInCredentialBox.create &.user_id(admin.id)
+      SignInCredentialBox.create &.user_id(admin.id)
 
       expect_raises Avram::LazyLoadError do
         admin.sign_in_credential

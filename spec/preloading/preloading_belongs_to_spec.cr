@@ -64,7 +64,7 @@ describe "Preloading belongs_to associations" do
 
   it "does not fail when getting results multiple times" do
     post = PostBox.create
-    comment = CommentBox.create &.post_id(post.id)
+    CommentBox.create &.post_id(post.id)
 
     query = Comment::BaseQuery.new.preload_post
 
