@@ -131,5 +131,18 @@ describe "Preloading belongs_to associations" do
         comment.post.comments.should eq([comment, comment2])
       end
     end
+
+    it "does not modify original record" do
+      with_lazy_load(enabled: false) do
+        post = PostBox.create
+        original_comment = CommentBox.create &.post_id(post.id)
+
+        Comment::BaseQuery.preload_post(original_comment)
+
+        expect_raises Avram::LazyLoadError do
+          original_comment.post
+        end
+      end
+    end
   end
 end
