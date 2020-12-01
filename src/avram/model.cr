@@ -166,8 +166,6 @@ abstract class Avram::Model
   macro setup(step)
     {{ step.id }}(
       type: {{ @type }},
-      primary_key_type: {{ PRIMARY_KEY_TYPE }},
-      primary_key_name: {{ PRIMARY_KEY_NAME }},
       columns: {{ COLUMNS }},
       associations: {{ ASSOCIATIONS }}
     )
