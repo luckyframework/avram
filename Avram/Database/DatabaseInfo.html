@@ -756,6 +756,11 @@
       
     </li>
   
+  <li class=" " data-id="avram/Avram/SchemaEnforcer/EnsureUUIDPrimaryKeyHasDefault" data-name="avram::schemaenforcer::ensureuuidprimarykeyhasdefault">
+      <a href="../../Avram/SchemaEnforcer/EnsureUUIDPrimaryKeyHasDefault.html">EnsureUUIDPrimaryKeyHasDefault</a>
+      
+    </li>
+  
   <li class=" " data-id="avram/Avram/SchemaEnforcer/Validation" data-name="avram::schemaenforcer::validation">
       <a href="../../Avram/SchemaEnforcer/Validation.html">Validation</a>
       
@@ -1408,7 +1413,7 @@
   <dl>
     
       <dt class="entry-const" id="SQL_QUERY">
-        <strong>SQL_QUERY</strong> = <code><span class="s">&quot;  SELECT columns.table_name,\n        tables.table_type,\n        columns.table_schema,\n        columns.table_catalog,\n        columns.column_name,\n        columns.is_nullable\n  FROM information_schema.columns as columns\n  JOIN information_schema.tables as tables\n    ON tables.table_name = columns.table_name\n    AND tables.table_catalog = columns.table_catalog\n    AND tables.table_schema = columns.table_schema\n  WHERE columns.table_schema=&#39;public&#39;;&quot;</span></code>
+        <strong>SQL_QUERY</strong> = <code><span class="s">&quot;  SELECT columns.table_name,\n        tables.table_type,\n        columns.table_schema,\n        columns.table_catalog,\n        columns.column_name,\n        columns.is_nullable,\n        columns.column_default,\n        columns.data_type\n  FROM information_schema.columns as columns\n  JOIN information_schema.tables as tables\n    ON tables.table_name = columns.table_name\n    AND tables.table_catalog = columns.table_catalog\n    AND tables.table_schema = columns.table_schema\n  WHERE columns.table_schema=&#39;public&#39;;&quot;</span></code>
       </dt>
       
     
