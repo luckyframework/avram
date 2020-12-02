@@ -8,6 +8,7 @@ macro avram_enum(enum_name, &block)
       Lucky
     end
 
+    def_equals @enum
     getter :enum
 
     # You may need to prefix with {{ @type }}
@@ -41,6 +42,7 @@ macro avram_enum(enum_name, &block)
       end
 
       def parse(value : String)
+        return parse(nil) if value.blank?
         SuccessfulCast({{ enum_name }}).new({{ enum_name }}.new(value.to_i))
       end
 

@@ -12,6 +12,7 @@ struct Int32
     end
 
     def parse(value : String)
+      return parse(nil) if value.blank?
       SuccessfulCast(Int32).new value.to_i
     rescue ArgumentError
       FailedCast.new

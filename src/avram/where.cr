@@ -38,7 +38,7 @@ module Avram::Where
   end
 
   abstract class ValueHoldingSqlClause < SqlClause
-    getter value : String | Array(String) | Array(Int32)
+    getter value : String | Array(String) | Array(Int32) | Nil
 
     def initialize(@column, @value)
     end

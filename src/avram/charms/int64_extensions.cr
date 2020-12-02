@@ -20,6 +20,7 @@ struct Int64
     end
 
     def parse(value : String)
+      return parse(nil) if value.blank?
       SuccessfulCast(Int64).new value.to_i64
     rescue ArgumentError
       FailedCast.new
