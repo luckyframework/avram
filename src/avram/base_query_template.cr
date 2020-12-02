@@ -1,5 +1,5 @@
 class Avram::BaseQueryTemplate
-  macro setup(type, columns, associations, primary_key_name, *args, **named_args)
+  macro setup(type, columns, associations, *args, **named_args)
     class ::{{ type }}::BaseQuery
       private class Nothing
       end
@@ -7,14 +7,6 @@ class Avram::BaseQueryTemplate
       def_clone
       include Avram::Queryable({{ type }})
       include Avram::PrimaryKeyQueryable({{ type }})
-
-      # If not using default 'id' primary key
-      {% if primary_key_name.id != "id".id %}
-        # Then point 'id' to the primary key
-        def id(*args, **named_args)
-          {{ primary_key_name.id }}(*args, **named_args)
-        end
-      {% end %}
 
       macro generate_criteria_method(query_class, name, type)
         def \{{ name }}
