@@ -8,6 +8,8 @@ module Avram
     property table_type : String
     property column_name : String
     property is_nullable : String
+    property column_default : String?
+    property data_type : String
 
     def nilable?
       is_nullable == "YES"
