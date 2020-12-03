@@ -21,10 +21,6 @@ abstract class Avram::Model
     self.class.name
   end
 
-  def to_param
-    id.to_s
-  end
-
   # Reload the model with the latest information from the database
   #
   # This method will return a new model instance with the
