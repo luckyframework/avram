@@ -23,12 +23,12 @@ abstract class Avram::Model
 
   # Refer to `PrimaryKeyMethods#reload`
   def reload : self
-    raise Avram::UnsupportedQueryError.new("Unable to call Avram::Model#reload on #{self.class.name} because no primary key has been defined.")
+    {% raise "Unable to call Avram::Model#reload on #{@type.name} because it does not have a primary key." %}
   end
 
   # Refer to `PrimaryKeyMethods#reload`
   def reload(&block) : self
-    raise Avram::UnsupportedQueryError.new("Unable to call Avram::Model#reload on #{self.class.name} because no primary key has been defined.")
+    {% raise "Unable to call Avram::Model#reload on #{@type.name} because it does not have a primary key." %}
   end
 
   macro table(table_name = nil)
