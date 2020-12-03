@@ -45,6 +45,21 @@ module Avram::Associations::HasOne
 
   private macro define_has_one_base_query(assoc_name, model, foreign_key)
     class BaseQuery
+      def self.preload_{{ assoc_name }}(record, preload_query = {{ model }}::BaseQuery.new)
+        preload_{{ assoc_name }}(records: [record], preload_query: preload_query).first
+      end
+
+      def self.preload_{{ assoc_name }}(records : Enumerable, preload_query = {{ model }}::BaseQuery.new)
+        ids = records.map(&.id)
+        empty_results = {} of {{ model }}::PrimaryKeyType => Array({{ model }})
+        {{ assoc_name }} = ids.empty? ? empty_results : preload_query.{{ foreign_key }}.in(ids).results.group_by(&.{{ foreign_key }})
+        records.map(&.dup)
+          .map do |record|
+            assoc = {{ assoc_name }}[record.id]?.try(&.first?)
+            record.tap(&.__set_preloaded_{{ assoc_name }}(assoc))
+          end
+      end
+
       def preload_{{ assoc_name }}
         preload_{{ assoc_name }}({{ model }}::BaseQuery.new)
       end
@@ -53,7 +68,7 @@ module Avram::Associations::HasOne
         add_preload do |records|
           ids = records.map(&.id)
           empty_results = {} of {{ model }}::PrimaryKeyType => Array({{ model }})
-          {{ assoc_name }} = ids.empty? ? empty_results : preload_query.dup.{{ foreign_key }}.in(ids).results.group_by(&.{{ foreign_key }})
+          {{ assoc_name }} = ids.empty? ? empty_results : preload_query.{{ foreign_key }}.in(ids).results.group_by(&.{{ foreign_key }})
           records.each do |record|
             record.__set_preloaded_{{ assoc_name }} {{ assoc_name }}[record.id]?.try(&.first?)
           end
