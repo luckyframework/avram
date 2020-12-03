@@ -1,6 +1,6 @@
 class Avram::SchemaEnforcer::EnsureUUIDPrimaryKeyHasDefault < Avram::SchemaEnforcer::Validation
   def validate!
-    return unless uuid_primary_key? && missing_column_default?
+    return unless has_primary_key? && uuid_primary_key? && missing_column_default?
 
     message = <<-TEXT
     Primary key on the '#{table_name.colorize.bold}' table has the type set as uuid but does not have a default value.
@@ -20,6 +20,10 @@ class Avram::SchemaEnforcer::EnsureUUIDPrimaryKeyHasDefault < Avram::SchemaEnfor
           execute("ALTER TABLE #{table_name.colorize.bold} ALTER COLUMN #{primary_key_info.column_name.colorize.bold} SET DEFAULT uuid_generate_v4();")
     TEXT
     raise Avram::SchemaMismatchError.new(message)
+  end
+
+  def has_primary_key?
+    !model_class.primary_key_name.nil?
   end
 
   def uuid_primary_key?

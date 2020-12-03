@@ -6,7 +6,10 @@ class Avram::BaseQueryTemplate
 
       def_clone
       include Avram::Queryable({{ type }})
-      include Avram::PrimaryKeyQueryable({{ type }})
+
+      {% if type.resolve.has_constant?("PRIMARY_KEY_NAME") %}
+        include Avram::PrimaryKeyQueryable({{ type }})
+      {% end %}
 
       macro generate_criteria_method(query_class, name, type)
         def \{{ name }}
