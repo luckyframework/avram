@@ -21,10 +21,6 @@ abstract class Avram::Model
     self.class.name
   end
 
-  def to_param
-    id.to_s
-  end
-
   # Refer to `PrimaryKeyMethods#reload`
   def reload : self
     raise Avram::UnsupportedQueryError.new("Unable to call Avram::Model#reload on #{self.class.name} because no primary key has been defined.")

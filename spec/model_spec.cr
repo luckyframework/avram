@@ -63,24 +63,6 @@ describe Avram::Model do
     user.available_for_hire?.should be_false
   end
 
-  it "can be used for params" do
-    now = Time.utc
-
-    user = User.new id: 123_i64,
-      name: "Name",
-      age: 24,
-      year_born: 1990_i16,
-      joined_at: now,
-      created_at: now,
-      updated_at: now,
-      nickname: "nick",
-      total_score: nil,
-      average_score: nil,
-      available_for_hire: nil
-
-    user.to_param.should eq "123"
-  end
-
   it "sets up getters that parse the values" do
     user = QueryMe.new id: 123_i64,
       created_at: Time.utc,
