@@ -78,4 +78,55 @@ describe "Preloading has_one associations" do
 
     SignInCredential::BaseQuery.times_called.should eq 0
   end
+
+  context "with existing record" do
+    it "works" do
+      with_lazy_load(enabled: false) do
+        admin = AdminBox.create
+        sign_in_credential = SignInCredentialBox.create &.user_id(admin.id)
+
+        admin = Admin::BaseQuery.preload_sign_in_credential(admin)
+
+        admin.sign_in_credential.should eq sign_in_credential
+      end
+    end
+
+    it "works with multiple" do
+      with_lazy_load(enabled: false) do
+        admin = AdminBox.create
+        sign_in_credential = SignInCredentialBox.create &.user_id(admin.id)
+        admin2 = AdminBox.create
+        sign_in_credential2 = SignInCredentialBox.create &.user_id(admin2.id)
+
+        admins = Admin::BaseQuery.preload_sign_in_credential([admin, admin2])
+
+        admins[0].sign_in_credential.should eq(sign_in_credential)
+        admins[1].sign_in_credential.should eq(sign_in_credential2)
+      end
+    end
+
+    it "works with custom query" do
+      with_lazy_load(enabled: false) do
+        user = UserBox.create
+        sign_in_credential = SignInCredentialBox.create &.user_id(user.id)
+
+        user = UserQuery.preload_sign_in_credential(user, SignInCredential::BaseQuery.new.id.not.eq(sign_in_credential.id))
+
+        user.sign_in_credential.should be_nil
+      end
+    end
+
+    it "does not modify original record" do
+      with_lazy_load(enabled: false) do
+        admin = AdminBox.create
+        SignInCredentialBox.create &.user_id(admin.id)
+
+        Admin::BaseQuery.preload_sign_in_credential(admin)
+
+        expect_raises Avram::LazyLoadError do
+          admin.sign_in_credential
+        end
+      end
+    end
+  end
 end
