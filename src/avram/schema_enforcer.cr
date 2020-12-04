@@ -6,11 +6,12 @@ module Avram::SchemaEnforcer
   MODELS_TO_SKIP = [] of String # Stringified class name
 
   macro setup(type, *args, **named_args)
+    class_getter schema_enforcer_validations = [] of Avram::SchemaEnforcer::Validation
+
     def self.ensure_correct_column_mappings!
       return if Avram::SchemaEnforcer::MODELS_TO_SKIP.includes?(self.name)
 
-      EnsureExistingTable.new(model_class: {{ type.id }}).validate!
-      EnsureMatchingColumns.new(model_class: {{ type.id }}).validate!
+      schema_enforcer_validations.each(&.validate!)
     end
 
     {% if !type.resolve.abstract? %}

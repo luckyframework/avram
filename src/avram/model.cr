@@ -44,6 +44,8 @@ abstract class Avram::Model
 
     {{ yield }}
 
+    schema_enforcer_validations << EnsureExistingTable.new(model_class: {{ @type.id }})
+    schema_enforcer_validations << EnsureMatchingColumns.new(model_class: {{ @type.id }})
     validate_primary_key
 
     class_getter table_name = {{ table_name.id.symbolize }}
