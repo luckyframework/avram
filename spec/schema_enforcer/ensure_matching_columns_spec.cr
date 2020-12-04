@@ -38,4 +38,10 @@ describe Avram::SchemaEnforcer::EnsureMatchingColumns do
       ModelWithRequiredAttributeOnOptionalColumn.ensure_correct_column_mappings!
     end
   end
+
+  it "does not check nilable/required if turned off" do
+    validation = Avram::SchemaEnforcer::EnsureMatchingColumns.new(ModelWithRequiredAttributeOnOptionalColumn, check_required: false)
+
+    validation.validate!
+  end
 end
