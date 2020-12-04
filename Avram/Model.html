@@ -676,6 +676,11 @@
       
     </li>
   
+  <li class=" " data-id="avram/Avram/PrimaryKeyMethods" data-name="avram::primarykeymethods">
+      <a href="../Avram/PrimaryKeyMethods.html">PrimaryKeyMethods</a>
+      
+    </li>
+  
   <li class=" " data-id="avram/Avram/PrimaryKeyQueryable" data-name="avram::primarykeyqueryable(t)">
       <a href="../Avram/PrimaryKeyQueryable.html">PrimaryKeyQueryable</a>
       
@@ -1422,6 +1427,23 @@
 
 
 
+  <h2>
+    <a id="class-method-summary" class="anchor" href="#class-method-summary">
+  <svg class="octicon-link" aria-hidden="true">
+    <use href="#octicon-link"/>
+  </svg>
+</a>
+    Class Method Summary
+  </h2>
+  <ul class="list-summary">
+    
+      <li class="entry-summary">
+        <a href="#primary_key_name:Symbol?-class-method" class="signature"><strong>.primary_key_name</strong> : Symbol?</a>
+        
+      </li>
+    
+  </ul>
+
 
 
   <h2>
@@ -1435,19 +1457,7 @@
   <ul class="list-summary">
     
       <li class="entry-summary">
-        <a href="#==(other:self)-instance-method" class="signature"><strong>#==</strong>(other : <span class="k">self</span>)</a>
-        
-          <div class="summary"><p>Returns <code>true</code> if this reference is the same as <em>other</em>.</p></div>
-        
-      </li>
-    
-      <li class="entry-summary">
         <a href="#delete-instance-method" class="signature"><strong>#delete</strong></a>
-        
-      </li>
-    
-      <li class="entry-summary">
-        <a href="#id-instance-method" class="signature"><strong>#id</strong></a>
         
       </li>
     
@@ -1459,19 +1469,14 @@
       <li class="entry-summary">
         <a href="#reload:self-instance-method" class="signature"><strong>#reload</strong> : <span class="k">self</span></a>
         
-          <div class="summary"><p>Reload the model with the latest information from the database</p></div>
+          <div class="summary"><p>Refer to <code><a href="../Avram/PrimaryKeyMethods.html#reload:self-instance-method">PrimaryKeyMethods#reload</a></code></p></div>
         
       </li>
     
       <li class="entry-summary">
         <a href="#reload(&):self-instance-method" class="signature"><strong>#reload</strong>(&) : <span class="k">self</span></a>
         
-          <div class="summary"><p>Same as <code><a href="../Avram/Model.html#reload:self-instance-method">#reload</a></code> but allows passing a block to customize the query.</p></div>
-        
-      </li>
-    
-      <li class="entry-summary">
-        <a href="#to_param-instance-method" class="signature"><strong>#to_param</strong></a>
+          <div class="summary"><p>Refer to <code><a href="../Avram/PrimaryKeyMethods.html#reload:self-instance-method">PrimaryKeyMethods#reload</a></code></p></div>
         
       </li>
     
@@ -1670,6 +1675,30 @@
 
 
 
+  <h2>
+    <a id="class-method-detail" class="anchor" href="#class-method-detail">
+  <svg class="octicon-link" aria-hidden="true">
+    <use href="#octicon-link"/>
+  </svg>
+</a>
+    Class Method Detail
+  </h2>
+  
+    <div class="entry-detail" id="primary_key_name:Symbol?-class-method">
+      <div class="signature">
+        
+        def self.<strong>primary_key_name</strong> : Symbol?
+
+        <a class="method-permalink" href="#primary_key_name:Symbol?-class-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+      </div>
+    </div>
+  
+
 
 
   <h2>
@@ -1681,49 +1710,12 @@
     Instance Method Detail
   </h2>
   
-    <div class="entry-detail" id="==(other:self)-instance-method">
-      <div class="signature">
-        
-        def <strong>==</strong>(other : <span class="k">self</span>)
-
-        <a class="method-permalink" href="#==(other:self)-instance-method">#</a>
-      </div>
-      
-        <div class="doc">
-          
-            <div class="doc-inherited">
-              Description copied from class Reference
-            </div>
-          
-          <p>Returns <code>true</code> if this reference is the same as <em>other</em>. Invokes <code>same?</code>.</p>
-        </div>
-      
-      <br/>
-      <div>
-        
-      </div>
-    </div>
-  
     <div class="entry-detail" id="delete-instance-method">
       <div class="signature">
         
         def <strong>delete</strong>
 
         <a class="method-permalink" href="#delete-instance-method">#</a>
-      </div>
-      
-      <br/>
-      <div>
-        
-      </div>
-    </div>
-  
-    <div class="entry-detail" id="id-instance-method">
-      <div class="signature">
-        abstract 
-        def <strong>id</strong>
-
-        <a class="method-permalink" href="#id-instance-method">#</a>
       </div>
       
       <br/>
@@ -1756,26 +1748,7 @@
       
         <div class="doc">
           
-          <p>Reload the model with the latest information from the database</p>
-
-<p>This method will return a new model instance with the
-latest data from the database. Note that this does
-<strong>not</strong> change the original instance, so you may need to
-assign the result to a variable or work directly with the return value.</p>
-
-<p>Example:</p>
-
-<pre><code class="language-crystal">user <span class="o">=</span> <span class="t">SaveUser</span>.create!(name: <span class="s">&quot;Original&quot;</span>)
-<span class="t">SaveUser</span>.update!(user, name: <span class="s">&quot;Updated&quot;</span>)
-
-<span class="c"># Will be &quot;Original&quot;</span>
-user.name
-<span class="c"># Will return &quot;Updated&quot;</span>
-user.reload.name <span class="c"># Will be &quot;Updated&quot;</span>
-<span class="c"># Will still be &quot;Original&quot; since the &#39;user&#39; is the same model instance.</span>
-user.name
-
-<span class="t">Instead</span> re<span class="o">-</span>assign the variable. <span class="t">Now</span> </code></pre>
+          <p>Refer to <code><a href="../Avram/PrimaryKeyMethods.html#reload:self-instance-method">PrimaryKeyMethods#reload</a></code></p>
         </div>
       
       <br/>
@@ -1794,44 +1767,8 @@ user.name
       
         <div class="doc">
           
-          <p>Same as <code><a href="../Avram/Model.html#reload:self-instance-method">#reload</a></code> but allows passing a block to customize the query.</p>
-
-<p>This is almost always used to preload additional relationships.</p>
-
-<p>Example:</p>
-
-<pre><code class="language-crystal">user <span class="o">=</span> <span class="t">SaveUser</span>.create(params)
-
-<span class="c"># We want to display the list of articles the user has commented on, so let&#39;s #</span>
-<span class="c"># preload them to avoid N+1 performance issues</span>
-user <span class="o">=</span> user.reload(<span class="o">&amp;</span>.preload_comments(<span class="t">CommentQuery</span>.<span class="k">new</span>.preload_article))
-
-<span class="c"># Now we can safely get all the comment authors</span>
-user.comments.map(<span class="o">&amp;</span>.article)</code></pre>
-
-<p>Note that the yielded query is the <code>BaseQuery</code> so it will not have any
-methods defined on your customized query. This is usually fine since
-typically reload only uses preloads.</p>
-
-<p>If you do need to do something more custom you can manually reload:</p>
-
-<pre><code class="language-crystal">user <span class="o">=</span> <span class="t">SaveUser</span>.create!(name: <span class="s">&quot;Helen&quot;</span>)
-<span class="t">UserQuery</span>.<span class="k">new</span>.some_custom_preload_method.find(user.id)</code></pre>
+          <p>Refer to <code><a href="../Avram/PrimaryKeyMethods.html#reload:self-instance-method">PrimaryKeyMethods#reload</a></code></p>
         </div>
-      
-      <br/>
-      <div>
-        
-      </div>
-    </div>
-  
-    <div class="entry-detail" id="to_param-instance-method">
-      <div class="signature">
-        
-        def <strong>to_param</strong>
-
-        <a class="method-permalink" href="#to_param-instance-method">#</a>
-      </div>
       
       <br/>
       <div>

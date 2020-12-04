@@ -18,7 +18,7 @@
 </svg>
 
   <meta id="repository-name" content="avram">
-  <title>Db::Migrations - avram 0.17.0</title>
+  <title>Avram::PrimaryKeyMethods - avram 0.17.0</title>
   <script type="text/javascript">
     CrystalDocs.base_path = "../";
   </script>
@@ -61,7 +61,7 @@
       
     </li>
   
-  <li class="parent " data-id="avram/Avram" data-name="avram">
+  <li class="parent open current" data-id="avram/Avram" data-name="avram">
       <a href="../Avram.html">Avram</a>
       
         <ul>
@@ -676,7 +676,7 @@
       
     </li>
   
-  <li class=" " data-id="avram/Avram/PrimaryKeyMethods" data-name="avram::primarykeymethods">
+  <li class=" current" data-id="avram/Avram/PrimaryKeyMethods" data-name="avram::primarykeymethods">
       <a href="../Avram/PrimaryKeyMethods.html">PrimaryKeyMethods</a>
       
     </li>
@@ -1001,7 +1001,7 @@
       
     </li>
   
-  <li class="parent open current" data-id="avram/Db" data-name="db">
+  <li class="parent " data-id="avram/Db" data-name="db">
       <a href="../Db.html">Db</a>
       
         <ul>
@@ -1041,7 +1041,7 @@
       
     </li>
   
-  <li class="parent open current" data-id="avram/Db/Migrations" data-name="db::migrations">
+  <li class="parent " data-id="avram/Db/Migrations" data-name="db::migrations">
       <a href="../Db/Migrations.html">Migrations</a>
       
         <ul>
@@ -1370,7 +1370,7 @@
 <div class="main-content">
 <h1 class="type-name">
 
-  <span class="kind">module</span> Db::Migrations
+  <span class="kind">module</span> Avram::PrimaryKeyMethods
 
 </h1>
 
@@ -1409,6 +1409,42 @@
 
 
 
+  <h2>
+    <a id="instance-method-summary" class="anchor" href="#instance-method-summary">
+  <svg class="octicon-link" aria-hidden="true">
+    <use href="#octicon-link"/>
+  </svg>
+</a>
+    Instance Method Summary
+  </h2>
+  <ul class="list-summary">
+    
+      <li class="entry-summary">
+        <a href="#==(other:self)-instance-method" class="signature"><strong>#==</strong>(other : <span class="k">self</span>)</a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#primary_key_name:Symbol?-instance-method" class="signature"><strong>#primary_key_name</strong> : Symbol?</a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#reload:self-instance-method" class="signature"><strong>#reload</strong> : <span class="k">self</span></a>
+        
+          <div class="summary"><p>Reload the model with the latest information from the database</p></div>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#reload(&):self-instance-method" class="signature"><strong>#reload</strong>(&) : <span class="k">self</span></a>
+        
+          <div class="summary"><p>Same as <code><a href="../Avram/PrimaryKeyMethods.html#reload:self-instance-method">#reload</a></code> but allows passing a block to customize the query.</p></div>
+        
+      </li>
+    
+  </ul>
+
 
 
 
@@ -1421,6 +1457,123 @@
 
 
 
+
+  <h2>
+    <a id="instance-method-detail" class="anchor" href="#instance-method-detail">
+  <svg class="octicon-link" aria-hidden="true">
+    <use href="#octicon-link"/>
+  </svg>
+</a>
+    Instance Method Detail
+  </h2>
+  
+    <div class="entry-detail" id="==(other:self)-instance-method">
+      <div class="signature">
+        
+        def <strong>==</strong>(other : <span class="k">self</span>)
+
+        <a class="method-permalink" href="#==(other:self)-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="primary_key_name:Symbol?-instance-method">
+      <div class="signature">
+        
+        def <strong>primary_key_name</strong> : Symbol?
+
+        <a class="method-permalink" href="#primary_key_name:Symbol?-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="reload:self-instance-method">
+      <div class="signature">
+        
+        def <strong>reload</strong> : <span class="k">self</span>
+
+        <a class="method-permalink" href="#reload:self-instance-method">#</a>
+      </div>
+      
+        <div class="doc">
+          
+          <p>Reload the model with the latest information from the database</p>
+
+<p>This method will return a new model instance with the
+latest data from the database. Note that this does
+<strong>not</strong> change the original instance, so you may need to
+assign the result to a variable or work directly with the return value.</p>
+
+<p>Example:</p>
+
+<pre><code class="language-crystal">user <span class="o">=</span> <span class="t">SaveUser</span>.create!(name: <span class="s">&quot;Original&quot;</span>)
+<span class="t">SaveUser</span>.update!(user, name: <span class="s">&quot;Updated&quot;</span>)
+
+<span class="c"># Will be &quot;Original&quot;</span>
+user.name
+<span class="c"># Will return &quot;Updated&quot;</span>
+user.reload.name <span class="c"># Will be &quot;Updated&quot;</span>
+<span class="c"># Will still be &quot;Original&quot; since the &#39;user&#39; is the same model instance.</span>
+user.name
+
+<span class="t">Instead</span> re<span class="o">-</span>assign the variable. <span class="t">Now</span> </code></pre>
+        </div>
+      
+      <br/>
+      <div>
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="reload(&):self-instance-method">
+      <div class="signature">
+        
+        def <strong>reload</strong>(&) : <span class="k">self</span>
+
+        <a class="method-permalink" href="#reload(&):self-instance-method">#</a>
+      </div>
+      
+        <div class="doc">
+          
+          <p>Same as <code><a href="../Avram/PrimaryKeyMethods.html#reload:self-instance-method">#reload</a></code> but allows passing a block to customize the query.</p>
+
+<p>This is almost always used to preload additional relationships.</p>
+
+<p>Example:</p>
+
+<pre><code class="language-crystal">user <span class="o">=</span> <span class="t">SaveUser</span>.create(params)
+
+<span class="c"># We want to display the list of articles the user has commented on, so let&#39;s #</span>
+<span class="c"># preload them to avoid N+1 performance issues</span>
+user <span class="o">=</span> user.reload(<span class="o">&amp;</span>.preload_comments(<span class="t">CommentQuery</span>.<span class="k">new</span>.preload_article))
+
+<span class="c"># Now we can safely get all the comment authors</span>
+user.comments.map(<span class="o">&amp;</span>.article)</code></pre>
+
+<p>Note that the yielded query is the <code>BaseQuery</code> so it will not have any
+methods defined on your customized query. This is usually fine since
+typically reload only uses preloads.</p>
+
+<p>If you do need to do something more custom you can manually reload:</p>
+
+<pre><code class="language-crystal">user <span class="o">=</span> <span class="t">SaveUser</span>.create!(name: <span class="s">&quot;Helen&quot;</span>)
+<span class="t">UserQuery</span>.<span class="k">new</span>.some_custom_preload_method.find(user.id)</code></pre>
+        </div>
+      
+      <br/>
+      <div>
+        
+      </div>
+    </div>
+  
 
 
 
