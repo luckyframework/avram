@@ -20,4 +20,9 @@ describe "views" do
     nickname_info.nickname.should eq "Johnny"
     nickname_info.count.should eq 3
   end
+
+  pending "works with SchemaEnforcer" do
+    AdminUser.ensure_correct_column_mappings!
+    NicknameInfo.ensure_correct_column_mappings!
+  end
 end
