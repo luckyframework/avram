@@ -20,7 +20,6 @@ struct Int16
     end
 
     def parse(value : String)
-      return parse(nil) if value.blank?
       SuccessfulCast(Int16).new value.to_i16
     rescue ArgumentError
       FailedCast.new

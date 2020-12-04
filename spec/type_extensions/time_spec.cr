@@ -2,12 +2,6 @@ require "../spec_helper"
 
 describe "Time column type" do
   describe ".parse" do
-    it "returns nil if parsing an empty String" do
-      result = Time::Lucky.parse("")
-
-      result.should be_a(Avram::Type::SuccessfulCast(Nil))
-    end
-
     it "casts various formats successfully" do
       time = Time.local
       times = {

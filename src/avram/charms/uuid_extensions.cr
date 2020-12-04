@@ -16,7 +16,6 @@ struct UUID
     end
 
     def parse(value : String)
-      return parse(nil) if value.blank?
       SuccessfulCast(UUID).new(UUID.new(value))
     rescue
       FailedCast.new
