@@ -35,7 +35,6 @@ class Avram::SchemaEnforcer::EnsureUUIDPrimaryKeyHasDefault < Avram::SchemaEnfor
   end
 
   def primary_key_info
-    table_info = database_info.table(table_name).not_nil!
     table_info.column(model_class.primary_key_name.to_s).not_nil!
   end
 end

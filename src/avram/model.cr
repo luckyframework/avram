@@ -17,6 +17,10 @@ abstract class Avram::Model
     nil
   end
 
+  def self.database_table_info : Avram::Database::TableInfo?
+    database.database_info.table(table_name.to_s)
+  end
+
   def model_name
     self.class.name
   end
