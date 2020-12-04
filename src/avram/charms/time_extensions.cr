@@ -22,9 +22,7 @@ struct Time
       value
     end
 
-    def parse(value : String) : SuccessfulCast(Time) | SuccessfulCast(Nil) | FailedCast
-      return parse(nil) if value.blank?
-
+    def parse(value : String) : SuccessfulCast(Time) | FailedCast
       # Prefer user defined string formats
       try_parsing_with_string_formats(value) ||
         # Then try default formats

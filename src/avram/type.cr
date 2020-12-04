@@ -14,15 +14,10 @@ module Avram::Type
   def parse(values : Array(String))
     casts = values.map { |value| parse(value) }
     if casts.all?(&.is_a?(SuccessfulCast))
-      casts.map(&.as(SuccessfulCast))
+      values = casts.map { |c| c.as(SuccessfulCast).value }
+      parse(values)
     else
       FailedCast.new
-    end
-  end
-
-  def parse!(values : Array(T)) forall T
-    values.map do |v|
-      parse!(v)
     end
   end
 

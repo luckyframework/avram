@@ -8,8 +8,6 @@ struct Bool
     include Avram::Type
 
     def parse(value : String)
-      return parse(nil) if value.blank?
-
       if %w(true 1).includes? value
         SuccessfulCast(Bool).new true
       elsif %w(false 0).includes? value
