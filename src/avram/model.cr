@@ -44,8 +44,6 @@ abstract class Avram::Model
 
     {{ yield }}
 
-    schema_enforcer_validations << EnsureExistingTable.new(model_class: {{ @type.id }})
-    schema_enforcer_validations << EnsureMatchingColumns.new(model_class: {{ @type.id }})
     validate_primary_key
 
     class_getter table_name = {{ table_name.id.symbolize }}
@@ -55,6 +53,7 @@ abstract class Avram::Model
     setup(Avram::Model.setup_getters)
     setup(Avram::Model.setup_column_info_methods)
     setup(Avram::Model.setup_association_queries)
+    setup(Avram::Model.setup_table_schema_enforcer_validations)
     setup(Avram::BaseQueryTemplate.setup)
     setup(Avram::SaveOperationTemplate.setup)
     setup(Avram::SchemaEnforcer.setup)
@@ -178,6 +177,11 @@ abstract class Avram::Model
         {% end %}
       end
     {% end %}
+  end
+
+  macro setup_table_schema_enforcer_validations(type, *args, **named_args)
+    schema_enforcer_validations << EnsureExistingTable.new(model_class: {{ type.id }})
+    schema_enforcer_validations << EnsureMatchingColumns.new(model_class: {{ type.id }})
   end
 
   macro setup_getters(columns, *args, **named_args)
