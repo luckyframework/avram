@@ -35,6 +35,11 @@ abstract class Avram::Model
     {% raise "Unable to call Avram::Model#reload on #{@type.name} because it does not have a primary key." %}
   end
 
+  # Refer to `PrimaryKeyMethods#to_param`
+  def to_param : String
+    {% raise "Unable to call Avram::Model#to_param on #{@type.name} because it does not have a primary key. Add a primary key or define your own `to_param` method." %}
+  end
+
   macro table(table_name = nil)
     {% unless table_name %}
       {% table_name = run("../run_macros/infer_table_name.cr", @type.id) %}

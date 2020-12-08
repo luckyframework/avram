@@ -65,4 +65,10 @@ module Avram::PrimaryKeyMethods
     query = yield base_query_class.new
     query.find(id)
   end
+
+  # For integration with Lucky
+  # This allows an `Avram::Model` to be passed into a Lucky::Action to create a url/path
+  def to_param : String
+    id.to_s
+  end
 end
