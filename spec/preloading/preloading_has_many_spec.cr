@@ -142,4 +142,56 @@ describe "Preloading has_many associations" do
 
     Comment::BaseQuery.times_called.should eq 0
   end
+
+  context "with existing record" do
+    it "works" do
+      with_lazy_load(enabled: false) do
+        post = PostBox.create
+        comment = CommentBox.create &.post_id(post.id)
+
+        post = Post::BaseQuery.preload_comments(post)
+
+        post.comments.should eq([comment])
+      end
+    end
+
+    it "works with multiple" do
+      with_lazy_load(enabled: false) do
+        post1 = PostBox.create
+        post2 = PostBox.create
+        comment1 = CommentBox.create &.post_id(post1.id)
+        comment2 = CommentBox.create &.post_id(post2.id)
+
+        posts = Post::BaseQuery.preload_comments([post1, post2])
+
+        posts[0].comments.should eq([comment1])
+        posts[1].comments.should eq([comment2])
+      end
+    end
+
+    it "works with custom query" do
+      with_lazy_load(enabled: false) do
+        post = PostBox.create
+        comment1 = CommentBox.create &.post_id(post.id).body("CUSTOM BODY")
+        CommentBox.create &.post_id(post.id)
+
+        post = Post::BaseQuery.preload_comments(post, Comment::BaseQuery.new.body("CUSTOM BODY"))
+
+        post.comments.should eq([comment1])
+      end
+    end
+
+    it "does not modify original record" do
+      with_lazy_load(enabled: false) do
+        original_post = PostBox.create
+        CommentBox.create &.post_id(original_post.id)
+
+        Post::BaseQuery.preload_comments(original_post)
+
+        expect_raises Avram::LazyLoadError do
+          original_post.comments
+        end
+      end
+    end
+  end
 end

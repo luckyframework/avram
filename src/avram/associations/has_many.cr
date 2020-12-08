@@ -47,6 +47,21 @@ module Avram::Associations::HasMany
 
   private macro define_has_many_base_query(assoc_name, model, foreign_key, through)
     class BaseQuery
+      def self.preload_{{ assoc_name }}(record, preload_query = {{ model }}::BaseQuery.new)
+        preload_{{ assoc_name }}(records: [record], preload_query: preload_query).first
+      end
+
+      def self.preload_{{ assoc_name }}(records : Enumerable, preload_query = {{ model }}::BaseQuery.new)
+        ids = records.map(&.id)
+        empty_results = {} of {{ model }}::PrimaryKeyType => Array({{ model }})
+        {{ assoc_name }} = ids.empty? ? empty_results  : preload_query.{{ foreign_key }}.in(ids).results.group_by(&.{{ foreign_key }})
+        records.map(&.dup)
+          .map do |record|
+            record._preloaded_{{ assoc_name }} = {{ assoc_name }}[record.id]? || [] of {{ model }}
+            record
+          end
+      end
+
       def preload_{{ assoc_name }}
         preload_{{ assoc_name }}({{ model }}::BaseQuery.new)
       end
