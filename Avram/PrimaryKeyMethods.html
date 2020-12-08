@@ -1443,6 +1443,13 @@
         
       </li>
     
+      <li class="entry-summary">
+        <a href="#to_param:String-instance-method" class="signature"><strong>#to_param</strong> : String</a>
+        
+          <div class="summary"><p>For integration with Lucky This allows an <code><a href="../Avram/Model.html">Avram::Model</a></code> to be passed into a Lucky::Action to create a url/path</p></div>
+        
+      </li>
+    
   </ul>
 
 
@@ -1566,6 +1573,26 @@ typically reload only uses preloads.</p>
 
 <pre><code class="language-crystal">user <span class="o">=</span> <span class="t">SaveUser</span>.create!(name: <span class="s">&quot;Helen&quot;</span>)
 <span class="t">UserQuery</span>.<span class="k">new</span>.some_custom_preload_method.find(user.id)</code></pre>
+        </div>
+      
+      <br/>
+      <div>
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="to_param:String-instance-method">
+      <div class="signature">
+        
+        def <strong>to_param</strong> : <a href="../String.html">String</a>
+
+        <a class="method-permalink" href="#to_param:String-instance-method">#</a>
+      </div>
+      
+        <div class="doc">
+          
+          <p>For integration with Lucky
+This allows an <code><a href="../Avram/Model.html">Avram::Model</a></code> to be passed into a Lucky::Action to create a url/path</p>
         </div>
       
       <br/>
