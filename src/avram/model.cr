@@ -27,17 +27,22 @@ abstract class Avram::Model
 
   # Refer to `PrimaryKeyMethods#reload`
   def reload : self
-    {% raise "Unable to call Avram::Model#reload on #{@type.name} because it does not have a primary key." %}
+    {% raise "Unable to call Avram::Model#reload on #{@type.name} because it does not have a primary key. Add a primary key or define your own `reload` method." %}
   end
 
   # Refer to `PrimaryKeyMethods#reload`
   def reload(&block) : self
-    {% raise "Unable to call Avram::Model#reload on #{@type.name} because it does not have a primary key." %}
+    {% raise "Unable to call Avram::Model#reload on #{@type.name} because it does not have a primary key. Add a primary key or define your own `reload` method." %}
   end
 
   # Refer to `PrimaryKeyMethods#to_param`
   def to_param : String
     {% raise "Unable to call Avram::Model#to_param on #{@type.name} because it does not have a primary key. Add a primary key or define your own `to_param` method." %}
+  end
+
+  # Refer to `PrimaryKeyMethods#delete`
+  def delete
+    {% raise "Unable to call Avram::Model#delete on #{@type.name} because it does not have a primary key. Add a primary key or define your own `delete` method." %}
   end
 
   macro table(table_name = nil)
@@ -141,18 +146,6 @@ abstract class Avram::Model
       columns: {{ COLUMNS }},
       associations: {{ ASSOCIATIONS }}
     )
-  end
-
-  def delete
-    self.class.database.exec "DELETE FROM #{@@table_name} WHERE #{primary_key_name} = #{escape_primary_key(id)}"
-  end
-
-  private def escape_primary_key(id : Int64 | Int32 | Int16)
-    id
-  end
-
-  private def escape_primary_key(id : UUID)
-    PG::EscapeHelper.escape_literal(id.to_s)
   end
 
   macro setup_initialize(columns, *args, **named_args)

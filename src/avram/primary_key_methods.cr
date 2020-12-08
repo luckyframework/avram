@@ -71,4 +71,16 @@ module Avram::PrimaryKeyMethods
   def to_param : String
     id.to_s
   end
+
+  def delete
+    self.class.database.exec "DELETE FROM #{@@table_name} WHERE #{primary_key_name} = #{escape_primary_key(id)}"
+  end
+
+  private def escape_primary_key(id : Int64 | Int32 | Int16)
+    id
+  end
+
+  private def escape_primary_key(id : UUID)
+    PG::EscapeHelper.escape_literal(id.to_s)
+  end
 end
