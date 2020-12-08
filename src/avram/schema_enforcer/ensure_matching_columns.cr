@@ -1,12 +1,14 @@
 class Avram::SchemaEnforcer::EnsureMatchingColumns < Avram::SchemaEnforcer::Validation
-  private getter table_info : Database::TableInfo
+  @check_required : Bool
   @missing_columns = [] of String
   @optional_attribute_errors = [] of String
   @required_attribute_errors = [] of String
 
   def initialize(model_class)
-    super
-    @table_info = database_info.table(table_name).not_nil!
+    initialize(model_class, check_required: true)
+  end
+
+  def initialize(@model_class, @check_required)
   end
 
   def validate!
@@ -26,6 +28,8 @@ class Avram::SchemaEnforcer::EnsureMatchingColumns < Avram::SchemaEnforcer::Vali
       @missing_columns << missing_attribute_error(table_info.table_name, table_info.column_names, attribute)
       return
     end
+
+    return unless @check_required
 
     if !attribute[:nilable] && column.nilable?
       @required_attribute_errors << required_attribute_error(table_info.table_name, attribute)
