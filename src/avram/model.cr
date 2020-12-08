@@ -59,6 +59,25 @@ abstract class Avram::Model
     setup(Avram::SchemaEnforcer.setup)
   end
 
+  macro view(view_name = nil)
+    {% unless view_name %}
+      {% view_name = run("../run_macros/infer_table_name.cr", @type.id) %}
+    {% end %}
+
+    {{ yield }}
+
+    class_getter table_name = {{ view_name.id.symbolize }}
+    TABLE_NAME = {{ view_name.id.symbolize }}
+    setup(Avram::Model.setup_initialize)
+    setup(Avram::Model.setup_db_mapping)
+    setup(Avram::Model.setup_getters)
+    setup(Avram::Model.setup_column_info_methods)
+    setup(Avram::Model.setup_association_queries)
+    setup(Avram::Model.setup_view_schema_enforcer_validations)
+    setup(Avram::BaseQueryTemplate.setup)
+    setup(Avram::SchemaEnforcer.setup)
+  end
+
   macro primary_key(type_declaration)
     PRIMARY_KEY_TYPE = {{ type_declaration.type }}
     PRIMARY_KEY_NAME = {{ type_declaration.var.symbolize }}
@@ -182,6 +201,11 @@ abstract class Avram::Model
   macro setup_table_schema_enforcer_validations(type, *args, **named_args)
     schema_enforcer_validations << EnsureExistingTable.new(model_class: {{ type.id }})
     schema_enforcer_validations << EnsureMatchingColumns.new(model_class: {{ type.id }})
+  end
+
+  macro setup_view_schema_enforcer_validations(type, *args, **named_args)
+    schema_enforcer_validations << EnsureExistingTable.new(model_class: {{ type.id }})
+    schema_enforcer_validations << EnsureMatchingColumns.new(model_class: {{ type.id }}, check_required: false)
   end
 
   macro setup_getters(columns, *args, **named_args)
