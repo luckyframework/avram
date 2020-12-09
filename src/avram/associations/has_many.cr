@@ -69,6 +69,24 @@ module Avram::Associations::HasMany
         preload_{{ assoc_name }}(records: records, preload_query: modified_query)
       end
 
+      {% if through %}
+      def self.preload_{{ assoc_name }}(records : Enumerable, preload_query)
+        intermediary_records = preload_{{ through.first.id }}(records) do |through_query|
+          through_query.preload_{{ through[1].id }}(preload_query)
+        end
+        intermediary_records.map(&.dup)
+          .map do |record|
+            throughs = record.{{ through.first.id }}
+            throughs = throughs.is_a?(Array) ? throughs : [throughs]
+            record._preloaded_{{ assoc_name }} = throughs.compact.flat_map do |through|
+              throughs1 = through.{{ through[1].id }}
+              throughs1.is_a?(Array) ? throughs1 : [throughs1]
+            end.compact
+
+            record
+          end
+      end
+      {% else %}
       def self.preload_{{ assoc_name }}(records : Enumerable, preload_query)
         ids = records.map(&.id)
         empty_results = {} of {{ model }}::PrimaryKeyType => Array({{ model }})
@@ -79,6 +97,7 @@ module Avram::Associations::HasMany
             record
           end
       end
+      {% end %}
 
       def preload_{{ assoc_name }}
         preload_{{ assoc_name }}({{ model }}::BaseQuery.new)
