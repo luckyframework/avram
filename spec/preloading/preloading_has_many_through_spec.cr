@@ -119,7 +119,8 @@ describe "Preloading has_many through associations" do
 
         manager = Manager::BaseQuery.preload_customers(manager, Customer::BaseQuery.new.employee_id(employee1.id))
 
-        manager.customers.should eq([customer1, customer3])
+        # the order of the customers seems to be somewhat random
+        manager.customers.sort_by(&.id).should eq([customer1, customer3])
       end
     end
 
