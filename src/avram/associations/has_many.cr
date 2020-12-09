@@ -47,6 +47,58 @@ module Avram::Associations::HasMany
 
   private macro define_has_many_base_query(assoc_name, model, foreign_key, through)
     class BaseQuery
+      def self.preload_{{ assoc_name }}(record)
+        preload_{{ assoc_name }}(record: record, preload_query: {{ model }}::BaseQuery.new)
+      end
+
+      def self.preload_{{ assoc_name }}(record)
+        modified_query = yield {{ model }}::BaseQuery.new
+        preload_{{ assoc_name }}(record: record, preload_query: modified_query)
+      end
+
+      def self.preload_{{ assoc_name }}(record, preload_query)
+        preload_{{ assoc_name }}(records: [record], preload_query: preload_query).first
+      end
+
+      def self.preload_{{ assoc_name }}(records : Enumerable)
+        preload_{{ assoc_name }}(records: records, preload_query: {{ model }}::BaseQuery.new)
+      end
+
+      def self.preload_{{ assoc_name }}(records : Enumerable)
+        modified_query = yield {{ model }}::BaseQuery.new
+        preload_{{ assoc_name }}(records: records, preload_query: modified_query)
+      end
+
+      {% if through %}
+      def self.preload_{{ assoc_name }}(records : Enumerable, preload_query)
+        intermediary_records = preload_{{ through.first.id }}(records) do |through_query|
+          through_query.preload_{{ through[1].id }}(preload_query)
+        end
+        intermediary_records.map(&.dup)
+          .map do |record|
+            throughs = record.{{ through.first.id }}
+            throughs = throughs.is_a?(Array) ? throughs : [throughs]
+            record._preloaded_{{ assoc_name }} = throughs.compact.flat_map do |through|
+              throughs1 = through.{{ through[1].id }}
+              throughs1.is_a?(Array) ? throughs1 : [throughs1]
+            end.compact
+
+            record
+          end
+      end
+      {% else %}
+      def self.preload_{{ assoc_name }}(records : Enumerable, preload_query)
+        ids = records.map(&.id)
+        empty_results = {} of {{ model }}::PrimaryKeyType => Array({{ model }})
+        {{ assoc_name }} = ids.empty? ? empty_results  : preload_query.{{ foreign_key }}.in(ids).results.group_by(&.{{ foreign_key }})
+        records.map(&.dup)
+          .map do |record|
+            record._preloaded_{{ assoc_name }} = {{ assoc_name }}[record.id]? || [] of {{ model }}
+            record
+          end
+      end
+      {% end %}
+
       def preload_{{ assoc_name }}
         preload_{{ assoc_name }}({{ model }}::BaseQuery.new)
       end
