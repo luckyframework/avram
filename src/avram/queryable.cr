@@ -220,6 +220,22 @@ module Avram::Queryable(T)
     database.scalar new_query.statement, args: new_query.args, queryable: schema_class.name
   end
 
+  # This method is meant to be used in your query object `initialize`.
+  # Allows you to set a default query for your query objects.
+  #
+  # ```crystal
+  # class AdminUserQuery < User::BaseQuery
+  #   def initialize
+  #     defaults &.admin(true)
+  #   end
+  # end
+  # ```
+  private def defaults : Nil
+    default = yield self
+
+    self.query = default.query
+  end
+
   private def with_ordered_query : self
     self
   end

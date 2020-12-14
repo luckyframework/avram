@@ -20,9 +20,28 @@ class JSONQuery < Blob::BaseQuery
   end
 end
 
+class QueryWithDefault < User::BaseQuery
+
+  def initialize
+    defaults &.age.gte(21)
+  end
+end
+
 describe Avram::Queryable do
   it "can chain scope methods" do
     ChainedQuery.new.young.named("Paul")
+  end
+
+  it "can set default queries" do
+    query = QueryWithDefault.new.query
+
+    query.statement.should eq "SELECT #{User::COLUMN_SQL} FROM users WHERE users.age >= $1"
+  end
+
+  it "allows you to add on to a query with default" do
+    query = QueryWithDefault.new.name("Santa").query
+
+    query.statement.should eq "SELECT #{User::COLUMN_SQL} FROM users WHERE users.age >= $1 AND users.name = $2"
   end
 
   describe "#distinct" do
