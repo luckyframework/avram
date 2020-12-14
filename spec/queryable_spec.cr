@@ -21,7 +21,6 @@ class JSONQuery < Blob::BaseQuery
 end
 
 class QueryWithDefault < User::BaseQuery
-
   def initialize
     defaults &.age.gte(21)
   end
