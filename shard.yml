@@ -3,6 +3,8 @@ version: 0.18.0
 
 crystal: 0.35.1
 
+license: MIT
+
 targets:
   lucky.gen.migration:
     main: src/precompiled_tasks/gen/migration.cr
@@ -43,5 +45,3 @@ development_dependencies:
 
 scripts:
   postinstall: script/precompile_tasks
-
-license: MIT
