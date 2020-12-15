@@ -1,5 +1,5 @@
 name: avram
-version: 0.17.0
+version: 0.18.0
 
 crystal: 0.35.1
 
@@ -16,7 +16,7 @@ dependencies:
     version: 0.1.0
   lucky_cli:
     github: luckyframework/lucky_cli
-    version: ~> 0.24.0
+    branch: master
   pg:
     github: will/crystal-pg
     version: ~> 0.22.0
@@ -39,7 +39,7 @@ dependencies:
 development_dependencies:
   ameba:
     github: crystal-ameba/ameba
-    branch: master
+    version: ~> 0.13
 
 scripts:
   postinstall: script/precompile_tasks
