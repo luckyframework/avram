@@ -32,4 +32,8 @@ describe "Enum" do
     issue.status.to_s.should eq("Opened")
     issue.status.to_i.should eq(0)
   end
+
+  it "provides a working ==" do
+    Issue::Status.new(:closed).should eq(Issue::Status.new(:closed))
+  end
 end
