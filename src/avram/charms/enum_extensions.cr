@@ -1,12 +1,25 @@
+macro redeclare_avram_enum(name)
+  {% for member in name.resolve.constants %}
+    {{ member }} = {{ name }}::{{ member }}
+  {% end %}
+end
+
 macro avram_enum(enum_name, &block)
-  enum Avram{{ enum_name }}
+  {% avram_enum = ("Avram" + enum_name.names.join("::")).id %}
+  enum {{ avram_enum }}
     {{ block.body }}
+
+    def ===(other : Int32)
+      value == other
+    end
   end
 
   class {{ enum_name }}
     def self.adapter
       Lucky
     end
+
+    redeclare_avram_enum({{ avram_enum }})
 
     getter :enum
 
@@ -28,7 +41,7 @@ macro avram_enum(enum_name, &block)
       self.enum == other.enum
     end
 
-    delegate to_s, to_i, to: @enum
+    delegate :===, to_s, to_i, to: @enum
 
     forward_missing_to @enum
 

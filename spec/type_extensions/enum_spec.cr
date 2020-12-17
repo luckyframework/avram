@@ -36,4 +36,28 @@ describe "Enum" do
   it "provides a working ==" do
     Issue::Status.new(:closed).should eq(Issue::Status.new(:closed))
   end
+
+  it "provides enum-like getters" do
+    Issue::Status::Closed.should eq(Issue::Status.new(:closed).enum)
+  end
+
+  it "implements case equality" do
+    symbol_lookup = case Issue::Status.new(:closed).value
+                    when Issue::Status.new(:closed)
+                      true
+                    else
+                      false
+                    end
+
+    symbol_lookup.should be_true
+
+    constant_lookup = case Issue::Status.new(:opened).value
+                      when Issue::Status::Opened
+                        true
+                      else
+                        false
+                      end
+
+    constant_lookup.should be_true
+  end
 end
