@@ -14,7 +14,7 @@ macro avram_enum(enum_name, &block)
     end
   end
 
-  class {{ enum_name }}
+  struct {{ enum_name }}
     def self.adapter
       Lucky
     end
@@ -35,10 +35,6 @@ macro avram_enum(enum_name, &block)
 
     def initialize(enum_value : String)
       @enum = Avram{{ enum_name }}.from_value(enum_value.to_i)
-    end
-
-    def ==(other : {{ enum_name }}) : Bool
-      self.enum == other.enum
     end
 
     delegate :===, to_s, to_i, to: @enum
