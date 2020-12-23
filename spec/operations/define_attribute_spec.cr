@@ -35,6 +35,20 @@ private class SaveOperationWithAttributes < Post::SaveOperation
   end
 end
 
+private class DeleteOperationWithAttributes < Post::DeleteOperation
+  attribute accept_delete : Bool = false
+  attribute confirm_delete : String
+  file_attribute :biometric_confirmation
+
+  before_delete :ensure_confirmation_matches
+
+  private def ensure_confirmation_matches
+    if confirm_delete.value != "DELETE ME FOR REALZ"
+      confirm_delete.add_error("text must match")
+    end
+  end
+end
+
 describe "attribute in operations" do
   it "is a PermittedAttribute" do
     operation.title.should be_a(Avram::PermittedAttribute(String?))
@@ -44,6 +58,10 @@ describe "attribute in operations" do
     save_operation.password_confirmation.should be_a(Avram::PermittedAttribute(String?))
     save_operation.password_confirmation.name.should eq(:password_confirmation)
     save_operation.password_confirmation.param_key.should eq("post")
+
+    delete_operation.accept_delete.should be_a(Avram::PermittedAttribute(Bool?))
+    delete_operation.accept_delete.name.should eq(:accept_delete)
+    delete_operation.accept_delete.param_key.should eq("post")
   end
 
   it "generates a list of attributes" do
@@ -61,6 +79,17 @@ describe "attribute in operations" do
       :title,
       :published_at,
     ]
+
+    delete_operation.attributes.map(&.name).should eq [
+      :biometric_confirmation,
+      :confirm_delete,
+      :accept_delete,
+      :custom_id,
+      :created_at,
+      :updated_at,
+      :title,
+      :published_at
+    ]
   end
 
   it "sets a default value of nil if another one is not given" do
@@ -68,6 +97,7 @@ describe "attribute in operations" do
     operation.count.value.should be_nil
     save_operation.password_confirmation.value.should be_nil
     save_operation.terms_of_service.value.should be_nil
+    delete_operation.confirm_delete.value.should be_nil
   end
 
   it "assigns the default value to an attribute if one is set and no param is given" do
@@ -75,6 +105,7 @@ describe "attribute in operations" do
     operation.thing.value.should eq "taco"
     save_operation.best_kind_of_bear.value.should eq "black bear"
     save_operation.default_is_false.value.should be_false
+    delete_operation.accept_delete.value.should be_false
   end
 
   it "overrides the default value with a param if one is given" do
@@ -83,6 +114,7 @@ describe "attribute in operations" do
     operation({"checked" => "true"}).checked.value.should eq true
     save_operation({"best_kind_of_bear" => "brown bear"}).best_kind_of_bear.value.should eq "brown bear"
     save_operation({"best_kind_of_bear" => ""}).best_kind_of_bear.value.should be_nil
+    delete_operation({"accept_delete" => "true"}).accept_delete.value.should be_true
   end
 
   it "sets the param and value based on the passed in params" do
@@ -93,6 +125,10 @@ describe "attribute in operations" do
     save_operation = save_operation({"password_confirmation" => "password"})
     save_operation.password_confirmation.value.should eq "password"
     save_operation.password_confirmation.param.should eq "password"
+
+    delete_operation = delete_operation({"confirm_delete" => "yeah sure"})
+    delete_operation.confirm_delete.value.should eq "yeah sure"
+    delete_operation.confirm_delete.param.should eq "yeah sure"
   end
 
   it "is memoized so you can change the attribute in `prepare`" do
@@ -152,11 +188,16 @@ describe "file_attribute in operation" do
     save_operation.thumb.should be_a(Avram::PermittedAttribute(Avram::Uploadable?))
     save_operation.thumb.name.should eq(:thumb)
     save_operation.thumb.param_key.should eq("post")
+
+    delete_operation.biometric_confirmation.should be_a(Avram::PermittedAttribute(Avram::Uploadable?))
+    delete_operation.biometric_confirmation.name.should eq(:biometric_confirmation)
+    delete_operation.biometric_confirmation.param_key.should eq("post")
   end
 
   it "is included in the list of attributes" do
     operation.attributes.map(&.name).should contain(:thumb)
     save_operation.attributes.map(&.name).should contain(:thumb)
+    delete_operation.attributes.map(&.name).should contain(:biometric_confirmation)
   end
 
   it "gracefully handles invalid params" do
@@ -167,6 +208,10 @@ describe "file_attribute in operation" do
     save_operation = save_operation({"thumb" => "not a file"})
     save_operation.thumb.value.should be_nil
     save_operation.thumb.errors.first.should eq "is invalid"
+
+    delete_operation = delete_operation({"biometric_confirmation" => "not a file"})
+    delete_operation.biometric_confirmation.value.should be_nil
+    delete_operation.biometric_confirmation.errors.first.should eq "is invalid"
   end
 
   it "includes file attribute errors when calling SaveOperation#valid?" do
@@ -197,4 +242,9 @@ end
 
 private def upload_save_operation(attrs = {} of String => Avram::Uploadable)
   SaveOperationWithAttributes.new(Avram::UploadParams.new(attrs))
+end
+
+private def delete_operation(attrs = {} of String => String)
+  post = PostBox.create
+  DeleteOperationWithAttributes.new(post, Avram::Params.new(attrs))
 end
