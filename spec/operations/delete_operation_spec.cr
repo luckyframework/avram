@@ -9,6 +9,12 @@ private class FailedToDeleteUser < User::DeleteOperation
   end
 end
 
+private class SoftDeleteItem < SoftDeletableItem::DeleteOperation
+end
+
+private class DeleteWithCascade < Business::DeleteOperation
+end
+
 describe "Avram::DeleteOperation" do
 
   describe "destroy" do
@@ -48,7 +54,59 @@ describe "Avram::DeleteOperation" do
     it "raises an exception when unable to delete" do
       user = UserBox.create
 
-      expect_raises(Avram::InvalidOperationError, ) do
+      expect_raises(Avram::InvalidOperationError) do
+        FailedToDeleteUser.destroy!(user)
+      end
+    end
+  end
+
+  describe "soft deletes" do
+    it "returns a soft deleted object" do
+      item = SoftDeletableItemBox.create
+
+      deleted_item = SoftDeleteItem.destroy!(item)
+
+      deleted_item.soft_deleted?.should be_true
+    end
+  end
+
+  describe "cascade deletes" do
+    it "deletes the object and associated" do
+      business = BusinessBox.create
+      email_address = EmailAddressBox.create &.business_id(business.id)
+
+      EmailAddress::BaseQuery.new.select_count.should eq(1)
+
+      DeleteWithCascade.destroy(business) do |operation, _deleted_business|
+        operation.deleted?.should be_true
+        EmailAddress::BaseQuery.new.select_count.should eq(0)
+      end
+    end
+  end
+
+  describe "publishes" do
+    it "publishes a successful delete" do
+      Avram::Events::DeleteSuccessEvent.subscribe do |event|
+        if event.operation_class == "BasicDeleteUser"
+          UserQuery.new.select_count.should eq 0
+        end
+      end
+
+      user = UserBox.create
+
+      BasicDeleteUser.destroy!(user)
+    end
+
+    it "publishes a failed delete" do
+      Avram::Events::DeleteFailedEvent.subscribe do |event|
+        event.operation_class.should eq("FailedToDeleteUser")
+        event.error_messages_as_string.should contain("not today")
+        UserQuery.new.select_count.should eq 1
+      end
+
+      user = UserBox.create
+
+      expect_raises(Avram::InvalidOperationError) do
         FailedToDeleteUser.destroy!(user)
       end
     end

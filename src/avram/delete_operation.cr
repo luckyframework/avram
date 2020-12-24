@@ -50,10 +50,13 @@ abstract class Avram::DeleteOperation(T)
     before_delete
 
     if valid?
-      @record.delete
+      result = delete_or_soft_delete(@record)
+      @record = result
       after_delete(@record)
+      published_delete_success_event
       mark_as_deleted
     else
+      published_delete_failed_event
       mark_as_failed
     end
   end
@@ -77,6 +80,11 @@ abstract class Avram::DeleteOperation(T)
     true
   end
 
+  # Returns true if the operation has run and saved the record successfully
+  def deleted?
+    delete_status == DeleteStatus::Deleted
+  end
+
   def mark_as_failed
     self.delete_status = DeleteStatus::DeleteFailed
     false
@@ -85,6 +93,30 @@ abstract class Avram::DeleteOperation(T)
   def before_delete; end
 
   def after_delete(_record : T); end
+
+  # :nodoc:
+  def published_delete_failed_event
+    Avram::Events::DeleteFailedEvent.publish(
+      operation_class: self.class.name,
+      errors: errors
+    )
+  end
+
+  # :nodoc:
+  def published_delete_success_event
+    Avram::Events::DeleteSuccessEvent.publish(
+      operation_class: self.class.name
+    )
+  end
+
+  private def delete_or_soft_delete(record : T) : T
+    result = if record.is_a?(Avram::SoftDelete::Model)
+      record.soft_delete
+    else
+      record.delete
+      record
+    end
+  end
 
   # :nodoc:
   macro add_column_attributes(attributes)
