@@ -38,6 +38,7 @@ private class NeedyDeleteOperation < Post::DeleteOperation
   needs user : User
   needs notification_message : String?
   needs no_number : Int32 = 4
+  attribute confirm_delete : String
 end
 
 describe "Avram::Operation needs" do
@@ -101,16 +102,28 @@ describe "Avram::SaveOperation needs" do
   end
 end
 
-describe "Avram::DeleteOperation needs", focus: true do
+describe "Avram::DeleteOperation needs" do
   it "sets up a method arg for destroy" do
-    params = Avram::Params.new({"notification_message" => "is this thing on?"})
+    user = UserBox.create
+    post = PostBox.create
+
+    NeedyDeleteOperation.destroy(post, user: user, notification_message: "is this thing on?") do |operation, _record|
+      operation.notification_message.should eq("is this thing on?")
+      operation.no_number.should eq(4)
+      operation.user.should eq(user)
+    end
+  end
+
+  it "also generates named args for other attributes" do
+    params = Avram::Params.new({"confirm_delete" => "yeah, do it"})
     user = UserBox.create
     post = PostBox.create
 
     NeedyDeleteOperation.destroy(post, params, user: user, notification_message: nil) do |operation, _record|
-      operation.notification_message.value.should eq("is this thing on?")
-      operation.no_number.value.should eq(4)
-      operation.user.value.should eq(user)
+      operation.notification_message.should be_nil
+      operation.no_number.should eq(4)
+      operation.user.should eq(user)
+      operation.confirm_delete.value.should eq("yeah, do it")
     end
   end
 end
