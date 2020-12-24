@@ -88,7 +88,7 @@ describe "attribute in operations" do
       :created_at,
       :updated_at,
       :title,
-      :published_at
+      :published_at,
     ]
   end
 

@@ -16,7 +16,6 @@ private class DeleteWithCascade < Business::DeleteOperation
 end
 
 describe "Avram::DeleteOperation" do
-
   describe "destroy" do
     it "deletes the specified record" do
       user = UserBox.create
@@ -73,7 +72,7 @@ describe "Avram::DeleteOperation" do
   describe "cascade deletes" do
     it "deletes the object and associated" do
       business = BusinessBox.create
-      email_address = EmailAddressBox.create &.business_id(business.id)
+      EmailAddressBox.create &.business_id(business.id)
 
       EmailAddress::BaseQuery.new.select_count.should eq(1)
 

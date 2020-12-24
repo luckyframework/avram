@@ -111,11 +111,11 @@ abstract class Avram::DeleteOperation(T)
 
   private def delete_or_soft_delete(record : T) : T
     result = if record.is_a?(Avram::SoftDelete::Model)
-      record.soft_delete
-    else
-      record.delete
-      record
-    end
+               record.soft_delete
+             else
+               record.delete
+               record
+             end
   end
 
   # :nodoc:

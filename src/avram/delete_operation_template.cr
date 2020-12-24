@@ -11,8 +11,6 @@ class Avram::DeleteOperationTemplate
     end
 
     class ::{{ type }}::DeleteOperation < Avram::DeleteOperation({{ type }})
-      {% primary_key_type = type.resolve.constant("PRIMARY_KEY_TYPE") %}
-
       macro inherited
         FOREIGN_KEY = "{{ type.stringify.underscore.id }}_id"
       end
