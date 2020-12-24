@@ -7,9 +7,7 @@ require "./mark_as_failed"
 require "./param_key_override"
 require "./inherit_column_attributes"
 require "./validations"
-require "./define_attribute"
 require "./operation_errors"
-require "./param_key_override"
 
 abstract class Avram::SaveOperation(T)
   include Avram::DefineAttribute
