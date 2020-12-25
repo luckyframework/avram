@@ -129,7 +129,6 @@ module Avram::NeedyInitializerAndDeleteMethods
         if operation.delete
           yield operation, operation.record.not_nil!
         else
-          #operation.published_delete_failed_event
           yield operation, nil
         end
       {% end %}
