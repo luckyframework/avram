@@ -4,12 +4,14 @@ describe Avram::Model do
   describe "has_many" do
     it "gets the related records" do
       post = PostBox.create
+      post2 = PostBox.create
       comment = CommentBox.new.post_id(post.id).create
 
       post = Post::BaseQuery.new.find(post.id)
 
-      post.comments.to_a.should eq [comment]
+      post.comments.should eq [comment]
       comment.post.should eq post
+      post2.comments.size.should eq 0
     end
 
     it "gets the related records for nilable association that exists" do
@@ -45,10 +47,12 @@ describe Avram::Model do
     it "joins the two associations" do
       tag = TagBox.create
       post = PostBox.create
+      post2 = PostBox.create
       TagBox.create
       TaggingBox.new.tag_id(tag.id).post_id(post.id).create
 
       post.tags.should eq [tag]
+      post2.tags.size.should eq 0
     end
 
     it "counts has_many through belongs_to associations" do

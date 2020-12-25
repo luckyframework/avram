@@ -185,9 +185,9 @@ abstract class Avram::Model
   macro setup_association_queries(associations, *args, **named_args)
     {% for assoc in associations %}
       def {{ assoc[:assoc_name] }}_query
-        {% if assoc[:type] == :has_many %}
+        {% if assoc[:relationship_type] == :has_many %}
           {{ assoc[:type] }}::BaseQuery.new.{{ assoc[:foreign_key].id }}(id)
-        {% elsif assoc[:type] == :belongs_to %}
+        {% elsif assoc[:relationship_type] == :belongs_to %}
           {{ assoc[:type] }}::BaseQuery.new.id({{ assoc[:foreign_key].id }})
         {% else %}
           {{ assoc[:type] }}::BaseQuery.new
