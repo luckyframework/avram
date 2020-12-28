@@ -236,6 +236,11 @@
       
     </li>
   
+  <li class=" " data-id="avram/Avram/FailedMigration" data-name="avram::failedmigration">
+      <a href="../Avram/FailedMigration.html">FailedMigration</a>
+      
+    </li>
+  
   <li class=" " data-id="avram/Avram/FailedOperation" data-name="avram::failedoperation">
       <a href="../Avram/FailedOperation.html">FailedOperation</a>
       
@@ -966,6 +971,11 @@
       
     </li>
   
+  <li class=" " data-id="avram/BaseTask" data-name="basetask">
+      <a href="../BaseTask.html">BaseTask</a>
+      
+    </li>
+  
   <li class="parent " data-id="avram/Bool" data-name="bool">
       <a href="../Bool.html">Bool</a>
       
@@ -1375,7 +1385,7 @@
 </h1>
 
 
-  <ul class="superclass-hierarchy"><li class="superclass"><a href="../Db/Create.html">Db::Create</a></li><li class="superclass">LuckyCli::Task</li><li class="superclass">Reference</li><li class="superclass"><a href="../Object.html">Object</a></li></ul>
+  <ul class="superclass-hierarchy"><li class="superclass"><a href="../Db/Create.html">Db::Create</a></li><li class="superclass"><a href="../BaseTask.html">BaseTask</a></li><li class="superclass">LuckyCli::Task</li><li class="superclass">Reference</li><li class="superclass"><a href="../Object.html">Object</a></li></ul>
 
 
 
@@ -1458,11 +1468,6 @@
   <ul class="list-summary">
     
       <li class="entry-summary">
-        <a href="#call-instance-method" class="signature"><strong>#call</strong></a>
-        
-      </li>
-    
-      <li class="entry-summary">
         <a href="#help_message-instance-method" class="signature"><strong>#help_message</strong></a>
         
       </li>
@@ -1507,6 +1512,11 @@
       </li>
     
       <li class="entry-summary">
+        <a href="#run_task-instance-method" class="signature"><strong>#run_task</strong></a>
+        
+      </li>
+    
+      <li class="entry-summary">
         <a href="#summary-instance-method" class="signature"><strong>#summary</strong></a>
         
       </li>
@@ -1518,6 +1528,65 @@
 
 
 <div class="methods-inherited">
+  
+    
+
+  <h3>Instance methods inherited from class <code><a href="../BaseTask.html">BaseTask</a></code></h3>
+  
+  
+    <a href="../BaseTask.html#call-instance-method" class="tooltip">
+      <span>call</span>
+    call</a>, 
+    
+  
+    <a href="../BaseTask.html#help_message-instance-method" class="tooltip">
+      <span>help_message</span>
+    help_message</a>, 
+    
+  
+    <a href="../BaseTask.html#name-instance-method" class="tooltip">
+      <span>name</span>
+    name</a>, 
+    
+  
+    <a href="../BaseTask.html#option_parser:OptionParser-instance-method" class="tooltip">
+      <span>option_parser : OptionParser</span>
+    option_parser</a>, 
+    
+  
+    <a href="../BaseTask.html#option_parser=(option_parser:OptionParser)-instance-method" class="tooltip">
+      <span>option_parser=(option_parser : OptionParser)</span>
+    option_parser=</a>, 
+    
+  
+    <a href="../BaseTask.html#output:IO-instance-method" class="tooltip">
+      <span>output : IO</span>
+    output</a>, 
+    
+  
+    <a href="../BaseTask.html#output=(output:IO)-instance-method" class="tooltip">
+      <span>output=(output : IO)</span>
+    output=</a>, 
+    
+  
+    <a href="../BaseTask.html#print_help_or_call(args:Array(String),io:IO)-instance-method" class="tooltip">
+      <span>print_help_or_call(args : Array(String), io : IO)<br/>print_help_or_call(args : Array(String))</span>
+    print_help_or_call</a>, 
+    
+  
+    <a href="../BaseTask.html#run_task-instance-method" class="tooltip">
+      <span>run_task</span>
+    run_task</a>
+    
+  
+
+
+    
+
+
+    
+
+
   
     
 
@@ -1597,20 +1666,6 @@
 </a>
     Instance Method Detail
   </h2>
-  
-    <div class="entry-detail" id="call-instance-method">
-      <div class="signature">
-        
-        def <strong>call</strong>
-
-        <a class="method-permalink" href="#call-instance-method">#</a>
-      </div>
-      
-      <br/>
-      <div>
-        
-      </div>
-    </div>
   
     <div class="entry-detail" id="help_message-instance-method">
       <div class="signature">
@@ -1723,6 +1778,20 @@
         def <strong>print_help_or_call</strong>(args : <a href="../Array.html">Array</a>(<a href="../String.html">String</a>))
 
         <a class="method-permalink" href="#print_help_or_call(args:Array(String))-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="run_task-instance-method">
+      <div class="signature">
+        
+        def <strong>run_task</strong>
+
+        <a class="method-permalink" href="#run_task-instance-method">#</a>
       </div>
       
       <br/>

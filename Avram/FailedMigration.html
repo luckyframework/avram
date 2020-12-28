@@ -18,7 +18,7 @@
 </svg>
 
   <meta id="repository-name" content="avram">
-  <title>Avram::DefineAttribute - avram 0.18.1</title>
+  <title>Avram::FailedMigration - avram 0.18.1</title>
   <script type="text/javascript">
     CrystalDocs.base_path = "../";
   </script>
@@ -201,7 +201,7 @@
       
     </li>
   
-  <li class=" current" data-id="avram/Avram/DefineAttribute" data-name="avram::defineattribute">
+  <li class=" " data-id="avram/Avram/DefineAttribute" data-name="avram::defineattribute">
       <a href="../Avram/DefineAttribute.html">DefineAttribute</a>
       
     </li>
@@ -236,7 +236,7 @@
       
     </li>
   
-  <li class=" " data-id="avram/Avram/FailedMigration" data-name="avram::failedmigration">
+  <li class=" current" data-id="avram/Avram/FailedMigration" data-name="avram::failedmigration">
       <a href="../Avram/FailedMigration.html">FailedMigration</a>
       
     </li>
@@ -1380,11 +1380,12 @@
 <div class="main-content">
 <h1 class="type-name">
 
-  <span class="kind">module</span> Avram::DefineAttribute
+  <span class="kind">class</span> Avram::FailedMigration
 
 </h1>
 
 
+  <ul class="superclass-hierarchy"><li class="superclass"><a href="../Avram/FailedMigration.html">Avram::FailedMigration</a></li><li class="superclass"><a href="../Avram/AvramError.html">Avram::AvramError</a></li><li class="superclass">Exception</li><li class="superclass">Reference</li><li class="superclass"><a href="../Object.html">Object</a></li></ul>
 
 
 
@@ -1398,21 +1399,6 @@
 
 
 
-  <h2>
-    <a id="direct-including-types" class="anchor" href="#direct-including-types">
-  <svg class="octicon-link" aria-hidden="true">
-    <use href="#octicon-link"/>
-  </svg>
-</a>
-    Direct including types
-  </h2>
-  <ul class="other-types-list">
-    
-      <li class="other-type"><a href="../Avram/Operation.html">Avram::Operation</a></li>
-    
-      <li class="other-type"><a href="../Avram/SaveOperation.html">Avram::SaveOperation(T)</a></li>
-    
-  </ul>
 
 
 
@@ -1431,22 +1417,18 @@
 
 
 
-
-
-
-
   <h2>
-    <a id="instance-method-summary" class="anchor" href="#instance-method-summary">
+    <a id="constructors" class="anchor" href="#constructors">
   <svg class="octicon-link" aria-hidden="true">
     <use href="#octicon-link"/>
   </svg>
 </a>
-    Instance Method Summary
+    Constructors
   </h2>
   <ul class="list-summary">
     
       <li class="entry-summary">
-        <a href="#attributes-instance-method" class="signature"><strong>#attributes</strong></a>
+        <a href="#new(migration:String,statements:Array(String),cause:Exception)-class-method" class="signature"><strong>.new</strong>(migration : String, statements : Array(String), cause : Exception)</a>
         
       </li>
     
@@ -1454,64 +1436,81 @@
 
 
 
-  <h2>
-    <a id="macro-summary" class="anchor" href="#macro-summary">
-  <svg class="octicon-link" aria-hidden="true">
-    <use href="#octicon-link"/>
-  </svg>
-</a>
-    Macro Summary
-  </h2>
-  <ul class="list-summary">
-    
-      <li class="entry-summary">
-        <a href="#attribute(type_declaration)-macro" class="signature"><strong>attribute</strong>(type_declaration)</a>
-        
-      </li>
-    
-      <li class="entry-summary">
-        <a href="#ensure_base_attributes_method_is_present-macro" class="signature"><strong>ensure_base_attributes_method_is_present</strong></a>
-        
-      </li>
-    
-      <li class="entry-summary">
-        <a href="#file_attribute(key)-macro" class="signature"><strong>file_attribute</strong>(key)</a>
-        
-      </li>
-    
-      <li class="entry-summary">
-        <a href="#inherit_attributes-macro" class="signature"><strong>inherit_attributes</strong></a>
-        
-      </li>
-    
-  </ul>
+
+
+
 
 
 
 <div class="methods-inherited">
   
+    
+
+
+    
+
+
+    
+
+
+  
+    
+
+
+    
+
+
+    
+
+
+  
+    
+
+
+    
+
+
+    
+
+
+  
+    
+
+  <h3>Instance methods inherited from class <code><a href="../Object.html">Object</a></code></h3>
+  
+  
+    <a href="../Object.html#blank_for_validates_required?:Bool-instance-method" class="tooltip">
+      <span>blank_for_validates_required? : Bool</span>
+    blank_for_validates_required?</a>
+    
+  
+
+
+    
+
+
+    
+
+
+  
 </div>
 
 
-
-
-
-
   <h2>
-    <a id="instance-method-detail" class="anchor" href="#instance-method-detail">
+    <a id="constructor-detail" class="anchor" href="#constructor-detail">
   <svg class="octicon-link" aria-hidden="true">
     <use href="#octicon-link"/>
   </svg>
 </a>
-    Instance Method Detail
+    Constructor Detail
   </h2>
   
-    <div class="entry-detail" id="attributes-instance-method">
+    <div class="entry-detail" id="new(migration:String,statements:Array(String),cause:Exception)-class-method">
       <div class="signature">
         
-        def <strong>attributes</strong>
+        def self.<strong>new</strong>(migration : <a href="../String.html">String</a>, statements : <a href="../Array.html">Array</a>(<a href="../String.html">String</a>), cause : Exception)
 
-        <a class="method-permalink" href="#attributes-instance-method">#</a>
+        <a class="method-permalink" href="#new(migration:String,statements:Array(String),cause:Exception)-class-method">#</a>
       </div>
       
       <br/>
@@ -1523,71 +1522,9 @@
 
 
 
-  <h2>
-    <a id="macro-detail" class="anchor" href="#macro-detail">
-  <svg class="octicon-link" aria-hidden="true">
-    <use href="#octicon-link"/>
-  </svg>
-</a>
-    Macro Detail
-  </h2>
-  
-    <div class="entry-detail" id="attribute(type_declaration)-macro">
-      <div class="signature">
-        
-        macro <strong>attribute</strong>(type_declaration)
 
-        <a class="method-permalink" href="#attribute(type_declaration)-macro">#</a>
-      </div>
-      
-      <br/>
-      <div>
-        
-      </div>
-    </div>
-  
-    <div class="entry-detail" id="ensure_base_attributes_method_is_present-macro">
-      <div class="signature">
-        
-        macro <strong>ensure_base_attributes_method_is_present</strong>
 
-        <a class="method-permalink" href="#ensure_base_attributes_method_is_present-macro">#</a>
-      </div>
-      
-      <br/>
-      <div>
-        
-      </div>
-    </div>
-  
-    <div class="entry-detail" id="file_attribute(key)-macro">
-      <div class="signature">
-        
-        macro <strong>file_attribute</strong>(key)
 
-        <a class="method-permalink" href="#file_attribute(key)-macro">#</a>
-      </div>
-      
-      <br/>
-      <div>
-        
-      </div>
-    </div>
-  
-    <div class="entry-detail" id="inherit_attributes-macro">
-      <div class="signature">
-        
-        macro <strong>inherit_attributes</strong>
-
-        <a class="method-permalink" href="#inherit_attributes-macro">#</a>
-      </div>
-      
-      <br/>
-      <div>
-        
-      </div>
-    </div>
-  
 
 
 </div>
