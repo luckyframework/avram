@@ -97,15 +97,7 @@ abstract class Avram::Migrator::Migration::V1
       end
     end
   rescue e : PQ::PQError
-    raise <<-ERROR
-    There was a problem running this statement:
-
-      #{statements.join("\n")}
-
-    Problem:
-
-      #{e.message}
-    ERROR
+    raise FailedMigration.new(migration: self.class.name, statements: statements, cause: e)
   end
 
   def reset_prepared_statements

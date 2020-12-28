@@ -189,7 +189,5 @@ class Avram::Migrator::Runner
     end
   rescue e : DB::ConnectionRefused
     raise "Unable to connect to the database. Please check your configuration.".colorize(:red).to_s
-  rescue e : Exception
-    raise "Unexpected error while running migrations: #{e.message}".colorize(:red).to_s
   end
 end
