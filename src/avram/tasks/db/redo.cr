@@ -1,6 +1,6 @@
 require "colorize"
 
-class Db::Redo < LuckyCli::Task
+class Db::Redo < BaseTask
   summary "Rollback and run just the last migration"
 
   def help_message
@@ -14,8 +14,8 @@ class Db::Redo < LuckyCli::Task
     TEXT
   end
 
-  def call
-    Db::Rollback.new.call
-    Db::Migrate.new.call
+  def run_task
+    Db::Rollback.new.run_task
+    Db::Migrate.new.run_task
   end
 end

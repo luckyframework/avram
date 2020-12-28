@@ -4,7 +4,7 @@ include CleanupHelper
 describe Db::Schema::Dump do
   it "generates a new sql dump file" do
     with_cleanup do
-      Db::Schema::Dump.new("structure.sql").call
+      Db::Schema::Dump.new("structure.sql").run_task
 
       filename = "structure.sql"
       File.exists?(filename).should eq true

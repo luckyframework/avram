@@ -1,4 +1,4 @@
-class Db::VerifyConnection < LuckyCli::Task
+class Db::VerifyConnection < BaseTask
   summary "Verify connection to postgres"
   getter? quiet
 
@@ -19,7 +19,7 @@ class Db::VerifyConnection < LuckyCli::Task
     TEXT
   end
 
-  def call
+  def run_task
     DB.open(Avram::Migrator::Runner.database_url) do |_db|
     end
     puts "✔ Connection verified" unless quiet?
