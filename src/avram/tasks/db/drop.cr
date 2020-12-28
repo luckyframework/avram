@@ -1,13 +1,11 @@
 require "colorize"
 
-class Db::Drop < LuckyCli::Task
+class Db::Drop < BaseTask
   summary "Drop the database"
 
-  def call
-    Avram::Migrator.run do
-      Avram::Migrator::Runner.drop_db
-      puts "Done dropping #{Avram::Migrator::Runner.db_name.colorize(:green)}"
-    end
+  def run_task
+    Avram::Migrator::Runner.drop_db
+    puts "Done dropping #{Avram::Migrator::Runner.db_name.colorize(:green)}"
   end
 
   def help_message

@@ -1,9 +1,9 @@
 require "shell-table"
 
-class Db::Migrations::Status < LuckyCli::Task
+class Db::Migrations::Status < BaseTask
   summary "Print the current status of migrations"
 
-  def call
+  def run_task
     if migrations.none?
       puts "There are no migrations.".colorize(:green)
     else

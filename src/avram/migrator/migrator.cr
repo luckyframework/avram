@@ -1,9 +1,8 @@
 module Avram::Migrator
   def self.run
     yield
-  rescue e : PQ::PQError
-    raise e.message.colorize(:red).to_s
-  rescue e : Exception
-    raise e.message.to_s
+  rescue e
+    puts e.inspect_with_backtrace
+    exit 1
   end
 end

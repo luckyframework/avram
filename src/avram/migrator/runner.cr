@@ -94,7 +94,7 @@ class Avram::Migrator::Runner
   end
 
   def self.dump_db(dump_to : String = "db/structure.sql", quiet : Bool = false)
-    Db::VerifyConnection.new(quiet: true).call
+    Db::VerifyConnection.new(quiet: true).run_task
     run "pg_dump -s #{cmd_args} > #{dump_to}"
     unless quiet
       puts "Done dumping #{db_name.colorize(:green)}"
@@ -189,7 +189,5 @@ class Avram::Migrator::Runner
     end
   rescue e : DB::ConnectionRefused
     raise "Unable to connect to the database. Please check your configuration.".colorize(:red).to_s
-  rescue e : Exception
-    raise "Unexpected error while running migrations: #{e.message}".colorize(:red).to_s
   end
 end

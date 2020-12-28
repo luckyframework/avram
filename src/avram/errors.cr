@@ -146,4 +146,21 @@ module Avram
   # Used when `Avram::Operation` fails.
   class FailedOperation < AvramError
   end
+
+  class FailedMigration < AvramError
+    def initialize(@migration : String, statements : Array(String), cause : Exception)
+      super(message(statements), cause)
+    end
+
+    private def message(statements : Array(String))
+      <<-ERROR
+      Error occurred while performing a migration.
+
+      Migration: #{@migration}
+
+      Statements:
+        #{statements.join("\n")}
+      ERROR
+    end
+  end
 end
