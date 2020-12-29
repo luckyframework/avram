@@ -151,4 +151,38 @@ module Avram::Validations
       end
     end
   end
+
+  # Validate a number is `greater_than` and/or `less_than`
+  #
+  # ```
+  # validate_numeric age, greater_than: 18
+  # validate_numeric count, greater_than: 0, less_than: 1200
+  # ```
+  def validate_numeric(
+    attribute : Avram::Attribute(Number?),
+    greater_than = nil,
+    less_than = nil,
+    allow_nil : Bool = false
+  )
+    if greater_than && less_than && greater_than > less_than
+      raise ImpossibleValidation.new(
+        attribute: attribute.name,
+        message: "number greater than #{greater_than} but less than #{less_than}")
+    end
+
+    number = attribute.value
+
+    if number.nil?
+      attribute.add_error "is nil" unless allow_nil
+      return
+    end
+
+    if greater_than && number < greater_than
+      attribute.add_error "is too small"
+    end
+
+    if less_than && number > less_than
+      attribute.add_error "is too large"
+    end
+  end
 end

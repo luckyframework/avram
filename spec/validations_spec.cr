@@ -262,4 +262,50 @@ describe Avram::Validations do
       just_nil.valid?.should be_false
     end
   end
+
+  describe "validate_numeric" do
+    it "validates" do
+      too_small_attribute = attribute(1)
+      Avram::Validations.validate_numeric(too_small_attribute, greater_than: 2)
+      too_small_attribute.errors.should eq(["is too small"])
+
+      too_large_attribute = attribute(38)
+      Avram::Validations.validate_numeric(too_large_attribute, less_than: 32)
+      too_large_attribute.errors.should eq(["is too large"])
+
+      just_right_attribute = attribute(10)
+      Avram::Validations.validate_numeric(just_right_attribute, greater_than: 9, less_than: 11)
+      just_right_attribute.valid?.should be_true
+    end
+
+    it "raises an error for an impossible condition" do
+      expect_raises(Avram::ImpossibleValidation) do
+        Avram::Validations.validate_numeric attribute(100), greater_than: 4, less_than: 1
+      end
+    end
+
+    it "can allow nil" do
+      just_nil = attribute(nil)
+      Avram::Validations.validate_numeric(just_nil, greater_than: 1, less_than: 2, allow_nil: true)
+      just_nil.valid?.should be_true
+
+      just_nil = attribute(nil)
+      Avram::Validations.validate_numeric(just_nil, greater_than: 1, less_than: 2)
+      just_nil.valid?.should be_false
+    end
+
+    it "handles different types of numbers" do
+      attribute = attribute(10.9)
+      Avram::Validations.validate_numeric(attribute, greater_than: 9, less_than: 11)
+      attribute.valid?.should be_true
+
+      attribute = attribute(10)
+      Avram::Validations.validate_numeric(attribute, greater_than: 9.8, less_than: 10.9)
+      attribute.valid?.should be_true
+
+      attribute = attribute(10_i64)
+      Avram::Validations.validate_numeric(attribute, greater_than: 9, less_than: 11)
+      attribute.valid?.should be_true
+    end
+  end
 end
