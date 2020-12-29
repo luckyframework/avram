@@ -94,6 +94,18 @@ module Avram::NeedyInitializerAndDeleteMethods
   end
 
   macro generate_destroy(attribute_method_args, attribute_params, with_params, with_bang)
+    def self.delete{% if with_bang %}!{% end %}(*args, **named_args{% if !with_bang %}, &block{% end %})
+      {% raise <<-ERROR
+      DeleteOperations do not have a 'delete' method.
+
+      Try this...
+
+        ▸ Use 'destroy' to delete a record
+
+      ERROR
+      %}
+    end
+
     def self.destroy{% if with_bang %}!{% end %}(
       record : T,
       params : Hash,

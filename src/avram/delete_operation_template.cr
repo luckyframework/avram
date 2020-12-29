@@ -11,9 +11,6 @@ class Avram::DeleteOperationTemplate
     end
 
     class ::{{ type }}::DeleteOperation < Avram::DeleteOperation({{ type }})
-      macro inherited
-        FOREIGN_KEY = "{{ type.stringify.underscore.id }}_id"
-      end
 
       add_column_attributes({{ columns }})
     end

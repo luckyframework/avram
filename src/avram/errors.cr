@@ -43,7 +43,7 @@ module Avram
 
     def initialize(operation)
       message = String.build do |string|
-        string << "Could not complete #{operation.class.name}."
+        string << "Could not perform #{operation.class.name}."
         string << "\n"
         string << "\n"
         operation.errors.each do |attribute_name, errors|
