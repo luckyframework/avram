@@ -9,8 +9,7 @@ module Avram::NeedyInitializerAndDeleteMethods
 
   macro needs(type_declaration)
     {% OPERATION_NEEDS << type_declaration %}
-    @{{ type_declaration.var }} : {{ type_declaration.type }}
-    property {{ type_declaration.var }}
+    property {{ type_declaration.var }} : {{ type_declaration.type }}
   end
 
   macro inherit_needs
@@ -29,17 +28,16 @@ module Avram::NeedyInitializerAndDeleteMethods
     end
 
     macro finished
-      # @type is not correct in this method, but is in the macro we call below
-      # That is why this extrac macro was extracted. We need @type to get the
-      # attributes for this SaveOperation
-      generate_initializer_and_save_methods
+      # This is called at the end so @type will be of the subclass,
+      # and not the parent abstract class.
+      generate_initializer_and_destroy_methods
     end
   end
 
-  macro generate_initializer_and_save_methods
+  macro generate_initializer_and_destroy_methods
     # Build up a list of method arguments
     #
-    # These method arguments can be used in macros fro generating create/update/new
+    # These method arguments can be used in macros for generating destroy/new
     #
     # This way everything has a name and type and we don't have to rely on
     # **named_args. **named_args** are easy but you get horrible type errors.
@@ -95,15 +93,17 @@ module Avram::NeedyInitializerAndDeleteMethods
 
   macro generate_destroy(attribute_method_args, attribute_params, with_params, with_bang)
     def self.delete{% if with_bang %}!{% end %}(*args, **named_args{% if !with_bang %}, &block{% end %})
-      {% raise <<-ERROR
-      DeleteOperations do not have a 'delete' method.
+      {% verbatim do %}
+        {% raise <<-ERROR
+        DeleteOperations do not have a 'delete' method.
 
-      Try this...
+        Try this...
 
-        ▸ Use 'destroy' to delete a record
+          ▸ Use 'destroy' to delete a record
 
-      ERROR
-      %}
+        ERROR
+        %}
+      {% end %}
     end
 
     def self.destroy{% if with_bang %}!{% end %}(
