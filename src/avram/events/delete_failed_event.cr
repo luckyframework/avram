@@ -9,7 +9,7 @@ class Avram::Events::DeleteFailedEvent < Pulsar::Event
 
   def error_messages_as_string
     String.build do |msg|
-      errors.map do |key, messages|
+      errors.each do |key, messages|
         msg << "#{key} #{messages.join(", ")}"
       end
     end

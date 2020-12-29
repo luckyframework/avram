@@ -36,7 +36,7 @@ describe "Avram::DeleteOperation" do
       end
     end
 
-    it "fails to delete the specified record" do
+    it "does not delete if the operation is invalid" do
       user = UserBox.create
 
       FailedToDeleteUser.destroy(user) do |operation, deleted_user|
@@ -74,6 +74,7 @@ describe "Avram::DeleteOperation" do
       deleted_item = SoftDeleteItem.destroy!(item)
 
       deleted_item.soft_deleted?.should be_true
+      SoftDeletableItem::BaseQuery.new.find(deleted_item.id).should eq item
     end
   end
 
@@ -93,22 +94,21 @@ describe "Avram::DeleteOperation" do
 
   describe "publishes" do
     it "publishes a successful delete" do
+      events = [] of Avram::Events::DeleteSuccessEvent
       Avram::Events::DeleteSuccessEvent.subscribe do |event|
-        if event.operation_class == "BasicDeleteUser"
-          UserQuery.new.select_count.should eq 0
-        end
+        events << event
       end
 
       user = UserBox.create
 
       BasicDeleteUser.destroy!(user)
+      events.map(&.operation_class).should contain("BasicDeleteUser")
     end
 
     it "publishes a failed delete" do
+      events = [] of Avram::Events::DeleteFailedEvent
       Avram::Events::DeleteFailedEvent.subscribe do |event|
-        event.operation_class.should eq("FailedToDeleteUser")
-        event.error_messages_as_string.should contain("not today")
-        UserQuery.new.select_count.should eq 1
+        events << event
       end
 
       user = UserBox.create
@@ -116,6 +116,11 @@ describe "Avram::DeleteOperation" do
       expect_raises(Avram::InvalidOperationError) do
         FailedToDeleteUser.destroy!(user)
       end
+
+      events.map(&.operation_class).should contain("FailedToDeleteUser")
+      events.map(&.error_messages_as_string).should contain("nope not today")
+
+      UserQuery.new.select_count.should eq 1
     end
   end
 
@@ -123,7 +128,7 @@ describe "Avram::DeleteOperation" do
     it "adds the error and fails to save" do
       post = PostBox.create &.title("sandbox")
 
-      DeleteOperationWithAccessToModelValues.destroy(post) do |operation, deleted_post|
+      DeleteOperationWithAccessToModelValues.destroy(post) do |operation, _deleted_post|
         operation.deleted?.should be_false
         operation.errors[:title].should contain("You can't delete your sandbox")
       end

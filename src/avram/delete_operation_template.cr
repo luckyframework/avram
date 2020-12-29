@@ -1,11 +1,6 @@
 class Avram::DeleteOperationTemplate
   macro setup(type, columns, *args, **named_args)
 
-    # This makes it easy for plugins and extensions to use the base SaveOperation
-    def base_query_class : ::{{ type }}::BaseQuery.class
-      ::{{ type }}::BaseQuery
-    end
-
     def delete_operation_class : ::{{ type }}::DeleteOperation.class
       ::{{ type }}::DeleteOperation
     end
