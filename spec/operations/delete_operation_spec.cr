@@ -15,6 +15,14 @@ end
 private class DeleteWithCascade < Business::DeleteOperation
 end
 
+private class DeleteOperationWithAccessToModelValues < Post::DeleteOperation
+  before_delete do
+    if record.title == "sandbox"
+      title.add_error("You can't delete your sandbox")
+    end
+  end
+end
+
 describe "Avram::DeleteOperation" do
   describe "destroy" do
     it "deletes the specified record" do
@@ -107,6 +115,17 @@ describe "Avram::DeleteOperation" do
 
       expect_raises(Avram::InvalidOperationError) do
         FailedToDeleteUser.destroy!(user)
+      end
+    end
+  end
+
+  context "using the model for conditional deletes" do
+    it "adds the error and fails to save" do
+      post = PostBox.create &.title("sandbox")
+
+      DeleteOperationWithAccessToModelValues.destroy(post) do |operation, deleted_post|
+        operation.deleted?.should be_false
+        operation.errors[:title].should contain("You can't delete your sandbox")
       end
     end
   end
