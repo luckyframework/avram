@@ -1,6 +1,6 @@
 require "colorize"
 
-class Db::RollbackAll < LuckyCli::Task
+class Db::RollbackAll < BaseTask
   summary "Rollback all migrations"
 
   def help_message
@@ -16,10 +16,8 @@ class Db::RollbackAll < LuckyCli::Task
     TEXT
   end
 
-  def call
-    Avram::Migrator.run do
-      Avram::Migrator::Runner.new.rollback_all
-      puts "Done rolling back all migrations".colorize(:green)
-    end
+  def run_task
+    Avram::Migrator::Runner.new.rollback_all
+    puts "Done rolling back all migrations".colorize(:green)
   end
 end

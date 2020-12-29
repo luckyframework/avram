@@ -15,9 +15,9 @@ backend = Log::IOBackend.new(STDERR)
 backend.formatter = Dexter::JSONLogFormatter.proc
 Log.builder.bind("avram.*", :error, backend)
 
-Db::Create.new(quiet: true).call
-Db::Migrate.new(quiet: true).call
-Db::VerifyConnection.new(quiet: true).call
+Db::Create.new(quiet: true).run_task
+Db::Migrate.new(quiet: true).run_task
+Db::VerifyConnection.new(quiet: true).run_task
 
 Spec.before_each do
   TestDatabase.truncate

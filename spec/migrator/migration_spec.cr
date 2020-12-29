@@ -66,7 +66,7 @@ end
 
 describe Avram::Migrator::Migration::V1 do
   it "executes statements in a transaction" do
-    expect_raises Exception, %(relation "table_does_not_exist" does not exist) do
+    expect_raises Avram::FailedMigration do
       MigrationThatPartiallyWorks::V999.new.up
     end
 

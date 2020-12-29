@@ -1,4 +1,4 @@
-class Db::Setup < LuckyCli::Task
+class Db::Setup < BaseTask
   summary "Runs a few tasks for setting up your database"
 
   def initialize(@quiet : Bool = false)
@@ -21,10 +21,8 @@ class Db::Setup < LuckyCli::Task
     TEXT
   end
 
-  def call
-    Avram::Migrator.run do
-      Avram::Migrator::Runner.create_db(@quiet)
-      Avram::Migrator::Runner.new(@quiet).run_pending_migrations
-    end
+  def run_task
+    Avram::Migrator::Runner.create_db(@quiet)
+    Avram::Migrator::Runner.new(@quiet).run_pending_migrations
   end
 end

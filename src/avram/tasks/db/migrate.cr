@@ -1,6 +1,6 @@
 require "colorize"
 
-class Db::Migrate < LuckyCli::Task
+class Db::Migrate < BaseTask
   summary "Run any pending migrations"
 
   def initialize(@quiet : Bool = false)
@@ -18,9 +18,7 @@ class Db::Migrate < LuckyCli::Task
     TEXT
   end
 
-  def call
-    Avram::Migrator.run do
-      Avram::Migrator::Runner.new(@quiet).run_pending_migrations
-    end
+  def run_task
+    Avram::Migrator::Runner.new(@quiet).run_pending_migrations
   end
 end
