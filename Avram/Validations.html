@@ -1508,6 +1508,13 @@
       </li>
     
       <li class="entry-summary">
+        <a href="#validate_numeric(attribute:Avram::Attribute(Number?),greater_than=nil,less_than=nil,allow_nil:Bool=false)-instance-method" class="signature"><strong>#validate_numeric</strong>(attribute : Avram::Attribute(Number?), greater_than = <span class="n">nil</span>, less_than = <span class="n">nil</span>, allow_nil : Bool = <span class="n">false</span>)</a>
+        
+          <div class="summary"><p>Validate a number is <code>greater_than</code> and/or <code>less_than</code></p></div>
+        
+      </li>
+    
+      <li class="entry-summary">
         <a href="#validate_required(*attributes,message:Avram::Attribute::ErrorMessage=&quot;isrequired&quot;)-instance-method" class="signature"><strong>#validate_required</strong>(*attributes, message : Avram::Attribute::ErrorMessage = <span class="s">&quot;is required&quot;</span>)</a>
         
           <div class="summary"><p>Validates that the passed in attributes have values</p></div>
@@ -1666,6 +1673,28 @@ field invalid.</p>
 <pre><code>validate_inclusion_of state, <span class="k">in</span>: [<span class="s">&quot;NY&quot;</span>, <span class="s">&quot;MA&quot;</span>]</code></pre>
 
 <p>This will mark <code>state</code> as invalid unless the value is <code>"NY"</code>, or <code>"MA"</code>.</p>
+        </div>
+      
+      <br/>
+      <div>
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="validate_numeric(attribute:Avram::Attribute(Number?),greater_than=nil,less_than=nil,allow_nil:Bool=false)-instance-method">
+      <div class="signature">
+        
+        def <strong>validate_numeric</strong>(attribute : <a href="../Avram/Attribute.html">Avram::Attribute</a>(Number?), greater_than = <span class="n">nil</span>, less_than = <span class="n">nil</span>, allow_nil : <a href="../Bool.html">Bool</a> = <span class="n">false</span>)
+
+        <a class="method-permalink" href="#validate_numeric(attribute:Avram::Attribute(Number?),greater_than=nil,less_than=nil,allow_nil:Bool=false)-instance-method">#</a>
+      </div>
+      
+        <div class="doc">
+          
+          <p>Validate a number is <code>greater_than</code> and/or <code>less_than</code></p>
+
+<pre><code>validate_numeric age, greater_than: <span class="n">18</span>
+validate_numeric count, greater_than: <span class="n">0</span>, less_than: <span class="n">1200</span></code></pre>
         </div>
       
       <br/>
