@@ -50,7 +50,7 @@ describe Avram::Migrator::CreateTableStatement do
     built.statements.size.should eq 1
     built.statements.first.should eq <<-SQL
     CREATE TABLE users (
-      id uuid PRIMARY KEY);
+      id uuid PRIMARY KEY DEFAULT gen_random_uuid());
     SQL
 
     built = Avram::Migrator::CreateTableStatement.new(:users).build do

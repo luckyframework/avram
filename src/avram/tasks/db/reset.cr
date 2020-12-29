@@ -1,6 +1,6 @@
 require "colorize"
 
-class Db::Reset < LuckyCli::Task
+class Db::Reset < BaseTask
   summary "Drop, recreate, and run migrations."
 
   def help_message
@@ -18,9 +18,9 @@ class Db::Reset < LuckyCli::Task
     TEXT
   end
 
-  def call
-    Db::Drop.new.call
-    Db::Create.new.call
-    Db::Migrate.new.call
+  def run_task
+    Db::Drop.new.run_task
+    Db::Create.new.run_task
+    Db::Migrate.new.run_task
   end
 end

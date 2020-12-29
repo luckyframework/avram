@@ -110,7 +110,7 @@ module Avram::Validations
   # validate_size_of api_key, is: 32
   # ```
   def validate_size_of(
-    attribute : Avram::Attribute,
+    attribute : Avram::Attribute(String?),
     *,
     is exact_size,
     message : Avram::Attribute::ErrorMessage = "is invalid",
@@ -121,14 +121,14 @@ module Avram::Validations
     end
   end
 
-  # Validate the size of the attribute is within a `min` and/or `max`
+  # Validate the size of a `String` is within a `min` and/or `max`
   #
   # ```
-  # validate_size_of age, min: 18, max: 100
-  # validate_size_of account_balance, min: 500
+  # validate_size_of feedback, min: 18, max: 100
+  # validate_size_of password, min: 12
   # ```
   def validate_size_of(
-    attribute : Avram::Attribute,
+    attribute : Avram::Attribute(String?),
     min = nil,
     max = nil,
     allow_nil : Bool = false
@@ -149,6 +149,40 @@ module Avram::Validations
       if !max.nil? && size > max
         attribute.add_error "is too long"
       end
+    end
+  end
+
+  # Validate a number is `greater_than` and/or `less_than`
+  #
+  # ```
+  # validate_numeric age, greater_than: 18
+  # validate_numeric count, greater_than: 0, less_than: 1200
+  # ```
+  def validate_numeric(
+    attribute : Avram::Attribute(Number?),
+    greater_than = nil,
+    less_than = nil,
+    allow_nil : Bool = false
+  )
+    if greater_than && less_than && greater_than > less_than
+      raise ImpossibleValidation.new(
+        attribute: attribute.name,
+        message: "number greater than #{greater_than} but less than #{less_than}")
+    end
+
+    number = attribute.value
+
+    if number.nil?
+      attribute.add_error "is nil" unless allow_nil
+      return
+    end
+
+    if greater_than && number < greater_than
+      attribute.add_error "is too small"
+    end
+
+    if less_than && number > less_than
+      attribute.add_error "is too large"
     end
   end
 end

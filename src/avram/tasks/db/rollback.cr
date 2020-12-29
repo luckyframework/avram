@@ -1,6 +1,6 @@
 require "colorize"
 
-class Db::Rollback < LuckyCli::Task
+class Db::Rollback < BaseTask
   summary "Rollback the last migration"
 
   def help_message
@@ -14,9 +14,7 @@ class Db::Rollback < LuckyCli::Task
     TEXT
   end
 
-  def call
-    Avram::Migrator.run do
-      Avram::Migrator::Runner.new.rollback_one
-    end
+  def run_task
+    Avram::Migrator::Runner.new.rollback_one
   end
 end
