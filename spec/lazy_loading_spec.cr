@@ -14,6 +14,9 @@ describe "Lazy loading associations" do
   end
 
   it "can lazy load has_one" do
+    # to verify it is loading the correct association, not just the first
+    SignInCredentialBox.new.user_id(AdminBox.create.id).create
+
     admin = AdminBox.create
     sign_in_credential = SignInCredentialBox.new.user_id(admin.id).create
     admin.sign_in_credential!.should eq(sign_in_credential)
