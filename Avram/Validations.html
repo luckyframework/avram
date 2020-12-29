@@ -1515,14 +1515,14 @@
       </li>
     
       <li class="entry-summary">
-        <a href="#validate_size_of(attribute:Avram::Attribute,min=nil,max=nil,allow_nil:Bool=false)-instance-method" class="signature"><strong>#validate_size_of</strong>(attribute : Avram::Attribute, min = <span class="n">nil</span>, max = <span class="n">nil</span>, allow_nil : Bool = <span class="n">false</span>)</a>
+        <a href="#validate_size_of(attribute:Avram::Attribute(String?),min=nil,max=nil,allow_nil:Bool=false)-instance-method" class="signature"><strong>#validate_size_of</strong>(attribute : Avram::Attribute(String?), min = <span class="n">nil</span>, max = <span class="n">nil</span>, allow_nil : Bool = <span class="n">false</span>)</a>
         
-          <div class="summary"><p>Validate the size of the attribute is within a <code>min</code> and/or <code>max</code></p></div>
+          <div class="summary"><p>Validate the size of a <code><a href="../String.html">String</a></code> is within a <code>min</code> and/or <code>max</code></p></div>
         
       </li>
     
       <li class="entry-summary">
-        <a href="#validate_size_of(attribute:Avram::Attribute,*,isexact_size,message:Avram::Attribute::ErrorMessage=&quot;isinvalid&quot;,allow_nil:Bool=false)-instance-method" class="signature"><strong>#validate_size_of</strong>(attribute : Avram::Attribute, *, is exact_size, message : Avram::Attribute::ErrorMessage = <span class="s">&quot;is invalid&quot;</span>, allow_nil : Bool = <span class="n">false</span>)</a>
+        <a href="#validate_size_of(attribute:Avram::Attribute(String?),*,isexact_size,message:Avram::Attribute::ErrorMessage=&quot;isinvalid&quot;,allow_nil:Bool=false)-instance-method" class="signature"><strong>#validate_size_of</strong>(attribute : Avram::Attribute(String?), *, is exact_size, message : Avram::Attribute::ErrorMessage = <span class="s">&quot;is invalid&quot;</span>, allow_nil : Bool = <span class="n">false</span>)</a>
         
           <div class="summary"><p>Validate the size of a <code><a href="../String.html">String</a></code> is exactly a certain size</p></div>
         
@@ -1700,20 +1700,20 @@ marked as invalid if the value is <code>nil</code>, or "blank" (empty strings or
       </div>
     </div>
   
-    <div class="entry-detail" id="validate_size_of(attribute:Avram::Attribute,min=nil,max=nil,allow_nil:Bool=false)-instance-method">
+    <div class="entry-detail" id="validate_size_of(attribute:Avram::Attribute(String?),min=nil,max=nil,allow_nil:Bool=false)-instance-method">
       <div class="signature">
         
-        def <strong>validate_size_of</strong>(attribute : <a href="../Avram/Attribute.html">Avram::Attribute</a>, min = <span class="n">nil</span>, max = <span class="n">nil</span>, allow_nil : <a href="../Bool.html">Bool</a> = <span class="n">false</span>)
+        def <strong>validate_size_of</strong>(attribute : <a href="../Avram/Attribute.html">Avram::Attribute</a>(<a href="../String.html">String</a>?), min = <span class="n">nil</span>, max = <span class="n">nil</span>, allow_nil : <a href="../Bool.html">Bool</a> = <span class="n">false</span>)
 
-        <a class="method-permalink" href="#validate_size_of(attribute:Avram::Attribute,min=nil,max=nil,allow_nil:Bool=false)-instance-method">#</a>
+        <a class="method-permalink" href="#validate_size_of(attribute:Avram::Attribute(String?),min=nil,max=nil,allow_nil:Bool=false)-instance-method">#</a>
       </div>
       
         <div class="doc">
           
-          <p>Validate the size of the attribute is within a <code>min</code> and/or <code>max</code></p>
+          <p>Validate the size of a <code><a href="../String.html">String</a></code> is within a <code>min</code> and/or <code>max</code></p>
 
-<pre><code>validate_size_of age, min: <span class="n">18</span>, max: <span class="n">100</span>
-validate_size_of account_balance, min: <span class="n">500</span></code></pre>
+<pre><code>validate_size_of feedback, min: <span class="n">18</span>, max: <span class="n">100</span>
+validate_size_of password, min: <span class="n">12</span></code></pre>
         </div>
       
       <br/>
@@ -1722,12 +1722,12 @@ validate_size_of account_balance, min: <span class="n">500</span></code></pre>
       </div>
     </div>
   
-    <div class="entry-detail" id="validate_size_of(attribute:Avram::Attribute,*,isexact_size,message:Avram::Attribute::ErrorMessage=&quot;isinvalid&quot;,allow_nil:Bool=false)-instance-method">
+    <div class="entry-detail" id="validate_size_of(attribute:Avram::Attribute(String?),*,isexact_size,message:Avram::Attribute::ErrorMessage=&quot;isinvalid&quot;,allow_nil:Bool=false)-instance-method">
       <div class="signature">
         
-        def <strong>validate_size_of</strong>(attribute : <a href="../Avram/Attribute.html">Avram::Attribute</a>, *, is exact_size, message : <a href="../Avram/Attribute/ErrorMessage.html">Avram::Attribute::ErrorMessage</a> = <span class="s">&quot;is invalid&quot;</span>, allow_nil : <a href="../Bool.html">Bool</a> = <span class="n">false</span>)
+        def <strong>validate_size_of</strong>(attribute : <a href="../Avram/Attribute.html">Avram::Attribute</a>(<a href="../String.html">String</a>?), *, is exact_size, message : <a href="../Avram/Attribute/ErrorMessage.html">Avram::Attribute::ErrorMessage</a> = <span class="s">&quot;is invalid&quot;</span>, allow_nil : <a href="../Bool.html">Bool</a> = <span class="n">false</span>)
 
-        <a class="method-permalink" href="#validate_size_of(attribute:Avram::Attribute,*,isexact_size,message:Avram::Attribute::ErrorMessage=&quot;isinvalid&quot;,allow_nil:Bool=false)-instance-method">#</a>
+        <a class="method-permalink" href="#validate_size_of(attribute:Avram::Attribute(String?),*,isexact_size,message:Avram::Attribute::ErrorMessage=&quot;isinvalid&quot;,allow_nil:Bool=false)-instance-method">#</a>
       </div>
       
         <div class="doc">
