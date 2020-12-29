@@ -13,7 +13,7 @@ class UniquenessWithCustomMessageSaveOperation < User::SaveOperation
   end
 end
 
-private def attribute(value)
+private def attribute(value : T) : Avram::Attribute(T) forall T
   Avram::Attribute.new(value: value, param: nil, param_key: "fake", name: :fake)
 end
 

@@ -110,7 +110,7 @@ module Avram::Validations
   # validate_size_of api_key, is: 32
   # ```
   def validate_size_of(
-    attribute : Avram::Attribute,
+    attribute : Avram::Attribute(String?),
     *,
     is exact_size,
     message : Avram::Attribute::ErrorMessage = "is invalid",
@@ -121,14 +121,14 @@ module Avram::Validations
     end
   end
 
-  # Validate the size of the attribute is within a `min` and/or `max`
+  # Validate the size of a `String` is within a `min` and/or `max`
   #
   # ```
-  # validate_size_of age, min: 18, max: 100
-  # validate_size_of account_balance, min: 500
+  # validate_size_of feedback, min: 18, max: 100
+  # validate_size_of password, min: 12
   # ```
   def validate_size_of(
-    attribute : Avram::Attribute,
+    attribute : Avram::Attribute(String?),
     min = nil,
     max = nil,
     allow_nil : Bool = false
