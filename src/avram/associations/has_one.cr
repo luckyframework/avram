@@ -33,10 +33,9 @@ module Avram::Associations::HasOne
       if _{{ assoc_name }}_preloaded?
         @_preloaded_{{ assoc_name }}{% unless nilable %}.not_nil!{% end %}
       elsif lazy_load_enabled? || allow_lazy
-        query = {{ model }}::BaseQuery.new
-        query.{{ foreign_key.id }}(id)
-
-        query.first{% if nilable %}?{% end %}
+        {{ model }}::BaseQuery.new
+          .{{ foreign_key.id }}(id)
+          .first{% if nilable %}?{% end %}
       else
         raise Avram::LazyLoadError.new {{ @type.name.stringify }}, {{ assoc_name.stringify }}
       end
