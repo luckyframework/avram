@@ -36,7 +36,22 @@ module Avram::DefineAttribute
 
   macro attribute(type_declaration)
     {% if type_declaration.type.is_a?(Union) %}
-      {% raise "attribute must use just one type" %}
+      {% if type_declaration.value.is_a?(Nop) %}
+        {% default_value = "" %}
+      {% else %}
+        {% default_value = "= #{type_declaration.value}" %}
+      {% end %}
+      {% raise <<-ERROR
+        `attribute` in #{@type} must not be called with a type union or nilable type but was called with #{type_declaration.type}
+        If you were attempting to create a nilable attribute, all attributes are considered nilable by default.
+
+        Try this...
+
+          attribute #{type_declaration.var} : #{type_declaration.type.types.first} #{default_value.id}
+
+        Read more on attributes: https://luckyframework.org/guides/database/validating-saving
+        ERROR
+      %}
     {% end %}
 
     {% ATTRIBUTES << type_declaration %}
