@@ -37,13 +37,13 @@ module Avram
     end
   end
 
-  # Raised when using the create! or update! methods on an operation when it does not have the proper attributes
+  # Raised when using the create!, update!, or destroy! methods on an operation when it does not have the proper attributes
   class InvalidOperationError < AvramError
     getter errors : Hash(Symbol, Array(String))
 
     def initialize(operation)
       message = String.build do |string|
-        string << "Could not save #{operation.class.name}."
+        string << "Could not perform #{operation.class.name}."
         string << "\n"
         string << "\n"
         operation.errors.each do |attribute_name, errors|

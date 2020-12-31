@@ -34,6 +34,13 @@ private class NeedsSaveOperation < Needs::SaveOperation
   file_attribute :image
 end
 
+private class NeedyDeleteOperation < Post::DeleteOperation
+  needs user : User
+  needs notification_message : String?
+  needs no_number : Int32 = 4
+  attribute confirm_delete : String
+end
+
 describe "Avram::Operation needs" do
   it "sets up named args for needs" do
     OperationWithNeeds.run(tags: ["one", "two"], id: 3) do |operation, value|
@@ -91,6 +98,32 @@ describe "Avram::SaveOperation needs" do
       operation.optional.should eq("bar")
       operation.not_db_related.value.should eq(4)
       operation.image.value.not_nil!.filename.should eq "thumb.png"
+    end
+  end
+end
+
+describe "Avram::DeleteOperation needs" do
+  it "sets up a method arg for destroy" do
+    user = UserBox.create
+    post = PostBox.create
+
+    NeedyDeleteOperation.destroy(post, user: user, notification_message: "is this thing on?") do |operation, _record|
+      operation.notification_message.should eq("is this thing on?")
+      operation.no_number.should eq(4)
+      operation.user.should eq(user)
+    end
+  end
+
+  it "also generates named args for other attributes" do
+    params = Avram::Params.new({"confirm_delete" => "yeah, do it"})
+    user = UserBox.create
+    post = PostBox.create
+
+    NeedyDeleteOperation.destroy(post, params, user: user, notification_message: nil) do |operation, _record|
+      operation.notification_message.should be_nil
+      operation.no_number.should eq(4)
+      operation.user.should eq(user)
+      operation.confirm_delete.value.should eq("yeah, do it")
     end
   end
 end

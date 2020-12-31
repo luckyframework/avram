@@ -66,6 +66,7 @@ abstract class Avram::Model
     setup(Avram::Model.setup_table_schema_enforcer_validations)
     setup(Avram::BaseQueryTemplate.setup)
     setup(Avram::SaveOperationTemplate.setup)
+    setup(Avram::DeleteOperationTemplate.setup)
     setup(Avram::SchemaEnforcer.setup)
   end
 
