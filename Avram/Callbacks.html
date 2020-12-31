@@ -206,10 +206,40 @@
       
     </li>
   
+  <li class="parent " data-id="avram/Avram/DeleteOperation" data-name="avram::deleteoperation(t)">
+      <a href="../Avram/DeleteOperation.html">DeleteOperation</a>
+      
+        <ul>
+  
+  <li class=" " data-id="avram/Avram/DeleteOperation/DeleteStatus" data-name="avram::deleteoperation::deletestatus">
+      <a href="../Avram/DeleteOperation/DeleteStatus.html">DeleteStatus</a>
+      
+    </li>
+  
+</ul>
+
+      
+    </li>
+  
+  <li class=" " data-id="avram/Avram/DeleteOperationTemplate" data-name="avram::deleteoperationtemplate">
+      <a href="../Avram/DeleteOperationTemplate.html">DeleteOperationTemplate</a>
+      
+    </li>
+  
   <li class="parent " data-id="avram/Avram/Events" data-name="avram::events">
       <a href="../Avram/Events.html">Events</a>
       
         <ul>
+  
+  <li class=" " data-id="avram/Avram/Events/DeleteFailedEvent" data-name="avram::events::deletefailedevent">
+      <a href="../Avram/Events/DeleteFailedEvent.html">DeleteFailedEvent</a>
+      
+    </li>
+  
+  <li class=" " data-id="avram/Avram/Events/DeleteSuccessEvent" data-name="avram::events::deletesuccessevent">
+      <a href="../Avram/Events/DeleteSuccessEvent.html">DeleteSuccessEvent</a>
+      
+    </li>
   
   <li class=" " data-id="avram/Avram/Events/FailedQueryEvent" data-name="avram::events::failedqueryevent">
       <a href="../Avram/Events/FailedQueryEvent.html">FailedQueryEvent</a>
@@ -603,6 +633,11 @@
   
   <li class=" " data-id="avram/Avram/NeedyInitializer" data-name="avram::needyinitializer">
       <a href="../Avram/NeedyInitializer.html">NeedyInitializer</a>
+      
+    </li>
+  
+  <li class=" " data-id="avram/Avram/NeedyInitializerAndDeleteMethods" data-name="avram::needyinitializeranddeletemethods">
+      <a href="../Avram/NeedyInitializerAndDeleteMethods.html">NeedyInitializerAndDeleteMethods</a>
       
     </li>
   
@@ -1408,6 +1443,8 @@
   </h2>
   <ul class="other-types-list">
     
+      <li class="other-type"><a href="../Avram/DeleteOperation.html">Avram::DeleteOperation(T)</a></li>
+    
       <li class="other-type"><a href="../Avram/Operation.html">Avram::Operation</a></li>
     
       <li class="other-type"><a href="../Avram/SaveOperation.html">Avram::SaveOperation(T)</a></li>
@@ -1448,13 +1485,6 @@
   <ul class="list-summary">
     
       <li class="entry-summary">
-        <a href="#after_commit(method_name,if_if=nil,unless_unless=nil)-macro" class="signature"><strong>after_commit</strong>(method_name, if _if = <span class="n">nil</span>, unless _unless = <span class="n">nil</span>)</a>
-        
-          <div class="summary"><p>Run the given method after save and after successful transaction commit</p></div>
-        
-      </li>
-    
-      <li class="entry-summary">
         <a href="#after_commit(if_if=nil,unless_unless=nil,&block)-macro" class="signature"><strong>after_commit</strong>(if _if = <span class="n">nil</span>, unless _unless = <span class="n">nil</span>, &block)</a>
         
           <div class="summary"><p>Run the given block after save and after successful transaction commit</p></div>
@@ -1462,9 +1492,9 @@
       </li>
     
       <li class="entry-summary">
-        <a href="#after_completed(method_name)-macro" class="signature"><strong>after_completed</strong>(method_name)</a>
+        <a href="#after_commit(method_name,if_if=nil,unless_unless=nil)-macro" class="signature"><strong>after_commit</strong>(method_name, if _if = <span class="n">nil</span>, unless _unless = <span class="n">nil</span>)</a>
         
-          <div class="summary"><p>Run the given method after the SaveOperation has completed everything.</p></div>
+          <div class="summary"><p>Run the given method after save and after successful transaction commit</p></div>
         
       </li>
     
@@ -1476,9 +1506,21 @@
       </li>
     
       <li class="entry-summary">
-        <a href="#after_run(method_name)-macro" class="signature"><strong>after_run</strong>(method_name)</a>
+        <a href="#after_completed(method_name)-macro" class="signature"><strong>after_completed</strong>(method_name)</a>
         
-          <div class="summary"><p>Run the given method after <code>run</code> is called on an <code><a href="../Avram/Operation.html">Operation</a></code>.</p></div>
+          <div class="summary"><p>Run the given method after the SaveOperation has completed everything.</p></div>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#after_delete(if_if=nil,unless_unless=nil,&block)-macro" class="signature"><strong>after_delete</strong>(if _if = <span class="n">nil</span>, unless _unless = <span class="n">nil</span>, &block)</a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#after_delete(method_name,if_if=nil,unless_unless=nil)-macro" class="signature"><strong>after_delete</strong>(method_name, if _if = <span class="n">nil</span>, unless _unless = <span class="n">nil</span>)</a>
+        
+          <div class="summary"><p>Same as <code><a href="../Avram/Callbacks.html#after_save(if_if=nil,unless_unless=nil,&block)-macro">after_save</a></code> but with a different name</p></div>
         
       </li>
     
@@ -1490,9 +1532,9 @@
       </li>
     
       <li class="entry-summary">
-        <a href="#after_save(method_name,if_if=nil,unless_unless=nil)-macro" class="signature"><strong>after_save</strong>(method_name, if _if = <span class="n">nil</span>, unless _unless = <span class="n">nil</span>)</a>
+        <a href="#after_run(method_name)-macro" class="signature"><strong>after_run</strong>(method_name)</a>
         
-          <div class="summary"><p>Run the given method after save, but before transaction is committed</p></div>
+          <div class="summary"><p>Run the given method after <code>run</code> is called on an <code><a href="../Avram/Operation.html">Operation</a></code>.</p></div>
         
       </li>
     
@@ -1504,9 +1546,21 @@
       </li>
     
       <li class="entry-summary">
-        <a href="#before_run(method_name)-macro" class="signature"><strong>before_run</strong>(method_name)</a>
+        <a href="#after_save(method_name,if_if=nil,unless_unless=nil)-macro" class="signature"><strong>after_save</strong>(method_name, if _if = <span class="n">nil</span>, unless _unless = <span class="n">nil</span>)</a>
         
-          <div class="summary"><p>Run the given method before <code>run</code> is called on an <code><a href="../Avram/Operation.html">Operation</a></code>.</p></div>
+          <div class="summary"><p>Run the given method after save, but before transaction is committed</p></div>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#before_delete(if_if=nil,unless_unless=nil)-macro" class="signature"><strong>before_delete</strong>(if _if = <span class="n">nil</span>, unless _unless = <span class="n">nil</span>)</a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#before_delete(method_name,if_if=nil,unless_unless=nil)-macro" class="signature"><strong>before_delete</strong>(method_name, if _if = <span class="n">nil</span>, unless _unless = <span class="n">nil</span>)</a>
+        
+          <div class="summary"><p>Same as <code><a href="../Avram/Callbacks.html#before_save(if_if=nil,unless_unless=nil)-macro">before_save</a></code>, but with a different name</p></div>
         
       </li>
     
@@ -1518,9 +1572,9 @@
       </li>
     
       <li class="entry-summary">
-        <a href="#before_save(method_name,if_if=nil,unless_unless=nil)-macro" class="signature"><strong>before_save</strong>(method_name, if _if = <span class="n">nil</span>, unless _unless = <span class="n">nil</span>)</a>
+        <a href="#before_run(method_name)-macro" class="signature"><strong>before_run</strong>(method_name)</a>
         
-          <div class="summary"><p>Run the given method before saving or creating for <code><a href="../Avram/SaveOperation.html">SaveOperation</a></code></p></div>
+          <div class="summary"><p>Run the given method before <code>run</code> is called on an <code><a href="../Avram/Operation.html">Operation</a></code>.</p></div>
         
       </li>
     
@@ -1528,6 +1582,13 @@
         <a href="#before_save(if_if=nil,unless_unless=nil)-macro" class="signature"><strong>before_save</strong>(if _if = <span class="n">nil</span>, unless _unless = <span class="n">nil</span>)</a>
         
           <div class="summary"><p>Run the given block before saving or creating for <code><a href="../Avram/SaveOperation.html">SaveOperation</a></code></p></div>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#before_save(method_name,if_if=nil,unless_unless=nil)-macro" class="signature"><strong>before_save</strong>(method_name, if _if = <span class="n">nil</span>, unless _unless = <span class="n">nil</span>)</a>
+        
+          <div class="summary"><p>Run the given method before saving or creating for <code><a href="../Avram/SaveOperation.html">SaveOperation</a></code></p></div>
         
       </li>
     
@@ -1560,39 +1621,6 @@
     Macro Detail
   </h2>
   
-    <div class="entry-detail" id="after_commit(method_name,if_if=nil,unless_unless=nil)-macro">
-      <div class="signature">
-        
-        macro <strong>after_commit</strong>(method_name, if _if = <span class="n">nil</span>, unless _unless = <span class="n">nil</span>)
-
-        <a class="method-permalink" href="#after_commit(method_name,if_if=nil,unless_unless=nil)-macro">#</a>
-      </div>
-      
-        <div class="doc">
-          
-          <p>Run the given method after save and after successful transaction commit</p>
-
-<p>Optionally you can pass an <code>if</code> or <code>unless</code> argument which allows you to
-run this conditionally. The symbol should reference a method you've defined
-that returns a truthy/falsey value</p>
-
-<p>The newly saved record will be passed to the method.</p>
-
-<pre><code><span class="k">class</span> <span class="t">SaveComment</span> <span class="o">&lt;</span> <span class="t">Comment</span><span class="t">::</span><span class="t">SaveOperation</span>
-  after_commit notify_post_author
-
-  <span class="k">private</span> <span class="k">def</span> <span class="m">notify_post_author</span>(comment : <span class="t">Comment</span>)
-    <span class="t">NewCommentNotificationEmail</span>.<span class="k">new</span>(comment, to: comment.author!).deliver_now
-  <span class="k">end</span>
-<span class="k">end</span></code></pre>
-        </div>
-      
-      <br/>
-      <div>
-        
-      </div>
-    </div>
-  
     <div class="entry-detail" id="after_commit(if_if=nil,unless_unless=nil,&amp;block)-macro">
       <div class="signature">
         
@@ -1620,28 +1648,29 @@ that returns a truthy/falsey value</p>
       </div>
     </div>
   
-    <div class="entry-detail" id="after_completed(method_name)-macro">
+    <div class="entry-detail" id="after_commit(method_name,if_if=nil,unless_unless=nil)-macro">
       <div class="signature">
         
-        macro <strong>after_completed</strong>(method_name)
+        macro <strong>after_commit</strong>(method_name, if _if = <span class="n">nil</span>, unless _unless = <span class="n">nil</span>)
 
-        <a class="method-permalink" href="#after_completed(method_name)-macro">#</a>
+        <a class="method-permalink" href="#after_commit(method_name,if_if=nil,unless_unless=nil)-macro">#</a>
       </div>
       
         <div class="doc">
           
-          <p>Run the given method after the SaveOperation has completed everything.
-During normal operations, this runs after the <code><a href="../Avram/Callbacks.html#after_commit(method_name,if_if=nil,unless_unless=nil)-macro">after_commit</a></code>.
-This is the only SaveOperation callback that runs when no changes
-are made to an existing record.</p>
+          <p>Run the given method after save and after successful transaction commit</p>
 
-<p>The record will be passed to the method.</p>
+<p>Optionally you can pass an <code>if</code> or <code>unless</code> argument which allows you to
+run this conditionally. The symbol should reference a method you've defined
+that returns a truthy/falsey value</p>
+
+<p>The newly saved record will be passed to the method.</p>
 
 <pre><code><span class="k">class</span> <span class="t">SaveComment</span> <span class="o">&lt;</span> <span class="t">Comment</span><span class="t">::</span><span class="t">SaveOperation</span>
-  after_completed pass_info_to_author
+  after_commit notify_post_author
 
-  <span class="k">private</span> <span class="k">def</span> <span class="m">pass_info_to_author</span>(comment : <span class="t">Comment</span>)
-    <span class="t">SaveAuthor</span>
+  <span class="k">private</span> <span class="k">def</span> <span class="m">notify_post_author</span>(comment : <span class="t">Comment</span>)
+    <span class="t">NewCommentNotificationEmail</span>.<span class="k">new</span>(comment, to: comment.author!).deliver_now
   <span class="k">end</span>
 <span class="k">end</span></code></pre>
         </div>
@@ -1681,24 +1710,63 @@ are made to an existing record.</p>
       </div>
     </div>
   
-    <div class="entry-detail" id="after_run(method_name)-macro">
+    <div class="entry-detail" id="after_completed(method_name)-macro">
       <div class="signature">
         
-        macro <strong>after_run</strong>(method_name)
+        macro <strong>after_completed</strong>(method_name)
 
-        <a class="method-permalink" href="#after_run(method_name)-macro">#</a>
+        <a class="method-permalink" href="#after_completed(method_name)-macro">#</a>
       </div>
       
         <div class="doc">
           
-          <p>Run the given method after <code>run</code> is called on an <code><a href="../Avram/Operation.html">Operation</a></code>.
-The return value of the <code>run</code> method is passed to <code>method_name</code>.</p>
+          <p>Run the given method after the SaveOperation has completed everything.
+During normal operations, this runs after the <code><a href="../Avram/Callbacks.html#after_commit(if_if=nil,unless_unless=nil,&block)-macro">after_commit</a></code>.
+This is the only SaveOperation callback that runs when no changes
+are made to an existing record.</p>
 
-<pre><code>after_run <span class="n">:log_entry</span>
+<p>The record will be passed to the method.</p>
 
-<span class="k">private</span> <span class="k">def</span> <span class="m">log_entry</span>(value)
-  log_stuff(value)
+<pre><code><span class="k">class</span> <span class="t">SaveComment</span> <span class="o">&lt;</span> <span class="t">Comment</span><span class="t">::</span><span class="t">SaveOperation</span>
+  after_completed pass_info_to_author
+
+  <span class="k">private</span> <span class="k">def</span> <span class="m">pass_info_to_author</span>(comment : <span class="t">Comment</span>)
+    <span class="t">SaveAuthor</span>
+  <span class="k">end</span>
 <span class="k">end</span></code></pre>
+        </div>
+      
+      <br/>
+      <div>
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="after_delete(if_if=nil,unless_unless=nil,&amp;block)-macro">
+      <div class="signature">
+        
+        macro <strong>after_delete</strong>(if _if = <span class="n">nil</span>, unless _unless = <span class="n">nil</span>, &block)
+
+        <a class="method-permalink" href="#after_delete(if_if=nil,unless_unless=nil,&block)-macro">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="after_delete(method_name,if_if=nil,unless_unless=nil)-macro">
+      <div class="signature">
+        
+        macro <strong>after_delete</strong>(method_name, if _if = <span class="n">nil</span>, unless _unless = <span class="n">nil</span>)
+
+        <a class="method-permalink" href="#after_delete(method_name,if_if=nil,unless_unless=nil)-macro">#</a>
+      </div>
+      
+        <div class="doc">
+          
+          <p>Same as <code><a href="../Avram/Callbacks.html#after_save(if_if=nil,unless_unless=nil,&block)-macro">after_save</a></code> but with a different name</p>
         </div>
       
       <br/>
@@ -1730,6 +1798,71 @@ The return value of the <code>run</code> method is passed to <code>method_name</
     <span class="s">&quot;some report&quot;</span>
   <span class="k">end</span>
 <span class="k">end</span></code></pre>
+        </div>
+      
+      <br/>
+      <div>
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="after_run(method_name)-macro">
+      <div class="signature">
+        
+        macro <strong>after_run</strong>(method_name)
+
+        <a class="method-permalink" href="#after_run(method_name)-macro">#</a>
+      </div>
+      
+        <div class="doc">
+          
+          <p>Run the given method after <code>run</code> is called on an <code><a href="../Avram/Operation.html">Operation</a></code>.
+The return value of the <code>run</code> method is passed to <code>method_name</code>.</p>
+
+<pre><code>after_run <span class="n">:log_entry</span>
+
+<span class="k">private</span> <span class="k">def</span> <span class="m">log_entry</span>(value)
+  log_stuff(value)
+<span class="k">end</span></code></pre>
+        </div>
+      
+      <br/>
+      <div>
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="after_save(if_if=nil,unless_unless=nil,&amp;block)-macro">
+      <div class="signature">
+        
+        macro <strong>after_save</strong>(if _if = <span class="n">nil</span>, unless _unless = <span class="n">nil</span>, &block)
+
+        <a class="method-permalink" href="#after_save(if_if=nil,unless_unless=nil,&block)-macro">#</a>
+      </div>
+      
+        <div class="doc">
+          
+          <p>Run the given block after save, but before transaction is committed</p>
+
+<p>Optionally you can pass an <code>if</code> or <code>unless</code> argument which allows you to
+run this conditionally. The symbol should reference a method you've defined
+that returns a truthy/falsey value</p>
+
+<p>This is a great place to do other database saves because if something goes
+wrong the whole transaction would be rolled back.</p>
+
+<p>The newly saved record will be passed to the method.</p>
+
+<pre><code><span class="k">class</span> <span class="t">SaveComment</span> <span class="o">&lt;</span> <span class="t">Comment</span><span class="t">::</span><span class="t">SaveOperation</span>
+  after_save <span class="k">do</span> <span class="o">|</span>comment<span class="o">|</span>
+    <span class="t">SavePost</span>.update!(comment.post!, updated_at: <span class="t">Time</span>.utc)
+  <span class="k">end</span>
+<span class="k">end</span></code></pre>
+
+<blockquote>This is <em>not</em> a good place to do things like send messages, enqueue
+> background jobs, or charge payments. Since the transaction could be rolled
+> back the record may not be persisted to the database.
+> Instead use <code><a href="../Avram/Callbacks.html#after_commit(if_if=nil,unless_unless=nil,&block)-macro">after_commit</a></code></blockquote>
         </div>
       
       <br/>
@@ -1770,7 +1903,7 @@ wrong the whole transaction would be rolled back.</p>
 <blockquote>This is <em>not</em> a good place to do things like send messages, enqueue
 > background jobs, or charge payments. Since the transaction could be rolled
 > back the record may not be persisted to the database.
-> Instead use <code><a href="../Avram/Callbacks.html#after_commit(method_name,if_if=nil,unless_unless=nil)-macro">after_commit</a></code></blockquote>
+> Instead use <code><a href="../Avram/Callbacks.html#after_commit(if_if=nil,unless_unless=nil,&block)-macro">after_commit</a></code></blockquote>
         </div>
       
       <br/>
@@ -1779,37 +1912,54 @@ wrong the whole transaction would be rolled back.</p>
       </div>
     </div>
   
-    <div class="entry-detail" id="after_save(if_if=nil,unless_unless=nil,&amp;block)-macro">
+    <div class="entry-detail" id="before_delete(if_if=nil,unless_unless=nil)-macro">
       <div class="signature">
         
-        macro <strong>after_save</strong>(if _if = <span class="n">nil</span>, unless _unless = <span class="n">nil</span>, &block)
+        macro <strong>before_delete</strong>(if _if = <span class="n">nil</span>, unless _unless = <span class="n">nil</span>)
 
-        <a class="method-permalink" href="#after_save(if_if=nil,unless_unless=nil,&block)-macro">#</a>
+        <a class="method-permalink" href="#before_delete(if_if=nil,unless_unless=nil)-macro">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="before_delete(method_name,if_if=nil,unless_unless=nil)-macro">
+      <div class="signature">
+        
+        macro <strong>before_delete</strong>(method_name, if _if = <span class="n">nil</span>, unless _unless = <span class="n">nil</span>)
+
+        <a class="method-permalink" href="#before_delete(method_name,if_if=nil,unless_unless=nil)-macro">#</a>
       </div>
       
         <div class="doc">
           
-          <p>Run the given block after save, but before transaction is committed</p>
+          <p>Same as <code><a href="../Avram/Callbacks.html#before_save(if_if=nil,unless_unless=nil)-macro">before_save</a></code>, but with a different name</p>
+        </div>
+      
+      <br/>
+      <div>
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="before_run-macro">
+      <div class="signature">
+        
+        macro <strong>before_run</strong>
 
-<p>Optionally you can pass an <code>if</code> or <code>unless</code> argument which allows you to
-run this conditionally. The symbol should reference a method you've defined
-that returns a truthy/falsey value</p>
+        <a class="method-permalink" href="#before_run-macro">#</a>
+      </div>
+      
+        <div class="doc">
+          
+          <p>Run the given block before <code>run</code> is called on an <code><a href="../Avram/Operation.html">Operation</a></code>.</p>
 
-<p>This is a great place to do other database saves because if something goes
-wrong the whole transaction would be rolled back.</p>
-
-<p>The newly saved record will be passed to the method.</p>
-
-<pre><code><span class="k">class</span> <span class="t">SaveComment</span> <span class="o">&lt;</span> <span class="t">Comment</span><span class="t">::</span><span class="t">SaveOperation</span>
-  after_save <span class="k">do</span> <span class="o">|</span>comment<span class="o">|</span>
-    <span class="t">SavePost</span>.update!(comment.post!, updated_at: <span class="t">Time</span>.utc)
-  <span class="k">end</span>
+<pre><code>before_run <span class="k">do</span>
+  validate_required data
 <span class="k">end</span></code></pre>
-
-<blockquote>This is <em>not</em> a good place to do things like send messages, enqueue
-> background jobs, or charge payments. Since the transaction could be rolled
-> back the record may not be persisted to the database.
-> Instead use <code><a href="../Avram/Callbacks.html#after_commit(method_name,if_if=nil,unless_unless=nil)-macro">after_commit</a></code></blockquote>
         </div>
       
       <br/>
@@ -1843,20 +1993,32 @@ wrong the whole transaction would be rolled back.</p>
       </div>
     </div>
   
-    <div class="entry-detail" id="before_run-macro">
+    <div class="entry-detail" id="before_save(if_if=nil,unless_unless=nil)-macro">
       <div class="signature">
         
-        macro <strong>before_run</strong>
+        macro <strong>before_save</strong>(if _if = <span class="n">nil</span>, unless _unless = <span class="n">nil</span>)
 
-        <a class="method-permalink" href="#before_run-macro">#</a>
+        <a class="method-permalink" href="#before_save(if_if=nil,unless_unless=nil)-macro">#</a>
       </div>
       
         <div class="doc">
           
-          <p>Run the given block before <code>run</code> is called on an <code><a href="../Avram/Operation.html">Operation</a></code>.</p>
+          <p>Run the given block before saving or creating for <code><a href="../Avram/SaveOperation.html">SaveOperation</a></code></p>
 
-<pre><code>before_run <span class="k">do</span>
-  validate_required data
+<p>This runs before saving and before the database transaction is started.
+You can set defaults, validate, or perform any other setup necessary for
+saving.</p>
+
+<p>Optionally you can pass an <code>if</code> or <code>unless</code> argument which allows you to
+run this conditionally. The symbol should reference a method you've defined
+that returns a truthy/falsey value</p>
+
+<pre><code>before_save(<span class="k">unless</span>: <span class="n">:skip_callback?</span>) <span class="k">do</span>
+  validate_required name, age
+<span class="k">end</span>
+
+<span class="k">private</span> <span class="k">def</span> <span class="m">skip_callback?</span>
+  <span class="n">false</span>
 <span class="k">end</span></code></pre>
         </div>
       
@@ -1899,41 +2061,6 @@ before_save <span class="n">:validate_can_internet</span>, <span class="k">unles
 
 <span class="k">private</span> <span class="k">def</span> <span class="m">too_cool_for_school?</span>
   [<span class="n">true</span>, <span class="n">false</span>].sample
-<span class="k">end</span></code></pre>
-        </div>
-      
-      <br/>
-      <div>
-        
-      </div>
-    </div>
-  
-    <div class="entry-detail" id="before_save(if_if=nil,unless_unless=nil)-macro">
-      <div class="signature">
-        
-        macro <strong>before_save</strong>(if _if = <span class="n">nil</span>, unless _unless = <span class="n">nil</span>)
-
-        <a class="method-permalink" href="#before_save(if_if=nil,unless_unless=nil)-macro">#</a>
-      </div>
-      
-        <div class="doc">
-          
-          <p>Run the given block before saving or creating for <code><a href="../Avram/SaveOperation.html">SaveOperation</a></code></p>
-
-<p>This runs before saving and before the database transaction is started.
-You can set defaults, validate, or perform any other setup necessary for
-saving.</p>
-
-<p>Optionally you can pass an <code>if</code> or <code>unless</code> argument which allows you to
-run this conditionally. The symbol should reference a method you've defined
-that returns a truthy/falsey value</p>
-
-<pre><code>before_save(<span class="k">unless</span>: <span class="n">:skip_callback?</span>) <span class="k">do</span>
-  validate_required name, age
-<span class="k">end</span>
-
-<span class="k">private</span> <span class="k">def</span> <span class="m">skip_callback?</span>
-  <span class="n">false</span>
 <span class="k">end</span></code></pre>
         </div>
       
