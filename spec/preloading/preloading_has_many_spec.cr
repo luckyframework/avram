@@ -49,6 +49,17 @@ describe "Preloading has_many associations" do
     end
   end
 
+  it "works with associations that use the query option" do
+    with_lazy_load(enabled: false) do
+      post = PostBox.create
+      nice_comment = CommentBox.create &.nice.post_id(post.id)
+
+      posts = Post::BaseQuery.new.preload_nice_comments
+
+      posts.results.first.nice_comments.should eq([nice_comment])
+    end
+  end
+
   it "works with UUID foreign keys" do
     with_lazy_load(enabled: false) do
       item = LineItemBox.create

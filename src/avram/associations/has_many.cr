@@ -1,5 +1,5 @@
 module Avram::Associations::HasMany
-  macro has_many(type_declaration, through = nil, foreign_key = nil)
+  macro has_many(type_declaration, through = nil, foreign_key = nil, query = nil)
     {% if !through.is_a?(NilLiteral) && (!through.is_a?(ArrayLiteral) || through.any? { |item| !item.is_a?(SymbolLiteral) }) %}
       {% through.raise <<-ERROR
       'through' on #{@type.name} must be given an Array(Symbol). Instead, got: #{through}
@@ -37,15 +37,16 @@ module Avram::Associations::HasMany
       type: {{ type_declaration.type }},
       foreign_key: :{{ foreign_key }},
       through: {{ through }},
-      relationship_type: :has_many
+      relationship_type: :has_many,
+      query: {{ query }}
 
     {% model = type_declaration.type %}
 
-    define_has_many_lazy_loading({{ assoc_name }}, {{ model }}, {{ foreign_key }}, {{ through }})
-    define_has_many_base_query({{ assoc_name }}, {{ model }}, {{ foreign_key }}, {{ through }})
+    define_has_many_lazy_loading({{ assoc_name }}, {{ model }}, {{ foreign_key }}, {{ through }}, {{ query }})
+    define_has_many_base_query({{ assoc_name }}, {{ model }}, {{ foreign_key }}, {{ through }}, {{ query }})
   end
 
-  private macro define_has_many_base_query(assoc_name, model, foreign_key, through)
+  private macro define_has_many_base_query(assoc_name, model, foreign_key, through, query)
     class BaseQuery
       def self.preload_{{ assoc_name }}(record)
         preload_{{ assoc_name }}(record: record, preload_query: {{ model }}::BaseQuery.new)
@@ -146,7 +147,7 @@ module Avram::Associations::HasMany
     end
   end
 
-  private macro define_has_many_lazy_loading(assoc_name, model, foreign_key, through)
+  private macro define_has_many_lazy_loading(assoc_name, model, foreign_key, through, query)
     @_preloaded_{{ assoc_name }} : Array({{ model }})?
     setter _preloaded_{{ assoc_name }}
 
@@ -180,16 +181,16 @@ module Avram::Associations::HasMany
     end
 
     private def lazy_load_{{ assoc_name }} : Array({{ model }})
+      {% query = query || "#{model}::BaseQuery.new".id %}
       {% if through %}
-        through_results = {{ through.first.id }}_query.preload_{{ through[1].id }}.results
+        through_results = {{ through.first.id }}_query.preload_{{ through[1].id }}({{ query }}).results
         through_results = through_results.is_a?(Array) ? through_results : [through_results]
         through_results.compact.flat_map do |through_result|
           assoc_results = through_result.{{ through[1].id }}
           assoc_results.is_a?(Array) ? assoc_results : [assoc_results]
         end.compact
       {% else %}
-        {{ model }}::BaseQuery
-          .new
+        {{ query }}
           .{{ foreign_key }}(id)
           .results
       {% end %}

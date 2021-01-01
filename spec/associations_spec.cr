@@ -27,6 +27,19 @@ describe Avram::Model do
       manager.customers.should eq [customer]
     end
 
+    it "gets the related records for a query association" do
+      post = PostBox.create
+      post2 = PostBox.create
+      comment = CommentBox.create &.post_id(post.id)
+      nice_comment = CommentBox.create &.nice.post_id(post.id)
+
+      post.comments.should eq [comment, nice_comment]
+      post.nice_comments.should eq [nice_comment]
+
+      post2.comments.size.should eq 0
+      post2.nice_comments.size.should eq 0
+    end
+
     it "returns nil for nilable association that doesn't exist" do
       employee = EmployeeBox.create
       employee.manager.should eq nil
@@ -53,6 +66,18 @@ describe Avram::Model do
 
       post.tags.should eq [tag]
       post2.tags.size.should eq 0
+    end
+
+    it "joins associations with the query option" do
+      tag = TagBox.create
+      funny_tag = TagBox.create &.name(Tag::FUNNY_TAG_NAME)
+      post = PostBox.create
+
+      TaggingBox.new.tag_id(tag.id).post_id(post.id).create
+      TaggingBox.new.tag_id(funny_tag.id).post_id(post.id).create
+
+      post.tags.should eq [tag, funny_tag]
+      post.funny_tags.should eq [funny_tag]
     end
 
     it "counts has_many through belongs_to associations" do

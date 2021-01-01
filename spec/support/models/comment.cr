@@ -1,4 +1,5 @@
 class Comment < BaseModel
+  NICE_COMMENT_BODY = "Nice"
   skip_default_columns
 
   table do

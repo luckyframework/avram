@@ -1,4 +1,5 @@
 class Tag < BaseModel
+  FUNNY_TAG_NAME = "Chargoggagoggmanchauggagoggchaubunagungamaugg"
   skip_default_columns
 
   table do
