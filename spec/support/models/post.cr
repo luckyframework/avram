@@ -12,7 +12,6 @@ class Post < BaseModel
       query: Comment::BaseQuery.new.body(Comment::NICE_COMMENT_BODY)
     has_many taggings : Tagging
     has_many tags : Tag, through: [:taggings, :tag]
-    has_many funny_tags : Tag, through: [:taggings, :tag], query: Tag::BaseQuery.new.name(Tag::FUNNY_TAG_NAME)
   end
 end
 

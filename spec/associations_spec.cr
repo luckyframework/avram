@@ -68,18 +68,6 @@ describe Avram::Model do
       post2.tags.size.should eq 0
     end
 
-    it "joins associations with the query option" do
-      tag = TagBox.create
-      funny_tag = TagBox.create &.name(Tag::FUNNY_TAG_NAME)
-      post = PostBox.create
-
-      TaggingBox.new.tag_id(tag.id).post_id(post.id).create
-      TaggingBox.new.tag_id(funny_tag.id).post_id(post.id).create
-
-      post.tags.should eq [tag, funny_tag]
-      post.funny_tags.should eq [funny_tag]
-    end
-
     it "counts has_many through belongs_to associations" do
       tag = TagBox.create
       post = PostBox.create
