@@ -1,4 +1,8 @@
 class CustomEmail
+  def self.adapter
+    Lucky
+  end
+
   def initialize(@email : String)
   end
 
