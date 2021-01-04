@@ -58,7 +58,7 @@ module Avram::Validations
   #
   # This validation is only for Boolean Attributes. The attribute will be marked
   # as invalid for any value other than `true`.
-  def validate_acceptance_of(attribute : Avram::Attribute(Bool?), message : Avram::Attribute::ErrorMessage = "must be accepted")
+  def validate_acceptance_of(attribute : Avram::Attribute(Bool), message : Avram::Attribute::ErrorMessage = "must be accepted")
     if attribute.value != true
       attribute.add_error message
     end
@@ -110,7 +110,7 @@ module Avram::Validations
   # validate_size_of api_key, is: 32
   # ```
   def validate_size_of(
-    attribute : Avram::Attribute(String?),
+    attribute : Avram::Attribute(String),
     *,
     is exact_size,
     message : Avram::Attribute::ErrorMessage = "is invalid",
@@ -128,7 +128,7 @@ module Avram::Validations
   # validate_size_of password, min: 12
   # ```
   def validate_size_of(
-    attribute : Avram::Attribute(String?),
+    attribute : Avram::Attribute(String),
     min = nil,
     max = nil,
     allow_nil : Bool = false
@@ -159,7 +159,7 @@ module Avram::Validations
   # validate_numeric count, greater_than: 0, less_than: 1200
   # ```
   def validate_numeric(
-    attribute : Avram::Attribute(Number?),
+    attribute : Avram::Attribute(Number),
     greater_than = nil,
     less_than = nil,
     allow_nil : Bool = false

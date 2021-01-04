@@ -87,21 +87,21 @@ describe "Avram::Attribute" do
     end
 
     it "allows the from and to values to be nil" do
-      attribute = Avram::Attribute(String?).new(name: :color, param: nil, value: "teal", param_key: "test_form")
+      attribute = Avram::Attribute(String).new(name: :color, param: nil, value: "teal", param_key: "test_form")
       attribute.value = nil
       attribute.changed?(to: nil).should be_true
 
-      attribute = Avram::Attribute(String?).new(name: :color, param: nil, value: nil, param_key: "test_form")
+      attribute = Avram::Attribute(String).new(name: :color, param: nil, value: nil, param_key: "test_form")
       attribute.value = "gold"
       attribute.changed?(from: nil).should be_true
     end
 
     it "treats a blank string as nil" do
-      attribute = Avram::Attribute(String?).new(name: :color, param: nil, value: " ", param_key: "test_form")
+      attribute = Avram::Attribute(String).new(name: :color, param: nil, value: " ", param_key: "test_form")
       attribute.value = "silver"
       attribute.changed?(from: nil).should be_true
 
-      attribute = Avram::Attribute(String?).new(name: :color, param: nil, value: "purple", param_key: "test_form")
+      attribute = Avram::Attribute(String).new(name: :color, param: nil, value: "purple", param_key: "test_form")
       attribute.value = " "
       attribute.changed?(to: nil).should be_true
     end

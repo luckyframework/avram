@@ -17,6 +17,10 @@ private def attribute(value : T) : Avram::Attribute(T) forall T
   Avram::Attribute.new(value: value, param: nil, param_key: "fake", name: :fake)
 end
 
+private def nil_attribute(type : T.class) : Avram::Attribute(T) forall T
+  Avram::Attribute(T).new(value: nil, param: nil, param_key: "fake", name: :fake)
+end
+
 describe Avram::Validations do
   describe "validate_at_most_one_filled" do
     it "marks filled attribute as invalid if more than one is filled" do
@@ -52,7 +56,7 @@ describe Avram::Validations do
     end
 
     it "marks first field as invalid if no attributes are filled" do
-      first_blank_attribute = attribute(nil)
+      first_blank_attribute = nil_attribute(String)
       second_blank_attribute = attribute("")
 
       Avram::Validations.validate_exactly_one_filled(first_blank_attribute, second_blank_attribute)
@@ -75,7 +79,7 @@ describe Avram::Validations do
   describe "validate_required" do
     it "validates multiple attributes" do
       empty_attribute = attribute("")
-      nil_attribute = attribute(nil)
+      nil_attribute = nil_attribute(String)
 
       Avram::Validations.validate_required(empty_attribute, nil_attribute)
 
@@ -172,7 +176,7 @@ describe Avram::Validations do
       Avram::Validations.validate_acceptance_of false_attribute
       false_attribute.errors.should eq(["must be accepted"])
 
-      nil_attribute = attribute(nil)
+      nil_attribute = nil_attribute(Bool)
       Avram::Validations.validate_acceptance_of nil_attribute
       nil_attribute.errors.should eq(["must be accepted"])
 
@@ -208,7 +212,7 @@ describe Avram::Validations do
     end
 
     it "can allow nil" do
-      nil_name = Avram::Attribute(String?).new(value: nil, param: nil, param_key: "fake", name: :fake)
+      nil_name = Avram::Attribute(String).new(value: nil, param: nil, param_key: "fake", name: :fake)
 
       Avram::Validations.validate_inclusion_of(nil_name, in: ["Jamie"], allow_nil: true)
       nil_name.valid?.should be_true
@@ -241,23 +245,25 @@ describe Avram::Validations do
     end
 
     it "raises an error for an impossible condition" do
-      does_not_matter = attribute(nil)
       expect_raises(Avram::ImpossibleValidation) do
-        Avram::Validations.validate_size_of does_not_matter, min: 4, max: 1
+        Avram::Validations.validate_size_of nil_attribute(String), min: 4, max: 1
       end
     end
 
     it "can allow nil" do
-      just_nil = attribute(nil)
+      just_nil = nil_attribute(String)
       Avram::Validations.validate_size_of(just_nil, is: 10, allow_nil: true)
       just_nil.valid?.should be_true
 
+      just_nil = nil_attribute(String)
       Avram::Validations.validate_size_of(just_nil, min: 1, max: 2, allow_nil: true)
       just_nil.valid?.should be_true
 
+      just_nil = nil_attribute(String)
       Avram::Validations.validate_size_of(just_nil, is: 10)
       just_nil.valid?.should be_false
 
+      just_nil = nil_attribute(String)
       Avram::Validations.validate_size_of(just_nil, min: 1, max: 2)
       just_nil.valid?.should be_false
     end
@@ -285,11 +291,11 @@ describe Avram::Validations do
     end
 
     it "can allow nil" do
-      just_nil = attribute(nil)
+      just_nil = nil_attribute(Int32)
       Avram::Validations.validate_numeric(just_nil, greater_than: 1, less_than: 2, allow_nil: true)
       just_nil.valid?.should be_true
 
-      just_nil = attribute(nil)
+      just_nil = nil_attribute(Int32)
       Avram::Validations.validate_numeric(just_nil, greater_than: 1, less_than: 2)
       just_nil.valid?.should be_false
     end
