@@ -121,7 +121,7 @@ abstract class Avram::DeleteOperation(T)
     end
 
     {% for attribute in attributes %}
-      @_{{ attribute[:name] }} : Avram::Attribute({{ attribute[:type] }}?)?
+      @_{{ attribute[:name] }} : Avram::Attribute({{ attribute[:type] }})?
 
       def {{ attribute[:name] }}
         _{{ attribute[:name] }}
@@ -143,7 +143,7 @@ abstract class Avram::DeleteOperation(T)
         record_value = @record.try(&.{{ attribute[:name] }})
         value = record_value.nil? ? default_value_for_{{ attribute[:name] }} : record_value
 
-        @_{{ attribute[:name] }} ||= Avram::Attribute({{ attribute[:type] }}?).new(
+        @_{{ attribute[:name] }} ||= Avram::Attribute({{ attribute[:type] }}).new(
           name: :{{ attribute[:name].id }},
           param: permitted_params["{{ attribute[:name] }}"]?,
           value: value,
