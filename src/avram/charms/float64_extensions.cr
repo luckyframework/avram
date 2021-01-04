@@ -7,6 +7,10 @@ struct Float64
     alias ColumnType = Float64
     include Avram::Type
 
+    def self.criteria(query : T, column) forall T
+      Criteria(T, Float64).new(query, column)
+    end
+
     def from_db!(value : Float64)
       value
     end

@@ -18,6 +18,10 @@ struct Time
       Time::Format::ISO_8601_TIME,
     ]
 
+    def self.criteria(query : T, column) forall T
+      Criteria(T, Time).new(query, column)
+    end
+
     def from_db!(value : Time)
       value
     end
