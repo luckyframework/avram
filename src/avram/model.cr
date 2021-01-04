@@ -209,9 +209,8 @@ abstract class Avram::Model
 
   macro setup_getters(columns, *args, **named_args)
     {% for column in columns %}
-      {% db_type = column[:type].is_a?(Generic) ? column[:type].type_vars.first : column[:type] %}
       def {{column[:name]}} : {{column[:type]}}{{(column[:nilable] ? "?" : "").id}}
-        {{ db_type }}::Lucky.from_db!(@{{column[:name]}})
+        {{ column[:type] }}.adapter.from_db!(@{{column[:name]}})
       end
       {% if column[:type].id == Bool.id %}
       def {{column[:name]}}? : Bool
