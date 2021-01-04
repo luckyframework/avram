@@ -1463,7 +1463,7 @@
   <ul class="list-summary">
     
       <li class="entry-summary">
-        <a href="#new(name:Symbol,param:Avram::Uploadable%7CString?,value:T,param_key:String)-class-method" class="signature"><strong>.new</strong>(name : Symbol, param : Avram::Uploadable | String?, value : T, param_key : String)</a>
+        <a href="#new(name,param,value:T?,param_key)-class-method" class="signature"><strong>.new</strong>(name, param, value : T?, param_key)</a>
         
       </li>
     
@@ -1484,38 +1484,38 @@
   <h3>Instance methods inherited from class <code><a href="../Avram/Attribute.html">Avram::Attribute(T)</a></code></h3>
   
   
-    <a href="../Avram/Attribute.html#add_error(message:ErrorMessage=&quot;isinvalid&quot;)-instance-method" class="tooltip">
-      <span>add_error(message : ErrorMessage = <span class="s">&quot;is invalid&quot;</span>)</span>
+    <a href="../Avram/Attribute.html#add_error(message:String=&quot;isinvalid&quot;)-instance-method" class="tooltip">
+      <span>add_error(message : String = <span class="s">&quot;is invalid&quot;</span>)<br/>add_error(message : Proc | Avram::CallableErrorMessage)</span>
     add_error</a>, 
     
   
-    <a href="../Avram/Attribute.html#changed?(from:T%7CNothing=Nothing.new,to:T%7CNothing=Nothing.new)-instance-method" class="tooltip">
-      <span>changed?(from : T | Nothing = <span class="t">Nothing</span>.<span class="k">new</span>, to : T | Nothing = <span class="t">Nothing</span>.<span class="k">new</span>)</span>
+    <a href="../Avram/Attribute.html#changed?(from:T?%7CNothing=Nothing.new,to:T?%7CNothing=Nothing.new):Bool-instance-method" class="tooltip">
+      <span>changed?(from : T? | Nothing = <span class="t">Nothing</span>.<span class="k">new</span>, to : T? | Nothing = <span class="t">Nothing</span>.<span class="k">new</span>) : Bool</span>
     changed?</a>, 
     
   
-    <a href="../Avram/Attribute.html#errors-instance-method" class="tooltip">
-      <span>errors</span>
+    <a href="../Avram/Attribute.html#errors:Array(String)-instance-method" class="tooltip">
+      <span>errors : Array(String)</span>
     errors</a>, 
     
   
-    <a href="../Avram/Attribute.html#name-instance-method" class="tooltip">
-      <span>name</span>
+    <a href="../Avram/Attribute.html#name:Symbol-instance-method" class="tooltip">
+      <span>name : Symbol</span>
     name</a>, 
     
   
-    <a href="../Avram/Attribute.html#original_value-instance-method" class="tooltip">
-      <span>original_value</span>
+    <a href="../Avram/Attribute.html#original_value:T?-instance-method" class="tooltip">
+      <span>original_value : T?</span>
     original_value</a>, 
     
   
-    <a href="../Avram/Attribute.html#param-instance-method" class="tooltip">
-      <span>param</span>
+    <a href="../Avram/Attribute.html#param:Avram::Uploadable%7CString-instance-method" class="tooltip">
+      <span>param : Avram::Uploadable | String</span>
     param</a>, 
     
   
-    <a href="../Avram/Attribute.html#param_key-instance-method" class="tooltip">
-      <span>param_key</span>
+    <a href="../Avram/Attribute.html#param_key:String-instance-method" class="tooltip">
+      <span>param_key : String</span>
     param_key</a>, 
     
   
@@ -1529,18 +1529,18 @@
     reset_errors</a>, 
     
   
-    <a href="../Avram/Attribute.html#valid?-instance-method" class="tooltip">
-      <span>valid?</span>
+    <a href="../Avram/Attribute.html#valid?:Bool-instance-method" class="tooltip">
+      <span>valid? : Bool</span>
     valid?</a>, 
     
   
-    <a href="../Avram/Attribute.html#value-instance-method" class="tooltip">
-      <span>value</span>
+    <a href="../Avram/Attribute.html#value:T?-instance-method" class="tooltip">
+      <span>value : T?</span>
     value</a>, 
     
   
-    <a href="../Avram/Attribute.html#value=(value)-instance-method" class="tooltip">
-      <span>value=(value)</span>
+    <a href="../Avram/Attribute.html#value=(value:T?)-instance-method" class="tooltip">
+      <span>value=(value : T?)</span>
     value=</a>
     
   
@@ -1551,8 +1551,8 @@
   <h3>Constructor methods inherited from class <code><a href="../Avram/Attribute.html">Avram::Attribute(T)</a></code></h3>
   
   
-    <a href="../Avram/Attribute.html#new(name:Symbol,param:Avram::Uploadable%7CString?,value:T,param_key:String)-class-method" class="tooltip">
-      <span>new(name : Symbol, param : Avram::Uploadable | String?, value : T, param_key : String)</span>
+    <a href="../Avram/Attribute.html#new(name,param,value:T?,param_key)-class-method" class="tooltip">
+      <span>new(name, param, value : T?, param_key)</span>
     new</a>
     
   
@@ -1603,12 +1603,12 @@
     Constructor Detail
   </h2>
   
-    <div class="entry-detail" id="new(name:Symbol,param:Avram::Uploadable|String?,value:T,param_key:String)-class-method">
+    <div class="entry-detail" id="new(name,param,value:T?,param_key)-class-method">
       <div class="signature">
         
-        def self.<strong>new</strong>(name : Symbol, param : <a href="../Avram/Uploadable.html">Avram::Uploadable</a> | <a href="../String.html">String</a>?, value : T, param_key : <a href="../String.html">String</a>)
+        def self.<strong>new</strong>(name, param, value : T?, param_key)
 
-        <a class="method-permalink" href="#new(name:Symbol,param:Avram::Uploadable%7CString?,value:T,param_key:String)-class-method">#</a>
+        <a class="method-permalink" href="#new(name,param,value:T?,param_key)-class-method">#</a>
       </div>
       
       <br/>

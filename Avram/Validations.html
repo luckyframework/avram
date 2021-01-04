@@ -1510,7 +1510,7 @@
   <ul class="list-summary">
     
       <li class="entry-summary">
-        <a href="#validate_acceptance_of(attribute:Avram::Attribute(Bool?),message:Avram::Attribute::ErrorMessage=&quot;mustbeaccepted&quot;)-instance-method" class="signature"><strong>#validate_acceptance_of</strong>(attribute : Avram::Attribute(Bool?), message : Avram::Attribute::ErrorMessage = <span class="s">&quot;must be accepted&quot;</span>)</a>
+        <a href="#validate_acceptance_of(attribute:Avram::Attribute(Bool),message:Avram::Attribute::ErrorMessage=&quot;mustbeaccepted&quot;)-instance-method" class="signature"><strong>#validate_acceptance_of</strong>(attribute : Avram::Attribute(Bool), message : Avram::Attribute::ErrorMessage = <span class="s">&quot;must be accepted&quot;</span>)</a>
         
           <div class="summary"><p>Validate whether an attribute was accepted (<code>true</code>)</p></div>
         
@@ -1545,7 +1545,7 @@
       </li>
     
       <li class="entry-summary">
-        <a href="#validate_numeric(attribute:Avram::Attribute(Number?),greater_than=nil,less_than=nil,allow_nil:Bool=false)-instance-method" class="signature"><strong>#validate_numeric</strong>(attribute : Avram::Attribute(Number?), greater_than = <span class="n">nil</span>, less_than = <span class="n">nil</span>, allow_nil : Bool = <span class="n">false</span>)</a>
+        <a href="#validate_numeric(attribute:Avram::Attribute(Number),greater_than=nil,less_than=nil,allow_nil:Bool=false)-instance-method" class="signature"><strong>#validate_numeric</strong>(attribute : Avram::Attribute(Number), greater_than = <span class="n">nil</span>, less_than = <span class="n">nil</span>, allow_nil : Bool = <span class="n">false</span>)</a>
         
           <div class="summary"><p>Validate a number is <code>greater_than</code> and/or <code>less_than</code></p></div>
         
@@ -1559,14 +1559,14 @@
       </li>
     
       <li class="entry-summary">
-        <a href="#validate_size_of(attribute:Avram::Attribute(String?),min=nil,max=nil,allow_nil:Bool=false)-instance-method" class="signature"><strong>#validate_size_of</strong>(attribute : Avram::Attribute(String?), min = <span class="n">nil</span>, max = <span class="n">nil</span>, allow_nil : Bool = <span class="n">false</span>)</a>
+        <a href="#validate_size_of(attribute:Avram::Attribute(String),min=nil,max=nil,allow_nil:Bool=false)-instance-method" class="signature"><strong>#validate_size_of</strong>(attribute : Avram::Attribute(String), min = <span class="n">nil</span>, max = <span class="n">nil</span>, allow_nil : Bool = <span class="n">false</span>)</a>
         
           <div class="summary"><p>Validate the size of a <code><a href="../String.html">String</a></code> is within a <code>min</code> and/or <code>max</code></p></div>
         
       </li>
     
       <li class="entry-summary">
-        <a href="#validate_size_of(attribute:Avram::Attribute(String?),*,isexact_size,message:Avram::Attribute::ErrorMessage=&quot;isinvalid&quot;,allow_nil:Bool=false)-instance-method" class="signature"><strong>#validate_size_of</strong>(attribute : Avram::Attribute(String?), *, is exact_size, message : Avram::Attribute::ErrorMessage = <span class="s">&quot;is invalid&quot;</span>, allow_nil : Bool = <span class="n">false</span>)</a>
+        <a href="#validate_size_of(attribute:Avram::Attribute(String),*,isexact_size,message:Avram::Attribute::ErrorMessage=&quot;isinvalid&quot;,allow_nil:Bool=false)-instance-method" class="signature"><strong>#validate_size_of</strong>(attribute : Avram::Attribute(String), *, is exact_size, message : Avram::Attribute::ErrorMessage = <span class="s">&quot;is invalid&quot;</span>, allow_nil : Bool = <span class="n">false</span>)</a>
         
           <div class="summary"><p>Validate the size of a <code><a href="../String.html">String</a></code> is exactly a certain size</p></div>
         
@@ -1596,12 +1596,12 @@
     Instance Method Detail
   </h2>
   
-    <div class="entry-detail" id="validate_acceptance_of(attribute:Avram::Attribute(Bool?),message:Avram::Attribute::ErrorMessage=&quot;mustbeaccepted&quot;)-instance-method">
+    <div class="entry-detail" id="validate_acceptance_of(attribute:Avram::Attribute(Bool),message:Avram::Attribute::ErrorMessage=&quot;mustbeaccepted&quot;)-instance-method">
       <div class="signature">
         
-        def <strong>validate_acceptance_of</strong>(attribute : <a href="../Avram/Attribute.html">Avram::Attribute</a>(<a href="../Bool.html">Bool</a>?), message : <a href="../Avram/Attribute/ErrorMessage.html">Avram::Attribute::ErrorMessage</a> = <span class="s">&quot;must be accepted&quot;</span>)
+        def <strong>validate_acceptance_of</strong>(attribute : <a href="../Avram/Attribute.html">Avram::Attribute</a>(<a href="../Bool.html">Bool</a>), message : <a href="../Avram/Attribute/ErrorMessage.html">Avram::Attribute::ErrorMessage</a> = <span class="s">&quot;must be accepted&quot;</span>)
 
-        <a class="method-permalink" href="#validate_acceptance_of(attribute:Avram::Attribute(Bool?),message:Avram::Attribute::ErrorMessage=&quot;mustbeaccepted&quot;)-instance-method">#</a>
+        <a class="method-permalink" href="#validate_acceptance_of(attribute:Avram::Attribute(Bool),message:Avram::Attribute::ErrorMessage=&quot;mustbeaccepted&quot;)-instance-method">#</a>
       </div>
       
         <div class="doc">
@@ -1718,12 +1718,12 @@ field invalid.</p>
       </div>
     </div>
   
-    <div class="entry-detail" id="validate_numeric(attribute:Avram::Attribute(Number?),greater_than=nil,less_than=nil,allow_nil:Bool=false)-instance-method">
+    <div class="entry-detail" id="validate_numeric(attribute:Avram::Attribute(Number),greater_than=nil,less_than=nil,allow_nil:Bool=false)-instance-method">
       <div class="signature">
         
-        def <strong>validate_numeric</strong>(attribute : <a href="../Avram/Attribute.html">Avram::Attribute</a>(Number?), greater_than = <span class="n">nil</span>, less_than = <span class="n">nil</span>, allow_nil : <a href="../Bool.html">Bool</a> = <span class="n">false</span>)
+        def <strong>validate_numeric</strong>(attribute : <a href="../Avram/Attribute.html">Avram::Attribute</a>(Number), greater_than = <span class="n">nil</span>, less_than = <span class="n">nil</span>, allow_nil : <a href="../Bool.html">Bool</a> = <span class="n">false</span>)
 
-        <a class="method-permalink" href="#validate_numeric(attribute:Avram::Attribute(Number?),greater_than=nil,less_than=nil,allow_nil:Bool=false)-instance-method">#</a>
+        <a class="method-permalink" href="#validate_numeric(attribute:Avram::Attribute(Number),greater_than=nil,less_than=nil,allow_nil:Bool=false)-instance-method">#</a>
       </div>
       
         <div class="doc">
@@ -1766,12 +1766,12 @@ marked as invalid if the value is <code>nil</code>, or "blank" (empty strings or
       </div>
     </div>
   
-    <div class="entry-detail" id="validate_size_of(attribute:Avram::Attribute(String?),min=nil,max=nil,allow_nil:Bool=false)-instance-method">
+    <div class="entry-detail" id="validate_size_of(attribute:Avram::Attribute(String),min=nil,max=nil,allow_nil:Bool=false)-instance-method">
       <div class="signature">
         
-        def <strong>validate_size_of</strong>(attribute : <a href="../Avram/Attribute.html">Avram::Attribute</a>(<a href="../String.html">String</a>?), min = <span class="n">nil</span>, max = <span class="n">nil</span>, allow_nil : <a href="../Bool.html">Bool</a> = <span class="n">false</span>)
+        def <strong>validate_size_of</strong>(attribute : <a href="../Avram/Attribute.html">Avram::Attribute</a>(<a href="../String.html">String</a>), min = <span class="n">nil</span>, max = <span class="n">nil</span>, allow_nil : <a href="../Bool.html">Bool</a> = <span class="n">false</span>)
 
-        <a class="method-permalink" href="#validate_size_of(attribute:Avram::Attribute(String?),min=nil,max=nil,allow_nil:Bool=false)-instance-method">#</a>
+        <a class="method-permalink" href="#validate_size_of(attribute:Avram::Attribute(String),min=nil,max=nil,allow_nil:Bool=false)-instance-method">#</a>
       </div>
       
         <div class="doc">
@@ -1788,12 +1788,12 @@ validate_size_of password, min: <span class="n">12</span></code></pre>
       </div>
     </div>
   
-    <div class="entry-detail" id="validate_size_of(attribute:Avram::Attribute(String?),*,isexact_size,message:Avram::Attribute::ErrorMessage=&quot;isinvalid&quot;,allow_nil:Bool=false)-instance-method">
+    <div class="entry-detail" id="validate_size_of(attribute:Avram::Attribute(String),*,isexact_size,message:Avram::Attribute::ErrorMessage=&quot;isinvalid&quot;,allow_nil:Bool=false)-instance-method">
       <div class="signature">
         
-        def <strong>validate_size_of</strong>(attribute : <a href="../Avram/Attribute.html">Avram::Attribute</a>(<a href="../String.html">String</a>?), *, is exact_size, message : <a href="../Avram/Attribute/ErrorMessage.html">Avram::Attribute::ErrorMessage</a> = <span class="s">&quot;is invalid&quot;</span>, allow_nil : <a href="../Bool.html">Bool</a> = <span class="n">false</span>)
+        def <strong>validate_size_of</strong>(attribute : <a href="../Avram/Attribute.html">Avram::Attribute</a>(<a href="../String.html">String</a>), *, is exact_size, message : <a href="../Avram/Attribute/ErrorMessage.html">Avram::Attribute::ErrorMessage</a> = <span class="s">&quot;is invalid&quot;</span>, allow_nil : <a href="../Bool.html">Bool</a> = <span class="n">false</span>)
 
-        <a class="method-permalink" href="#validate_size_of(attribute:Avram::Attribute(String?),*,isexact_size,message:Avram::Attribute::ErrorMessage=&quot;isinvalid&quot;,allow_nil:Bool=false)-instance-method">#</a>
+        <a class="method-permalink" href="#validate_size_of(attribute:Avram::Attribute(String),*,isexact_size,message:Avram::Attribute::ErrorMessage=&quot;isinvalid&quot;,allow_nil:Bool=false)-instance-method">#</a>
       </div>
       
         <div class="doc">

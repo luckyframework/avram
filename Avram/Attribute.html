@@ -1477,7 +1477,7 @@
   <ul class="list-summary">
     
       <li class="entry-summary">
-        <a href="#new(name:Symbol,param:Avram::Uploadable%7CString?,value:T,param_key:String)-class-method" class="signature"><strong>.new</strong>(name : Symbol, param : Avram::Uploadable | String?, value : T, param_key : String)</a>
+        <a href="#new(name,param,value:T?,param_key)-class-method" class="signature"><strong>.new</strong>(name, param, value : T?, param_key)</a>
         
       </li>
     
@@ -1498,37 +1498,42 @@
   <ul class="list-summary">
     
       <li class="entry-summary">
-        <a href="#add_error(message:ErrorMessage=&quot;isinvalid&quot;)-instance-method" class="signature"><strong>#add_error</strong>(message : ErrorMessage = <span class="s">&quot;is invalid&quot;</span>)</a>
+        <a href="#add_error(message:String=&quot;isinvalid&quot;)-instance-method" class="signature"><strong>#add_error</strong>(message : String = <span class="s">&quot;is invalid&quot;</span>)</a>
         
       </li>
     
       <li class="entry-summary">
-        <a href="#changed?(from:T%7CNothing=Nothing.new,to:T%7CNothing=Nothing.new)-instance-method" class="signature"><strong>#changed?</strong>(from : T | Nothing = <span class="t">Nothing</span>.<span class="k">new</span>, to : T | Nothing = <span class="t">Nothing</span>.<span class="k">new</span>)</a>
+        <a href="#add_error(message:Proc%7CAvram::CallableErrorMessage)-instance-method" class="signature"><strong>#add_error</strong>(message : Proc | Avram::CallableErrorMessage)</a>
         
       </li>
     
       <li class="entry-summary">
-        <a href="#errors-instance-method" class="signature"><strong>#errors</strong></a>
+        <a href="#changed?(from:T?%7CNothing=Nothing.new,to:T?%7CNothing=Nothing.new):Bool-instance-method" class="signature"><strong>#changed?</strong>(from : T? | Nothing = <span class="t">Nothing</span>.<span class="k">new</span>, to : T? | Nothing = <span class="t">Nothing</span>.<span class="k">new</span>) : Bool</a>
         
       </li>
     
       <li class="entry-summary">
-        <a href="#name-instance-method" class="signature"><strong>#name</strong></a>
+        <a href="#errors:Array(String)-instance-method" class="signature"><strong>#errors</strong> : Array(String)</a>
         
       </li>
     
       <li class="entry-summary">
-        <a href="#original_value-instance-method" class="signature"><strong>#original_value</strong></a>
+        <a href="#name:Symbol-instance-method" class="signature"><strong>#name</strong> : Symbol</a>
         
       </li>
     
       <li class="entry-summary">
-        <a href="#param-instance-method" class="signature"><strong>#param</strong></a>
+        <a href="#original_value:T?-instance-method" class="signature"><strong>#original_value</strong> : T?</a>
         
       </li>
     
       <li class="entry-summary">
-        <a href="#param_key-instance-method" class="signature"><strong>#param_key</strong></a>
+        <a href="#param:Avram::Uploadable%7CString-instance-method" class="signature"><strong>#param</strong> : Avram::Uploadable | String</a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#param_key:String-instance-method" class="signature"><strong>#param_key</strong> : String</a>
         
       </li>
     
@@ -1543,17 +1548,17 @@
       </li>
     
       <li class="entry-summary">
-        <a href="#valid?-instance-method" class="signature"><strong>#valid?</strong></a>
+        <a href="#valid?:Bool-instance-method" class="signature"><strong>#valid?</strong> : Bool</a>
         
       </li>
     
       <li class="entry-summary">
-        <a href="#value-instance-method" class="signature"><strong>#value</strong></a>
+        <a href="#value:T?-instance-method" class="signature"><strong>#value</strong> : T?</a>
         
       </li>
     
       <li class="entry-summary">
-        <a href="#value=(value)-instance-method" class="signature"><strong>#value=</strong>(value)</a>
+        <a href="#value=(value:T?)-instance-method" class="signature"><strong>#value=</strong>(value : T?)</a>
         
       </li>
     
@@ -1606,12 +1611,12 @@
     Constructor Detail
   </h2>
   
-    <div class="entry-detail" id="new(name:Symbol,param:Avram::Uploadable|String?,value:T,param_key:String)-class-method">
+    <div class="entry-detail" id="new(name,param,value:T?,param_key)-class-method">
       <div class="signature">
         
-        def self.<strong>new</strong>(name : Symbol, param : <a href="../Avram/Uploadable.html">Avram::Uploadable</a> | <a href="../String.html">String</a>?, value : T, param_key : <a href="../String.html">String</a>)
+        def self.<strong>new</strong>(name, param, value : T?, param_key)
 
-        <a class="method-permalink" href="#new(name:Symbol,param:Avram::Uploadable%7CString?,value:T,param_key:String)-class-method">#</a>
+        <a class="method-permalink" href="#new(name,param,value:T?,param_key)-class-method">#</a>
       </div>
       
       <br/>
@@ -1634,12 +1639,12 @@
     Instance Method Detail
   </h2>
   
-    <div class="entry-detail" id="add_error(message:ErrorMessage=&quot;isinvalid&quot;)-instance-method">
+    <div class="entry-detail" id="add_error(message:String=&quot;isinvalid&quot;)-instance-method">
       <div class="signature">
         
-        def <strong>add_error</strong>(message : <a href="../Avram/Attribute/ErrorMessage.html">ErrorMessage</a> = <span class="s">&quot;is invalid&quot;</span>)
+        def <strong>add_error</strong>(message : <a href="../String.html">String</a> = <span class="s">&quot;is invalid&quot;</span>)
 
-        <a class="method-permalink" href="#add_error(message:ErrorMessage=&quot;isinvalid&quot;)-instance-method">#</a>
+        <a class="method-permalink" href="#add_error(message:String=&quot;isinvalid&quot;)-instance-method">#</a>
       </div>
       
       <br/>
@@ -1648,12 +1653,12 @@
       </div>
     </div>
   
-    <div class="entry-detail" id="changed?(from:T|Nothing=Nothing.new,to:T|Nothing=Nothing.new)-instance-method">
+    <div class="entry-detail" id="add_error(message:Proc|Avram::CallableErrorMessage)-instance-method">
       <div class="signature">
         
-        def <strong>changed?</strong>(from : T | <a href="../Avram/Attribute/Nothing.html">Nothing</a> = <span class="t">Nothing</span>.<span class="k">new</span>, to : T | <a href="../Avram/Attribute/Nothing.html">Nothing</a> = <span class="t">Nothing</span>.<span class="k">new</span>)
+        def <strong>add_error</strong>(message : Proc | <a href="../Avram/CallableErrorMessage.html">Avram::CallableErrorMessage</a>)
 
-        <a class="method-permalink" href="#changed?(from:T%7CNothing=Nothing.new,to:T%7CNothing=Nothing.new)-instance-method">#</a>
+        <a class="method-permalink" href="#add_error(message:Proc%7CAvram::CallableErrorMessage)-instance-method">#</a>
       </div>
       
       <br/>
@@ -1662,12 +1667,12 @@
       </div>
     </div>
   
-    <div class="entry-detail" id="errors-instance-method">
+    <div class="entry-detail" id="changed?(from:T?|Nothing=Nothing.new,to:T?|Nothing=Nothing.new):Bool-instance-method">
       <div class="signature">
         
-        def <strong>errors</strong>
+        def <strong>changed?</strong>(from : T? | <a href="../Avram/Attribute/Nothing.html">Nothing</a> = <span class="t">Nothing</span>.<span class="k">new</span>, to : T? | <a href="../Avram/Attribute/Nothing.html">Nothing</a> = <span class="t">Nothing</span>.<span class="k">new</span>) : <a href="../Bool.html">Bool</a>
 
-        <a class="method-permalink" href="#errors-instance-method">#</a>
+        <a class="method-permalink" href="#changed?(from:T?%7CNothing=Nothing.new,to:T?%7CNothing=Nothing.new):Bool-instance-method">#</a>
       </div>
       
       <br/>
@@ -1676,12 +1681,12 @@
       </div>
     </div>
   
-    <div class="entry-detail" id="name-instance-method">
+    <div class="entry-detail" id="errors:Array(String)-instance-method">
       <div class="signature">
         
-        def <strong>name</strong>
+        def <strong>errors</strong> : <a href="../Array.html">Array</a>(<a href="../String.html">String</a>)
 
-        <a class="method-permalink" href="#name-instance-method">#</a>
+        <a class="method-permalink" href="#errors:Array(String)-instance-method">#</a>
       </div>
       
       <br/>
@@ -1690,12 +1695,12 @@
       </div>
     </div>
   
-    <div class="entry-detail" id="original_value-instance-method">
+    <div class="entry-detail" id="name:Symbol-instance-method">
       <div class="signature">
         
-        def <strong>original_value</strong>
+        def <strong>name</strong> : Symbol
 
-        <a class="method-permalink" href="#original_value-instance-method">#</a>
+        <a class="method-permalink" href="#name:Symbol-instance-method">#</a>
       </div>
       
       <br/>
@@ -1704,12 +1709,12 @@
       </div>
     </div>
   
-    <div class="entry-detail" id="param-instance-method">
+    <div class="entry-detail" id="original_value:T?-instance-method">
       <div class="signature">
         
-        def <strong>param</strong>
+        def <strong>original_value</strong> : T?
 
-        <a class="method-permalink" href="#param-instance-method">#</a>
+        <a class="method-permalink" href="#original_value:T?-instance-method">#</a>
       </div>
       
       <br/>
@@ -1718,12 +1723,26 @@
       </div>
     </div>
   
-    <div class="entry-detail" id="param_key-instance-method">
+    <div class="entry-detail" id="param:Avram::Uploadable|String-instance-method">
       <div class="signature">
         
-        def <strong>param_key</strong>
+        def <strong>param</strong> : <a href="../Avram/Uploadable.html">Avram::Uploadable</a> | <a href="../String.html">String</a>
 
-        <a class="method-permalink" href="#param_key-instance-method">#</a>
+        <a class="method-permalink" href="#param:Avram::Uploadable%7CString-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="param_key:String-instance-method">
+      <div class="signature">
+        
+        def <strong>param_key</strong> : <a href="../String.html">String</a>
+
+        <a class="method-permalink" href="#param_key:String-instance-method">#</a>
       </div>
       
       <br/>
@@ -1760,12 +1779,12 @@
       </div>
     </div>
   
-    <div class="entry-detail" id="valid?-instance-method">
+    <div class="entry-detail" id="valid?:Bool-instance-method">
       <div class="signature">
         
-        def <strong>valid?</strong>
+        def <strong>valid?</strong> : <a href="../Bool.html">Bool</a>
 
-        <a class="method-permalink" href="#valid?-instance-method">#</a>
+        <a class="method-permalink" href="#valid?:Bool-instance-method">#</a>
       </div>
       
       <br/>
@@ -1774,12 +1793,12 @@
       </div>
     </div>
   
-    <div class="entry-detail" id="value-instance-method">
+    <div class="entry-detail" id="value:T?-instance-method">
       <div class="signature">
         
-        def <strong>value</strong>
+        def <strong>value</strong> : T?
 
-        <a class="method-permalink" href="#value-instance-method">#</a>
+        <a class="method-permalink" href="#value:T?-instance-method">#</a>
       </div>
       
       <br/>
@@ -1788,12 +1807,12 @@
       </div>
     </div>
   
-    <div class="entry-detail" id="value=(value)-instance-method">
+    <div class="entry-detail" id="value=(value:T?)-instance-method">
       <div class="signature">
         
-        def <strong>value=</strong>(value)
+        def <strong>value=</strong>(value : T?)
 
-        <a class="method-permalink" href="#value=(value)-instance-method">#</a>
+        <a class="method-permalink" href="#value=(value:T?)-instance-method">#</a>
       </div>
       
       <br/>
