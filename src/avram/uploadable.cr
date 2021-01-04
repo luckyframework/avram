@@ -6,6 +6,10 @@ module Avram::Uploadable
   # This should test if the filename is a blank string.
   abstract def blank? : Bool
 
+  def self.adapter
+    Lucky
+  end
+
   module Lucky
     include Avram::Type
 

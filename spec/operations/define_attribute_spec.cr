@@ -51,15 +51,15 @@ end
 
 describe "attribute in operations" do
   it "is a PermittedAttribute" do
-    operation.title.should be_a(Avram::PermittedAttribute(String?))
+    operation.title.should be_a(Avram::PermittedAttribute(String))
     operation.title.name.should eq(:title)
     operation.title.param_key.should eq("data")
 
-    save_operation.password_confirmation.should be_a(Avram::PermittedAttribute(String?))
+    save_operation.password_confirmation.should be_a(Avram::PermittedAttribute(String))
     save_operation.password_confirmation.name.should eq(:password_confirmation)
     save_operation.password_confirmation.param_key.should eq("post")
 
-    delete_operation.accept_delete.should be_a(Avram::PermittedAttribute(Bool?))
+    delete_operation.accept_delete.should be_a(Avram::PermittedAttribute(Bool))
     delete_operation.accept_delete.name.should eq(:accept_delete)
     delete_operation.accept_delete.param_key.should eq("post")
   end
@@ -181,15 +181,15 @@ end
 
 describe "file_attribute in operation" do
   it "is a PermittedAttribute" do
-    operation.thumb.should be_a(Avram::PermittedAttribute(Avram::Uploadable?))
+    operation.thumb.should be_a(Avram::PermittedAttribute(Avram::Uploadable))
     operation.thumb.name.should eq(:thumb)
     operation.thumb.param_key.should eq("data")
 
-    save_operation.thumb.should be_a(Avram::PermittedAttribute(Avram::Uploadable?))
+    save_operation.thumb.should be_a(Avram::PermittedAttribute(Avram::Uploadable))
     save_operation.thumb.name.should eq(:thumb)
     save_operation.thumb.param_key.should eq("post")
 
-    delete_operation.biometric_confirmation.should be_a(Avram::PermittedAttribute(Avram::Uploadable?))
+    delete_operation.biometric_confirmation.should be_a(Avram::PermittedAttribute(Avram::Uploadable))
     delete_operation.biometric_confirmation.name.should eq(:biometric_confirmation)
     delete_operation.biometric_confirmation.param_key.should eq("post")
   end

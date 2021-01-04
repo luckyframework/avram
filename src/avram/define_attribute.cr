@@ -65,7 +65,7 @@ module Avram::DefineAttribute
                         type_declaration.value
                       end
     %}
-    @_{{ name }} : Avram::Attribute({{ type }}?)?
+    @_{{ name }} : Avram::Attribute({{ type }})?
 
     ensure_base_attributes_method_is_present
 
@@ -78,7 +78,7 @@ module Avram::DefineAttribute
     end
 
     private def _{{ name }}
-      @_{{ name }} ||= Avram::Attribute({{ type }}?).new(
+      @_{{ name }} ||= Avram::Attribute({{ type }}).new(
         name: :{{ name }},
         param: {{ name }}_param,
         value: {{ default_value }},
@@ -99,7 +99,7 @@ module Avram::DefineAttribute
     end
 
     def set_{{ name }}_from_param(attribute : Avram::Attribute)
-      parse_result = {{ type }}::Lucky.parse({{ name }}_param)
+      parse_result = {{ type }}.adapter.parse({{ name }}_param)
       if parse_result.is_a? Avram::Type::SuccessfulCast
         attribute.value = parse_result.value
       else
