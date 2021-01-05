@@ -13,6 +13,19 @@ describe "Lazy loading associations" do
     post.tags!.should eq([tag])
   end
 
+  it "can lazy load has_many with the query option" do
+    post = PostBox.create
+    post2 = PostBox.create
+    comment = CommentBox.create &.post_id(post.id)
+    nice_comment = CommentBox.create &.nice.post_id(post.id)
+
+    post.comments!.should eq([comment, nice_comment])
+    post.nice_comments!.should eq([nice_comment])
+
+    post2.comments.size.should eq 0
+    post2.nice_comments.size.should eq 0
+  end
+
   it "can lazy load has_one" do
     # to verify it is loading the correct association, not just the first
     SignInCredentialBox.new.user_id(AdminBox.create.id).create
