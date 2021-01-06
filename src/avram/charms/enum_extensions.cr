@@ -45,6 +45,10 @@ macro avram_enum(enum_name, &block)
       alias ColumnType = Int32
       include Avram::Type
 
+      def self.criteria(query : T, column) forall T
+        Criteria(T, Int32).new(query, column)
+      end
+
       def from_db!(value : Int32)
         {{ enum_name }}.new(value)
       end

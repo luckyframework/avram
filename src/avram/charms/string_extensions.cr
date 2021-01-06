@@ -7,6 +7,10 @@ class String
     alias ColumnType = String
     include Avram::Type
 
+    def self.criteria(query : T, column) forall T
+      Criteria(T, String).new(query, column)
+    end
+
     def parse(value : String)
       SuccessfulCast(String).new(value)
     end

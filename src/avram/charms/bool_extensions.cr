@@ -7,6 +7,10 @@ struct Bool
     alias ColumnType = Bool
     include Avram::Type
 
+    def self.criteria(query : T, column) forall T
+      Criteria(T, Bool).new(query, column)
+    end
+
     def parse(value : String)
       if %w(true 1).includes? value
         SuccessfulCast(Bool).new true

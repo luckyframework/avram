@@ -7,6 +7,10 @@ struct JSON::Any
     alias ColumnType = JSON::Any
     include Avram::Type
 
+    def self.criteria(query : T, column) forall T
+      Criteria(T, JSON::Any).new(query, column)
+    end
+
     def from_db!(value : JSON::Any)
       value
     end

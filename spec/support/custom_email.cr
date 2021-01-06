@@ -22,6 +22,10 @@ class CustomEmail
     alias ColumnType = String
     include Avram::Type
 
+    def self.criteria(query : T, column) forall T
+      Criteria(T, CustomEmail).new(query, column)
+    end
+
     def parse(value : CustomEmail)
       SuccessfulCast(CustomEmail).new(value)
     end

@@ -11,10 +11,9 @@ class Avram::BaseQueryTemplate
         include Avram::PrimaryKeyQueryable({{ type }})
       {% end %}
 
-      macro generate_criteria_method(query_class, name, type)
+      macro generate_criteria_method(name, type)
         def \{{ name }}
-          column_name = "#{table_name}.\{{ name }}"
-          \{{ type }}::Lucky::Criteria(\{{ query_class }}, \{{ type }}).new(self, column_name)
+          \{{ type }}.adapter.criteria(self, "#{table_name}.\{{ name }}")
         end
       end
 
@@ -48,20 +47,11 @@ class Avram::BaseQueryTemplate
           {{ column[:name] }}.eq(value)
         end
 
-        {% if column[:type].is_a?(Generic) %}
-          # Checking Array type
-          generate_criteria_method(BaseQuery, {{ column[:name] }}, {{ column[:type].type_vars.first }})
+        generate_criteria_method({{ column[:name] }}, {{ column[:type] }})
 
-          macro inherited
-            generate_criteria_method(\{{ @type.name }}, {{ column[:name] }}, {{ column[:type].type_vars.first }})
-          end
-        {% else %}
-          generate_criteria_method(BaseQuery, {{ column[:name] }}, {{ column[:type] }})
-
-          macro inherited
-            generate_criteria_method(\{{ @type.name }}, {{ column[:name] }}, {{ column[:type] }})
-          end
-        {% end %}
+        macro inherited
+          generate_criteria_method({{ column[:name] }}, {{ column[:type] }})
+        end
       {% end %}
 
       {% for assoc in associations %}
