@@ -4,9 +4,9 @@ class Avram::Attribute(T)
   setter value : T?
   getter param_key : String
   @errors = [] of String
-  @param : Avram::Uploadable | String?
+  @param : Avram::Uploadable | String | Nil
 
-  def initialize(@name, @param, @value : T?, @param_key)
+  def initialize(@name, @value : T?, @param_key, @param = nil)
     @original_value = @value
   end
 
@@ -67,6 +67,36 @@ class Avram::Attribute(T)
     from = from.is_a?(Nothing) ? true : from == original_value
     to = to.is_a?(Nothing) ? true : to == value
     value != original_value && from && to
+  end
+
+  def extract(params : Avram::Paramable)
+    extract(params, type: T)
+  end
+
+  private def extract(params, type : Avram::Uploadable.class)
+    file = params.nested_file?(param_key)
+    @param = param_val = file.try(&.[]?(name.to_s))
+    return if param_val.nil?
+
+    parse_result = Avram::Uploadable.adapter.parse(param_val)
+    if parse_result.is_a? Avram::Type::SuccessfulCast
+      self.value = parse_result.value
+    else
+      add_error("is invalid")
+    end
+  end
+
+  private def extract(params, type)
+    nested_params = params.nested(param_key)
+    @param = param_val = nested_params[name.to_s]?
+    return if param_val.nil?
+
+    parse_result = type.adapter.parse(param_val)
+    if parse_result.is_a? Avram::Type::SuccessfulCast
+      self.value = parse_result.value
+    else
+      add_error("is invalid")
+    end
   end
 
   class Nothing
