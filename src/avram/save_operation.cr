@@ -339,6 +339,28 @@ abstract class Avram::SaveOperation(T)
     !!record_id
   end
 
+  def revert : self?
+    return unless saved?
+
+    saved_record = record.not_nil!
+    operation = self.class.new(saved_record)
+
+    if id.value.nil?
+      operation if saved_record.delete.rows_affected > 0
+    else
+      {% for attribute in @type.constant(:ATTRIBUTES) %}
+        operation.{{ attribute.var }}.value = {{ attribute.var }}.original_value
+      {% end %}
+
+      {% for column in @type.constant(:COLUMN_ATTRIBUTES) %}
+        operation.{{ column[:name].id }}.value =
+          {{ column[:name].id }}.original_value
+      {% end %}
+
+      operation if operation.save
+    end
+  end
+
   private def insert_or_update
     if persisted?
       update record_id
