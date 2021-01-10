@@ -339,13 +339,22 @@ abstract class Avram::SaveOperation(T)
     !!record_id
   end
 
+  # `#persisted?` always returns `true` in `after_*` hooks, whether
+  # a new record was created, or an existing one was updated.
+  #
+  # This method should always return `true` for a create or `false`
+  # for an update, independent of the stage we are at in the operation.
+  def new_record? : Bool
+    {{ T.resolve.constant(:PRIMARY_KEY_NAME).id }}.value.nil?
+  end
+
   def revert : self?
     return unless saved?
 
     saved_record = record.not_nil!
     operation = self.class.new(saved_record)
 
-    if id.value.nil?
+    if new_record?
       operation if saved_record.delete.rows_affected > 0
     else
       {% for attribute in @type.constant(:ATTRIBUTES) %}
