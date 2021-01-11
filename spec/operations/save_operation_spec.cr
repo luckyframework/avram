@@ -655,7 +655,7 @@ describe "Avram::SaveOperation" do
 
         operation.save.should be_true
         UserQuery.new.first?.should_not(be_nil)
-        operation.revert.should be_a(SaveUser)
+        operation.revert.valid?.should be_true
         UserQuery.new.first?.should(be_nil)
       end
     end
@@ -686,7 +686,7 @@ describe "Avram::SaveOperation" do
         updated_user.age.should eq(new_age)
         updated_user.joined_at.should eq(new_joined)
 
-        operation.revert.should be_a(SaveUser)
+        operation.revert.valid?.should be_true
 
         reverted_user = user.reload
         reverted_user.name.should eq(name)

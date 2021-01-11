@@ -348,25 +348,48 @@ abstract class Avram::SaveOperation(T)
     {{ T.resolve.constant(:PRIMARY_KEY_NAME).id }}.value.nil?
   end
 
-  def revert : self?
-    return unless saved?
+  # TODO:
+  #   - Factor in operation needs
+  #   - Use the new delete operation for deleting the record
+  def revert : self
+    if persisted?
+      operation = self.class.new(record.not_nil!)
+    else
+      operation = self.class.new
+    end
 
-    saved_record = record.not_nil!
-    operation = self.class.new(saved_record)
+    unless saved?
+      operation.add_error(:revert, "Cannot revert an unsaved record")
+      return operation
+    end
 
     if new_record?
-      operation if saved_record.delete.rows_affected > 0
+      revert_create(operation)
     else
-      {% for attribute in @type.constant(:ATTRIBUTES) %}
-        operation.{{ attribute.var }}.value = {{ attribute.var }}.original_value
-      {% end %}
+      revert_update(operation)
+    end
 
-      {% for column in @type.constant(:COLUMN_ATTRIBUTES) %}
-        operation.{{ column[:name].id }}.value =
-          {{ column[:name].id }}.original_value
-      {% end %}
+    operation
+  end
 
-      operation if operation.save
+  private def revert_create(operation)
+    if record.not_nil!.delete.rows_affected < 1
+      operation.add_error(:revert, "Could not delete record")
+    end
+  end
+
+  private def revert_update(operation)
+    {% for attribute in @type.constant(:ATTRIBUTES) %}
+      operation.{{ attribute.var }}.value = {{ attribute.var }}.original_value
+    {% end %}
+
+    {% for column in @type.constant(:COLUMN_ATTRIBUTES) %}
+      operation.{{ column[:name].id }}.value =
+        {{ column[:name].id }}.original_value
+    {% end %}
+
+    unless operation.save
+      operation.add_error(:revert, "Could not save record")
     end
   end
 
