@@ -20,6 +20,9 @@ module Avram::RevertSaveOperation
             \{{ need.var }}: \{{ need.var }},
           \{% end %}
         )\{% end %}
+
+        operation.add_error(:revert, "No record to revert")
+        return operation
       end
 
       unless saved?
