@@ -647,54 +647,6 @@ describe "Avram::SaveOperation" do
       end
     end
   end
-
-  describe "#revert" do
-    context "when new record was created" do
-      it "deletes new record" do
-        operation = SaveUser.new(name: "Dan", age: 34, joined_at: Time.utc)
-
-        operation.save.should be_true
-        UserQuery.new.first?.should_not(be_nil)
-        operation.revert.valid?.should be_true
-        UserQuery.new.first?.should(be_nil)
-      end
-    end
-
-    context "when existing record was updated" do
-      it "reverts update" do
-        name = "Dan"
-        age = 34
-        joined = Time.utc(2018, 1, 1, 10, 20, 30)
-
-        new_name = "Mary"
-        new_age = 26
-        new_joined = Time.utc(2018, 1, 1, 20, 30, 40)
-
-        user = UserBox.create &.name(name).age(age).joined_at(joined)
-
-        operation = SaveUser.new(
-          user,
-          name: new_name,
-          age: new_age,
-          joined_at: new_joined
-        )
-
-        operation.save.should be_true
-
-        updated_user = user.reload
-        updated_user.name.should eq(new_name)
-        updated_user.age.should eq(new_age)
-        updated_user.joined_at.should eq(new_joined)
-
-        operation.revert.valid?.should be_true
-
-        reverted_user = user.reload
-        reverted_user.name.should eq(name)
-        reverted_user.age.should eq(age)
-        reverted_user.joined_at.should eq(joined)
-      end
-    end
-  end
 end
 
 private def now_as_string

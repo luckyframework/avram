@@ -20,6 +20,7 @@ abstract class Avram::SaveOperation(T)
   include Avram::NestedSaveOperation
   include Avram::MarkAsFailed
   include Avram::InheritColumnAttributes
+  include Avram::RevertSaveOperation
 
   enum SaveStatus
     Saved
@@ -346,51 +347,6 @@ abstract class Avram::SaveOperation(T)
   # for an update, independent of the stage we are at in the operation.
   def new_record? : Bool
     {{ T.resolve.constant(:PRIMARY_KEY_NAME).id }}.value.nil?
-  end
-
-  # TODO:
-  #   - Factor in operation needs
-  #   - Use the new delete operation for deleting the record
-  def revert : self
-    if persisted?
-      operation = self.class.new(record.not_nil!)
-    else
-      operation = self.class.new
-    end
-
-    unless saved?
-      operation.add_error(:revert, "Cannot revert an unsaved record")
-      return operation
-    end
-
-    if new_record?
-      revert_create(operation)
-    else
-      revert_update(operation)
-    end
-
-    operation
-  end
-
-  private def revert_create(operation)
-    if record.not_nil!.delete.rows_affected < 1
-      operation.add_error(:revert, "Could not delete record")
-    end
-  end
-
-  private def revert_update(operation)
-    {% for attribute in @type.constant(:ATTRIBUTES) %}
-      operation.{{ attribute.var }}.value = {{ attribute.var }}.original_value
-    {% end %}
-
-    {% for column in @type.constant(:COLUMN_ATTRIBUTES) %}
-      operation.{{ column[:name].id }}.value =
-        {{ column[:name].id }}.original_value
-    {% end %}
-
-    unless operation.save
-      operation.add_error(:revert, "Could not save record")
-    end
   end
 
   private def insert_or_update
