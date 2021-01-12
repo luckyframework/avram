@@ -5,15 +5,26 @@ describe "Time column type" do
     it "casts various formats successfully" do
       time = Time.local
       times = {
-        iso8601:              time.to_s("%FT%X%z"),
-        rfc2822:              time.to_rfc2822,
-        rfc3339:              time.to_rfc3339,
-        space_separated_yaml: "2001-12-14 21:59:43.10 -5",
-        http_date:            "Sun, 14 Feb 2016 21:00:00 GMT",
+        iso8601:             time.to_s("%FT%X%z"),
+        rfc2822:             time.to_rfc2822,
+        rfc3339:             time.to_rfc3339,
+        datetime_html_input: time.to_s("%Y-%m-%dT%H:%M:%S"),
+        http_date:           time.to_s("%a, %d %b %Y %H:%M:%S GMT"),
       }
       times.each do |_format, item|
         result = Time.adapter.parse(item)
         result.should be_a(Avram::Type::SuccessfulCast(Time))
+
+        unless result.is_a? Avram::Type::SuccessfulCast(Time)
+          next
+        end
+
+        result.value.year.should eq(time.year)
+        result.value.month.should eq(time.month)
+        result.value.day.should eq(time.day)
+        result.value.hour.should eq(time.hour)
+        result.value.minute.should eq(time.minute)
+        result.value.second.should eq(time.second)
       end
     end
 
