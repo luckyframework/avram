@@ -13,10 +13,12 @@ class CreateBusinesses::V20180612221318 < Avram::Migrator::Migration::V1
       add_belongs_to business : Business, on_delete: :cascade
     end
 
+    enable_extension "citext"
+
     create :email_addresses do
       primary_key id : Int64
       add_timestamps
-      add address : String
+      add address : String, case_sensitive: false
       add_belongs_to business : Business?, on_delete: :cascade
     end
   end
