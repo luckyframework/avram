@@ -3,7 +3,7 @@ require "../spec_helper"
 describe "Time column type" do
   describe ".parse" do
     it "casts various formats successfully" do
-      time = Time.local
+      time = Time.utc
       times = {
         iso8601:             time.to_s("%FT%X%z"),
         rfc2822:             time.to_rfc2822,

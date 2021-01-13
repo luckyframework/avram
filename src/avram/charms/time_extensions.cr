@@ -13,7 +13,7 @@ struct Time
       Time::Format::RFC_3339,
       # HTML datetime-local inputs are basically RFC 3339 without the timezone:
       # https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/datetime-local
-      Time::Format.new("%Y-%m-%dT%H:%M:%S", Time::Location.local),
+      Time::Format.new("%Y-%m-%dT%H:%M:%S", Time::Location::UTC),
       # Dates and times go last, otherwise it will parse strings with both
       # dates *and* times incorrectly.
       Time::Format::HTTP_DATE,
