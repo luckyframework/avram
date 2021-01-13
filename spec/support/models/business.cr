@@ -12,10 +12,3 @@ class TaxId < BaseModel
     belongs_to business : Business
   end
 end
-
-class EmailAddress < BaseModel
-  table do
-    column address : String
-    belongs_to business : Business?
-  end
-end
