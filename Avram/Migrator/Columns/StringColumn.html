@@ -1468,7 +1468,7 @@
   <ul class="list-summary">
     
       <li class="entry-summary">
-        <a href="#new(name,nilable,default)-class-method" class="signature"><strong>.new</strong>(name, nilable, default)</a>
+        <a href="#new(name,nilable,default,case_sensitive=true)-class-method" class="signature"><strong>.new</strong>(name, nilable, default, case_sensitive = <span class="n">true</span>)</a>
         
       </li>
     
@@ -1490,6 +1490,8 @@
     
       <li class="entry-summary">
         <a href="#column_type:String-instance-method" class="signature"><strong>#column_type</strong> : String</a>
+        
+          <div class="summary"><p>If <code>case_sensitive?</code> is false then the column type is set to <code>citext</code> which requires the <code>citext</code> extension to be enabled otherwise the type is <code>text</code></p></div>
         
       </li>
     
@@ -1614,12 +1616,12 @@
     Constructor Detail
   </h2>
   
-    <div class="entry-detail" id="new(name,nilable,default)-class-method">
+    <div class="entry-detail" id="new(name,nilable,default,case_sensitive=true)-class-method">
       <div class="signature">
         
-        def self.<strong>new</strong>(name, nilable, default)
+        def self.<strong>new</strong>(name, nilable, default, case_sensitive = <span class="n">true</span>)
 
-        <a class="method-permalink" href="#new(name,nilable,default)-class-method">#</a>
+        <a class="method-permalink" href="#new(name,nilable,default,case_sensitive=true)-class-method">#</a>
       </div>
       
       <br/>
@@ -1649,6 +1651,13 @@
 
         <a class="method-permalink" href="#column_type:String-instance-method">#</a>
       </div>
+      
+        <div class="doc">
+          
+          <p>If <code>case_sensitive?</code> is false then the column type is set to <code>citext</code>
+which requires the <code>citext</code> extension to be enabled
+otherwise the type is <code>text</code></p>
+        </div>
       
       <br/>
       <div>
