@@ -30,4 +30,9 @@ describe "Array" do
     result = Float64.adapter.parse(["3.1415"])
     result.value.should eq([3.1415])
   end
+
+  it "parses Array(UUID) from Array(String)", focus: true do
+    result = UUID.adapter.parse(["b7e99d07-22c4-497d-a014-7cc8d3a7b23a"])
+    result.value.should eq([UUID.new("b7e99d07-22c4-497d-a014-7cc8d3a7b23a")])
+  end
 end

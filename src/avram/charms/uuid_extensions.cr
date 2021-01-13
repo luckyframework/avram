@@ -29,6 +29,16 @@ struct UUID
       value.to_s
     end
 
+    def to_db(values : Array(UUID))
+      # https://github.com/will/crystal-pg/issues/224
+      # PQ::Param.encode_array(values)
+      String.build do |str|
+        str << '{'
+        str << values.map(&.to_s).join(',')
+        str << '}'
+      end
+    end
+
     class Criteria(T, V) < Avram::Criteria(T, V)
     end
   end

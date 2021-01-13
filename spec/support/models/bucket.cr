@@ -7,5 +7,6 @@ class Bucket < BaseModel
     column big_numbers : Array(Int64)
     column names : Array(String)
     column floaty_numbers : Array(Float64)
+    column oody_things : Array(UUID)
   end
 end
