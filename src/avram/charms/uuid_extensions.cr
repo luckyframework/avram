@@ -29,6 +29,10 @@ struct UUID
       value.to_s
     end
 
+    def to_db(values : Array(UUID))
+      PQ::Param.encode_array(values)
+    end
+
     class Criteria(T, V) < Avram::Criteria(T, V)
     end
   end

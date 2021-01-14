@@ -23,6 +23,12 @@ describe "Array Columns" do
     bucket.floaty_numbers.should eq([1.1, 2.2, 3.3, 4.4])
   end
 
+  it "handles Array(UUID)" do
+    BucketBox.create &.oody_things([UUID.new("40435254-4e21-45a6-9a1b-a1b9e7f5b444")])
+    bucket = BucketQuery.new.last
+    bucket.oody_things.should eq([UUID.new("40435254-4e21-45a6-9a1b-a1b9e7f5b444")])
+  end
+
   it "handles optional Array" do
     BucketBox.create &.numbers(nil)
     bucket = BucketQuery.new.last
