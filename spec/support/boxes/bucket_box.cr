@@ -6,5 +6,6 @@ class BucketBox < BaseBox
     big_numbers [1000_i64, 2000_i64]
     names ["Mario", "Luigi"]
     floaty_numbers [0.0]
+    oody_things [UUID.random]
   end
 end

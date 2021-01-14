@@ -31,7 +31,7 @@ describe "Array" do
     result.value.should eq([3.1415])
   end
 
-  it "parses Array(UUID) from Array(String)", focus: true do
+  it "parses Array(UUID) from Array(String)" do
     result = UUID.adapter.parse(["b7e99d07-22c4-497d-a014-7cc8d3a7b23a"])
     result.value.should eq([UUID.new("b7e99d07-22c4-497d-a014-7cc8d3a7b23a")])
   end
