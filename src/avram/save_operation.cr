@@ -291,19 +291,17 @@ abstract class Avram::SaveOperation(T)
 
   def save : Bool
     before_save
-    if valid? && (!persisted? || changes.any?)
+
+    if valid?
       transaction_committed = database.transaction do
-        insert_or_update
-        saved_record = record.not_nil!
-        after_save(saved_record)
+        insert_or_update if changes.any? || !persisted?
+        after_save(record.not_nil!)
         true
       end
 
       if transaction_committed
-        saved_record = record.not_nil!
-        after_commit(saved_record)
         self.save_status = SaveStatus::Saved
-        after_completed(saved_record)
+        after_commit(record.not_nil!)
         Avram::Events::SaveSuccessEvent.publish(
           operation_class: self.class.name,
           attributes: generic_attributes
@@ -313,10 +311,6 @@ abstract class Avram::SaveOperation(T)
         mark_as_failed
         false
       end
-    elsif valid? && changes.empty?
-      self.save_status = SaveStatus::Saved
-      after_completed(record.not_nil!)
-      true
     else
       mark_as_failed
       false
@@ -356,8 +350,6 @@ abstract class Avram::SaveOperation(T)
   def after_save(_record : T); end
 
   def after_commit(_record : T); end
-
-  def after_completed(_record : T); end
 
   private def insert : T
     self.created_at.value ||= Time.utc if responds_to?(:created_at)

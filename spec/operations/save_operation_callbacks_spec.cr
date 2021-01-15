@@ -160,13 +160,22 @@ end
 private class UpdateOperationWithNoUpdates < Post::SaveOperation
   include TestableOperation
 
-  after_completed :mark_operation_completed
-  after_completed do |_saved_post|
-    mark_callback("after_completed_in_a_block")
+  after_save :mark_operation_saved
+  after_save do |_saved_post|
+    mark_callback("after_save_in_a_block")
   end
 
-  private def mark_operation_completed(_saved_post)
-    mark_callback("after_completed_called")
+  after_commit :mark_operation_committed
+  after_commit do |_saved_post|
+    mark_callback("after_commit_in_a_block")
+  end
+
+  private def mark_operation_saved(_saved_post)
+    mark_callback("after_save_called")
+  end
+
+  private def mark_operation_committed(_saved_post)
+    mark_callback("after_commit_called")
   end
 end
 
@@ -245,12 +254,14 @@ describe "Avram::SaveOperation callbacks" do
     end
   end
 
-  it "runs after_completed callbacks even when nothing is being updated" do
+  it "runs callbacks even when nothing is being updated" do
     post = PostBox.create
     UpdateOperationWithNoUpdates.update(post) do |operation, _updated_post|
       operation.callbacks_that_ran.should eq([
-        "after_completed_called",
-        "after_completed_in_a_block",
+        "after_save_called",
+        "after_save_in_a_block",
+        "after_commit_called",
+        "after_commit_in_a_block",
       ])
     end
   end

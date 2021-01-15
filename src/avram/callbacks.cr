@@ -522,9 +522,16 @@ module Avram::Callbacks
   # ```
   #
   macro after_completed(method_name)
-    after_completed do |object|
-      {{ method_name.id }}(object)
-    end
+    {% raise <<-ERROR
+      after_completed has been removed
+
+      The after_save and after_commit callbacks are called even if no changes were made
+
+      Try this...
+
+        ▸ after_commit #{method_name.id}
+      ERROR
+    %}
   end
 
   # Run the given block after save and after successful transaction commit
@@ -541,16 +548,16 @@ module Avram::Callbacks
   # end
   # ```
   macro after_completed(&block)
-    def after_completed(%object : T)
-      {% if @type.methods.map(&.name).includes?(:after_completed.id) %}
-        previous_def
-      {% else %}
-        super
-      {% end %}
+    {% raise <<-ERROR
+      after_completed has been removed
 
-      {{ block.args.first }} = %object
-      {{ block.body }}
-    end
+      The after_save and after_commit callbacks are called even if no changes were made
+
+      Try this...
+
+        ▸ after_commit #{block.id}
+      ERROR
+    %}
   end
 
   # :nodoc:
