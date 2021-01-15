@@ -525,8 +525,7 @@ module Avram::Callbacks
     {% raise <<-ERROR
       after_completed has been removed
 
-      after_save and after_commit now runs even if no changes were made
-      to an existing record.
+      The after_save and after_commit callbacks are called even if no changes were made
 
       Try this...
 
@@ -552,8 +551,7 @@ module Avram::Callbacks
     {% raise <<-ERROR
       after_completed has been removed
 
-      after_save and after_commit now runs even if no changes were made
-      to an existing record.
+      The after_save and after_commit callbacks are called even if no changes were made
 
       Try this...
 
