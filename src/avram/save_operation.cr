@@ -351,20 +351,6 @@ abstract class Avram::SaveOperation(T)
 
   def after_commit(_record : T); end
 
-  def after_completed(_record : T)
-    {% raise <<-ERROR
-      after_completed has been removed
-
-      after_save and after_commit now runs even if no changes were made
-      to an existing record.
-
-      Try this...
-
-        ▸ use after_commit instead
-      ERROR
-    %}
-  end
-
   private def insert : T
     self.created_at.value ||= Time.utc if responds_to?(:created_at)
     self.updated_at.value ||= Time.utc if responds_to?(:updated_at)
