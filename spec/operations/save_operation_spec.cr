@@ -624,6 +624,29 @@ describe "Avram::SaveOperation" do
       end
     end
   end
+
+  describe "#new_record?" do
+    context "when creating" do
+      it "returns 'true'" do
+        operation = SaveUser.new(name: "Dan", age: 34, joined_at: Time.utc)
+
+        operation.new_record?.should be_true
+        operation.save.should be_true
+        operation.new_record?.should be_true
+      end
+    end
+
+    context "when updating" do
+      it "returns 'false'" do
+        user = UserFactory.create &.name("Dan").age(34).joined_at(Time.utc)
+        operation = SaveUser.new(user, name: "Tom")
+
+        operation.new_record?.should be_false
+        operation.save.should be_true
+        operation.new_record?.should be_false
+      end
+    end
+  end
 end
 
 private def now_as_string
