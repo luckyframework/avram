@@ -72,7 +72,7 @@ end
 describe "Avram::SaveOperation needs" do
   it "sets up a method arg for save, update, and new" do
     params = Avram::Params.new({"name" => "Paul"})
-    UserBox.create
+    UserFactory.create
     user = UserQuery.new.first
 
     NeedsSaveOperation.create(params, nilable_value: "not nil", optional: "bar", created_by: "Jane") do |operation, _record|
@@ -104,8 +104,8 @@ end
 
 describe "Avram::DeleteOperation needs" do
   it "sets up a method arg for destroy" do
-    user = UserBox.create
-    post = PostBox.create
+    user = UserFactory.create
+    post = PostFactory.create
 
     NeedyDeleteOperation.destroy(post, user: user, notification_message: "is this thing on?") do |operation, _record|
       operation.notification_message.should eq("is this thing on?")
@@ -116,8 +116,8 @@ describe "Avram::DeleteOperation needs" do
 
   it "also generates named args for other attributes" do
     params = Avram::Params.new({"confirm_delete" => "yeah, do it"})
-    user = UserBox.create
-    post = PostBox.create
+    user = UserFactory.create
+    post = PostFactory.create
 
     NeedyDeleteOperation.destroy(post, params, user: user, notification_message: nil) do |operation, _record|
       operation.notification_message.should be_nil

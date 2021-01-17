@@ -33,7 +33,7 @@ end
 
 describe "Avram::DeleteOperation callbacks" do
   it "runs before_delete and after_delete callbacks" do
-    user = UserBox.create &.name("Jerry")
+    user = UserFactory.create &.name("Jerry")
 
     DeleteOperationWithCallbacks.destroy(user) do |operation, deleted_user|
       deleted_user.not_nil!.name.should eq "Jerry"

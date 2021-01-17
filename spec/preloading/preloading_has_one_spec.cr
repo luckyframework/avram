@@ -9,8 +9,8 @@ end
 describe "Preloading has_one associations" do
   it "works" do
     with_lazy_load(enabled: false) do
-      admin = AdminBox.create
-      sign_in_credential = SignInCredentialBox.create &.user_id(admin.id)
+      admin = AdminFactory.create
+      sign_in_credential = SignInCredentialFactory.create &.user_id(admin.id)
 
       admin = Admin::BaseQuery.new.preload_sign_in_credential
 
@@ -21,8 +21,8 @@ describe "Preloading has_one associations" do
   it "works with custom query and nested preload" do
     with_lazy_load(enabled: false) do
       SignInCredential::BaseQuery.times_called = 0
-      user = UserBox.create
-      SignInCredentialBox.create &.user_id(user.id)
+      user = UserFactory.create
+      SignInCredentialFactory.create &.user_id(user.id)
 
       user = User::BaseQuery.new.preload_sign_in_credential(
         SignInCredential::BaseQuery.new.preload_user
@@ -35,11 +35,11 @@ describe "Preloading has_one associations" do
 
   it "works with optional association" do
     with_lazy_load(enabled: false) do
-      UserBox.create
+      UserFactory.create
       user = User::BaseQuery.new.preload_sign_in_credential.first
       user.sign_in_credential.should be_nil
 
-      sign_in_credential = SignInCredentialBox.new.user_id(user.id).create
+      sign_in_credential = SignInCredentialFactory.new.user_id(user.id).create
       user = User::BaseQuery.new.preload_sign_in_credential.first
       user.sign_in_credential.should eq sign_in_credential
     end
@@ -47,8 +47,8 @@ describe "Preloading has_one associations" do
 
   it "raises error if accessing association without preloading first" do
     with_lazy_load(enabled: false) do
-      admin = AdminBox.create
-      SignInCredentialBox.create &.user_id(admin.id)
+      admin = AdminFactory.create
+      SignInCredentialFactory.create &.user_id(admin.id)
 
       expect_raises Avram::LazyLoadError do
         admin.sign_in_credential
@@ -57,7 +57,7 @@ describe "Preloading has_one associations" do
   end
 
   it "does not fail when getting results multiple times" do
-    AdminBox.create
+    AdminFactory.create
 
     admin = Admin::BaseQuery.new.preload_sign_in_credential
 
@@ -65,8 +65,8 @@ describe "Preloading has_one associations" do
   end
 
   it "lazy loads if nothing is preloaded" do
-    admin = AdminBox.create
-    sign_in_credential = SignInCredentialBox.create &.user_id(admin.id)
+    admin = AdminFactory.create
+    sign_in_credential = SignInCredentialFactory.create &.user_id(admin.id)
 
     admin.sign_in_credential.should eq sign_in_credential
   end
@@ -82,8 +82,8 @@ describe "Preloading has_one associations" do
   context "with existing record" do
     it "works" do
       with_lazy_load(enabled: false) do
-        admin = AdminBox.create
-        sign_in_credential = SignInCredentialBox.create &.user_id(admin.id)
+        admin = AdminFactory.create
+        sign_in_credential = SignInCredentialFactory.create &.user_id(admin.id)
 
         admin = Admin::BaseQuery.preload_sign_in_credential(admin)
 
@@ -93,10 +93,10 @@ describe "Preloading has_one associations" do
 
     it "works with multiple" do
       with_lazy_load(enabled: false) do
-        admin = AdminBox.create
-        sign_in_credential = SignInCredentialBox.create &.user_id(admin.id)
-        admin2 = AdminBox.create
-        sign_in_credential2 = SignInCredentialBox.create &.user_id(admin2.id)
+        admin = AdminFactory.create
+        sign_in_credential = SignInCredentialFactory.create &.user_id(admin.id)
+        admin2 = AdminFactory.create
+        sign_in_credential2 = SignInCredentialFactory.create &.user_id(admin2.id)
 
         admins = Admin::BaseQuery.preload_sign_in_credential([admin, admin2])
 
@@ -107,8 +107,8 @@ describe "Preloading has_one associations" do
 
     it "works with custom query" do
       with_lazy_load(enabled: false) do
-        user = UserBox.create
-        sign_in_credential = SignInCredentialBox.create &.user_id(user.id)
+        user = UserFactory.create
+        sign_in_credential = SignInCredentialFactory.create &.user_id(user.id)
 
         user = UserQuery.preload_sign_in_credential(user, SignInCredential::BaseQuery.new.id.not.eq(sign_in_credential.id))
 
@@ -118,8 +118,8 @@ describe "Preloading has_one associations" do
 
     it "does not modify original record" do
       with_lazy_load(enabled: false) do
-        admin = AdminBox.create
-        SignInCredentialBox.create &.user_id(admin.id)
+        admin = AdminFactory.create
+        SignInCredentialFactory.create &.user_id(admin.id)
 
         Admin::BaseQuery.preload_sign_in_credential(admin)
 

@@ -11,7 +11,7 @@ end
 
 describe "Case insensitive columns" do
   it "fails uniqueness validation" do
-    existing = EmailAddressBox.create
+    existing = EmailAddressFactory.create
 
     SaveEmailAddress.create(address: existing.address) do |operation, _result|
       operation.valid?.should be_false

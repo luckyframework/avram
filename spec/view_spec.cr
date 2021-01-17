@@ -4,17 +4,17 @@ include LazyLoadHelpers
 
 describe "views" do
   it "works with a primary key" do
-    user = UserBox.create
-    AdminBox.new.name(user.name).create
+    user = UserFactory.create
+    AdminFactory.new.name(user.name).create
     admin_user = AdminUser::BaseQuery.find(user.id)
 
     admin_user.name.should eq user.name
   end
 
   it "works without a primary key" do
-    UserBox.new.nickname("Johnny").create
-    UserBox.new.nickname("Johnny").create
-    UserBox.new.nickname("Johnny").create
+    UserFactory.new.nickname("Johnny").create
+    UserFactory.new.nickname("Johnny").create
+    UserFactory.new.nickname("Johnny").create
     nickname_info = NicknameInfo::BaseQuery.first
 
     nickname_info.nickname.should eq "Johnny"

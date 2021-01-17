@@ -106,7 +106,7 @@ describe Avram::Validations do
 
   describe "validate_uniqueness_of" do
     it "validates that a new record is unique with a query or without one" do
-      existing_user = UserBox.new.name("Sally").nickname("Sal").create
+      existing_user = UserFactory.new.name("Sally").nickname("Sal").create
       operation = UniquenessSaveOperation.new
       operation.name.value = existing_user.name
       operation.nickname.value = existing_user.nickname.not_nil!.downcase
@@ -118,7 +118,7 @@ describe Avram::Validations do
     end
 
     it "ignores the existing record on update" do
-      existing_user = UserBox.new.name("Sally").create
+      existing_user = UserFactory.new.name("Sally").create
       operation = UniquenessSaveOperation.new(existing_user)
       operation.name.value = existing_user.name
 
@@ -138,7 +138,7 @@ describe Avram::Validations do
     end
 
     it "validates custom message for validate_uniqueness_of" do
-      existing_user = UserBox.create
+      existing_user = UserFactory.create
       UniquenessWithCustomMessageSaveOperation.create(name: existing_user.name) do |operation, _user|
         operation.name.errors.should eq(["cannot be used"])
       end

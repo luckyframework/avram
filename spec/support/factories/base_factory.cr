@@ -1,4 +1,4 @@
-abstract class BaseBox < Avram::Box
+abstract class BaseFactory < Avram::Factory
   def self.build
     new.build
   end

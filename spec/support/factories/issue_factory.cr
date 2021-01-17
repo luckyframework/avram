@@ -1,4 +1,4 @@
-class IssueBox < BaseBox
+class IssueFactory < BaseFactory
   def initialize
     status Issue::Status.new(:opened)
     role Issue::Role.new(:issue)

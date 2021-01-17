@@ -10,12 +10,12 @@ describe "Preloading has_many through associations" do
   context "through is a has_many association that has a belongs_to relationship to target" do
     it "works" do
       with_lazy_load(enabled: false) do
-        tag = TagBox.create
-        TagBox.create # unused tag
-        post = PostBox.create
-        other_post = PostBox.create
-        TaggingBox.create &.tag_id(tag.id).post_id(post.id)
-        TaggingBox.create &.tag_id(tag.id).post_id(other_post.id)
+        tag = TagFactory.create
+        TagFactory.create # unused tag
+        post = PostFactory.create
+        other_post = PostFactory.create
+        TaggingFactory.create &.tag_id(tag.id).post_id(post.id)
+        TaggingFactory.create &.tag_id(tag.id).post_id(other_post.id)
 
         post_tags = Post::BaseQuery.new.preload_tags.results.first.tags
 
@@ -26,12 +26,12 @@ describe "Preloading has_many through associations" do
 
     it "works with uuid foreign keys" do
       with_lazy_load(enabled: false) do
-        item = LineItemBox.create
-        other_item = LineItemBox.create
-        product = ProductBox.create
-        ProductBox.create # unused product
-        LineItemProductBox.create &.line_item_id(item.id).product_id(product.id)
-        LineItemProductBox.create &.line_item_id(other_item.id).product_id(product.id)
+        item = LineItemFactory.create
+        other_item = LineItemFactory.create
+        product = ProductFactory.create
+        ProductFactory.create # unused product
+        LineItemProductFactory.create &.line_item_id(item.id).product_id(product.id)
+        LineItemProductFactory.create &.line_item_id(other_item.id).product_id(product.id)
 
         item_products = LineItemQuery.new.preload_associated_products.results.first.associated_products
 
@@ -41,7 +41,7 @@ describe "Preloading has_many through associations" do
     end
 
     it "does not fail when getting results multiple times" do
-      PostBox.create
+      PostFactory.create
 
       posts = Post::BaseQuery.new.preload_tags
 
@@ -52,9 +52,9 @@ describe "Preloading has_many through associations" do
   context "through is a has_many association that has a has_many relationship to target" do
     it "works" do
       with_lazy_load(enabled: false) do
-        manager = ManagerBox.create
-        employee = EmployeeBox.new.manager_id(manager.id).create
-        customer = CustomerBox.new.employee_id(employee.id).create
+        manager = ManagerFactory.create
+        employee = EmployeeFactory.new.manager_id(manager.id).create
+        customer = CustomerFactory.new.employee_id(employee.id).create
 
         customers = Manager::BaseQuery.new.preload_customers.find(manager.id).customers
 
@@ -67,9 +67,9 @@ describe "Preloading has_many through associations" do
   context "through is a belongs_to association that has a belongs_to relationship to target" do
     it "works" do
       with_lazy_load(enabled: false) do
-        manager = ManagerBox.create
-        employee = EmployeeBox.new.manager_id(manager.id).create
-        customer = CustomerBox.new.employee_id(employee.id).create
+        manager = ManagerFactory.create
+        employee = EmployeeFactory.new.manager_id(manager.id).create
+        customer = CustomerFactory.new.employee_id(employee.id).create
 
         managers = Customer::BaseQuery.new.preload_managers.find(customer.id).managers
 
@@ -82,9 +82,9 @@ describe "Preloading has_many through associations" do
   context "with existing record" do
     it "works" do
       with_lazy_load(enabled: false) do
-        tag = TagBox.create
-        post = PostBox.create
-        TaggingBox.create &.tag_id(tag.id).post_id(post.id)
+        tag = TagFactory.create
+        post = PostFactory.create
+        TaggingFactory.create &.tag_id(tag.id).post_id(post.id)
 
         post = Post::BaseQuery.preload_tags(post)
 
@@ -94,12 +94,12 @@ describe "Preloading has_many through associations" do
 
     it "works with multiple" do
       with_lazy_load(enabled: false) do
-        tag1 = TagBox.create
-        tag2 = TagBox.create
-        post1 = PostBox.create
-        post2 = PostBox.create
-        TaggingBox.create &.tag_id(tag1.id).post_id(post1.id)
-        TaggingBox.create &.tag_id(tag2.id).post_id(post2.id)
+        tag1 = TagFactory.create
+        tag2 = TagFactory.create
+        post1 = PostFactory.create
+        post2 = PostFactory.create
+        TaggingFactory.create &.tag_id(tag1.id).post_id(post1.id)
+        TaggingFactory.create &.tag_id(tag2.id).post_id(post2.id)
 
         posts = Post::BaseQuery.preload_tags([post1, post2])
 
@@ -110,12 +110,12 @@ describe "Preloading has_many through associations" do
 
     it "works with custom query" do
       with_lazy_load(enabled: false) do
-        manager = ManagerBox.create
-        employee1 = EmployeeBox.new.manager_id(manager.id).create
-        employee2 = EmployeeBox.new.manager_id(manager.id).create
-        customer1 = CustomerBox.new.employee_id(employee1.id).create
-        CustomerBox.new.employee_id(employee2.id).create
-        customer3 = CustomerBox.new.employee_id(employee1.id).create
+        manager = ManagerFactory.create
+        employee1 = EmployeeFactory.new.manager_id(manager.id).create
+        employee2 = EmployeeFactory.new.manager_id(manager.id).create
+        customer1 = CustomerFactory.new.employee_id(employee1.id).create
+        CustomerFactory.new.employee_id(employee2.id).create
+        customer3 = CustomerFactory.new.employee_id(employee1.id).create
 
         manager = Manager::BaseQuery.preload_customers(manager, Customer::BaseQuery.new.employee_id(employee1.id))
 
@@ -126,9 +126,9 @@ describe "Preloading has_many through associations" do
 
     it "does not modify original record" do
       with_lazy_load(enabled: false) do
-        tag = TagBox.create
-        original_post = PostBox.create
-        TaggingBox.create &.tag_id(tag.id).post_id(original_post.id)
+        tag = TagFactory.create
+        original_post = PostFactory.create
+        TaggingFactory.create &.tag_id(tag.id).post_id(original_post.id)
 
         Post::BaseQuery.preload_tags(original_post)
 

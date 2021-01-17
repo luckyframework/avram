@@ -1,0 +1,2 @@
+class TaggingFactory < BaseFactory
+end

@@ -1,4 +1,4 @@
-class SoftDeletableItemBox < BaseBox
+class SoftDeletableItemFactory < BaseFactory
   def kept
     soft_deleted_at nil
   end

@@ -80,7 +80,7 @@ describe "Avram::SaveOperation" do
   end
 
   it "can save empty arrays" do
-    bucket = BucketBox.create
+    bucket = BucketFactory.create
 
     bucket = Bucket::SaveOperation.update!(bucket, names: [] of String)
 
@@ -119,7 +119,7 @@ describe "Avram::SaveOperation" do
   describe ".update" do
     it "sets params if passed it" do
       joined_at = 1.day.ago.at_beginning_of_minute.to_utc
-      user = UserBox.new.name("New").age(20).joined_at(Time.utc).create
+      user = UserFactory.new.name("New").age(20).joined_at(Time.utc).create
       user = SaveUser.update!(user, name: "New", age: 20, joined_at: joined_at)
       user.name.should eq "New"
       user.age.should eq 20
@@ -127,10 +127,10 @@ describe "Avram::SaveOperation" do
     end
 
     it "passes params to the block" do
-      user_box = UserBox.new.name("New").age(20).joined_at(Time.utc).create
+      user_factory = UserFactory.new.name("New").age(20).joined_at(Time.utc).create
       joined_at = 1.day.ago.at_beginning_of_minute.to_utc
 
-      SaveUser.update(user_box, name: "New", age: 20, joined_at: joined_at) do |_operation, user|
+      SaveUser.update(user_factory, name: "New", age: 20, joined_at: joined_at) do |_operation, user|
         user.name.should eq "New"
         user.age.should eq 20
         user.joined_at.should eq joined_at
@@ -149,7 +149,7 @@ describe "Avram::SaveOperation" do
   end
 
   it "treats nil changes as nil and not an empty string" do
-    user = UserBox.build
+    user = UserFactory.build
     operation = SaveUser.new(user)
     operation.name.value = nil
 
@@ -196,7 +196,7 @@ describe "Avram::SaveOperation" do
 
   describe "initializer" do
     it "works with a record and named args" do
-      UserBox.new.name("Old Name").create
+      UserFactory.new.name("Old Name").create
       params = Avram::Params.new(name: "New Name")
       user = UserQuery.new.first
 
@@ -264,7 +264,7 @@ describe "Avram::SaveOperation" do
     end
 
     it "returns the value from params for updates" do
-      user = UserBox.build
+      user = UserFactory.build
       params = {"name" => "New Name From Params"}
       avram_params = Avram::Params.new(params)
 
@@ -287,7 +287,7 @@ describe "Avram::SaveOperation" do
     end
 
     it "uses the value if param is empty" do
-      user = UserBox.build
+      user = UserFactory.build
 
       operation = SaveUser.new(user, Avram::Params.new({} of String => String))
 
@@ -348,7 +348,7 @@ describe "Avram::SaveOperation" do
     end
 
     it "allows overriding updated_at and created_at on create" do
-      user = UserBox.new
+      user = UserFactory.new
         .created_at(Time.utc(2018, 1, 1, 10, 20, 30))
         .updated_at(Time.utc(2018, 1, 1, 20, 30, 40))
         .create
@@ -498,7 +498,7 @@ describe "Avram::SaveOperation" do
 
   describe "updating with no changes" do
     it "works when there are no changes" do
-      UserBox.new.name("Old Name").create
+      UserFactory.new.name("Old Name").create
       user = UserQuery.new.first
       params = Avram::Params.new({} of String => String)
       SaveUser.update user, with: params do |operation, _record|
@@ -507,7 +507,7 @@ describe "Avram::SaveOperation" do
     end
 
     it "returns true when there are no changes" do
-      UserBox.new.name("Old Name").create
+      UserFactory.new.name("Old Name").create
       user = UserQuery.new.first
       SaveUser.new(user).tap do |operation|
         operation.save.should be_true
@@ -517,7 +517,7 @@ describe "Avram::SaveOperation" do
 
   describe ".update" do
     it "can create without params" do
-      post = PostBox.new.title("Original Title").create
+      post = PostFactory.new.title("Original Title").create
       ValidSaveOperationWithoutParams.update(post) do |operation, record|
         operation.saved?.should be_true
         record.title.should eq "My Title"
@@ -526,7 +526,7 @@ describe "Avram::SaveOperation" do
 
     context "on success" do
       it "yields the operation and the updated record" do
-        UserBox.new.name("Old Name").create
+        UserFactory.new.name("Old Name").create
         user = UserQuery.new.first
         params = Avram::Params.new({"name" => "New Name"})
         SaveUser.update user, with: params do |operation, record|
@@ -536,7 +536,7 @@ describe "Avram::SaveOperation" do
       end
 
       it "updates updated_at" do
-        user = UserBox.new.updated_at(1.day.ago).create
+        user = UserFactory.new.updated_at(1.day.ago).create
         params = Avram::Params.new({"name" => "New Name"})
         SaveUser.update user, with: params do |operation, record|
           operation.saved?.should be_true
@@ -547,7 +547,7 @@ describe "Avram::SaveOperation" do
 
     context "on failure" do
       it "yields the operation and nil" do
-        UserBox.new.name("Old Name").create
+        UserFactory.new.name("Old Name").create
         user = UserQuery.new.first
         params = Avram::Params.new({"name" => ""})
         SaveUser.update user, with: params do |operation, record|
@@ -557,7 +557,7 @@ describe "Avram::SaveOperation" do
       end
 
       it "logs the failure" do
-        UserBox.new.name("Old Name").create
+        UserFactory.new.name("Old Name").create
         user = UserQuery.new.first
 
         Avram::SaveFailedLog.dexter.temp_config do |log_io|
@@ -569,7 +569,7 @@ describe "Avram::SaveOperation" do
 
     context "with a uuid backed model" do
       it "doesn't generate a new uuid" do
-        line_item = LineItemBox.create
+        line_item = LineItemFactory.create
         SaveLineItem.update(line_item, Avram::Params.new({"name" => "Another pair of shoes"})) do |operation, record|
           operation.saved?.should be_true
           record.id.should eq line_item.id
@@ -579,7 +579,7 @@ describe "Avram::SaveOperation" do
 
     context "when the default is false and the field is required" do
       it "is valid since 'false' is a valid Boolean value" do
-        user = UserBox.create &.nickname("oopsie").available_for_hire(false)
+        user = UserFactory.create &.nickname("oopsie").available_for_hire(false)
         params = Avram::Params.new({"nickname" => "falsey mcfalserson"})
         SaveUserWithFalseValueValidations.update(user, params) do |operation, record|
           record.should_not eq nil
@@ -594,14 +594,14 @@ describe "Avram::SaveOperation" do
 
   describe ".update!" do
     it "can create without params" do
-      post = PostBox.new.title("Original Title").create
+      post = PostFactory.new.title("Original Title").create
       post = ValidSaveOperationWithoutParams.update!(post)
       post.title.should eq "My Title"
     end
 
     context "on success" do
       it "updates and returns the record" do
-        UserBox.new.name("Old Name").create
+        UserFactory.new.name("Old Name").create
         user = UserQuery.new.first
         params = Avram::Params.new({"name" => "New Name"})
 
@@ -614,7 +614,7 @@ describe "Avram::SaveOperation" do
 
     context "on failure" do
       it "raises an exception" do
-        UserBox.new.name("Old Name").create
+        UserFactory.new.name("Old Name").create
         user = UserQuery.new.first
         params = Avram::Params.new({"name" => ""})
 

@@ -1,4 +1,4 @@
-class UserBox < BaseBox
+class UserFactory < BaseFactory
   def initialize
     name "Paul Smith"
     joined_at Time.utc

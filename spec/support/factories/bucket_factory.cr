@@ -1,4 +1,4 @@
-class BucketBox < BaseBox
+class BucketFactory < BaseFactory
   def initialize
     bools [true, false]
     small_numbers [1_i16, 2_i16]

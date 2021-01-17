@@ -8,17 +8,17 @@ class SaveBlob < Blob::SaveOperation
 end
 
 describe "JSON Columns" do
-  it "should work in boxes" do
-    BlobBox.create
+  it "should work in factories" do
+    BlobFactory.create
     blob = BlobQuery.new.first
     blob.doc.should eq JSON::Any.new({"foo" => JSON::Any.new("bar")})
 
-    blob2 = BlobBox.new.doc(JSON::Any.new(42_i64)).create
+    blob2 = BlobFactory.new.doc(JSON::Any.new(42_i64)).create
     blob2.doc.should eq JSON::Any.new(42_i64)
   end
 
   it "should be nullable" do
-    blob = BlobBox.create
+    blob = BlobFactory.create
     SaveBlob.update!(blob, doc: nil)
     blob = BlobQuery.new.first
     blob.doc.should eq nil
