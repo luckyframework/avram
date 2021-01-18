@@ -10,8 +10,8 @@ describe "Preloading has_many associations" do
   it "works" do
     with_lazy_load(enabled: false) do
       Comment::BaseQuery.times_called = 0
-      post = PostBox.create
-      comment = CommentBox.create &.post_id(post.id)
+      post = PostFactory.create
+      comment = CommentFactory.create &.post_id(post.id)
 
       posts = Post::BaseQuery.new.preload_comments
 
@@ -22,11 +22,11 @@ describe "Preloading has_many associations" do
 
   it "preserves additional criteria when used after adding a preload" do
     with_lazy_load(enabled: false) do
-      post = PostBox.create
-      another_post = PostBox.create
-      comment = CommentBox.create &.post_id(post.id)
+      post = PostFactory.create
+      another_post = PostFactory.create
+      comment = CommentFactory.create &.post_id(post.id)
 
-      CommentBox.create &.post_id(another_post.id) # should not be preloaded
+      CommentFactory.create &.post_id(another_post.id) # should not be preloaded
 
       posts = Post::BaseQuery.new.preload_comments.limit(1)
 
@@ -38,8 +38,8 @@ describe "Preloading has_many associations" do
 
   it "works with custom query" do
     with_lazy_load(enabled: false) do
-      post = PostBox.create
-      comment = CommentBox.create &.post_id(post.id)
+      post = PostFactory.create
+      comment = CommentFactory.create &.post_id(post.id)
 
       posts = Post::BaseQuery.new.preload_comments(
         Comment::BaseQuery.new.id.not.eq(comment.id)
@@ -51,8 +51,8 @@ describe "Preloading has_many associations" do
 
   it "works with UUID foreign keys" do
     with_lazy_load(enabled: false) do
-      item = LineItemBox.create
-      scan = ScanBox.create &.line_item_id(item.id)
+      item = LineItemFactory.create
+      scan = ScanFactory.create &.line_item_id(item.id)
 
       items = LineItem::BaseQuery.new.preload_scans
 
@@ -62,8 +62,8 @@ describe "Preloading has_many associations" do
 
   it "works with nested preloads" do
     with_lazy_load(enabled: false) do
-      post = PostBox.create
-      CommentBox.create &.post_id(post.id)
+      post = PostFactory.create
+      CommentFactory.create &.post_id(post.id)
 
       posts = Post::BaseQuery.new.preload_comments(
         Comment::BaseQuery.new.preload_post
@@ -75,7 +75,7 @@ describe "Preloading has_many associations" do
 
   it "raises error if accessing association without preloading first" do
     with_lazy_load(enabled: false) do
-      post = PostBox.create
+      post = PostFactory.create
 
       expect_raises Avram::LazyLoadError do
         post.comments
@@ -85,7 +85,7 @@ describe "Preloading has_many associations" do
 
   it "uses an empty array if there are no associated records" do
     with_lazy_load(enabled: false) do
-      PostBox.create
+      PostFactory.create
 
       posts = Post::BaseQuery.new.preload_comments
 
@@ -94,7 +94,7 @@ describe "Preloading has_many associations" do
   end
 
   it "does not fail when getting results multiple times" do
-    PostBox.create
+    PostFactory.create
 
     posts = Post::BaseQuery.new.preload_comments
 
@@ -102,9 +102,9 @@ describe "Preloading has_many associations" do
   end
 
   it "does not fail when getting results multiple times with custom query" do
-    post = PostBox.create
-    _another_post = PostBox.create
-    comment = CommentBox.create &.post_id(post.id)
+    post = PostFactory.create
+    _another_post = PostFactory.create
+    comment = CommentFactory.create &.post_id(post.id)
 
     posts = Post::BaseQuery.new.preload_comments(
       Comment::BaseQuery.new.id.not.eq(comment.id)
@@ -115,8 +115,8 @@ describe "Preloading has_many associations" do
 
   it "uses preloaded records if available, even if lazy load is enabled" do
     with_lazy_load(enabled: true) do
-      post = PostBox.create
-      comment = CommentBox.create &.post_id(post.id)
+      post = PostFactory.create
+      comment = CommentFactory.create &.post_id(post.id)
 
       posts = Post::BaseQuery.new.preload_comments(
         Comment::BaseQuery.new.id.not.eq(comment.id)
@@ -127,8 +127,8 @@ describe "Preloading has_many associations" do
   end
 
   it "lazy loads if nothing is preloaded" do
-    post = PostBox.create
-    comment = CommentBox.create &.post_id(post.id)
+    post = PostFactory.create
+    comment = CommentFactory.create &.post_id(post.id)
 
     posts = Post::BaseQuery.new
 
@@ -146,8 +146,8 @@ describe "Preloading has_many associations" do
   context "with existing record" do
     it "works" do
       with_lazy_load(enabled: false) do
-        post = PostBox.create
-        comment = CommentBox.create &.post_id(post.id)
+        post = PostFactory.create
+        comment = CommentFactory.create &.post_id(post.id)
 
         post = Post::BaseQuery.preload_comments(post)
 
@@ -157,10 +157,10 @@ describe "Preloading has_many associations" do
 
     it "works with multiple" do
       with_lazy_load(enabled: false) do
-        post1 = PostBox.create
-        post2 = PostBox.create
-        comment1 = CommentBox.create &.post_id(post1.id)
-        comment2 = CommentBox.create &.post_id(post2.id)
+        post1 = PostFactory.create
+        post2 = PostFactory.create
+        comment1 = CommentFactory.create &.post_id(post1.id)
+        comment2 = CommentFactory.create &.post_id(post2.id)
 
         posts = Post::BaseQuery.preload_comments([post1, post2])
 
@@ -171,9 +171,9 @@ describe "Preloading has_many associations" do
 
     it "works with custom query" do
       with_lazy_load(enabled: false) do
-        post = PostBox.create
-        comment1 = CommentBox.create &.post_id(post.id).body("CUSTOM BODY")
-        CommentBox.create &.post_id(post.id)
+        post = PostFactory.create
+        comment1 = CommentFactory.create &.post_id(post.id).body("CUSTOM BODY")
+        CommentFactory.create &.post_id(post.id)
 
         post = Post::BaseQuery.preload_comments(post, Comment::BaseQuery.new.body("CUSTOM BODY"))
 
@@ -183,8 +183,8 @@ describe "Preloading has_many associations" do
 
     it "does not modify original record" do
       with_lazy_load(enabled: false) do
-        original_post = PostBox.create
-        CommentBox.create &.post_id(original_post.id)
+        original_post = PostFactory.create
+        CommentFactory.create &.post_id(original_post.id)
 
         Post::BaseQuery.preload_comments(original_post)
 

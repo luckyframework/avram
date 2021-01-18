@@ -1,4 +1,4 @@
-class BusinessBox < BaseBox
+class BusinessFactory < BaseFactory
   def initialize
     name "My Biz"
   end

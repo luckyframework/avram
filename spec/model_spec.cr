@@ -30,8 +30,8 @@ end
 
 describe Avram::Model do
   it "compares with id and model name, not just id" do
-    user = UserBox.create
-    post = PostBox.create
+    user = UserFactory.create
+    post = PostFactory.create
 
     user.id.should eq(post.id)
     user.should_not eq(post)
@@ -94,7 +94,7 @@ describe Avram::Model do
 
   describe "reload" do
     it "can reload a model" do
-      user = UserBox.create &.name("Original Name")
+      user = UserFactory.create &.name("Original Name")
 
       # Update returns a brand new user. It should have the new name
       newly_updated_user = User::SaveOperation.update!(user, name: "Updated Name")
@@ -108,7 +108,7 @@ describe Avram::Model do
 
     it "can reload a model with a yielded query" do
       with_lazy_load(enabled: false) do
-        post = PostBox.create
+        post = PostFactory.create
 
         # If `preload_tags` doesn't work this will raise
         post.reload(&.preload_tags).tags.should be_empty
@@ -141,7 +141,7 @@ describe Avram::Model do
   end
 
   it "can be deleted" do
-    UserBox.create
+    UserFactory.create
     user = UserQuery.new.first
 
     user.delete
@@ -162,14 +162,14 @@ describe Avram::Model do
     end
 
     it "can be saved" do
-      LineItemBox.create
+      LineItemFactory.create
 
       item = LineItemQuery.new.first
       item.id.should be_a UUID
     end
 
     it "can be deleted" do
-      LineItemBox.create
+      LineItemFactory.create
 
       item = LineItemQuery.new.first
       item.delete

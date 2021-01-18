@@ -4,14 +4,14 @@ include LazyLoadHelpers
 
 describe "Enum" do
   it "check enum" do
-    issue = IssueBox.create
+    issue = IssueFactory.create
 
     issue.status.enum.should eq(Issue::AvramStatus::Opened)
     issue.role.enum.should eq(Issue::AvramRole::Issue)
   end
 
   it "update enum" do
-    issue = IssueBox.create
+    issue = IssueFactory.create
 
     updated_issue = Issue::SaveOperation.update!(issue, status: Issue::Status.new(:closed))
 
@@ -20,14 +20,14 @@ describe "Enum" do
   end
 
   it "access enum methods" do
-    issue = IssueBox.create
+    issue = IssueFactory.create
 
     issue.status.opened?.should eq(true)
     issue.status.value.should eq(0)
   end
 
   it "access enum to_s and to_i" do
-    issue = IssueBox.create
+    issue = IssueFactory.create
 
     issue.status.to_s.should eq("Opened")
     issue.status.to_i.should eq(0)

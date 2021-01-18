@@ -1,4 +1,4 @@
-class TagBox < BaseBox
+class TagFactory < BaseFactory
   def initialize
     name sequence("name")
   end

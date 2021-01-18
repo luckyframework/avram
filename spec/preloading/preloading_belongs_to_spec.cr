@@ -10,8 +10,8 @@ describe "Preloading belongs_to associations" do
   it "works" do
     with_lazy_load(enabled: false) do
       Post::BaseQuery.times_called = 0
-      post = PostBox.create
-      CommentBox.create &.post_id(post.id)
+      post = PostFactory.create
+      CommentFactory.create &.post_id(post.id)
 
       comments = Comment::BaseQuery.new.preload_post
 
@@ -22,8 +22,8 @@ describe "Preloading belongs_to associations" do
 
   it "works with optional association" do
     with_lazy_load(enabled: false) do
-      employee = EmployeeBox.create
-      manager = ManagerBox.create
+      employee = EmployeeFactory.create
+      manager = ManagerFactory.create
 
       employees = Employee::BaseQuery.new.preload_manager
       employees.first.manager.should be_nil
@@ -39,8 +39,8 @@ describe "Preloading belongs_to associations" do
 
   it "raises error if accessing association without preloading first" do
     with_lazy_load(enabled: false) do
-      post = PostBox.create
-      comment = CommentBox.create &.post_id(post.id)
+      post = PostFactory.create
+      comment = CommentFactory.create &.post_id(post.id)
 
       comment = Comment::BaseQuery.find(comment.id)
 
@@ -52,9 +52,9 @@ describe "Preloading belongs_to associations" do
 
   it "works with nested preloads" do
     with_lazy_load(enabled: false) do
-      post = PostBox.create
-      comment = CommentBox.create &.post_id(post.id)
-      comment2 = CommentBox.create &.post_id(post.id)
+      post = PostFactory.create
+      comment = CommentFactory.create &.post_id(post.id)
+      comment2 = CommentFactory.create &.post_id(post.id)
 
       comment = Comment::BaseQuery.new.preload_post(Post::BaseQuery.new.preload_comments).find(comment.id)
 
@@ -63,8 +63,8 @@ describe "Preloading belongs_to associations" do
   end
 
   it "does not fail when getting results multiple times" do
-    post = PostBox.create
-    CommentBox.create &.post_id(post.id)
+    post = PostFactory.create
+    CommentFactory.create &.post_id(post.id)
 
     query = Comment::BaseQuery.new.preload_post
 
@@ -72,15 +72,15 @@ describe "Preloading belongs_to associations" do
   end
 
   it "works with uuid foreign keys" do
-    item = LineItemBox.create
-    PriceBox.new.line_item_id(item.id).create
+    item = LineItemFactory.create
+    PriceFactory.new.line_item_id(item.id).create
 
     PriceQuery.new.preload_line_item.first.line_item.should eq item
   end
 
   it "lazy loads if nothing is preloaded" do
-    post = PostBox.create
-    comment = CommentBox.create &.post_id(post.id)
+    post = PostFactory.create
+    comment = CommentFactory.create &.post_id(post.id)
 
     comment = Comment::BaseQuery.find(comment.id)
 
@@ -98,8 +98,8 @@ describe "Preloading belongs_to associations" do
   context "with existing record" do
     it "works" do
       with_lazy_load(enabled: false) do
-        post = PostBox.create
-        comment = CommentBox.create &.post_id(post.id)
+        post = PostFactory.create
+        comment = CommentFactory.create &.post_id(post.id)
 
         comment = Comment::BaseQuery.preload_post(comment)
 
@@ -109,9 +109,9 @@ describe "Preloading belongs_to associations" do
 
     it "works with multiple" do
       with_lazy_load(enabled: false) do
-        post = PostBox.create
-        comment1 = CommentBox.create &.post_id(post.id)
-        comment2 = CommentBox.create &.post_id(post.id)
+        post = PostFactory.create
+        comment1 = CommentFactory.create &.post_id(post.id)
+        comment2 = CommentFactory.create &.post_id(post.id)
 
         comments = Comment::BaseQuery.preload_post([comment1, comment2])
 
@@ -122,9 +122,9 @@ describe "Preloading belongs_to associations" do
 
     it "works with custom query" do
       with_lazy_load(enabled: false) do
-        post = PostBox.create
-        comment = CommentBox.create &.post_id(post.id)
-        comment2 = CommentBox.create &.post_id(post.id)
+        post = PostFactory.create
+        comment = CommentFactory.create &.post_id(post.id)
+        comment2 = CommentFactory.create &.post_id(post.id)
 
         comment = Comment::BaseQuery.preload_post(comment, Post::BaseQuery.new.preload_comments)
 
@@ -134,8 +134,8 @@ describe "Preloading belongs_to associations" do
 
     it "does not modify original record" do
       with_lazy_load(enabled: false) do
-        post = PostBox.create
-        original_comment = CommentBox.create &.post_id(post.id)
+        post = PostFactory.create
+        original_comment = CommentFactory.create &.post_id(post.id)
 
         Comment::BaseQuery.preload_post(original_comment)
 

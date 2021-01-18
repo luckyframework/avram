@@ -7,7 +7,7 @@ end
 describe "Avram soft delete" do
   describe "models" do
     it "allows soft deleting a record" do
-      item = SoftDeletableItemBox.create &.kept
+      item = SoftDeletableItemFactory.create &.kept
 
       item = item.soft_delete
 
@@ -15,7 +15,7 @@ describe "Avram soft delete" do
     end
 
     it "allows restoring a soft deleted record" do
-      item = SoftDeletableItemBox.create &.soft_deleted
+      item = SoftDeletableItemFactory.create &.soft_deleted
 
       item = item.restore
 
@@ -23,7 +23,7 @@ describe "Avram soft delete" do
     end
 
     it "allows checking if a record is soft deleted" do
-      item = SoftDeletableItemBox.create &.kept
+      item = SoftDeletableItemFactory.create &.kept
       item.soft_deleted?.should be_false
 
       item = item.soft_delete
@@ -34,8 +34,8 @@ describe "Avram soft delete" do
 
   describe "queries" do
     it "can get only kept records" do
-      kept_item = SoftDeletableItemBox.create &.kept
-      SoftDeletableItemBox.create &.soft_deleted
+      kept_item = SoftDeletableItemFactory.create &.kept
+      SoftDeletableItemFactory.create &.soft_deleted
 
       SoftDeletableItemQuery.new.only_soft_deleted.only_kept.results.should eq([
         kept_item,
@@ -43,8 +43,8 @@ describe "Avram soft delete" do
     end
 
     it "can get only soft deleted records" do
-      SoftDeletableItemBox.create &.kept
-      soft_deleted_item = SoftDeletableItemBox.create &.soft_deleted
+      SoftDeletableItemFactory.create &.kept
+      soft_deleted_item = SoftDeletableItemFactory.create &.soft_deleted
 
       SoftDeletableItemQuery.new.only_kept.only_soft_deleted.results.should eq([
         soft_deleted_item,
@@ -52,8 +52,8 @@ describe "Avram soft delete" do
     end
 
     it "can get soft deleted and kept records" do
-      kept_item = SoftDeletableItemBox.create &.kept
-      soft_deleted_item = SoftDeletableItemBox.create &.soft_deleted
+      kept_item = SoftDeletableItemFactory.create &.kept
+      soft_deleted_item = SoftDeletableItemFactory.create &.soft_deleted
 
       SoftDeletableItemQuery.new.only_kept.with_soft_deleted.results.should eq([
         kept_item,
@@ -62,8 +62,8 @@ describe "Avram soft delete" do
     end
 
     it "can bulk soft delete" do
-      kept_item = SoftDeletableItemBox.create &.kept
-      soft_deleted_item = SoftDeletableItemBox.create &.soft_deleted
+      kept_item = SoftDeletableItemFactory.create &.kept
+      soft_deleted_item = SoftDeletableItemFactory.create &.soft_deleted
 
       num_restored = SoftDeletableItemQuery.new.soft_delete
 
@@ -73,8 +73,8 @@ describe "Avram soft delete" do
     end
 
     it "can bulk restore" do
-      kept_item = SoftDeletableItemBox.create &.kept
-      soft_deleted_item = SoftDeletableItemBox.create &.soft_deleted
+      kept_item = SoftDeletableItemFactory.create &.kept
+      soft_deleted_item = SoftDeletableItemFactory.create &.soft_deleted
 
       num_restored = SoftDeletableItemQuery.new.restore
 

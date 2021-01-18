@@ -1,4 +1,4 @@
-class CustomerBox < Avram::Box
+class CustomerFactory < BaseFactory
   def initialize
     name sequence("test-customer")
   end

@@ -1,2 +1,0 @@
-class TaggingBox < BaseBox
-end

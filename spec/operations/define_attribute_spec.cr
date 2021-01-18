@@ -245,6 +245,6 @@ private def upload_save_operation(attrs = {} of String => Avram::Uploadable)
 end
 
 private def delete_operation(attrs = {} of String => String)
-  post = PostBox.create
+  post = PostFactory.create
   DeleteOperationWithAttributes.new(post, Avram::Params.new(attrs))
 end

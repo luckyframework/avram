@@ -1,4 +1,4 @@
-class AdminBox < BaseBox
+class AdminFactory < BaseFactory
   def initialize
     name "Admin"
   end

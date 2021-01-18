@@ -116,7 +116,7 @@ describe Avram::Operation do
       operation.password.value = "p@ssword"
     end
 
-    user = UserBox.create
+    user = UserFactory.create
     UserWithVirtual.update(user, password: "p@ssword") do |operation, _user|
       operation.password.value = "p@ssword"
     end

@@ -23,8 +23,8 @@ describe "Avram::SaveOperation" do
   describe "wrapping multiple saves in a transaction" do
     it "rolls them all back" do
       TestDatabase.transaction do
-        UserBox.create
-        PostBox.create
+        UserFactory.create
+        PostFactory.create
         TestDatabase.rollback
       end.should be_false
 
@@ -36,7 +36,7 @@ describe "Avram::SaveOperation" do
   describe "updating" do
     it "runs in a transaction" do
       params = Avram::Params.new({"title" => "New Title"})
-      post = PostBox.new.title("Old Title").create
+      post = PostFactory.new.title("Old Title").create
       Post::BaseQuery.new.first.title.should eq "Old Title"
 
       PostTransactionSaveOperation.update(post, params, rollback_after_save: true) do |operation, _post|

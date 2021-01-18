@@ -1,11 +1,17 @@
 abstract class Avram::Box
+  macro inherited
+    {% raise "Avram::Box has been renamed to Avram::Factory" %}
+  end
+end
+
+abstract class Avram::Factory
   getter operation
 
   SEQUENCES = {} of String => Int32
 
   macro inherited
     {% unless @type.abstract? %}
-      {% operation = @type.name.gsub(/Box/, "::SaveOperation").id %}
+      {% operation = @type.name.gsub(/Factory$/, "::SaveOperation").id %}
       @operation : {{ operation }} = {{ operation }}.new
       setup_attribute_shortcuts({{ operation }})
       setup_attributes({{ operation }})
@@ -31,10 +37,6 @@ abstract class Avram::Box
     end
   end
 
-  def self.save
-    {% raise "'Box.save' has been renamed to 'Box.create' to match 'SaveOperation.create'" %}
-  end
-
   def self.build_attributes
     yield(new).attributes
   end
@@ -55,34 +57,34 @@ abstract class Avram::Box
     operation.save!
   end
 
-  # Returns an array with 2 instances of the model from the Box.
+  # Returns an array with 2 instances of the model from the Factory.
   #
   # Usage:
   #
   # ```crystal
-  # tags = TagBox.create_pair
+  # tags = TagFactory.create_pair
   # typeof(tags) # => Array(Tag)
   # tags.size    # => 2
   # ```
   def self.create_pair
-    create_pair { |box| box }
+    create_pair { |factory| factory }
   end
 
-  # Similar to `create_pair`, but accepts a block which yields the box instance.
+  # Similar to `create_pair`, but accepts a block which yields the factory instance.
   #
-  # Both boxes receive the same argument values.
+  # Both factories receive the same argument values.
   #
   # Usage:
   #
   # ```crystal
-  # TagBox.create_pair do |box|
-  #   # set both boxes name to "test"
-  #   box.name("test")
+  # TagFactory.create_pair do |factory|
+  #   # set both factories name to "test"
+  #   factory.name("test")
   # end
   # ```
   def self.create_pair
     [1, 2].map do |n|
-      self.create { |box| yield(box) }
+      self.create { |factory| yield(factory) }
     end
   end
 
@@ -91,7 +93,7 @@ abstract class Avram::Box
   # Usage:
   #
   # ```crystal
-  # class UserBox < Avram::Box
+  # class UserFactory < Avram::Factory
   #   def initialize
   #     username sequence("username")            # => username-1, username-2, etc.
   #     email "#{sequence("email")}@example.com" # => email-1@example.com, email-2@example.com, etc.

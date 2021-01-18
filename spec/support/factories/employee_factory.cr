@@ -1,4 +1,4 @@
-class EmployeeBox < BaseBox
+class EmployeeFactory < BaseFactory
   def initialize
     name "Humble Employee"
   end

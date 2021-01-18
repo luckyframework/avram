@@ -99,10 +99,10 @@ describe Avram::Queryable do
 
   describe "#distinct_on" do
     it "selects distinct on a specific column" do
-      UserBox.new.name("Purcell").age(22).create
-      UserBox.new.name("Purcell").age(84).create
-      UserBox.new.name("Griffiths").age(55).create
-      UserBox.new.name("Griffiths").age(75).create
+      UserFactory.new.name("Purcell").age(22).create
+      UserFactory.new.name("Purcell").age(84).create
+      UserFactory.new.name("Griffiths").age(55).create
+      UserFactory.new.name("Griffiths").age(75).create
       queryable = UserQuery.new.distinct_on(&.name).order_by(:name, :asc).order_by(:age, :asc)
       query = queryable.query
 
@@ -129,8 +129,8 @@ describe Avram::Queryable do
 
   describe ".first" do
     it "gets the first row from the database" do
-      UserBox.new.name("First").create
-      UserBox.new.name("Last").create
+      UserFactory.new.name("First").create
+      UserFactory.new.name("Last").create
 
       UserQuery.first.name.should eq "First"
     end
@@ -144,8 +144,8 @@ describe Avram::Queryable do
 
   describe "#first" do
     it "gets the first row from the database" do
-      UserBox.new.name("First").create
-      UserBox.new.name("Last").create
+      UserFactory.new.name("First").create
+      UserFactory.new.name("Last").create
 
       UserQuery.new.first.name.should eq "First"
     end
@@ -159,8 +159,8 @@ describe Avram::Queryable do
 
   describe ".first?" do
     it "gets the first row from the database" do
-      UserBox.new.name("First").create
-      UserBox.new.name("Last").create
+      UserFactory.new.name("First").create
+      UserFactory.new.name("Last").create
 
       user = UserQuery.first?
       user.should_not be_nil
@@ -174,8 +174,8 @@ describe Avram::Queryable do
 
   describe "#first?" do
     it "gets the first row from the database" do
-      UserBox.new.name("First").create
-      UserBox.new.name("Last").create
+      UserFactory.new.name("First").create
+      UserFactory.new.name("Last").create
 
       user = UserQuery.new.first?
       user_query = Avram::Events::QueryEvent.logged_events.last.query
@@ -201,8 +201,8 @@ describe Avram::Queryable do
 
   describe ".last" do
     it "gets the last row from the database" do
-      UserBox.new.name("First").create
-      UserBox.new.name("Last").create
+      UserFactory.new.name("First").create
+      UserFactory.new.name("Last").create
 
       UserQuery.last.name.should eq "Last"
     end
@@ -216,16 +216,16 @@ describe Avram::Queryable do
 
   describe "#last" do
     it "gets the last row from the database" do
-      UserBox.new.name("First").create
-      UserBox.new.name("Last").create
+      UserFactory.new.name("First").create
+      UserFactory.new.name("Last").create
 
       UserQuery.new.last.name.should eq "Last"
     end
 
     it "reverses the order of ordered queries" do
-      UserBox.new.name("Alpha").create
-      UserBox.new.name("Charlie").create
-      UserBox.new.name("Bravo").create
+      UserFactory.new.name("Alpha").create
+      UserFactory.new.name("Charlie").create
+      UserFactory.new.name("Bravo").create
 
       UserQuery.new.order_by(:name, :desc).last.name.should eq "Alpha"
     end
@@ -239,8 +239,8 @@ describe Avram::Queryable do
 
   describe ".last?" do
     it "gets the last row from the database" do
-      UserBox.new.name("First").create
-      UserBox.new.name("Last").create
+      UserFactory.new.name("First").create
+      UserFactory.new.name("Last").create
 
       user = UserQuery.last?
 
@@ -255,8 +255,8 @@ describe Avram::Queryable do
 
   describe "#last?" do
     it "gets the last row from the database" do
-      UserBox.new.name("First").create
-      UserBox.new.name("Last").create
+      UserFactory.new.name("First").create
+      UserFactory.new.name("Last").create
 
       user = UserQuery.new.last?
       user_query = Avram::Events::QueryEvent.logged_events.last.query
@@ -282,7 +282,7 @@ describe Avram::Queryable do
 
   describe ".find" do
     it "gets the record with the given id" do
-      UserBox.create
+      UserFactory.create
       user = UserQuery.first
 
       UserQuery.find(user.id).should eq user
@@ -309,7 +309,7 @@ describe Avram::Queryable do
 
   describe "#find" do
     it "gets the record with the given id" do
-      UserBox.create
+      UserFactory.create
       user = UserQuery.new.first
 
       UserQuery.new.find(user.id).should eq user
@@ -334,7 +334,7 @@ describe Avram::Queryable do
     end
 
     it "doesn't mutate the query" do
-      user = UserBox.new.create
+      user = UserFactory.new.create
       query = UserQuery.new
       original_query_sql = query.to_sql
 
@@ -360,7 +360,7 @@ describe Avram::Queryable do
     end
 
     it "accepts raw sql with bindings and chains with itself" do
-      user = UserBox.new.name("Mikias Abera").age(26).nickname("miki").create
+      user = UserFactory.new.name("Mikias Abera").age(26).nickname("miki").create
       users = UserQuery.new.where("name = ? AND age = ?", "Mikias Abera", 26).where(:nickname, "miki")
 
       users.query.statement.should eq "SELECT #{User::COLUMN_SQL} FROM users WHERE name = 'Mikias Abera' AND age = 26 AND nickname = $1"
@@ -409,8 +409,8 @@ describe Avram::Queryable do
     end
 
     it "works while chaining" do
-      UserBox.create
-      UserBox.create
+      UserFactory.create
+      UserFactory.create
       users = UserQuery.new.name.desc_order.limit(1)
 
       users.query.statement.should eq "SELECT #{User::COLUMN_SQL} FROM users ORDER BY users.name DESC LIMIT 1"
@@ -470,7 +470,7 @@ describe Avram::Queryable do
 
   describe "#none" do
     it "returns 0 records" do
-      UserBox.create
+      UserFactory.create
 
       query = UserQuery.new.none
 
@@ -489,17 +489,17 @@ describe Avram::Queryable do
 
   describe "#select_min" do
     it "returns the minimum" do
-      UserBox.create &.age(2)
-      UserBox.create &.age(1)
-      UserBox.create &.age(3)
+      UserFactory.create &.age(2)
+      UserFactory.create &.age(1)
+      UserFactory.create &.age(3)
       min = UserQuery.new.age.select_min
       min.should eq 1
     end
 
     it "works with chained where clauses" do
-      UserBox.create &.age(2)
-      UserBox.create &.age(1)
-      UserBox.create &.age(3)
+      UserFactory.create &.age(2)
+      UserFactory.create &.age(1)
+      UserFactory.create &.age(3)
       min = UserQuery.new.age.gte(2).age.select_min
       min.should eq 2
     end
@@ -521,17 +521,17 @@ describe Avram::Queryable do
 
   describe "#select_max" do
     it "returns the maximum" do
-      UserBox.create &.age(2)
-      UserBox.create &.age(1)
-      UserBox.create &.age(3)
+      UserFactory.create &.age(2)
+      UserFactory.create &.age(1)
+      UserFactory.create &.age(3)
       max = UserQuery.new.age.select_max
       max.should eq 3
     end
 
     it "works with chained where clauses" do
-      UserBox.create &.age(2)
-      UserBox.create &.age(1)
-      UserBox.create &.age(3)
+      UserFactory.create &.age(2)
+      UserFactory.create &.age(1)
+      UserFactory.create &.age(3)
       max = UserQuery.new.age.lte(2).age.select_max
       max.should eq 2
     end
@@ -553,9 +553,9 @@ describe Avram::Queryable do
 
   describe "#select_average" do
     it "returns the average" do
-      UserBox.create &.age(2)
-      UserBox.create &.age(1)
-      UserBox.create &.age(3)
+      UserFactory.create &.age(2)
+      UserFactory.create &.age(1)
+      UserFactory.create &.age(3)
       average = UserQuery.new.age.select_average
       average.should eq 2
       average.should be_a Float64
@@ -567,9 +567,9 @@ describe Avram::Queryable do
     end
 
     it "works with chained where clauses" do
-      UserBox.create &.age(2)
-      UserBox.create &.age(1)
-      UserBox.create &.age(3)
+      UserFactory.create &.age(2)
+      UserFactory.create &.age(1)
+      UserFactory.create &.age(3)
       average = UserQuery.new.age.gte(2).age.select_average
       average.should eq 2.5
     end
@@ -594,9 +594,9 @@ describe Avram::Queryable do
 
   describe "#select_sum" do
     it "works with chained where clauses" do
-      UserBox.create &.total_score(2000)
-      UserBox.create &.total_score(1000)
-      UserBox.create &.total_score(3000)
+      UserFactory.create &.total_score(2000)
+      UserFactory.create &.total_score(1000)
+      UserFactory.create &.total_score(3000)
       sum = UserQuery.new.total_score.gte(2000).total_score.select_sum
       sum.should eq 5000
     end
@@ -618,9 +618,9 @@ describe Avram::Queryable do
 
   describe "#select_sum for Int64 column" do
     it "returns the sum" do
-      UserBox.create &.total_score(2000)
-      UserBox.create &.total_score(1000)
-      UserBox.create &.total_score(3000)
+      UserFactory.create &.total_score(2000)
+      UserFactory.create &.total_score(1000)
+      UserFactory.create &.total_score(3000)
       sum = UserQuery.new.total_score.select_sum
       sum.should eq 6000
       sum.should be_a Int64
@@ -637,9 +637,9 @@ describe Avram::Queryable do
 
   describe "#select_sum for Int32 column" do
     it "returns the sum" do
-      UserBox.create &.age(2)
-      UserBox.create &.age(1)
-      UserBox.create &.age(3)
+      UserFactory.create &.age(2)
+      UserFactory.create &.age(1)
+      UserFactory.create &.age(3)
       query_sum = UserQuery.new.age.select_sum
       query_sum.should eq 6
       query_sum.should be_a Int64
@@ -656,8 +656,8 @@ describe Avram::Queryable do
 
   describe "#select_sum for Int16 column" do
     it "returns the sum" do
-      UserBox.create &.year_born(1990_i16)
-      UserBox.create &.year_born(1995_i16)
+      UserFactory.create &.year_born(1990_i16)
+      UserFactory.create &.year_born(1995_i16)
       query_sum = UserQuery.new.year_born.select_sum
       query_sum.should eq 3985
       query_sum.should be_a Int64
@@ -676,7 +676,7 @@ describe Avram::Queryable do
     it "returns the sum" do
       scores = [100.4, 123.22]
       sum = scores.sum
-      scores.each { |score| UserBox.create &.average_score(score) }
+      scores.each { |score| UserFactory.create &.average_score(score) }
       query_sum = UserQuery.new.average_score.select_sum
       query_sum.should eq sum
       sum.should be_a Float64
@@ -696,13 +696,13 @@ describe Avram::Queryable do
       count = UserQuery.new.select_count
       count.should eq 0
 
-      UserBox.create
+      UserFactory.create
       count = UserQuery.new.select_count
       count.should eq 1
     end
 
     it "works with ORDER BY by removing the ordering" do
-      UserBox.create
+      UserFactory.create
 
       query = UserQuery.new.name.desc_order
 
@@ -710,8 +710,8 @@ describe Avram::Queryable do
     end
 
     it "works with chained where" do
-      UserBox.new.age(30).create
-      UserBox.new.age(31).create
+      UserFactory.new.age(30).create
+      UserFactory.new.age(31).create
 
       query = UserQuery.new.age.gte(31)
 
@@ -746,7 +746,7 @@ describe Avram::Queryable do
   describe "#not" do
     context "with an argument" do
       it "negates the given where condition as 'equal'" do
-        UserBox.new.name("Paul").create
+        UserFactory.new.name("Paul").create
 
         results = UserQuery.new.name.not.eq("not existing").results
         results.should eq UserQuery.new.results
@@ -754,8 +754,8 @@ describe Avram::Queryable do
         results = UserQuery.new.name.not.eq("Paul").results
         results.should eq [] of User
 
-        UserBox.new.name("Alex").create
-        UserBox.new.name("Sarah").create
+        UserFactory.new.name("Alex").create
+        UserFactory.new.name("Sarah").create
         results = UserQuery.new.name.lower.not.eq("alex").results
         results.map(&.name).should eq ["Paul", "Sarah"]
       end
@@ -763,15 +763,15 @@ describe Avram::Queryable do
 
     context "with no arguments" do
       it "negates any previous condition" do
-        UserBox.new.name("Paul").create
+        UserFactory.new.name("Paul").create
 
         results = UserQuery.new.name.not.eq("Paul").results
         results.should eq [] of User
       end
 
       it "can be used with operators" do
-        UserBox.new.age(33).name("Joyce").create
-        UserBox.new.age(34).name("Jil").create
+        UserFactory.new.age(33).name("Joyce").create
+        UserFactory.new.age(34).name("Jil").create
 
         results = UserQuery.new.age.not.gt(33).results
         results.map(&.name).should eq ["Joyce"]
@@ -790,7 +790,7 @@ describe Avram::Queryable do
 
   describe "#in" do
     it "gets records with ids in an array" do
-      UserBox.new.name("Mikias").create
+      UserFactory.new.name("Mikias").create
       user = UserQuery.new.first
 
       results = UserQuery.new.id.in([user.id])
@@ -798,7 +798,7 @@ describe Avram::Queryable do
     end
 
     it "gets records with name not in an array" do
-      UserBox.new.name("Mikias")
+      UserFactory.new.name("Mikias")
 
       results = UserQuery.new.name.not.in(["Mikias"])
       results.map(&.name).should eq [] of String
@@ -816,8 +816,8 @@ describe Avram::Queryable do
 
   describe "#join methods for associations" do
     it "inner join on belongs to" do
-      post = PostBox.create
-      CommentBox.new.post_id(post.id).create
+      post = PostFactory.create
+      CommentFactory.new.post_id(post.id).create
 
       query = Comment::BaseQuery.new.join_post
       query.to_sql.should eq ["SELECT comments.custom_id, comments.created_at, comments.updated_at, comments.body, comments.post_id FROM comments INNER JOIN posts ON comments.post_id = posts.custom_id"]
@@ -836,8 +836,8 @@ describe Avram::Queryable do
     end
 
     it "inner join on has many" do
-      post = PostBox.create
-      comment = CommentBox.new.post_id(post.id).create
+      post = PostFactory.create
+      comment = CommentFactory.new.post_id(post.id).create
 
       query = Post::BaseQuery.new.join_comments
       query.to_sql.should eq ["SELECT posts.custom_id, posts.created_at, posts.updated_at, posts.title, posts.published_at FROM posts INNER JOIN comments ON posts.custom_id = comments.post_id"]
@@ -856,9 +856,9 @@ describe Avram::Queryable do
     end
 
     it "multiple inner joins on has many through" do
-      post = PostBox.create
-      tag = TagBox.create
-      TaggingBox.new.post_id(post.id).tag_id(tag.id).create
+      post = PostFactory.create
+      tag = TagFactory.create
+      TaggingFactory.new.post_id(post.id).tag_id(tag.id).create
 
       query = Post::BaseQuery.new.join_tags
       query.to_sql.should eq ["SELECT posts.custom_id, posts.created_at, posts.updated_at, posts.title, posts.published_at FROM posts INNER JOIN taggings ON posts.custom_id = taggings.post_id INNER JOIN tags ON taggings.tag_id = tags.custom_id"]
@@ -879,7 +879,7 @@ describe Avram::Queryable do
 
   describe "#left_join methods for associations" do
     it "left join on belongs to" do
-      employee = EmployeeBox.create
+      employee = EmployeeFactory.create
 
       query = Employee::BaseQuery.new.left_join_manager
       query.to_sql.should eq ["SELECT employees.id, employees.created_at, employees.updated_at, employees.name, employees.manager_id FROM employees LEFT JOIN managers ON employees.manager_id = managers.id"]
@@ -898,7 +898,7 @@ describe Avram::Queryable do
     end
 
     it "left join on has many" do
-      post = PostBox.create
+      post = PostFactory.create
 
       query = Post::BaseQuery.new.left_join_comments
       query.to_sql.should eq ["SELECT posts.custom_id, posts.created_at, posts.updated_at, posts.title, posts.published_at FROM posts LEFT JOIN comments ON posts.custom_id = comments.post_id"]
@@ -917,7 +917,7 @@ describe Avram::Queryable do
     end
 
     it "multiple left joins on has many through" do
-      post = PostBox.create
+      post = PostFactory.create
 
       query = Post::BaseQuery.new.left_join_tags
       query.to_sql.should eq ["SELECT posts.custom_id, posts.created_at, posts.updated_at, posts.title, posts.published_at FROM posts LEFT JOIN taggings ON posts.custom_id = taggings.post_id LEFT JOIN tags ON taggings.tag_id = tags.custom_id"]
@@ -939,7 +939,7 @@ describe Avram::Queryable do
   context "when querying jsonb" do
     describe "simple where query" do
       it "returns 1 result" do
-        blob = BlobBox.new.doc(JSON::Any.new({"foo" => JSON::Any.new("bar")})).create
+        blob = BlobFactory.new.doc(JSON::Any.new({"foo" => JSON::Any.new("bar")})).create
 
         query = JSONQuery.new.static_foo
         query.to_sql.should eq ["SELECT blobs.id, blobs.created_at, blobs.updated_at, blobs.doc FROM blobs WHERE blobs.doc = $1", "{\"foo\":\"bar\"}"]
@@ -963,7 +963,7 @@ describe Avram::Queryable do
   context "when querying arrays" do
     describe "simple where query" do
       it "returns 1 result" do
-        bucket = BucketBox.new.names(["pumpkin", "zucchini"]).create
+        bucket = BucketFactory.new.names(["pumpkin", "zucchini"]).create
 
         query = BucketQuery.new.names(["pumpkin", "zucchini"])
         query.to_sql.should eq ["SELECT #{Bucket::COLUMN_SQL} FROM buckets WHERE buckets.names = $1", "{\"pumpkin\",\"zucchini\"}"]
@@ -975,7 +975,7 @@ describe Avram::Queryable do
 
   describe ".truncate" do
     it "truncates the table" do
-      10.times { UserBox.create }
+      10.times { UserFactory.create }
       UserQuery.new.select_count.should eq 10
       UserQuery.truncate
       UserQuery.new.select_count.should eq 0
@@ -984,8 +984,8 @@ describe Avram::Queryable do
 
   describe "#update" do
     it "updates records when wheres are added" do
-      UserBox.create &.available_for_hire(false)
-      UserBox.create &.available_for_hire(false)
+      UserFactory.create &.available_for_hire(false)
+      UserFactory.create &.available_for_hire(false)
 
       updated_count = ChainedQuery.new.update(available_for_hire: true)
 
@@ -996,8 +996,8 @@ describe Avram::Queryable do
     end
 
     it "updates some records when wheres are added" do
-      helen = UserBox.create &.available_for_hire(false).name("Helen")
-      kate = UserBox.create &.available_for_hire(false).name("Kate")
+      helen = UserFactory.create &.available_for_hire(false).name("Helen")
+      kate = UserFactory.create &.available_for_hire(false).name("Kate")
 
       updated_count = ChainedQuery.new.name("Helen").update(available_for_hire: true)
 
@@ -1007,7 +1007,7 @@ describe Avram::Queryable do
     end
 
     it "only sets columns to `nil` if explicitly set" do
-      richard = UserBox.create &.name("Richard").nickname("Rich")
+      richard = UserFactory.create &.name("Richard").nickname("Rich")
 
       updated_count = ChainedQuery.new.update(nickname: nil)
 
@@ -1018,7 +1018,7 @@ describe Avram::Queryable do
     end
 
     it "works with JSON" do
-      blob = BlobBox.create &.doc(JSON::Any.new({"updated" => JSON::Any.new(true)}))
+      blob = BlobFactory.create &.doc(JSON::Any.new({"updated" => JSON::Any.new(true)}))
 
       updated_doc = JSON::Any.new({"updated" => JSON::Any.new(false)})
       updated_count = Blob::BaseQuery.new.update(doc: updated_doc)
@@ -1029,7 +1029,7 @@ describe Avram::Queryable do
     end
 
     it "works with arrays" do
-      bucket = BucketBox.create &.names(["Luke"])
+      bucket = BucketFactory.create &.names(["Luke"])
 
       updated_count = Bucket::BaseQuery.new.update(names: ["Rey"])
 
@@ -1041,10 +1041,10 @@ describe Avram::Queryable do
 
   describe "#delete" do
     it "deletes user records that are young" do
-      UserBox.new.name("Tony").age(48).create
-      UserBox.new.name("Peter").age(15).create
-      UserBox.new.name("Bruce").age(49).create
-      UserBox.new.name("Wanda").age(17).create
+      UserFactory.new.name("Tony").age(48).create
+      UserFactory.new.name("Peter").age(15).create
+      UserFactory.new.name("Bruce").age(49).create
+      UserFactory.new.name("Wanda").age(17).create
 
       ChainedQuery.new.select_count.should eq 4
       # use the glove to remove half of them
@@ -1054,8 +1054,8 @@ describe Avram::Queryable do
     end
 
     it "delete all records since no where clause is specified" do
-      UserBox.new.name("Steve").age(90).create
-      UserBox.new.name("Nick").age(66).create
+      UserFactory.new.name("Steve").age(90).create
+      UserFactory.new.name("Nick").age(66).create
 
       result = ChainedQuery.new.delete
       result.should eq 2
@@ -1112,10 +1112,10 @@ describe Avram::Queryable do
     end
 
     it "returns separate results than the original query" do
-      UserBox.create &.name("Purcell").age(22)
-      UserBox.create &.name("Purcell").age(84)
-      UserBox.create &.name("Griffiths").age(55)
-      UserBox.create &.name("Griffiths").age(75)
+      UserFactory.create &.name("Purcell").age(22)
+      UserFactory.create &.name("Purcell").age(84)
+      UserFactory.create &.name("Griffiths").age(55)
+      UserFactory.create &.name("Griffiths").age(75)
 
       original_query = ChainedQuery.new.named("Purcell")
       new_query = original_query.clone.age.gt(30)
@@ -1125,8 +1125,8 @@ describe Avram::Queryable do
     end
 
     it "clones joined queries" do
-      post = PostBox.create
-      CommentBox.create &.post_id(post.id)
+      post = PostFactory.create
+      CommentFactory.create &.post_id(post.id)
 
       original_query = Post::BaseQuery.new.where_comments(Comment::BaseQuery.new.created_at.asc_order)
       new_query = original_query.clone.select_count
@@ -1137,8 +1137,8 @@ describe Avram::Queryable do
 
     it "clones preloads" do
       Avram.temp_config(lazy_load_enabled: false) do
-        post = PostBox.create
-        comment = CommentBox.create &.post_id(post.id)
+        post = PostFactory.create
+        comment = CommentFactory.create &.post_id(post.id)
         posts = Post::BaseQuery.new.preload_comments
         cloned_posts = posts.clone
         posts.first.comments.should eq([comment])
@@ -1148,10 +1148,10 @@ describe Avram::Queryable do
 
     it "clones nested preloads" do
       Avram.temp_config(lazy_load_enabled: false) do
-        item = LineItemBox.create
-        PriceBox.create &.line_item_id(item.id).in_cents(500)
-        product = ProductBox.create
-        LineItemProductBox.create &.line_item_id(item.id).product_id(product.id)
+        item = LineItemFactory.create
+        PriceFactory.create &.line_item_id(item.id).in_cents(500)
+        product = ProductFactory.create
+        LineItemProductFactory.create &.line_item_id(item.id).product_id(product.id)
 
         products = Product::BaseQuery.new
           .preload_line_items(LineItem::BaseQuery.new.preload_price)
@@ -1173,7 +1173,7 @@ describe Avram::Queryable do
     it "queries between dates" do
       start_date = 1.week.ago
       end_date = 1.day.ago
-      post = PostBox.create &.published_at(3.days.ago)
+      post = PostFactory.create &.published_at(3.days.ago)
       posts = Post::BaseQuery.new.published_at.between(start_date, end_date)
 
       posts.query.statement.should eq "SELECT posts.custom_id, posts.created_at, posts.updated_at, posts.title, posts.published_at FROM posts WHERE posts.published_at >= $1 AND posts.published_at <= $2"
@@ -1182,7 +1182,7 @@ describe Avram::Queryable do
     end
 
     it "queries between numbers" do
-      company = CompanyBox.create &.sales(50)
+      company = CompanyFactory.create &.sales(50)
       companies = Company::BaseQuery.new.sales.between(1, 100)
 
       companies.query.statement.should eq "SELECT companies.id, companies.created_at, companies.updated_at, companies.sales, companies.earnings FROM companies WHERE companies.sales >= $1 AND companies.sales <= $2"
@@ -1191,7 +1191,7 @@ describe Avram::Queryable do
     end
 
     it "queries between floats" do
-      company = CompanyBox.create &.earnings(300.45)
+      company = CompanyFactory.create &.earnings(300.45)
       companies = Company::BaseQuery.new.earnings.between(123.45, 678.901)
 
       companies.query.statement.should eq "SELECT companies.id, companies.created_at, companies.updated_at, companies.sales, companies.earnings FROM companies WHERE companies.earnings >= $1 AND companies.earnings <= $2"
@@ -1211,9 +1211,9 @@ describe Avram::Queryable do
 
   describe "#group" do
     it "groups" do
-      UserBox.create &.age(25).name("Michael")
-      UserBox.create &.age(25).name("Dwight")
-      UserBox.create &.age(21).name("Jim")
+      UserFactory.create &.age(25).name("Michael")
+      UserFactory.create &.age(25).name("Dwight")
+      UserFactory.create &.age(21).name("Jim")
 
       users = UserQuery.new.group(&.age).group(&.id)
       users.query.statement.should eq "SELECT #{User::COLUMN_SQL} FROM users GROUP BY users.age, users.id"
@@ -1241,8 +1241,8 @@ describe Avram::Queryable do
   context "queries joining with has_one" do
     describe "when you query from the belongs_to side" do
       it "returns a record" do
-        line_item = LineItemBox.create &.name("Thing 1")
-        price = PriceBox.create &.in_cents(100).line_item_id(line_item.id)
+        line_item = LineItemFactory.create &.name("Thing 1")
+        price = PriceFactory.create &.in_cents(100).line_item_id(line_item.id)
 
         query = PriceQuery.new.where_line_item(LineItemQuery.new.name("Thing 1"))
         query.first.should eq price
@@ -1251,8 +1251,8 @@ describe Avram::Queryable do
 
     describe "when you query from the has_one side" do
       it "returns a record" do
-        line_item = LineItemBox.create &.name("Thing 1")
-        PriceBox.create &.in_cents(100).line_item_id(line_item.id)
+        line_item = LineItemFactory.create &.name("Thing 1")
+        PriceFactory.create &.in_cents(100).line_item_id(line_item.id)
 
         query = LineItemQuery.new.where_price(PriceQuery.new.in_cents(100))
         query.first.should eq line_item

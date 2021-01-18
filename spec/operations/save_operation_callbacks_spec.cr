@@ -188,7 +188,7 @@ describe "Avram::SaveOperation callbacks" do
   end
 
   it "runs all callbacks when saving successfully" do
-    post = PostBox.create
+    post = PostFactory.create
     operation = CallbacksSaveOperation.new(post)
     operation.callbacks_that_ran.should eq([] of String)
 
@@ -205,7 +205,7 @@ describe "Avram::SaveOperation callbacks" do
   end
 
   it "does not run after_commit if rolled back" do
-    post = PostBox.create
+    post = PostFactory.create
     operation = CallbacksSaveOperation.new(post, rollback: true)
     operation.callbacks_that_ran.should eq([] of String)
 
@@ -239,7 +239,7 @@ describe "Avram::SaveOperation callbacks" do
   end
 
   it "skips running specified callbacks" do
-    post = PostBox.create &.title("Existing Post")
+    post = PostFactory.create &.title("Existing Post")
     params = Avram::Params.new({"title" => "A fancy post"})
 
     UpdateOperationWithSkipCallbacks.update(post, params) do |operation, updated_post|
@@ -255,7 +255,7 @@ describe "Avram::SaveOperation callbacks" do
   end
 
   it "runs callbacks even when nothing is being updated" do
-    post = PostBox.create
+    post = PostFactory.create
     UpdateOperationWithNoUpdates.update(post) do |operation, _updated_post|
       operation.callbacks_that_ran.should eq([
         "after_save_called",

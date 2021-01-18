@@ -4,10 +4,10 @@ include LazyLoadHelpers
 
 describe "Lazy loading associations" do
   it "can lazy load has_many and has_many through" do
-    post = PostBox.create
-    comment = CommentBox.new.post_id(post.id).create
-    tag = TagBox.create
-    TaggingBox.new.post_id(post.id).tag_id(tag.id).create
+    post = PostFactory.create
+    comment = CommentFactory.new.post_id(post.id).create
+    tag = TagFactory.create
+    TaggingFactory.new.post_id(post.id).tag_id(tag.id).create
 
     post.comments!.should eq([comment])
     post.tags!.should eq([tag])
@@ -15,26 +15,26 @@ describe "Lazy loading associations" do
 
   it "can lazy load has_one" do
     # to verify it is loading the correct association, not just the first
-    SignInCredentialBox.new.user_id(AdminBox.create.id).create
+    SignInCredentialFactory.new.user_id(AdminFactory.create.id).create
 
-    admin = AdminBox.create
-    sign_in_credential = SignInCredentialBox.new.user_id(admin.id).create
+    admin = AdminFactory.create
+    sign_in_credential = SignInCredentialFactory.new.user_id(admin.id).create
     admin.sign_in_credential!.should eq(sign_in_credential)
   end
 
   it "can lazy load optional has_one" do
-    user = UserBox.create
+    user = UserFactory.create
     user.sign_in_credential!.should be_nil
   end
 
   it "can lazy load belongs_to" do
-    post = PostBox.create
-    comment = CommentBox.new.post_id(post.id).create
+    post = PostFactory.create
+    comment = CommentFactory.new.post_id(post.id).create
     comment.post!.should eq(post)
   end
 
   it "can lazy load optional belongs_to" do
-    employee = EmployeeBox.create
+    employee = EmployeeFactory.create
     employee.manager!.should be_nil
   end
 end
