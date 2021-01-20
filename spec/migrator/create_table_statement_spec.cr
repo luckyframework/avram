@@ -74,6 +74,22 @@ describe Avram::Migrator::CreateTableStatement do
     SQL
   end
 
+  it "can create tables with composite primary keys" do
+    built = Avram::Migrator::CreateTableStatement.new(:users).build do
+      add id1 : Int64
+      add id2 : UUID
+      composite_primary_key :id1, :id2
+    end
+
+    built.statements.size.should eq 1
+    built.statements.first.should eq <<-SQL
+    CREATE TABLE users (
+      id1 bigint NOT NULL,
+      id2 uuid NOT NULL,
+      PRIMARY KEY (id1, id2));
+    SQL
+  end
+
   it "sets default values" do
     built = Avram::Migrator::CreateTableStatement.new(:users).build do
       add name : String, default: "name"
@@ -172,6 +188,22 @@ describe Avram::Migrator::CreateTableStatement do
       built.statements[3].should eq "CREATE INDEX comments_category_label_id_index ON comments USING btree (category_label_id);"
       built.statements[4].should eq "CREATE INDEX comments_employee_id_index ON comments USING btree (employee_id);"
       built.statements[5].should eq "CREATE INDEX comments_line_item_id_index ON comments USING btree (line_item_id);"
+    end
+
+    it "can create tables with association on composite primary keys" do
+      built = Avram::Migrator::CreateTableStatement.new(:comments).build do
+        add_belongs_to user : User, on_delete: :cascade
+        add id2 : Int64
+        composite_primary_key :user_id, :id2
+      end
+
+      built.statements.size.should eq 2
+      built.statements.first.should eq <<-SQL
+      CREATE TABLE comments (
+        user_id bigint NOT NULL REFERENCES users ON DELETE CASCADE,
+        id2 bigint NOT NULL,
+        PRIMARY KEY (user_id, id2));
+      SQL
     end
 
     it "raises error when on_delete strategy is invalid or nil" do

@@ -6,6 +6,7 @@ class Avram::Migrator::CreateTableStatement
   include Avram::Migrator::MissingOnDeleteWithBelongsToError
 
   private getter rows = [] of String
+  private getter constraints = [] of String
 
   def initialize(@table_name : Symbol)
   end
@@ -55,6 +56,8 @@ class Avram::Migrator::CreateTableStatement
     String.build do |statement|
       statement << initial_table_statement
       statement << rows.join(",\n")
+      statement << ",\n" if !constraints.empty?
+      statement << constraints.join(", \n")
       statement << ");"
     end
   end
@@ -69,6 +72,10 @@ class Avram::Migrator::CreateTableStatement
     rows << Avram::Migrator::Columns::PrimaryKeys::{{ type_declaration.type }}PrimaryKey
       .new(name: {{ type_declaration.var.stringify }})
       .build
+  end
+
+  macro composite_primary_key(*columns)
+    constraints << "  PRIMARY KEY ({{columns.join(", ").id}})"
   end
 
   macro add_timestamps
