@@ -90,6 +90,25 @@ describe Avram::Migrator::CreateTableStatement do
     SQL
   end
 
+  it "can create tables with composite primary keys with primary key constraint at end" do
+    built = Avram::Migrator::CreateTableStatement.new(:users).build do
+      add id1 : Int64
+      add id2 : UUID
+      composite_primary_key :id1, :id2
+
+      add example : String
+    end
+
+    built.statements.size.should eq 1
+    built.statements.first.should eq <<-SQL
+    CREATE TABLE users (
+      id1 bigint NOT NULL,
+      id2 uuid NOT NULL,
+      example text NOT NULL,
+      PRIMARY KEY (id1, id2));
+    SQL
+  end
+
   it "sets default values" do
     built = Avram::Migrator::CreateTableStatement.new(:users).build do
       add name : String, default: "name"
