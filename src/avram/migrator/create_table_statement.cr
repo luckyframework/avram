@@ -75,6 +75,9 @@ class Avram::Migrator::CreateTableStatement
   end
 
   macro composite_primary_key(*columns)
+    {% if columns.size < 2 %}
+    {% raise "composite_primary_key expected at least two primary keys, instead got #{columns.size}" %}
+    {% end %}
     constraints << "  PRIMARY KEY ({{columns.join(", ").id}})"
   end
 
