@@ -1617,6 +1617,13 @@
       </li>
     
       <li class="entry-summary">
+        <a href="#new_record?:Bool-instance-method" class="signature"><strong>#new_record?</strong> : Bool</a>
+        
+          <div class="summary"><p><code><a href="../Avram/SaveOperation.html#persisted?:Bool-instance-method">#persisted?</a></code> always returns <code>true</code> in <code>after_*</code> hooks, whether a new record was created, or an existing one was updated.</p></div>
+        
+      </li>
+    
+      <li class="entry-summary">
         <a href="#params-instance-method" class="signature"><strong>#params</strong></a>
         
       </li>
@@ -2148,6 +2155,29 @@
 
         <a class="method-permalink" href="#generic_attributes-instance-method">#</a>
       </div>
+      
+      <br/>
+      <div>
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="new_record?:Bool-instance-method">
+      <div class="signature">
+        
+        def <strong>new_record?</strong> : <a href="../Bool.html">Bool</a>
+
+        <a class="method-permalink" href="#new_record?:Bool-instance-method">#</a>
+      </div>
+      
+        <div class="doc">
+          
+          <p><code><a href="../Avram/SaveOperation.html#persisted?:Bool-instance-method">#persisted?</a></code> always returns <code>true</code> in <code>after_*</code> hooks, whether
+a new record was created, or an existing one was updated.</p>
+
+<p>This method should always return <code>true</code> for a create or <code>false</code>
+for an update, independent of the stage we are at in the operation.</p>
+        </div>
       
       <br/>
       <div>
