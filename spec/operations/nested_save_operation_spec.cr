@@ -7,7 +7,6 @@ private class SaveBusiness < Business::SaveOperation
 
   class SaveTaxId < TaxId::SaveOperation
     permit_columns number
-    needs easy : Bool
   end
 
   permit_columns name
@@ -43,10 +42,7 @@ describe "Avram::SaveOperation with nested operation" do
         email_address: {"address" => ""},
         tax_id: {"number" => ""}
 
-      SaveBusiness.create(
-        params,
-        save_tax_id_easy: true
-      ) do |operation, business|
+      SaveBusiness.create(params) do |operation, business|
         business.should be_nil
         operation.valid?.should be_false
         operations_saved?(operation, false)
@@ -56,10 +52,7 @@ describe "Avram::SaveOperation with nested operation" do
         email_address: {"address" => "123 Main St."},
         tax_id: {"number" => ""}
 
-      SaveBusiness.create(
-        params,
-        save_tax_id_easy: false
-      ) do |operation, business|
+      SaveBusiness.create(params) do |operation, business|
         business.should be_nil
         operation.valid?.should be_false
         operations_saved?(operation, false)
@@ -69,10 +62,7 @@ describe "Avram::SaveOperation with nested operation" do
         email_address: {"address" => ""},
         tax_id: {"number" => "123"}
 
-      SaveBusiness.create(
-        params,
-        save_tax_id_easy: true
-      ) do |operation, business|
+      SaveBusiness.create(params) do |operation, business|
         business.should be_nil
         operation.valid?.should be_false
         operations_saved?(operation, false)
@@ -97,7 +87,7 @@ describe "Avram::SaveOperation with nested operation" do
         email_address: {"address" => new_address},
         tax_id: {"number" => new_tax_num.to_s}
 
-      operation = SaveBusiness.new(business, params, save_tax_id_easy: false)
+      operation = SaveBusiness.new(business, params)
       operation.save_email_address.address.add_error("failed on purpose")
       operation.save_tax_id.number.add_error("failed on purpose")
       operation.save
@@ -108,7 +98,7 @@ describe "Avram::SaveOperation with nested operation" do
       email.reload.address.should eq(address)
       tax.reload.number.should eq(tax_num)
 
-      operation = SaveBusiness.new(business, params, save_tax_id_easy: true)
+      operation = SaveBusiness.new(business, params)
       operation.save_email_address.address.add_error("failed on purpose")
       operation.save
 
@@ -118,7 +108,7 @@ describe "Avram::SaveOperation with nested operation" do
       email.reload.address.should eq(address)
       tax.reload.number.should eq(tax_num)
 
-      operation = SaveBusiness.new(business, params, save_tax_id_easy: false)
+      operation = SaveBusiness.new(business, params)
       operation.save_tax_id.number.add_error("failed on purpose")
       operation.save
 
@@ -132,7 +122,7 @@ describe "Avram::SaveOperation with nested operation" do
         email_address: {"address" => new_address},
         tax_id: {"number" => new_tax_num.to_s}
 
-      operation = SaveBusiness.new(business, params, save_tax_id_easy: true)
+      operation = SaveBusiness.new(business, params)
       operation.save_tax_id.number.add_error("failed on purpose")
       operation.save
 
@@ -150,7 +140,7 @@ describe "Avram::SaveOperation with nested operation" do
         email_address: {"address" => "foo@bar.com"},
         tax_id: {"number" => "123"}
 
-      operation = SaveBusiness.new(params, save_tax_id_easy: false)
+      operation = SaveBusiness.new(params)
       operation.save_tax_id
       operation.save_email_address
       operation.save
@@ -183,11 +173,7 @@ describe "Avram::SaveOperation with nested operation" do
         email_address: {"address" => new_address},
         tax_id: {"number" => new_tax_num.to_s}
 
-      SaveBusiness.update(
-        business,
-        params,
-        save_tax_id_easy: true
-      ) do |operation, updated_business|
+      SaveBusiness.update(business, params) do |operation, updated_business|
         operation.valid?.should be_true
         operations_saved?(operation, saved?: true)
         operation.save_tax_id.valid?.should be_true
@@ -206,11 +192,7 @@ describe "Avram::SaveOperation with nested operation" do
         email_address: {"address" => new_address},
         tax_id: {"number" => new_tax_num.to_s}
 
-      SaveBusiness.update(
-        business,
-        params,
-        save_tax_id_easy: false
-      ) do |operation, updated_business|
+      SaveBusiness.update(business, params) do |operation, updated_business|
         operation.valid?.should be_true
         operations_saved?(operation, saved?: true)
         operation.save_tax_id.valid?.should be_true
