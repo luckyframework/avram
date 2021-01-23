@@ -19,6 +19,8 @@ module Avram::NestedSaveOperation
     after_save save_{{ name }}
 
     def save_{{ name }}(saved_record)
+      {{ name }}.{{ @type.constant(:FOREIGN_KEY).id }}.value = saved_record.id
+
       unless {{ name }}.save
         add_error(:{{ name }}, "failed")
         mark_nested_save_operations_as_failed
@@ -32,14 +34,6 @@ module Avram::NestedSaveOperation
       else
         {{ type }}.new(record.not_nil!.{{ assoc[:assoc_name].id }}!, params)
       end
-
-      nested = @{{ name }}.not_nil!
-
-      record.try do |record|
-        nested.{{ @type.constant(:FOREIGN_KEY).id }}.value = record.id
-      end
-
-      nested
     end
 
     def nested_save_operations
