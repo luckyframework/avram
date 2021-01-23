@@ -1,21 +1,40 @@
 module Avram::NestedSaveOperation
   macro has_one(type_declaration)
     {% name = type_declaration.var %}
-    {% type = type_declaration.type %}
+    {% type = type_declaration.type.resolve %}
+
+    {% model_type = type.ancestors.find do |t|
+         t.stringify.starts_with?("Avram::SaveOperation(")
+       end.type_vars.first %}
+
+    {% assoc = T.constant(:ASSOCIATIONS).find do |assoc|
+         assoc[:relationship_type] == :has_one &&
+           assoc[:type].resolve.name == model_type.name
+       end %}
+
+    {% unless assoc %}
+      {% raise "#{T} must have a has_one association with #{model_type}" %}
+    {% end %}
+
     @_{{ name }} : {{ type }} | Nil
 
-    def {{ name }}
-      @_{{ name }} ||= {{ type }}.new(params)
-    end
+    after_save save_{{ name }}
 
-    after_save save_nested_{{ name }}
+    def save_{{ name }}(saved_record)
+      {{ name }}.{{ @type.constant(:FOREIGN_KEY).id }}.value = saved_record.id
 
-    def save_nested_{{ name }}(record)
-      {{ name }}.{{ @type.constant(:FOREIGN_KEY).id }}.value = record.id
-
-      if !{{ name }}.save
+      unless {{ name }}.save
+        add_error(:{{ name }}, "failed")
         mark_nested_save_operations_as_failed
         database.rollback
+      end
+    end
+
+    def {{ name }}
+      @_{{ name }} ||= if new_record?
+        {{ type }}.new(params)
+      else
+        {{ type }}.new(record.not_nil!.{{ assoc[:assoc_name].id }}!, params)
       end
     end
 
@@ -28,8 +47,8 @@ module Avram::NestedSaveOperation
   end
 
   def mark_nested_save_operations_as_failed
-    nested_save_operations.each do |f|
-      f.as(Avram::MarkAsFailed).mark_as_failed
+    nested_save_operations.each do |operation|
+      operation.as(Avram::MarkAsFailed).mark_as_failed
     end
   end
 
