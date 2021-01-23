@@ -16,6 +16,8 @@ module Avram::NestedSaveOperation
       {% raise "#{T} must have a has_one association with #{model_type}" %}
     {% end %}
 
+    @_{{ name }} : {{ type }} | Nil
+
     after_save save_{{ name }}
 
     def save_{{ name }}(saved_record)
@@ -29,7 +31,7 @@ module Avram::NestedSaveOperation
     end
 
     def {{ name }}
-      @{{ name }} ||= if new_record?
+      @_{{ name }} ||= if new_record?
         {{ type }}.new(params)
       else
         {{ type }}.new(record.not_nil!.{{ assoc[:assoc_name].id }}!, params)
