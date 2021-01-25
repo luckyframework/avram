@@ -25,6 +25,18 @@ private class FailingTestOperation < Avram::Operation
   end
 end
 
+private class PassingTestOperation < Avram::Operation
+  attribute name : String
+
+  before_run do
+    validate_required name
+  end
+
+  def run
+    "run_method_called"
+  end
+end
+
 private class TestOperationWithParamKey < Avram::Operation
   param_key :custom_key
 
@@ -89,6 +101,18 @@ describe Avram::Operation do
         operation.params.should eq params
         operation.params.get("page").should eq "1"
         value.should eq "Custom Key Test"
+      end
+    end
+
+    it "is not called if operation invalid" do
+      params = Avram::Params.new({"name" => "Foo"})
+
+      PassingTestOperation.run(params) do |_, value|
+        value.should eq("run_method_called")
+      end
+
+      PassingTestOperation.run do |_, value|
+        value.should be_nil
       end
     end
   end
