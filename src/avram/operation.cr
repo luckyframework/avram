@@ -52,13 +52,15 @@ abstract class Avram::Operation
   # ```
   def self.run(params : Avram::Paramable, *args, **named_args)
     operation = self.new(params, *args, **named_args)
+    value = nil
+
     operation.before_run
-    value = operation.run
+
     if operation.valid?
+      value = operation.run
       operation.after_run(value)
-    else
-      value = nil
     end
+
     yield operation, value
   end
 
