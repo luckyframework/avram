@@ -3,21 +3,16 @@
 <head>
   <meta charset="utf-8" />
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="generator" content="Crystal Docs 0.34.0">
+<meta name="generator" content="Crystal Docs 0.35.1">
 <meta name="crystal_docs.project_version" content="0.18.2">
 <meta name="crystal_docs.project_name" content="avram">
+
 
 
 <link href="css/style.css" rel="stylesheet" type="text/css" />
 <script type="text/javascript" src="js/doc.js"></script>
 
-<svg class="hidden">
-  <symbol id="octicon-link" viewBox="0 0 16 16">
-    <path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path>
-  </symbol>
-</svg>
-
-  <meta id="repository-name" content="avram">
+  <meta name="repository-name" content="avram">
   <title>Time - avram 0.18.2</title>
   <script type="text/javascript">
     CrystalDocs.base_path = "";
@@ -25,6 +20,11 @@
 </head>
 <body>
 
+<svg class="hidden">
+  <symbol id="octicon-link" viewBox="0 0 16 16">
+    <path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path>
+  </symbol>
+</svg>
 <div class="sidebar">
   <div class="sidebar-header">
     <div class="search-box">
@@ -44,7 +44,7 @@
     </div>
   </div>
 
-  <div class="search-results" class="hidden">
+  <div class="search-results hidden">
     <ul class="search-list"></ul>
   </div>
 
@@ -1445,11 +1445,11 @@
   </h2>
 
   <p><code><a href="Time.html">Time</a></code> represents a date-time instant in
-<a href="https://www.w3.org/International/articles/definitions-time/#incremental_time" target="_blank">incremental time</a>
+<a href="https://www.w3.org/International/articles/definitions-time/#incremental_time">incremental time</a>
 observed in a specific time zone.</p>
 
 <p>The calendaric calculations are based on the rules of the proleptic Gregorian
-calendar as specified in <a href="http://xml.coverpages.org/ISO-FDIS-8601.pdf" target="_blank">ISO 8601</a>.
+calendar as specified in <a href="http://xml.coverpages.org/ISO-FDIS-8601.pdf">ISO 8601</a>.
 Leap seconds are ignored.</p>
 
 <p>Internally, the time is stored as an <code><a href="Int64.html">Int64</a></code> representing seconds from epoch
@@ -1485,7 +1485,7 @@ requires having a specific time zone (for example for calendaric operations).</p
 <p><code><a href="Time.html">Time</a></code> instances representing a specific instant can be created by
 <code>.utc</code> or <code>.new</code> with the date-time specified as individual arguments:</p>
 
-<pre><code>time <span class="o">=</span> <span class="t">Time</span>.utc(<span class="n">2016</span>, <span class="n">2</span>, <span class="n">15</span>, <span class="n">10</span>, <span class="n">20</span>, <span class="n">30</span>)
+<pre><code class="language-crystal">time <span class="o">=</span> <span class="t">Time</span>.utc(<span class="n">2016</span>, <span class="n">2</span>, <span class="n">15</span>, <span class="n">10</span>, <span class="n">20</span>, <span class="n">30</span>)
 time.to_s <span class="c"># =&gt; 2016-02-15 10:20:30 UTC</span>
 time <span class="o">=</span> <span class="t">Time</span>.local(<span class="n">2016</span>, <span class="n">2</span>, <span class="n">15</span>, <span class="n">10</span>, <span class="n">20</span>, <span class="n">30</span>, location: <span class="t">Time</span><span class="t">::</span><span class="t">Location</span>.load(<span class="s">&quot;Europe/Berlin&quot;</span>))
 time.to_s <span class="c"># =&gt; 2016-02-15 10:20:30 +01:00 Europe/Berlin</span>
@@ -1501,7 +1501,7 @@ time.to_s <span class="c"># =&gt; 2016-02-15 00:00:00 UTC</span></code></pre>
 
 <p>Each <code><a href="Time.html">Time</a></code> instance allows querying calendar data:</p>
 
-<pre><code>time <span class="o">=</span> <span class="t">Time</span>.utc(<span class="n">2016</span>, <span class="n">2</span>, <span class="n">15</span>, <span class="n">10</span>, <span class="n">20</span>, <span class="n">30</span>)
+<pre><code class="language-crystal">time <span class="o">=</span> <span class="t">Time</span>.utc(<span class="n">2016</span>, <span class="n">2</span>, <span class="n">15</span>, <span class="n">10</span>, <span class="n">20</span>, <span class="n">30</span>)
 time.year        <span class="c"># =&gt; 2016</span>
 time.month       <span class="c"># =&gt; 2</span>
 time.day         <span class="c"># =&gt; 15</span>
@@ -1518,7 +1518,7 @@ time.time_of_day <span class="c"># =&gt; 10:20:30</span></code></pre>
 <p>For querying if a time is at a specific day of week, <code><a href="Time.html">Time</a></code> offers named
 predicate methods, delegating to <code>#day_of_week</code>:</p>
 
-<pre><code>time.monday? <span class="c"># =&gt; true</span>
+<pre><code class="language-crystal">time.monday? <span class="c"># =&gt; true</span>
 <span class="c"># ...</span>
 time.sunday? <span class="c"># =&gt; false</span></code></pre>
 
@@ -1534,7 +1534,7 @@ time.sunday? <span class="c"># =&gt; false</span></code></pre>
 (i.e. the instant represented by this <code><a href="Time.html">Time</a></code>).
 <code>#offset</code> returns the offset of the current zone in seconds.</p>
 
-<pre><code>time <span class="o">=</span> <span class="t">Time</span>.local(<span class="n">2018</span>, <span class="n">3</span>, <span class="n">8</span>, <span class="n">22</span>, <span class="n">5</span>, <span class="n">13</span>, location: <span class="t">Time</span><span class="t">::</span><span class="t">Location</span>.load(<span class="s">&quot;Europe/Berlin&quot;</span>))
+<pre><code class="language-crystal">time <span class="o">=</span> <span class="t">Time</span>.local(<span class="n">2018</span>, <span class="n">3</span>, <span class="n">8</span>, <span class="n">22</span>, <span class="n">5</span>, <span class="n">13</span>, location: <span class="t">Time</span><span class="t">::</span><span class="t">Location</span>.load(<span class="s">&quot;Europe/Berlin&quot;</span>))
 time          <span class="c"># =&gt; 2018-03-08 22:05:13 +01:00 Europe/Berlin</span>
 time.location <span class="c"># =&gt; #&lt;Time::Location Europe/Berlin&gt;</span>
 time.zone     <span class="c"># =&gt; #&lt;Time::Location::Zone CET +01:00 (3600s) STD&gt;</span>
@@ -1542,7 +1542,7 @@ time.offset   <span class="c"># =&gt; 3600</span></code></pre>
 
 <p>Using <code>.utc</code>, the location is <code>Time::Location::UTC</code>:</p>
 
-<pre><code>time <span class="o">=</span> <span class="t">Time</span>.utc(<span class="n">2018</span>, <span class="n">3</span>, <span class="n">8</span>, <span class="n">22</span>, <span class="n">5</span>, <span class="n">13</span>)
+<pre><code class="language-crystal">time <span class="o">=</span> <span class="t">Time</span>.utc(<span class="n">2018</span>, <span class="n">3</span>, <span class="n">8</span>, <span class="n">22</span>, <span class="n">5</span>, <span class="n">13</span>)
 time          <span class="c"># =&gt; 2018-03-08 22:05:13.0 UTC</span>
 time.location <span class="c"># =&gt; #&lt;Time::Location UTC&gt;</span>
 time.zone     <span class="c"># =&gt; #&lt;Time::Location::Zone UTC +00:00 (0s) STD&gt;</span>
@@ -1551,7 +1551,7 @@ time.offset   <span class="c"># =&gt; 0</span></code></pre>
 <p>A <code><a href="Time.html">Time</a></code> instance can be transformed to a different time zone while retaining
 the same instant using <code>#in</code>:</p>
 
-<pre><code>time_de <span class="o">=</span> <span class="t">Time</span>.local(<span class="n">2018</span>, <span class="n">3</span>, <span class="n">8</span>, <span class="n">22</span>, <span class="n">5</span>, <span class="n">13</span>, location: <span class="t">Time</span><span class="t">::</span><span class="t">Location</span>.load(<span class="s">&quot;Europe/Berlin&quot;</span>))
+<pre><code class="language-crystal">time_de <span class="o">=</span> <span class="t">Time</span>.local(<span class="n">2018</span>, <span class="n">3</span>, <span class="n">8</span>, <span class="n">22</span>, <span class="n">5</span>, <span class="n">13</span>, location: <span class="t">Time</span><span class="t">::</span><span class="t">Location</span>.load(<span class="s">&quot;Europe/Berlin&quot;</span>))
 time_ar <span class="o">=</span> time_de.<span class="k">in</span> <span class="t">Time</span><span class="t">::</span><span class="t">Location</span>.load(<span class="s">&quot;America/Buenos_Aires&quot;</span>)
 time_de <span class="c"># =&gt; 2018-03-08 22:05:13 +01:00 Europe/Berlin</span>
 time_ar <span class="c"># =&gt; 2018-03-08 18:05:13 -03:00 America/Buenos_Aires</span></code></pre>
@@ -1560,13 +1560,13 @@ time_ar <span class="c"># =&gt; 2018-03-08 18:05:13 -03:00 America/Buenos_Aires<
 the same date-time in the instant time-line, therefore they are considered
 equal:</p>
 
-<pre><code>time_de.to_utc     <span class="c"># =&gt; 2018-03-08 21:05:13 UTC</span>
+<pre><code class="language-crystal">time_de.to_utc     <span class="c"># =&gt; 2018-03-08 21:05:13 UTC</span>
 time_ar.to_utc     <span class="c"># =&gt; 2018-03-08 21:05:13 UTC</span>
 time_de <span class="o">==</span> time_ar <span class="c"># =&gt; true</span></code></pre>
 
 <p>There are also two special methods for converting to UTC and local time zone:</p>
 
-<pre><code>time.to_utc   <span class="c"># equals time.in(Location::UTC)</span>
+<pre><code class="language-crystal">time.to_utc   <span class="c"># equals time.in(Location::UTC)</span>
 time.to_local <span class="c"># equals time.in(Location.local)</span></code></pre>
 
 <p><code>#to_local_in</code> allows changing the time zone while keeping
@@ -1585,13 +1585,13 @@ representation.</p>
 
 <p>The method <code>#to_s</code> formats the date-time according to a specified pattern.</p>
 
-<pre><code>time <span class="o">=</span> <span class="t">Time</span>.utc(<span class="n">2015</span>, <span class="n">10</span>, <span class="n">12</span>, <span class="n">10</span>, <span class="n">30</span>, <span class="n">0</span>)
+<pre><code class="language-crystal">time <span class="o">=</span> <span class="t">Time</span>.utc(<span class="n">2015</span>, <span class="n">10</span>, <span class="n">12</span>, <span class="n">10</span>, <span class="n">30</span>, <span class="n">0</span>)
 time.to_s(<span class="s">&quot;%Y-%m-%d %H:%M:%S %:z&quot;</span>) <span class="c"># =&gt; &quot;2015-10-12 10:30:00 +00:00&quot;</span></code></pre>
 
 <p>Similarly, <code>Time.parse</code> and <code>Time.parse!</code> are used to construct a <code><a href="Time.html">Time</a></code> instance from date-time
 information in a string, according to a specified pattern:</p>
 
-<pre><code><span class="t">Time</span>.parse(<span class="s">&quot;2015-10-12 10:30:00 +00:00&quot;</span>, <span class="s">&quot;%Y-%m-%d %H:%M:%S %z&quot;</span>, <span class="t">Time</span><span class="t">::</span><span class="t">Location</span><span class="t">::</span><span class="t">UTC</span>)
+<pre><code class="language-crystal"><span class="t">Time</span>.parse(<span class="s">&quot;2015-10-12 10:30:00 +00:00&quot;</span>, <span class="s">&quot;%Y-%m-%d %H:%M:%S %z&quot;</span>, <span class="t">Time</span><span class="t">::</span><span class="t">Location</span><span class="t">::</span><span class="t">UTC</span>)
 <span class="t">Time</span>.parse!(<span class="s">&quot;2015-10-12 10:30:00 +00:00&quot;</span>, <span class="s">&quot;%Y-%m-%d %H:%M:%S %z&quot;</span>)</code></pre>
 
 <p>See <code>Time::Format</code> for all directives.</p>
@@ -1602,7 +1602,7 @@ information in a string, according to a specified pattern:</p>
   </svg>
 </a>Calculations</h3>
 
-<pre><code><span class="t">Time</span>.utc(<span class="n">2015</span>, <span class="n">10</span>, <span class="n">10</span>) <span class="o">-</span> <span class="n">5</span>.days <span class="c"># =&gt; 2015-10-05 00:00:00 +00:00</span>
+<pre><code class="language-crystal"><span class="t">Time</span>.utc(<span class="n">2015</span>, <span class="n">10</span>, <span class="n">10</span>) <span class="o">-</span> <span class="n">5</span>.days <span class="c"># =&gt; 2015-10-05 00:00:00 +00:00</span>
 
 span <span class="o">=</span> <span class="t">Time</span>.utc(<span class="n">2015</span>, <span class="n">10</span>, <span class="n">10</span>) <span class="o">-</span> <span class="t">Time</span>.utc(<span class="n">2015</span>, <span class="n">9</span>, <span class="n">10</span>)
 span.days          <span class="c"># =&gt; 30</span>
@@ -1626,7 +1626,7 @@ returned instances is not guaranteed to equal to the time elapsed between
 making the calls; even the order of the returned <code><a href="Time.html">Time</a></code> instances might
 not reflect invocation order.</p>
 
-<pre><code>t1 <span class="o">=</span> <span class="t">Time</span>.utc
+<pre><code class="language-crystal">t1 <span class="o">=</span> <span class="t">Time</span>.utc
 <span class="c"># operation that takes 1 minute</span>
 t2 <span class="o">=</span> <span class="t">Time</span>.utc
 t2 <span class="o">-</span> t1 <span class="c"># =&gt; ?</span></code></pre>
@@ -1635,21 +1635,21 @@ t2 <span class="o">-</span> t1 <span class="c"># =&gt; ?</span></code></pre>
 computer's wall clock has changed between both calls.</p>
 
 <p>As an alternative, the operating system also provides a monotonic clock.
-Its time-line has no specfied starting point but is strictly linearly
+Its time-line has no specified starting point but is strictly linearly
 increasing.</p>
 
 <p>This monotonic clock should always be used for measuring elapsed time.</p>
 
 <p>A reading from this clock can be taken using <code>.monotonic</code>:</p>
 
-<pre><code>t1 <span class="o">=</span> <span class="t">Time</span>.monotonic
+<pre><code class="language-crystal">t1 <span class="o">=</span> <span class="t">Time</span>.monotonic
 <span class="c"># operation that takes 1 minute</span>
 t2 <span class="o">=</span> <span class="t">Time</span>.monotonic
 t2 <span class="o">-</span> t1 <span class="c"># =&gt; 1.minute (approximately)</span></code></pre>
 
 <p>The execution time of a block can be measured using <code>.measure</code>:</p>
 
-<pre><code>elapsed_time <span class="o">=</span> <span class="t">Time</span>.measure <span class="k">do</span>
+<pre><code class="language-crystal">elapsed_time <span class="o">=</span> <span class="t">Time</span>.measure <span class="k">do</span>
   <span class="c"># operation that takes 20 milliseconds</span>
 <span class="k">end</span>
 elapsed_time <span class="c"># =&gt; 20.milliseconds (approximately)</span></code></pre>
