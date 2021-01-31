@@ -543,7 +543,6 @@ module Avram::Callbacks
   # ```
   # class SaveComment < Comment::SaveOperation
   #   after_completed do |comment|
-  #
   #   end
   # end
   # ```

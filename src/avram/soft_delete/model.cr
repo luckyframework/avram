@@ -3,7 +3,7 @@
 # Include this module in your model, and make sure to add a `soft_deleted_at`
 # column to your model. The column type must be `Time?`
 #
-# ```crystal
+# ```
 # # In a migration
 # add soft_deleted_at : Time?
 #
@@ -19,7 +19,7 @@
 #
 # You should also add the `Avram::SoftDeleteQuery` to your query
 #
-# ```crystal
+# ```
 # class ArticleQuery < Article::BaseQuery
 #   include Avram::SoftDelete::Query
 # end

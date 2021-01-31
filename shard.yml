@@ -1,7 +1,7 @@
 name: avram
 version: 0.18.2
 
-crystal: 0.35.1
+crystal: 0.36.0
 
 license: MIT
 
@@ -30,7 +30,7 @@ dependencies:
     version: ~> 0.2.0
   dexter:
     github: luckyframework/dexter
-    version: ~> 0.3.1
+    branch: master
   shell-table:
     github: luckyframework/shell-table.cr
     branch: refactor/setter

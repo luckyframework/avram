@@ -4,7 +4,7 @@
 #
 # Then add this module your query
 #
-# ```crystal
+# ```
 # class ArticleQuery < Article::BaseQuery
 #   include Avram::SoftDelete::Query
 # end
@@ -41,7 +41,7 @@ module Avram::SoftDelete::Query
   #
   # This will soft delete all `Article` record older than 1 year:
   #
-  # ```crystal
+  # ```
   # ArticleQuery.new.created_at.lt(1.year.ago).soft_delete
   # ```
   def soft_delete
@@ -54,7 +54,7 @@ module Avram::SoftDelete::Query
   #
   # This will restore `Article` records updated in the last week:
   #
-  # ```crystal
+  # ```
   # ArticleQuery.new.updated_at.gt(1.week.ago).restore
   # ```
   def restore : Int64

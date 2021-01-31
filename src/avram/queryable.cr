@@ -223,7 +223,7 @@ module Avram::Queryable(T)
   # This method is meant to be used in your query object `initialize`.
   # Allows you to set a default query for your query objects.
   #
-  # ```crystal
+  # ```
   # class AdminUserQuery < User::BaseQuery
   #   def initialize
   #     defaults &.admin(true)
