@@ -1,4 +1,4 @@
-FROM crystallang/crystal:0.36.0
+FROM crystallang/crystal:0.36.1
 WORKDIR /data
 
 # install base dependencies
