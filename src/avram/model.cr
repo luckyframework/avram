@@ -166,16 +166,12 @@ abstract class Avram::Model
     DB.mapping({
       {% for column in columns %}
         {{column[:name]}}: {
-          {% if column[:type].id == Float64.id %}
-            type: PG::Numeric,
-          {% elsif column[:type].id == Array(Float64).id %}
+          {% if column[:type].id == Array(Float64).id %}
             type: Array(PG::Numeric),
-          {% else %}
-            {% if column[:type].is_a?(Generic) %}
+          {% elsif column[:type].is_a?(Generic) %}
             type: {{column[:type]}},
-            {% else %}
+          {% else %}
             type: {{column[:type]}}::Lucky::ColumnType,
-            {% end %}
           {% end %}
           nilable: {{column[:nilable]}},
         },
