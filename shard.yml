@@ -30,7 +30,7 @@ dependencies:
     version: ~> 0.2.0
   dexter:
     github: luckyframework/dexter
-    branch: master
+    version: ~> 0.3.2
   shell-table:
     github: luckyframework/shell-table.cr
     branch: refactor/setter
