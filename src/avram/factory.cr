@@ -61,7 +61,7 @@ abstract class Avram::Factory
   #
   # Usage:
   #
-  # ```crystal
+  # ```
   # tags = TagFactory.create_pair
   # typeof(tags) # => Array(Tag)
   # tags.size    # => 2
@@ -76,7 +76,7 @@ abstract class Avram::Factory
   #
   # Usage:
   #
-  # ```crystal
+  # ```
   # TagFactory.create_pair do |factory|
   #   # set both factories name to "test"
   #   factory.name("test")
@@ -92,7 +92,7 @@ abstract class Avram::Factory
   #
   # Usage:
   #
-  # ```crystal
+  # ```
   # class UserFactory < Avram::Factory
   #   def initialize
   #     username sequence("username")            # => username-1, username-2, etc.

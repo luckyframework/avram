@@ -14,7 +14,7 @@ module Avram::PrimaryKeyMethods
   #
   # Example:
   #
-  # ```crystal
+  # ```
   # user = SaveUser.create!(name: "Original")
   # SaveUser.update!(user, name: "Updated")
   #
@@ -40,7 +40,7 @@ module Avram::PrimaryKeyMethods
   #
   # Example:
   #
-  # ```crystal
+  # ```
   # user = SaveUser.create(params)
   #
   # # We want to display the list of articles the user has commented on, so let's #
@@ -57,7 +57,7 @@ module Avram::PrimaryKeyMethods
   #
   # If you do need to do something more custom you can manually reload:
   #
-  # ```crystal
+  # ```
   # user = SaveUser.create!(name: "Helen")
   # UserQuery.new.some_custom_preload_method.find(user.id)
   # ```

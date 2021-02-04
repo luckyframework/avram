@@ -76,7 +76,7 @@ module Avram::Migrator::StatementHelpers
   # `callback` - When to run this trigger (BEFORE or AFTER). Default `:before`
   # `on` - The operation(s) for this trigger (INSERT, UPDATE, DELETE). Default is `[:update]`
   #
-  # ```crystal
+  # ```
   # create_trigger(:users, "trigger_set_timestamps", "set_timestamps")
   # # => CREATE TRIGGER trigger_set_timestamps BEFORE UPDATE ON users FOR EACH ROW EXECUTE PROCEDURE set_timestamps();
   # ```
