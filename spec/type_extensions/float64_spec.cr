@@ -5,7 +5,7 @@ describe "Float64" do
     result = Float64.adapter.parse(10.0)
     result.value.should eq(10.0)
   end
-  
+
   it "parses Array(Float64) from Arrray(Float64)" do
     result = Float64.adapter.parse([10.0, 20.0])
     result.value.should eq([10.0, 20.0])
@@ -20,7 +20,7 @@ describe "Float64" do
     result = Float64.adapter.parse(
       [
         n(0, 0, 0, 1, [] of Int16),
-        n(1, 0, 0, 0, [1])
+        n(1, 0, 0, 0, [1]),
       ]
     )
     result.value.should eq([0.0, 1.0])
