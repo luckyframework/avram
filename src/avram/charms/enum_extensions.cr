@@ -34,7 +34,12 @@ macro avram_enum(enum_name, &block)
     end
 
     def initialize(enum_value : String)
-      @enum = Avram{{ enum_name }}.from_value(enum_value.to_i)
+      int_value = enum_value.to_i?
+      @enum = if int_value
+                Avram{{ enum_name }}.from_value(int_value)
+              else
+                Avram{{ enum_name }}.parse(enum_value)
+              end
     end
 
     delegate :===, to_s, to_i, to: @enum
@@ -58,7 +63,7 @@ macro avram_enum(enum_name, &block)
       end
 
       def parse(value : String)
-        SuccessfulCast({{ enum_name }}).new({{ enum_name }}.new(value.to_i))
+        SuccessfulCast({{ enum_name }}).new({{ enum_name }}.new(value))
       end
 
       def parse(value : Int32)

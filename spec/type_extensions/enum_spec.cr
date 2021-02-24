@@ -43,6 +43,16 @@ describe "Enum" do
     Issue::Status.new(:closed).enum.should eq(Issue::Status::Closed)
   end
 
+  it "parses the enum value name" do
+    Issue::Status.new("Closed").should eq(Issue::Status.new(:closed))
+    Issue::Status.new("Opened").should eq(Issue::Status.new(:opened))
+  end
+
+  it "parses the enum value integer when a string" do
+    Issue::Status.new("0").should eq(Issue::Status.new(:opened))
+    Issue::Status.new("1").should eq(Issue::Status.new(:closed))
+  end
+
   it "implements case equality" do
     case Issue::Status.new(:closed).value
     when Issue::Status.new(:closed)
