@@ -110,7 +110,7 @@ class Avram::Migrator::Runner
   private def self.create_table_for_tracking_migrations
     <<-SQL
     CREATE TABLE IF NOT EXISTS #{MIGRATIONS_TABLE_NAME} (
-      id serial PRIMARY KEY,
+      id bigserial PRIMARY KEY,
       version bigint NOT NULL
     )
     SQL
