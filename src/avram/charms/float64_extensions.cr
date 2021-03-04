@@ -4,7 +4,7 @@ struct Float64
   end
 
   module Lucky
-    alias ColumnType = ::PG::Numeric
+    alias ColumnType = ::PG::Numeric | Float64
     include Avram::Type
 
     def self.criteria(query : T, column) forall T
