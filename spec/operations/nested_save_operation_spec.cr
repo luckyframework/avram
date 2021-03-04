@@ -9,7 +9,7 @@ private class SaveBusiness < Business::SaveOperation
     permit_columns number
   end
 
-  permit_columns name
+  permit_columns name, latitude, longitude
   has_one save_email_address : SaveEmailAddress
   has_one save_tax_id : SaveTaxId
 end
@@ -136,7 +136,7 @@ describe "Avram::SaveOperation with nested operation" do
 
   context "when all forms are valid" do
     it "sets the relationship and creates both" do
-      params = NestedParams.new business: {"name" => "Fubar"},
+      params = NestedParams.new business: {"name" => "Fubar", "latitude" => "46.383488", "longitude" => "22.774896"},
         email_address: {"address" => "foo@bar.com"},
         tax_id: {"number" => "123"}
 
