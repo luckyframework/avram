@@ -973,6 +973,19 @@ describe Avram::Queryable do
     end
   end
 
+  context "when querying double" do
+    describe "simple where double" do
+      it "returns 1 result" do
+        business = BusinessFactory.new.create
+
+        query = BusinessQuery.new.name(business.name)
+        query.to_sql.should eq ["SELECT #{Business::COLUMN_SQL} FROM businesses WHERE businesses.name = $1", business.name]
+        result = query.first
+        result.should eq business
+      end
+    end
+  end
+
   describe ".truncate" do
     it "truncates the table" do
       10.times { UserFactory.create }
