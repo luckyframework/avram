@@ -4,6 +4,8 @@ require "./*"
 abstract class Avram::Migrator::Migration::V1
   include Avram::Migrator::StatementHelpers
 
+  alias MigrationId = Int32 | Int64
+
   macro inherited
     Avram::Migrator::Runner.migrations << self
 
@@ -62,7 +64,7 @@ abstract class Avram::Migrator::Migration::V1
 
   def migrated?
     DB.open(Avram::Migrator::Runner.database_url) do |db|
-      db.query_one? "SELECT id FROM migrations WHERE version = $1", version, as: Int32
+      db.query_one? "SELECT id FROM migrations WHERE version = $1", version, as: MigrationId
     end
   end
 
