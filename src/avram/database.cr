@@ -156,9 +156,10 @@ abstract class Avram::Database
   end
 
   # :nodoc:
-  def transaction
+  def transaction : Bool
     if current_transaction
       yield
+      true
     else
       wrap_in_transaction do
         yield
