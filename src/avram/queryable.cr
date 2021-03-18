@@ -122,6 +122,14 @@ module Avram::Queryable(T)
     clone.tap &.query.where(sql_clause)
   end
 
+  def where : self
+    query.where(Avram::Where::PrecedenceStart.new)
+    result = yield self
+    result.query.clear_conjunction
+    result.query.where(Avram::Where::PrecedenceEnd.new)
+    result
+  end
+
   def merge_query(query_to_merge : Avram::QueryBuilder) : self
     clone.tap &.query.merge(query_to_merge)
   end

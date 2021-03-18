@@ -401,6 +401,30 @@ describe Avram::Queryable do
     end
   end
 
+  describe "#where with block" do
+    it "wraps a simple where clause with parenthesis" do
+      query = UserQuery.new.where(&.age(30)).query
+
+      query.statement.should eq "SELECT #{User::COLUMN_SQL} FROM users WHERE ( users.age = $1 )"
+      query.args.should eq ["30"]
+    end
+
+    it "wraps complex queries" do
+      query = UserQuery.new.where { |user_q|
+        user_q.where { |q|
+          q.age(25).or(&.age(26))
+        }.where { |q|
+          q.name("Billy").or(&.name("Tommy"))
+        }
+      }.or { |q|
+        q.nickname("Strange")
+      }.query
+
+      query.statement.should eq "SELECT #{User::COLUMN_SQL} FROM users WHERE ( ( users.age = $1 OR users.age = $2 ) AND ( users.name = $3 OR users.name = $4 ) ) OR users.nickname = $5"
+      query.args.should eq ["25", "26", "Billy", "Tommy", "Strange"]
+    end
+  end
+
   describe "#limit" do
     it "adds a limit clause" do
       queryable = UserQuery.new.limit(2)

@@ -308,6 +308,12 @@ class Avram::QueryBuilder
     block.call(self)
   end
 
+  # Clears the last conjunction
+  # e.g. users.age = $1 AND -> users.age = $1
+  def clear_conjunction
+    @wheres.last.conjunction = Avram::Where::Conjunction::None unless @wheres.empty?
+  end
+
   @_wheres_sql : String?
 
   private def wheres_sql
@@ -321,6 +327,9 @@ class Avram::QueryBuilder
 
         [clause, sql_clause.conjunction.to_s]
       end
+
+      # Remove blank conjunctions
+      statements.reject!(&.blank?)
 
       # Remove the last floating conjunction
       statements.pop
