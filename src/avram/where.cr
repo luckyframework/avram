@@ -2,6 +2,7 @@ module Avram::Where
   enum Conjunction
     And
     Or
+    None
 
     def to_s
       case self
@@ -9,6 +10,8 @@ module Avram::Where
         "AND"
       when .or?
         "OR"
+      else
+        ""
       end
     end
   end
@@ -20,6 +23,22 @@ module Avram::Where
 
     def clone
       self
+    end
+  end
+
+  class PrecedenceStart < Condition
+    def initialize
+      @conjunction = Avram::Where::Conjunction::None
+    end
+
+    def prepare(placeholder_supplier : Proc(String)) : String
+      "("
+    end
+  end
+
+  class PrecedenceEnd < Condition
+    def prepare(placeholder_supplier : Proc(String)) : String
+      ")"
     end
   end
 
