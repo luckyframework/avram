@@ -32,6 +32,10 @@ module Avram::Migrator::StatementHelpers
     prepared_statements << CreateForeignKeyStatement.new(from, to, on_delete, column, primary_key).build
   end
 
+  def drop_foreign_key(from : Symbol, references : Symbol, column : Symbol?)
+    prepared_statements << DropForeignKeyStatement.new(from, references, column).build
+  end
+
   def create_index(table_name : Symbol, columns : Columns, unique = false, using = :btree, name : String? | Symbol? = nil)
     prepared_statements << CreateIndexStatement.new(table_name, columns, using, unique, name).build
   end
