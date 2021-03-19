@@ -996,6 +996,16 @@
       
     </li>
   
+  <li class=" " data-id="avram/Avram/Where/PrecedenceEnd" data-name="avram::where::precedenceend">
+      <a href="../Avram/Where/PrecedenceEnd.html">PrecedenceEnd</a>
+      
+    </li>
+  
+  <li class=" " data-id="avram/Avram/Where/PrecedenceStart" data-name="avram::where::precedencestart">
+      <a href="../Avram/Where/PrecedenceStart.html">PrecedenceStart</a>
+      
+    </li>
+  
   <li class=" " data-id="avram/Avram/Where/Raw" data-name="avram::where::raw">
       <a href="../Avram/Where/Raw.html">Raw</a>
       
@@ -1514,6 +1524,13 @@
       </li>
     
       <li class="entry-summary">
+        <a href="#clear_conjunction-instance-method" class="signature"><strong>#clear_conjunction</strong></a>
+        
+          <div class="summary"><p>Clears the last conjunction e.g.</p></div>
+        
+      </li>
+    
+      <li class="entry-summary">
         <a href="#clone-instance-method" class="signature"><strong>#clone</strong></a>
         
           <div class="summary"><p>Returns a copy of <code>self</code> with all instance variables cloned.</p></div>
@@ -1536,12 +1553,12 @@
       </li>
     
       <li class="entry-summary">
-        <a href="#distinct_on:ColumnName?-instance-method" class="signature"><strong>#distinct_on</strong> : ColumnName?</a>
+        <a href="#distinct_on(column:ColumnName)-instance-method" class="signature"><strong>#distinct_on</strong>(column : ColumnName)</a>
         
       </li>
     
       <li class="entry-summary">
-        <a href="#distinct_on(column:ColumnName)-instance-method" class="signature"><strong>#distinct_on</strong>(column : ColumnName)</a>
+        <a href="#distinct_on:ColumnName?-instance-method" class="signature"><strong>#distinct_on</strong> : ColumnName?</a>
         
       </li>
     
@@ -1581,12 +1598,12 @@
       </li>
     
       <li class="entry-summary">
-        <a href="#limit:Int32?-instance-method" class="signature"><strong>#limit</strong> : Int32?</a>
+        <a href="#limit(limit)-instance-method" class="signature"><strong>#limit</strong>(limit)</a>
         
       </li>
     
       <li class="entry-summary">
-        <a href="#limit(limit)-instance-method" class="signature"><strong>#limit</strong>(limit)</a>
+        <a href="#limit:Int32?-instance-method" class="signature"><strong>#limit</strong> : Int32?</a>
         
       </li>
     
@@ -1629,6 +1646,13 @@
     
       <li class="entry-summary">
         <a href="#orders-instance-method" class="signature"><strong>#orders</strong></a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#remove_last_where-instance-method" class="signature"><strong>#remove_last_where</strong></a>
+        
+          <div class="summary"><p>Removes the last <code><a href="../Avram/Where.html">Avram::Where</a></code> to be added</p></div>
         
       </li>
     
@@ -1824,6 +1848,26 @@
       </div>
     </div>
   
+    <div class="entry-detail" id="clear_conjunction-instance-method">
+      <div class="signature">
+        
+        def <strong>clear_conjunction</strong>
+
+        <a class="method-permalink" href="#clear_conjunction-instance-method">#</a>
+      </div>
+      
+        <div class="doc">
+          
+          <p>Clears the last conjunction
+e.g. users.age = $1 AND -> users.age = $1</p>
+        </div>
+      
+      <br/>
+      <div>
+        
+      </div>
+    </div>
+  
     <div class="entry-detail" id="clone-instance-method">
       <div class="signature">
         
@@ -1885,12 +1929,12 @@
       </div>
     </div>
   
-    <div class="entry-detail" id="distinct_on:ColumnName?-instance-method">
+    <div class="entry-detail" id="distinct_on(column:ColumnName)-instance-method">
       <div class="signature">
         
-        def <strong>distinct_on</strong> : <a href="../Avram/QueryBuilder/ColumnName.html">ColumnName</a>?
+        def <strong>distinct_on</strong>(column : <a href="../Avram/QueryBuilder/ColumnName.html">ColumnName</a>)
 
-        <a class="method-permalink" href="#distinct_on:ColumnName?-instance-method">#</a>
+        <a class="method-permalink" href="#distinct_on(column:ColumnName)-instance-method">#</a>
       </div>
       
       <br/>
@@ -1899,12 +1943,12 @@
       </div>
     </div>
   
-    <div class="entry-detail" id="distinct_on(column:ColumnName)-instance-method">
+    <div class="entry-detail" id="distinct_on:ColumnName?-instance-method">
       <div class="signature">
         
-        def <strong>distinct_on</strong>(column : <a href="../Avram/QueryBuilder/ColumnName.html">ColumnName</a>)
+        def <strong>distinct_on</strong> : <a href="../Avram/QueryBuilder/ColumnName.html">ColumnName</a>?
 
-        <a class="method-permalink" href="#distinct_on(column:ColumnName)-instance-method">#</a>
+        <a class="method-permalink" href="#distinct_on:ColumnName?-instance-method">#</a>
       </div>
       
       <br/>
@@ -2011,12 +2055,12 @@
       </div>
     </div>
   
-    <div class="entry-detail" id="limit:Int32?-instance-method">
+    <div class="entry-detail" id="limit(limit)-instance-method">
       <div class="signature">
         
-        def <strong>limit</strong> : <a href="../Int32.html">Int32</a>?
+        def <strong>limit</strong>(limit)
 
-        <a class="method-permalink" href="#limit:Int32?-instance-method">#</a>
+        <a class="method-permalink" href="#limit(limit)-instance-method">#</a>
       </div>
       
       <br/>
@@ -2025,12 +2069,12 @@
       </div>
     </div>
   
-    <div class="entry-detail" id="limit(limit)-instance-method">
+    <div class="entry-detail" id="limit:Int32?-instance-method">
       <div class="signature">
         
-        def <strong>limit</strong>(limit)
+        def <strong>limit</strong> : <a href="../Int32.html">Int32</a>?
 
-        <a class="method-permalink" href="#limit(limit)-instance-method">#</a>
+        <a class="method-permalink" href="#limit:Int32?-instance-method">#</a>
       </div>
       
       <br/>
@@ -2149,6 +2193,25 @@
 
         <a class="method-permalink" href="#orders-instance-method">#</a>
       </div>
+      
+      <br/>
+      <div>
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="remove_last_where-instance-method">
+      <div class="signature">
+        
+        def <strong>remove_last_where</strong>
+
+        <a class="method-permalink" href="#remove_last_where-instance-method">#</a>
+      </div>
+      
+        <div class="doc">
+          
+          <p>Removes the last <code><a href="../Avram/Where.html">Avram::Where</a></code> to be added</p>
+        </div>
       
       <br/>
       <div>

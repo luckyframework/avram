@@ -996,6 +996,16 @@
       
     </li>
   
+  <li class=" " data-id="avram/Avram/Where/PrecedenceEnd" data-name="avram::where::precedenceend">
+      <a href="../Avram/Where/PrecedenceEnd.html">PrecedenceEnd</a>
+      
+    </li>
+  
+  <li class=" " data-id="avram/Avram/Where/PrecedenceStart" data-name="avram::where::precedencestart">
+      <a href="../Avram/Where/PrecedenceStart.html">PrecedenceStart</a>
+      
+    </li>
+  
   <li class=" " data-id="avram/Avram/Where/Raw" data-name="avram::where::raw">
       <a href="../Avram/Where/Raw.html">Raw</a>
       
@@ -1619,12 +1629,12 @@
       </li>
     
       <li class="entry-summary">
-        <a href="#primary_key_name(*args,**options,&)-instance-method" class="signature"><strong>#primary_key_name</strong>(*args, **options, &)</a>
+        <a href="#primary_key_name(*args,**options)-instance-method" class="signature"><strong>#primary_key_name</strong>(*args, **options)</a>
         
       </li>
     
       <li class="entry-summary">
-        <a href="#primary_key_name(*args,**options)-instance-method" class="signature"><strong>#primary_key_name</strong>(*args, **options)</a>
+        <a href="#primary_key_name(*args,**options,&)-instance-method" class="signature"><strong>#primary_key_name</strong>(*args, **options, &)</a>
         
       </li>
     
@@ -1697,6 +1707,11 @@
         <a href="#update:Int64-instance-method" class="signature"><strong>#update</strong> : Int64</a>
         
           <div class="summary"><p>Update the records using the query's where clauses, or all records if no wheres are added.</p></div>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#where(&):self-instance-method" class="signature"><strong>#where</strong>(&) : <span class="k">self</span></a>
         
       </li>
     
@@ -2113,12 +2128,12 @@ conjunction to OR. Then call yield to set the next set of ORs</p>
       </div>
     </div>
   
-    <div class="entry-detail" id="primary_key_name(*args,**options,&)-instance-method">
+    <div class="entry-detail" id="primary_key_name(*args,**options)-instance-method">
       <div class="signature">
         
-        def <strong>primary_key_name</strong>(*args, **options, &)
+        def <strong>primary_key_name</strong>(*args, **options)
 
-        <a class="method-permalink" href="#primary_key_name(*args,**options,&)-instance-method">#</a>
+        <a class="method-permalink" href="#primary_key_name(*args,**options)-instance-method">#</a>
       </div>
       
       <br/>
@@ -2127,12 +2142,12 @@ conjunction to OR. Then call yield to set the next set of ORs</p>
       </div>
     </div>
   
-    <div class="entry-detail" id="primary_key_name(*args,**options)-instance-method">
+    <div class="entry-detail" id="primary_key_name(*args,**options,&)-instance-method">
       <div class="signature">
         
-        def <strong>primary_key_name</strong>(*args, **options)
+        def <strong>primary_key_name</strong>(*args, **options, &)
 
-        <a class="method-permalink" href="#primary_key_name(*args,**options)-instance-method">#</a>
+        <a class="method-permalink" href="#primary_key_name(*args,**options,&)-instance-method">#</a>
       </div>
       
       <br/>
@@ -2340,6 +2355,20 @@ conjunction to OR. Then call yield to set the next set of ORs</p>
 <pre><code class="language-crystal"><span class="c"># Update all comments with the word &quot;spam&quot; as spam</span>
 <span class="t">CommentQuery</span>.<span class="k">new</span>.body.ilike(<span class="s">&quot;spam&quot;</span>).update(spam: <span class="n">true</span>)</code></pre>
         </div>
+      
+      <br/>
+      <div>
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="where(&):self-instance-method">
+      <div class="signature">
+        
+        def <strong>where</strong>(&) : <span class="k">self</span>
+
+        <a class="method-permalink" href="#where(&):self-instance-method">#</a>
+      </div>
       
       <br/>
       <div>
