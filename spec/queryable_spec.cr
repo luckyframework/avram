@@ -423,6 +423,15 @@ describe Avram::Queryable do
       query.statement.should eq "SELECT #{User::COLUMN_SQL} FROM users WHERE ( ( users.age = $1 OR users.age = $2 ) AND ( users.name = $3 OR users.name = $4 ) ) OR users.nickname = $5"
       query.args.should eq ["25", "26", "Billy", "Tommy", "Strange"]
     end
+
+    it "clones properly when assigned to a variable and updated later" do
+      orig_query = UserQuery.new
+
+      new_query = orig_query.where(&.nickname("BusyCat")).limit(3)
+
+      orig_query.query.statement.should eq "SELECT #{User::COLUMN_SQL} FROM users"
+      new_query.query.statement.should eq "SELECT #{User::COLUMN_SQL} FROM users WHERE ( users.nickname = $1 ) LIMIT 3"
+    end
   end
 
   describe "#limit" do
