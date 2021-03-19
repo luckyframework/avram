@@ -432,6 +432,20 @@ describe Avram::Queryable do
       orig_query.query.statement.should eq "SELECT #{User::COLUMN_SQL} FROM users"
       new_query.query.statement.should eq "SELECT #{User::COLUMN_SQL} FROM users WHERE ( users.nickname = $1 ) LIMIT 3"
     end
+
+    it "doesn't add parenthesis when query to wrap is provided" do
+      query = UserQuery.new.name("Susan").where do |q|
+        some_condition = false
+        if some_condition
+          q.name("john")
+        else
+          q
+        end
+      end.age(25).query
+
+      query.statement.should eq "SELECT #{User::COLUMN_SQL} FROM users WHERE users.name = $1 AND users.age = $2"
+      query.args.should eq ["Susan", "25"]
+    end
   end
 
   describe "#limit" do

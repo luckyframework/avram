@@ -125,8 +125,14 @@ module Avram::Queryable(T)
   def where : self
     cloned = clone.tap &.query.where(Avram::Where::PrecedenceStart.new)
     result = yield cloned
-    cloned = result.clone.tap &.query.clear_conjunction
-    cloned.clone.tap &.query.where(Avram::Where::PrecedenceEnd.new)
+
+    # If no query was added to the yielded block, we remove the precedence
+    if result.query.wheres.last.is_a?(Avram::Where::PrecedenceStart)
+      result.clone.tap &.query.remove_last_where
+    else
+      cloned = result.clone.tap &.query.clear_conjunction
+      cloned.clone.tap &.query.where(Avram::Where::PrecedenceEnd.new)
+    end
   end
 
   def merge_query(query_to_merge : Avram::QueryBuilder) : self

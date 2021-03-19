@@ -309,6 +309,11 @@ class Avram::QueryBuilder
     @wheres.last.conjunction = Avram::Where::Conjunction::None unless @wheres.empty?
   end
 
+  # Removes the last `Avram::Where` to be added
+  def remove_last_where
+    @wheres.pop
+  end
+
   @_wheres_sql : String?
 
   private def wheres_sql
