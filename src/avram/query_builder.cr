@@ -293,11 +293,6 @@ class Avram::QueryBuilder
     self
   end
 
-  @[Deprecated("Use `#where` instead.")]
-  def raw_where(where_clause : Avram::Where::Raw)
-    where(where_clause)
-  end
-
   def or(&block : Avram::QueryBuilder -> Avram::QueryBuilder)
     if @wheres.empty?
       raise Avram::InvalidQueryError.new("Cannot call `or` before calling a `where`")
@@ -340,11 +335,6 @@ class Avram::QueryBuilder
 
   def wheres
     @wheres
-  end
-
-  @[Deprecated("Use `#wheres` instead. Raw wheres are included.")]
-  def raw_wheres
-    wheres.select(&.is_a?(Avram::Where::Raw))
   end
 
   private def prepared_statement_values
