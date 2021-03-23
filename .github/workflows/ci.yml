@@ -8,29 +8,37 @@ on:
 
 jobs:
   check_format:
+    strategy:
+      fail-fast: false
+      matrix:
+        crystal_version:
+          - 0.36.1
+          - 1.0.0
+        experimental:
+          - false
     runs-on: ubuntu-latest
-    container:
-      image: crystallang/crystal:0.36.1
+    continue-on-error: ${{ matrix.experimental }}
+    container: crystallang/crystal:${{ matrix.crystal_version }}-alpine
     steps:
       - uses: actions/checkout@v1
       - name: Install shards
         run: shards install
       - name: Format
-        run: crystal tool format --check src spec config
-  ameba:
-    runs-on: ubuntu-latest
-    container:
-      image: crystallang/crystal:0.36.1
-    steps:
-      - uses: actions/checkout@v1
-      - name: Install shards
-        run: shards install
-      - name: Analyze
-        run: crystal bin/ameba.cr
+        run: crystal tool format --check
+      - name: Lint
+        run: ./bin/ameba
   specs:
+    strategy:
+      fail-fast: false
+      matrix:
+        crystal_version:
+          - 0.36.1
+          - 1.0.0
+        experimental:
+          - false
     runs-on: ubuntu-latest
-    container:
-      image: crystallang/crystal:0.36.1
+    continue-on-error: ${{ matrix.experimental }}
+    container: crystallang/crystal:${{ matrix.crystal_version }}-alpine
     services:
       postgres:
         image: postgres:10-alpine
