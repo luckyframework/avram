@@ -18,7 +18,7 @@ jobs:
           - false
     runs-on: ubuntu-latest
     continue-on-error: ${{ matrix.experimental }}
-    container: crystallang/crystal:${{ matrix.crystal_version }}-alpine
+    container: crystallang/crystal:${{ matrix.crystal_version }}
     steps:
       - uses: actions/checkout@v1
       - name: Install shards
@@ -38,7 +38,7 @@ jobs:
           - false
     runs-on: ubuntu-latest
     continue-on-error: ${{ matrix.experimental }}
-    container: crystallang/crystal:${{ matrix.crystal_version }}-alpine
+    container: crystallang/crystal:${{ matrix.crystal_version }}
     services:
       postgres:
         image: postgres:10-alpine
@@ -55,17 +55,17 @@ jobs:
           apt-get update
           apt-get -yqq install libpq-dev postgresql-client
       - uses: actions/checkout@v2
+      - name: Cache Crystal
+        uses: actions/cache@v1
+        with:
+          path: ~/.cache/crystal
+          key: ${{ runner.os }}-crystal
       - name: Install shards
         run: shards install
       - name: Install Lucky CLI
         run: |
           crystal build lib/lucky_cli/src/lucky.cr --no-debug --release
           cp lucky /usr/local/bin
-      - name: Cache Crystal
-        uses: actions/cache@v1
-        with:
-          path: ~/.cache/crystal
-          key: ${{ runner.os }}-crystal
       - name: Run integration test
         run: ./script/integration_test
         env:
