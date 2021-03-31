@@ -294,7 +294,7 @@ abstract class Avram::SaveOperation(T)
 
     if valid?
       transaction_committed = database.transaction do
-        insert_or_update if changes.any? || !persisted?
+        insert_or_update if !changes.empty? || !persisted?
         after_save(record.not_nil!)
         true
       end

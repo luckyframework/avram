@@ -157,7 +157,7 @@ class Avram::QueryBuilder
   end
 
   def reverse_order
-    @orders = @orders.map(&.reversed).reverse
+    @orders = @orders.map(&.reversed).reverse!
     self
   end
 
@@ -187,7 +187,7 @@ class Avram::QueryBuilder
   end
 
   def grouped?
-    @groups.any?
+    !@groups.empty?
   end
 
   def select_count
@@ -236,7 +236,7 @@ class Avram::QueryBuilder
   def selects
     @selections
       .split(", ")
-      .map { |column| column.split(".").last }
+      .map(&.split('.').last)
   end
 
   def select(selection : Array(ColumnName))
@@ -247,7 +247,7 @@ class Avram::QueryBuilder
   end
 
   def ordered?
-    @orders.any?
+    !@orders.empty?
   end
 
   private def select_sql
@@ -321,7 +321,7 @@ class Avram::QueryBuilder
   end
 
   private def joined_wheres_queries
-    if wheres.any?
+    if !wheres.empty?
       statements = wheres.flat_map do |sql_clause|
         clause = sql_clause.prepare(->next_prepared_statement_placeholder)
 

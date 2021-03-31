@@ -7,6 +7,6 @@ module Avram::Paramable
   abstract def get(key : String)
 
   def has_key_for?(operation : Avram::Operation.class | Avram::SaveOperation.class) : Bool
-    nested?(operation.param_key).any?
+    !nested?(operation.param_key).empty?
   end
 end

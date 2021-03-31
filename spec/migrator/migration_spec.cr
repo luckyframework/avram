@@ -123,5 +123,5 @@ private def get_column_names(table_name)
     AND table_name = '#{table_name}'
   SQL
 
-  TestDatabase.run { |db| db.query_all statement, as: {String, Bool} }
+  TestDatabase.run(&.query_all(statement, as: {String, Bool}))
 end
