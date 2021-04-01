@@ -21,7 +21,7 @@ dependencies:
     version: ~> 0.23.0
   habitat:
     github: luckyframework/habitat
-    branch: master
+    version: ~> 0.4.7
   wordsmith:
     github: luckyframework/wordsmith
     branch: master
