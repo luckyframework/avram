@@ -17,7 +17,7 @@ module Avram::Join
     abstract def join_type : String
 
     def to_sql
-      if @using.any?
+      if !@using.empty?
         %(#{join_type} JOIN #{@to} USING (#{@using.join(", ")}))
       else
         "#{join_type} JOIN #{@to} ON #{from_column} #{@comparison} #{to_column}"

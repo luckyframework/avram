@@ -13,7 +13,7 @@ module Avram::Type
 
   def parse(values : Array(String))
     casts = values.map { |value| parse(value) }
-    if casts.all?(&.is_a?(SuccessfulCast))
+    if casts.all?(SuccessfulCast)
       values = casts.map { |c| c.as(SuccessfulCast).value }
       parse(values)
     else

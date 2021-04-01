@@ -165,7 +165,7 @@ class Avram::Migrator::Runner
   end
 
   def ensure_migrated!
-    if pending_migrations.any?
+    if !pending_migrations.empty?
       raise "There are pending migrations. Please run lucky db.migrate"
     end
   end
