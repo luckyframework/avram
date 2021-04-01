@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="generator" content="Crystal Docs 0.35.1">
+<meta name="generator" content="Crystal Docs 0.36.1">
 <meta name="crystal_docs.project_version" content="0.19.1">
 <meta name="crystal_docs.project_name" content="avram">
 
@@ -553,6 +553,11 @@
   
   <li class=" " data-id="avram/Avram/Migrator/DropExtensionStatement" data-name="avram::migrator::dropextensionstatement">
       <a href="../../Avram/Migrator/DropExtensionStatement.html">DropExtensionStatement</a>
+      
+    </li>
+  
+  <li class=" " data-id="avram/Avram/Migrator/DropForeignKeyStatement" data-name="avram::migrator::dropforeignkeystatement">
+      <a href="../../Avram/Migrator/DropForeignKeyStatement.html">DropForeignKeyStatement</a>
       
     </li>
   
@@ -1505,6 +1510,11 @@
     Defined in:
   </h2>
   
+    
+      avram/migrator/statement_helpers.cr
+    
+    <br/>
+  
 
 
 
@@ -1553,6 +1563,11 @@
     
       <li class="entry-summary">
         <a href="#drop(table_name)-instance-method" class="signature"><strong>#drop</strong>(table_name)</a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#drop_foreign_key(from:Symbol,references:Symbol,column:Symbol?)-instance-method" class="signature"><strong>#drop_foreign_key</strong>(from : Symbol, references : Symbol, column : Symbol?)</a>
         
       </li>
     
@@ -1763,6 +1778,20 @@ Postgres does not support updating or replacing a trigger as of version 12</p>
         def <strong>drop</strong>(table_name)
 
         <a class="method-permalink" href="#drop(table_name)-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="drop_foreign_key(from:Symbol,references:Symbol,column:Symbol?)-instance-method">
+      <div class="signature">
+        
+        def <strong>drop_foreign_key</strong>(from : Symbol, references : Symbol, column : Symbol?)
+
+        <a class="method-permalink" href="#drop_foreign_key(from:Symbol,references:Symbol,column:Symbol?)-instance-method">#</a>
       </div>
       
       <br/>
