@@ -24,16 +24,16 @@ dependencies:
     version: ~> 0.4.7
   wordsmith:
     github: luckyframework/wordsmith
-    branch: master
+    version: ~> 0.2.2
   dexter:
     github: luckyframework/dexter
-    branch: master
+    version: ~> 0.3.3
   shell-table:
     github: luckyframework/shell-table.cr
     branch: master
   pulsar:
     github: luckyframework/pulsar
-    branch: master
+    version: ~> 0.2.2
 
 development_dependencies:
   ameba:
