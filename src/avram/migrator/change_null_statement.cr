@@ -7,7 +7,7 @@
 # # => "ALTER TABLE users ALTER COLUMN email DROP NOT NULL;"
 # ```
 class Avram::Migrator::ChangeNullStatement
-  def initialize(@table : Symbol, @column : Symbol, @required : Bool)
+  def initialize(@table : TableName, @column : Symbol, @required : Bool)
   end
 
   def build

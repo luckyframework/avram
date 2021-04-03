@@ -21,11 +21,11 @@ module Avram
 
   # Raised when Avram cannot find a record by given id
   class RecordNotFoundError < AvramError
-    def initialize(model : Symbol, id : String)
+    def initialize(model : TableName, id : String)
       super "Could not find #{model} with id of #{id}"
     end
 
-    def initialize(model : Symbol, query : Symbol)
+    def initialize(model : TableName, query : Symbol)
       super "Could not find #{query} record in #{model}"
     end
   end

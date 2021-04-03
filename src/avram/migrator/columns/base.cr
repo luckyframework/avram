@@ -30,7 +30,7 @@ abstract class Avram::Migrator::Columns::Base
     self
   end
 
-  def build_change_type_statement(table_name : Symbol) : String
+  def build_change_type_statement(table_name : TableName) : String
     "ALTER TABLE #{table_name} ALTER COLUMN #{name} SET DATA TYPE #{column_type};"
   end
 

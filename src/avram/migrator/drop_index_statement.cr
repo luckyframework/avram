@@ -29,7 +29,7 @@ class Avram::Migrator::DropIndexStatement
 
   ALLOWED_ON_DELETE_STRATEGIES = %i[cascade restrict]
 
-  def initialize(@table : Symbol, @columns : Columns? = nil, @if_exists = false, @on_delete = :do_nothing, @name : String? | Symbol? = nil)
+  def initialize(@table : TableName, @columns : Columns? = nil, @if_exists = false, @on_delete = :do_nothing, @name : String? | Symbol? = nil)
   end
 
   def build

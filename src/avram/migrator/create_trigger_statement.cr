@@ -1,6 +1,6 @@
 class Avram::Migrator::CreateTriggerStatement
   def initialize(
-    @table_name : Symbol,
+    @table_name : TableName,
     @trigger_name : String,
     @function : String,
     callback @trigger_when : Symbol = :before,

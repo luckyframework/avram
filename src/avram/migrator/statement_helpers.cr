@@ -28,27 +28,27 @@ module Avram::Migrator::StatementHelpers
     end
   end
 
-  def create_foreign_key(from : Symbol, to : Symbol, on_delete : Symbol, column : Symbol?, primary_key = :id)
+  def create_foreign_key(from : TableName, to : TableName, on_delete : Symbol, column : Symbol?, primary_key = :id)
     prepared_statements << CreateForeignKeyStatement.new(from, to, on_delete, column, primary_key).build
   end
 
-  def drop_foreign_key(from : Symbol, references : Symbol, column : Symbol?)
+  def drop_foreign_key(from : TableName, references : TableName, column : Symbol?)
     prepared_statements << DropForeignKeyStatement.new(from, references, column).build
   end
 
-  def create_index(table_name : Symbol, columns : Columns, unique = false, using = :btree, name : String? | Symbol? = nil)
+  def create_index(table_name : TableName, columns : Columns, unique = false, using = :btree, name : String? | Symbol? = nil)
     prepared_statements << CreateIndexStatement.new(table_name, columns, using, unique, name).build
   end
 
-  def drop_index(table_name : Symbol, columns : Columns? = nil, if_exists = false, on_delete = :do_nothing, name : String? | Symbol? = nil)
+  def drop_index(table_name : TableName, columns : Columns? = nil, if_exists = false, on_delete = :do_nothing, name : String? | Symbol? = nil)
     prepared_statements << Avram::Migrator::DropIndexStatement.new(table_name, columns, if_exists, on_delete, name).build
   end
 
-  def make_required(table : Symbol, column : Symbol)
+  def make_required(table : TableName, column : Symbol)
     prepared_statements << Avram::Migrator::ChangeNullStatement.new(table, column, required: true).build
   end
 
-  def make_optional(table : Symbol, column : Symbol)
+  def make_optional(table : TableName, column : Symbol)
     prepared_statements << Avram::Migrator::ChangeNullStatement.new(table, column, required: false).build
   end
 
@@ -84,13 +84,13 @@ module Avram::Migrator::StatementHelpers
   # create_trigger(:users, "trigger_set_timestamps", "set_timestamps")
   # # => CREATE TRIGGER trigger_set_timestamps BEFORE UPDATE ON users FOR EACH ROW EXECUTE PROCEDURE set_timestamps();
   # ```
-  def create_trigger(table_name : Symbol, name : String, function_name : String, callback : Symbol = :before, on : Array(Symbol) = [:update])
+  def create_trigger(table_name : TableName, name : String, function_name : String, callback : Symbol = :before, on : Array(Symbol) = [:update])
     drop_trigger(table_name, name)
     prepared_statements << Avram::Migrator::CreateTriggerStatement.new(table_name, name, function_name, callback, on).build
   end
 
   # Drop the tigger `name` for the table `table_name`
-  def drop_trigger(table_name : Symbol, name : String)
+  def drop_trigger(table_name : TableName, name : String)
     prepared_statements << Avram::Migrator::DropTriggerStatement.new(table_name, name).build
   end
 end

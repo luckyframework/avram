@@ -1,5 +1,5 @@
 class Avram::Migrator::DropTableStatement
-  def initialize(@table_name : Symbol)
+  def initialize(@table_name : TableName)
   end
 
   def build

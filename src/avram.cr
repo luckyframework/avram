@@ -28,6 +28,8 @@ module Avram
   FailedQueryLog = Log.for("failed_query")
   SaveFailedLog  = Log.for("save_failed")
 
+  alias TableName = String | Symbol
+
   def self.initialize_logging
     Avram::Events::QueryEvent.subscribe do |event, duration|
       next if event.query.starts_with?("TRUNCATE")

@@ -5,8 +5,8 @@ module Avram::Join
     getter :from, :to, :from_column, :to_column
 
     def initialize(
-      @from : Symbol,
-      @to : Symbol,
+      @from : TableName,
+      @to : TableName,
       @primary_key : Symbol? = nil,
       @foreign_key : Symbol? = nil,
       @comparison : String? = "=",

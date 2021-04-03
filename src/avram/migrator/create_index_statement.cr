@@ -30,7 +30,7 @@ class Avram::Migrator::CreateIndexStatement
 
   ALLOWED_INDEX_TYPES = %w[btree]
 
-  def initialize(@table : Symbol, @columns : Columns, @using : Symbol = :btree, @unique = false, @name : String? | Symbol? = nil)
+  def initialize(@table : TableName, @columns : Columns, @using : Symbol = :btree, @unique = false, @name : String? | Symbol? = nil)
     raise "index type '#{using}' not supported" unless ALLOWED_INDEX_TYPES.includes?(using.to_s)
   end
 
