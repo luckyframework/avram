@@ -2,7 +2,7 @@ class Avram::QueryBuilder
   def_clone
 
   alias ColumnName = Symbol | String
-  getter table
+  getter table : TableName
   getter distinct_on : ColumnName | Nil = nil
   @limit : Int32?
   @offset : Int32?
@@ -15,7 +15,7 @@ class Avram::QueryBuilder
   @distinct : Bool = false
   @delete : Bool = false
 
-  def initialize(@table : Symbol)
+  def initialize(@table)
   end
 
   def to_sql

@@ -7,7 +7,7 @@
 # # => "ALTER TABLE comments DROP CONSTRAINT comments_author_id_fk;"
 # ```
 class Avram::Migrator::DropForeignKeyStatement
-  def initialize(@from : Symbol, @references : Symbol, @column : Symbol? = nil)
+  def initialize(@from : TableName, @references : TableName, @column : Symbol? = nil)
   end
 
   def build

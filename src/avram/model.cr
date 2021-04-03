@@ -46,18 +46,17 @@ abstract class Avram::Model
   end
 
   macro table(table_name = nil)
-    {% unless table_name %}
-      {% table_name = run("../run_macros/infer_table_name.cr", @type.id) %}
-    {% end %}
-
     default_columns
 
     {{ yield }}
 
     validate_primary_key
 
-    class_getter table_name = {{ table_name.id.symbolize }}
-    TABLE_NAME = {{ table_name.id.symbolize }}
+    {% if table_name %}
+    class_getter table_name : String = {{ table_name.id.stringify }}
+    {% else %}
+    class_getter table_name : String = Avram::TableFor.table_for({{ @type.id }})
+    {% end %}
     setup(Avram::Model.setup_initialize)
     setup(Avram::Model.setup_db_mapping)
     setup(Avram::Model.setup_getters)
@@ -71,14 +70,13 @@ abstract class Avram::Model
   end
 
   macro view(view_name = nil)
-    {% unless view_name %}
-      {% view_name = run("../run_macros/infer_table_name.cr", @type.id) %}
-    {% end %}
-
     {{ yield }}
 
-    class_getter table_name = {{ view_name.id.symbolize }}
-    TABLE_NAME = {{ view_name.id.symbolize }}
+    {% if view_name %}
+      class_getter table_name : String = {{ view_name.id.stringify }}
+    {% else %}
+      class_getter table_name : String = Avram::TableFor.table_for({{ @type.id }})
+    {% end %}
     setup(Avram::Model.setup_initialize)
     setup(Avram::Model.setup_db_mapping)
     setup(Avram::Model.setup_getters)

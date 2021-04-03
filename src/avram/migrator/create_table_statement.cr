@@ -8,7 +8,7 @@ class Avram::Migrator::CreateTableStatement
   private getter rows = [] of String
   private getter constraints = [] of String
 
-  def initialize(@table_name : Symbol)
+  def initialize(@table_name : TableName)
   end
 
   # Accepts a block to build a table and indices using `add` and `add_index` methods.

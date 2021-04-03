@@ -1,7 +1,7 @@
 class Avram::Migrator::BuildReferenceFragment
   private getter references, on_delete
 
-  @references : String?
+  @references : TableName?
   @on_delete : Symbol?
 
   def initialize(@references, @on_delete)

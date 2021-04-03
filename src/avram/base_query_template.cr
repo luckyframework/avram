@@ -65,7 +65,7 @@ class Avram::BaseQueryTemplate
               join(
                 Avram::Join::{{ join_type.id }}.new(
                   from: table_name,
-                  to: {{ assoc[:type] }}::TABLE_NAME,
+                  to: {{ assoc[:type] }}.table_name,
                   primary_key: {{ assoc[:foreign_key].id.symbolize }},
                   foreign_key: {{ assoc[:type] }}::PRIMARY_KEY_NAME
                 )
@@ -74,7 +74,7 @@ class Avram::BaseQueryTemplate
               join(
                 Avram::Join::{{ join_type.id }}.new(
                   from: table_name,
-                  to: {{ assoc[:type] }}::TABLE_NAME,
+                  to: {{ assoc[:type] }}.table_name,
                   foreign_key: {{ assoc[:foreign_key].id.symbolize }},
                   primary_key: primary_key_name
                 )
@@ -88,7 +88,7 @@ class Avram::BaseQueryTemplate
               join(
                 Avram::Join::{{ join_type.id }}.new(
                   from: table_name,
-                  to: {{ assoc[:type] }}::TABLE_NAME,
+                  to: {{ assoc[:type] }}.table_name,
                   foreign_key: {{ assoc[:foreign_key] }},
                   primary_key: primary_key_name
                 )

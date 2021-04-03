@@ -1,7 +1,7 @@
 class Avram::Insert
   alias Params = Hash(Symbol, String) | Hash(Symbol, String?) | Hash(Symbol, Nil)
 
-  def initialize(@table : Symbol, @params : Params, @column_names : Array(Symbol) = [] of Symbol)
+  def initialize(@table : TableName, @params : Params, @column_names : Array(Symbol) = [] of Symbol)
   end
 
   def statement

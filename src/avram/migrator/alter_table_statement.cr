@@ -11,7 +11,7 @@ class Avram::Migrator::AlterTableStatement
   getter fill_existing_with_statements = [] of String
   getter change_type_statements = [] of String
 
-  def initialize(@table_name : Symbol)
+  def initialize(@table_name : TableName)
   end
 
   macro change_type(type_declaration, **type_options)

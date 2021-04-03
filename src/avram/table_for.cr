@@ -3,6 +3,6 @@ module Avram::TableFor
   # of the `model` passed in.
   # e.g. `User` => `:users`
   macro table_for(model)
-    :{{ run("../run_macros/infer_table_name.cr", model.id) }}
+    Wordsmith::Inflector.pluralize({{ model.stringify }}.gsub("::", "").underscore)
   end
 end

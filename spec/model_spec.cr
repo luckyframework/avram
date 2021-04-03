@@ -179,10 +179,10 @@ describe Avram::Model do
   end
 
   it "can infer the table name when omitted" do
-    InferredTableNameModel.table_name.should eq(:inferred_table_name_models)
+    InferredTableNameModel.table_name.should eq("inferred_table_name_models")
   end
 
   it "can infer table name for namedspaced models" do
-    NamedSpaced::Model.table_name.should eq(:named_spaced_models)
+    NamedSpaced::Model.table_name.should eq("named_spaced_models")
   end
 end

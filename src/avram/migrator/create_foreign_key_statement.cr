@@ -7,7 +7,7 @@
 # # => "ALTER TABLE comments ADD CONSTRAINT comments_author_id_fk FOREIGN KEY (author_id) REFERENCES users (uid) ON DELETE CASCADE;"
 # ```
 class Avram::Migrator::CreateForeignKeyStatement
-  def initialize(@from : Symbol, @to : Symbol, @on_delete : Symbol, @column : Symbol? = nil, @primary_key = :id)
+  def initialize(@from : TableName, @to : TableName, @on_delete : Symbol, @column : Symbol? = nil, @primary_key = :id)
   end
 
   def build

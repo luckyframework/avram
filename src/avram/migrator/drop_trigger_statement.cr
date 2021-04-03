@@ -1,5 +1,5 @@
 class Avram::Migrator::DropTriggerStatement
-  def initialize(@table_name : Symbol, @trigger_name : String)
+  def initialize(@table_name : TableName, @trigger_name : String)
   end
 
   def build
