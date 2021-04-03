@@ -866,6 +866,11 @@
       
     </li>
   
+  <li class=" " data-id="avram/Avram/TableName" data-name="avram::tablename">
+      <a href="../../../Avram/TableName.html">TableName</a>
+      
+    </li>
+  
   <li class="parent " data-id="avram/Avram/Type" data-name="avram::type">
       <a href="../../../Avram/Type.html">Type</a>
       
@@ -1577,8 +1582,8 @@
   <h3>Instance methods inherited from module <code><a href="../../../Avram/Migrator/StatementHelpers.html">Avram::Migrator::StatementHelpers</a></code></h3>
   
   
-    <a href="../../../Avram/Migrator/StatementHelpers.html#create_foreign_key(from:Symbol,to:Symbol,on_delete:Symbol,column:Symbol?,primary_key=:id)-instance-method" class="tooltip">
-      <span>create_foreign_key(from : Symbol, to : Symbol, on_delete : Symbol, column : Symbol?, primary_key = <span class="n">:id</span>)</span>
+    <a href="../../../Avram/Migrator/StatementHelpers.html#create_foreign_key(from:TableName,to:TableName,on_delete:Symbol,column:Symbol?,primary_key=:id)-instance-method" class="tooltip">
+      <span>create_foreign_key(from : TableName, to : TableName, on_delete : Symbol, column : Symbol?, primary_key = <span class="n">:id</span>)</span>
     create_foreign_key</a>, 
     
   
@@ -1587,13 +1592,13 @@
     create_function</a>, 
     
   
-    <a href="../../../Avram/Migrator/StatementHelpers.html#create_index(table_name:Symbol,columns:Columns,unique=false,using=:btree,name:String?%7CSymbol?=nil)-instance-method" class="tooltip">
-      <span>create_index(table_name : Symbol, columns : Columns, unique = <span class="n">false</span>, using = <span class="n">:btree</span>, name : String? | Symbol? = <span class="n">nil</span>)</span>
+    <a href="../../../Avram/Migrator/StatementHelpers.html#create_index(table_name:TableName,columns:Columns,unique=false,using=:btree,name:String?%7CSymbol?=nil)-instance-method" class="tooltip">
+      <span>create_index(table_name : TableName, columns : Columns, unique = <span class="n">false</span>, using = <span class="n">:btree</span>, name : String? | Symbol? = <span class="n">nil</span>)</span>
     create_index</a>, 
     
   
-    <a href="../../../Avram/Migrator/StatementHelpers.html#create_trigger(table_name:Symbol,name:String,function_name:String,callback:Symbol=:before,on:Array(Symbol)=[:update])-instance-method" class="tooltip">
-      <span>create_trigger(table_name : Symbol, name : String, function_name : String, callback : Symbol = <span class="n">:before</span>, on : Array(Symbol) = [<span class="n">:update</span>])</span>
+    <a href="../../../Avram/Migrator/StatementHelpers.html#create_trigger(table_name:TableName,name:String,function_name:String,callback:Symbol=:before,on:Array(Symbol)=[:update])-instance-method" class="tooltip">
+      <span>create_trigger(table_name : TableName, name : String, function_name : String, callback : Symbol = <span class="n">:before</span>, on : Array(Symbol) = [<span class="n">:update</span>])</span>
     create_trigger</a>, 
     
   
@@ -1607,8 +1612,8 @@
     drop</a>, 
     
   
-    <a href="../../../Avram/Migrator/StatementHelpers.html#drop_foreign_key(from:Symbol,references:Symbol,column:Symbol?)-instance-method" class="tooltip">
-      <span>drop_foreign_key(from : Symbol, references : Symbol, column : Symbol?)</span>
+    <a href="../../../Avram/Migrator/StatementHelpers.html#drop_foreign_key(from:TableName,references:TableName,column:Symbol?)-instance-method" class="tooltip">
+      <span>drop_foreign_key(from : TableName, references : TableName, column : Symbol?)</span>
     drop_foreign_key</a>, 
     
   
@@ -1617,13 +1622,13 @@
     drop_function</a>, 
     
   
-    <a href="../../../Avram/Migrator/StatementHelpers.html#drop_index(table_name:Symbol,columns:Columns?=nil,if_exists=false,on_delete=:do_nothing,name:String?%7CSymbol?=nil)-instance-method" class="tooltip">
-      <span>drop_index(table_name : Symbol, columns : Columns? = <span class="n">nil</span>, if_exists = <span class="n">false</span>, on_delete = <span class="n">:do_nothing</span>, name : String? | Symbol? = <span class="n">nil</span>)</span>
+    <a href="../../../Avram/Migrator/StatementHelpers.html#drop_index(table_name:TableName,columns:Columns?=nil,if_exists=false,on_delete=:do_nothing,name:String?%7CSymbol?=nil)-instance-method" class="tooltip">
+      <span>drop_index(table_name : TableName, columns : Columns? = <span class="n">nil</span>, if_exists = <span class="n">false</span>, on_delete = <span class="n">:do_nothing</span>, name : String? | Symbol? = <span class="n">nil</span>)</span>
     drop_index</a>, 
     
   
-    <a href="../../../Avram/Migrator/StatementHelpers.html#drop_trigger(table_name:Symbol,name:String)-instance-method" class="tooltip">
-      <span>drop_trigger(table_name : Symbol, name : String)</span>
+    <a href="../../../Avram/Migrator/StatementHelpers.html#drop_trigger(table_name:TableName,name:String)-instance-method" class="tooltip">
+      <span>drop_trigger(table_name : TableName, name : String)</span>
     drop_trigger</a>, 
     
   
@@ -1632,13 +1637,13 @@
     enable_extension</a>, 
     
   
-    <a href="../../../Avram/Migrator/StatementHelpers.html#make_optional(table:Symbol,column:Symbol)-instance-method" class="tooltip">
-      <span>make_optional(table : Symbol, column : Symbol)</span>
+    <a href="../../../Avram/Migrator/StatementHelpers.html#make_optional(table:TableName,column:Symbol)-instance-method" class="tooltip">
+      <span>make_optional(table : TableName, column : Symbol)</span>
     make_optional</a>, 
     
   
-    <a href="../../../Avram/Migrator/StatementHelpers.html#make_required(table:Symbol,column:Symbol)-instance-method" class="tooltip">
-      <span>make_required(table : Symbol, column : Symbol)</span>
+    <a href="../../../Avram/Migrator/StatementHelpers.html#make_required(table:TableName,column:Symbol)-instance-method" class="tooltip">
+      <span>make_required(table : TableName, column : Symbol)</span>
     make_required</a>, 
     
   
