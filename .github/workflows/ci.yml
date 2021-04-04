@@ -62,10 +62,6 @@ jobs:
           key: ${{ runner.os }}-crystal
       - name: Install shards
         run: shards install
-      - name: Install Lucky CLI
-        run: |
-          crystal build lib/lucky_cli/src/lucky.cr --no-debug --release
-          cp lucky /usr/local/bin
       - name: Run integration test
         run: ./script/integration_test
         env:
