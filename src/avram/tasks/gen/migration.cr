@@ -3,7 +3,7 @@ require "ecr"
 require "file_utils"
 
 class Avram::Migrator::MigrationGenerator
-  include LuckyCli::TextHelpers
+  include LuckyTask::TextHelpers
 
   getter :name
   @_version : String?
@@ -105,7 +105,7 @@ class Avram::Migrator::MigrationGenerator
   end
 end
 
-class Gen::Migration < LuckyCli::Task
+class Gen::Migration < LuckyTask::Task
   summary "Generate a new migration"
 
   Habitat.create do

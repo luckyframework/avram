@@ -1,4 +1,4 @@
-abstract class BaseTask < LuckyCli::Task
+abstract class BaseTask < LuckyTask::Task
   abstract def run_task
 
   def call

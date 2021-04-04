@@ -1,11 +1,12 @@
 require "db"
 require "pg"
 require "colorize"
+require "lucky_task"
 
 class Avram::Migrator::Runner
   MIGRATIONS_TABLE_NAME = "migrations"
 
-  extend LuckyCli::TextHelpers
+  extend LuckyTask::TextHelpers
 
   @@migrations = [] of Avram::Migrator::Migration::V1.class
 

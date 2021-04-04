@@ -1,4 +1,4 @@
-class Db::Console < LuckyCli::Task
+class Db::Console < LuckyTask::Task
   summary "Access PostgreSQL console"
 
   def help_message

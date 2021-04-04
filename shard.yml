@@ -13,8 +13,8 @@ authors:
   - Paul Smith <paulcsmith0218@gmail.com>
 
 dependencies:
-  lucky_cli:
-    github: luckyframework/lucky_cli
+  lucky_task:
+    github: luckyframework/lucky_task
     branch: master
   pg:
     github: will/crystal-pg
