@@ -1,5 +1,4 @@
 require "dexter"
-require "lucky_cli"
 require "wordsmith"
 require "habitat"
 require "pulsar"
