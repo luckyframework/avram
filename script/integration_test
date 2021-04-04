@@ -5,6 +5,8 @@ set -e
 
 printf "\nRunning tasks\n\n"
 
+alias lucky="crystal tasks.cr"
+
 lucky db.drop
 lucky db.create
 lucky db.migrate
