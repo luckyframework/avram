@@ -15,7 +15,7 @@ authors:
 dependencies:
   lucky_task:
     github: luckyframework/lucky_task
-    branch: master
+    version: ~> 0.1.0
   pg:
     github: will/crystal-pg
     version: ~> 0.23.0
