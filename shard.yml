@@ -1,5 +1,5 @@
 name: avram
-version: 0.19.1
+version: 0.20.0
 
 crystal: ">= 0.36.1, < 2.0.0"
 
