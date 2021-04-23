@@ -47,7 +47,7 @@ jobs:
           - false
         include:
           - crystal_version: nightly
-            postgres_version: latest
+            postgres_version: 13
             experimental: true
     runs-on: ubuntu-latest
     continue-on-error: ${{ matrix.experimental }}
