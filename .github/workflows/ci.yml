@@ -51,7 +51,7 @@ jobs:
             experimental: true
     runs-on: ubuntu-latest
     continue-on-error: ${{ matrix.experimental }}
-    container: postgres:${{ matrix.postgres_version }}
+    container: crystallang/crystal:${{ matrix.crystal_version }}
     services:
       postgres:
         image: postgres:${{ matrix.postgres_version }}-alpine
@@ -64,10 +64,12 @@ jobs:
         options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
     steps:
       - uses: actions/checkout@v2
-      - name: Install Crystal
-        uses: oprypin/install-crystal@v1
-        with:
-          crystal: ${{ matrix.crystal_version }}
+      - name: Install PostgreSQL client
+        run: |
+          sudo sh -c 'echo "deb http://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main" > /etc/apt/sources.list.d/pgdg.list'
+          wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | sudo apt-key add -
+          apt-get update
+          apt-get -yqq install libpq-dev postgresql-client-#{{ matrix.postgres_version }}
       - name: Cache Crystal
         uses: actions/cache@v1
         with:
