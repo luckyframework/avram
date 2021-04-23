@@ -18,7 +18,7 @@ jobs:
           - false
         include:
           - crystal_version: nightly
-          - experimental: true
+            experimental: true
     runs-on: ubuntu-latest
     continue-on-error: ${{ matrix.experimental }}
     container: crystallang/crystal:${{ matrix.crystal_version }}
@@ -47,8 +47,8 @@ jobs:
           - false
         include:
           - crystal_version: nightly
-          - postgres_version: latest
-          - experimental: true
+            postgres_version: latest
+            experimental: true
     runs-on: ubuntu-latest
     continue-on-error: ${{ matrix.experimental }}
     container: postgres:${{ matrix.postgres_version }}-alpine
