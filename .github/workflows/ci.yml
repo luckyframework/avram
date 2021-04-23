@@ -51,7 +51,7 @@ jobs:
             experimental: true
     runs-on: ubuntu-latest
     continue-on-error: ${{ matrix.experimental }}
-    container: postgres:${{ matrix.postgres_version }}-alpine
+    container: postgres:${{ matrix.postgres_version }}
     services:
       postgres:
         image: postgres:${{ matrix.postgres_version }}-alpine
