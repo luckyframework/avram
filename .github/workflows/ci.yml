@@ -2,7 +2,7 @@ name: Avram CI
 
 on:
   push:
-    branches: [ master ]
+    branches: [master]
   pull_request:
     branches: "*"
 
@@ -27,10 +27,16 @@ jobs:
         run: crystal tool format --check
       - name: Lint
         run: ./bin/ameba
+
   specs:
     strategy:
       fail-fast: false
       matrix:
+        postgres_version:
+          - 10
+          - 11
+          - 12
+          - 13
         crystal_version:
           - 0.36.1
           - 1.0.0
@@ -38,10 +44,10 @@ jobs:
           - false
     runs-on: ubuntu-latest
     continue-on-error: ${{ matrix.experimental }}
-    container: crystallang/crystal:${{ matrix.crystal_version }}
+    container: postgres:${{ matrix.postgres_version }}-alpine
     services:
       postgres:
-        image: postgres:10-alpine
+        image: postgres:${{ matrix.postgres_version }}-alpine
         env:
           POSTGRES_USER: lucky
           POSTGRES_PASSWORD: developer
@@ -50,11 +56,11 @@ jobs:
         # needed because the postgres container does not provide a healthcheck
         options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
     steps:
-      - name: Install PostgreSQL client
-        run: |
-          apt-get update
-          apt-get -yqq install libpq-dev postgresql-client
       - uses: actions/checkout@v2
+      - name: Install Crystal
+      - uses: oprypin/install-crystal@v1
+        with:
+          crystal: ${{ matrix.crystal_version }}
       - name: Cache Crystal
         uses: actions/cache@v1
         with:
