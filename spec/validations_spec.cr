@@ -168,6 +168,14 @@ describe Avram::Validations do
 
       second.errors.should eq(["not even close"])
     end
+
+    it "validates custom message for validate_numeric" do
+      too_small_attribute = attribute(1)
+
+      Avram::Validations.validate_numeric too_small_attribute, greater_than: 2, message: "number is too small"
+
+      too_small_attribute.errors.should eq(["number is too small"])
+    end
   end
 
   describe "validate_acceptance_of" do
