@@ -127,10 +127,12 @@ module Avram::Validations
   # validate_size_of feedback, min: 18, max: 100
   # validate_size_of password, min: 12
   # ```
+  # ameba:disable Metrics/CyclomaticComplexity
   def validate_size_of(
     attribute : Avram::Attribute(String),
     min = nil,
     max = nil,
+    message = nil,
     allow_nil : Bool = false
   )
     if !min.nil? && !max.nil? && min > max
@@ -143,11 +145,11 @@ module Avram::Validations
       size = attribute.value.to_s.size
 
       if !min.nil? && size < min
-        attribute.add_error "is too short"
+        attribute.add_error message || "is too short"
       end
 
       if !max.nil? && size > max
-        attribute.add_error "is too long"
+        attribute.add_error message || "is too long"
       end
     end
   end
@@ -158,10 +160,12 @@ module Avram::Validations
   # validate_numeric age, greater_than: 18
   # validate_numeric count, greater_than: 0, less_than: 1200
   # ```
+  # ameba:disable Metrics/CyclomaticComplexity
   def validate_numeric(
     attribute : Avram::Attribute(Number),
     greater_than = nil,
     less_than = nil,
+    message = nil,
     allow_nil : Bool = false
   )
     if greater_than && less_than && greater_than > less_than
@@ -178,11 +182,11 @@ module Avram::Validations
     end
 
     if greater_than && number < greater_than
-      attribute.add_error "is too small"
+      attribute.add_error message || "is too small"
     end
 
     if less_than && number > less_than
-      attribute.add_error "is too large"
+      attribute.add_error message || "is too large"
     end
   end
 end
