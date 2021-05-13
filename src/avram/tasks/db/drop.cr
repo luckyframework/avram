@@ -7,7 +7,7 @@ class Db::Drop < BaseTask
   end
 
   def run_task
-    Avram::Migrator::Runner.drop_db
+    Avram::Migrator::Runner.drop_db(@quiet)
     puts "Done dropping #{Avram::Migrator::Runner.db_name.colorize(:green)}"
   end
 

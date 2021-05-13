@@ -22,8 +22,8 @@ class Db::Reset < BaseTask
   end
 
   def run_task
-    Db::Drop.new.run_task
-    Db::Create.new.run_task
-    Db::Migrate.new.run_task
+    Db::Drop.new(@quiet).run_task
+    Db::Create.new(@quiet).run_task
+    Db::Migrate.new(@quiet).run_task
   end
 end
