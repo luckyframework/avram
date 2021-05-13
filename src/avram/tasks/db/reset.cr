@@ -5,7 +5,7 @@ class Db::Reset < BaseTask
 
   def initialize(@quiet : Bool = false)
   end
-  
+
   def help_message
     <<-TEXT
     #{summary}

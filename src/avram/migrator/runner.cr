@@ -63,7 +63,7 @@ class Avram::Migrator::Runner
     if (message = e.message) && message.includes?(%("#{self.db_name}" does not exist))
       unless quiet?
         puts "Already dropped #{self.db_name.colorize(:green)}"
-      end  
+      end
     else
       raise e
     end
