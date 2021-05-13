@@ -54,11 +54,13 @@ class Avram::Migrator::Runner
     end
   end
 
-  def self.drop_db
+  def self.drop_db(quiet? : Bool = false)
     run "dropdb #{cmd_args}"
   rescue e : Exception
     if (message = e.message) && message.includes?(%("#{self.db_name}" does not exist))
-      puts "Already dropped #{self.db_name.colorize(:green)}"
+      unless quiet?
+        puts "Already dropped #{self.db_name.colorize(:green)}"
+      end  
     else
       raise e
     end
