@@ -17,7 +17,7 @@ describe Db::Schema::Restore do
 
   it "restores from the sample_backup file" do
     Avram.temp_config(database_to_migrate: SampleBackupDatabase) do
-      Db::Drop.new.run_task
+      Db::Drop.new(quiet: true).run_task
       Db::Create.new(quiet: true).run_task
 
       Db::Schema::Restore.new(SQL_DUMP_FILE).run_task

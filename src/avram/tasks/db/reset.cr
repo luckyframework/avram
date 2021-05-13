@@ -3,6 +3,9 @@ require "colorize"
 class Db::Reset < BaseTask
   summary "Drop, recreate, and run migrations."
 
+  def initialize(@quiet : Bool = false)
+  end
+
   def help_message
     <<-TEXT
     #{summary}
@@ -19,8 +22,8 @@ class Db::Reset < BaseTask
   end
 
   def run_task
-    Db::Drop.new.run_task
-    Db::Create.new.run_task
-    Db::Migrate.new.run_task
+    Db::Drop.new(@quiet).run_task
+    Db::Create.new(@quiet).run_task
+    Db::Migrate.new(@quiet).run_task
   end
 end

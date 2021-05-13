@@ -3,9 +3,11 @@ require "colorize"
 class Db::Drop < BaseTask
   summary "Drop the database"
 
+  def initialize(@quiet : Bool = false)
+  end
+
   def run_task
-    Avram::Migrator::Runner.drop_db
-    puts "Done dropping #{Avram::Migrator::Runner.db_name.colorize(:green)}"
+    Avram::Migrator::Runner.drop_db(@quiet)
   end
 
   def help_message
