@@ -56,6 +56,9 @@ class Avram::Migrator::Runner
 
   def self.drop_db(quiet? : Bool = false)
     run "dropdb #{cmd_args}"
+    unless quiet?
+      puts "Done dropping #{Avram::Migrator::Runner.db_name.colorize(:green)}"
+    end
   rescue e : Exception
     if (message = e.message) && message.includes?(%("#{self.db_name}" does not exist))
       unless quiet?
