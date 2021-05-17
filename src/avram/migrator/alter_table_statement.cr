@@ -99,7 +99,7 @@ class Avram::Migrator::AlterTableStatement
     .set_references(references: %table_name.to_s, on_delete: {{ on_delete }})
     .build_add_statement_for_alter
 
-    {% if fill_existing_with && fill_existing_with != :nothing %}
+    {% if !(fill_existing_with == nil) && fill_existing_with != :nothing %}
       add_fill_existing_with_statements(
         column: {{ foreign_key_name.stringify }},
         type: {{ foreign_key_type }},
@@ -115,7 +115,8 @@ class Avram::Migrator::AlterTableStatement
     {% type = type_declaration.type %}
     {% nilable = false %}
     {% array = false %}
-    {% should_fill_existing = fill_existing_with && (fill_existing_with != :nothing) %}
+    {% should_fill_existing =  (!(fill_existing_with == nil)) && (fill_existing_with != :nothing) %}
+    
     {% if type.is_a?(Union) %}
       {% type = type.types.first %}
       {% nilable = true %}

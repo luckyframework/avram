@@ -93,6 +93,18 @@ describe Avram::Migrator::AlterTableStatement do
       built.statements[0].should eq "ALTER TABLE users\n  ADD confirmed_at timestamptz;"
       built.statements[1].should eq "UPDATE users SET confirmed_at = NOW();"
     end
+
+    it "fills existing with the correct boolean value" do
+      built = Avram::Migrator::AlterTableStatement.new(:users).build do
+        add admin : Bool, fill_existing_with: false
+      end
+
+      built.statements.size.should eq 3
+      built.statements[0].should eq "ALTER TABLE users\n  ADD admin boolean;"
+      built.statements[1].should eq "UPDATE users SET admin = 'false';"
+      built.statements[2].should eq "ALTER TABLE users ALTER COLUMN admin SET NOT NULL;"
+    end
+
   end
 
   describe "associations" do
