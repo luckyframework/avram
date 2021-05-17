@@ -104,7 +104,6 @@ describe Avram::Migrator::AlterTableStatement do
       built.statements[1].should eq "UPDATE users SET admin = 'false';"
       built.statements[2].should eq "ALTER TABLE users ALTER COLUMN admin SET NOT NULL;"
     end
-
   end
 
   describe "associations" do
