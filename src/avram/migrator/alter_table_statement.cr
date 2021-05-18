@@ -116,7 +116,7 @@ class Avram::Migrator::AlterTableStatement
     {% nilable = false %}
     {% array = false %}
     {% should_fill_existing = (!(fill_existing_with == nil)) && (fill_existing_with != :nothing) %}
-    
+
     {% if type.is_a?(Union) %}
       {% type = type.types.first %}
       {% nilable = true %}
