@@ -7,6 +7,12 @@ class Avram::Connection
     try_connection!
   end
 
+  def connect_listen(*channels : String, &block : PQ::Notification ->) : Nil
+    PG.connect_listen(@connection_string, *channels, &block)
+  rescue DB::ConnectionRefused
+    raise ConnectionError.new(connection_uri, database_class: @database_class)
+  end
+
   def try_connection!
     DB.open(@connection_string)
   rescue DB::ConnectionRefused
