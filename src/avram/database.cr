@@ -50,9 +50,7 @@ abstract class Avram::Database
   # end
   # ```
   def self.listen(*channels : String, &block : PQ::Notification ->) : Nil
-    new.listen(*channels) do |notification|
-      block.call(notification)
-    end
+    new.listen(*channels, &block)
   end
 
   @@database_info : DatabaseInfo?
