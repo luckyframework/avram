@@ -59,4 +59,28 @@ describe Avram::Factory do
       tags.last.name.should eq "new-tag-2"
     end
   end
+
+  describe "before_save" do
+    it "sets the association before saving" do
+      factory = ScanFactory.new
+      line_item_id = LineItemFactory.create.id
+      factory.before_save do
+        factory.line_item_id(line_item_id)
+      end
+      scan = factory.create
+      scan.line_item_id.should eq line_item_id
+    end
+  end
+
+  describe "after_save" do
+    it "runs the block after the record is created" do
+      factory = LineItemFactory.new
+      factory.after_save do |line_item|
+        ScanFactory.create &.line_item_id(line_item.id)
+      end
+      line_item = factory.create
+
+      line_item.scans_count.should eq 1
+    end
+  end
 end
