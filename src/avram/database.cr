@@ -39,6 +39,22 @@ abstract class Avram::Database
     new.delete
   end
 
+  # Listens for `pg_notify()` calls on each channel in `channels`
+  # Yields a `PQ::Notification` object with `channel`, `payload`, and `pid`.
+  #
+  # ```
+  # # pg_notify("callback", "123")
+  # AppDatabase.listen("callback", "jobs") do |notification|
+  #   notification.channel # => "callback"
+  #   notification.payload # => "123"
+  # end
+  # ```
+  def self.listen(*channels : String, &block : PQ::Notification ->) : Nil
+    new.listen(*channels) do |notification|
+      block.call(notification)
+    end
+  end
+
   @@database_info : DatabaseInfo?
 
   def self.database_info : DatabaseInfo
@@ -131,11 +147,20 @@ abstract class Avram::Database
     yield current_transaction.try(&.connection) || db
   end
 
+  # :nodoc:
+  def listen(*channels : String, &block : PQ::Notification ->) : Nil
+    connection.connect_listen(*channels, &block)
+  end
+
+  private def connection : Avram::Connection
+    Avram::Connection.new(url, database_class: self.class)
+  end
+
   private def db : DB::Database
     @@db ||= @@lock.synchronize do
       # check @@db again because a previous request could have set it after
       # the first time it was checked
-      @@db || Avram::Connection.new(url, database_class: self.class).open
+      @@db || connection.open
     end
   end
 
