@@ -1534,9 +1534,9 @@
       </li>
     
       <li class="entry-summary">
-        <a href="#query(query,*args_,args:Array?=nil,queryable:String?=nil,**named_args,&)-class-method" class="signature"><strong>.query</strong>(query, *args_, args : Array? = <span class="n">nil</span>, queryable : String? = <span class="n">nil</span>, **named_args, &)</a>
+        <a href="#listen(*channels:String,&block:PQ::Notification-%3E):Nil-class-method" class="signature"><strong>.listen</strong>(*channels : String, &block : PQ::Notification -> ) : Nil</a>
         
-          <div class="summary"><p>Same as crystal-db's <code>DB::QueryMethods#:query</code> but with instrumentation</p></div>
+          <div class="summary"><p>Listens for <code>pg_notify()</code> calls on each channel in <code>channels</code> Yields a <code>PQ::Notification</code> object with <code>channel</code>, <code>payload</code>, and <code>pid</code>.</p></div>
         
       </li>
     
@@ -1544,6 +1544,13 @@
         <a href="#query(query,*args_,args:Array?=nil,queryable:String?=nil,**named_args)-class-method" class="signature"><strong>.query</strong>(query, *args_, args : Array? = <span class="n">nil</span>, queryable : String? = <span class="n">nil</span>, **named_args)</a>
         
           <div class="summary"><p>Same as crystal-db's <code>DB::QueryMethods#query</code> but with instrumentation</p></div>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#query(query,*args_,args:Array?=nil,queryable:String?=nil,**named_args,&)-class-method" class="signature"><strong>.query</strong>(query, *args_, args : Array? = <span class="n">nil</span>, queryable : String? = <span class="n">nil</span>, **named_args, &)</a>
+        
+          <div class="summary"><p>Same as crystal-db's <code>DB::QueryMethods#:query</code> but with instrumentation</p></div>
         
       </li>
     
@@ -1843,17 +1850,24 @@
       </div>
     </div>
   
-    <div class="entry-detail" id="query(query,*args_,args:Array?=nil,queryable:String?=nil,**named_args,&)-class-method">
+    <div class="entry-detail" id="listen(*channels:String,&block:PQ::Notification->):Nil-class-method">
       <div class="signature">
         
-        def self.<strong>query</strong>(query, *args_, args : <a href="../Array.html">Array</a>? = <span class="n">nil</span>, queryable : <a href="../String.html">String</a>? = <span class="n">nil</span>, **named_args, &)
+        def self.<strong>listen</strong>(*channels : <a href="../String.html">String</a>, &block : PQ::Notification -> ) : <a href="../Nil.html">Nil</a>
 
-        <a class="method-permalink" href="#query(query,*args_,args:Array?=nil,queryable:String?=nil,**named_args,&)-class-method">#</a>
+        <a class="method-permalink" href="#listen(*channels:String,&block:PQ::Notification-%3E):Nil-class-method">#</a>
       </div>
       
         <div class="doc">
           
-          <p>Same as crystal-db's <code>DB::QueryMethods#:query</code> but with instrumentation</p>
+          <p>Listens for <code>pg_notify()</code> calls on each channel in <code>channels</code>
+Yields a <code>PQ::Notification</code> object with <code>channel</code>, <code>payload</code>, and <code>pid</code>.</p>
+
+<pre><code class="language-crystal"><span class="c"># pg_notify(&quot;callback&quot;, &quot;123&quot;)</span>
+<span class="t">AppDatabase</span>.listen(<span class="s">&quot;callback&quot;</span>, <span class="s">&quot;jobs&quot;</span>) <span class="k">do</span> <span class="o">|</span>notification<span class="o">|</span>
+  notification.channel <span class="c"># =&gt; &quot;callback&quot;</span>
+  notification.payload <span class="c"># =&gt; &quot;123&quot;</span>
+<span class="k">end</span></code></pre>
         </div>
       
       <br/>
@@ -1873,6 +1887,25 @@
         <div class="doc">
           
           <p>Same as crystal-db's <code>DB::QueryMethods#query</code> but with instrumentation</p>
+        </div>
+      
+      <br/>
+      <div>
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="query(query,*args_,args:Array?=nil,queryable:String?=nil,**named_args,&)-class-method">
+      <div class="signature">
+        
+        def self.<strong>query</strong>(query, *args_, args : <a href="../Array.html">Array</a>? = <span class="n">nil</span>, queryable : <a href="../String.html">String</a>? = <span class="n">nil</span>, **named_args, &)
+
+        <a class="method-permalink" href="#query(query,*args_,args:Array?=nil,queryable:String?=nil,**named_args,&)-class-method">#</a>
+      </div>
+      
+        <div class="doc">
+          
+          <p>Same as crystal-db's <code>DB::QueryMethods#:query</code> but with instrumentation</p>
         </div>
       
       <br/>
