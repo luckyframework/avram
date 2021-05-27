@@ -11,10 +11,15 @@ abstract class Avram::Factory
 
   macro inherited
     {% unless @type.abstract? %}
-      {% operation = @type.name.gsub(/Factory$/, "::SaveOperation").id %}
+      {% model_name = @type.name.gsub(/Factory$/, "") %}
+      {% operation = "#{model_name}::SaveOperation".id %}
       @operation : {{ operation }} = {{ operation }}.new
+
+      getter before_saves : Array(-> Nil) = [] of -> Nil
+      getter after_saves : Array({{ model_name.id }} -> Nil) = [] of {{ model_name.id }} -> Nil
       setup_attribute_shortcuts({{ operation }})
       setup_attributes({{ operation }})
+      setup_callbacks({{ model_name }})
     {% end %}
   end
 
@@ -37,6 +42,29 @@ abstract class Avram::Factory
     end
   end
 
+  macro setup_callbacks(model_name)
+    # Run `block` before the record is created
+    def before_save(&block : -> Nil) : Nil
+      @before_saves << block
+    end
+
+    # Run `block` after the record is created.
+    # The block will yield the created record instance
+    def after_save(&block : {{ model_name.id }} -> Nil) : Nil
+      @after_saves << block
+    end
+
+    private def run_before_save_callbacks
+      @before_saves.each(&.call)
+    end
+
+    private def run_after_save_callbacks(record : {{ model_name.id }})
+      @after_saves.each(&.call(record))
+
+      record
+    end
+  end
+
   def self.build_attributes
     yield(new).attributes
   end
@@ -54,7 +82,9 @@ abstract class Avram::Factory
   end
 
   def create
-    operation.save!
+    run_before_save_callbacks
+    record = operation.save!
+    run_after_save_callbacks(record)
   end
 
   # Returns an array with 2 instances of the model from the Factory.
