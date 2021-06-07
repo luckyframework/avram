@@ -18,10 +18,14 @@ module Avram::Uploadable
     end
 
     def parse(values : Array(Avram::Uploadable))
-      SuccessfulCast(Array(Avram::Uploadable)).new(values)
+      SuccessfulCast.new(values)
     end
 
     def parse(value : String?)
+      FailedCast.new
+    end
+
+    def parse(values : Array(String))
       FailedCast.new
     end
   end
