@@ -1,8 +1,11 @@
 module Avram::Queryable(T)
   include Enumerable(T)
 
-  @query : Avram::QueryBuilder?
-  setter query
+  property query : Avram::QueryBuilder do
+    Avram::QueryBuilder
+      .new(table: table_name)
+      .select(schema_class.column_names)
+  end
 
   delegate :database, :table_name, :primary_key_name, to: T
 
@@ -13,23 +16,23 @@ module Avram::Queryable(T)
       end
     end
 
-    def self.all
+    def self.all : self
       new
     end
 
-    def self.first
+    def self.first : T
       new.first
     end
 
-    def self.first?
+    def self.first? : T?
       new.first?
     end
 
-    def self.last
+    def self.last : T
       new.last
     end
 
-    def self.last?
+    def self.last? : T?
       new.last?
     end
 
@@ -39,14 +42,8 @@ module Avram::Queryable(T)
     end
   end
 
-  def schema_class
+  def schema_class : T.class
     T
-  end
-
-  def query
-    @query ||= Avram::QueryBuilder
-      .new(table: table_name)
-      .select(schema_class.column_names)
   end
 
   def distinct : self
