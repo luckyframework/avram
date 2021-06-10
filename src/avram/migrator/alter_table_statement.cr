@@ -83,10 +83,11 @@ class Avram::Migrator::AlterTableStatement
     {% optional = type_declaration.type.is_a?(Union) %}
 
     {% if optional %}
-      {% underscored_class = type_declaration.type.types.first.stringify.underscore %}
+      {% underscored_class = type_declaration.type.types.first %}
     {% else %}
-      {% underscored_class = type_declaration.type.stringify.underscore %}
+      {% underscored_class = type_declaration.type %}
     {% end %}
+    {% underscored_class = underscored_class.stringify.underscore.gsub(/::/, "_") %}
 
     {% foreign_key_name = type_declaration.var + "_id" %}
     %table_name = {{ references }} || Wordsmith::Inflector.pluralize({{ underscored_class }})
