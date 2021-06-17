@@ -765,14 +765,13 @@ describe Avram::Queryable do
       query.select_count.should eq 1
     end
 
-    it "raises when used with offset or limit" do
-      expect_raises(Avram::UnsupportedQueryError) do
-        UserQuery.new.limit(1).select_count
-      end
+    it "works with distinct_on" do
+      UserFactory.new.age(30).create
+      UserFactory.new.age(30).create
 
-      expect_raises(Avram::UnsupportedQueryError) do
-        UserQuery.new.offset(1).select_count
-      end
+      query = UserQuery.new.distinct_on(&.age)
+
+      query.select_count.should eq 1
     end
 
     it "returns 0 if postgres returns no results" do
