@@ -196,7 +196,10 @@ module Avram::Queryable(T)
   end
 
   def select_count : Int64
-    exec_scalar(&.select_count).as(Int64)
+    table = "(#{query.statement}) AS temp"
+    new_query = Avram::QueryBuilder.new(table).select_count
+    result = database.scalar new_query.statement, args: query.args, queryable: schema_class.name
+    result.as(Int64)
   rescue e : DB::NoResultsError
     0_i64
   end
