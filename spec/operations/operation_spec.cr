@@ -96,7 +96,7 @@ describe Avram::Operation do
     end
 
     it "has access to the raw params passed in" do
-      params = Avram::Params.new({"page" => "1", "per" => "50"})
+      params = Avram::Params.new({"page" => ["1"], "per" => ["50"]})
       TestOperationWithParamKey.run(params) do |operation, value|
         operation.params.should eq params
         operation.params.get("page").should eq "1"
@@ -105,7 +105,7 @@ describe Avram::Operation do
     end
 
     it "is not called if operation invalid" do
-      params = Avram::Params.new({"name" => "Foo"})
+      params = Avram::Params.new({"name" => ["Foo"]})
 
       PassingTestOperation.run(params) do |_, value|
         value.should eq("run_method_called")
@@ -160,25 +160,25 @@ describe Avram::Operation do
     operation.name.value = "Megan"
     operation.name.value.should eq("Megan")
 
-    params = Avram::Params.new({"name" => "Jordan"})
+    params = Avram::Params.new({"name" => ["Jordan"]})
     operation = TestOperation.new(params)
     operation.name.value.should eq("Jordan")
   end
 
   it "parses params" do
-    params = Avram::Params.new({"age" => "45"})
+    params = Avram::Params.new({"age" => ["45"]})
     operation = TestOperation.new(params)
     operation.age.value.should eq 45
     operation.age.errors.should eq [] of String
 
-    params = Avram::Params.new({"age" => "not an int"})
+    params = Avram::Params.new({"age" => ["not an int"]})
     operation = TestOperation.new(params)
     operation.age.value.should be_nil
     operation.age.errors.should eq ["is invalid"]
   end
 
   it "includes validations" do
-    params = Avram::Params.new({"name" => ""})
+    params = Avram::Params.new({"name" => [""]})
     operation = TestOperation.new(params)
     operation.name.errors.should eq [] of String
     operation.valid?.should be_true
@@ -191,7 +191,7 @@ describe Avram::Operation do
 
   describe "#errors" do
     it "includes errors for all attributes" do
-      params = Avram::Params.new({"name" => "", "age" => "20"})
+      params = Avram::Params.new({"name" => [""], "age" => ["20"]})
       operation = TestOperationWithMultipleValidations.new(params)
 
       operation.validate
@@ -204,7 +204,7 @@ describe Avram::Operation do
 
     it "raises FailedOperation when the operation returns nil" do
       expect_raises(Avram::FailedOperation, "The operation failed to return a value") do
-        FailingTestOperation.run!(Avram::Params.new({"name" => "Mario"}))
+        FailingTestOperation.run!(Avram::Params.new({"name" => ["Mario"]}))
       end
     end
 

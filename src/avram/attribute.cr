@@ -86,6 +86,20 @@ class Avram::Attribute(T)
     end
   end
 
+  private def extract(params, type : Array(T).class) forall T
+    nested_params = params.nested_arrays(param_key)
+    param_val = nested_params[name.to_s]?
+    @param = param_val.try(&.first?)
+    return if param_val.nil?
+
+    parse_result = T.adapter.parse(param_val)
+    if parse_result.is_a? Avram::Type::SuccessfulCast
+      self.value = parse_result.value
+    else
+      add_error("is invalid")
+    end
+  end
+
   private def extract(params, type)
     nested_params = params.nested(param_key)
     @param = param_val = nested_params[name.to_s]?

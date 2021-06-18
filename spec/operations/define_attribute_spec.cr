@@ -6,6 +6,7 @@ private class OperationWithAttributes < Avram::Operation
   attribute count : Int32
   attribute checked : Bool = false
   attribute thing : String = "taco"
+  attribute tags : Array(String) = [] of String
   file_attribute :thumb
 
   def update_count
@@ -65,7 +66,7 @@ describe "attribute in operations" do
   end
 
   it "generates a list of attributes" do
-    operation.attributes.map(&.name).should eq [:thumb, :thing, :checked, :count, :title]
+    operation.attributes.map(&.name).should eq [:thumb, :tags, :thing, :checked, :count, :title]
 
     save_operation.attributes.map(&.name).should eq [
       :thumb,
@@ -103,36 +104,38 @@ describe "attribute in operations" do
   it "assigns the default value to an attribute if one is set and no param is given" do
     operation.checked.value.should eq false
     operation.thing.value.should eq "taco"
+    operation.tags.value.should eq [] of String
     save_operation.best_kind_of_bear.value.should eq "black bear"
     save_operation.default_is_false.value.should be_false
     delete_operation.accept_delete.value.should be_false
   end
 
   it "overrides the default value with a param if one is given" do
-    operation({"title" => "Random Food"}).title.value.should eq "Random Food"
-    operation({"count" => "4"}).count.value.should eq 4
-    operation({"checked" => "true"}).checked.value.should eq true
-    save_operation({"best_kind_of_bear" => "brown bear"}).best_kind_of_bear.value.should eq "brown bear"
-    save_operation({"best_kind_of_bear" => ""}).best_kind_of_bear.value.should be_nil
-    delete_operation({"accept_delete" => "true"}).accept_delete.value.should be_true
+    operation({"title" => ["Random Food"]}).title.value.should eq "Random Food"
+    operation({"count" => ["4"]}).count.value.should eq 4
+    operation({"checked" => ["true"]}).checked.value.should eq true
+    operation({"tags" => ["one", "two"]}).tags.value.should eq ["one", "two"]
+    save_operation({"best_kind_of_bear" => ["brown bear"]}).best_kind_of_bear.value.should eq "brown bear"
+    save_operation({"best_kind_of_bear" => [""]}).best_kind_of_bear.value.should be_nil
+    delete_operation({"accept_delete" => ["true"]}).accept_delete.value.should be_true
   end
 
   it "sets the param and value based on the passed in params" do
-    operation = operation({"title" => "secret"})
+    operation = operation({"title" => ["secret"]})
     operation.title.value.should eq "secret"
     operation.title.param.should eq "secret"
 
-    save_operation = save_operation({"password_confirmation" => "password"})
+    save_operation = save_operation({"password_confirmation" => ["password"]})
     save_operation.password_confirmation.value.should eq "password"
     save_operation.password_confirmation.param.should eq "password"
 
-    delete_operation = delete_operation({"confirm_delete" => "yeah sure"})
+    delete_operation = delete_operation({"confirm_delete" => ["yeah sure"]})
     delete_operation.confirm_delete.value.should eq "yeah sure"
     delete_operation.confirm_delete.param.should eq "yeah sure"
   end
 
   it "is memoized so you can change the attribute in `prepare`" do
-    operation = save_operation({"password_confirmation" => "password"})
+    operation = save_operation({"password_confirmation" => ["password"]})
     operation.password_confirmation.value.should eq "password"
 
     operation.prepare
@@ -140,27 +143,27 @@ describe "attribute in operations" do
   end
 
   it "parses the value using the declared type" do
-    operation = save_operation({"terms_of_service" => "1"})
+    operation = save_operation({"terms_of_service" => ["1"]})
     operation.terms_of_service.value.should be_true
 
-    operation = save_operation({"terms_of_service" => "0"})
+    operation = save_operation({"terms_of_service" => ["0"]})
     operation.terms_of_service.value.should be_false
   end
 
   it "gracefully handles invalid params" do
-    operation = save_operation({"terms_of_service" => "not a boolean"})
+    operation = save_operation({"terms_of_service" => ["not a boolean"]})
     operation.terms_of_service.value.should be_nil
     operation.terms_of_service.errors.first.should eq "is invalid"
   end
 
   it "includes attribute errors when calling SaveOperation#valid?" do
-    operation = save_operation({"terms_of_service" => "not a boolean"})
+    operation = save_operation({"terms_of_service" => ["not a boolean"]})
     operation.setup_required_database_columns
     operation.valid?.should be_false
   end
 
   it "can still save to the database" do
-    params = {"password_confirmation" => "password", "terms_of_service" => "1"}
+    params = {"password_confirmation" => ["password"], "terms_of_service" => ["1"]}
     operation = save_operation(params)
     operation.setup_required_database_columns
     operation.save.should eq true
@@ -201,21 +204,21 @@ describe "file_attribute in operation" do
   end
 
   it "gracefully handles invalid params" do
-    operation = operation({"thumb" => "not a file"})
+    operation = operation({"thumb" => ["not a file"]})
     operation.thumb.value.should be_nil
     operation.thumb.errors.first.should eq "is invalid"
 
-    save_operation = save_operation({"thumb" => "not a file"})
+    save_operation = save_operation({"thumb" => ["not a file"]})
     save_operation.thumb.value.should be_nil
     save_operation.thumb.errors.first.should eq "is invalid"
 
-    delete_operation = delete_operation({"biometric_confirmation" => "not a file"})
+    delete_operation = delete_operation({"biometric_confirmation" => ["not a file"]})
     delete_operation.biometric_confirmation.value.should be_nil
     delete_operation.biometric_confirmation.errors.first.should eq "is invalid"
   end
 
   it "includes file attribute errors when calling SaveOperation#valid?" do
-    operation = save_operation({"thumb" => "not a file"})
+    operation = save_operation({"thumb" => ["not a file"]})
     operation.setup_required_database_columns
     operation.valid?.should be_false
   end
@@ -228,7 +231,7 @@ describe "file_attribute in operation" do
   end
 end
 
-private def operation(attrs = {} of String => String)
+private def operation(attrs = {} of String => Array(String))
   OperationWithAttributes.new(Avram::Params.new(attrs))
 end
 
@@ -236,7 +239,7 @@ private def upload_operation(attrs = {} of String => Avram::Uploadable)
   OperationWithAttributes.new(Avram::UploadParams.new(attrs))
 end
 
-private def save_operation(attrs = {} of String => String)
+private def save_operation(attrs = {} of String => Array(String))
   SaveOperationWithAttributes.new(Avram::Params.new(attrs))
 end
 
@@ -244,7 +247,7 @@ private def upload_save_operation(attrs = {} of String => Avram::Uploadable)
   SaveOperationWithAttributes.new(Avram::UploadParams.new(attrs))
 end
 
-private def delete_operation(attrs = {} of String => String)
+private def delete_operation(attrs = {} of String => Array(String))
   post = PostFactory.create
   DeleteOperationWithAttributes.new(post, Avram::Params.new(attrs))
 end
