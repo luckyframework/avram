@@ -2,6 +2,10 @@ require "dexter"
 require "wordsmith"
 require "habitat"
 require "pulsar"
+require "db"
+require "pg"
+require "uuid"
+
 require "./avram/object_extensions"
 require "./avram/criteria"
 require "./avram/type"
@@ -11,9 +15,6 @@ require "./avram/charms/**"
 require "./avram/migrator/**"
 require "./avram/tasks/**"
 require "./avram/**"
-require "db"
-require "pg"
-require "uuid"
 
 module Avram
   Habitat.create do

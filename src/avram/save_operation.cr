@@ -363,9 +363,6 @@ abstract class Avram::SaveOperation(T)
   private def insert : T
     self.created_at.value ||= Time.utc if responds_to?(:created_at)
     self.updated_at.value ||= Time.utc if responds_to?(:updated_at)
-    puts "*" * 50
-    pp insert_sql.statement
-    puts "*" * 50
     @record = database.query insert_sql.statement, args: insert_sql.args do |rs|
       @record = T.from_rs(rs).first
     end

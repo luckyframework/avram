@@ -1,7 +1,7 @@
 class Avram::Insert
   alias Params = Hash(Symbol, String) | Hash(Symbol, String?) | Hash(Symbol, Nil)
 
-  def initialize(@table : TableName, @params : Params, @column_names : Array(String) = [] of String)
+  def initialize(@table : TableName, @params : Params, @column_names : Array(Symbol) = [] of Symbol)
   end
 
   def statement
@@ -13,7 +13,7 @@ class Avram::Insert
       "*"
     else
       @column_names
-        .join(", ") { |column| "#{@table}.#{column}".gsub('"', "") }
+        .join(", ") { |column| "#{@table}.#{column}" }
     end
   end
 

@@ -1,3 +1,31 @@
+module JSON::Serializable
+  macro included
+    def self.adapter
+      Lucky(self)
+    end
+  end
+
+  module Lucky(T)
+    include Avram::Type
+
+    def from_db!(value)
+      value
+    end
+
+    def parse(value : JSON::Serializable)
+      SuccessfulCast(JSON::Serializable).new value
+    end
+
+    def parse(value)
+      SuccessfulCast(JSON::Serializable).new T.from_json(value)
+    end
+
+    def to_db(value)
+      value.to_json
+    end
+  end
+end
+
 struct JSON::Any
   def self.adapter
     Lucky

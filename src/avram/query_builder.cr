@@ -241,14 +241,8 @@ class Avram::QueryBuilder
 
   def select(selection : Array(ColumnName))
     @selections = selection
-      .join(", ") do |column|
-        String.build do |io|
-          io << "#{@table}.#{column}"
-          # HACK: cast jsonb columns to String so they can be re-parsed
-          # https://github.com/will/crystal-pg/issues/125
-          io << "::text" if column.to_s.ends_with?("_raw")
-        end
-      end
+      .join(", ") { |column| "#{@table}.#{column}" }
+
     self
   end
 
