@@ -243,7 +243,6 @@ class Avram::QueryBuilder
     @selections = selection
       .map { |column| "#{@table}.#{column}" }
       .join(", ")
-
     self
   end
 

@@ -17,8 +17,8 @@ dependencies:
     github: luckyframework/lucky_task
     version: ~> 0.1.0
   pg:
-    github: will/crystal-pg
-    version: ~> 0.23.0
+    github: matthewmcgarvey/crystal-pg
+    branch: read-json-columns
   habitat:
     github: luckyframework/habitat
     version: ~> 0.4.7
