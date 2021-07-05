@@ -13,7 +13,8 @@ class Avram::Insert
       "*"
     else
       @column_names
-        .join(", ") { |column| "#{@table}.#{column}" }
+        .map { |column| "#{@table}.#{column}" }
+        .join(", ")
     end
   end
 

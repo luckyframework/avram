@@ -241,7 +241,8 @@ class Avram::QueryBuilder
 
   def select(selection : Array(ColumnName))
     @selections = selection
-      .join(", ") { |column| "#{@table}.#{column}" }
+      .map { |column| "#{@table}.#{column}" }
+      .join(", ")
 
     self
   end
