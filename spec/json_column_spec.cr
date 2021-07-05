@@ -63,4 +63,15 @@ describe "JSON Columns" do
       }),
     })
   end
+
+  describe "serialized", focus: true do
+    it "saves the raw value" do
+      SaveBlob.create(metadata_raw: "{}") do |operation, blob|
+        operation.saved?.should be_true
+        blob.should_not be_nil
+        blob.not_nil!.metadata.should be_nil
+        blob.not_nil!.metadata_raw.should eq("{}")
+      end
+    end
+  end
 end
