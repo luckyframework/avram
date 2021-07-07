@@ -6,7 +6,12 @@ module JSON::Serializable
   end
 
   module Lucky(T)
+    alias ColumnType = JSON::Any
     include Avram::Type
+
+    def self.criteria(query : R, column) forall R
+      Criteria(R, T).new(query, column)
+    end
 
     def from_db!(value)
       value
@@ -22,6 +27,9 @@ module JSON::Serializable
 
     def to_db(value)
       value.to_json
+    end
+
+    class Criteria(T, V) < Avram::Criteria(T, V)
     end
   end
 end

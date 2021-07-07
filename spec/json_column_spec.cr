@@ -71,7 +71,7 @@ describe "JSON Columns" do
   end
 
   describe "serialized" do
-    it "saves the raw value" do
+    it "saves the serialized value" do
       SaveBlob.create(metadata: BlobMetadata.from_json("{}")) do |operation, blob|
         operation.saved?.should be_true
         blob.should_not be_nil
@@ -79,6 +79,15 @@ describe "JSON Columns" do
         blob.not_nil!.metadata.name.should be_nil
         blob.not_nil!.media.should be_nil
       end
+    end
+
+    it "queries serialized columns" do
+      one = BlobMetadata.from_json({name: "One", code: 4}.to_json)
+      two = BlobMetadata.from_json({name: "Two", code: 9}.to_json)
+      BlobFactory.create &.metadata(one)
+      BlobFactory.create &.metadata(two)
+
+      BlobQuery.new.metadata(two).select_count.should eq(1)
     end
   end
 end
