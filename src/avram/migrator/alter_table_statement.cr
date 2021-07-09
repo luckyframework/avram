@@ -113,16 +113,16 @@ class Avram::Migrator::AlterTableStatement
   end
 
   macro add(type_declaration, index = false, using = :btree, unique = false, default = nil, fill_existing_with = nil, **type_options)
-    {% type = type_declaration.type %}
+    {% type = type_declaration.type.resolve %}
     {% nilable = false %}
     {% array = false %}
     {% should_fill_existing = (!(fill_existing_with == nil)) && (fill_existing_with != :nothing) %}
 
-    {% if type.is_a?(Union) %}
-      {% type = type.types.first %}
+    {% if type.nilable? %}
+      {% type = type.union_types.reject(&.==(Nil)).first %}
       {% nilable = true %}
     {% end %}
-    {% if type.is_a?(Generic) %}
+    {% if type < Array %}
       {% type = type.type_vars.first %}
       {% array = true %}
     {% end %}

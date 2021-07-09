@@ -87,14 +87,14 @@ class Avram::Migrator::CreateTableStatement
   end
 
   macro add(type_declaration, default = nil, index = false, unique = false, using = :btree, **type_options)
-    {% type = type_declaration.type %}
+    {% type = type_declaration.type.resolve %}
     {% nilable = false %}
     {% array = false %}
-    {% if type.is_a?(Union) %}
-      {% type = type.types.first %}
+    {% if type.nilable? %}
+      {% type = type.union_types.reject(&.==(Nil)).first %}
       {% nilable = true %}
     {% end %}
-    {% if type.is_a?(Generic) %}
+    {% if type < Array %}
       {% type = type.type_vars.first %}
       {% array = true %}
     {% end %}
