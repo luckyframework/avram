@@ -33,5 +33,6 @@ describe "models using enums" do
     IssueFactory.create &.role(Issue::Role::Critical)
 
     IssueQuery.new.role.select_max.should eq(Issue::Role::Critical)
+    IssueQuery.new.role.select_min.should eq(Issue::Role::Issue)
   end
 end
