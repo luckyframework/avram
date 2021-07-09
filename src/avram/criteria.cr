@@ -125,11 +125,11 @@ class Avram::Criteria(T, V)
   end
 
   def select_min : V?
-    V.adapter.parse!(rows.exec_scalar(&.select_min(column)))
+    rows.exec_scalar(&.select_min(column)).as(V?)
   end
 
   def select_max : V?
-    V.adapter.parse!(rows.exec_scalar(&.select_max(column)))
+    rows.exec_scalar(&.select_max(column)).as(V?)
   end
 
   def select_average : Float64?

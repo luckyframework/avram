@@ -21,10 +21,6 @@ module Avram::Type
     end
   end
 
-  def parse(value)
-    FailedCast.new
-  end
-
   def parse!(value)
     parse(value).as(SuccessfulCast).value
   end

@@ -2,15 +2,15 @@ require "../spec_helper"
 
 include LazyLoadHelpers
 
-describe Enum do
-  it "check enum" do
+describe "models using enums" do
+  it "can be created" do
     issue = IssueFactory.create
 
     issue.status.should eq(Issue::Status::Opened)
     issue.role.should eq(Issue::Role::Issue)
   end
 
-  it "update enum" do
+  it "can be updated" do
     issue = IssueFactory.create
 
     updated_issue = Issue::SaveOperation.update!(issue, status: Issue::Status.new(:closed))
@@ -19,17 +19,19 @@ describe Enum do
     updated_issue.role.should eq(Issue::Role::Issue)
   end
 
-  it "access enum methods" do
+  it "can be queried" do
     issue = IssueFactory.create
+    query = IssueQuery.new
 
-    issue.status.opened?.should eq(true)
-    issue.status.value.should eq(0)
+    query.status(Issue::Status::Opened).first.should eq(issue)
+    query.status("Opened").first.should eq(issue)
+    query.status(0).first.should eq(issue)
   end
 
-  it "access enum to_s and to_i" do
-    issue = IssueFactory.create
+  it "handles other queries" do
+    IssueFactory.create &.role(Issue::Role::Issue)
+    IssueFactory.create &.role(Issue::Role::Critical)
 
-    issue.status.to_s.should eq("Opened")
-    issue.status.to_i.should eq(0)
+    IssueQuery.new.role.select_max.should eq(Issue::Role::Critical)
   end
 end
