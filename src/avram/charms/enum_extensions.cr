@@ -1,3 +1,5 @@
+require "./int32_extensions"
+
 abstract struct Enum
   def self.adapter
     Lucky(self)
@@ -35,7 +37,7 @@ abstract struct Enum
       Criteria(V, T).new(query, column)
     end
 
-    class Criteria(T, V) < Avram::Criteria(T, V)
+    class Criteria(T, V) < Int32::Lucky::Criteria(T, V)
       def select_min : V?
         rows.exec_scalar(&.select_min(column))
           .as(Int32?)
