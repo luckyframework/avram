@@ -124,16 +124,16 @@ class Avram::Criteria(T, V)
     add_clause(Avram::Where::LessThanOrEqualTo.new(column, V.adapter.to_db!(value)))
   end
 
-  def select_min : V | Nil
-    rows.exec_scalar(&.select_min(column)).as(V | Nil)
+  def select_min : V?
+    V.adapter.parse!(rows.exec_scalar(&.select_min(column)))
   end
 
-  def select_max : V | Nil
-    rows.exec_scalar(&.select_max(column)).as(V | Nil)
+  def select_max : V?
+    V.adapter.parse!(rows.exec_scalar(&.select_max(column)))
   end
 
   def select_average : Float64?
-    rows.exec_scalar(&.select_average(column)).as(PG::Numeric | Nil).try &.to_f64
+    rows.exec_scalar(&.select_average(column)).as(PG::Numeric?).try &.to_f64
   end
 
   def select_average! : Float64
