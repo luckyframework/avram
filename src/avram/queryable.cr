@@ -36,6 +36,14 @@ module Avram::Queryable(T)
       new.last?
     end
 
+    def self.any? : Bool
+      new.any?
+    end
+
+    def self.none? : Bool
+      new.none?
+    end
+
     def self.truncate
       query = self.new
       query.database.exec "TRUNCATE TABLE #{query.table_name}"
@@ -193,6 +201,17 @@ module Avram::Queryable(T)
 
   def last
     last? || raise RecordNotFoundError.new(model: table_name, query: :last)
+  end
+
+  def any? : Bool
+    queryable = clone
+    new_query = queryable.query.limit(1).select("1 AS one")
+    results = database.query_one?(new_query.statement, args: new_query.args, queryable: schema_class.name, as: Int32)
+    !results.nil?
+  end
+
+  def none? : Bool
+    !any?
   end
 
   def select_count : Int64

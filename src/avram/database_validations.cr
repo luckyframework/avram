@@ -28,7 +28,7 @@ module Avram::DatabaseValidations(T)
     message : String = "is already taken"
   )
     attribute.value.try do |value|
-      if limit_query(query.eq(value)).first?
+      if limit_query(query.eq(value)).any?
         attribute.add_error message
       end
     end
@@ -63,7 +63,7 @@ module Avram::DatabaseValidations(T)
     message : String = "is already taken"
   )
     attribute.value.try do |value|
-      if limit_query(query).where(attribute.name, value).first?
+      if limit_query(query).where(attribute.name, value).any?
         attribute.add_error message
       end
     end
