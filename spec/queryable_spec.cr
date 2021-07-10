@@ -26,6 +26,12 @@ class QueryWithDefault < User::BaseQuery
   end
 end
 
+class CommentQuery < Comment::BaseQuery
+end
+
+class PostQuery < Post::BaseQuery
+end
+
 describe Avram::Queryable do
   it "can chain scope methods" do
     ChainedQuery.new.young.named("Paul")
@@ -1036,8 +1042,23 @@ describe Avram::Queryable do
     it "truncates the table" do
       10.times { UserFactory.create }
       UserQuery.new.select_count.should eq 10
-      UserQuery.truncate
+      # NOTE: we don't test rows_affected here because this isn't
+      # available with a truncate statement
+      UserQuery.truncate 
       UserQuery.new.select_count.should eq 0
+    end
+
+    it "deletes associated data when cascade is true" do
+      post_with_matching_comment = PostFactory.create
+      comment = CommentFactory.new
+        .post_id(post_with_matching_comment.id)
+        .create
+
+      PostQuery.truncate cascade: true
+      PostQuery.new.select_count.should eq 0
+      expect_raises(Avram::RecordNotFoundError) do
+        CommentQuery.new.find(comment.id)
+      end
     end
   end
 
