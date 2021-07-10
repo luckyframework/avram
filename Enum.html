@@ -13,7 +13,7 @@
 <script type="text/javascript" src="js/doc.js"></script>
 
   <meta name="repository-name" content="avram">
-  <title>Top Level Namespace - avram 0.20.0</title>
+  <title>Enum - avram 0.20.0</title>
   <script type="text/javascript">
     CrystalDocs.base_path = "";
   </script>
@@ -50,11 +50,6 @@
 
   <div class="types-list">
     <ul>
-  
-  <li class=" current" data-id="avram/toplevel" data-name="top level namespace">
-      <a href="toplevel.html">Top Level Namespace</a>
-      
-    </li>
   
   <li class=" " data-id="avram/Array" data-name="array(t)">
       <a href="Array.html">Array</a>
@@ -1201,6 +1196,36 @@
       
     </li>
   
+  <li class="parent open current" data-id="avram/Enum" data-name="enum">
+      <a href="Enum.html">Enum</a>
+      
+        <ul>
+  
+  <li class="parent " data-id="avram/Enum/Lucky" data-name="enum::lucky(t)">
+      <a href="Enum/Lucky.html">Lucky</a>
+      
+        <ul>
+  
+  <li class=" " data-id="avram/Enum/Lucky/ColumnType" data-name="enum::lucky::columntype">
+      <a href="Enum/Lucky/ColumnType.html">ColumnType</a>
+      
+    </li>
+  
+  <li class=" " data-id="avram/Enum/Lucky/Criteria" data-name="enum::lucky::criteria(t, v)">
+      <a href="Enum/Lucky/Criteria.html">Criteria</a>
+      
+    </li>
+  
+</ul>
+
+      
+    </li>
+  
+</ul>
+
+      
+    </li>
+  
   <li class="parent " data-id="avram/Float64" data-name="float64">
       <a href="Float64.html">Float64</a>
       
@@ -1455,17 +1480,127 @@
 <div class="main-content">
 <h1 class="type-name">
 
-  Top Level Namespace
+  <span class="kind">abstract struct</span> Enum
 
 </h1>
 
 
+  <ul class="superclass-hierarchy"><li class="superclass"><a href="Enum.html">Enum</a></li><li class="superclass">Value</li><li class="superclass"><a href="Object.html">Object</a></li></ul>
+
+
+
+
+  <h2>
+    <a id="overview" class="anchor" href="#overview">
+  <svg class="octicon-link" aria-hidden="true">
+    <use href="#octicon-link"/>
+  </svg>
+</a>
+    Overview
+  </h2>
+
+  <p>Enum is the base type of all enums.</p>
+
+<p>An enum is a set of integer values, where each value has an associated name. For example:</p>
+
+<pre><code class="language-crystal"><span class="k">enum</span> <span class="t">Color</span>
+  <span class="t">Red</span>   <span class="c"># 0</span>
+  <span class="t">Green</span> <span class="c"># 1</span>
+  <span class="t">Blue</span>  <span class="c"># 2</span>
+<span class="k">end</span></code></pre>
+
+<p>Values start with the value <code>0</code> and are incremented by one, but can be overwritten.</p>
+
+<p>To get the underlying value you invoke value on it:</p>
+
+<pre><code class="language-crystal"><span class="t">Color</span><span class="t">::</span><span class="t">Green</span>.value <span class="c"># =&gt; 1</span></code></pre>
+
+<p>Each constant (member) in the enum has the type of the enum:</p>
+
+<pre><code class="language-crystal"><span class="k">typeof</span>(<span class="t">Color</span><span class="t">::</span><span class="t">Red</span>) <span class="c"># =&gt; Color</span></code></pre>
+
+<h3><a id="flags-enum" class="anchor" href="#flags-enum">
+  <svg class="octicon-link" aria-hidden="true">
+    <use href="#octicon-link"/>
+  </svg>
+</a>Flags enum</h3>
+
+<p>An enum can be marked with the <code>@[Flags]</code> annotation. This changes the default values:</p>
+
+<pre><code class="language-crystal">@[<span class="t">Flags</span>]
+<span class="k">enum</span> <span class="t">IOMode</span>
+  <span class="t">Read</span>  <span class="c"># 1</span>
+  <span class="t">Write</span> <span class="c"># 2</span>
+  <span class="t">Async</span> <span class="c"># 4</span>
+<span class="k">end</span></code></pre>
+
+<p>Additionally, some methods change their behaviour.</p>
+
+<h3><a id="enums-from-integers" class="anchor" href="#enums-from-integers">
+  <svg class="octicon-link" aria-hidden="true">
+    <use href="#octicon-link"/>
+  </svg>
+</a>Enums from integers</h3>
+
+<p>An enum can be created from an integer:</p>
+
+<pre><code class="language-crystal"><span class="t">Color</span>.<span class="k">new</span>(<span class="n">1</span>).to_s <span class="c"># =&gt; &quot;Green&quot;</span></code></pre>
+
+<p>Values that don't correspond to enum's constants are allowed: the value
+will still be of type Color, but when printed you will get the underlying value:</p>
+
+<pre><code class="language-crystal"><span class="t">Color</span>.<span class="k">new</span>(<span class="n">10</span>).to_s <span class="c"># =&gt; &quot;10&quot;</span></code></pre>
+
+<p>This method is mainly intended to convert integers from C to enums in Crystal.</p>
+
+<h3><a id="question-methods" class="anchor" href="#question-methods">
+  <svg class="octicon-link" aria-hidden="true">
+    <use href="#octicon-link"/>
+  </svg>
+</a>Question methods</h3>
+
+<p>An enum automatically defines question methods for each member, using
+<code>String#underscore</code> for the method name.</p>
+
+<ul><li>In the case of regular enums, this compares by equality (<code>==</code>).</li><li>In the case of flags enums, this invokes <code>includes?</code>.</li></ul>
+
+<p>For example:</p>
+
+<pre><code class="language-crystal">color <span class="o">=</span> <span class="t">Color</span><span class="t">::</span><span class="t">Blue</span>
+color.red?  <span class="c"># =&gt; false</span>
+color.blue? <span class="c"># =&gt; true</span>
+
+mode <span class="o">=</span> <span class="t">IOMode</span><span class="t">::</span><span class="t">Read</span> <span class="o">|</span> <span class="t">IOMode</span><span class="t">::</span><span class="t">Async</span>
+mode.read?  <span class="c"># =&gt; true</span>
+mode.write? <span class="c"># =&gt; false</span>
+mode.async? <span class="c"># =&gt; true</span></code></pre>
+
+<p>This is very convenient in <code>case</code> expressions:</p>
+
+<pre><code class="language-crystal"><span class="k">case</span> color
+<span class="k">when</span> .red?
+  puts <span class="s">&quot;Got red&quot;</span>
+<span class="k">when</span> .blue?
+  puts <span class="s">&quot;Got blue&quot;</span>
+<span class="k">end</span></code></pre>
 
 
 
 
 
-
+  <h2>
+    <a id="included-modules" class="anchor" href="#included-modules">
+  <svg class="octicon-link" aria-hidden="true">
+    <use href="#octicon-link"/>
+  </svg>
+</a>
+    Included Modules
+  </h2>
+  <ul class="other-types-list">
+    
+      <li class="other-type">Comparable(<a href="Enum.html">Enum</a>)</li>
+    
+  </ul>
 
 
 
@@ -1485,10 +1620,11 @@
     Defined in:
   </h2>
   
-
-
-
-
+    
+      avram/charms/enum_extensions.cr
+    
+    <br/>
+  
 
 
 
@@ -1497,22 +1633,17 @@
 
 
   <h2>
-    <a id="macro-summary" class="anchor" href="#macro-summary">
+    <a id="class-method-summary" class="anchor" href="#class-method-summary">
   <svg class="octicon-link" aria-hidden="true">
     <use href="#octicon-link"/>
   </svg>
 </a>
-    Macro Summary
+    Class Method Summary
   </h2>
   <ul class="list-summary">
     
       <li class="entry-summary">
-        <a href="#avram_enum(enum_name,&block)-macro" class="signature"><strong>avram_enum</strong>(enum_name, &block)</a>
-        
-      </li>
-    
-      <li class="entry-summary">
-        <a href="#redeclare_avram_enum(name)-macro" class="signature"><strong>redeclare_avram_enum</strong>(name)</a>
+        <a href="#adapter-class-method" class="signature"><strong>.adapter</strong></a>
         
       </li>
     
@@ -1520,32 +1651,81 @@
 
 
 
+
+
+
+
 <div class="methods-inherited">
+  
+    
+
+
+    
+
+
+    
+
+
+  
+    
+
+
+    
+
+
+    
+
+
+  
+    
+
+  <h3>Instance methods inherited from class <code><a href="Object.html">Object</a></code></h3>
+  
+  
+    <a href="Object.html#blank?-instance-method" class="tooltip">
+      <span>blank?</span>
+    blank?</a>, 
+    
+  
+    <a href="Object.html#blank_for_validates_required?:Bool-instance-method" class="tooltip">
+      <span>blank_for_validates_required? : Bool</span>
+    blank_for_validates_required?</a>, 
+    
+  
+    <a href="Object.html#present?-instance-method" class="tooltip">
+      <span>present?</span>
+    present?</a>
+    
+  
+
+
+    
+
+
+    
+
+
   
 </div>
 
 
 
 
-
-
-
-
   <h2>
-    <a id="macro-detail" class="anchor" href="#macro-detail">
+    <a id="class-method-detail" class="anchor" href="#class-method-detail">
   <svg class="octicon-link" aria-hidden="true">
     <use href="#octicon-link"/>
   </svg>
 </a>
-    Macro Detail
+    Class Method Detail
   </h2>
   
-    <div class="entry-detail" id="avram_enum(enum_name,&amp;block)-macro">
+    <div class="entry-detail" id="adapter-class-method">
       <div class="signature">
         
-        macro <strong>avram_enum</strong>(enum_name, &block)
+        def self.<strong>adapter</strong>
 
-        <a class="method-permalink" href="#avram_enum(enum_name,&block)-macro">#</a>
+        <a class="method-permalink" href="#adapter-class-method">#</a>
       </div>
       
       <br/>
@@ -1554,20 +1734,10 @@
       </div>
     </div>
   
-    <div class="entry-detail" id="redeclare_avram_enum(name)-macro">
-      <div class="signature">
-        
-        macro <strong>redeclare_avram_enum</strong>(name)
 
-        <a class="method-permalink" href="#redeclare_avram_enum(name)-macro">#</a>
-      </div>
-      
-      <br/>
-      <div>
-        
-      </div>
-    </div>
-  
+
+
+
 
 
 </div>
