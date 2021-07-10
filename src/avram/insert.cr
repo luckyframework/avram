@@ -12,9 +12,7 @@ class Avram::Insert
     if @column_names.empty?
       "*"
     else
-      @column_names
-        .map { |column| "#{@table}.#{column}" }
-        .join(", ")
+      @column_names.join(", ") { |column| "#{@table}.#{column}" }
     end
   end
 
