@@ -1,84 +1,53 @@
-macro redeclare_avram_enum(name)
-  {% for member in name.resolve.constants %}
-    {{ member }} = {{ name }}::{{ member }}
-  {% end %}
-end
+require "./int32_extensions"
 
-macro avram_enum(enum_name, &block)
-  {% avram_enum = ("Avram" + enum_name.names.join("::")).id %}
-  enum {{ avram_enum }}
-    {{ block.body }}
-
-    def ===(other : Int32)
-      value == other
-    end
+abstract struct Enum
+  def self.adapter
+    Lucky(self)
   end
 
-  struct {{ enum_name }}
-    def self.adapter
-      Lucky
+  module Lucky(T)
+    include Avram::Type
+    alias ColumnType = Int32
+
+    def parse(value : String)
+      if result = T.parse?(value)
+        SuccessfulCast.new(result)
+      else
+        FailedCast.new
+      end
     end
 
-    redeclare_avram_enum({{ avram_enum }})
-
-    getter :enum
-
-    # You may need to prefix with {{ @type }}
-    #
-    #   {{ @type }}::{{enum_name}}
-    def initialize(@enum : Avram{{ enum_name }})
+    def parse(value : Int32)
+      if result = T.from_value?(value)
+        SuccessfulCast.new(result)
+      else
+        FailedCast.new
+      end
     end
 
-    def initialize(enum_value : Int32)
-      @enum = Avram{{ enum_name }}.from_value(enum_value)
+    def parse(value : T)
+      SuccessfulCast.new(value)
     end
 
-    def initialize(enum_value : String)
-      int_value = enum_value.to_i?
-      @enum = if int_value
-                Avram{{ enum_name }}.from_value(int_value)
-              else
-                Avram{{ enum_name }}.parse(enum_value)
-              end
+    def to_db(value : T)
+      value.value.to_s
     end
 
-    delegate :===, to_s, to_i, to: @enum
+    def criteria(query : V, column) forall V
+      Criteria(V, T).new(query, column)
+    end
 
-    forward_missing_to @enum
-
-    module Lucky
-      alias ColumnType = Int32
-      include Avram::Type
-
-      def self.criteria(query : T, column) forall T
-        Criteria(T, Int32).new(query, column)
+    class Criteria(T, V) < Int32::Lucky::Criteria(T, V)
+      def select_min : V?
+        rows.exec_scalar(&.select_min(column))
+          .as(Int32?)
+          .try { |min| V.adapter.parse!(min) }
       end
 
-      def from_db!(value : Int32)
-        {{ enum_name }}.new(value)
-      end
-
-      def parse(value : Avram{{ enum_name }})
-        SuccessfulCast({{ enum_name }}).new(value)
-      end
-
-      def parse(value : String)
-        SuccessfulCast({{ enum_name }}).new({{ enum_name }}.new(value))
-      end
-
-      def parse(value : Int32)
-        SuccessfulCast({{ enum_name }}).new({{ enum_name }}.new(value))
-      end
-
-      def to_db(value : Int32)
-        value.to_s
-      end
-
-      def to_db(value : {{ enum_name }})
-        value.value.to_s
-      end
-
-      class Criteria(T, V) < Int32::Lucky::Criteria(T, V)
+      def select_max : V?
+        rows.exec_scalar(&.select_max(column))
+          .as(Int32?)
+          .try { |max| V.adapter.parse!(max) }
       end
     end
   end

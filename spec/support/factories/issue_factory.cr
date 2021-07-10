@@ -1,7 +1,6 @@
 class IssueFactory < BaseFactory
   def initialize
-    status Issue::Status.new(:opened)
-    role Issue::Role.new(:issue)
+    status Issue::Status::Opened
   end
 
   def build_model

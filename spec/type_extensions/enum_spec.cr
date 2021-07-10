@@ -2,84 +2,37 @@ require "../spec_helper"
 
 include LazyLoadHelpers
 
-describe "Enum" do
-  it "check enum" do
+describe "models using enums" do
+  it "can be created" do
     issue = IssueFactory.create
 
-    issue.status.enum.should eq(Issue::AvramStatus::Opened)
-    issue.role.enum.should eq(Issue::AvramRole::Issue)
+    issue.status.should eq(Issue::Status::Opened)
+    issue.role.should eq(Issue::Role::Issue)
   end
 
-  it "update enum" do
+  it "can be updated" do
     issue = IssueFactory.create
 
     updated_issue = Issue::SaveOperation.update!(issue, status: Issue::Status.new(:closed))
 
-    updated_issue.status.enum.should eq(Issue::AvramStatus::Closed)
-    updated_issue.role.enum.should eq(Issue::AvramRole::Issue)
+    updated_issue.status.should eq(Issue::Status::Closed)
+    updated_issue.role.should eq(Issue::Role::Issue)
   end
 
-  it "access enum methods" do
+  it "can be queried" do
     issue = IssueFactory.create
+    query = IssueQuery.new
 
-    issue.status.opened?.should eq(true)
-    issue.status.value.should eq(0)
+    query.status(Issue::Status::Opened).first.should eq(issue)
+    query.status("Opened").first.should eq(issue)
+    query.status(0).first.should eq(issue)
   end
 
-  it "access enum to_s and to_i" do
-    issue = IssueFactory.create
+  it "handles other queries" do
+    IssueFactory.create &.role(Issue::Role::Issue)
+    IssueFactory.create &.role(Issue::Role::Critical)
 
-    issue.status.to_s.should eq("Opened")
-    issue.status.to_i.should eq(0)
-  end
-
-  it "provides a working ==" do
-    Issue::Status.new(:closed).should eq(Issue::Status.new(:closed))
-    Issue::Status.new(:opened).should_not eq(Issue::Status.new(:closed))
-  end
-
-  it "provides enum-like constant values" do
-    Issue::Status::Closed.should eq(Issue::Status.new(:closed).enum)
-    Issue::Status.new(:closed).enum.should eq(Issue::Status::Closed)
-  end
-
-  it "parses the enum value name" do
-    Issue::Status.new("Closed").should eq(Issue::Status.new(:closed))
-    Issue::Status.new("Opened").should eq(Issue::Status.new(:opened))
-  end
-
-  it "parses the enum value integer when a string" do
-    Issue::Status.new("0").should eq(Issue::Status.new(:opened))
-    Issue::Status.new("1").should eq(Issue::Status.new(:closed))
-  end
-
-  it "implements case equality" do
-    case Issue::Status.new(:closed).value
-    when Issue::Status.new(:closed)
-      true
-    else
-      false
-    end.should be_true
-
-    case Issue::Status::Closed.value
-    when Issue::Status.new(:closed)
-      true
-    else
-      false
-    end.should be_true
-
-    case Issue::Status.new(:opened).value
-    when Issue::Status::Opened
-      true
-    else
-      false
-    end.should be_true
-
-    case Issue::Status::Opened.value
-    when Issue::Status::Opened
-      true
-    else
-      false
-    end.should be_true
+    IssueQuery.new.role.select_max.should eq(Issue::Role::Critical)
+    IssueQuery.new.role.select_min.should eq(Issue::Role::Issue)
   end
 end
