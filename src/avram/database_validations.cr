@@ -23,10 +23,10 @@ module Avram::DatabaseValidations(T)
   # database you will not know if there is a collision until all other validations
   # pass and Avram tries to save the record.
   private def validate_uniqueness_of(
-    attribute : Avram::Attribute,
-    query : Avram::Criteria,
+    attribute : Avram::Attribute(V),
+    query : Avram::Criteria(T::BaseQuery, V),
     message : String = "is already taken"
-  )
+  ) forall V
     attribute.value.try do |value|
       if limit_query(query.eq(value)).first?
         attribute.add_error message
@@ -59,7 +59,7 @@ module Avram::DatabaseValidations(T)
   # ```
   private def validate_uniqueness_of(
     attribute : Avram::Attribute,
-    query : Avram::Queryable,
+    query : T::BaseQuery,
     message : String = "is already taken"
   )
     attribute.value.try do |value|
