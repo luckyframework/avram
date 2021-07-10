@@ -246,6 +246,10 @@ class Avram::QueryBuilder
     self
   end
 
+  def select(@selections : String)
+    self
+  end
+
   def ordered?
     !@orders.empty?
   end

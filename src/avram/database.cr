@@ -74,19 +74,19 @@ abstract class Avram::Database
   end
 
   # Methods without a block
-  {% for crystal_db_alias in [:exec, :scalar, :query, :query_all, :query_one, :query_each] %}
+  {% for crystal_db_alias in [:exec, :scalar, :query, :query_all, :query_one, :query_one?, :query_each] %}
     # Same as crystal-db's `DB::QueryMethods#{{ crystal_db_alias.id }}` but with instrumentation
     def {{ crystal_db_alias.id }}(query, *args_, args : Array? = nil, queryable : String? = nil, **named_args)
       publish_query_event(query, args_, args, queryable) do
         run do |db|
-          db.{{ crystal_db_alias.id }}(query, *args_, args: args)
+          db.{{ crystal_db_alias.id }}(query, *args_, **named_args, args: args)
         end
       end
     end
 
     # Same as crystal-db's `DB::QueryMethods#{{ crystal_db_alias.id }}` but with instrumentation
     def self.{{ crystal_db_alias.id }}(query, *args_, args : Array? = nil, queryable : String? = nil, **named_args)
-      new.{{ crystal_db_alias.id }}(query, *args_, args: args, queryable: queryable)
+      new.{{ crystal_db_alias.id }}(query, *args_, **named_args, args: args, queryable: queryable)
     end
   {% end %}
 
