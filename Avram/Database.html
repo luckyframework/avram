@@ -1541,16 +1541,16 @@
       </li>
     
       <li class="entry-summary">
-        <a href="#query(query,*args_,args:Array?=nil,queryable:String?=nil,**named_args)-class-method" class="signature"><strong>.query</strong>(query, *args_, args : Array? = <span class="n">nil</span>, queryable : String? = <span class="n">nil</span>, **named_args)</a>
+        <a href="#query(query,*args_,args:Array?=nil,queryable:String?=nil,**named_args,&)-class-method" class="signature"><strong>.query</strong>(query, *args_, args : Array? = <span class="n">nil</span>, queryable : String? = <span class="n">nil</span>, **named_args, &)</a>
         
-          <div class="summary"><p>Same as crystal-db's <code>DB::QueryMethods#query</code> but with instrumentation</p></div>
+          <div class="summary"><p>Same as crystal-db's <code>DB::QueryMethods#:query</code> but with instrumentation</p></div>
         
       </li>
     
       <li class="entry-summary">
-        <a href="#query(query,*args_,args:Array?=nil,queryable:String?=nil,**named_args,&)-class-method" class="signature"><strong>.query</strong>(query, *args_, args : Array? = <span class="n">nil</span>, queryable : String? = <span class="n">nil</span>, **named_args, &)</a>
+        <a href="#query(query,*args_,args:Array?=nil,queryable:String?=nil,**named_args)-class-method" class="signature"><strong>.query</strong>(query, *args_, args : Array? = <span class="n">nil</span>, queryable : String? = <span class="n">nil</span>, **named_args)</a>
         
-          <div class="summary"><p>Same as crystal-db's <code>DB::QueryMethods#:query</code> but with instrumentation</p></div>
+          <div class="summary"><p>Same as crystal-db's <code>DB::QueryMethods#query</code> but with instrumentation</p></div>
         
       </li>
     
@@ -1583,6 +1583,13 @@
       </li>
     
       <li class="entry-summary">
+        <a href="#query_one(query,*args_,args:Array?=nil,queryable:String?=nil,**named_args)-class-method" class="signature"><strong>.query_one</strong>(query, *args_, args : Array? = <span class="n">nil</span>, queryable : String? = <span class="n">nil</span>, **named_args)</a>
+        
+          <div class="summary"><p>Same as crystal-db's <code>DB::QueryMethods#query_one</code> but with instrumentation</p></div>
+        
+      </li>
+    
+      <li class="entry-summary">
         <a href="#query_one(query,*args_,args:Array?=nil,queryable:String?=nil,**named_args,&)-class-method" class="signature"><strong>.query_one</strong>(query, *args_, args : Array? = <span class="n">nil</span>, queryable : String? = <span class="n">nil</span>, **named_args, &)</a>
         
           <div class="summary"><p>Same as crystal-db's <code>DB::QueryMethods#:query_one</code> but with instrumentation</p></div>
@@ -1590,9 +1597,9 @@
       </li>
     
       <li class="entry-summary">
-        <a href="#query_one(query,*args_,args:Array?=nil,queryable:String?=nil,**named_args)-class-method" class="signature"><strong>.query_one</strong>(query, *args_, args : Array? = <span class="n">nil</span>, queryable : String? = <span class="n">nil</span>, **named_args)</a>
+        <a href="#query_one?(query,*args_,args:Array?=nil,queryable:String?=nil,**named_args)-class-method" class="signature"><strong>.query_one?</strong>(query, *args_, args : Array? = <span class="n">nil</span>, queryable : String? = <span class="n">nil</span>, **named_args)</a>
         
-          <div class="summary"><p>Same as crystal-db's <code>DB::QueryMethods#query_one</code> but with instrumentation</p></div>
+          <div class="summary"><p>Same as crystal-db's <code>DB::QueryMethods#query_one?</code> but with instrumentation</p></div>
         
       </li>
     
@@ -1713,6 +1720,13 @@
         <a href="#query_one(query,*args_,args:Array?=nil,queryable:String?=nil,**named_args,&)-instance-method" class="signature"><strong>#query_one</strong>(query, *args_, args : Array? = <span class="n">nil</span>, queryable : String? = <span class="n">nil</span>, **named_args, &)</a>
         
           <div class="summary"><p>Same as crystal-db's <code>DB::QueryMethods#:query_one</code> but with instrumentation</p></div>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#query_one?(query,*args_,args:Array?=nil,queryable:String?=nil,**named_args)-instance-method" class="signature"><strong>#query_one?</strong>(query, *args_, args : Array? = <span class="n">nil</span>, queryable : String? = <span class="n">nil</span>, **named_args)</a>
+        
+          <div class="summary"><p>Same as crystal-db's <code>DB::QueryMethods#query_one?</code> but with instrumentation</p></div>
         
       </li>
     
@@ -1876,25 +1890,6 @@ Yields a <code>PQ::Notification</code> object with <code>channel</code>, <code>p
       </div>
     </div>
   
-    <div class="entry-detail" id="query(query,*args_,args:Array?=nil,queryable:String?=nil,**named_args)-class-method">
-      <div class="signature">
-        
-        def self.<strong>query</strong>(query, *args_, args : <a href="../Array.html">Array</a>? = <span class="n">nil</span>, queryable : <a href="../String.html">String</a>? = <span class="n">nil</span>, **named_args)
-
-        <a class="method-permalink" href="#query(query,*args_,args:Array?=nil,queryable:String?=nil,**named_args)-class-method">#</a>
-      </div>
-      
-        <div class="doc">
-          
-          <p>Same as crystal-db's <code>DB::QueryMethods#query</code> but with instrumentation</p>
-        </div>
-      
-      <br/>
-      <div>
-        
-      </div>
-    </div>
-  
     <div class="entry-detail" id="query(query,*args_,args:Array?=nil,queryable:String?=nil,**named_args,&)-class-method">
       <div class="signature">
         
@@ -1906,6 +1901,25 @@ Yields a <code>PQ::Notification</code> object with <code>channel</code>, <code>p
         <div class="doc">
           
           <p>Same as crystal-db's <code>DB::QueryMethods#:query</code> but with instrumentation</p>
+        </div>
+      
+      <br/>
+      <div>
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="query(query,*args_,args:Array?=nil,queryable:String?=nil,**named_args)-class-method">
+      <div class="signature">
+        
+        def self.<strong>query</strong>(query, *args_, args : <a href="../Array.html">Array</a>? = <span class="n">nil</span>, queryable : <a href="../String.html">String</a>? = <span class="n">nil</span>, **named_args)
+
+        <a class="method-permalink" href="#query(query,*args_,args:Array?=nil,queryable:String?=nil,**named_args)-class-method">#</a>
+      </div>
+      
+        <div class="doc">
+          
+          <p>Same as crystal-db's <code>DB::QueryMethods#query</code> but with instrumentation</p>
         </div>
       
       <br/>
@@ -1990,6 +2004,25 @@ Yields a <code>PQ::Notification</code> object with <code>channel</code>, <code>p
       </div>
     </div>
   
+    <div class="entry-detail" id="query_one(query,*args_,args:Array?=nil,queryable:String?=nil,**named_args)-class-method">
+      <div class="signature">
+        
+        def self.<strong>query_one</strong>(query, *args_, args : <a href="../Array.html">Array</a>? = <span class="n">nil</span>, queryable : <a href="../String.html">String</a>? = <span class="n">nil</span>, **named_args)
+
+        <a class="method-permalink" href="#query_one(query,*args_,args:Array?=nil,queryable:String?=nil,**named_args)-class-method">#</a>
+      </div>
+      
+        <div class="doc">
+          
+          <p>Same as crystal-db's <code>DB::QueryMethods#query_one</code> but with instrumentation</p>
+        </div>
+      
+      <br/>
+      <div>
+        
+      </div>
+    </div>
+  
     <div class="entry-detail" id="query_one(query,*args_,args:Array?=nil,queryable:String?=nil,**named_args,&)-class-method">
       <div class="signature">
         
@@ -2009,17 +2042,17 @@ Yields a <code>PQ::Notification</code> object with <code>channel</code>, <code>p
       </div>
     </div>
   
-    <div class="entry-detail" id="query_one(query,*args_,args:Array?=nil,queryable:String?=nil,**named_args)-class-method">
+    <div class="entry-detail" id="query_one?(query,*args_,args:Array?=nil,queryable:String?=nil,**named_args)-class-method">
       <div class="signature">
         
-        def self.<strong>query_one</strong>(query, *args_, args : <a href="../Array.html">Array</a>? = <span class="n">nil</span>, queryable : <a href="../String.html">String</a>? = <span class="n">nil</span>, **named_args)
+        def self.<strong>query_one?</strong>(query, *args_, args : <a href="../Array.html">Array</a>? = <span class="n">nil</span>, queryable : <a href="../String.html">String</a>? = <span class="n">nil</span>, **named_args)
 
-        <a class="method-permalink" href="#query_one(query,*args_,args:Array?=nil,queryable:String?=nil,**named_args)-class-method">#</a>
+        <a class="method-permalink" href="#query_one?(query,*args_,args:Array?=nil,queryable:String?=nil,**named_args)-class-method">#</a>
       </div>
       
         <div class="doc">
           
-          <p>Same as crystal-db's <code>DB::QueryMethods#query_one</code> but with instrumentation</p>
+          <p>Same as crystal-db's <code>DB::QueryMethods#query_one?</code> but with instrumentation</p>
         </div>
       
       <br/>
@@ -2326,6 +2359,25 @@ Yields a <code>PQ::Notification</code> object with <code>channel</code>, <code>p
         <div class="doc">
           
           <p>Same as crystal-db's <code>DB::QueryMethods#:query_one</code> but with instrumentation</p>
+        </div>
+      
+      <br/>
+      <div>
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="query_one?(query,*args_,args:Array?=nil,queryable:String?=nil,**named_args)-instance-method">
+      <div class="signature">
+        
+        def <strong>query_one?</strong>(query, *args_, args : <a href="../Array.html">Array</a>? = <span class="n">nil</span>, queryable : <a href="../String.html">String</a>? = <span class="n">nil</span>, **named_args)
+
+        <a class="method-permalink" href="#query_one?(query,*args_,args:Array?=nil,queryable:String?=nil,**named_args)-instance-method">#</a>
+      </div>
+      
+        <div class="doc">
+          
+          <p>Same as crystal-db's <code>DB::QueryMethods#query_one?</code> but with instrumentation</p>
         </div>
       
       <br/>

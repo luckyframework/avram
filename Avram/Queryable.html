@@ -1529,6 +1529,13 @@
       </li>
     
       <li class="entry-summary">
+        <a href="#any?:Bool-instance-method" class="signature"><strong>#any?</strong> : Bool</a>
+        
+          <div class="summary"><p>Returns <code>true</code> if at least one of the collection members is not <code>false</code> or <code>nil</code>.</p></div>
+        
+      </li>
+    
+      <li class="entry-summary">
         <a href="#database(*args,**options)-instance-method" class="signature"><strong>#database</strong>(*args, **options)</a>
         
       </li>
@@ -1613,6 +1620,13 @@
     
       <li class="entry-summary">
         <a href="#none:self-instance-method" class="signature"><strong>#none</strong> : <span class="k">self</span></a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#none?:Bool-instance-method" class="signature"><strong>#none?</strong> : Bool</a>
+        
+          <div class="summary"><p>Returns <code>true</code> if all of the elements of the collection are <code>false</code> or <code>nil</code>.</p></div>
         
       </li>
     
@@ -1726,7 +1740,7 @@
       </li>
     
       <li class="entry-summary">
-        <a href="#where(&):self-instance-method" class="signature"><strong>#where</strong>(&) : <span class="k">self</span></a>
+        <a href="#where(statement:String,*,argsbind_vars:Array):self-instance-method" class="signature"><strong>#where</strong>(statement : String, *, args bind_vars : Array) : <span class="k">self</span></a>
         
       </li>
     
@@ -1746,7 +1760,7 @@
       </li>
     
       <li class="entry-summary">
-        <a href="#where(statement:String,*,argsbind_vars:Array):self-instance-method" class="signature"><strong>#where</strong>(statement : String, *, args bind_vars : Array) : <span class="k">self</span></a>
+        <a href="#where(&):self-instance-method" class="signature"><strong>#where</strong>(&) : <span class="k">self</span></a>
         
       </li>
     
@@ -1791,6 +1805,32 @@
 
         <a class="method-permalink" href="#add_preload(&block:Array(T)-%3ENil)-instance-method">#</a>
       </div>
+      
+      <br/>
+      <div>
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="any?:Bool-instance-method">
+      <div class="signature">
+        
+        def <strong>any?</strong> : <a href="../Bool.html">Bool</a>
+
+        <a class="method-permalink" href="#any?:Bool-instance-method">#</a>
+      </div>
+      
+        <div class="doc">
+          
+            <div class="doc-inherited">
+              Description copied from module Enumerable(T)
+            </div>
+          
+          <p>Returns <code>true</code> if at least one of the collection members is not <code>false</code> or <code>nil</code>.</p>
+
+<pre><code class="language-crystal">[<span class="n">nil</span>, <span class="n">true</span>, <span class="n">99</span>].any? <span class="c"># =&gt; true</span>
+[<span class="n">nil</span>, <span class="n">false</span>].any?    <span class="c"># =&gt; false</span></code></pre>
+        </div>
       
       <br/>
       <div>
@@ -2060,6 +2100,34 @@ When the collection is empty, returns <code>nil</code>.</p>
 
         <a class="method-permalink" href="#none:self-instance-method">#</a>
       </div>
+      
+      <br/>
+      <div>
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="none?:Bool-instance-method">
+      <div class="signature">
+        
+        def <strong>none?</strong> : <a href="../Bool.html">Bool</a>
+
+        <a class="method-permalink" href="#none?:Bool-instance-method">#</a>
+      </div>
+      
+        <div class="doc">
+          
+            <div class="doc-inherited">
+              Description copied from module Enumerable(T)
+            </div>
+          
+          <p>Returns <code>true</code> if all of the elements of the collection are <code>false</code> or <code>nil</code>.</p>
+
+<pre><code class="language-crystal">[<span class="n">nil</span>, <span class="n">false</span>].none?       <span class="c"># =&gt; true</span>
+[<span class="n">nil</span>, <span class="n">false</span>, <span class="n">true</span>].none? <span class="c"># =&gt; false</span></code></pre>
+
+<p>It's the opposite of <code>all?</code>.</p>
+        </div>
       
       <br/>
       <div>
@@ -2377,12 +2445,12 @@ conjunction to OR. Then call yield to set the next set of ORs</p>
       </div>
     </div>
   
-    <div class="entry-detail" id="where(&):self-instance-method">
+    <div class="entry-detail" id="where(statement:String,*,argsbind_vars:Array):self-instance-method">
       <div class="signature">
         
-        def <strong>where</strong>(&) : <span class="k">self</span>
+        def <strong>where</strong>(statement : <a href="../String.html">String</a>, *, args bind_vars : <a href="../Array.html">Array</a>) : <span class="k">self</span>
 
-        <a class="method-permalink" href="#where(&):self-instance-method">#</a>
+        <a class="method-permalink" href="#where(statement:String,*,argsbind_vars:Array):self-instance-method">#</a>
       </div>
       
       <br/>
@@ -2433,12 +2501,12 @@ conjunction to OR. Then call yield to set the next set of ORs</p>
       </div>
     </div>
   
-    <div class="entry-detail" id="where(statement:String,*,argsbind_vars:Array):self-instance-method">
+    <div class="entry-detail" id="where(&):self-instance-method">
       <div class="signature">
         
-        def <strong>where</strong>(statement : <a href="../String.html">String</a>, *, args bind_vars : <a href="../Array.html">Array</a>) : <span class="k">self</span>
+        def <strong>where</strong>(&) : <span class="k">self</span>
 
-        <a class="method-permalink" href="#where(statement:String,*,argsbind_vars:Array):self-instance-method">#</a>
+        <a class="method-permalink" href="#where(&):self-instance-method">#</a>
       </div>
       
       <br/>
