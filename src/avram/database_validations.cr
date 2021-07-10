@@ -28,7 +28,7 @@ module Avram::DatabaseValidations(T)
     message : String = "is already taken"
   )
     attribute.value.try do |value|
-      if limit_query(query.eq(value)).any?
+      if limit_query(query.eq(value)).any? # ameba:disable Performance/AnyInsteadOfEmpty
         attribute.add_error message
       end
     end
@@ -63,7 +63,7 @@ module Avram::DatabaseValidations(T)
     message : String = "is already taken"
   )
     attribute.value.try do |value|
-      if limit_query(query).where(attribute.name, value).any?
+      if limit_query(query).where(attribute.name, value).any? # ameba:disable Performance/AnyInsteadOfEmpty
         attribute.add_error message
       end
     end

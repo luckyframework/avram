@@ -284,20 +284,20 @@ describe Avram::Queryable do
     it "is true if there is a record in the database" do
       UserFactory.new.name("First").create
 
-      UserQuery.new.name("First").any?.should be_true
+      UserQuery.new.name("First").any?.should be_true # ameba:disable Performance/AnyInsteadOfEmpty
     end
 
     it "is false if there is not a record in the database" do
       UserFactory.new.name("First").create
 
-      UserQuery.new.name("Second").any?.should be_false
+      UserQuery.new.name("Second").any?.should be_false # ameba:disable Performance/AnyInsteadOfEmpty
     end
 
     it "does not mutate the query" do
       query = UserQuery.new.name("name")
       original_query_sql = query.to_sql
 
-      query.any?
+      query.any? # ameba:disable Performance/AnyInsteadOfEmpty
 
       query.to_sql.should eq original_query_sql
     end
