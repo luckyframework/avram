@@ -98,7 +98,4 @@ class Avram::Attribute(T)
       add_error("is invalid")
     end
   end
-
-  class Nothing
-  end
 end

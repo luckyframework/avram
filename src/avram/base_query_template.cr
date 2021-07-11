@@ -1,9 +1,6 @@
 class Avram::BaseQueryTemplate
   macro setup(type, columns, associations, *args, **named_args)
     class ::{{ type }}::BaseQuery
-      private class Nothing
-      end
-
       def_clone
       include Avram::Queryable({{ type }})
 
@@ -19,7 +16,7 @@ class Avram::BaseQueryTemplate
 
       def update(
           {% for column in columns %}
-            {{ column[:name] }} : {{ column[:type] }} | Nothing{% if column[:nilable] %} | Nil{% end %} = Nothing.new,
+            {{ column[:name] }} : {{ column[:type] }} | Avram::Nothing{% if column[:nilable] %} | Nil{% end %} = Avram::Nothing.new,
           {% end %}
         ) : Int64
 
@@ -28,7 +25,7 @@ class Avram::BaseQueryTemplate
         {% for column in columns %}
           if {{ column[:name] }}.nil?
             _changes[:{{ column[:name] }}] = nil
-          elsif {{ column[:name] }}.is_a?(Nothing)
+          elsif {{ column[:name] }}.is_a?(Avram::Nothing)
             nil
           else
             value = {{ column[:name] }}.not_nil!.class.adapter.to_db({{ column[:name] }}).to_s

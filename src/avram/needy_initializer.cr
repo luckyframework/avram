@@ -42,8 +42,8 @@ module Avram::NeedyInitializer
     #
     # attribute_method_args would look something like:
     #
-    #   name : String | Nothing = Nothing.new,
-    #   email : String | Nil | Nothing = Nothing.new
+    #   name : String | Avram::Nothing = Avram::Nothing.new,
+    #   email : String | Nil | Avram::Nothing = Avram::Nothing.new
     #
     # This can be passed to macros as a string, and then the macro can call .id
     # on it to output the string as code!
@@ -58,14 +58,11 @@ module Avram::NeedyInitializer
     {% attribute_params = "" %}
 
     {% for attribute in ATTRIBUTES %}
-      {% attribute_method_args = attribute_method_args + "#{attribute.var} : #{attribute.type} | Nothing = Nothing.new,\n" %}
+      {% attribute_method_args = attribute_method_args + "#{attribute.var} : #{attribute.type} | Avram::Nothing = Avram::Nothing.new,\n" %}
       {% attribute_params = attribute_params + "#{attribute.var}: #{attribute.var},\n" %}
     {% end %}
 
     generate_initializer({{ attribute_method_args }}, {{ attribute_params }})
-  end
-
-  private class Nothing
   end
 
   macro generate_initializer(attribute_method_args, attribute_params)
@@ -92,7 +89,7 @@ module Avram::NeedyInitializer
 
     def set_attributes({{ attribute_method_args.id }})
       {% for attribute in ATTRIBUTES %}
-        unless {{ attribute.var }}.is_a? Nothing
+        unless {{ attribute.var }}.is_a? Avram::Nothing
           self.{{ attribute.var }}.value = {{ attribute.var }}
         end
       {% end %}
