@@ -12,8 +12,8 @@ class Avram::Events::SaveFailedEvent < Pulsar::Event
   end
 
   def error_messages_as_string
-    invalid_attributes.map do |attribute|
+    invalid_attributes.join(". ") do |attribute|
       "#{attribute.name} #{attribute.errors.join(", ")}"
-    end.join(". ")
+    end
   end
 end

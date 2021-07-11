@@ -4,6 +4,7 @@ class UniquenessSaveOperation < User::SaveOperation
   before_save do
     validate_uniqueness_of name
     validate_uniqueness_of nickname, query: UserQuery.new.nickname.lower
+    validate_uniqueness_of age, query: UserQuery.new.name.nilable_eq(name.value)
   end
 end
 
@@ -110,21 +111,28 @@ describe Avram::Validations do
       operation = UniquenessSaveOperation.new
       operation.name.value = existing_user.name
       operation.nickname.value = existing_user.nickname.not_nil!.downcase
+      operation.age.value = existing_user.age
 
       operation.save
 
+      operation.valid?.should be_false
       operation.name.errors.should contain "is already taken"
       operation.nickname.errors.should contain "is already taken"
+      operation.age.errors.should contain "is already taken"
     end
 
     it "ignores the existing record on update" do
-      existing_user = UserFactory.new.name("Sally").create
+      existing_user = UserFactory.new.name("Sally").nickname("Sal").create
       operation = UniquenessSaveOperation.new(existing_user)
       operation.name.value = existing_user.name
+      operation.nickname.value = existing_user.nickname.not_nil!.downcase
+      operation.age.value = existing_user.age
 
-      operation.valid?
+      operation.save
 
-      operation.name.errors.should_not contain "is already taken"
+      operation.name.errors.should be_empty
+      operation.nickname.errors.should be_empty
+      operation.age.errors.should be_empty
     end
   end
 
