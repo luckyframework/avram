@@ -44,9 +44,19 @@ module Avram::Queryable(T)
       new.none?
     end
 
-    def self.truncate
+    # Removes all data from a table using the TRUNCATE postgres SQL command.
+    #
+    # You should run this command with `cascade: true` if your table
+    # columns are referenced by other foreign key constraints. Use *delete*
+    # instead if you don't want to accidentally delete rows referenced
+    # elsewhere.
+    #
+    # To delete all data referenced by foreign keys as well, set *cascade*
+    # to true.
+    def self.truncate(*, cascade : Bool = false)
       query = self.new
-      query.database.exec "TRUNCATE TABLE #{query.table_name}"
+      cascade_str = cascade ? " CASCADE" : ""
+      query.database.exec "TRUNCATE TABLE #{query.table_name}#{cascade_str}"
     end
   end
 
