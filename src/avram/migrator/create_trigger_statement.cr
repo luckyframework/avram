@@ -18,8 +18,6 @@ class Avram::Migrator::CreateTriggerStatement
   end
 
   private def operation_statement
-    @trigger_operation.map { |op|
-      op.to_s.upcase
-    }.join(" OR ")
+    @trigger_operation.join(" OR ", &.to_s.upcase)
   end
 end
