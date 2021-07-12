@@ -50,7 +50,7 @@ abstract class Avram::Model
 
     {{ yield }}
 
-    validate_columns
+    validate_columns("table")
     validate_primary_key
 
     {% if table_name %}
@@ -73,7 +73,7 @@ abstract class Avram::Model
   macro view(view_name = nil)
     {{ yield }}
 
-    validate_columns
+    validate_columns("view")
     {% if view_name %}
       class_getter table_name : String = {{ view_name.id.stringify }}
     {% else %}
@@ -149,9 +149,19 @@ abstract class Avram::Model
     )
   end
 
-  macro validate_columns
+  macro validate_columns(model_type)
     {% if COLUMNS.empty? %}
-      {% raise "#{@type} must define at least one column." %}
+      {% raise <<-ERROR
+        #{@type} must define at least one column.
+
+        Example:
+
+          #{model_type.id} do
+            primary_key id : Int64
+            ...
+          end
+        ERROR
+      %}
     {% end %}
   end
 
