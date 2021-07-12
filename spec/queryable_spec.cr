@@ -26,6 +26,12 @@ class QueryWithDefault < User::BaseQuery
   end
 end
 
+class CommentQuery < Comment::BaseQuery
+end
+
+class PostQuery < Post::BaseQuery
+end
+
 describe Avram::Queryable do
   it "can chain scope methods" do
     ChainedQuery.new.young.named("Paul")
@@ -277,6 +283,43 @@ describe Avram::Queryable do
       query.last?
 
       query.to_sql.should eq original_query_sql
+    end
+  end
+
+  describe "#any?" do
+    it "is true if there is a record in the database" do
+      UserFactory.new.name("First").create
+
+      UserQuery.new.name("First").any?.should be_true # ameba:disable Performance/AnyInsteadOfEmpty
+    end
+
+    it "is false if there is not a record in the database" do
+      UserFactory.new.name("First").create
+
+      UserQuery.new.name("Second").any?.should be_false # ameba:disable Performance/AnyInsteadOfEmpty
+    end
+
+    it "does not mutate the query" do
+      query = UserQuery.new.name("name")
+      original_query_sql = query.to_sql
+
+      query.any? # ameba:disable Performance/AnyInsteadOfEmpty
+
+      query.to_sql.should eq original_query_sql
+    end
+  end
+
+  describe "#none?" do
+    it "is true if no records found in database" do
+      UserFactory.new.name("First").create
+
+      UserQuery.new.name("Second").none?.should be_true
+    end
+
+    it "is false if there is a record in the database" do
+      UserFactory.new.name("First").create
+
+      UserQuery.new.name("First").none?.should be_false
     end
   end
 
@@ -1036,8 +1079,23 @@ describe Avram::Queryable do
     it "truncates the table" do
       10.times { UserFactory.create }
       UserQuery.new.select_count.should eq 10
+      # NOTE: we don't test rows_affected here because this isn't
+      # available with a truncate statement
       UserQuery.truncate
       UserQuery.new.select_count.should eq 0
+    end
+
+    it "deletes associated data when cascade is true" do
+      post_with_matching_comment = PostFactory.create
+      comment = CommentFactory.new
+        .post_id(post_with_matching_comment.id)
+        .create
+
+      PostQuery.truncate cascade: true
+      PostQuery.new.select_count.should eq 0
+      expect_raises(Avram::RecordNotFoundError) do
+        CommentQuery.new.find(comment.id)
+      end
     end
   end
 

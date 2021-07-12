@@ -73,9 +73,9 @@ abstract class Avram::SaveOperation(T)
   end
 
   private def error_messages_as_string
-    errors.map do |attribute_name, messages|
+    errors.join(". ") do |attribute_name, messages|
       "#{attribute_name} #{messages.join(", ")}"
-    end.join(". ")
+    end
   end
 
   # :nodoc:

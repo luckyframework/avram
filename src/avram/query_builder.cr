@@ -84,9 +84,9 @@ class Avram::QueryBuilder
   end
 
   private def set_sql_clause(params)
-    "SET " + params.map do |key, _value|
+    "SET " + params.join(", ") do |key, _|
       "#{key} = #{next_prepared_statement_placeholder}"
-    end.join(", ")
+    end
   end
 
   private def join_sql(clauses)
@@ -163,7 +163,7 @@ class Avram::QueryBuilder
 
   def order_sql
     if ordered?
-      "ORDER BY " + orders.map(&.prepare).join(", ")
+      "ORDER BY " + orders.join(", ", &.prepare)
     end
   end
 
@@ -240,9 +240,11 @@ class Avram::QueryBuilder
   end
 
   def select(selection : Array(ColumnName))
-    @selections = selection
-      .map { |column| "#{@table}.#{column}" }
-      .join(", ")
+    @selections = selection.join(", ") { |column| "#{@table}.#{column}" }
+    self
+  end
+
+  def select(@selections : String)
     self
   end
 
@@ -285,7 +287,7 @@ class Avram::QueryBuilder
   end
 
   private def joins_sql
-    joins.map(&.to_sql).join(" ")
+    joins.join(" ", &.to_sql)
   end
 
   def where(where_clause : Avram::Where::Condition)

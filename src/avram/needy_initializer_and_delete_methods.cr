@@ -44,8 +44,8 @@ module Avram::NeedyInitializerAndDeleteMethods
     #
     # attribute_method_args would look something like:
     #
-    #   name : String | Nothing = Nothing.new,
-    #   email : String | Nil | Nothing = Nothing.new
+    #   name : String | Avram::Nothing = Avram::Nothing.new,
+    #   email : String | Nil | Avram::Nothing = Avram::Nothing.new
     #
     # This can be passed to macros as a string, and then the macro can call .id
     # on it to output the string as code!
@@ -61,16 +61,16 @@ module Avram::NeedyInitializerAndDeleteMethods
 
     {% if @type.constant :COLUMN_ATTRIBUTES %}
       {% for attribute in COLUMN_ATTRIBUTES.uniq %}
-        {% attribute_method_args = attribute_method_args + "#{attribute[:name]} : #{attribute[:type]} | Nothing" %}
+        {% attribute_method_args = attribute_method_args + "#{attribute[:name]} : #{attribute[:type]} | Avram::Nothing" %}
         {% if attribute[:nilable] %}{% attribute_method_args = attribute_method_args + " | Nil" %}{% end %}
-        {% attribute_method_args = attribute_method_args + " = Nothing.new,\n" %}
+        {% attribute_method_args = attribute_method_args + " = Avram::Nothing.new,\n" %}
 
         {% attribute_params = attribute_params + "#{attribute[:name]}: #{attribute[:name]},\n" %}
       {% end %}
     {% end %}
 
     {% for attribute in ATTRIBUTES %}
-      {% attribute_method_args = attribute_method_args + "#{attribute.var} : #{attribute.type} | Nothing = Nothing.new,\n" %}
+      {% attribute_method_args = attribute_method_args + "#{attribute.var} : #{attribute.type} | Avram::Nothing = Avram::Nothing.new,\n" %}
       {% attribute_params = attribute_params + "#{attribute.var}: #{attribute.var},\n" %}
     {% end %}
 
@@ -154,9 +154,6 @@ module Avram::NeedyInitializerAndDeleteMethods
     generate_destroy({{ attribute_method_args }}, {{ attribute_params }}, with_params: false, with_bang: false)
   end
 
-  private class Nothing
-  end
-
   macro generate_initializer(attribute_method_args, attribute_params)
     {% needs_method_args = "" %}
     {% for type_declaration in OPERATION_NEEDS %}
@@ -184,14 +181,14 @@ module Avram::NeedyInitializerAndDeleteMethods
     def set_attributes({{ attribute_method_args.id }})
       {% if @type.constant :COLUMN_ATTRIBUTES %}
         {% for attribute in COLUMN_ATTRIBUTES.uniq %}
-          unless {{ attribute[:name] }}.is_a? Nothing
+          unless {{ attribute[:name] }}.is_a? Avram::Nothing
             self.{{ attribute[:name] }}.value = {{ attribute[:name] }}
           end
         {% end %}
       {% end %}
 
       {% for attribute in ATTRIBUTES %}
-        unless {{ attribute.var }}.is_a? Nothing
+        unless {{ attribute.var }}.is_a? Avram::Nothing
           self.{{ attribute.var }}.value = {{ attribute.var }}
         end
       {% end %}

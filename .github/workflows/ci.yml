@@ -12,7 +12,6 @@ jobs:
       fail-fast: false
       matrix:
         crystal_version:
-          - 0.36.1
           - 1.0.0
         experimental:
           - false
@@ -41,7 +40,6 @@ jobs:
           - 12
           - 13
         crystal_version:
-          - 0.36.1
           - 1.0.0
         experimental:
           - false
