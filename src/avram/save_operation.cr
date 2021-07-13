@@ -8,6 +8,7 @@ require "./param_key_override"
 require "./inherit_column_attributes"
 require "./validations"
 require "./operation_errors"
+require "./upsert"
 
 abstract class Avram::SaveOperation(T)
   include Avram::DefineAttribute
@@ -20,6 +21,7 @@ abstract class Avram::SaveOperation(T)
   include Avram::NestedSaveOperation
   include Avram::MarkAsFailed
   include Avram::InheritColumnAttributes
+  include Avram::Upsert
 
   enum SaveStatus
     Saved
@@ -33,7 +35,10 @@ abstract class Avram::SaveOperation(T)
 
   @record : T?
   @params : Avram::Paramable
-  getter :record, :params
+
+  # :nodoc:
+  setter :record
+  getter :params, :record
   property save_status : SaveStatus = SaveStatus::Unperformed
 
   abstract def attributes
@@ -51,8 +56,7 @@ abstract class Avram::SaveOperation(T)
 
   delegate :database, :table_name, :primary_key_name, to: T
 
-  # :nodoc:
-  def published_save_failed_event
+  private def publish_save_failed_event
     Avram::Events::SaveFailedEvent.publish(
       operation_class: self.class.name,
       attributes: generic_attributes
@@ -309,10 +313,12 @@ abstract class Avram::SaveOperation(T)
         true
       else
         mark_as_failed
+        publish_save_failed_event
         false
       end
     else
       mark_as_failed
+      publish_save_failed_event
       false
     end
   end

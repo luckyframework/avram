@@ -125,7 +125,6 @@ module Avram::NeedyInitializerAndSaveMethods
         if operation.save
           yield operation, operation.record
         else
-          operation.published_save_failed_event
           yield operation, nil
         end
       {% end %}
@@ -165,12 +164,8 @@ module Avram::NeedyInitializerAndSaveMethods
       {% if with_bang %}
         operation.update!
       {% else %}
-        if operation.save
-          yield operation, operation.record.not_nil!
-        else
-          operation.published_save_failed_event
-          yield operation, operation.record.not_nil!
-        end
+        operation.save
+        yield operation, operation.record.not_nil!
       {% end %}
     end
   end
