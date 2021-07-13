@@ -13,7 +13,7 @@
 <script type="text/javascript" src="../js/doc.js"></script>
 
   <meta name="repository-name" content="avram">
-  <title>Avram::NeedyInitializerAndSaveMethods - avram 0.20.0</title>
+  <title>Avram::Upsert - avram 0.20.0</title>
   <script type="text/javascript">
     CrystalDocs.base_path = "../";
   </script>
@@ -651,7 +651,7 @@
       
     </li>
   
-  <li class=" current" data-id="avram/Avram/NeedyInitializerAndSaveMethods" data-name="avram::needyinitializerandsavemethods">
+  <li class=" " data-id="avram/Avram/NeedyInitializerAndSaveMethods" data-name="avram::needyinitializerandsavemethods">
       <a href="../Avram/NeedyInitializerAndSaveMethods.html">NeedyInitializerAndSaveMethods</a>
       
     </li>
@@ -906,7 +906,7 @@
       
     </li>
   
-  <li class=" " data-id="avram/Avram/Upsert" data-name="avram::upsert">
+  <li class=" current" data-id="avram/Avram/Upsert" data-name="avram::upsert">
       <a href="../Avram/Upsert.html">Upsert</a>
       
     </li>
@@ -1485,13 +1485,26 @@
 <div class="main-content">
 <h1 class="type-name">
 
-  <span class="kind">module</span> Avram::NeedyInitializerAndSaveMethods
+  <span class="kind">module</span> Avram::Upsert
 
 </h1>
 
 
 
 
+
+  <h2>
+    <a id="overview" class="anchor" href="#overview">
+  <svg class="octicon-link" aria-hidden="true">
+    <use href="#octicon-link"/>
+  </svg>
+</a>
+    Overview
+  </h2>
+
+  <p>Adds the ability to "create or update" (upsert) to <code><a href="../Avram/SaveOperation.html">Avram::SaveOperation</a></code></p>
+
+<p>This is included in SaveOperations by default. See <code><a href="../Avram/Upsert.html#upsert_lookup_columns(*attribute_names)-macro">upsert_lookup_columns</a></code> for usage details.</p>
 
 
 
@@ -1530,7 +1543,7 @@
   </h2>
   
     
-      avram/needy_initializer_and_save_methods.cr
+      avram/upsert.cr
     
     <br/>
   
@@ -1556,42 +1569,9 @@
   <ul class="list-summary">
     
       <li class="entry-summary">
-        <a href="#generate_create(attribute_method_args,attribute_params,with_params,with_bang)-macro" class="signature"><strong>generate_create</strong>(attribute_method_args, attribute_params, with_params, with_bang)</a>
+        <a href="#upsert_lookup_columns(*attribute_names)-macro" class="signature"><strong>upsert_lookup_columns</strong>(*attribute_names)</a>
         
-      </li>
-    
-      <li class="entry-summary">
-        <a href="#generate_initializer(attribute_method_args,attribute_params)-macro" class="signature"><strong>generate_initializer</strong>(attribute_method_args, attribute_params)</a>
-        
-      </li>
-    
-      <li class="entry-summary">
-        <a href="#generate_initializer_and_save_methods-macro" class="signature"><strong>generate_initializer_and_save_methods</strong></a>
-        
-      </li>
-    
-      <li class="entry-summary">
-        <a href="#generate_save_methods(attribute_method_args,attribute_params)-macro" class="signature"><strong>generate_save_methods</strong>(attribute_method_args, attribute_params)</a>
-        
-      </li>
-    
-      <li class="entry-summary">
-        <a href="#generate_update(attribute_method_args,attribute_params,with_params,with_bang)-macro" class="signature"><strong>generate_update</strong>(attribute_method_args, attribute_params, with_params, with_bang)</a>
-        
-      </li>
-    
-      <li class="entry-summary">
-        <a href="#hash_is_not_allowed_helpful_error(method,additional_args=nil)-macro" class="signature"><strong>hash_is_not_allowed_helpful_error</strong>(method, additional_args = <span class="n">nil</span>)</a>
-        
-      </li>
-    
-      <li class="entry-summary">
-        <a href="#inherit_needs-macro" class="signature"><strong>inherit_needs</strong></a>
-        
-      </li>
-    
-      <li class="entry-summary">
-        <a href="#needs(type_declaration)-macro" class="signature"><strong>needs</strong>(type_declaration)</a>
+          <div class="summary"><p>Defines the columns Avram should use when performing an <code>upsert</code></p></div>
         
       </li>
     
@@ -1619,111 +1599,76 @@
     Macro Detail
   </h2>
   
-    <div class="entry-detail" id="generate_create(attribute_method_args,attribute_params,with_params,with_bang)-macro">
+    <div class="entry-detail" id="upsert_lookup_columns(*attribute_names)-macro">
       <div class="signature">
         
-        macro <strong>generate_create</strong>(attribute_method_args, attribute_params, with_params, with_bang)
+        macro <strong>upsert_lookup_columns</strong>(*attribute_names)
 
-        <a class="method-permalink" href="#generate_create(attribute_method_args,attribute_params,with_params,with_bang)-macro">#</a>
+        <a class="method-permalink" href="#upsert_lookup_columns(*attribute_names)-macro">#</a>
       </div>
       
-      <br/>
-      <div>
-        
-      </div>
-    </div>
-  
-    <div class="entry-detail" id="generate_initializer(attribute_method_args,attribute_params)-macro">
-      <div class="signature">
-        
-        macro <strong>generate_initializer</strong>(attribute_method_args, attribute_params)
+        <div class="doc">
+          
+          <p>Defines the columns Avram should use when performing an <code>upsert</code></p>
 
-        <a class="method-permalink" href="#generate_initializer(attribute_method_args,attribute_params)-macro">#</a>
-      </div>
-      
-      <br/>
-      <div>
-        
-      </div>
-    </div>
-  
-    <div class="entry-detail" id="generate_initializer_and_save_methods-macro">
-      <div class="signature">
-        
-        macro <strong>generate_initializer_and_save_methods</strong>
+<p>An "upsert" is short for "update or insert", or in Avram terminology a
+"create or update". If the values in an operation conflict with an existing
+record in the database, Avram updates that record. If there is no
+conflicting record, then Avram will create new one.</p>
 
-        <a class="method-permalink" href="#generate_initializer_and_save_methods-macro">#</a>
-      </div>
-      
-      <br/>
-      <div>
-        
-      </div>
-    </div>
-  
-    <div class="entry-detail" id="generate_save_methods(attribute_method_args,attribute_params)-macro">
-      <div class="signature">
-        
-        macro <strong>generate_save_methods</strong>(attribute_method_args, attribute_params)
+<p>In Avram, you must define which columns Avram should look at when
+determining if a conflicting record exists. This is done using the macro
+<code><a href="../Avram/Upsert.html#upsert_lookup_columns(*attribute_names)-macro">Avram::Upsert.upsert_lookup_columns</a></code></p>
 
-        <a class="method-permalink" href="#generate_save_methods(attribute_method_args,attribute_params)-macro">#</a>
-      </div>
-      
-      <br/>
-      <div>
-        
-      </div>
-    </div>
-  
-    <div class="entry-detail" id="generate_update(attribute_method_args,attribute_params,with_params,with_bang)-macro">
-      <div class="signature">
-        
-        macro <strong>generate_update</strong>(attribute_method_args, attribute_params, with_params, with_bang)
+<p><strong>Note:</strong> In almost <em>every</em> case the <code><a href="../Avram/Upsert.html#upsert_lookup_columns(*attribute_names)-macro">upsert_lookup_columns</a></code> should have a <strong>unique index</strong> defined
+in the database to ensure no conflicting records are created, even from outside Avram.</p>
 
-        <a class="method-permalink" href="#generate_update(attribute_method_args,attribute_params,with_params,with_bang)-macro">#</a>
-      </div>
-      
-      <br/>
-      <div>
-        
-      </div>
-    </div>
-  
-    <div class="entry-detail" id="hash_is_not_allowed_helpful_error(method,additional_args=nil)-macro">
-      <div class="signature">
-        
-        macro <strong>hash_is_not_allowed_helpful_error</strong>(method, additional_args = <span class="n">nil</span>)
+<h2><a id="full-example" class="anchor" href="#full-example">
+  <svg class="octicon-link" aria-hidden="true">
+    <use href="#octicon-link"/>
+  </svg>
+</a>Full Example</h2>
 
-        <a class="method-permalink" href="#hash_is_not_allowed_helpful_error(method,additional_args=nil)-macro">#</a>
-      </div>
-      
-      <br/>
-      <div>
-        
-      </div>
-    </div>
-  
-    <div class="entry-detail" id="inherit_needs-macro">
-      <div class="signature">
-        
-        macro <strong>inherit_needs</strong>
+<pre><code class="language-crystal"><span class="k">class</span> <span class="t">User</span> <span class="o">&lt;</span> <span class="t">BaseModel</span>
+  table <span class="k">do</span>
+    column name : <span class="t">String</span>
+    column email : <span class="t">String</span> <span class="c"># This column has a unique index</span>
+  <span class="k">end</span>
+<span class="k">end</span>
 
-        <a class="method-permalink" href="#inherit_needs-macro">#</a>
-      </div>
-      
-      <br/>
-      <div>
-        
-      </div>
-    </div>
-  
-    <div class="entry-detail" id="needs(type_declaration)-macro">
-      <div class="signature">
-        
-        macro <strong>needs</strong>(type_declaration)
+<span class="k">class</span> <span class="t">SaveUser</span> <span class="o">&lt;</span> <span class="t">User</span><span class="t">::</span><span class="t">SaveOperation</span>
+  <span class="c"># Can be one or more columns. In this case we choose just :email</span>
+  upsert_lookup_columns <span class="n">:email</span>
+<span class="k">end</span>
 
-        <a class="method-permalink" href="#needs(type_declaration)-macro">#</a>
-      </div>
+<span class="c"># Will create a new row in the database since no row with</span>
+<span class="c"># `email: &quot;bob@example.com&quot;` exists yet</span>
+<span class="t">SaveUser</span>.upsert!(name: <span class="s">&quot;Bobby&quot;</span>, email: <span class="s">&quot;bob@example.com&quot;</span>)
+
+<span class="c"># Will update the name on the row we just created since the email is</span>
+<span class="c"># the same as one in the database</span>
+<span class="t">SaveUser</span>.upsert!(name: <span class="s">&quot;Bob&quot;</span>, email: <span class="s">&quot;bob@example.com&quot;</span>)</code></pre>
+
+<h2><a id="difference-between-upsert-and-upsert" class="anchor" href="#difference-between-upsert-and-upsert">
+  <svg class="octicon-link" aria-hidden="true">
+    <use href="#octicon-link"/>
+  </svg>
+</a>Difference between <code>upsert</code> and <code>upsert!</code></h2>
+
+<p>There is an <code>upsert</code> and <code>upsert!</code> that work similarly to <code>create</code> and <code>create!</code>.
+<code>upsert!</code> will raise an error if the operation is invalid. Whereas <code>upsert</code>
+will yield the operation and the new record if the operation is valid, or
+the operation and <code>nil</code> if it is invalid.</p>
+
+<pre><code class="language-crystal"><span class="c"># Will raise because the name is blank</span>
+<span class="t">SaveUser</span>.upsert!(name: <span class="s">&quot;&quot;</span>, email: <span class="s">&quot;bob@example.com&quot;</span>)
+
+<span class="c"># Operation is invalid because name is blank</span>
+<span class="t">SaveUser</span>.upsert(name: <span class="s">&quot;&quot;</span>, email: <span class="s">&quot;bob@example.com&quot;</span>) <span class="k">do</span> <span class="o">|</span>operation, user<span class="o">|</span>
+  <span class="c"># `user` is `nil` because the operation is invalid.</span>
+  <span class="c"># If the `name` was valid `user` would be the newly created user</span>
+<span class="k">end</span></code></pre>
+        </div>
       
       <br/>
       <div>
