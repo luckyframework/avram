@@ -24,11 +24,11 @@ private class DeleteOperationWithAccessToModelValues < Post::DeleteOperation
 end
 
 describe "Avram::DeleteOperation" do
-  describe "destroy" do
+  describe "delete" do
     it "deletes the specified record" do
       user = UserFactory.create
 
-      BasicDeleteUser.destroy(user) do |operation, deleted_user|
+      BasicDeleteUser.delete(user) do |operation, deleted_user|
         operation.valid?.should be_true
         operation.delete_status.should eq BasicDeleteUser::DeleteStatus::Deleted
         deleted_user.not_nil!.name.should eq user.name
@@ -39,7 +39,7 @@ describe "Avram::DeleteOperation" do
     it "does not delete if the operation is invalid" do
       user = UserFactory.create
 
-      FailedToDeleteUser.destroy(user) do |operation, deleted_user|
+      FailedToDeleteUser.delete(user) do |operation, deleted_user|
         operation.valid?.should be_false
         operation.delete_status.should eq FailedToDeleteUser::DeleteStatus::DeleteFailed
         deleted_user.should eq nil
@@ -49,11 +49,11 @@ describe "Avram::DeleteOperation" do
     end
   end
 
-  describe "destroy!" do
+  describe "delete!" do
     it "deletes the specified record" do
       user = UserFactory.create
 
-      deleted_user = BasicDeleteUser.destroy!(user)
+      deleted_user = BasicDeleteUser.delete!(user)
       deleted_user.name.should eq user.name
       UserQuery.new.select_count.should eq 0
     end
@@ -62,7 +62,7 @@ describe "Avram::DeleteOperation" do
       user = UserFactory.create
 
       expect_raises(Avram::InvalidOperationError) do
-        FailedToDeleteUser.destroy!(user)
+        FailedToDeleteUser.delete!(user)
       end
     end
   end
@@ -71,7 +71,7 @@ describe "Avram::DeleteOperation" do
     it "returns a soft deleted object" do
       item = SoftDeletableItemFactory.create
 
-      deleted_item = SoftDeleteItem.destroy!(item)
+      deleted_item = SoftDeleteItem.delete!(item)
 
       deleted_item.soft_deleted?.should be_true
       SoftDeletableItem::BaseQuery.new.find(deleted_item.id).should eq item
@@ -85,7 +85,7 @@ describe "Avram::DeleteOperation" do
 
       EmailAddress::BaseQuery.new.select_count.should eq(1)
 
-      DeleteWithCascade.destroy(business) do |operation, _deleted_business|
+      DeleteWithCascade.delete(business) do |operation, _deleted_business|
         operation.deleted?.should be_true
         EmailAddress::BaseQuery.new.select_count.should eq(0)
       end
@@ -101,7 +101,7 @@ describe "Avram::DeleteOperation" do
 
       user = UserFactory.create
 
-      BasicDeleteUser.destroy!(user)
+      BasicDeleteUser.delete!(user)
       events.map(&.operation_class).should contain("BasicDeleteUser")
     end
 
@@ -114,7 +114,7 @@ describe "Avram::DeleteOperation" do
       user = UserFactory.create
 
       expect_raises(Avram::InvalidOperationError) do
-        FailedToDeleteUser.destroy!(user)
+        FailedToDeleteUser.delete!(user)
       end
 
       events.map(&.operation_class).should contain("FailedToDeleteUser")
@@ -128,7 +128,7 @@ describe "Avram::DeleteOperation" do
     it "adds the error and fails to save" do
       post = PostFactory.create &.title("sandbox")
 
-      DeleteOperationWithAccessToModelValues.destroy(post) do |operation, _deleted_post|
+      DeleteOperationWithAccessToModelValues.delete(post) do |operation, _deleted_post|
         operation.deleted?.should be_false
         operation.errors[:title].should contain("You can't delete your sandbox")
       end

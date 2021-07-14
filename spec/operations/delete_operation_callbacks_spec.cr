@@ -35,7 +35,7 @@ describe "Avram::DeleteOperation callbacks" do
   it "runs before_delete and after_delete callbacks" do
     user = UserFactory.create &.name("Jerry")
 
-    DeleteOperationWithCallbacks.destroy(user) do |operation, deleted_user|
+    DeleteOperationWithCallbacks.delete(user) do |operation, deleted_user|
       deleted_user.not_nil!.name.should eq "Jerry"
       operation.callbacks_that_ran.should contain "before_delete_update_number"
       operation.callbacks_that_ran.should contain "before_delete_in_a_block"

@@ -34,6 +34,22 @@ abstract class Avram::DeleteOperation(T)
     T.name.underscore
   end
 
+  def self.destroy(*args, **named_args)
+    {% raise "#{@type}.destroy has been renamed to #{@type}.delete" %}
+  end
+
+  def self.destroy(*args, **named_args, &block)
+    {% raise "#{@type}.destroy has been renamed to #{@type}.delete" %}
+  end
+
+  def self.destroy!(*args, **named_args)
+    {% raise "#{@type}.destroy! has been renamed to #{@type}.delete!" %}
+  end
+
+  def self.destroy!(*args, **named_args, &block)
+    {% raise "#{@type}.destroy! has been renamed to #{@type}.delete!" %}
+  end
+
   def delete : Bool
     before_delete
 

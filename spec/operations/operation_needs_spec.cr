@@ -103,11 +103,11 @@ describe "Avram::SaveOperation needs" do
 end
 
 describe "Avram::DeleteOperation needs" do
-  it "sets up a method arg for destroy" do
+  it "sets up a method arg for delete" do
     user = UserFactory.create
     post = PostFactory.create
 
-    NeedyDeleteOperation.destroy(post, user: user, notification_message: "is this thing on?") do |operation, _record|
+    NeedyDeleteOperation.delete(post, user: user, notification_message: "is this thing on?") do |operation, _record|
       operation.notification_message.should eq("is this thing on?")
       operation.no_number.should eq(4)
       operation.user.should eq(user)
@@ -119,7 +119,7 @@ describe "Avram::DeleteOperation needs" do
     user = UserFactory.create
     post = PostFactory.create
 
-    NeedyDeleteOperation.destroy(post, params, user: user, notification_message: nil) do |operation, _record|
+    NeedyDeleteOperation.delete(post, params, user: user, notification_message: nil) do |operation, _record|
       operation.notification_message.should be_nil
       operation.no_number.should eq(4)
       operation.user.should eq(user)

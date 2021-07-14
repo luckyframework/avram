@@ -37,7 +37,7 @@ module Avram
     end
   end
 
-  # Raised when using the create!, update!, or destroy! methods on an operation when it does not have the proper attributes
+  # Raised when using the create!, update!, or delete! methods on an operation when it does not have the proper attributes
   class InvalidOperationError < AvramError
     getter errors : Hash(Symbol, Array(String))
 

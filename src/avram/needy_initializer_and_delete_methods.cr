@@ -30,14 +30,14 @@ module Avram::NeedyInitializerAndDeleteMethods
     macro finished
       # This is called at the end so @type will be of the subclass,
       # and not the parent abstract class.
-      generate_initializer_and_destroy_methods
+      generate_initializer_and_delete_methods
     end
   end
 
-  macro generate_initializer_and_destroy_methods
+  macro generate_initializer_and_delete_methods
     # Build up a list of method arguments
     #
-    # These method arguments can be used in macros for generating destroy/new
+    # These method arguments can be used in macros for generating delete/new
     #
     # This way everything has a name and type and we don't have to rely on
     # **named_args. **named_args** are easy but you get horrible type errors.
@@ -91,22 +91,8 @@ module Avram::NeedyInitializerAndDeleteMethods
     %}
   end
 
-  macro generate_destroy(attribute_method_args, attribute_params, with_params, with_bang)
-    def self.delete{% if with_bang %}!{% end %}(*args, **named_args{% if !with_bang %}, &block{% end %})
-      {% verbatim do %}
-        {% raise <<-ERROR
-        DeleteOperations do not have a 'delete' method.
-
-        Try this...
-
-          ▸ Use 'destroy' to delete a record
-
-        ERROR
-        %}
-      {% end %}
-    end
-
-    def self.destroy{% if with_bang %}!{% end %}(
+  macro generate_delete(attribute_method_args, attribute_params, with_params, with_bang)
+    def self.delete{% if with_bang %}!{% end %}(
       record : T,
       params : Hash,
       **named_args
@@ -115,10 +101,10 @@ module Avram::NeedyInitializerAndDeleteMethods
       {% else %}
         yield nil, nil
       {% end %}
-      hash_is_not_allowed_helpful_error(:destroy{% if with_bang %}!{% end %}, additional_args: "record, ")
+      hash_is_not_allowed_helpful_error(:delete{% if with_bang %}!{% end %}, additional_args: "record, ")
     end
 
-    def self.destroy{% if with_bang %}!{% end %}(
+    def self.delete{% if with_bang %}!{% end %}(
         record : T,
         {% if with_params %}params,{% end %}
         {% for type_declaration in OPERATION_NEEDS %}
@@ -148,10 +134,10 @@ module Avram::NeedyInitializerAndDeleteMethods
   end
 
   macro generate_delete_methods(attribute_method_args, attribute_params)
-    generate_destroy({{ attribute_method_args }}, {{ attribute_params }}, with_params: true, with_bang: true)
-    generate_destroy({{ attribute_method_args }}, {{ attribute_params }}, with_params: true, with_bang: false)
-    generate_destroy({{ attribute_method_args }}, {{ attribute_params }}, with_params: false, with_bang: true)
-    generate_destroy({{ attribute_method_args }}, {{ attribute_params }}, with_params: false, with_bang: false)
+    generate_delete({{ attribute_method_args }}, {{ attribute_params }}, with_params: true, with_bang: true)
+    generate_delete({{ attribute_method_args }}, {{ attribute_params }}, with_params: true, with_bang: false)
+    generate_delete({{ attribute_method_args }}, {{ attribute_params }}, with_params: false, with_bang: true)
+    generate_delete({{ attribute_method_args }}, {{ attribute_params }}, with_params: false, with_bang: false)
   end
 
   macro generate_initializer(attribute_method_args, attribute_params)
