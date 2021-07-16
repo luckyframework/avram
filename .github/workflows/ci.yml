@@ -21,9 +21,11 @@ jobs:
             experimental: true
     runs-on: ubuntu-latest
     continue-on-error: ${{ matrix.experimental }}
-    container: crystallang/crystal:${{ matrix.crystal_version }}
     steps:
       - uses: actions/checkout@v1
+      - uses: crystal-lang/install-crystal@v1
+        with:
+          crystal: ${{matrix.crystal_version}}
       - name: Install shards
         run: shards install
       - name: Format
@@ -51,7 +53,6 @@ jobs:
             experimental: true
     runs-on: ubuntu-latest
     continue-on-error: ${{ matrix.experimental }}
-    container: crystallang/crystal:${{ matrix.crystal_version }}
     services:
       postgres:
         image: postgres:${{ matrix.postgres_version }}-alpine
@@ -72,6 +73,9 @@ jobs:
           wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | apt-key add -
           apt-get update
           apt-get -yqq install libpq-dev postgresql-client-${{ matrix.postgres_version }}
+      - uses: crystal-lang/install-crystal@v1
+        with:
+          crystal: ${{matrix.crystal_version}}
       - name: Cache Crystal
         uses: actions/cache@v1
         with:
