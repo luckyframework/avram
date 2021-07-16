@@ -13,6 +13,7 @@ jobs:
       matrix:
         crystal_version:
           - 1.0.0
+          - 1.1.0
         experimental:
           - false
         include:
@@ -41,6 +42,7 @@ jobs:
           - 13
         crystal_version:
           - 1.0.0
+          - 1.1.0
         experimental:
           - false
         include:
