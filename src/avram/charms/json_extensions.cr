@@ -1,3 +1,38 @@
+module JSON::Serializable
+  macro included
+    def self.adapter
+      Lucky(self)
+    end
+  end
+
+  module Lucky(T)
+    include Avram::Type
+
+    def self.criteria(query : R, column) forall R
+      Criteria(R, T).new(query, column)
+    end
+
+    def from_db!(value)
+      value
+    end
+
+    def parse(value : JSON::Serializable)
+      SuccessfulCast(JSON::Serializable).new value
+    end
+
+    def parse(value)
+      SuccessfulCast(JSON::Serializable).new T.from_json(value)
+    end
+
+    def to_db(value)
+      value.to_json
+    end
+
+    class Criteria(T, V) < Avram::Criteria(T, V)
+    end
+  end
+end
+
 struct JSON::Any
   def self.adapter
     Lucky

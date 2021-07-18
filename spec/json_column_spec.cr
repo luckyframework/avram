@@ -27,13 +27,17 @@ describe "JSON Columns" do
   it "should convert scalars and save forms" do
     form1 = SaveBlob.new
     form1.set_doc_from_param(42)
+    form1.set_metadata_from_param(BlobMetadata.from_json("{}"))
     form1.doc.value.should eq JSON::Any.new(42_i64)
+    form1.metadata.value.should be_a(BlobMetadata)
+
     form1.save!
     blob1 = BlobQuery.new.last
     blob1.doc.should eq JSON::Any.new(42_i64)
 
     form2 = SaveBlob.new
     form2.set_doc_from_param("hey")
+    form2.set_metadata_from_param(BlobMetadata.from_json("{}"))
     form2.doc.value.should eq JSON::Any.new("hey")
     form2.save!
     blob2 = BlobQuery.new.last
@@ -43,6 +47,7 @@ describe "JSON Columns" do
   it "should convert hashes and arrays and save forms" do
     form1 = SaveBlob.new
     form1.set_doc_from_param(%w[a b c])
+    form1.set_metadata_from_param(BlobMetadata.from_json("{}"))
     form1.doc.value.should eq %w[a b c].map { |v| JSON::Any.new(v) }
     form1.save!
     blob1 = BlobQuery.new.last
@@ -50,6 +55,7 @@ describe "JSON Columns" do
 
     form2 = SaveBlob.new
     form2.set_doc_from_param({"foo" => {"bar" => "baz"}})
+    form2.set_metadata_from_param(BlobMetadata.from_json("{}"))
     form2.doc.value.should eq JSON::Any.new({
       "foo" => JSON::Any.new({
         "bar" => JSON::Any.new("baz"),
@@ -62,5 +68,26 @@ describe "JSON Columns" do
         "bar" => JSON::Any.new("baz"),
       }),
     })
+  end
+
+  describe "serialized" do
+    it "saves the serialized value" do
+      SaveBlob.create(metadata: BlobMetadata.from_json("{}")) do |operation, blob|
+        operation.saved?.should be_true
+        blob.should_not be_nil
+        blob.not_nil!.metadata.should be_a(BlobMetadata)
+        blob.not_nil!.metadata.name.should be_nil
+        blob.not_nil!.media.should be_nil
+      end
+    end
+
+    it "queries serialized columns" do
+      one = BlobMetadata.from_json({name: "One", code: 4}.to_json)
+      two = BlobMetadata.from_json({name: "Two", code: 9}.to_json)
+      BlobFactory.create &.metadata(one)
+      BlobFactory.create &.metadata(two)
+
+      BlobQuery.new.metadata(two).select_count.should eq(1)
+    end
   end
 end
