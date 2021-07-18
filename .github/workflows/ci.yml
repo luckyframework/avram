@@ -13,6 +13,7 @@ jobs:
       matrix:
         crystal_version:
           - 1.0.0
+          - 1.1.0
         experimental:
           - false
         include:
@@ -20,9 +21,11 @@ jobs:
             experimental: true
     runs-on: ubuntu-latest
     continue-on-error: ${{ matrix.experimental }}
-    container: crystallang/crystal:${{ matrix.crystal_version }}
     steps:
       - uses: actions/checkout@v1
+      - uses: crystal-lang/install-crystal@v1
+        with:
+          crystal: ${{matrix.crystal_version}}
       - name: Install shards
         run: shards install
       - name: Format
@@ -41,6 +44,7 @@ jobs:
           - 13
         crystal_version:
           - 1.0.0
+          - 1.1.0
         experimental:
           - false
         include:
@@ -49,7 +53,6 @@ jobs:
             experimental: true
     runs-on: ubuntu-latest
     continue-on-error: ${{ matrix.experimental }}
-    container: crystallang/crystal:${{ matrix.crystal_version }}
     services:
       postgres:
         image: postgres:${{ matrix.postgres_version }}-alpine
@@ -62,14 +65,9 @@ jobs:
         options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
     steps:
       - uses: actions/checkout@v2
-      - name: Install PostgreSQL client
-        run: |
-          apt-get update
-          apt-get -yqq install lsb-release wget gnupg
-          sh -c 'echo "deb http://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main" > /etc/apt/sources.list.d/pgdg.list'
-          wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | apt-key add -
-          apt-get update
-          apt-get -yqq install libpq-dev postgresql-client-${{ matrix.postgres_version }}
+      - uses: crystal-lang/install-crystal@v1
+        with:
+          crystal: ${{matrix.crystal_version}}
       - name: Cache Crystal
         uses: actions/cache@v1
         with:
@@ -80,9 +78,9 @@ jobs:
       - name: Run integration test
         run: ./script/integration_test
         env:
-          DATABASE_URL: postgres://lucky:developer@postgres:5432/avram_dev
+          DATABASE_URL: postgres://lucky:developer@localhost:5432/avram_dev
       - name: Run tests
         run: crystal spec
         env:
-          BACKUP_DATABASE_URL: postgres://lucky:developer@postgres:5432/sample_backup
-          DATABASE_URL: postgres://lucky:developer@postgres:5432/avram_dev
+          BACKUP_DATABASE_URL: postgres://lucky:developer@localhost:5432/sample_backup
+          DATABASE_URL: postgres://lucky:developer@localhost:5432/avram_dev
