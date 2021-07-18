@@ -636,8 +636,18 @@
       
     </li>
   
-  <li class=" " data-id="avram/Avram/Model" data-name="avram::model">
+  <li class="parent " data-id="avram/Avram/Model" data-name="avram::model">
       <a href="../Avram/Model.html">Model</a>
+      
+        <ul>
+  
+  <li class=" " data-id="avram/Avram/Model/JSONConverter" data-name="avram::model::jsonconverter(t)">
+      <a href="../Avram/Model/JSONConverter.html">JSONConverter</a>
+      
+    </li>
+  
+</ul>
+
       
     </li>
   
@@ -1544,7 +1554,7 @@
   </h2>
   
     
-      <a href="https://github.com/luckyframework/avram/blob/49c22d1d99e9f3583ada0ac5bffaf7bd987c4d24/src/avram/charms/float64_extensions.cr#L6" target="_blank">
+      <a href="https://github.com/luckyframework/avram/blob/401b1ae2d5898544bd5bd300fa75672e5efb19fb/src/avram/charms/float64_extensions.cr#L6" target="_blank">
         avram/charms/float64_extensions.cr
       </a>
     
@@ -1597,17 +1607,22 @@
       </li>
     
       <li class="entry-summary">
-        <a href="#parse(values:Array(PG::Numeric))-instance-method" class="signature"><strong>#parse</strong>(values : Array(PG::Numeric))</a>
-        
-      </li>
-    
-      <li class="entry-summary">
         <a href="#parse(value:Float64)-instance-method" class="signature"><strong>#parse</strong>(value : Float64)</a>
         
       </li>
     
       <li class="entry-summary">
         <a href="#parse(values:Array(Float64))-instance-method" class="signature"><strong>#parse</strong>(values : Array(Float64))</a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#parse(value:PG::Numeric)-instance-method" class="signature"><strong>#parse</strong>(value : PG::Numeric)</a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#parse(values:Array(PG::Numeric))-instance-method" class="signature"><strong>#parse</strong>(values : Array(PG::Numeric))</a>
         
       </li>
     
@@ -1623,11 +1638,6 @@
     
       <li class="entry-summary">
         <a href="#parse(value:Int64)-instance-method" class="signature"><strong>#parse</strong>(value : Int64)</a>
-        
-      </li>
-    
-      <li class="entry-summary">
-        <a href="#parse(value:PG::Numeric)-instance-method" class="signature"><strong>#parse</strong>(value : PG::Numeric)</a>
         
       </li>
     
@@ -1713,7 +1723,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/49c22d1d99e9f3583ada0ac5bffaf7bd987c4d24/src/avram/charms/float64_extensions.cr#L10" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/401b1ae2d5898544bd5bd300fa75672e5efb19fb/src/avram/charms/float64_extensions.cr#L10" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1741,7 +1751,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/49c22d1d99e9f3583ada0ac5bffaf7bd987c4d24/src/avram/charms/float64_extensions.cr#L14" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/401b1ae2d5898544bd5bd300fa75672e5efb19fb/src/avram/charms/float64_extensions.cr#L14" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1757,23 +1767,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/49c22d1d99e9f3583ada0ac5bffaf7bd987c4d24/src/avram/charms/float64_extensions.cr#L18" target="_blank">View source</a>]
-        
-      </div>
-    </div>
-  
-    <div class="entry-detail" id="parse(values:Array(PG::Numeric))-instance-method">
-      <div class="signature">
-        
-        def <strong>parse</strong>(values : <a href="../Array.html">Array</a>(PG::Numeric))
-
-        <a class="method-permalink" href="#parse(values:Array(PG::Numeric))-instance-method">#</a>
-      </div>
-      
-      <br/>
-      <div>
-        
-          [<a href="https://github.com/luckyframework/avram/blob/49c22d1d99e9f3583ada0ac5bffaf7bd987c4d24/src/avram/charms/float64_extensions.cr#L34" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/401b1ae2d5898544bd5bd300fa75672e5efb19fb/src/avram/charms/float64_extensions.cr#L18" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1789,7 +1783,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/49c22d1d99e9f3583ada0ac5bffaf7bd987c4d24/src/avram/charms/float64_extensions.cr#L22" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/401b1ae2d5898544bd5bd300fa75672e5efb19fb/src/avram/charms/float64_extensions.cr#L22" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1805,55 +1799,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/49c22d1d99e9f3583ada0ac5bffaf7bd987c4d24/src/avram/charms/float64_extensions.cr#L26" target="_blank">View source</a>]
-        
-      </div>
-    </div>
-  
-    <div class="entry-detail" id="parse(value:String)-instance-method">
-      <div class="signature">
-        
-        def <strong>parse</strong>(value : <a href="../String.html">String</a>)
-
-        <a class="method-permalink" href="#parse(value:String)-instance-method">#</a>
-      </div>
-      
-      <br/>
-      <div>
-        
-          [<a href="https://github.com/luckyframework/avram/blob/49c22d1d99e9f3583ada0ac5bffaf7bd987c4d24/src/avram/charms/float64_extensions.cr#L38" target="_blank">View source</a>]
-        
-      </div>
-    </div>
-  
-    <div class="entry-detail" id="parse(value:Int32)-instance-method">
-      <div class="signature">
-        
-        def <strong>parse</strong>(value : <a href="../Int32.html">Int32</a>)
-
-        <a class="method-permalink" href="#parse(value:Int32)-instance-method">#</a>
-      </div>
-      
-      <br/>
-      <div>
-        
-          [<a href="https://github.com/luckyframework/avram/blob/49c22d1d99e9f3583ada0ac5bffaf7bd987c4d24/src/avram/charms/float64_extensions.cr#L44" target="_blank">View source</a>]
-        
-      </div>
-    </div>
-  
-    <div class="entry-detail" id="parse(value:Int64)-instance-method">
-      <div class="signature">
-        
-        def <strong>parse</strong>(value : <a href="../Int64.html">Int64</a>)
-
-        <a class="method-permalink" href="#parse(value:Int64)-instance-method">#</a>
-      </div>
-      
-      <br/>
-      <div>
-        
-          [<a href="https://github.com/luckyframework/avram/blob/49c22d1d99e9f3583ada0ac5bffaf7bd987c4d24/src/avram/charms/float64_extensions.cr#L48" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/401b1ae2d5898544bd5bd300fa75672e5efb19fb/src/avram/charms/float64_extensions.cr#L26" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1869,7 +1815,71 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/49c22d1d99e9f3583ada0ac5bffaf7bd987c4d24/src/avram/charms/float64_extensions.cr#L30" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/401b1ae2d5898544bd5bd300fa75672e5efb19fb/src/avram/charms/float64_extensions.cr#L30" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="parse(values:Array(PG::Numeric))-instance-method">
+      <div class="signature">
+        
+        def <strong>parse</strong>(values : <a href="../Array.html">Array</a>(PG::Numeric))
+
+        <a class="method-permalink" href="#parse(values:Array(PG::Numeric))-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/luckyframework/avram/blob/401b1ae2d5898544bd5bd300fa75672e5efb19fb/src/avram/charms/float64_extensions.cr#L34" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="parse(value:String)-instance-method">
+      <div class="signature">
+        
+        def <strong>parse</strong>(value : <a href="../String.html">String</a>)
+
+        <a class="method-permalink" href="#parse(value:String)-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/luckyframework/avram/blob/401b1ae2d5898544bd5bd300fa75672e5efb19fb/src/avram/charms/float64_extensions.cr#L38" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="parse(value:Int32)-instance-method">
+      <div class="signature">
+        
+        def <strong>parse</strong>(value : <a href="../Int32.html">Int32</a>)
+
+        <a class="method-permalink" href="#parse(value:Int32)-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/luckyframework/avram/blob/401b1ae2d5898544bd5bd300fa75672e5efb19fb/src/avram/charms/float64_extensions.cr#L44" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="parse(value:Int64)-instance-method">
+      <div class="signature">
+        
+        def <strong>parse</strong>(value : <a href="../Int64.html">Int64</a>)
+
+        <a class="method-permalink" href="#parse(value:Int64)-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/luckyframework/avram/blob/401b1ae2d5898544bd5bd300fa75672e5efb19fb/src/avram/charms/float64_extensions.cr#L48" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1885,7 +1895,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/49c22d1d99e9f3583ada0ac5bffaf7bd987c4d24/src/avram/charms/float64_extensions.cr#L52" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/401b1ae2d5898544bd5bd300fa75672e5efb19fb/src/avram/charms/float64_extensions.cr#L52" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1901,7 +1911,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/49c22d1d99e9f3583ada0ac5bffaf7bd987c4d24/src/avram/charms/float64_extensions.cr#L56" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/401b1ae2d5898544bd5bd300fa75672e5efb19fb/src/avram/charms/float64_extensions.cr#L56" target="_blank">View source</a>]
         
       </div>
     </div>
