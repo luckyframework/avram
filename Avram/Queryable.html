@@ -3,8 +3,8 @@
 <head>
   <meta charset="utf-8" />
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="generator" content="Crystal Docs 0.36.1">
-<meta name="crystal_docs.project_version" content="0.20.0">
+<meta name="generator" content="Crystal Docs 1.0.0">
+<meta name="crystal_docs.project_version" content="master">
 <meta name="crystal_docs.project_name" content="avram">
 
 
@@ -13,7 +13,7 @@
 <script type="text/javascript" src="../js/doc.js"></script>
 
   <meta name="repository-name" content="avram">
-  <title>Avram::Queryable(T) - avram 0.20.0</title>
+  <title>Avram::Queryable(T) - avram master</title>
   <script type="text/javascript">
     CrystalDocs.base_path = "../";
   </script>
@@ -39,7 +39,7 @@
       </h1>
 
       <span class="project-version">
-        0.20.0
+        master
       </span>
     </div>
   </div>
@@ -1530,7 +1530,9 @@
   </h2>
   
     
-      avram/queryable.cr
+      <a href="https://github.com/luckyframework/avram/blob/49c22d1d99e9f3583ada0ac5bffaf7bd987c4d24/src/avram/queryable.cr#L1" target="_blank">
+        avram/queryable.cr
+      </a>
     
     <br/>
   
@@ -1673,12 +1675,12 @@
       </li>
     
       <li class="entry-summary">
-        <a href="#order_by(order:Avram::OrderBy):self-instance-method" class="signature"><strong>#order_by</strong>(order : Avram::OrderBy) : <span class="k">self</span></a>
+        <a href="#order_by(column,direction):self-instance-method" class="signature"><strong>#order_by</strong>(column, direction) : <span class="k">self</span></a>
         
       </li>
     
       <li class="entry-summary">
-        <a href="#order_by(column,direction):self-instance-method" class="signature"><strong>#order_by</strong>(column, direction) : <span class="k">self</span></a>
+        <a href="#order_by(order:Avram::OrderBy):self-instance-method" class="signature"><strong>#order_by</strong>(order : Avram::OrderBy) : <span class="k">self</span></a>
         
       </li>
     
@@ -1688,12 +1690,12 @@
       </li>
     
       <li class="entry-summary">
-        <a href="#primary_key_name(*args,**options,&)-instance-method" class="signature"><strong>#primary_key_name</strong>(*args, **options, &)</a>
+        <a href="#primary_key_name(*args,**options)-instance-method" class="signature"><strong>#primary_key_name</strong>(*args, **options)</a>
         
       </li>
     
       <li class="entry-summary">
-        <a href="#primary_key_name(*args,**options)-instance-method" class="signature"><strong>#primary_key_name</strong>(*args, **options)</a>
+        <a href="#primary_key_name(*args,**options,&)-instance-method" class="signature"><strong>#primary_key_name</strong>(*args, **options, &)</a>
         
       </li>
     
@@ -1743,12 +1745,12 @@
       </li>
     
       <li class="entry-summary">
-        <a href="#table_name(*args,**options,&)-instance-method" class="signature"><strong>#table_name</strong>(*args, **options, &)</a>
+        <a href="#table_name(*args,**options)-instance-method" class="signature"><strong>#table_name</strong>(*args, **options)</a>
         
       </li>
     
       <li class="entry-summary">
-        <a href="#table_name(*args,**options)-instance-method" class="signature"><strong>#table_name</strong>(*args, **options)</a>
+        <a href="#table_name(*args,**options,&)-instance-method" class="signature"><strong>#table_name</strong>(*args, **options, &)</a>
         
       </li>
     
@@ -1770,12 +1772,7 @@
       </li>
     
       <li class="entry-summary">
-        <a href="#where(statement:String,*,argsbind_vars:Array):self-instance-method" class="signature"><strong>#where</strong>(statement : String, *, args bind_vars : Array) : <span class="k">self</span></a>
-        
-      </li>
-    
-      <li class="entry-summary">
-        <a href="#where(statement:String,*bind_vars):self-instance-method" class="signature"><strong>#where</strong>(statement : String, *bind_vars) : <span class="k">self</span></a>
+        <a href="#where(column:Symbol,value):self-instance-method" class="signature"><strong>#where</strong>(column : Symbol, value) : <span class="k">self</span></a>
         
       </li>
     
@@ -1785,7 +1782,12 @@
       </li>
     
       <li class="entry-summary">
-        <a href="#where(column:Symbol,value):self-instance-method" class="signature"><strong>#where</strong>(column : Symbol, value) : <span class="k">self</span></a>
+        <a href="#where(statement:String,*bind_vars):self-instance-method" class="signature"><strong>#where</strong>(statement : String, *bind_vars) : <span class="k">self</span></a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#where(statement:String,*,argsbind_vars:Array):self-instance-method" class="signature"><strong>#where</strong>(statement : String, *, args bind_vars : Array) : <span class="k">self</span></a>
         
       </li>
     
@@ -1828,7 +1830,7 @@
     Instance Method Detail
   </h2>
   
-    <div class="entry-detail" id="add_preload(&block:Array(T)->Nil)-instance-method">
+    <div class="entry-detail" id="add_preload(&amp;block:Array(T)-&gt;Nil)-instance-method">
       <div class="signature">
         
         def <strong>add_preload</strong>(&block : <a href="../Array.html">Array</a>(T) -> <a href="../Nil.html">Nil</a>)
@@ -1838,6 +1840,8 @@
       
       <br/>
       <div>
+        
+          [<a href="https://github.com/luckyframework/avram/blob/49c22d1d99e9f3583ada0ac5bffaf7bd987c4d24/src/avram/queryable.cr#L244" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1865,6 +1869,8 @@
       <br/>
       <div>
         
+          [<a href="https://github.com/luckyframework/avram/blob/49c22d1d99e9f3583ada0ac5bffaf7bd987c4d24/src/avram/queryable.cr#L216" target="_blank">View source</a>]
+        
       </div>
     </div>
   
@@ -1879,10 +1885,12 @@
       <br/>
       <div>
         
+          [<a href="https://github.com/luckyframework/avram/blob/49c22d1d99e9f3583ada0ac5bffaf7bd987c4d24/src/avram/queryable.cr#L10" target="_blank">View source</a>]
+        
       </div>
     </div>
   
-    <div class="entry-detail" id="database(*args,**options,&)-instance-method">
+    <div class="entry-detail" id="database(*args,**options,&amp;)-instance-method">
       <div class="signature">
         
         def <strong>database</strong>(*args, **options, &)
@@ -1892,6 +1900,8 @@
       
       <br/>
       <div>
+        
+          [<a href="https://github.com/luckyframework/avram/blob/49c22d1d99e9f3583ada0ac5bffaf7bd987c4d24/src/avram/queryable.cr#L10" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1917,6 +1927,8 @@
       <br/>
       <div>
         
+          [<a href="https://github.com/luckyframework/avram/blob/49c22d1d99e9f3583ada0ac5bffaf7bd987c4d24/src/avram/queryable.cr#L101" target="_blank">View source</a>]
+        
       </div>
     </div>
   
@@ -1931,10 +1943,12 @@
       <br/>
       <div>
         
+          [<a href="https://github.com/luckyframework/avram/blob/49c22d1d99e9f3583ada0ac5bffaf7bd987c4d24/src/avram/queryable.cr#L67" target="_blank">View source</a>]
+        
       </div>
     </div>
   
-    <div class="entry-detail" id="distinct_on(&):self-instance-method">
+    <div class="entry-detail" id="distinct_on(&amp;):self-instance-method">
       <div class="signature">
         
         def <strong>distinct_on</strong>(&) : <span class="k">self</span>
@@ -1945,10 +1959,12 @@
       <br/>
       <div>
         
+          [<a href="https://github.com/luckyframework/avram/blob/49c22d1d99e9f3583ada0ac5bffaf7bd987c4d24/src/avram/queryable.cr#L83" target="_blank">View source</a>]
+        
       </div>
     </div>
   
-    <div class="entry-detail" id="each(&)-instance-method">
+    <div class="entry-detail" id="each(&amp;)-instance-method">
       <div class="signature">
         
         def <strong>each</strong>(&)
@@ -1968,10 +1984,12 @@
       <br/>
       <div>
         
+          [<a href="https://github.com/luckyframework/avram/blob/49c22d1d99e9f3583ada0ac5bffaf7bd987c4d24/src/avram/queryable.cr#L236" target="_blank">View source</a>]
+        
       </div>
     </div>
   
-    <div class="entry-detail" id="exec_scalar(&)-instance-method">
+    <div class="entry-detail" id="exec_scalar(&amp;)-instance-method">
       <div class="signature">
         
         def <strong>exec_scalar</strong>(&)
@@ -1981,6 +1999,8 @@
       
       <br/>
       <div>
+        
+          [<a href="https://github.com/luckyframework/avram/blob/49c22d1d99e9f3583ada0ac5bffaf7bd987c4d24/src/avram/queryable.cr#L260" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2009,6 +2029,8 @@ if the collection is empty.</p>
       <br/>
       <div>
         
+          [<a href="https://github.com/luckyframework/avram/blob/49c22d1d99e9f3583ada0ac5bffaf7bd987c4d24/src/avram/queryable.cr#L199" target="_blank">View source</a>]
+        
       </div>
     </div>
   
@@ -2036,10 +2058,12 @@ When the collection is empty, returns <code>nil</code>.</p>
       <br/>
       <div>
         
+          [<a href="https://github.com/luckyframework/avram/blob/49c22d1d99e9f3583ada0ac5bffaf7bd987c4d24/src/avram/queryable.cr#L192" target="_blank">View source</a>]
+        
       </div>
     </div>
   
-    <div class="entry-detail" id="group(&):self-instance-method">
+    <div class="entry-detail" id="group(&amp;):self-instance-method">
       <div class="signature">
         
         def <strong>group</strong>(&) : <span class="k">self</span>
@@ -2049,6 +2073,8 @@ When the collection is empty, returns <code>nil</code>.</p>
       
       <br/>
       <div>
+        
+          [<a href="https://github.com/luckyframework/avram/blob/49c22d1d99e9f3583ada0ac5bffaf7bd987c4d24/src/avram/queryable.cr#L175" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2064,6 +2090,8 @@ When the collection is empty, returns <code>nil</code>.</p>
       <br/>
       <div>
         
+          [<a href="https://github.com/luckyframework/avram/blob/49c22d1d99e9f3583ada0ac5bffaf7bd987c4d24/src/avram/queryable.cr#L120" target="_blank">View source</a>]
+        
       </div>
     </div>
   
@@ -2077,6 +2105,8 @@ When the collection is empty, returns <code>nil</code>.</p>
       
       <br/>
       <div>
+        
+          [<a href="https://github.com/luckyframework/avram/blob/49c22d1d99e9f3583ada0ac5bffaf7bd987c4d24/src/avram/queryable.cr#L212" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2092,6 +2122,8 @@ When the collection is empty, returns <code>nil</code>.</p>
       <br/>
       <div>
         
+          [<a href="https://github.com/luckyframework/avram/blob/49c22d1d99e9f3583ada0ac5bffaf7bd987c4d24/src/avram/queryable.cr#L203" target="_blank">View source</a>]
+        
       </div>
     </div>
   
@@ -2105,6 +2137,8 @@ When the collection is empty, returns <code>nil</code>.</p>
       
       <br/>
       <div>
+        
+          [<a href="https://github.com/luckyframework/avram/blob/49c22d1d99e9f3583ada0ac5bffaf7bd987c4d24/src/avram/queryable.cr#L184" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2120,6 +2154,8 @@ When the collection is empty, returns <code>nil</code>.</p>
       <br/>
       <div>
         
+          [<a href="https://github.com/luckyframework/avram/blob/49c22d1d99e9f3583ada0ac5bffaf7bd987c4d24/src/avram/queryable.cr#L153" target="_blank">View source</a>]
+        
       </div>
     </div>
   
@@ -2133,6 +2169,8 @@ When the collection is empty, returns <code>nil</code>.</p>
       
       <br/>
       <div>
+        
+          [<a href="https://github.com/luckyframework/avram/blob/49c22d1d99e9f3583ada0ac5bffaf7bd987c4d24/src/avram/queryable.cr#L180" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2162,6 +2200,8 @@ When the collection is empty, returns <code>nil</code>.</p>
       <br/>
       <div>
         
+          [<a href="https://github.com/luckyframework/avram/blob/49c22d1d99e9f3583ada0ac5bffaf7bd987c4d24/src/avram/queryable.cr#L223" target="_blank">View source</a>]
+        
       </div>
     </div>
   
@@ -2176,10 +2216,12 @@ When the collection is empty, returns <code>nil</code>.</p>
       <br/>
       <div>
         
+          [<a href="https://github.com/luckyframework/avram/blob/49c22d1d99e9f3583ada0ac5bffaf7bd987c4d24/src/avram/queryable.cr#L188" target="_blank">View source</a>]
+        
       </div>
     </div>
   
-    <div class="entry-detail" id="or(&):self-instance-method">
+    <div class="entry-detail" id="or(&amp;):self-instance-method">
       <div class="signature">
         
         def <strong>or</strong>(&) : <span class="k">self</span>
@@ -2196,19 +2238,7 @@ conjunction to OR. Then call yield to set the next set of ORs</p>
       <br/>
       <div>
         
-      </div>
-    </div>
-  
-    <div class="entry-detail" id="order_by(order:Avram::OrderBy):self-instance-method">
-      <div class="signature">
-        
-        def <strong>order_by</strong>(order : <a href="../Avram/OrderBy.html">Avram::OrderBy</a>) : <span class="k">self</span>
-
-        <a class="method-permalink" href="#order_by(order:Avram::OrderBy):self-instance-method">#</a>
-      </div>
-      
-      <br/>
-      <div>
+          [<a href="https://github.com/luckyframework/avram/blob/49c22d1d99e9f3583ada0ac5bffaf7bd987c4d24/src/avram/queryable.cr#L159" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2224,6 +2254,24 @@ conjunction to OR. Then call yield to set the next set of ORs</p>
       <br/>
       <div>
         
+          [<a href="https://github.com/luckyframework/avram/blob/49c22d1d99e9f3583ada0ac5bffaf7bd987c4d24/src/avram/queryable.cr#L164" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="order_by(order:Avram::OrderBy):self-instance-method">
+      <div class="signature">
+        
+        def <strong>order_by</strong>(order : <a href="../Avram/OrderBy.html">Avram::OrderBy</a>) : <span class="k">self</span>
+
+        <a class="method-permalink" href="#order_by(order:Avram::OrderBy):self-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/luckyframework/avram/blob/49c22d1d99e9f3583ada0ac5bffaf7bd987c4d24/src/avram/queryable.cr#L171" target="_blank">View source</a>]
+        
       </div>
     </div>
   
@@ -2238,19 +2286,7 @@ conjunction to OR. Then call yield to set the next set of ORs</p>
       <br/>
       <div>
         
-      </div>
-    </div>
-  
-    <div class="entry-detail" id="primary_key_name(*args,**options,&)-instance-method">
-      <div class="signature">
-        
-        def <strong>primary_key_name</strong>(*args, **options, &)
-
-        <a class="method-permalink" href="#primary_key_name(*args,**options,&)-instance-method">#</a>
-      </div>
-      
-      <br/>
-      <div>
+          [<a href="https://github.com/luckyframework/avram/blob/49c22d1d99e9f3583ada0ac5bffaf7bd987c4d24/src/avram/queryable.cr#L242" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2266,6 +2302,24 @@ conjunction to OR. Then call yield to set the next set of ORs</p>
       <br/>
       <div>
         
+          [<a href="https://github.com/luckyframework/avram/blob/49c22d1d99e9f3583ada0ac5bffaf7bd987c4d24/src/avram/queryable.cr#L10" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="primary_key_name(*args,**options,&amp;)-instance-method">
+      <div class="signature">
+        
+        def <strong>primary_key_name</strong>(*args, **options, &)
+
+        <a class="method-permalink" href="#primary_key_name(*args,**options,&)-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/luckyframework/avram/blob/49c22d1d99e9f3583ada0ac5bffaf7bd987c4d24/src/avram/queryable.cr#L10" target="_blank">View source</a>]
+        
       </div>
     </div>
   
@@ -2279,6 +2333,8 @@ conjunction to OR. Then call yield to set the next set of ORs</p>
       
       <br/>
       <div>
+        
+          [<a href="https://github.com/luckyframework/avram/blob/49c22d1d99e9f3583ada0ac5bffaf7bd987c4d24/src/avram/queryable.cr#L4" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2294,6 +2350,8 @@ conjunction to OR. Then call yield to set the next set of ORs</p>
       <br/>
       <div>
         
+          [<a href="https://github.com/luckyframework/avram/blob/49c22d1d99e9f3583ada0ac5bffaf7bd987c4d24/src/avram/queryable.cr#L4" target="_blank">View source</a>]
+        
       </div>
     </div>
   
@@ -2307,6 +2365,8 @@ conjunction to OR. Then call yield to set the next set of ORs</p>
       
       <br/>
       <div>
+        
+          [<a href="https://github.com/luckyframework/avram/blob/49c22d1d99e9f3583ada0ac5bffaf7bd987c4d24/src/avram/queryable.cr#L75" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2322,6 +2382,8 @@ conjunction to OR. Then call yield to set the next set of ORs</p>
       <br/>
       <div>
         
+          [<a href="https://github.com/luckyframework/avram/blob/49c22d1d99e9f3583ada0ac5bffaf7bd987c4d24/src/avram/queryable.cr#L79" target="_blank">View source</a>]
+        
       </div>
     </div>
   
@@ -2336,10 +2398,12 @@ conjunction to OR. Then call yield to set the next set of ORs</p>
       <br/>
       <div>
         
+          [<a href="https://github.com/luckyframework/avram/blob/49c22d1d99e9f3583ada0ac5bffaf7bd987c4d24/src/avram/queryable.cr#L71" target="_blank">View source</a>]
+        
       </div>
     </div>
   
-    <div class="entry-detail" id="reset_where(&):self-instance-method">
+    <div class="entry-detail" id="reset_where(&amp;):self-instance-method">
       <div class="signature">
         
         def <strong>reset_where</strong>(&) : <span class="k">self</span>
@@ -2349,6 +2413,8 @@ conjunction to OR. Then call yield to set the next set of ORs</p>
       
       <br/>
       <div>
+        
+          [<a href="https://github.com/luckyframework/avram/blob/49c22d1d99e9f3583ada0ac5bffaf7bd987c4d24/src/avram/queryable.cr#L88" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2364,6 +2430,8 @@ conjunction to OR. Then call yield to set the next set of ORs</p>
       <br/>
       <div>
         
+          [<a href="https://github.com/luckyframework/avram/blob/49c22d1d99e9f3583ada0ac5bffaf7bd987c4d24/src/avram/queryable.cr#L248" target="_blank">View source</a>]
+        
       </div>
     </div>
   
@@ -2377,6 +2445,8 @@ conjunction to OR. Then call yield to set the next set of ORs</p>
       
       <br/>
       <div>
+        
+          [<a href="https://github.com/luckyframework/avram/blob/49c22d1d99e9f3583ada0ac5bffaf7bd987c4d24/src/avram/queryable.cr#L63" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2392,19 +2462,7 @@ conjunction to OR. Then call yield to set the next set of ORs</p>
       <br/>
       <div>
         
-      </div>
-    </div>
-  
-    <div class="entry-detail" id="table_name(*args,**options,&)-instance-method">
-      <div class="signature">
-        
-        def <strong>table_name</strong>(*args, **options, &)
-
-        <a class="method-permalink" href="#table_name(*args,**options,&)-instance-method">#</a>
-      </div>
-      
-      <br/>
-      <div>
+          [<a href="https://github.com/luckyframework/avram/blob/49c22d1d99e9f3583ada0ac5bffaf7bd987c4d24/src/avram/queryable.cr#L227" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2420,6 +2478,24 @@ conjunction to OR. Then call yield to set the next set of ORs</p>
       <br/>
       <div>
         
+          [<a href="https://github.com/luckyframework/avram/blob/49c22d1d99e9f3583ada0ac5bffaf7bd987c4d24/src/avram/queryable.cr#L10" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="table_name(*args,**options,&amp;)-instance-method">
+      <div class="signature">
+        
+        def <strong>table_name</strong>(*args, **options, &)
+
+        <a class="method-permalink" href="#table_name(*args,**options,&)-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/luckyframework/avram/blob/49c22d1d99e9f3583ada0ac5bffaf7bd987c4d24/src/avram/queryable.cr#L10" target="_blank">View source</a>]
+        
       </div>
     </div>
   
@@ -2434,6 +2510,8 @@ conjunction to OR. Then call yield to set the next set of ORs</p>
       <br/>
       <div>
         
+          [<a href="https://github.com/luckyframework/avram/blob/49c22d1d99e9f3583ada0ac5bffaf7bd987c4d24/src/avram/queryable.cr#L297" target="_blank">View source</a>]
+        
       </div>
     </div>
   
@@ -2447,6 +2525,8 @@ conjunction to OR. Then call yield to set the next set of ORs</p>
       
       <br/>
       <div>
+        
+          [<a href="https://github.com/luckyframework/avram/blob/49c22d1d99e9f3583ada0ac5bffaf7bd987c4d24/src/avram/queryable.cr#L293" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2472,47 +2552,7 @@ conjunction to OR. Then call yield to set the next set of ORs</p>
       <br/>
       <div>
         
-      </div>
-    </div>
-  
-    <div class="entry-detail" id="where(statement:String,*,argsbind_vars:Array):self-instance-method">
-      <div class="signature">
-        
-        def <strong>where</strong>(statement : <a href="../String.html">String</a>, *, args bind_vars : <a href="../Array.html">Array</a>) : <span class="k">self</span>
-
-        <a class="method-permalink" href="#where(statement:String,*,argsbind_vars:Array):self-instance-method">#</a>
-      </div>
-      
-      <br/>
-      <div>
-        
-      </div>
-    </div>
-  
-    <div class="entry-detail" id="where(statement:String,*bind_vars):self-instance-method">
-      <div class="signature">
-        
-        def <strong>where</strong>(statement : <a href="../String.html">String</a>, *bind_vars) : <span class="k">self</span>
-
-        <a class="method-permalink" href="#where(statement:String,*bind_vars):self-instance-method">#</a>
-      </div>
-      
-      <br/>
-      <div>
-        
-      </div>
-    </div>
-  
-    <div class="entry-detail" id="where(sql_clause:Avram::Where::SqlClause):self-instance-method">
-      <div class="signature">
-        
-        def <strong>where</strong>(sql_clause : <a href="../Avram/Where/SqlClause.html">Avram::Where::SqlClause</a>) : <span class="k">self</span>
-
-        <a class="method-permalink" href="#where(sql_clause:Avram::Where::SqlClause):self-instance-method">#</a>
-      </div>
-      
-      <br/>
-      <div>
+          [<a href="https://github.com/luckyframework/avram/blob/49c22d1d99e9f3583ada0ac5bffaf7bd987c4d24/src/avram/queryable.cr#L118" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2528,10 +2568,60 @@ conjunction to OR. Then call yield to set the next set of ORs</p>
       <br/>
       <div>
         
+          [<a href="https://github.com/luckyframework/avram/blob/49c22d1d99e9f3583ada0ac5bffaf7bd987c4d24/src/avram/queryable.cr#L124" target="_blank">View source</a>]
+        
       </div>
     </div>
   
-    <div class="entry-detail" id="where(&):self-instance-method">
+    <div class="entry-detail" id="where(sql_clause:Avram::Where::SqlClause):self-instance-method">
+      <div class="signature">
+        
+        def <strong>where</strong>(sql_clause : <a href="../Avram/Where/SqlClause.html">Avram::Where::SqlClause</a>) : <span class="k">self</span>
+
+        <a class="method-permalink" href="#where(sql_clause:Avram::Where::SqlClause):self-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/luckyframework/avram/blob/49c22d1d99e9f3583ada0ac5bffaf7bd987c4d24/src/avram/queryable.cr#L136" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="where(statement:String,*bind_vars):self-instance-method">
+      <div class="signature">
+        
+        def <strong>where</strong>(statement : <a href="../String.html">String</a>, *bind_vars) : <span class="k">self</span>
+
+        <a class="method-permalink" href="#where(statement:String,*bind_vars):self-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/luckyframework/avram/blob/49c22d1d99e9f3583ada0ac5bffaf7bd987c4d24/src/avram/queryable.cr#L128" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="where(statement:String,*,argsbind_vars:Array):self-instance-method">
+      <div class="signature">
+        
+        def <strong>where</strong>(statement : <a href="../String.html">String</a>, *, args bind_vars : <a href="../Array.html">Array</a>) : <span class="k">self</span>
+
+        <a class="method-permalink" href="#where(statement:String,*,argsbind_vars:Array):self-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/luckyframework/avram/blob/49c22d1d99e9f3583ada0ac5bffaf7bd987c4d24/src/avram/queryable.cr#L132" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="where(&amp;):self-instance-method">
       <div class="signature">
         
         def <strong>where</strong>(&) : <span class="k">self</span>
@@ -2541,6 +2631,8 @@ conjunction to OR. Then call yield to set the next set of ORs</p>
       
       <br/>
       <div>
+        
+          [<a href="https://github.com/luckyframework/avram/blob/49c22d1d99e9f3583ada0ac5bffaf7bd987c4d24/src/avram/queryable.cr#L140" target="_blank">View source</a>]
         
       </div>
     </div>
