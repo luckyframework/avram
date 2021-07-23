@@ -1,5 +1,5 @@
 name: avram
-version: 0.20.0
+version: 0.21.0
 
 crystal: ">= 1.0.0"
 
@@ -18,13 +18,13 @@ dependencies:
     version: ~> 0.1.0
   pg:
     github: will/crystal-pg
-    branch: master
+    version: ~> 0.24.0
   habitat:
     github: luckyframework/habitat
     version: ~> 0.4.7
   wordsmith:
     github: luckyframework/wordsmith
-    version: ~> 0.2.2
+    version: ~> 0.3.0
   dexter:
     github: luckyframework/dexter
     version: ~> 0.3.3
