@@ -87,6 +87,14 @@ describe Avram::QueryBuilder do
     query.args.should eq ["Paul", "20"]
   end
 
+  it "has the same statement on subsequent calls" do
+    query = new_query
+      .where(Avram::Where::Equal.new(:name, "Paul"))
+      .where(Avram::Where::GreaterThan.new(:age, "20"))
+    query.statement.should eq "SELECT * FROM users WHERE name = $1 AND age > $2"
+    query.statement.should eq "SELECT * FROM users WHERE name = $1 AND age > $2"
+  end
+
   it "accepts raw where clauses" do
     query = new_query
       .where(Avram::Where::Raw.new("name = ?", "Mikias"))
@@ -131,6 +139,16 @@ describe Avram::QueryBuilder do
 
       query.statement_for_update(params).should eq "UPDATE users SET first_name = $1, last_name = $2 WHERE id = $3 LIMIT 1 RETURNING *"
       query.args_for_update(params).should eq ["Paul", nil, "1"]
+    end
+
+    it "has the same placeholder values on subsequent calls" do
+      params = {:first_name => "Paul", :last_name => nil}
+      query = new_query
+        .where(Avram::Where::Equal.new(:id, "1"))
+        .limit(1)
+
+      query.statement_for_update(params).should eq "UPDATE users SET first_name = $1, last_name = $2 WHERE id = $3 LIMIT 1 RETURNING *"
+      query.statement_for_update(params).should eq "UPDATE users SET first_name = $1, last_name = $2 WHERE id = $3 LIMIT 1 RETURNING *"
     end
   end
 

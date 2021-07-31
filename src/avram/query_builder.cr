@@ -55,10 +55,18 @@ class Avram::QueryBuilder
   end
 
   def statement
+    clone.statement!
+  end
+
+  def statement!
     join_sql [@delete ? delete_sql : select_sql] + sql_condition_clauses
   end
 
   def statement_for_update(params, return_columns returning? : Bool = true)
+    clone.statement_for_update!(params, returning?)
+  end
+
+  def statement_for_update!(params, return_columns returning? : Bool = true)
     sql = ["UPDATE #{table}", set_sql_clause(params)]
     sql += sql_condition_clauses
     sql += ["RETURNING #{@selections}"] if returning?
@@ -316,13 +324,7 @@ class Avram::QueryBuilder
     @wheres.pop
   end
 
-  @_wheres_sql : String?
-
   private def wheres_sql
-    @_wheres_sql ||= joined_wheres_queries
-  end
-
-  private def joined_wheres_queries
     if !wheres.empty?
       statements = wheres.flat_map do |sql_clause|
         clause = sql_clause.prepare(->next_prepared_statement_placeholder)
