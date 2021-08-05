@@ -23,7 +23,7 @@ module Avram::DefineAttribute
 
     \{% if !@type.ancestors.first.abstract? %}
       \{% for attribute in @type.ancestors.first.constant :ATTRIBUTES %}
-        \{% ATTRIBUTES << type_declaration %}
+        \{% ATTRIBUTES << attribute %}
       \{% end %}
     \{% end %}
 
