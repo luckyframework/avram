@@ -10,6 +10,9 @@ abstract struct Enum
     alias ColumnType = Int32
 
     def parse(value : String)
+      is_int = value.to_i?
+      return parse(is_int) if is_int
+
       if result = T.parse?(value)
         SuccessfulCast.new(result)
       else
