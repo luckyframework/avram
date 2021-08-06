@@ -16,6 +16,14 @@ private class SaveUser < User::SaveOperation
   end
 end
 
+private class RenameUser < SaveUser
+  # This catches a compile-time bug when inheriting
+  # from a SaveOperation that has attributes and permitted columns
+  before_save do
+    nickname.value = "The '#{nickname.value}'"
+  end
+end
+
 private class SaveUserWithFalseValueValidations < User::SaveOperation
   permit_columns :nickname, :available_for_hire
 
@@ -441,6 +449,15 @@ describe "Avram::SaveOperation" do
       operation.name.name.should eq :name
       operation.name.value.should eq "Joe"
       operation.name.errors.should eq ["wrong"]
+    end
+
+    it "has inherited attributes" do
+      user = UserFactory.create &.nickname("taco shop")
+
+      RenameUser.update(user, should_not_override_permitted_columns: "yo") do |op, u|
+        u.nickname.should eq("The 'taco shop'")
+        op.should_not_override_permitted_columns.value.should eq("yo")
+      end
     end
   end
 

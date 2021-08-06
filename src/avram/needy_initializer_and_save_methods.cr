@@ -71,7 +71,7 @@ module Avram::NeedyInitializerAndSaveMethods
       {% end %}
     {% end %}
 
-    {% for attribute in ATTRIBUTES %}
+    {% for attribute in ATTRIBUTES.uniq %}
       {% attribute_method_args = attribute_method_args + "#{attribute.var} : #{attribute.type} | Avram::Nothing = Avram::Nothing.new,\n" %}
       {% attribute_params = attribute_params + "#{attribute.var}: #{attribute.var},\n" %}
     {% end %}
