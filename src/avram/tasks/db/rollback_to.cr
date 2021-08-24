@@ -7,7 +7,7 @@ class Db::RollbackTo < BaseTask
     <<-TEXT
     #{summary}
 
-    You can get the migration version from the filename or by running 'lucky db.migration.status'
+    You can get the migration version from the filename or by running 'lucky db.migrations.status'
 
     Example:
 
