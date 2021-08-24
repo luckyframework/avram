@@ -18,8 +18,8 @@ class Db::Migrations::Status < BaseTask
 
     Examples:
 
-      lucky db.migration.status
-      LUCKY_ENV=test lucky db.migration.status # Show migration status for test db
+      lucky db.migrations.status
+      LUCKY_ENV=test lucky db.migrations.status # Show migration status for test db
 
     TEXT
   end
