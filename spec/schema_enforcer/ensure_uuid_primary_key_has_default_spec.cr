@@ -6,7 +6,7 @@ private class TableWithoutUUIDPrimaryKey < BaseModel
 end
 
 private class TableWithoutDefaultUUID < BaseModel
-  table :prices do
+  table :unused_uuid_table do
   end
 end
 
@@ -23,7 +23,7 @@ describe Avram::SchemaEnforcer::EnsureUUIDPrimaryKeyHasDefault do
   end
 
   it "raises when table's uuid primary key does not have default" do
-    expect_schema_mismatch "Primary key on the 'prices' table has the type set as uuid but does not have a default value." do
+    expect_schema_mismatch "Primary key on the 'unused_uuid_table' table has the type set as uuid but does not have a default value." do
       Avram::SchemaEnforcer::EnsureUUIDPrimaryKeyHasDefault.new(TableWithoutDefaultUUID).validate!
     end
   end
