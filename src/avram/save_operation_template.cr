@@ -12,14 +12,6 @@ class Avram::SaveOperationTemplate
 
     class ::{{ type }}::SaveOperation < Avram::SaveOperation({{ type }})
       {% primary_key_type = type.resolve.constant("PRIMARY_KEY_TYPE") %}
-      {% if primary_key_type.id == UUID.id %}
-        before_save set_uuid
-
-        def set_uuid
-          {% primary_key_name = type.resolve.constant("PRIMARY_KEY_NAME") %}
-          {{ primary_key_name.id }}.value ||= UUID.random()
-        end
-      {% end %}
 
       macro inherited
         FOREIGN_KEY = "{{ type.stringify.underscore.id }}_id"
