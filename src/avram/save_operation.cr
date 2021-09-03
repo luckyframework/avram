@@ -260,7 +260,7 @@ abstract class Avram::SaveOperation(T)
         @@permitted_param_keys << "{{ attribute_name.id }}"
       {% else %}
         {% raise <<-ERROR
-          Can't permit '#{attribute_name}' because the column has not been defined on the model.
+          Can't permit '#{attribute_name}' because the column has not been defined on the model for #{@type}.
 
           Try this...
 
