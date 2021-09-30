@@ -45,6 +45,7 @@ struct Int32
 
     class Criteria(T, V) < Avram::Criteria(T, V)
       include Avram::BetweenCriteria(T, V)
+      include Avram::IncludesCriteria(T, V)
 
       def select_sum : Int64?
         super.as(Int64?)
