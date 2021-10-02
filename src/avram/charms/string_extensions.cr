@@ -28,6 +28,7 @@ class String
     end
 
     class Criteria(T, V) < Avram::Criteria(T, V)
+      include Avram::IncludesCriteria(T, V)
       @upper = false
       @lower = false
 

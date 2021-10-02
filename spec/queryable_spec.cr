@@ -1060,6 +1060,30 @@ describe Avram::Queryable do
         result.should eq bucket
       end
     end
+
+    describe "#includes" do
+      it "queries for a single value in the array" do
+        bucket1 = BucketFactory.create &.numbers([9, 13, 26, 4])
+        _bucket2 = BucketFactory.create &.numbers([5, 3, 1, 2])
+
+        query = BucketQuery.new.numbers.includes(13)
+
+        query.to_sql.should eq ["SELECT #{Bucket::COLUMN_SQL} FROM buckets WHERE $1 = ANY (buckets.numbers)", "13"]
+        query.select_count.should eq(1)
+        query.first.id.should eq(bucket1.id)
+      end
+
+      it "queries for records that don't include the value" do
+        _bucket1 = BucketFactory.create &.numbers([9, 13, 26, 4])
+        bucket2 = BucketFactory.create &.numbers([5, 3, 1, 2])
+
+        query = BucketQuery.new.numbers.not.includes(13)
+
+        query.to_sql.should eq ["SELECT #{Bucket::COLUMN_SQL} FROM buckets WHERE $1 != ALL (buckets.numbers)", "13"]
+        query.select_count.should eq(1)
+        query.first.id.should eq(bucket2.id)
+      end
+    end
   end
 
   context "when querying double" do
