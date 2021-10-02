@@ -13,7 +13,7 @@
 <script type="text/javascript" src="../../js/doc.js"></script>
 
   <meta name="repository-name" content="avram">
-  <title>Avram::Events::DeleteSuccessEvent - avram master</title>
+  <title>Avram::Where::Includes - avram master</title>
   <script type="text/javascript">
     CrystalDocs.base_path = "../../";
   </script>
@@ -216,7 +216,7 @@
       
     </li>
   
-  <li class="parent open current" data-id="avram/Avram/Events" data-name="avram::events">
+  <li class="parent " data-id="avram/Avram/Events" data-name="avram::events">
       <a href="../../Avram/Events.html">Events</a>
       
         <ul>
@@ -226,7 +226,7 @@
       
     </li>
   
-  <li class=" current" data-id="avram/Avram/Events/DeleteSuccessEvent" data-name="avram::events::deletesuccessevent">
+  <li class=" " data-id="avram/Avram/Events/DeleteSuccessEvent" data-name="avram::events::deletesuccessevent">
       <a href="../../Avram/Events/DeleteSuccessEvent.html">DeleteSuccessEvent</a>
       
     </li>
@@ -931,7 +931,7 @@
       
     </li>
   
-  <li class="parent " data-id="avram/Avram/Where" data-name="avram::where">
+  <li class="parent open current" data-id="avram/Avram/Where" data-name="avram::where">
       <a href="../../Avram/Where.html">Where</a>
       
         <ul>
@@ -976,7 +976,7 @@
       
     </li>
   
-  <li class=" " data-id="avram/Avram/Where/Includes" data-name="avram::where::includes">
+  <li class=" current" data-id="avram/Avram/Where/Includes" data-name="avram::where::includes">
       <a href="../../Avram/Where/Includes.html">Includes</a>
       
     </li>
@@ -1510,12 +1510,12 @@
 <div class="main-content">
 <h1 class="type-name">
 
-  <span class="kind">class</span> Avram::Events::DeleteSuccessEvent
+  <span class="kind">class</span> Avram::Where::Includes
 
 </h1>
 
 
-  <ul class="superclass-hierarchy"><li class="superclass"><a href="../../Avram/Events/DeleteSuccessEvent.html">Avram::Events::DeleteSuccessEvent</a></li><li class="superclass">Pulsar::Event</li><li class="superclass">Pulsar::BaseEvent</li><li class="superclass">Reference</li><li class="superclass"><a href="../../Object.html">Object</a></li></ul>
+  <ul class="superclass-hierarchy"><li class="superclass"><a href="../../Avram/Where/Includes.html">Avram::Where::Includes</a></li><li class="superclass"><a href="../../Avram/Where/ValueHoldingSqlClause.html">Avram::Where::ValueHoldingSqlClause</a></li><li class="superclass"><a href="../../Avram/Where/SqlClause.html">Avram::Where::SqlClause</a></li><li class="superclass"><a href="../../Avram/Where/Condition.html">Avram::Where::Condition</a></li><li class="superclass">Reference</li><li class="superclass"><a href="../../Object.html">Object</a></li></ul>
 
 
 
@@ -1543,8 +1543,8 @@
   </h2>
   
     
-      <a href="https://github.com/luckyframework/avram/blob/bdde708a782bc041adea9425a1b5bf4defdd4bfe/src/avram/events/delete_success_event.cr#L1" target="_blank">
-        avram/events/delete_success_event.cr
+      <a href="https://github.com/luckyframework/avram/blob/bdde708a782bc041adea9425a1b5bf4defdd4bfe/src/avram/where.cr#L220" target="_blank">
+        avram/where.cr
       </a>
     
     <br/>
@@ -1554,50 +1554,7 @@
 
 
 
-  <h2>
-    <a id="constructors" class="anchor" href="#constructors">
-  <svg class="octicon-link" aria-hidden="true">
-    <use href="#octicon-link"/>
-  </svg>
-</a>
-    Constructors
-  </h2>
-  <ul class="list-summary">
-    
-      <li class="entry-summary">
-        <a href="#new(operation_class:String)-class-method" class="signature"><strong>.new</strong>(operation_class : String)</a>
-        
-      </li>
-    
-  </ul>
 
-
-
-  <h2>
-    <a id="class-method-summary" class="anchor" href="#class-method-summary">
-  <svg class="octicon-link" aria-hidden="true">
-    <use href="#octicon-link"/>
-  </svg>
-</a>
-    Class Method Summary
-  </h2>
-  <ul class="list-summary">
-    
-      <li class="entry-summary">
-        <a href="#logged_events-class-method" class="signature"><strong>.logged_events</strong></a>
-        
-          <div class="summary"><p>Used by <code>Pulsar::SpecHelper</code> to test for logged events</p></div>
-        
-      </li>
-    
-      <li class="entry-summary">
-        <a href="#logged_events=(logged_events)-class-method" class="signature"><strong>.logged_events=</strong>(logged_events)</a>
-        
-          <div class="summary"><p>Used by <code>Pulsar::SpecHelper</code> to test for logged events</p></div>
-        
-      </li>
-    
-  </ul>
 
 
 
@@ -1612,14 +1569,17 @@
   <ul class="list-summary">
     
       <li class="entry-summary">
-        <a href="#operation_class:String-instance-method" class="signature"><strong>#operation_class</strong> : String</a>
+        <a href="#negated:Excludes-instance-method" class="signature"><strong>#negated</strong> : Excludes</a>
         
       </li>
     
       <li class="entry-summary">
-        <a href="#started_at:Time-instance-method" class="signature"><strong>#started_at</strong> : Time</a>
+        <a href="#operator:String-instance-method" class="signature"><strong>#operator</strong> : String</a>
         
-          <div class="summary"><p>When the event started</p></div>
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#prepare(placeholder_supplier:Proc(String)):String-instance-method" class="signature"><strong>#prepare</strong>(placeholder_supplier : Proc(String)) : String</a>
         
       </li>
     
@@ -1633,8 +1593,26 @@
   
     
 
+  <h3>Instance methods inherited from class <code><a href="../../Avram/Where/ValueHoldingSqlClause.html">Avram::Where::ValueHoldingSqlClause</a></code></h3>
+  
+  
+    <a href="../../Avram/Where/ValueHoldingSqlClause.html#value:String%7CArray(String)%7CArray(Int32)-instance-method" class="tooltip">
+      <span>value : String | Array(String) | Array(Int32)</span>
+    value</a>
+    
+  
+
 
     
+
+  <h3>Constructor methods inherited from class <code><a href="../../Avram/Where/ValueHoldingSqlClause.html">Avram::Where::ValueHoldingSqlClause</a></code></h3>
+  
+  
+    <a href="../../Avram/Where/ValueHoldingSqlClause.html#new(column,value)-class-method" class="tooltip">
+      <span>new(column, value)</span>
+    new</a>
+    
+  
 
 
     
@@ -1642,6 +1620,73 @@
 
   
     
+
+  <h3>Instance methods inherited from class <code><a href="../../Avram/Where/SqlClause.html">Avram::Where::SqlClause</a></code></h3>
+  
+  
+    <a href="../../Avram/Where/SqlClause.html#column:Symbol%7CString-instance-method" class="tooltip">
+      <span>column : Symbol | String</span>
+    column</a>, 
+    
+  
+    <a href="../../Avram/Where/SqlClause.html#negated:SqlClause-instance-method" class="tooltip">
+      <span>negated : SqlClause</span>
+    negated</a>, 
+    
+  
+    <a href="../../Avram/Where/SqlClause.html#operator:String-instance-method" class="tooltip">
+      <span>operator : String</span>
+    operator</a>, 
+    
+  
+    <a href="../../Avram/Where/SqlClause.html#prepare(placeholder_supplier:Proc(String)):String-instance-method" class="tooltip">
+      <span>prepare(placeholder_supplier : Proc(String)) : String</span>
+    prepare</a>
+    
+  
+
+
+    
+
+  <h3>Constructor methods inherited from class <code><a href="../../Avram/Where/SqlClause.html">Avram::Where::SqlClause</a></code></h3>
+  
+  
+    <a href="../../Avram/Where/SqlClause.html#new(column)-class-method" class="tooltip">
+      <span>new(column)</span>
+    new</a>
+    
+  
+
+
+    
+
+
+  
+    
+
+  <h3>Instance methods inherited from class <code><a href="../../Avram/Where/Condition.html">Avram::Where::Condition</a></code></h3>
+  
+  
+    <a href="../../Avram/Where/Condition.html#clone-instance-method" class="tooltip">
+      <span>clone</span>
+    clone</a>, 
+    
+  
+    <a href="../../Avram/Where/Condition.html#conjunction:Conjunction-instance-method" class="tooltip">
+      <span>conjunction : Conjunction</span>
+    conjunction</a>, 
+    
+  
+    <a href="../../Avram/Where/Condition.html#conjunction=(conjunction:Conjunction)-instance-method" class="tooltip">
+      <span>conjunction=(conjunction : Conjunction)</span>
+    conjunction=</a>, 
+    
+  
+    <a href="../../Avram/Where/Condition.html#prepare(placeholder_supplier:Proc(String)):String-instance-method" class="tooltip">
+      <span>prepare(placeholder_supplier : Proc(String)) : String</span>
+    prepare</a>
+    
+  
 
 
     
@@ -1693,81 +1738,7 @@
 </div>
 
 
-  <h2>
-    <a id="constructor-detail" class="anchor" href="#constructor-detail">
-  <svg class="octicon-link" aria-hidden="true">
-    <use href="#octicon-link"/>
-  </svg>
-</a>
-    Constructor Detail
-  </h2>
-  
-    <div class="entry-detail" id="new(operation_class:String)-class-method">
-      <div class="signature">
-        
-        def self.<strong>new</strong>(operation_class : <a href="../../String.html">String</a>)
 
-        <a class="method-permalink" href="#new(operation_class:String)-class-method">#</a>
-      </div>
-      
-      <br/>
-      <div>
-        
-          [<a href="https://github.com/luckyframework/avram/blob/bdde708a782bc041adea9425a1b5bf4defdd4bfe/src/avram/events/delete_success_event.cr#L4" target="_blank">View source</a>]
-        
-      </div>
-    </div>
-  
-
-
-
-  <h2>
-    <a id="class-method-detail" class="anchor" href="#class-method-detail">
-  <svg class="octicon-link" aria-hidden="true">
-    <use href="#octicon-link"/>
-  </svg>
-</a>
-    Class Method Detail
-  </h2>
-  
-    <div class="entry-detail" id="logged_events-class-method">
-      <div class="signature">
-        
-        def self.<strong>logged_events</strong>
-
-        <a class="method-permalink" href="#logged_events-class-method">#</a>
-      </div>
-      
-        <div class="doc">
-          
-          <p>Used by <code>Pulsar::SpecHelper</code> to test for logged events</p>
-        </div>
-      
-      <br/>
-      <div>
-        
-      </div>
-    </div>
-  
-    <div class="entry-detail" id="logged_events=(logged_events)-class-method">
-      <div class="signature">
-        
-        def self.<strong>logged_events=</strong>(logged_events)
-
-        <a class="method-permalink" href="#logged_events=(logged_events)-class-method">#</a>
-      </div>
-      
-        <div class="doc">
-          
-          <p>Used by <code>Pulsar::SpecHelper</code> to test for logged events</p>
-        </div>
-      
-      <br/>
-      <div>
-        
-      </div>
-    </div>
-  
 
 
 
@@ -1780,37 +1751,50 @@
     Instance Method Detail
   </h2>
   
-    <div class="entry-detail" id="operation_class:String-instance-method">
+    <div class="entry-detail" id="negated:Excludes-instance-method">
       <div class="signature">
         
-        def <strong>operation_class</strong> : <a href="../../String.html">String</a>
+        def <strong>negated</strong> : <a href="../../Avram/Where/Excludes.html">Excludes</a>
 
-        <a class="method-permalink" href="#operation_class:String-instance-method">#</a>
+        <a class="method-permalink" href="#negated:Excludes-instance-method">#</a>
       </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/bdde708a782bc041adea9425a1b5bf4defdd4bfe/src/avram/events/delete_success_event.cr#L2" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/bdde708a782bc041adea9425a1b5bf4defdd4bfe/src/avram/where.cr#L225" target="_blank">View source</a>]
         
       </div>
     </div>
   
-    <div class="entry-detail" id="started_at:Time-instance-method">
+    <div class="entry-detail" id="operator:String-instance-method">
       <div class="signature">
         
-        def <strong>started_at</strong> : <a href="../../Time.html">Time</a>
+        def <strong>operator</strong> : <a href="../../String.html">String</a>
 
-        <a class="method-permalink" href="#started_at:Time-instance-method">#</a>
+        <a class="method-permalink" href="#operator:String-instance-method">#</a>
       </div>
-      
-        <div class="doc">
-          
-          <p>When the event started</p>
-        </div>
       
       <br/>
       <div>
+        
+          [<a href="https://github.com/luckyframework/avram/blob/bdde708a782bc041adea9425a1b5bf4defdd4bfe/src/avram/where.cr#L221" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="prepare(placeholder_supplier:Proc(String)):String-instance-method">
+      <div class="signature">
+        
+        def <strong>prepare</strong>(placeholder_supplier : Proc(<a href="../../String.html">String</a>)) : <a href="../../String.html">String</a>
+
+        <a class="method-permalink" href="#prepare(placeholder_supplier:Proc(String)):String-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/luckyframework/avram/blob/bdde708a782bc041adea9425a1b5bf4defdd4bfe/src/avram/where.cr#L229" target="_blank">View source</a>]
         
       </div>
     </div>
