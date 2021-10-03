@@ -102,7 +102,7 @@ class Avram::Attribute(T)
   # These methods may accidentally get called on attributes
   # inside of operations. Since these methods don't exist,
   # chances are, you meant to call them on the value.
-  # ```crystal
+  # ```
   # username.to_s
   # # VS
   # username.value.to_s
