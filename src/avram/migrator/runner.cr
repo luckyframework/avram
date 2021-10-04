@@ -172,15 +172,18 @@ class Avram::Migrator::Runner
 
   def ensure_migrated!
     if !pending_migrations.empty?
-      puts ""
-      puts error_background
-      puts pending_migrations_error.colorize.on_red.white
-      puts error_background
-      puts ""
+      display_migration_error_banner
       Process.signal(:term, Process.ppid)
-      Process.signal(:hup, Process.ppid)
       exit 1
     end
+  end
+
+  private def display_migration_error_banner
+    puts ""
+    puts error_background
+    puts pending_migrations_error.colorize.on_red.white
+    puts error_background
+    puts ""
   end
 
   private def pending_migrations_error
