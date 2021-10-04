@@ -114,7 +114,7 @@ class Avram::Attribute(T)
   # NOTE: to_s(io : IO) is used when passing an object
   # in to string interpolation. Don't override that method.
   def to_s(time_format : String)
-    call_value_instead_error_message(".to_s(time_format)")
+    call_value_instead_error_message(".to_s(...)")
   end
 
   def to_i
