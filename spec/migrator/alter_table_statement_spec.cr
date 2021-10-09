@@ -114,7 +114,7 @@ describe Avram::Migrator::AlterTableStatement do
         add_belongs_to category_label : CategoryLabel, on_delete: :nullify, references: :custom_table
         add_belongs_to employee : User, on_delete: :cascade
         add_belongs_to line_item : LineItem, on_delete: :cascade, foreign_key_type: UUID, fill_existing_with: "a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11"
-        add_belongs_to subscription_item : Subscription::Item, on_delete: :cascade
+        add_belongs_to subscription_item : Subscription::Item, on_delete: :cascade, references: :subscription_items
       end
 
       built.statements.first.should eq <<-SQL
