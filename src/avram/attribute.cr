@@ -98,4 +98,64 @@ class Avram::Attribute(T)
       add_error("is invalid")
     end
   end
+
+  # These methods may accidentally get called on attributes
+  # inside of operations. Since these methods don't exist,
+  # chances are, you meant to call them on the value.
+  # ```
+  # username.to_s
+  # # VS
+  # username.value.to_s
+  # ```
+  def to_s
+    call_value_instead_error_message(".to_s")
+  end
+
+  # NOTE: to_s(io : IO) is used when passing an object
+  # in to string interpolation. Don't override that method.
+  def to_s(time_format : String)
+    call_value_instead_error_message(".to_s(...)")
+  end
+
+  def to_i
+    call_value_instead_error_message(".to_i")
+  end
+
+  def to_i32
+    call_value_instead_error_message(".to_i32")
+  end
+
+  def to_i64
+    call_value_instead_error_message(".to_i64")
+  end
+
+  def to_f
+    call_value_instead_error_message(".to_f")
+  end
+
+  def to_f64
+    call_value_instead_error_message(".to_f64")
+  end
+
+  def [](key)
+    call_value_instead_error_message(".[key]")
+  end
+
+  def []?(key)
+    call_value_instead_error_message(".[key]?")
+  end
+
+  macro call_value_instead_error_message(method)
+    {% raise <<-ERROR
+
+      The #{method.id} method should not be called directly on attributes (#{@type}).
+      Did you mean to call it on the value property?
+
+      Try this...
+
+        ▸ attribute.value#{method.id}
+
+      ERROR
+    %}
+  end
 end
