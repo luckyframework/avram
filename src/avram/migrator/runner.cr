@@ -172,8 +172,26 @@ class Avram::Migrator::Runner
 
   def ensure_migrated!
     if !pending_migrations.empty?
-      raise "There are pending migrations. Please run lucky db.migrate"
+      display_migration_error_banner
+      Process.signal(:term, Process.ppid)
+      exit 1
     end
+  end
+
+  private def display_migration_error_banner
+    puts ""
+    puts error_background
+    puts pending_migrations_error.colorize.on_red.white
+    puts error_background
+    puts ""
+  end
+
+  private def pending_migrations_error
+    " There are pending migrations. Please run lucky db.migrate "
+  end
+
+  private def error_background
+    (" " * pending_migrations_error.size).colorize.on_red
   end
 
   private def migrated_migrations
