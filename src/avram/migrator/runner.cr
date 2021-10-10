@@ -99,9 +99,11 @@ class Avram::Migrator::Runner
     end
   end
 
+  # Creates a new file at `dump_to` with your database schema,
+  # and includes the migtation data.
   def self.dump_db(dump_to : String = "db/structure.sql", quiet : Bool = false)
     Db::VerifyConnection.new(quiet: true).run_task
-    run "pg_dump -s #{cmd_args} > #{dump_to}"
+    run "pg_dump -s #{cmd_args} > #{dump_to}; pg_dump -t migrations --data-only #{cmd_args} >> #{dump_to}"
     unless quiet
       puts "Done dumping #{db_name.colorize(:green)}"
     end
