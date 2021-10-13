@@ -17,11 +17,11 @@ then
     # Integration test various tasks
     printf "\nRolling back to 20180802180356\n"
     lucky db.rollback_to 20180802180356
+    lucky db.migrations.status
     printf "\nRolling back remainder\n"
     lucky db.rollback_all
     lucky db.migrate.one
     lucky db.migrate
-    lucky db.migrations.status
     lucky db.reset
     lucky db.drop
     lucky db.setup
