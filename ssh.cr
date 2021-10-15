@@ -10,6 +10,4 @@ def shell # (command)
   end
 end
 
-# shell("docker-compose run --rm app bash")
-
 shell
