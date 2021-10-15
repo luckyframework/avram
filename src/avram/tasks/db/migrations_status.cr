@@ -42,7 +42,7 @@ class Db::Migrations::Status < BaseTask
 
   private def migration_statuses
     migrations.map do |migration|
-      status = migration.new.migrated? ? "Migrated" : "Pending"
+      status = migration.new.migrated? ? "Migrated" : "Pending".colorize(:yellow)
       [migration.name, status]
     end
   end
