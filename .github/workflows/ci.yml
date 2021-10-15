@@ -14,6 +14,7 @@ jobs:
         crystal_version:
           - 1.0.0
           - 1.1.0
+          - 1.2.0
         experimental:
           - false
         include:
@@ -38,13 +39,13 @@ jobs:
       fail-fast: false
       matrix:
         postgres_version:
-          - 10
           - 11
           - 12
           - 13
         crystal_version:
           - 1.0.0
           - 1.1.0
+          - 1.2.0
         experimental:
           - false
         include:
