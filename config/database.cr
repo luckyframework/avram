@@ -8,7 +8,7 @@ end
 
 TestDatabase.configure do |settings|
   settings.credentials = Avram::Credentials.parse?(ENV["DATABASE_URL"]?) || Avram::Credentials.new(
-    hostname: "localhost",
+    hostname: "db",
     database: database_name,
     username: "lucky",
     password: "developer"
@@ -17,7 +17,7 @@ end
 
 DatabaseWithIncorrectSettings.configure do |settings|
   settings.credentials = Avram::Credentials.new(
-    hostname: "localhost",
+    hostname: "db",
     database: database_name,
     username: "incorrect"
   )
