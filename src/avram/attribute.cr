@@ -6,6 +6,10 @@ class Avram::Attribute(T)
   @errors = [] of String
   @param : Avram::Uploadable | String | Nil
 
+  # This can be used as an escape hatch when you
+  # may have a blank string that's allowed to be saved.
+  property? allow_blank : Bool = false
+
   def initialize(@name, @value : T?, @param_key, @param = nil)
     @original_value = @value
   end
@@ -44,11 +48,19 @@ class Avram::Attribute(T)
   end
 
   def value : T?
-    ensure_no_blank(@value)
+    if allow_blank?
+      @value
+    else
+      ensure_no_blank(@value)
+    end
   end
 
   def original_value : T?
-    ensure_no_blank(@original_value)
+    if allow_blank?
+      @original_value
+    else
+      ensure_no_blank(@original_value)
+    end
   end
 
   private def ensure_no_blank(value : T?) : T?

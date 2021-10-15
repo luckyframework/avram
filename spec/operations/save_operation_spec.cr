@@ -77,6 +77,16 @@ private class SavePost < Post::SaveOperation
   permit_columns :title, :published_at
 end
 
+# This is to test an escape hatch where you don't want to
+# define a Nil type, but your field is optional
+private class AllowBlankComment < Comment::SaveOperation
+  skip_default_validations
+
+  before_save do
+    body.allow_blank = true
+  end
+end
+
 describe "Avram::SaveOperation" do
   it "allows overriding the param_key" do
     ParamKeySaveOperation.param_key.should eq "custom_param"
@@ -766,6 +776,32 @@ describe "Avram::SaveOperation" do
         operation.new_record?.should be_false
         operation.save.should be_true
         operation.new_record?.should be_false
+      end
+    end
+  end
+
+  describe "skip_default_validations" do
+    it "allows blank strings to be saved" do
+      post = PostFactory.create
+      AllowBlankComment.create(post_id: post.id, body: "") do |op, new_comment|
+        op.valid?.should be_true
+        comment = new_comment.not_nil!
+        comment.body.should eq("")
+      end
+    end
+    it "still allows normal data to be saved" do
+      post = PostFactory.create
+      AllowBlankComment.create(post_id: post.id, body: "not blank") do |op, new_comment|
+        op.valid?.should be_true
+        comment = new_comment.not_nil!
+        comment.body.should eq("not blank")
+      end
+    end
+    it "fails at postgres when saving nil" do
+      post = PostFactory.create
+      expect_raises(PQ::PQError) do
+        AllowBlankComment.create(post_id: post.id) do |_op, _new_comment|
+        end
       end
     end
   end
