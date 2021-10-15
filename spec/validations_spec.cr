@@ -28,7 +28,8 @@ describe Avram::Validations do
       filled_attribute = attribute("filled")
       filled_attribute_2 = attribute("filled")
       blank_attribute = attribute("")
-      Avram::Validations.validate_at_most_one_filled(filled_attribute, filled_attribute_2, blank_attribute)
+      result = Avram::Validations.validate_at_most_one_filled(filled_attribute, filled_attribute_2, blank_attribute)
+      result.should eq(false)
       filled_attribute.valid?.should be_true
       blank_attribute.valid?.should be_true
       filled_attribute_2.errors.should eq(["must be blank"])
@@ -38,7 +39,8 @@ describe Avram::Validations do
       filled_attribute = attribute("filled")
       blank_attribute = attribute("")
 
-      Avram::Validations.validate_at_most_one_filled(filled_attribute, blank_attribute)
+      result = Avram::Validations.validate_at_most_one_filled(filled_attribute, blank_attribute)
+      result.should eq(true)
 
       filled_attribute.valid?.should be_true
       blank_attribute.valid?.should be_true
@@ -50,7 +52,8 @@ describe Avram::Validations do
       filled_attribute = attribute("filled")
       filled_attribute_2 = attribute("filled")
       blank_attribute = attribute("")
-      Avram::Validations.validate_exactly_one_filled(filled_attribute, filled_attribute_2, blank_attribute)
+      result = Avram::Validations.validate_exactly_one_filled(filled_attribute, filled_attribute_2, blank_attribute)
+      result.should eq(false)
       filled_attribute.valid?.should be_true
       blank_attribute.valid?.should be_true
       filled_attribute_2.errors.should eq(["must be blank"])
@@ -60,8 +63,8 @@ describe Avram::Validations do
       first_blank_attribute = nil_attribute(String)
       second_blank_attribute = attribute("")
 
-      Avram::Validations.validate_exactly_one_filled(first_blank_attribute, second_blank_attribute)
-
+      result = Avram::Validations.validate_exactly_one_filled(first_blank_attribute, second_blank_attribute)
+      result.should eq(false)
       first_blank_attribute.errors.should eq(["at least one must be filled"])
       second_blank_attribute.valid?.should be_true
     end
@@ -70,8 +73,8 @@ describe Avram::Validations do
       filled_attribute = attribute("filled")
       blank_attribute = attribute("")
 
-      Avram::Validations.validate_exactly_one_filled(filled_attribute, blank_attribute)
-
+      result = Avram::Validations.validate_exactly_one_filled(filled_attribute, blank_attribute)
+      result.should eq(true)
       filled_attribute.valid?.should be_true
       blank_attribute.valid?.should be_true
     end
@@ -82,8 +85,8 @@ describe Avram::Validations do
       empty_attribute = attribute("")
       nil_attribute = nil_attribute(String)
 
-      Avram::Validations.validate_required(empty_attribute, nil_attribute)
-
+      result = Avram::Validations.validate_required(empty_attribute, nil_attribute)
+      result.should eq(false)
       empty_attribute.errors.should eq ["is required"]
       nil_attribute.errors.should eq ["is required"]
     end
@@ -91,16 +94,16 @@ describe Avram::Validations do
     it "adds no errors if things are present" do
       filled_attribute = attribute("Filled")
 
-      Avram::Validations.validate_required(filled_attribute)
-
+      result = Avram::Validations.validate_required(filled_attribute)
+      result.should eq(true)
       filled_attribute.valid?.should be_true
     end
 
     it "adds no error if the value is 'false'" do
       false_attribute = attribute(false)
 
-      Avram::Validations.validate_required false_attribute
-
+      result = Avram::Validations.validate_required false_attribute
+      result.should eq(true)
       false_attribute.valid?.should be_true
     end
   end
@@ -140,8 +143,8 @@ describe Avram::Validations do
     it "validates custom message for validates_required" do
       empty_attribute = attribute("")
 
-      Avram::Validations.validate_required empty_attribute, message: "ugh"
-
+      result = Avram::Validations.validate_required empty_attribute, message: "ugh"
+      result.should eq(false)
       empty_attribute.errors.should eq(["ugh"])
     end
 
@@ -155,16 +158,16 @@ describe Avram::Validations do
     it "validates custom message for validate_inclusion_of" do
       state_attribute = attribute("Iowa")
 
-      Avram::Validations.validate_inclusion_of state_attribute, ["Utah"], message: "nope!"
-
+      result = Avram::Validations.validate_inclusion_of state_attribute, ["Utah"], message: "nope!"
+      result.should eq(false)
       state_attribute.errors.should eq(["nope!"])
     end
 
     it "validates custom message for validate_acceptance_of" do
       false_attribute = attribute(false)
 
-      Avram::Validations.validate_acceptance_of false_attribute, message: "must be accepted"
-
+      result = Avram::Validations.validate_acceptance_of false_attribute, message: "must be accepted"
+      result.should eq(false)
       false_attribute.errors.should eq(["must be accepted"])
     end
 
@@ -172,16 +175,16 @@ describe Avram::Validations do
       first = attribute("first")
       second = attribute("second")
 
-      Avram::Validations.validate_confirmation_of first, with: second, message: "not even close"
-
+      result = Avram::Validations.validate_confirmation_of first, with: second, message: "not even close"
+      result.should eq(false)
       second.errors.should eq(["not even close"])
     end
 
     it "validates custom message for validate_numeric" do
       too_small_attribute = attribute(1)
 
-      Avram::Validations.validate_numeric too_small_attribute, greater_than: 2, message: "number is too small"
-
+      result = Avram::Validations.validate_numeric too_small_attribute, greater_than: 2, message: "number is too small"
+      result.should eq(false)
       too_small_attribute.errors.should eq(["number is too small"])
     end
   end
@@ -189,15 +192,18 @@ describe Avram::Validations do
   describe "validate_acceptance_of" do
     it "validates the attribute value is true" do
       false_attribute = attribute(false)
-      Avram::Validations.validate_acceptance_of false_attribute
+      result = Avram::Validations.validate_acceptance_of false_attribute
+      result.should eq(false)
       false_attribute.errors.should eq(["must be accepted"])
 
       nil_attribute = nil_attribute(Bool)
-      Avram::Validations.validate_acceptance_of nil_attribute
+      result = Avram::Validations.validate_acceptance_of nil_attribute
+      result.should eq(false)
       nil_attribute.errors.should eq(["must be accepted"])
 
       accepted_attribute = attribute(true)
-      Avram::Validations.validate_acceptance_of accepted_attribute
+      result = Avram::Validations.validate_acceptance_of accepted_attribute
+      result.should eq(true)
       accepted_attribute.valid?.should be_true
     end
   end
@@ -206,12 +212,14 @@ describe Avram::Validations do
     it "validates the attribute values match" do
       first = attribute("first")
       second = attribute("second")
-      Avram::Validations.validate_confirmation_of first, with: second
+      result = Avram::Validations.validate_confirmation_of first, with: second
+      result.should eq(false)
       second.errors.should eq(["must match"])
 
       first = attribute("same")
       second = attribute("same")
-      Avram::Validations.validate_confirmation_of first, with: second
+      result = Avram::Validations.validate_confirmation_of first, with: second
+      result.should eq(true)
       second.valid?.should be_true
     end
   end
@@ -219,24 +227,29 @@ describe Avram::Validations do
   describe "validate_inclusion_of" do
     it "validates" do
       allowed_name = attribute("Jamie")
-      Avram::Validations.validate_inclusion_of(allowed_name, in: ["Jamie"])
+      result = Avram::Validations.validate_inclusion_of(allowed_name, in: ["Jamie"])
+      result.should eq(true)
       allowed_name.valid?.should be_true
 
       forbidden_name = attribute("123123123")
-      Avram::Validations.validate_inclusion_of(forbidden_name, in: ["Jamie"])
+      result = Avram::Validations.validate_inclusion_of(forbidden_name, in: ["Jamie"])
+      result.should eq(false)
       forbidden_name.errors.should eq(["is invalid"])
     end
 
     it "can allow nil" do
       nil_name = Avram::Attribute(String).new(value: nil, param: nil, param_key: "fake", name: :fake)
 
-      Avram::Validations.validate_inclusion_of(nil_name, in: ["Jamie"], allow_nil: true)
+      result = Avram::Validations.validate_inclusion_of(nil_name, in: ["Jamie"], allow_nil: true)
+      result.should eq(true)
       nil_name.valid?.should be_true
 
-      Avram::Validations.validate_inclusion_of(nil_name, in: ["Jamie"], allow_nil: false)
+      result = Avram::Validations.validate_inclusion_of(nil_name, in: ["Jamie"], allow_nil: false)
+      result.should eq(false)
       nil_name.valid?.should be_false
 
-      Avram::Validations.validate_inclusion_of(nil_name, in: ["Jamie"])
+      result = Avram::Validations.validate_inclusion_of(nil_name, in: ["Jamie"])
+      result.should eq(false)
       nil_name.valid?.should be_false
     end
   end
@@ -244,19 +257,23 @@ describe Avram::Validations do
   describe "validate_size_of" do
     it "validates" do
       incorrect_size_attribute = attribute("P")
-      Avram::Validations.validate_size_of(incorrect_size_attribute, is: 2)
+      result = Avram::Validations.validate_size_of(incorrect_size_attribute, is: 2)
+      result.should eq(false)
       incorrect_size_attribute.errors.should eq(["is invalid"])
 
       too_short_attribute = attribute("P")
-      Avram::Validations.validate_size_of(too_short_attribute, min: 2)
+      result = Avram::Validations.validate_size_of(too_short_attribute, min: 2)
+      result.should eq(false)
       too_short_attribute.errors.should eq(["is too short"])
 
       too_long_attribute = attribute("Supercalifragilisticexpialidocious")
-      Avram::Validations.validate_size_of(too_long_attribute, max: 32)
+      result = Avram::Validations.validate_size_of(too_long_attribute, max: 32)
+      result.should eq(false)
       too_long_attribute.errors.should eq(["is too long"])
 
       just_right_attribute = attribute("Goldilocks")
-      Avram::Validations.validate_size_of(just_right_attribute, is: 10)
+      result = Avram::Validations.validate_size_of(just_right_attribute, is: 10)
+      result.should eq(true)
       just_right_attribute.valid?.should be_true
     end
 
@@ -268,19 +285,23 @@ describe Avram::Validations do
 
     it "can allow nil" do
       just_nil = nil_attribute(String)
-      Avram::Validations.validate_size_of(just_nil, is: 10, allow_nil: true)
+      result = Avram::Validations.validate_size_of(just_nil, is: 10, allow_nil: true)
+      result.should eq(true)
       just_nil.valid?.should be_true
 
       just_nil = nil_attribute(String)
-      Avram::Validations.validate_size_of(just_nil, min: 1, max: 2, allow_nil: true)
+      result = Avram::Validations.validate_size_of(just_nil, min: 1, max: 2, allow_nil: true)
+      result.should eq(true)
       just_nil.valid?.should be_true
 
       just_nil = nil_attribute(String)
-      Avram::Validations.validate_size_of(just_nil, is: 10)
+      result = Avram::Validations.validate_size_of(just_nil, is: 10)
+      result.should eq(false)
       just_nil.valid?.should be_false
 
       just_nil = nil_attribute(String)
-      Avram::Validations.validate_size_of(just_nil, min: 1, max: 2)
+      result = Avram::Validations.validate_size_of(just_nil, min: 1, max: 2)
+      result.should eq(false)
       just_nil.valid?.should be_false
     end
   end
@@ -288,15 +309,18 @@ describe Avram::Validations do
   describe "validate_numeric" do
     it "validates" do
       too_small_attribute = attribute(1)
-      Avram::Validations.validate_numeric(too_small_attribute, greater_than: 2)
+      result = Avram::Validations.validate_numeric(too_small_attribute, greater_than: 2)
+      result.should eq(false)
       too_small_attribute.errors.should eq(["is too small"])
 
       too_large_attribute = attribute(38)
-      Avram::Validations.validate_numeric(too_large_attribute, less_than: 32)
+      result = Avram::Validations.validate_numeric(too_large_attribute, less_than: 32)
+      result.should eq(false)
       too_large_attribute.errors.should eq(["is too large"])
 
       just_right_attribute = attribute(10)
-      Avram::Validations.validate_numeric(just_right_attribute, greater_than: 9, less_than: 11)
+      result = Avram::Validations.validate_numeric(just_right_attribute, greater_than: 9, less_than: 11)
+      result.should eq(true)
       just_right_attribute.valid?.should be_true
     end
 
@@ -308,25 +332,30 @@ describe Avram::Validations do
 
     it "can allow nil" do
       just_nil = nil_attribute(Int32)
-      Avram::Validations.validate_numeric(just_nil, greater_than: 1, less_than: 2, allow_nil: true)
+      result = Avram::Validations.validate_numeric(just_nil, greater_than: 1, less_than: 2, allow_nil: true)
+      result.should eq(true)
       just_nil.valid?.should be_true
 
       just_nil = nil_attribute(Int32)
-      Avram::Validations.validate_numeric(just_nil, greater_than: 1, less_than: 2)
+      result = Avram::Validations.validate_numeric(just_nil, greater_than: 1, less_than: 2)
+      result.should eq(false)
       just_nil.valid?.should be_false
     end
 
     it "handles different types of numbers" do
       attribute = attribute(10.9)
-      Avram::Validations.validate_numeric(attribute, greater_than: 9, less_than: 11)
+      result = Avram::Validations.validate_numeric(attribute, greater_than: 9, less_than: 11)
+      result.should eq(true)
       attribute.valid?.should be_true
 
       attribute = attribute(10)
-      Avram::Validations.validate_numeric(attribute, greater_than: 9.8, less_than: 10.9)
+      result = Avram::Validations.validate_numeric(attribute, greater_than: 9.8, less_than: 10.9)
+      result.should eq(true)
       attribute.valid?.should be_true
 
       attribute = attribute(10_i64)
-      Avram::Validations.validate_numeric(attribute, greater_than: 9, less_than: 11)
+      result = Avram::Validations.validate_numeric(attribute, greater_than: 9, less_than: 11)
+      result.should eq(true)
       attribute.valid?.should be_true
     end
   end

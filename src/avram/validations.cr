@@ -1,8 +1,9 @@
 require "./validations/callable_error_message"
 
 # A number of methods for validating Avram::Attributes
+# All validation methods return `Bool`. `false` if any error is added, otherwise `true`
 #
-# This module is included in `Avram::Operation` and `Avram::SaveOperation`
+# This module is included in `Avram::Operation`, `Avram::SaveOperation`, and `Avram::DeleteOperation`
 module Avram::Validations
   extend self
 
@@ -10,12 +11,18 @@ module Avram::Validations
   #
   # If more than one attribute is filled it will mark all but the first filled
   # field invalid.
-  def validate_at_most_one_filled(*attributes, message : Avram::Attribute::ErrorMessage = "must be blank")
+  def validate_at_most_one_filled(*attributes, message : Avram::Attribute::ErrorMessage = "must be blank") : Bool
+    no_errors = true
     present_attributes = attributes.reject(&.value.blank?)
 
     if present_attributes.size > 1
-      present_attributes.skip(1).each(&.add_error(message))
+      present_attributes.skip(1).each do |attr|
+        attr.add_error(message)
+        no_errors = false
+      end
     end
+
+    no_errors
   end
 
   # Validates that at exactly one attribute is filled
@@ -27,13 +34,16 @@ module Avram::Validations
   # field invalid.
   #
   # If no field is filled, the first field will be marked as invalid.
-  def validate_exactly_one_filled(*attributes, message : Avram::Attribute::ErrorMessage = "at least one must be filled")
-    validate_at_most_one_filled(*attributes)
+  def validate_exactly_one_filled(*attributes, message : Avram::Attribute::ErrorMessage = "at least one must be filled") : Bool
+    no_errors = validate_at_most_one_filled(*attributes)
     present_attributes = attributes.reject(&.value.blank?)
 
     if present_attributes.size.zero?
       attributes.first.add_error(message)
+      no_errors = false
     end
+
+    no_errors
   end
 
   # Validates that the passed in attributes have values
@@ -46,22 +56,30 @@ module Avram::Validations
   # ```
   # validate_required name, age, email
   # ```
-  def validate_required(*attributes, message : Avram::Attribute::ErrorMessage = "is required")
+  def validate_required(*attributes, message : Avram::Attribute::ErrorMessage = "is required") : Bool
+    no_errors = true
     attributes.each do |attribute|
       if attribute.value.blank_for_validates_required?
-        attribute.add_error message
+        attribute.add_error(message)
+        no_errors = false
       end
     end
+
+    no_errors
   end
 
   # Validate whether an attribute was accepted (`true`)
   #
   # This validation is only for Boolean Attributes. The attribute will be marked
   # as invalid for any value other than `true`.
-  def validate_acceptance_of(attribute : Avram::Attribute(Bool), message : Avram::Attribute::ErrorMessage = "must be accepted")
+  def validate_acceptance_of(attribute : Avram::Attribute(Bool), message : Avram::Attribute::ErrorMessage = "must be accepted") : Bool
+    no_errors = true
     if attribute.value != true
-      attribute.add_error message
+      attribute.add_error(message)
+      no_errors = false
     end
+
+    no_errors
   end
 
   # Validates that the values of two attributes are the same
@@ -80,10 +98,14 @@ module Avram::Validations
     attribute : Avram::Attribute(T),
     with confirmation_attribute : Avram::Attribute(T),
     message : Avram::Attribute::ErrorMessage = "must match"
-  ) forall T
+  ) : Bool forall T
+    no_errors = true
     if attribute.value != confirmation_attribute.value
-      confirmation_attribute.add_error message
+      confirmation_attribute.add_error(message)
+      no_errors = false
     end
+
+    no_errors
   end
 
   # Validates that the attribute value is in a list of allowed values
@@ -98,10 +120,16 @@ module Avram::Validations
     in allowed_values : Enumerable(T),
     message : Avram::Attribute::ErrorMessage = "is invalid",
     allow_nil : Bool = false
-  ) forall T
-    unless allowed_values.includes? attribute.value
-      attribute.add_error message unless allow_nil && attribute.value.nil?
+  ) : Bool forall T
+    no_errors = true
+    if !allowed_values.includes?(attribute.value)
+      if !(allow_nil && attribute.value.nil?)
+        attribute.add_error(message)
+        no_errors = false
+      end
     end
+
+    no_errors
   end
 
   # Validate the size of a `String` is exactly a certain size
@@ -115,10 +143,16 @@ module Avram::Validations
     is exact_size,
     message : Avram::Attribute::ErrorMessage = "is invalid",
     allow_nil : Bool = false
-  )
+  ) : Bool
+    no_errors = true
     if attribute.value.to_s.size != exact_size
-      attribute.add_error message unless allow_nil && attribute.value.nil?
+      if !(allow_nil && attribute.value.nil?)
+        attribute.add_error(message)
+        no_errors = false
+      end
     end
+
+    no_errors
   end
 
   # Validate the size of a `String` is within a `min` and/or `max`
@@ -134,7 +168,8 @@ module Avram::Validations
     max = nil,
     message = nil,
     allow_nil : Bool = false
-  )
+  ) : Bool
+    no_errors = true
     if !min.nil? && !max.nil? && min > max
       raise ImpossibleValidation.new(
         attribute: attribute.name,
@@ -145,13 +180,17 @@ module Avram::Validations
       size = attribute.value.to_s.size
 
       if !min.nil? && size < min
-        attribute.add_error message || "is too short"
+        attribute.add_error(message || "is too short")
+        no_errors = false
       end
 
       if !max.nil? && size > max
-        attribute.add_error message || "is too long"
+        attribute.add_error(message || "is too long")
+        no_errors = false
       end
     end
+
+    no_errors
   end
 
   # Validate a number is `greater_than` and/or `less_than`
@@ -167,7 +206,8 @@ module Avram::Validations
     less_than = nil,
     message = nil,
     allow_nil : Bool = false
-  )
+  ) : Bool
+    no_errors = true
     if greater_than && less_than && greater_than > less_than
       raise ImpossibleValidation.new(
         attribute: attribute.name,
@@ -177,16 +217,23 @@ module Avram::Validations
     number = attribute.value
 
     if number.nil?
-      attribute.add_error "is nil" unless allow_nil
-      return
+      unless allow_nil
+        attribute.add_error("is nil")
+        no_errors = false
+      end
+      return no_errors
     end
 
     if greater_than && number < greater_than
-      attribute.add_error message || "is too small"
+      attribute.add_error(message || "is too small")
+      no_errors = false
     end
 
     if less_than && number > less_than
-      attribute.add_error message || "is too large"
+      attribute.add_error(message || "is too large")
+      no_errors = false
     end
+
+    no_errors
   end
 end

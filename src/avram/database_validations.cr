@@ -2,6 +2,7 @@ require "./validations/**"
 
 module Avram::DatabaseValidations(T)
   # Validates that the given attribute is unique in the database
+  # All validation methods return `Bool`. `false` if any error is added, otherwise `true`
   #
   # > This will only work with attributes that correspond to a database column.
   #
@@ -26,12 +27,16 @@ module Avram::DatabaseValidations(T)
     attribute : Avram::Attribute,
     query : Avram::Criteria(T::BaseQuery, _),
     message : String = "is already taken"
-  )
+  ) : Bool
+    no_errors = true
     attribute.value.try do |value|
       if limit_query(query.eq(value)).any? # ameba:disable Performance/AnyInsteadOfEmpty
-        attribute.add_error message
+        attribute.add_error(message)
+        no_errors = false
       end
     end
+
+    no_errors
   end
 
   # Validates that the given attribute is unique in the database with a custom query
@@ -61,12 +66,16 @@ module Avram::DatabaseValidations(T)
     attribute : Avram::Attribute,
     query : T::BaseQuery,
     message : String = "is already taken"
-  )
+  ) : Bool
+    no_errors = true
     attribute.value.try do |value|
       if limit_query(query).where(attribute.name, value).any? # ameba:disable Performance/AnyInsteadOfEmpty
-        attribute.add_error message
+        attribute.add_error(message)
+        no_errors = false
       end
     end
+
+    no_errors
   end
 
   # Validates that the given attribute is unique in the database
@@ -90,7 +99,7 @@ module Avram::DatabaseValidations(T)
   private def validate_uniqueness_of(
     attribute : Avram::Attribute,
     message : Avram::Attribute::ErrorMessage = "is already taken"
-  )
+  ) : Bool
     validate_uniqueness_of(attribute: attribute, query: T::BaseQuery.new, message: message)
   end
 
