@@ -80,6 +80,16 @@ class Avram::Migrator::AlterTableStatement
     {% unless type_declaration.is_a?(TypeDeclaration) %}
       {% raise "add_belongs_to expected a type declaration like 'user : User', instead got: '#{type_declaration}'" %}
     {% end %}
+    {% if type_declaration.type.stringify =~ /\w::\w/ && references.nil? %}
+      {% raise <<-ERROR
+      Namespaced models must include the `references` option with the name of the table.
+
+      Try this...
+
+        ▸ add_belongs_to(#{type_declaration}, on_delete: #{on_delete}, references: :the_table_name)
+      ERROR
+      %}
+    {% end %}
     {% optional = type_declaration.type.is_a?(Union) %}
 
     {% if optional %}
