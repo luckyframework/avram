@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="generator" content="Crystal Docs 1.0.0">
+<meta name="generator" content="Crystal Docs 1.1.1">
 <meta name="crystal_docs.project_version" content="master">
 <meta name="crystal_docs.project_name" content="avram">
 
@@ -1530,72 +1530,53 @@
   </h2>
 
   <p>Enum is the base type of all enums.</p>
-
 <p>An enum is a set of integer values, where each value has an associated name. For example:</p>
-
 <pre><code class="language-crystal"><span class="k">enum</span> <span class="t">Color</span>
   <span class="t">Red</span>   <span class="c"># 0</span>
   <span class="t">Green</span> <span class="c"># 1</span>
   <span class="t">Blue</span>  <span class="c"># 2</span>
 <span class="k">end</span></code></pre>
-
 <p>Values start with the value <code>0</code> and are incremented by one, but can be overwritten.</p>
-
 <p>To get the underlying value you invoke value on it:</p>
-
 <pre><code class="language-crystal"><span class="t">Color</span><span class="t">::</span><span class="t">Green</span>.value <span class="c"># =&gt; 1</span></code></pre>
-
 <p>Each constant (member) in the enum has the type of the enum:</p>
-
 <pre><code class="language-crystal"><span class="k">typeof</span>(<span class="t">Color</span><span class="t">::</span><span class="t">Red</span>) <span class="c"># =&gt; Color</span></code></pre>
-
 <h3><a id="flags-enum" class="anchor" href="#flags-enum">
   <svg class="octicon-link" aria-hidden="true">
     <use href="#octicon-link"/>
   </svg>
 </a>Flags enum</h3>
-
 <p>An enum can be marked with the <code>@[Flags]</code> annotation. This changes the default values:</p>
-
 <pre><code class="language-crystal">@[<span class="t">Flags</span>]
 <span class="k">enum</span> <span class="t">IOMode</span>
   <span class="t">Read</span>  <span class="c"># 1</span>
   <span class="t">Write</span> <span class="c"># 2</span>
   <span class="t">Async</span> <span class="c"># 4</span>
 <span class="k">end</span></code></pre>
-
 <p>Additionally, some methods change their behaviour.</p>
-
 <h3><a id="enums-from-integers" class="anchor" href="#enums-from-integers">
   <svg class="octicon-link" aria-hidden="true">
     <use href="#octicon-link"/>
   </svg>
 </a>Enums from integers</h3>
-
 <p>An enum can be created from an integer:</p>
-
 <pre><code class="language-crystal"><span class="t">Color</span>.<span class="k">new</span>(<span class="n">1</span>).to_s <span class="c"># =&gt; &quot;Green&quot;</span></code></pre>
-
 <p>Values that don't correspond to enum's constants are allowed: the value
 will still be of type Color, but when printed you will get the underlying value:</p>
-
 <pre><code class="language-crystal"><span class="t">Color</span>.<span class="k">new</span>(<span class="n">10</span>).to_s <span class="c"># =&gt; &quot;10&quot;</span></code></pre>
-
 <p>This method is mainly intended to convert integers from C to enums in Crystal.</p>
-
 <h3><a id="question-methods" class="anchor" href="#question-methods">
   <svg class="octicon-link" aria-hidden="true">
     <use href="#octicon-link"/>
   </svg>
 </a>Question methods</h3>
-
 <p>An enum automatically defines question methods for each member, using
 <code>String#underscore</code> for the method name.</p>
-
-<ul><li>In the case of regular enums, this compares by equality (<code>==</code>).</li><li>In the case of flags enums, this invokes <code>includes?</code>.</li></ul>
-
+<ul>
+<li>In the case of regular enums, this compares by equality (<code>==</code>).</li>
+<li>In the case of flags enums, this invokes <code>includes?</code>.</li>
+</ul>
 <p>For example:</p>
-
 <pre><code class="language-crystal">color <span class="o">=</span> <span class="t">Color</span><span class="t">::</span><span class="t">Blue</span>
 color.red?  <span class="c"># =&gt; false</span>
 color.blue? <span class="c"># =&gt; true</span>
@@ -1604,9 +1585,7 @@ mode <span class="o">=</span> <span class="t">IOMode</span><span class="t">::</s
 mode.read?  <span class="c"># =&gt; true</span>
 mode.write? <span class="c"># =&gt; false</span>
 mode.async? <span class="c"># =&gt; true</span></code></pre>
-
 <p>This is very convenient in <code>case</code> expressions:</p>
-
 <pre><code class="language-crystal"><span class="k">case</span> color
 <span class="k">when</span> .red?
   puts <span class="s">&quot;Got red&quot;</span>
@@ -1651,7 +1630,7 @@ mode.async? <span class="c"># =&gt; true</span></code></pre>
   </h2>
   
     
-      <a href="https://github.com/luckyframework/avram/blob/48da4d808066257a19b84680fce76c98e938b066/src/avram/charms/enum_extensions.cr#L3" target="_blank">
+      <a href="https://github.com/luckyframework/avram/blob/7528131fef4a1c69847b9c4421f44048fda37122/src/avram/charms/enum_extensions.cr#L3" target="_blank">
         avram/charms/enum_extensions.cr
       </a>
     
@@ -1714,17 +1693,17 @@ mode.async? <span class="c"># =&gt; true</span></code></pre>
   <h3>Instance methods inherited from class <code><a href="Object.html">Object</a></code></h3>
   
   
-    <a href="Object.html#blank?-instance-method" class="tooltip">
+    <a href="Object.html#blank%3F-instance-method" class="tooltip">
       <span>blank?</span>
     blank?</a>, 
     
   
-    <a href="Object.html#blank_for_validates_required?:Bool-instance-method" class="tooltip">
+    <a href="Object.html#blank_for_validates_required%3F%3ABool-instance-method" class="tooltip">
       <span>blank_for_validates_required? : Bool</span>
     blank_for_validates_required?</a>, 
     
   
-    <a href="Object.html#present?-instance-method" class="tooltip">
+    <a href="Object.html#present%3F-instance-method" class="tooltip">
       <span>present?</span>
     present?</a>
     
@@ -1763,7 +1742,7 @@ mode.async? <span class="c"># =&gt; true</span></code></pre>
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/48da4d808066257a19b84680fce76c98e938b066/src/avram/charms/enum_extensions.cr#L4" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/7528131fef4a1c69847b9c4421f44048fda37122/src/avram/charms/enum_extensions.cr#L4" target="_blank">View source</a>]
         
       </div>
     </div>

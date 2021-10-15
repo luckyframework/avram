@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="generator" content="Crystal Docs 1.0.0">
+<meta name="generator" content="Crystal Docs 1.1.1">
 <meta name="crystal_docs.project_version" content="master">
 <meta name="crystal_docs.project_name" content="avram">
 
@@ -1531,25 +1531,18 @@
 
   <p>Builds an SQL statement for creating an index using table name, column
 name(s), index type and unique flag.</p>
-
 <h3><a id="usage" class="anchor" href="#usage">
   <svg class="octicon-link" aria-hidden="true">
     <use href="#octicon-link"/>
   </svg>
 </a>Usage</h3>
-
 <p>For a single column:</p>
-
 <pre><code class="language-crystal"><span class="t">CreateIndexStatement</span>.<span class="k">new</span>(<span class="n">:users</span>, columns: <span class="n">:email</span>, using: <span class="n">:btree</span>, unique: <span class="n">true</span>).build
 <span class="c"># =&gt; &quot;CREATE UNIQUE INDEX users_email_index ON users USING btree (email);&quot;</span></code></pre>
-
 <p>For multiple columns:</p>
-
 <pre><code class="language-crystal"><span class="t">CreateIndexStatement</span>.<span class="k">new</span>(<span class="n">:users</span>, columns: [<span class="n">:email</span>, <span class="n">:username</span>], using: <span class="n">:btree</span>, unique: <span class="n">true</span>).build
 <span class="c"># =&gt; &quot;CREATE UNIQUE INDEX users_email_username_index ON users USING btree (email, username);&quot;</span></code></pre>
-
 <p>With custom name:</p>
-
 <pre><code class="language-crystal"><span class="t">CreateIndexStatement</span>.<span class="k">new</span>(<span class="n">:users</span>, columns: [<span class="n">:email</span>, <span class="n">:username</span>], name: <span class="n">:custom_index_name</span>).build
 <span class="c"># =&gt; &quot;CREATE INDEX custom_index_name ON users USING btree (email, username);&quot;</span></code></pre>
 
@@ -1590,7 +1583,7 @@ name(s), index type and unique flag.</p>
   </h2>
   
     
-      <a href="https://github.com/luckyframework/avram/blob/48da4d808066257a19b84680fce76c98e938b066/src/avram/migrator/create_index_statement.cr#L28" target="_blank">
+      <a href="https://github.com/luckyframework/avram/blob/7528131fef4a1c69847b9c4421f44048fda37122/src/avram/migrator/create_index_statement.cr#L28" target="_blank">
         avram/migrator/create_index_statement.cr
       </a>
     
@@ -1631,7 +1624,7 @@ name(s), index type and unique flag.</p>
   <ul class="list-summary">
     
       <li class="entry-summary">
-        <a href="#new(table:TableName,columns:Columns,using:Symbol=:btree,unique=false,name:String?%7CSymbol?=nil)-class-method" class="signature"><strong>.new</strong>(table : TableName, columns : Columns, using : Symbol = <span class="n">:btree</span>, unique = <span class="n">false</span>, name : String? | Symbol? = <span class="n">nil</span>)</a>
+        <a href="#new%28table%3ATableName%2Ccolumns%3AColumns%2Cusing%3ASymbol%3D%3Abtree%2Cunique%3Dfalse%2Cname%3AString%3F%7CSymbol%3F%3Dnil%29-class-method" class="signature"><strong>.new</strong>(table : TableName, columns : Columns, using : Symbol = <span class="n">:btree</span>, unique = <span class="n">false</span>, name : String? | Symbol? = <span class="n">nil</span>)</a>
         
       </li>
     
@@ -1669,12 +1662,12 @@ name(s), index type and unique flag.</p>
   <h3>Instance methods inherited from module <code><a href="../../Avram/Migrator/IndexStatementHelpers.html">Avram::Migrator::IndexStatementHelpers</a></code></h3>
   
   
-    <a href="../../Avram/Migrator/IndexStatementHelpers.html#add_index(column:Symbol,unique=false,using:Symbol=:btree)-instance-method" class="tooltip">
+    <a href="../../Avram/Migrator/IndexStatementHelpers.html#add_index%28column%3ASymbol%2Cunique%3Dfalse%2Cusing%3ASymbol%3D%3Abtree%29-instance-method" class="tooltip">
       <span>add_index(column : Symbol, unique = <span class="n">false</span>, using : Symbol = <span class="n">:btree</span>)</span>
     add_index</a>, 
     
   
-    <a href="../../Avram/Migrator/IndexStatementHelpers.html#index_added?(index:String,column:Symbol)-instance-method" class="tooltip">
+    <a href="../../Avram/Migrator/IndexStatementHelpers.html#index_added%3F%28index%3AString%2Ccolumn%3ASymbol%29-instance-method" class="tooltip">
       <span>index_added?(index : String, column : Symbol)</span>
     index_added?</a>
     
@@ -1703,17 +1696,17 @@ name(s), index type and unique flag.</p>
   <h3>Instance methods inherited from class <code><a href="../../Object.html">Object</a></code></h3>
   
   
-    <a href="../../Object.html#blank?-instance-method" class="tooltip">
+    <a href="../../Object.html#blank%3F-instance-method" class="tooltip">
       <span>blank?</span>
     blank?</a>, 
     
   
-    <a href="../../Object.html#blank_for_validates_required?:Bool-instance-method" class="tooltip">
+    <a href="../../Object.html#blank_for_validates_required%3F%3ABool-instance-method" class="tooltip">
       <span>blank_for_validates_required? : Bool</span>
     blank_for_validates_required?</a>, 
     
   
-    <a href="../../Object.html#present?-instance-method" class="tooltip">
+    <a href="../../Object.html#present%3F-instance-method" class="tooltip">
       <span>present?</span>
     present?</a>
     
@@ -1744,13 +1737,13 @@ name(s), index type and unique flag.</p>
         
         def self.<strong>new</strong>(table : <a href="../../Avram/TableName.html">TableName</a>, columns : <a href="../../Avram/Migrator/IndexStatementHelpers/Columns.html">Columns</a>, using : Symbol = <span class="n">:btree</span>, unique = <span class="n">false</span>, name : <a href="../../String.html">String</a>? | Symbol? = <span class="n">nil</span>)
 
-        <a class="method-permalink" href="#new(table:TableName,columns:Columns,using:Symbol=:btree,unique=false,name:String?%7CSymbol?=nil)-class-method">#</a>
+        <a class="method-permalink" href="#new%28table%3ATableName%2Ccolumns%3AColumns%2Cusing%3ASymbol%3D%3Abtree%2Cunique%3Dfalse%2Cname%3AString%3F%7CSymbol%3F%3Dnil%29-class-method">#</a>
       </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/48da4d808066257a19b84680fce76c98e938b066/src/avram/migrator/create_index_statement.cr#L33" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/7528131fef4a1c69847b9c4421f44048fda37122/src/avram/migrator/create_index_statement.cr#L33" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1780,7 +1773,7 @@ name(s), index type and unique flag.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/48da4d808066257a19b84680fce76c98e938b066/src/avram/migrator/create_index_statement.cr#L37" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/7528131fef4a1c69847b9c4421f44048fda37122/src/avram/migrator/create_index_statement.cr#L37" target="_blank">View source</a>]
         
       </div>
     </div>

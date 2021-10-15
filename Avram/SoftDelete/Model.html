@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="generator" content="Crystal Docs 1.0.0">
+<meta name="generator" content="Crystal Docs 1.1.1">
 <meta name="crystal_docs.project_version" content="master">
 <meta name="crystal_docs.project_name" content="avram">
 
@@ -1527,21 +1527,16 @@
     Overview
   </h2>
 
-  <p>table do</p>
-
-<pre><code class="language-crystal">column soft_deleted_at : <span class="t">Time</span>?</code></pre>
-
-<p>end
+  <p>table do
+column soft_deleted_at : Time?
+end
 end</p>
-
 <pre><code class="language-crystal">
 <span class="t">You</span> should also add the <span class="s">`Avram::SoftDeleteQuery`</span> to your query
 </code></pre>
-
 <p>class ArticleQuery &lt; Article::BaseQuery
-  include Avram::SoftDelete::Query
+include Avram::SoftDelete::Query
 end</p>
-
 <pre><code class="language-crystal"></code></pre>
 
 
@@ -1567,7 +1562,7 @@ end</p>
   </h2>
   
     
-      <a href="https://github.com/luckyframework/avram/blob/48da4d808066257a19b84680fce76c98e938b066/src/avram/soft_delete/model.cr#L27" target="_blank">
+      <a href="https://github.com/luckyframework/avram/blob/7528131fef4a1c69847b9c4421f44048fda37122/src/avram/soft_delete/model.cr#L27" target="_blank">
         avram/soft_delete/model.cr
       </a>
     
@@ -1593,7 +1588,7 @@ end</p>
   <ul class="list-summary">
     
       <li class="entry-summary">
-        <a href="#restore:self-instance-method" class="signature"><strong>#restore</strong> : <span class="k">self</span></a>
+        <a href="#restore%3Aself-instance-method" class="signature"><strong>#restore</strong> : <span class="k">self</span></a>
         
           <div class="summary"><p>Restore the record</p></div>
         
@@ -1605,21 +1600,21 @@ end</p>
       </li>
     
       <li class="entry-summary">
-        <a href="#soft_delete:self-instance-method" class="signature"><strong>#soft_delete</strong> : <span class="k">self</span></a>
+        <a href="#soft_delete%3Aself-instance-method" class="signature"><strong>#soft_delete</strong> : <span class="k">self</span></a>
         
           <div class="summary"><p>Soft delete the record</p></div>
         
       </li>
     
       <li class="entry-summary">
-        <a href="#soft_deleted?:Bool-instance-method" class="signature"><strong>#soft_deleted?</strong> : Bool</a>
+        <a href="#soft_deleted%3F%3ABool-instance-method" class="signature"><strong>#soft_deleted?</strong> : Bool</a>
         
           <div class="summary"><p>Returns true if soft deleted, otherwise false</p></div>
         
       </li>
     
       <li class="entry-summary">
-        <a href="#soft_deleted_at:Time?-instance-method" class="signature"><strong>#soft_deleted_at</strong> : Time?</a>
+        <a href="#soft_deleted_at%3ATime%3F-instance-method" class="signature"><strong>#soft_deleted_at</strong> : Time?</a>
         
       </li>
     
@@ -1652,20 +1647,19 @@ end</p>
         
         def <strong>restore</strong> : <span class="k">self</span>
 
-        <a class="method-permalink" href="#restore:self-instance-method">#</a>
+        <a class="method-permalink" href="#restore%3Aself-instance-method">#</a>
       </div>
       
         <div class="doc">
           
           <p>Restore the record</p>
-
-<p>This will set <code><a href="../../Avram/SoftDelete/Model.html#soft_deleted_at:Time?-instance-method">#soft_deleted_at</a></code> to <code>nil</code></p>
+<p>This will set <code><a href="../../Avram/SoftDelete/Model.html#soft_deleted_at%3ATime%3F-instance-method">#soft_deleted_at</a></code> to <code>nil</code></p>
         </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/48da4d808066257a19b84680fce76c98e938b066/src/avram/soft_delete/model.cr#L38" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/7528131fef4a1c69847b9c4421f44048fda37122/src/avram/soft_delete/model.cr#L38" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1681,7 +1675,7 @@ end</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/48da4d808066257a19b84680fce76c98e938b066/src/avram/soft_delete/model.cr#L42" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/7528131fef4a1c69847b9c4421f44048fda37122/src/avram/soft_delete/model.cr#L42" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1691,20 +1685,19 @@ end</p>
         
         def <strong>soft_delete</strong> : <span class="k">self</span>
 
-        <a class="method-permalink" href="#soft_delete:self-instance-method">#</a>
+        <a class="method-permalink" href="#soft_delete%3Aself-instance-method">#</a>
       </div>
       
         <div class="doc">
           
           <p>Soft delete the record</p>
-
-<p>This will set <code><a href="../../Avram/SoftDelete/Model.html#soft_deleted_at:Time?-instance-method">#soft_deleted_at</a></code> to the current time (<code>Time.utc</code>)</p>
+<p>This will set <code><a href="../../Avram/SoftDelete/Model.html#soft_deleted_at%3ATime%3F-instance-method">#soft_deleted_at</a></code> to the current time (<code>Time.utc</code>)</p>
         </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/48da4d808066257a19b84680fce76c98e938b066/src/avram/soft_delete/model.cr#L31" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/7528131fef4a1c69847b9c4421f44048fda37122/src/avram/soft_delete/model.cr#L31" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1714,21 +1707,20 @@ end</p>
         
         def <strong>soft_deleted?</strong> : <a href="../../Bool.html">Bool</a>
 
-        <a class="method-permalink" href="#soft_deleted?:Bool-instance-method">#</a>
+        <a class="method-permalink" href="#soft_deleted%3F%3ABool-instance-method">#</a>
       </div>
       
         <div class="doc">
           
           <p>Returns true if soft deleted, otherwise false</p>
-
-<p>If the <code><a href="../../Avram/SoftDelete/Model.html#soft_deleted_at:Time?-instance-method">#soft_deleted_at</a></code> has a time value the record is "soft deleted".
-If <code><a href="../../Avram/SoftDelete/Model.html#soft_deleted_at:Time?-instance-method">#soft_deleted_at</a></code> is <code>nil</code> the record has not been deleted yet.</p>
+<p>If the <code><a href="../../Avram/SoftDelete/Model.html#soft_deleted_at%3ATime%3F-instance-method">#soft_deleted_at</a></code> has a time value the record is &quot;soft deleted&quot;.
+If <code><a href="../../Avram/SoftDelete/Model.html#soft_deleted_at%3ATime%3F-instance-method">#soft_deleted_at</a></code> is <code>nil</code> the record has not been deleted yet.</p>
         </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/48da4d808066257a19b84680fce76c98e938b066/src/avram/soft_delete/model.cr#L48" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/7528131fef4a1c69847b9c4421f44048fda37122/src/avram/soft_delete/model.cr#L48" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1738,13 +1730,13 @@ If <code><a href="../../Avram/SoftDelete/Model.html#soft_deleted_at:Time?-instan
         abstract 
         def <strong>soft_deleted_at</strong> : <a href="../../Time.html">Time</a>?
 
-        <a class="method-permalink" href="#soft_deleted_at:Time?-instance-method">#</a>
+        <a class="method-permalink" href="#soft_deleted_at%3ATime%3F-instance-method">#</a>
       </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/48da4d808066257a19b84680fce76c98e938b066/src/avram/soft_delete/model.cr#L52" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/7528131fef4a1c69847b9c4421f44048fda37122/src/avram/soft_delete/model.cr#L52" target="_blank">View source</a>]
         
       </div>
     </div>

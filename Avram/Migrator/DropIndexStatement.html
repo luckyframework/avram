@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="generator" content="Crystal Docs 1.0.0">
+<meta name="generator" content="Crystal Docs 1.1.1">
 <meta name="crystal_docs.project_version" content="master">
 <meta name="crystal_docs.project_name" content="avram">
 
@@ -1530,25 +1530,18 @@
   </h2>
 
   <p>Builds an SQL statement for dropping an index by inferring it's name using table name and column(s).</p>
-
 <h3><a id="usage" class="anchor" href="#usage">
   <svg class="octicon-link" aria-hidden="true">
     <use href="#octicon-link"/>
   </svg>
 </a>Usage</h3>
-
 <p>For a single column index:</p>
-
 <pre><code class="language-crystal"><span class="t">DropIndexStatement</span>.<span class="k">new</span>(<span class="n">:users</span>, <span class="n">:email</span>, if_exists: <span class="n">true</span>, on_delete: <span class="n">:cascade</span>).build
 <span class="c"># =&gt; &quot;DROP INDEX IF EXISTS users_email_index CASCADE;&quot;</span></code></pre>
-
 <p>For multiple column index:</p>
-
 <pre><code class="language-crystal"><span class="t">DropIndexStatement</span>.<span class="k">new</span>(<span class="n">:users</span>, [<span class="n">:email</span>, <span class="n">:username</span>] if_exists: <span class="n">true</span>, on_delete: <span class="n">:cascade</span>).build
 <span class="c"># =&gt; &quot;DROP INDEX IF EXISTS users_email_username_index CASCADE;&quot;</span></code></pre>
-
 <p>For index by name:</p>
-
 <pre><code class="language-crystal"><span class="t">DropIndexStatement</span>.<span class="k">new</span>(<span class="n">:users</span>, name: <span class="n">:custom_index_name</span>).build
 <span class="c"># =&gt; &quot;DROP INDEX custom_index_name;&quot;</span></code></pre>
 
@@ -1589,7 +1582,7 @@
   </h2>
   
     
-      <a href="https://github.com/luckyframework/avram/blob/48da4d808066257a19b84680fce76c98e938b066/src/avram/migrator/drop_index_statement.cr#L27" target="_blank">
+      <a href="https://github.com/luckyframework/avram/blob/7528131fef4a1c69847b9c4421f44048fda37122/src/avram/migrator/drop_index_statement.cr#L27" target="_blank">
         avram/migrator/drop_index_statement.cr
       </a>
     
@@ -1630,7 +1623,7 @@
   <ul class="list-summary">
     
       <li class="entry-summary">
-        <a href="#new(table:TableName,columns:Columns?=nil,if_exists=false,on_delete=:do_nothing,name:String?%7CSymbol?=nil)-class-method" class="signature"><strong>.new</strong>(table : TableName, columns : Columns? = <span class="n">nil</span>, if_exists = <span class="n">false</span>, on_delete = <span class="n">:do_nothing</span>, name : String? | Symbol? = <span class="n">nil</span>)</a>
+        <a href="#new%28table%3ATableName%2Ccolumns%3AColumns%3F%3Dnil%2Cif_exists%3Dfalse%2Con_delete%3D%3Ado_nothing%2Cname%3AString%3F%7CSymbol%3F%3Dnil%29-class-method" class="signature"><strong>.new</strong>(table : TableName, columns : Columns? = <span class="n">nil</span>, if_exists = <span class="n">false</span>, on_delete = <span class="n">:do_nothing</span>, name : String? | Symbol? = <span class="n">nil</span>)</a>
         
       </li>
     
@@ -1656,7 +1649,7 @@
       </li>
     
       <li class="entry-summary">
-        <a href="#on_delete_strategy(on_delete=:do_nothing)-instance-method" class="signature"><strong>#on_delete_strategy</strong>(on_delete = <span class="n">:do_nothing</span>)</a>
+        <a href="#on_delete_strategy%28on_delete%3D%3Ado_nothing%29-instance-method" class="signature"><strong>#on_delete_strategy</strong>(on_delete = <span class="n">:do_nothing</span>)</a>
         
       </li>
     
@@ -1673,12 +1666,12 @@
   <h3>Instance methods inherited from module <code><a href="../../Avram/Migrator/IndexStatementHelpers.html">Avram::Migrator::IndexStatementHelpers</a></code></h3>
   
   
-    <a href="../../Avram/Migrator/IndexStatementHelpers.html#add_index(column:Symbol,unique=false,using:Symbol=:btree)-instance-method" class="tooltip">
+    <a href="../../Avram/Migrator/IndexStatementHelpers.html#add_index%28column%3ASymbol%2Cunique%3Dfalse%2Cusing%3ASymbol%3D%3Abtree%29-instance-method" class="tooltip">
       <span>add_index(column : Symbol, unique = <span class="n">false</span>, using : Symbol = <span class="n">:btree</span>)</span>
     add_index</a>, 
     
   
-    <a href="../../Avram/Migrator/IndexStatementHelpers.html#index_added?(index:String,column:Symbol)-instance-method" class="tooltip">
+    <a href="../../Avram/Migrator/IndexStatementHelpers.html#index_added%3F%28index%3AString%2Ccolumn%3ASymbol%29-instance-method" class="tooltip">
       <span>index_added?(index : String, column : Symbol)</span>
     index_added?</a>
     
@@ -1707,17 +1700,17 @@
   <h3>Instance methods inherited from class <code><a href="../../Object.html">Object</a></code></h3>
   
   
-    <a href="../../Object.html#blank?-instance-method" class="tooltip">
+    <a href="../../Object.html#blank%3F-instance-method" class="tooltip">
       <span>blank?</span>
     blank?</a>, 
     
   
-    <a href="../../Object.html#blank_for_validates_required?:Bool-instance-method" class="tooltip">
+    <a href="../../Object.html#blank_for_validates_required%3F%3ABool-instance-method" class="tooltip">
       <span>blank_for_validates_required? : Bool</span>
     blank_for_validates_required?</a>, 
     
   
-    <a href="../../Object.html#present?-instance-method" class="tooltip">
+    <a href="../../Object.html#present%3F-instance-method" class="tooltip">
       <span>present?</span>
     present?</a>
     
@@ -1748,13 +1741,13 @@
         
         def self.<strong>new</strong>(table : <a href="../../Avram/TableName.html">TableName</a>, columns : <a href="../../Avram/Migrator/IndexStatementHelpers/Columns.html">Columns</a>? = <span class="n">nil</span>, if_exists = <span class="n">false</span>, on_delete = <span class="n">:do_nothing</span>, name : <a href="../../String.html">String</a>? | Symbol? = <span class="n">nil</span>)
 
-        <a class="method-permalink" href="#new(table:TableName,columns:Columns?=nil,if_exists=false,on_delete=:do_nothing,name:String?%7CSymbol?=nil)-class-method">#</a>
+        <a class="method-permalink" href="#new%28table%3ATableName%2Ccolumns%3AColumns%3F%3Dnil%2Cif_exists%3Dfalse%2Con_delete%3D%3Ado_nothing%2Cname%3AString%3F%7CSymbol%3F%3Dnil%29-class-method">#</a>
       </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/48da4d808066257a19b84680fce76c98e938b066/src/avram/migrator/drop_index_statement.cr#L32" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/7528131fef4a1c69847b9c4421f44048fda37122/src/avram/migrator/drop_index_statement.cr#L32" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1784,7 +1777,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/48da4d808066257a19b84680fce76c98e938b066/src/avram/migrator/drop_index_statement.cr#L35" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/7528131fef4a1c69847b9c4421f44048fda37122/src/avram/migrator/drop_index_statement.cr#L35" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1794,13 +1787,13 @@
         
         def <strong>on_delete_strategy</strong>(on_delete = <span class="n">:do_nothing</span>)
 
-        <a class="method-permalink" href="#on_delete_strategy(on_delete=:do_nothing)-instance-method">#</a>
+        <a class="method-permalink" href="#on_delete_strategy%28on_delete%3D%3Ado_nothing%29-instance-method">#</a>
       </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/48da4d808066257a19b84680fce76c98e938b066/src/avram/migrator/drop_index_statement.cr#L44" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/7528131fef4a1c69847b9c4421f44048fda37122/src/avram/migrator/drop_index_statement.cr#L44" target="_blank">View source</a>]
         
       </div>
     </div>

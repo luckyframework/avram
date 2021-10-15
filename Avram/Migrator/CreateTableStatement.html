@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="generator" content="Crystal Docs 1.0.0">
+<meta name="generator" content="Crystal Docs 1.1.1">
 <meta name="crystal_docs.project_version" content="master">
 <meta name="crystal_docs.project_name" content="avram">
 
@@ -1559,7 +1559,7 @@
   </h2>
   
     
-      <a href="https://github.com/luckyframework/avram/blob/48da4d808066257a19b84680fce76c98e938b066/src/avram/migrator/create_table_statement.cr#L4" target="_blank">
+      <a href="https://github.com/luckyframework/avram/blob/7528131fef4a1c69847b9c4421f44048fda37122/src/avram/migrator/create_table_statement.cr#L4" target="_blank">
         avram/migrator/create_table_statement.cr
       </a>
     
@@ -1581,7 +1581,7 @@
   <ul class="list-summary">
     
       <li class="entry-summary">
-        <a href="#new(table_name:TableName)-class-method" class="signature"><strong>.new</strong>(table_name : TableName)</a>
+        <a href="#new%28table_name%3ATableName%29-class-method" class="signature"><strong>.new</strong>(table_name : TableName)</a>
         
       </li>
     
@@ -1602,9 +1602,9 @@
   <ul class="list-summary">
     
       <li class="entry-summary">
-        <a href="#build(&):CreateTableStatement-instance-method" class="signature"><strong>#build</strong>(&) : CreateTableStatement</a>
+        <a href="#build%28%26%29%3ACreateTableStatement-instance-method" class="signature"><strong>#build</strong>(&) : CreateTableStatement</a>
         
-          <div class="summary"><p>Accepts a block to build a table and indices using <code><a href="../../Avram/Migrator/CreateTableStatement.html#add(type_declaration,default=nil,index=false,unique=false,using=:btree,**type_options)-macro">add</a></code> and <code>add_index</code> methods.</p></div>
+          <div class="summary"><p>Accepts a block to build a table and indices using <code><a href="../../Avram/Migrator/CreateTableStatement.html#add%28type_declaration%2Cdefault%3Dnil%2Cindex%3Dfalse%2Cunique%3Dfalse%2Cusing%3D%3Abtree%2C%2A%2Atype_options%29-macro">add</a></code> and <code>add_index</code> methods.</p></div>
         
       </li>
     
@@ -1628,12 +1628,12 @@
   <ul class="list-summary">
     
       <li class="entry-summary">
-        <a href="#add(type_declaration,default=nil,index=false,unique=false,using=:btree,**type_options)-macro" class="signature"><strong>add</strong>(type_declaration, default = <span class="n">nil</span>, index = <span class="n">false</span>, unique = <span class="n">false</span>, using = <span class="n">:btree</span>, **type_options)</a>
+        <a href="#add%28type_declaration%2Cdefault%3Dnil%2Cindex%3Dfalse%2Cunique%3Dfalse%2Cusing%3D%3Abtree%2C%2A%2Atype_options%29-macro" class="signature"><strong>add</strong>(type_declaration, default = <span class="n">nil</span>, index = <span class="n">false</span>, unique = <span class="n">false</span>, using = <span class="n">:btree</span>, **type_options)</a>
         
       </li>
     
       <li class="entry-summary">
-        <a href="#add_belongs_to(type_declaration,on_delete,references=nil,foreign_key_type=Int64,unique=false)-macro" class="signature"><strong>add_belongs_to</strong>(type_declaration, on_delete, references = <span class="n">nil</span>, foreign_key_type = <span class="t">Int64</span>, unique = <span class="n">false</span>)</a>
+        <a href="#add_belongs_to%28type_declaration%2Con_delete%2Creferences%3Dnil%2Cforeign_key_type%3DInt64%2Cunique%3Dfalse%29-macro" class="signature"><strong>add_belongs_to</strong>(type_declaration, on_delete, references = <span class="n">nil</span>, foreign_key_type = <span class="t">Int64</span>, unique = <span class="n">false</span>)</a>
         
           <div class="summary"><p>Adds a references column and index given a model class and references option.</p></div>
         
@@ -1645,17 +1645,17 @@
       </li>
     
       <li class="entry-summary">
-        <a href="#belongs_to(type_declaration,*args,**named_args)-macro" class="signature"><strong>belongs_to</strong>(type_declaration, *args, **named_args)</a>
+        <a href="#belongs_to%28type_declaration%2C%2Aargs%2C%2A%2Anamed_args%29-macro" class="signature"><strong>belongs_to</strong>(type_declaration, *args, **named_args)</a>
         
       </li>
     
       <li class="entry-summary">
-        <a href="#composite_primary_key(*columns)-macro" class="signature"><strong>composite_primary_key</strong>(*columns)</a>
+        <a href="#composite_primary_key%28%2Acolumns%29-macro" class="signature"><strong>composite_primary_key</strong>(*columns)</a>
         
       </li>
     
       <li class="entry-summary">
-        <a href="#primary_key(type_declaration)-macro" class="signature"><strong>primary_key</strong>(type_declaration)</a>
+        <a href="#primary_key%28type_declaration%29-macro" class="signature"><strong>primary_key</strong>(type_declaration)</a>
         
       </li>
     
@@ -1680,12 +1680,12 @@
   <h3>Instance methods inherited from module <code><a href="../../Avram/Migrator/IndexStatementHelpers.html">Avram::Migrator::IndexStatementHelpers</a></code></h3>
   
   
-    <a href="../../Avram/Migrator/IndexStatementHelpers.html#add_index(column:Symbol,unique=false,using:Symbol=:btree)-instance-method" class="tooltip">
+    <a href="../../Avram/Migrator/IndexStatementHelpers.html#add_index%28column%3ASymbol%2Cunique%3Dfalse%2Cusing%3ASymbol%3D%3Abtree%29-instance-method" class="tooltip">
       <span>add_index(column : Symbol, unique = <span class="n">false</span>, using : Symbol = <span class="n">:btree</span>)</span>
     add_index</a>, 
     
   
-    <a href="../../Avram/Migrator/IndexStatementHelpers.html#index_added?(index:String,column:Symbol)-instance-method" class="tooltip">
+    <a href="../../Avram/Migrator/IndexStatementHelpers.html#index_added%3F%28index%3AString%2Ccolumn%3ASymbol%29-instance-method" class="tooltip">
       <span>index_added?(index : String, column : Symbol)</span>
     index_added?</a>
     
@@ -1714,17 +1714,17 @@
   <h3>Instance methods inherited from class <code><a href="../../Object.html">Object</a></code></h3>
   
   
-    <a href="../../Object.html#blank?-instance-method" class="tooltip">
+    <a href="../../Object.html#blank%3F-instance-method" class="tooltip">
       <span>blank?</span>
     blank?</a>, 
     
   
-    <a href="../../Object.html#blank_for_validates_required?:Bool-instance-method" class="tooltip">
+    <a href="../../Object.html#blank_for_validates_required%3F%3ABool-instance-method" class="tooltip">
       <span>blank_for_validates_required? : Bool</span>
     blank_for_validates_required?</a>, 
     
   
-    <a href="../../Object.html#present?-instance-method" class="tooltip">
+    <a href="../../Object.html#present%3F-instance-method" class="tooltip">
       <span>present?</span>
     present?</a>
     
@@ -1755,13 +1755,13 @@
         
         def self.<strong>new</strong>(table_name : <a href="../../Avram/TableName.html">TableName</a>)
 
-        <a class="method-permalink" href="#new(table_name:TableName)-class-method">#</a>
+        <a class="method-permalink" href="#new%28table_name%3ATableName%29-class-method">#</a>
       </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/48da4d808066257a19b84680fce76c98e938b066/src/avram/migrator/create_table_statement.cr#L11" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/7528131fef4a1c69847b9c4421f44048fda37122/src/avram/migrator/create_table_statement.cr#L11" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1785,21 +1785,18 @@
         
         def <strong>build</strong>(&) : <a href="../../Avram/Migrator/CreateTableStatement.html">CreateTableStatement</a>
 
-        <a class="method-permalink" href="#build(&):CreateTableStatement-instance-method">#</a>
+        <a class="method-permalink" href="#build%28%26%29%3ACreateTableStatement-instance-method">#</a>
       </div>
       
         <div class="doc">
           
-          <p>Accepts a block to build a table and indices using <code><a href="../../Avram/Migrator/CreateTableStatement.html#add(type_declaration,default=nil,index=false,unique=false,using=:btree,**type_options)-macro">add</a></code> and <code>add_index</code> methods.</p>
-
+          <p>Accepts a block to build a table and indices using <code><a href="../../Avram/Migrator/CreateTableStatement.html#add%28type_declaration%2Cdefault%3Dnil%2Cindex%3Dfalse%2Cunique%3Dfalse%2Cusing%3D%3Abtree%2C%2A%2Atype_options%29-macro">add</a></code> and <code>add_index</code> methods.</p>
 <p>The generated sql statements are aggregated in the <code><a href="../../Avram/Migrator/CreateTableStatement.html#statements-instance-method">#statements</a></code> method.</p>
-
 <h2><a id="usage" class="anchor" href="#usage">
   <svg class="octicon-link" aria-hidden="true">
     <use href="#octicon-link"/>
   </svg>
 </a>Usage</h2>
-
 <pre><code class="language-crystal">built <span class="o">=</span> <span class="t">Avram</span><span class="t">::</span><span class="t">Migrator</span><span class="t">::</span><span class="t">CreateTableStatement</span>.<span class="k">new</span>(<span class="n">:users</span>).build <span class="k">do</span>
   add_belongs_to <span class="t">Account</span>, on_delete: <span class="n">:cascade</span>
   add <span class="n">:email</span> : <span class="t">String</span>, unique: <span class="n">true</span>
@@ -1815,10 +1812,8 @@ built.statements
     email text NOT NULL);&quot;</span>,
   <span class="s">&quot;CREATE UNIQUE INDEX users_email_index ON users USING btree (email);&quot;</span>
 ]</code></pre>
-
 <p>An optional second argument can toggle between the usage of a numeric or uuid
 based id column.</p>
-
 <pre><code class="language-crystal">built <span class="o">=</span> <span class="t">Avram</span><span class="t">::</span><span class="t">Migrator</span><span class="t">::</span><span class="t">CreateTableStatement</span>.<span class="k">new</span>(<span class="n">:users</span>, <span class="t">PrimaryKeyType</span><span class="t">::</span><span class="t">UUID</span>).build <span class="k">do</span>
   add <span class="n">:email</span> : <span class="t">String</span>, unique: <span class="n">true</span>
 <span class="k">end</span></code></pre>
@@ -1827,7 +1822,7 @@ based id column.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/48da4d808066257a19b84680fce76c98e938b066/src/avram/migrator/create_table_statement.cr#L46" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/7528131fef4a1c69847b9c4421f44048fda37122/src/avram/migrator/create_table_statement.cr#L46" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1843,7 +1838,7 @@ based id column.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/48da4d808066257a19b84680fce76c98e938b066/src/avram/migrator/create_table_statement.cr#L51" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/7528131fef4a1c69847b9c4421f44048fda37122/src/avram/migrator/create_table_statement.cr#L51" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1865,13 +1860,13 @@ based id column.</p>
         
         macro <strong>add</strong>(type_declaration, default = <span class="n">nil</span>, index = <span class="n">false</span>, unique = <span class="n">false</span>, using = <span class="n">:btree</span>, **type_options)
 
-        <a class="method-permalink" href="#add(type_declaration,default=nil,index=false,unique=false,using=:btree,**type_options)-macro">#</a>
+        <a class="method-permalink" href="#add%28type_declaration%2Cdefault%3Dnil%2Cindex%3Dfalse%2Cunique%3Dfalse%2Cusing%3D%3Abtree%2C%2A%2Atype_options%29-macro">#</a>
       </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/48da4d808066257a19b84680fce76c98e938b066/src/avram/migrator/create_table_statement.cr#L89" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/7528131fef4a1c69847b9c4421f44048fda37122/src/avram/migrator/create_table_statement.cr#L89" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1881,7 +1876,7 @@ based id column.</p>
         
         macro <strong>add_belongs_to</strong>(type_declaration, on_delete, references = <span class="n">nil</span>, foreign_key_type = <span class="t">Int64</span>, unique = <span class="n">false</span>)
 
-        <a class="method-permalink" href="#add_belongs_to(type_declaration,on_delete,references=nil,foreign_key_type=Int64,unique=false)-macro">#</a>
+        <a class="method-permalink" href="#add_belongs_to%28type_declaration%2Con_delete%2Creferences%3Dnil%2Cforeign_key_type%3DInt64%2Cunique%3Dfalse%29-macro">#</a>
       </div>
       
         <div class="doc">
@@ -1892,7 +1887,7 @@ based id column.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/48da4d808066257a19b84680fce76c98e938b066/src/avram/migrator/create_table_statement.cr#L121" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/7528131fef4a1c69847b9c4421f44048fda37122/src/avram/migrator/create_table_statement.cr#L121" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1908,7 +1903,7 @@ based id column.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/48da4d808066257a19b84680fce76c98e938b066/src/avram/migrator/create_table_statement.cr#L84" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/7528131fef4a1c69847b9c4421f44048fda37122/src/avram/migrator/create_table_statement.cr#L84" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1918,13 +1913,13 @@ based id column.</p>
         
         macro <strong>belongs_to</strong>(type_declaration, *args, **named_args)
 
-        <a class="method-permalink" href="#belongs_to(type_declaration,*args,**named_args)-macro">#</a>
+        <a class="method-permalink" href="#belongs_to%28type_declaration%2C%2Aargs%2C%2A%2Anamed_args%29-macro">#</a>
       </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/48da4d808066257a19b84680fce76c98e938b066/src/avram/migrator/create_table_statement.cr#L148" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/7528131fef4a1c69847b9c4421f44048fda37122/src/avram/migrator/create_table_statement.cr#L158" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1934,13 +1929,13 @@ based id column.</p>
         
         macro <strong>composite_primary_key</strong>(*columns)
 
-        <a class="method-permalink" href="#composite_primary_key(*columns)-macro">#</a>
+        <a class="method-permalink" href="#composite_primary_key%28%2Acolumns%29-macro">#</a>
       </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/48da4d808066257a19b84680fce76c98e938b066/src/avram/migrator/create_table_statement.cr#L77" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/7528131fef4a1c69847b9c4421f44048fda37122/src/avram/migrator/create_table_statement.cr#L77" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1950,13 +1945,13 @@ based id column.</p>
         
         macro <strong>primary_key</strong>(type_declaration)
 
-        <a class="method-permalink" href="#primary_key(type_declaration)-macro">#</a>
+        <a class="method-permalink" href="#primary_key%28type_declaration%29-macro">#</a>
       </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/48da4d808066257a19b84680fce76c98e938b066/src/avram/migrator/create_table_statement.cr#L71" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/7528131fef4a1c69847b9c4421f44048fda37122/src/avram/migrator/create_table_statement.cr#L71" target="_blank">View source</a>]
         
       </div>
     </div>

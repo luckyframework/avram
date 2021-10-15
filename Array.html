@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="generator" content="Crystal Docs 1.0.0">
+<meta name="generator" content="Crystal Docs 1.1.1">
 <meta name="crystal_docs.project_version" content="master">
 <meta name="crystal_docs.project_name" content="avram">
 
@@ -1530,40 +1530,28 @@
   </h2>
 
   <p>An <code><a href="Array.html">Array</a></code> is an ordered, integer-indexed collection of objects of type T.</p>
-
 <p>Array indexing starts at 0. A negative index is assumed to be
 relative to the end of the array: -1 indicates the last element,
 -2 is the next to last element, and so on.</p>
-
 <p>An <code><a href="Array.html">Array</a></code> can be created using the usual <code>new</code> method (several are provided), or with an array literal:</p>
-
 <pre><code class="language-crystal"><span class="t">Array</span>(<span class="t">Int32</span>).<span class="k">new</span>  <span class="c"># =&gt; []</span>
 [<span class="n">1</span>, <span class="n">2</span>, <span class="n">3</span>]         <span class="c"># Array(Int32)</span>
 [<span class="n">1</span>, <span class="s">&quot;hello&quot;</span>, <span class="s">&#39;x&#39;</span>] <span class="c"># Array(Int32 | String | Char)</span></code></pre>
-
 <p>See <a href="https://crystal-lang.org/reference/syntax_and_semantics/literals/array.html"><code>Array</code> literals</a> in the language reference.</p>
-
 <p>An <code><a href="Array.html">Array</a></code> can have mixed types, meaning T will be a union of types, but these are determined
 when the array is created, either by specifying T or by using an array literal. In the latter
 case, T will be set to the union of the array literal elements' types.</p>
-
 <p>When creating an empty array you must always specify T:</p>
-
 <pre><code class="language-crystal"><span class="o">[]</span> <span class="k">of</span> <span class="t">Int32</span> <span class="c"># same as Array(Int32)</span>
 <span class="o">[]</span>          <span class="c"># syntax error</span></code></pre>
-
 <p>An <code><a href="Array.html">Array</a></code> is implemented using an internal buffer of some capacity
 and is reallocated when elements are pushed to it when more capacity
 is needed. This is normally known as a <a href="http://en.wikipedia.org/wiki/Dynamic_array">dynamic array</a>.</p>
-
 <p>You can use a special array literal syntax with other types too, as long as they define an argless
 <code>new</code> method and a <code><<</code> method. <code>Set</code> is one such type:</p>
-
 <pre><code class="language-crystal">set <span class="o">=</span> <span class="t">Set</span>{<span class="n">1</span>, <span class="n">2</span>, <span class="n">3</span>} <span class="c"># =&gt; Set{1, 2, 3}</span>
 set.<span class="k">class</span>          <span class="c"># =&gt; Set(Int32)</span></code></pre>
-
 <p>The above is the same as this:</p>
-
 <pre><code class="language-crystal">set <span class="o">=</span> <span class="t">Set</span>(<span class="k">typeof</span>(<span class="n">1</span>, <span class="n">2</span>, <span class="n">3</span>)).<span class="k">new</span>
 set <span class="o">&lt;&lt;</span> <span class="n">1</span>
 set <span class="o">&lt;&lt;</span> <span class="n">2</span>
@@ -1585,7 +1573,7 @@ set <span class="o">&lt;&lt;</span> <span class="n">3</span></code></pre>
     
       <li class="other-type">Comparable(<a href="Array.html">Array(T)</a>)</li>
     
-      <li class="other-type">Indexable(T)</li>
+      <li class="other-type">Indexable::Mutable(T)</li>
     
   </ul>
 
@@ -1608,21 +1596,21 @@ set <span class="o">&lt;&lt;</span> <span class="n">3</span></code></pre>
   </h2>
   
     
-      <a href="https://github.com/luckyframework/avram/blob/48da4d808066257a19b84680fce76c98e938b066/src/avram/blank_extensions.cr#L55" target="_blank">
+      <a href="https://github.com/luckyframework/avram/blob/7528131fef4a1c69847b9c4421f44048fda37122/src/avram/blank_extensions.cr#L55" target="_blank">
         avram/blank_extensions.cr
       </a>
     
     <br/>
   
     
-      <a href="https://github.com/luckyframework/avram/blob/48da4d808066257a19b84680fce76c98e938b066/src/avram/charms/array_extensions.cr#L1" target="_blank">
+      <a href="https://github.com/luckyframework/avram/blob/7528131fef4a1c69847b9c4421f44048fda37122/src/avram/charms/array_extensions.cr#L1" target="_blank">
         avram/charms/array_extensions.cr
       </a>
     
     <br/>
   
     
-      <a href="https://github.com/luckyframework/avram/blob/48da4d808066257a19b84680fce76c98e938b066/src/avram/object_extensions.cr#L19" target="_blank">
+      <a href="https://github.com/luckyframework/avram/blob/7528131fef4a1c69847b9c4421f44048fda37122/src/avram/object_extensions.cr#L19" target="_blank">
         avram/object_extensions.cr
       </a>
     
@@ -1667,12 +1655,12 @@ set <span class="o">&lt;&lt;</span> <span class="n">3</span></code></pre>
   <ul class="list-summary">
     
       <li class="entry-summary">
-        <a href="#blank?-instance-method" class="signature"><strong>#blank?</strong></a>
+        <a href="#blank%3F-instance-method" class="signature"><strong>#blank?</strong></a>
         
       </li>
     
       <li class="entry-summary">
-        <a href="#blank_for_validates_required?:Bool-instance-method" class="signature"><strong>#blank_for_validates_required?</strong> : Bool</a>
+        <a href="#blank_for_validates_required%3F%3ABool-instance-method" class="signature"><strong>#blank_for_validates_required?</strong> : Bool</a>
         
           <div class="summary"><p>Arrays of any size should be considered present</p></div>
         
@@ -1738,20 +1726,30 @@ set <span class="o">&lt;&lt;</span> <span class="n">3</span></code></pre>
   
     
 
+
+    
+
+
+    
+
+
+  
+    
+
   <h3>Instance methods inherited from class <code><a href="Object.html">Object</a></code></h3>
   
   
-    <a href="Object.html#blank?-instance-method" class="tooltip">
+    <a href="Object.html#blank%3F-instance-method" class="tooltip">
       <span>blank?</span>
     blank?</a>, 
     
   
-    <a href="Object.html#blank_for_validates_required?:Bool-instance-method" class="tooltip">
+    <a href="Object.html#blank_for_validates_required%3F%3ABool-instance-method" class="tooltip">
       <span>blank_for_validates_required? : Bool</span>
     blank_for_validates_required?</a>, 
     
   
-    <a href="Object.html#present?-instance-method" class="tooltip">
+    <a href="Object.html#present%3F-instance-method" class="tooltip">
       <span>present?</span>
     present?</a>
     
@@ -1796,7 +1794,7 @@ set <span class="o">&lt;&lt;</span> <span class="n">3</span></code></pre>
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/48da4d808066257a19b84680fce76c98e938b066/src/avram/charms/array_extensions.cr#L4" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/7528131fef4a1c69847b9c4421f44048fda37122/src/avram/charms/array_extensions.cr#L4" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1818,13 +1816,13 @@ set <span class="o">&lt;&lt;</span> <span class="n">3</span></code></pre>
         
         def <strong>blank?</strong>
 
-        <a class="method-permalink" href="#blank?-instance-method">#</a>
+        <a class="method-permalink" href="#blank%3F-instance-method">#</a>
       </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/48da4d808066257a19b84680fce76c98e938b066/src/avram/blank_extensions.cr#L56" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/7528131fef4a1c69847b9c4421f44048fda37122/src/avram/blank_extensions.cr#L56" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1834,7 +1832,7 @@ set <span class="o">&lt;&lt;</span> <span class="n">3</span></code></pre>
         
         def <strong>blank_for_validates_required?</strong> : <a href="Bool.html">Bool</a>
 
-        <a class="method-permalink" href="#blank_for_validates_required?:Bool-instance-method">#</a>
+        <a class="method-permalink" href="#blank_for_validates_required%3F%3ABool-instance-method">#</a>
       </div>
       
         <div class="doc">
@@ -1845,7 +1843,7 @@ set <span class="o">&lt;&lt;</span> <span class="n">3</span></code></pre>
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/48da4d808066257a19b84680fce76c98e938b066/src/avram/object_extensions.cr#L21" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/7528131fef4a1c69847b9c4421f44048fda37122/src/avram/object_extensions.cr#L21" target="_blank">View source</a>]
         
       </div>
     </div>

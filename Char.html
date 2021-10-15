@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="generator" content="Crystal Docs 1.0.0">
+<meta name="generator" content="Crystal Docs 1.1.1">
 <meta name="crystal_docs.project_version" content="master">
 <meta name="crystal_docs.project_name" content="avram">
 
@@ -1531,17 +1531,13 @@
 
   <p>A <code><a href="Char.html">Char</a></code> represents a <a href="http://en.wikipedia.org/wiki/Unicode">Unicode</a> <a href="http://en.wikipedia.org/wiki/Code_point">code point</a>.
 It occupies 32 bits.</p>
-
 <p>It is created by enclosing an UTF-8 character in single quotes.</p>
-
 <pre><code class="language-crystal"><span class="s">&#39;a&#39;</span>
 <span class="s">&#39;z&#39;</span>
 <span class="s">&#39;0&#39;</span>
 <span class="s">&#39;_&#39;</span>
 <span class="s">&#39;あ&#39;</span></code></pre>
-
 <p>You can use a backslash to denote some characters:</p>
-
 <pre><code class="language-crystal"><span class="s">&#39;\&#39;&#39;</span> <span class="c"># single quote</span>
 <span class="s">&#39;\\&#39;</span> <span class="c"># backslash</span>
 <span class="s">&#39;\e&#39;</span> <span class="c"># escape</span>
@@ -1550,15 +1546,10 @@ It occupies 32 bits.</p>
 <span class="s">&#39;\r&#39;</span> <span class="c"># carriage return</span>
 <span class="s">&#39;\t&#39;</span> <span class="c"># tab</span>
 <span class="s">&#39;\v&#39;</span> <span class="c"># vertical tab</span></code></pre>
-
 <p>You can use a backslash followed by an <em>u</em> and four hexadecimal characters to denote a unicode codepoint written:</p>
-
 <pre><code class="language-crystal"><span class="s">&#39;\u0041&#39;</span> <span class="c"># == &#39;A&#39;</span></code></pre>
-
 <p>Or you can use curly braces and specify up to four hexadecimal numbers:</p>
-
 <pre><code class="language-crystal"><span class="s">&#39;\u{41}&#39;</span> <span class="c"># == &#39;A&#39;</span></code></pre>
-
 <p>See <a href="https://crystal-lang.org/reference/syntax_and_semantics/literals/char.html"><code>Char</code> literals</a> in the language reference.</p>
 
 
@@ -1600,7 +1591,7 @@ It occupies 32 bits.</p>
   </h2>
   
     
-      <a href="https://github.com/luckyframework/avram/blob/48da4d808066257a19b84680fce76c98e938b066/src/avram/object_extensions.cr#L32" target="_blank">
+      <a href="https://github.com/luckyframework/avram/blob/7528131fef4a1c69847b9c4421f44048fda37122/src/avram/object_extensions.cr#L32" target="_blank">
         avram/object_extensions.cr
       </a>
     
@@ -1626,12 +1617,12 @@ It occupies 32 bits.</p>
   <ul class="list-summary">
     
       <li class="entry-summary">
-        <a href="#blank?-instance-method" class="signature"><strong>#blank?</strong></a>
+        <a href="#blank%3F-instance-method" class="signature"><strong>#blank?</strong></a>
         
       </li>
     
       <li class="entry-summary">
-        <a href="#blank_for_validates_required?:Bool-instance-method" class="signature"><strong>#blank_for_validates_required?</strong> : Bool</a>
+        <a href="#blank_for_validates_required%3F%3ABool-instance-method" class="signature"><strong>#blank_for_validates_required?</strong> : Bool</a>
         
       </li>
     
@@ -1678,17 +1669,17 @@ It occupies 32 bits.</p>
   <h3>Instance methods inherited from class <code><a href="Object.html">Object</a></code></h3>
   
   
-    <a href="Object.html#blank?-instance-method" class="tooltip">
+    <a href="Object.html#blank%3F-instance-method" class="tooltip">
       <span>blank?</span>
     blank?</a>, 
     
   
-    <a href="Object.html#blank_for_validates_required?:Bool-instance-method" class="tooltip">
+    <a href="Object.html#blank_for_validates_required%3F%3ABool-instance-method" class="tooltip">
       <span>blank_for_validates_required? : Bool</span>
     blank_for_validates_required?</a>, 
     
   
-    <a href="Object.html#present?-instance-method" class="tooltip">
+    <a href="Object.html#present%3F-instance-method" class="tooltip">
       <span>present?</span>
     present?</a>
     
@@ -1723,13 +1714,13 @@ It occupies 32 bits.</p>
         
         def <strong>blank?</strong>
 
-        <a class="method-permalink" href="#blank?-instance-method">#</a>
+        <a class="method-permalink" href="#blank%3F-instance-method">#</a>
       </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/48da4d808066257a19b84680fce76c98e938b066/src/avram/object_extensions.cr#L33" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/7528131fef4a1c69847b9c4421f44048fda37122/src/avram/object_extensions.cr#L33" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1739,13 +1730,13 @@ It occupies 32 bits.</p>
         
         def <strong>blank_for_validates_required?</strong> : <a href="Bool.html">Bool</a>
 
-        <a class="method-permalink" href="#blank_for_validates_required?:Bool-instance-method">#</a>
+        <a class="method-permalink" href="#blank_for_validates_required%3F%3ABool-instance-method">#</a>
       </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/48da4d808066257a19b84680fce76c98e938b066/src/avram/object_extensions.cr#L45" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/7528131fef4a1c69847b9c4421f44048fda37122/src/avram/object_extensions.cr#L45" target="_blank">View source</a>]
         
       </div>
     </div>

@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="generator" content="Crystal Docs 1.0.0">
+<meta name="generator" content="Crystal Docs 1.1.1">
 <meta name="crystal_docs.project_version" content="master">
 <meta name="crystal_docs.project_name" content="avram">
 
@@ -1530,13 +1530,11 @@
   </h2>
 
   <p>Generates an ALTER TABLE statement for adding a foreign key constraint on a table.</p>
-
 <h3><a id="usage" class="anchor" href="#usage">
   <svg class="octicon-link" aria-hidden="true">
     <use href="#octicon-link"/>
   </svg>
 </a>Usage</h3>
-
 <pre><code class="language-crystal"><span class="t">CreateForeignKeyStatement</span>.<span class="k">new</span>(from: <span class="n">:comments</span>, to: <span class="n">:users</span>, column: <span class="n">:author_id</span>, primary_key: <span class="n">:uid</span>, on_delete: <span class="n">:cascade</span>).build
 <span class="c"># =&gt; &quot;ALTER TABLE comments ADD CONSTRAINT comments_author_id_fk FOREIGN KEY (author_id) REFERENCES users (uid) ON DELETE CASCADE;&quot;</span></code></pre>
 
@@ -1563,7 +1561,7 @@
   </h2>
   
     
-      <a href="https://github.com/luckyframework/avram/blob/48da4d808066257a19b84680fce76c98e938b066/src/avram/migrator/create_foreign_key_statement.cr#L9" target="_blank">
+      <a href="https://github.com/luckyframework/avram/blob/7528131fef4a1c69847b9c4421f44048fda37122/src/avram/migrator/create_foreign_key_statement.cr#L9" target="_blank">
         avram/migrator/create_foreign_key_statement.cr
       </a>
     
@@ -1585,7 +1583,7 @@
   <ul class="list-summary">
     
       <li class="entry-summary">
-        <a href="#new(from:TableName,to:TableName,on_delete:Symbol,column:Symbol?=nil,primary_key=:id)-class-method" class="signature"><strong>.new</strong>(from : TableName, to : TableName, on_delete : Symbol, column : Symbol? = <span class="n">nil</span>, primary_key = <span class="n">:id</span>)</a>
+        <a href="#new%28from%3ATableName%2Cto%3ATableName%2Con_delete%3ASymbol%2Ccolumn%3ASymbol%3F%3Dnil%2Cprimary_key%3D%3Aid%29-class-method" class="signature"><strong>.new</strong>(from : TableName, to : TableName, on_delete : Symbol, column : Symbol? = <span class="n">nil</span>, primary_key = <span class="n">:id</span>)</a>
         
       </li>
     
@@ -1633,17 +1631,17 @@
   <h3>Instance methods inherited from class <code><a href="../../Object.html">Object</a></code></h3>
   
   
-    <a href="../../Object.html#blank?-instance-method" class="tooltip">
+    <a href="../../Object.html#blank%3F-instance-method" class="tooltip">
       <span>blank?</span>
     blank?</a>, 
     
   
-    <a href="../../Object.html#blank_for_validates_required?:Bool-instance-method" class="tooltip">
+    <a href="../../Object.html#blank_for_validates_required%3F%3ABool-instance-method" class="tooltip">
       <span>blank_for_validates_required? : Bool</span>
     blank_for_validates_required?</a>, 
     
   
-    <a href="../../Object.html#present?-instance-method" class="tooltip">
+    <a href="../../Object.html#present%3F-instance-method" class="tooltip">
       <span>present?</span>
     present?</a>
     
@@ -1674,13 +1672,13 @@
         
         def self.<strong>new</strong>(from : <a href="../../Avram/TableName.html">TableName</a>, to : <a href="../../Avram/TableName.html">TableName</a>, on_delete : Symbol, column : Symbol? = <span class="n">nil</span>, primary_key = <span class="n">:id</span>)
 
-        <a class="method-permalink" href="#new(from:TableName,to:TableName,on_delete:Symbol,column:Symbol?=nil,primary_key=:id)-class-method">#</a>
+        <a class="method-permalink" href="#new%28from%3ATableName%2Cto%3ATableName%2Con_delete%3ASymbol%2Ccolumn%3ASymbol%3F%3Dnil%2Cprimary_key%3D%3Aid%29-class-method">#</a>
       </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/48da4d808066257a19b84680fce76c98e938b066/src/avram/migrator/create_foreign_key_statement.cr#L10" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/7528131fef4a1c69847b9c4421f44048fda37122/src/avram/migrator/create_foreign_key_statement.cr#L10" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1710,7 +1708,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/48da4d808066257a19b84680fce76c98e938b066/src/avram/migrator/create_foreign_key_statement.cr#L13" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/7528131fef4a1c69847b9c4421f44048fda37122/src/avram/migrator/create_foreign_key_statement.cr#L13" target="_blank">View source</a>]
         
       </div>
     </div>

@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="generator" content="Crystal Docs 1.0.0">
+<meta name="generator" content="Crystal Docs 1.1.1">
 <meta name="crystal_docs.project_version" content="master">
 <meta name="crystal_docs.project_name" content="avram">
 
@@ -1527,9 +1527,8 @@
     Overview
   </h2>
 
-  <p>Adds the ability to "create or update" (upsert) to <code><a href="../Avram/SaveOperation.html">Avram::SaveOperation</a></code></p>
-
-<p>This is included in SaveOperations by default. See <code><a href="../Avram/Upsert.html#upsert_lookup_columns(*attribute_names)-macro">upsert_lookup_columns</a></code> for usage details.</p>
+  <p>Adds the ability to &quot;create or update&quot; (upsert) to <code><a href="../Avram/SaveOperation.html">Avram::SaveOperation</a></code></p>
+<p>This is included in SaveOperations by default. See <code><a href="../Avram/Upsert.html#upsert_lookup_columns%28%2Aattribute_names%29-macro">upsert_lookup_columns</a></code> for usage details.</p>
 
 
 
@@ -1568,7 +1567,7 @@
   </h2>
   
     
-      <a href="https://github.com/luckyframework/avram/blob/48da4d808066257a19b84680fce76c98e938b066/src/avram/upsert.cr#L4" target="_blank">
+      <a href="https://github.com/luckyframework/avram/blob/7528131fef4a1c69847b9c4421f44048fda37122/src/avram/upsert.cr#L4" target="_blank">
         avram/upsert.cr
       </a>
     
@@ -1596,7 +1595,7 @@
   <ul class="list-summary">
     
       <li class="entry-summary">
-        <a href="#upsert_lookup_columns(*attribute_names)-macro" class="signature"><strong>upsert_lookup_columns</strong>(*attribute_names)</a>
+        <a href="#upsert_lookup_columns%28%2Aattribute_names%29-macro" class="signature"><strong>upsert_lookup_columns</strong>(*attribute_names)</a>
         
           <div class="summary"><p>Defines the columns Avram should use when performing an <code>upsert</code></p></div>
         
@@ -1631,31 +1630,26 @@
         
         macro <strong>upsert_lookup_columns</strong>(*attribute_names)
 
-        <a class="method-permalink" href="#upsert_lookup_columns(*attribute_names)-macro">#</a>
+        <a class="method-permalink" href="#upsert_lookup_columns%28%2Aattribute_names%29-macro">#</a>
       </div>
       
         <div class="doc">
           
           <p>Defines the columns Avram should use when performing an <code>upsert</code></p>
-
-<p>An "upsert" is short for "update or insert", or in Avram terminology a
-"create or update". If the values in an operation conflict with an existing
+<p>An &quot;upsert&quot; is short for &quot;update or insert&quot;, or in Avram terminology a
+&quot;create or update&quot;. If the values in an operation conflict with an existing
 record in the database, Avram updates that record. If there is no
 conflicting record, then Avram will create new one.</p>
-
 <p>In Avram, you must define which columns Avram should look at when
 determining if a conflicting record exists. This is done using the macro
-<code><a href="../Avram/Upsert.html#upsert_lookup_columns(*attribute_names)-macro">Avram::Upsert.upsert_lookup_columns</a></code></p>
-
-<p><strong>Note:</strong> In almost <em>every</em> case the <code><a href="../Avram/Upsert.html#upsert_lookup_columns(*attribute_names)-macro">upsert_lookup_columns</a></code> should have a <strong>unique index</strong> defined
+<code><a href="../Avram/Upsert.html#upsert_lookup_columns%28%2Aattribute_names%29-macro">Avram::Upsert.upsert_lookup_columns</a></code></p>
+<p><strong>Note:</strong> In almost <em>every</em> case the <code><a href="../Avram/Upsert.html#upsert_lookup_columns%28%2Aattribute_names%29-macro">upsert_lookup_columns</a></code> should have a <strong>unique index</strong> defined
 in the database to ensure no conflicting records are created, even from outside Avram.</p>
-
 <h2><a id="full-example" class="anchor" href="#full-example">
   <svg class="octicon-link" aria-hidden="true">
     <use href="#octicon-link"/>
   </svg>
 </a>Full Example</h2>
-
 <pre><code class="language-crystal"><span class="k">class</span> <span class="t">User</span> <span class="o">&lt;</span> <span class="t">BaseModel</span>
   table <span class="k">do</span>
     column name : <span class="t">String</span>
@@ -1675,18 +1669,15 @@ in the database to ensure no conflicting records are created, even from outside 
 <span class="c"># Will update the name on the row we just created since the email is</span>
 <span class="c"># the same as one in the database</span>
 <span class="t">SaveUser</span>.upsert!(name: <span class="s">&quot;Bob&quot;</span>, email: <span class="s">&quot;bob@example.com&quot;</span>)</code></pre>
-
 <h2><a id="difference-between-upsert-and-upsert" class="anchor" href="#difference-between-upsert-and-upsert">
   <svg class="octicon-link" aria-hidden="true">
     <use href="#octicon-link"/>
   </svg>
 </a>Difference between <code>upsert</code> and <code>upsert!</code></h2>
-
 <p>There is an <code>upsert</code> and <code>upsert!</code> that work similarly to <code>create</code> and <code>create!</code>.
 <code>upsert!</code> will raise an error if the operation is invalid. Whereas <code>upsert</code>
 will yield the operation and the new record if the operation is valid, or
 the operation and <code>nil</code> if it is invalid.</p>
-
 <pre><code class="language-crystal"><span class="c"># Will raise because the name is blank</span>
 <span class="t">SaveUser</span>.upsert!(name: <span class="s">&quot;&quot;</span>, email: <span class="s">&quot;bob@example.com&quot;</span>)
 
@@ -1700,7 +1691,7 @@ the operation and <code>nil</code> if it is invalid.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/48da4d808066257a19b84680fce76c98e938b066/src/avram/upsert.cr#L60" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/7528131fef4a1c69847b9c4421f44048fda37122/src/avram/upsert.cr#L60" target="_blank">View source</a>]
         
       </div>
     </div>

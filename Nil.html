@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="generator" content="Crystal Docs 1.0.0">
+<meta name="generator" content="Crystal Docs 1.1.1">
 <meta name="crystal_docs.project_version" content="master">
 <meta name="crystal_docs.project_name" content="avram">
 
@@ -1530,25 +1530,19 @@
   </h2>
 
   <p>The <code><a href="Nil.html">Nil</a></code> type has only one possible value: <code>nil</code>.</p>
-
 <p><code>nil</code> is commonly used to represent the absence of a value.
 For example, <code>String#index</code> returns the position of the character or <code>nil</code> if it's not
 in the string:</p>
-
 <pre><code class="language-crystal">str <span class="o">=</span> <span class="s">&quot;Hello world&quot;</span>
 str.index <span class="s">&#39;e&#39;</span> <span class="c"># =&gt; 1</span>
 str.index <span class="s">&#39;a&#39;</span> <span class="c"># =&gt; nil</span></code></pre>
-
 <p>In the above example, trying to invoke a method on the returned value will
 give a compile time error unless both <code><a href="Int32.html">Int32</a></code> and <code><a href="Nil.html">Nil</a></code> define that method:</p>
-
 <pre><code class="language-crystal">str <span class="o">=</span> <span class="s">&quot;Hello world&quot;</span>
 idx <span class="o">=</span> str.index <span class="s">&#39;e&#39;</span>
 idx <span class="o">+</span> <span class="n">1</span> <span class="c"># Error: undefined method &#39;+&#39; for Nil</span></code></pre>
-
 <p>The language and the standard library provide short, readable, easy ways to deal with <code>nil</code>,
 such as <code>Object#try</code> and <code>Object#not_nil!</code>:</p>
-
 <pre><code class="language-crystal">str <span class="o">=</span> <span class="s">&quot;Hello world&quot;</span>
 
 <span class="c"># The index of &#39;e&#39; in str or 0 if not found</span>
@@ -1564,7 +1558,6 @@ idx2 <span class="o">=</span> str.index(<span class="s">&#39;a&#39;</span>)
 <span class="c"># value is not nil: raises a runtime exception</span>
 <span class="c"># if our assumption doesn&#39;t hold.</span>
 idx3 <span class="o">=</span> str.index(<span class="s">&#39;o&#39;</span>).not_nil!</code></pre>
-
 <p>See <a href="https://crystal-lang.org/reference/syntax_and_semantics/literals/nil.html"><code>Nil</code> literal</a> in the language reference.</p>
 
 
@@ -1590,14 +1583,14 @@ idx3 <span class="o">=</span> str.index(<span class="s">&#39;o&#39;</span>).not_
   </h2>
   
     
-      <a href="https://github.com/luckyframework/avram/blob/48da4d808066257a19b84680fce76c98e938b066/src/avram/blank_extensions.cr#L37" target="_blank">
+      <a href="https://github.com/luckyframework/avram/blob/7528131fef4a1c69847b9c4421f44048fda37122/src/avram/blank_extensions.cr#L37" target="_blank">
         avram/blank_extensions.cr
       </a>
     
     <br/>
   
     
-      <a href="https://github.com/luckyframework/avram/blob/48da4d808066257a19b84680fce76c98e938b066/src/avram/object_extensions.cr#L50" target="_blank">
+      <a href="https://github.com/luckyframework/avram/blob/7528131fef4a1c69847b9c4421f44048fda37122/src/avram/object_extensions.cr#L50" target="_blank">
         avram/object_extensions.cr
       </a>
     
@@ -1623,12 +1616,12 @@ idx3 <span class="o">=</span> str.index(<span class="s">&#39;o&#39;</span>).not_
   <ul class="list-summary">
     
       <li class="entry-summary">
-        <a href="#blank?-instance-method" class="signature"><strong>#blank?</strong></a>
+        <a href="#blank%3F-instance-method" class="signature"><strong>#blank?</strong></a>
         
       </li>
     
       <li class="entry-summary">
-        <a href="#blank_for_validates_required?:Bool-instance-method" class="signature"><strong>#blank_for_validates_required?</strong> : Bool</a>
+        <a href="#blank_for_validates_required%3F%3ABool-instance-method" class="signature"><strong>#blank_for_validates_required?</strong> : Bool</a>
         
       </li>
     
@@ -1655,17 +1648,17 @@ idx3 <span class="o">=</span> str.index(<span class="s">&#39;o&#39;</span>).not_
   <h3>Instance methods inherited from class <code><a href="Object.html">Object</a></code></h3>
   
   
-    <a href="Object.html#blank?-instance-method" class="tooltip">
+    <a href="Object.html#blank%3F-instance-method" class="tooltip">
       <span>blank?</span>
     blank?</a>, 
     
   
-    <a href="Object.html#blank_for_validates_required?:Bool-instance-method" class="tooltip">
+    <a href="Object.html#blank_for_validates_required%3F%3ABool-instance-method" class="tooltip">
       <span>blank_for_validates_required? : Bool</span>
     blank_for_validates_required?</a>, 
     
   
-    <a href="Object.html#present?-instance-method" class="tooltip">
+    <a href="Object.html#present%3F-instance-method" class="tooltip">
       <span>present?</span>
     present?</a>
     
@@ -1700,13 +1693,13 @@ idx3 <span class="o">=</span> str.index(<span class="s">&#39;o&#39;</span>).not_
         
         def <strong>blank?</strong>
 
-        <a class="method-permalink" href="#blank?-instance-method">#</a>
+        <a class="method-permalink" href="#blank%3F-instance-method">#</a>
       </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/48da4d808066257a19b84680fce76c98e938b066/src/avram/blank_extensions.cr#L38" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/7528131fef4a1c69847b9c4421f44048fda37122/src/avram/blank_extensions.cr#L38" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1716,13 +1709,13 @@ idx3 <span class="o">=</span> str.index(<span class="s">&#39;o&#39;</span>).not_
         
         def <strong>blank_for_validates_required?</strong> : <a href="Bool.html">Bool</a>
 
-        <a class="method-permalink" href="#blank_for_validates_required?:Bool-instance-method">#</a>
+        <a class="method-permalink" href="#blank_for_validates_required%3F%3ABool-instance-method">#</a>
       </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/48da4d808066257a19b84680fce76c98e938b066/src/avram/object_extensions.cr#L55" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/7528131fef4a1c69847b9c4421f44048fda37122/src/avram/object_extensions.cr#L55" target="_blank">View source</a>]
         
       </div>
     </div>

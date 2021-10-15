@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="generator" content="Crystal Docs 1.0.0">
+<meta name="generator" content="Crystal Docs 1.1.1">
 <meta name="crystal_docs.project_version" content="master">
 <meta name="crystal_docs.project_name" content="avram">
 
@@ -1557,7 +1557,7 @@
   </h2>
   
     
-      <a href="https://github.com/luckyframework/avram/blob/48da4d808066257a19b84680fce76c98e938b066/src/avram/migrator/migration.cr#L4" target="_blank">
+      <a href="https://github.com/luckyframework/avram/blob/7528131fef4a1c69847b9c4421f44048fda37122/src/avram/migrator/migration.cr#L4" target="_blank">
         avram/migrator/migration.cr
       </a>
     
@@ -1583,7 +1583,7 @@
   <ul class="list-summary">
     
       <li class="entry-summary">
-        <a href="#down(quiet=false)-instance-method" class="signature"><strong>#down</strong>(quiet = <span class="n">false</span>)</a>
+        <a href="#down%28quiet%3Dfalse%29-instance-method" class="signature"><strong>#down</strong>(quiet = <span class="n">false</span>)</a>
         
           <div class="summary"><p>Same as #up except calls rollback method in migration.</p></div>
         
@@ -1595,17 +1595,17 @@
       </li>
     
       <li class="entry-summary">
-        <a href="#migrated?-instance-method" class="signature"><strong>#migrated?</strong></a>
+        <a href="#migrated%3F-instance-method" class="signature"><strong>#migrated?</strong></a>
         
       </li>
     
       <li class="entry-summary">
-        <a href="#pending?-instance-method" class="signature"><strong>#pending?</strong></a>
+        <a href="#pending%3F-instance-method" class="signature"><strong>#pending?</strong></a>
         
       </li>
     
       <li class="entry-summary">
-        <a href="#prepared_statements:Array(String)-instance-method" class="signature"><strong>#prepared_statements</strong> : Array(String)</a>
+        <a href="#prepared_statements%3AArray%28String%29-instance-method" class="signature"><strong>#prepared_statements</strong> : Array(String)</a>
         
       </li>
     
@@ -1615,7 +1615,7 @@
       </li>
     
       <li class="entry-summary">
-        <a href="#up(quiet=false)-instance-method" class="signature"><strong>#up</strong>(quiet = <span class="n">false</span>)</a>
+        <a href="#up%28quiet%3Dfalse%29-instance-method" class="signature"><strong>#up</strong>(quiet = <span class="n">false</span>)</a>
         
           <div class="summary"><p>Unless already migrated, calls migrate which in turn calls statement helpers to generate and collect SQL statements in the @prepared_statements array.</p></div>
         
@@ -1639,72 +1639,72 @@
   <h3>Instance methods inherited from module <code><a href="../../../Avram/Migrator/StatementHelpers.html">Avram::Migrator::StatementHelpers</a></code></h3>
   
   
-    <a href="../../../Avram/Migrator/StatementHelpers.html#create_foreign_key(from:TableName,to:TableName,on_delete:Symbol,column:Symbol?,primary_key=:id)-instance-method" class="tooltip">
+    <a href="../../../Avram/Migrator/StatementHelpers.html#create_foreign_key%28from%3ATableName%2Cto%3ATableName%2Con_delete%3ASymbol%2Ccolumn%3ASymbol%3F%2Cprimary_key%3D%3Aid%29-instance-method" class="tooltip">
       <span>create_foreign_key(from : TableName, to : TableName, on_delete : Symbol, column : Symbol?, primary_key = <span class="n">:id</span>)</span>
     create_foreign_key</a>, 
     
   
-    <a href="../../../Avram/Migrator/StatementHelpers.html#create_function(name:String,body:String,returns:String=%22trigger%22)-instance-method" class="tooltip">
+    <a href="../../../Avram/Migrator/StatementHelpers.html#create_function%28name%3AString%2Cbody%3AString%2Creturns%3AString%3D%22trigger%22%29-instance-method" class="tooltip">
       <span>create_function(name : String, body : String, returns : String = <span class="s">&quot;trigger&quot;</span>)</span>
     create_function</a>, 
     
   
-    <a href="../../../Avram/Migrator/StatementHelpers.html#create_index(table_name:TableName,columns:Columns,unique=false,using=:btree,name:String?%7CSymbol?=nil)-instance-method" class="tooltip">
+    <a href="../../../Avram/Migrator/StatementHelpers.html#create_index%28table_name%3ATableName%2Ccolumns%3AColumns%2Cunique%3Dfalse%2Cusing%3D%3Abtree%2Cname%3AString%3F%7CSymbol%3F%3Dnil%29-instance-method" class="tooltip">
       <span>create_index(table_name : TableName, columns : Columns, unique = <span class="n">false</span>, using = <span class="n">:btree</span>, name : String? | Symbol? = <span class="n">nil</span>)</span>
     create_index</a>, 
     
   
-    <a href="../../../Avram/Migrator/StatementHelpers.html#create_trigger(table_name:TableName,name:String,function_name:String,callback:Symbol=:before,on:Array(Symbol)=[:update])-instance-method" class="tooltip">
+    <a href="../../../Avram/Migrator/StatementHelpers.html#create_trigger%28table_name%3ATableName%2Cname%3AString%2Cfunction_name%3AString%2Ccallback%3ASymbol%3D%3Abefore%2Con%3AArray%28Symbol%29%3D%5B%3Aupdate%5D%29-instance-method" class="tooltip">
       <span>create_trigger(table_name : TableName, name : String, function_name : String, callback : Symbol = <span class="n">:before</span>, on : Array(Symbol) = [<span class="n">:update</span>])</span>
     create_trigger</a>, 
     
   
-    <a href="../../../Avram/Migrator/StatementHelpers.html#disable_extension(name:String)-instance-method" class="tooltip">
+    <a href="../../../Avram/Migrator/StatementHelpers.html#disable_extension%28name%3AString%29-instance-method" class="tooltip">
       <span>disable_extension(name : String)</span>
     disable_extension</a>, 
     
   
-    <a href="../../../Avram/Migrator/StatementHelpers.html#drop(table_name)-instance-method" class="tooltip">
+    <a href="../../../Avram/Migrator/StatementHelpers.html#drop%28table_name%29-instance-method" class="tooltip">
       <span>drop(table_name)</span>
     drop</a>, 
     
   
-    <a href="../../../Avram/Migrator/StatementHelpers.html#drop_foreign_key(from:TableName,references:TableName,column:Symbol?)-instance-method" class="tooltip">
+    <a href="../../../Avram/Migrator/StatementHelpers.html#drop_foreign_key%28from%3ATableName%2Creferences%3ATableName%2Ccolumn%3ASymbol%3F%29-instance-method" class="tooltip">
       <span>drop_foreign_key(from : TableName, references : TableName, column : Symbol?)</span>
     drop_foreign_key</a>, 
     
   
-    <a href="../../../Avram/Migrator/StatementHelpers.html#drop_function(name:String)-instance-method" class="tooltip">
+    <a href="../../../Avram/Migrator/StatementHelpers.html#drop_function%28name%3AString%29-instance-method" class="tooltip">
       <span>drop_function(name : String)</span>
     drop_function</a>, 
     
   
-    <a href="../../../Avram/Migrator/StatementHelpers.html#drop_index(table_name:TableName,columns:Columns?=nil,if_exists=false,on_delete=:do_nothing,name:String?%7CSymbol?=nil)-instance-method" class="tooltip">
+    <a href="../../../Avram/Migrator/StatementHelpers.html#drop_index%28table_name%3ATableName%2Ccolumns%3AColumns%3F%3Dnil%2Cif_exists%3Dfalse%2Con_delete%3D%3Ado_nothing%2Cname%3AString%3F%7CSymbol%3F%3Dnil%29-instance-method" class="tooltip">
       <span>drop_index(table_name : TableName, columns : Columns? = <span class="n">nil</span>, if_exists = <span class="n">false</span>, on_delete = <span class="n">:do_nothing</span>, name : String? | Symbol? = <span class="n">nil</span>)</span>
     drop_index</a>, 
     
   
-    <a href="../../../Avram/Migrator/StatementHelpers.html#drop_trigger(table_name:TableName,name:String)-instance-method" class="tooltip">
+    <a href="../../../Avram/Migrator/StatementHelpers.html#drop_trigger%28table_name%3ATableName%2Cname%3AString%29-instance-method" class="tooltip">
       <span>drop_trigger(table_name : TableName, name : String)</span>
     drop_trigger</a>, 
     
   
-    <a href="../../../Avram/Migrator/StatementHelpers.html#enable_extension(name:String)-instance-method" class="tooltip">
+    <a href="../../../Avram/Migrator/StatementHelpers.html#enable_extension%28name%3AString%29-instance-method" class="tooltip">
       <span>enable_extension(name : String)</span>
     enable_extension</a>, 
     
   
-    <a href="../../../Avram/Migrator/StatementHelpers.html#make_optional(table:TableName,column:Symbol)-instance-method" class="tooltip">
+    <a href="../../../Avram/Migrator/StatementHelpers.html#make_optional%28table%3ATableName%2Ccolumn%3ASymbol%29-instance-method" class="tooltip">
       <span>make_optional(table : TableName, column : Symbol)</span>
     make_optional</a>, 
     
   
-    <a href="../../../Avram/Migrator/StatementHelpers.html#make_required(table:TableName,column:Symbol)-instance-method" class="tooltip">
+    <a href="../../../Avram/Migrator/StatementHelpers.html#make_required%28table%3ATableName%2Ccolumn%3ASymbol%29-instance-method" class="tooltip">
       <span>make_required(table : TableName, column : Symbol)</span>
     make_required</a>, 
     
   
-    <a href="../../../Avram/Migrator/StatementHelpers.html#update_extension(name:String,to:String?=nil)-instance-method" class="tooltip">
+    <a href="../../../Avram/Migrator/StatementHelpers.html#update_extension%28name%3AString%2Cto%3AString%3F%3Dnil%29-instance-method" class="tooltip">
       <span>update_extension(name : String, to : String? = <span class="n">nil</span>)</span>
     update_extension</a>
     
@@ -1733,12 +1733,12 @@
   <h3>Instance methods inherited from module <code><a href="../../../Avram/Migrator/IndexStatementHelpers.html">Avram::Migrator::IndexStatementHelpers</a></code></h3>
   
   
-    <a href="../../../Avram/Migrator/IndexStatementHelpers.html#add_index(column:Symbol,unique=false,using:Symbol=:btree)-instance-method" class="tooltip">
+    <a href="../../../Avram/Migrator/IndexStatementHelpers.html#add_index%28column%3ASymbol%2Cunique%3Dfalse%2Cusing%3ASymbol%3D%3Abtree%29-instance-method" class="tooltip">
       <span>add_index(column : Symbol, unique = <span class="n">false</span>, using : Symbol = <span class="n">:btree</span>)</span>
     add_index</a>, 
     
   
-    <a href="../../../Avram/Migrator/IndexStatementHelpers.html#index_added?(index:String,column:Symbol)-instance-method" class="tooltip">
+    <a href="../../../Avram/Migrator/IndexStatementHelpers.html#index_added%3F%28index%3AString%2Ccolumn%3ASymbol%29-instance-method" class="tooltip">
       <span>index_added?(index : String, column : Symbol)</span>
     index_added?</a>
     
@@ -1767,17 +1767,17 @@
   <h3>Instance methods inherited from class <code><a href="../../../Object.html">Object</a></code></h3>
   
   
-    <a href="../../../Object.html#blank?-instance-method" class="tooltip">
+    <a href="../../../Object.html#blank%3F-instance-method" class="tooltip">
       <span>blank?</span>
     blank?</a>, 
     
   
-    <a href="../../../Object.html#blank_for_validates_required?:Bool-instance-method" class="tooltip">
+    <a href="../../../Object.html#blank_for_validates_required%3F%3ABool-instance-method" class="tooltip">
       <span>blank_for_validates_required? : Bool</span>
     blank_for_validates_required?</a>, 
     
   
-    <a href="../../../Object.html#present?-instance-method" class="tooltip">
+    <a href="../../../Object.html#present%3F-instance-method" class="tooltip">
       <span>present?</span>
     present?</a>
     
@@ -1812,7 +1812,7 @@
         
         def <strong>down</strong>(quiet = <span class="n">false</span>)
 
-        <a class="method-permalink" href="#down(quiet=false)-instance-method">#</a>
+        <a class="method-permalink" href="#down%28quiet%3Dfalse%29-instance-method">#</a>
       </div>
       
         <div class="doc">
@@ -1823,7 +1823,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/48da4d808066257a19b84680fce76c98e938b066/src/avram/migrator/migration.cr#L46" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/7528131fef4a1c69847b9c4421f44048fda37122/src/avram/migrator/migration.cr#L46" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1839,7 +1839,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/48da4d808066257a19b84680fce76c98e938b066/src/avram/migrator/migration.cr#L21" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/7528131fef4a1c69847b9c4421f44048fda37122/src/avram/migrator/migration.cr#L21" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1849,13 +1849,13 @@
         
         def <strong>migrated?</strong>
 
-        <a class="method-permalink" href="#migrated?-instance-method">#</a>
+        <a class="method-permalink" href="#migrated%3F-instance-method">#</a>
       </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/48da4d808066257a19b84680fce76c98e938b066/src/avram/migrator/migration.cr#L65" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/7528131fef4a1c69847b9c4421f44048fda37122/src/avram/migrator/migration.cr#L65" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1865,13 +1865,13 @@
         
         def <strong>pending?</strong>
 
-        <a class="method-permalink" href="#pending?-instance-method">#</a>
+        <a class="method-permalink" href="#pending%3F-instance-method">#</a>
       </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/48da4d808066257a19b84680fce76c98e938b066/src/avram/migrator/migration.cr#L61" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/7528131fef4a1c69847b9c4421f44048fda37122/src/avram/migrator/migration.cr#L61" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1881,13 +1881,13 @@
         
         def <strong>prepared_statements</strong> : <a href="../../../Array.html">Array</a>(<a href="../../../String.html">String</a>)
 
-        <a class="method-permalink" href="#prepared_statements:Array(String)-instance-method">#</a>
+        <a class="method-permalink" href="#prepared_statements%3AArray%28String%29-instance-method">#</a>
       </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/48da4d808066257a19b84680fce76c98e938b066/src/avram/migrator/migration.cr#L24" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/7528131fef4a1c69847b9c4421f44048fda37122/src/avram/migrator/migration.cr#L24" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1903,7 +1903,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/48da4d808066257a19b84680fce76c98e938b066/src/avram/migrator/migration.cr#L105" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/7528131fef4a1c69847b9c4421f44048fda37122/src/avram/migrator/migration.cr#L105" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1913,7 +1913,7 @@
         
         def <strong>up</strong>(quiet = <span class="n">false</span>)
 
-        <a class="method-permalink" href="#up(quiet=false)-instance-method">#</a>
+        <a class="method-permalink" href="#up%28quiet%3Dfalse%29-instance-method">#</a>
       </div>
       
         <div class="doc">
@@ -1927,7 +1927,7 @@ transaction and tracked upon completion.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/48da4d808066257a19b84680fce76c98e938b066/src/avram/migrator/migration.cr#L30" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/7528131fef4a1c69847b9c4421f44048fda37122/src/avram/migrator/migration.cr#L30" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1943,7 +1943,7 @@ transaction and tracked upon completion.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/48da4d808066257a19b84680fce76c98e938b066/src/avram/migrator/migration.cr#L22" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/7528131fef4a1c69847b9c4421f44048fda37122/src/avram/migrator/migration.cr#L22" target="_blank">View source</a>]
         
       </div>
     </div>

@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="generator" content="Crystal Docs 1.0.0">
+<meta name="generator" content="Crystal Docs 1.1.1">
 <meta name="crystal_docs.project_version" content="master">
 <meta name="crystal_docs.project_name" content="avram">
 
@@ -1528,11 +1528,8 @@
   </h2>
 
   <p>Add methods for querying/updating soft deleted and kept records.</p>
-
 <p>First include the model module in your model: <code><a href="../../Avram/SoftDelete/Model.html">Avram::SoftDelete::Model</a></code></p>
-
 <p>Then add this module your query</p>
-
 <pre><code class="language-crystal"><span class="k">class</span> <span class="t">ArticleQuery</span> <span class="o">&lt;</span> <span class="t">Article</span><span class="t">::</span><span class="t">BaseQuery</span>
   <span class="k">include</span> <span class="t">Avram</span><span class="t">::</span><span class="t">SoftDelete</span><span class="t">::</span><span class="t">Query</span>
 <span class="k">end</span></code></pre>
@@ -1560,7 +1557,7 @@
   </h2>
   
     
-      <a href="https://github.com/luckyframework/avram/blob/48da4d808066257a19b84680fce76c98e938b066/src/avram/soft_delete/query.cr#L12" target="_blank">
+      <a href="https://github.com/luckyframework/avram/blob/7528131fef4a1c69847b9c4421f44048fda37122/src/avram/soft_delete/query.cr#L12" target="_blank">
         avram/soft_delete/query.cr
       </a>
     
@@ -1600,7 +1597,7 @@
       </li>
     
       <li class="entry-summary">
-        <a href="#restore:Int64-instance-method" class="signature"><strong>#restore</strong> : Int64</a>
+        <a href="#restore%3AInt64-instance-method" class="signature"><strong>#restore</strong> : Int64</a>
         
           <div class="summary"><p>Bulk restore records</p></div>
         
@@ -1660,15 +1657,14 @@
         <div class="doc">
           
           <p>Only return kept records</p>
-
-<p>Kept records are considered "kept/not soft deleted" if the
+<p>Kept records are considered &quot;kept/not soft deleted&quot; if the
 <code><a href="../../Avram/SoftDelete/Query.html#soft_deleted_at-instance-method">#soft_deleted_at</a></code> column is <code>nil</code></p>
         </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/48da4d808066257a19b84680fce76c98e938b066/src/avram/soft_delete/query.cr#L17" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/7528131fef4a1c69847b9c4421f44048fda37122/src/avram/soft_delete/query.cr#L17" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1684,15 +1680,14 @@
         <div class="doc">
           
           <p>Only return soft deleted records</p>
-
-<p>Soft deleted records are considered "soft deleted" if the
+<p>Soft deleted records are considered &quot;soft deleted&quot; if the
 <code><a href="../../Avram/SoftDelete/Query.html#soft_deleted_at-instance-method">#soft_deleted_at</a></code> column has a non-nil value</p>
         </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/48da4d808066257a19b84680fce76c98e938b066/src/avram/soft_delete/query.cr#L25" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/7528131fef4a1c69847b9c4421f44048fda37122/src/avram/soft_delete/query.cr#L25" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1702,28 +1697,25 @@
         
         def <strong>restore</strong> : <a href="../../Int64.html">Int64</a>
 
-        <a class="method-permalink" href="#restore:Int64-instance-method">#</a>
+        <a class="method-permalink" href="#restore%3AInt64-instance-method">#</a>
       </div>
       
         <div class="doc">
           
           <p>Bulk restore records</p>
-
 <h2><a id="example" class="anchor" href="#example">
   <svg class="octicon-link" aria-hidden="true">
     <use href="#octicon-link"/>
   </svg>
 </a>Example</h2>
-
 <p>This will restore <code>Article</code> records updated in the last week:</p>
-
 <pre><code class="language-crystal"><span class="t">ArticleQuery</span>.<span class="k">new</span>.updated_at.gt(<span class="n">1</span>.week.ago).restore</code></pre>
         </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/48da4d808066257a19b84680fce76c98e938b066/src/avram/soft_delete/query.cr#L60" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/7528131fef4a1c69847b9c4421f44048fda37122/src/avram/soft_delete/query.cr#L60" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1739,22 +1731,19 @@
         <div class="doc">
           
           <p>Bulk soft delete records</p>
-
 <h2><a id="example" class="anchor" href="#example">
   <svg class="octicon-link" aria-hidden="true">
     <use href="#octicon-link"/>
   </svg>
 </a>Example</h2>
-
 <p>This will soft delete all <code>Article</code> record older than 1 year:</p>
-
 <pre><code class="language-crystal"><span class="t">ArticleQuery</span>.<span class="k">new</span>.created_at.lt(<span class="n">1</span>.year.ago).soft_delete</code></pre>
         </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/48da4d808066257a19b84680fce76c98e938b066/src/avram/soft_delete/query.cr#L47" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/7528131fef4a1c69847b9c4421f44048fda37122/src/avram/soft_delete/query.cr#L47" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1770,7 +1759,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/48da4d808066257a19b84680fce76c98e938b066/src/avram/soft_delete/query.cr#L64" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/7528131fef4a1c69847b9c4421f44048fda37122/src/avram/soft_delete/query.cr#L64" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1786,7 +1775,6 @@
         <div class="doc">
           
           <p>Returns all records</p>
-
 <p>This works be removing where clauses for the <code><a href="../../Avram/SoftDelete/Query.html#soft_deleted_at-instance-method">#soft_deleted_at</a></code> column.
 That means you can do <code>MyQuery.new.only_kept.with_soft_deleted</code> and you
 will get all records, not just the kept ones.</p>
@@ -1795,7 +1783,7 @@ will get all records, not just the kept ones.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/48da4d808066257a19b84680fce76c98e938b066/src/avram/soft_delete/query.cr#L34" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/7528131fef4a1c69847b9c4421f44048fda37122/src/avram/soft_delete/query.cr#L34" target="_blank">View source</a>]
         
       </div>
     </div>
