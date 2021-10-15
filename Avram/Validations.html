@@ -1527,8 +1527,9 @@
     Overview
   </h2>
 
-  <p>A number of methods for validating Avram::Attributes</p>
-<p>This module is included in <code><a href="../Avram/Operation.html">Avram::Operation</a></code> and <code><a href="../Avram/SaveOperation.html">Avram::SaveOperation</a></code></p>
+  <p>A number of methods for validating Avram::Attributes
+All validation methods return <code><a href="../Bool.html">Bool</a></code>. <code>false</code> if any error is added, otherwise <code>true</code></p>
+<p>This module is included in <code><a href="../Avram/Operation.html">Avram::Operation</a></code>, <code><a href="../Avram/SaveOperation.html">Avram::SaveOperation</a></code>, and <code><a href="../Avram/DeleteOperation.html">Avram::DeleteOperation</a></code></p>
 
 
 
@@ -1585,7 +1586,7 @@
   </h2>
   
     
-      <a href="https://github.com/luckyframework/avram/blob/7528131fef4a1c69847b9c4421f44048fda37122/src/avram/validations.cr#L6" target="_blank">
+      <a href="https://github.com/luckyframework/avram/blob/f409ee4c481a42e59c2c598d2524b790b2941315/src/avram/validations.cr#L7" target="_blank">
         avram/validations.cr
       </a>
     
@@ -1611,63 +1612,63 @@
   <ul class="list-summary">
     
       <li class="entry-summary">
-        <a href="#validate_acceptance_of%28attribute%3AAvram%3A%3AAttribute%28Bool%29%2Cmessage%3AAvram%3A%3AAttribute%3A%3AErrorMessage%3D%22mustbeaccepted%22%29-instance-method" class="signature"><strong>#validate_acceptance_of</strong>(attribute : Avram::Attribute(Bool), message : Avram::Attribute::ErrorMessage = <span class="s">&quot;must be accepted&quot;</span>)</a>
+        <a href="#validate_acceptance_of%28attribute%3AAvram%3A%3AAttribute%28Bool%29%2Cmessage%3AAvram%3A%3AAttribute%3A%3AErrorMessage%3D%22mustbeaccepted%22%29%3ABool-instance-method" class="signature"><strong>#validate_acceptance_of</strong>(attribute : Avram::Attribute(Bool), message : Avram::Attribute::ErrorMessage = <span class="s">&quot;must be accepted&quot;</span>) : Bool</a>
         
           <div class="summary"><p>Validate whether an attribute was accepted (<code>true</code>)</p></div>
         
       </li>
     
       <li class="entry-summary">
-        <a href="#validate_at_most_one_filled%28%2Aattributes%2Cmessage%3AAvram%3A%3AAttribute%3A%3AErrorMessage%3D%22mustbeblank%22%29-instance-method" class="signature"><strong>#validate_at_most_one_filled</strong>(*attributes, message : Avram::Attribute::ErrorMessage = <span class="s">&quot;must be blank&quot;</span>)</a>
+        <a href="#validate_at_most_one_filled%28%2Aattributes%2Cmessage%3AAvram%3A%3AAttribute%3A%3AErrorMessage%3D%22mustbeblank%22%29%3ABool-instance-method" class="signature"><strong>#validate_at_most_one_filled</strong>(*attributes, message : Avram::Attribute::ErrorMessage = <span class="s">&quot;must be blank&quot;</span>) : Bool</a>
         
           <div class="summary"><p>Validates that at most one attribute is filled</p></div>
         
       </li>
     
       <li class="entry-summary">
-        <a href="#validate_confirmation_of%28attribute%3AAvram%3A%3AAttribute%28T%29%2Cwithconfirmation_attribute%3AAvram%3A%3AAttribute%28T%29%2Cmessage%3AAvram%3A%3AAttribute%3A%3AErrorMessage%3D%22mustmatch%22%29forallT-instance-method" class="signature"><strong>#validate_confirmation_of</strong>(attribute : Avram::Attribute(T), with confirmation_attribute : Avram::Attribute(T), message : Avram::Attribute::ErrorMessage = <span class="s">&quot;must match&quot;</span>) forall T</a>
+        <a href="#validate_confirmation_of%28attribute%3AAvram%3A%3AAttribute%28T%29%2Cwithconfirmation_attribute%3AAvram%3A%3AAttribute%28T%29%2Cmessage%3AAvram%3A%3AAttribute%3A%3AErrorMessage%3D%22mustmatch%22%29%3ABoolforallT-instance-method" class="signature"><strong>#validate_confirmation_of</strong>(attribute : Avram::Attribute(T), with confirmation_attribute : Avram::Attribute(T), message : Avram::Attribute::ErrorMessage = <span class="s">&quot;must match&quot;</span>) : Bool forall T</a>
         
           <div class="summary"><p>Validates that the values of two attributes are the same</p></div>
         
       </li>
     
       <li class="entry-summary">
-        <a href="#validate_exactly_one_filled%28%2Aattributes%2Cmessage%3AAvram%3A%3AAttribute%3A%3AErrorMessage%3D%22atleastonemustbefilled%22%29-instance-method" class="signature"><strong>#validate_exactly_one_filled</strong>(*attributes, message : Avram::Attribute::ErrorMessage = <span class="s">&quot;at least one must be filled&quot;</span>)</a>
+        <a href="#validate_exactly_one_filled%28%2Aattributes%2Cmessage%3AAvram%3A%3AAttribute%3A%3AErrorMessage%3D%22atleastonemustbefilled%22%29%3ABool-instance-method" class="signature"><strong>#validate_exactly_one_filled</strong>(*attributes, message : Avram::Attribute::ErrorMessage = <span class="s">&quot;at least one must be filled&quot;</span>) : Bool</a>
         
           <div class="summary"><p>Validates that at exactly one attribute is filled</p></div>
         
       </li>
     
       <li class="entry-summary">
-        <a href="#validate_inclusion_of%28attribute%3AAvram%3A%3AAttribute%28T%29%2Cinallowed_values%3AEnumerable%28T%29%2Cmessage%3AAvram%3A%3AAttribute%3A%3AErrorMessage%3D%22isinvalid%22%2Callow_nil%3ABool%3Dfalse%29forallT-instance-method" class="signature"><strong>#validate_inclusion_of</strong>(attribute : Avram::Attribute(T), in allowed_values : Enumerable(T), message : Avram::Attribute::ErrorMessage = <span class="s">&quot;is invalid&quot;</span>, allow_nil : Bool = <span class="n">false</span>) forall T</a>
+        <a href="#validate_inclusion_of%28attribute%3AAvram%3A%3AAttribute%28T%29%2Cinallowed_values%3AEnumerable%28T%29%2Cmessage%3AAvram%3A%3AAttribute%3A%3AErrorMessage%3D%22isinvalid%22%2Callow_nil%3ABool%3Dfalse%29%3ABoolforallT-instance-method" class="signature"><strong>#validate_inclusion_of</strong>(attribute : Avram::Attribute(T), in allowed_values : Enumerable(T), message : Avram::Attribute::ErrorMessage = <span class="s">&quot;is invalid&quot;</span>, allow_nil : Bool = <span class="n">false</span>) : Bool forall T</a>
         
           <div class="summary"><p>Validates that the attribute value is in a list of allowed values</p></div>
         
       </li>
     
       <li class="entry-summary">
-        <a href="#validate_numeric%28attribute%3AAvram%3A%3AAttribute%28Number%29%2Cgreater_than%3Dnil%2Cless_than%3Dnil%2Cmessage%3Dnil%2Callow_nil%3ABool%3Dfalse%29-instance-method" class="signature"><strong>#validate_numeric</strong>(attribute : Avram::Attribute(Number), greater_than = <span class="n">nil</span>, less_than = <span class="n">nil</span>, message = <span class="n">nil</span>, allow_nil : Bool = <span class="n">false</span>)</a>
+        <a href="#validate_numeric%28attribute%3AAvram%3A%3AAttribute%28Number%29%2Cgreater_than%3Dnil%2Cless_than%3Dnil%2Cmessage%3Dnil%2Callow_nil%3ABool%3Dfalse%29%3ABool-instance-method" class="signature"><strong>#validate_numeric</strong>(attribute : Avram::Attribute(Number), greater_than = <span class="n">nil</span>, less_than = <span class="n">nil</span>, message = <span class="n">nil</span>, allow_nil : Bool = <span class="n">false</span>) : Bool</a>
         
           <div class="summary"><p>Validate a number is <code>greater_than</code> and/or <code>less_than</code></p></div>
         
       </li>
     
       <li class="entry-summary">
-        <a href="#validate_required%28%2Aattributes%2Cmessage%3AAvram%3A%3AAttribute%3A%3AErrorMessage%3D%22isrequired%22%29-instance-method" class="signature"><strong>#validate_required</strong>(*attributes, message : Avram::Attribute::ErrorMessage = <span class="s">&quot;is required&quot;</span>)</a>
+        <a href="#validate_required%28%2Aattributes%2Cmessage%3AAvram%3A%3AAttribute%3A%3AErrorMessage%3D%22isrequired%22%29%3ABool-instance-method" class="signature"><strong>#validate_required</strong>(*attributes, message : Avram::Attribute::ErrorMessage = <span class="s">&quot;is required&quot;</span>) : Bool</a>
         
           <div class="summary"><p>Validates that the passed in attributes have values</p></div>
         
       </li>
     
       <li class="entry-summary">
-        <a href="#validate_size_of%28attribute%3AAvram%3A%3AAttribute%28String%29%2Cmin%3Dnil%2Cmax%3Dnil%2Cmessage%3Dnil%2Callow_nil%3ABool%3Dfalse%29-instance-method" class="signature"><strong>#validate_size_of</strong>(attribute : Avram::Attribute(String), min = <span class="n">nil</span>, max = <span class="n">nil</span>, message = <span class="n">nil</span>, allow_nil : Bool = <span class="n">false</span>)</a>
+        <a href="#validate_size_of%28attribute%3AAvram%3A%3AAttribute%28String%29%2Cmin%3Dnil%2Cmax%3Dnil%2Cmessage%3Dnil%2Callow_nil%3ABool%3Dfalse%29%3ABool-instance-method" class="signature"><strong>#validate_size_of</strong>(attribute : Avram::Attribute(String), min = <span class="n">nil</span>, max = <span class="n">nil</span>, message = <span class="n">nil</span>, allow_nil : Bool = <span class="n">false</span>) : Bool</a>
         
           <div class="summary"><p>Validate the size of a <code><a href="../String.html">String</a></code> is within a <code>min</code> and/or <code>max</code></p></div>
         
       </li>
     
       <li class="entry-summary">
-        <a href="#validate_size_of%28attribute%3AAvram%3A%3AAttribute%28String%29%2C%2A%2Cisexact_size%2Cmessage%3AAvram%3A%3AAttribute%3A%3AErrorMessage%3D%22isinvalid%22%2Callow_nil%3ABool%3Dfalse%29-instance-method" class="signature"><strong>#validate_size_of</strong>(attribute : Avram::Attribute(String), *, is exact_size, message : Avram::Attribute::ErrorMessage = <span class="s">&quot;is invalid&quot;</span>, allow_nil : Bool = <span class="n">false</span>)</a>
+        <a href="#validate_size_of%28attribute%3AAvram%3A%3AAttribute%28String%29%2C%2A%2Cisexact_size%2Cmessage%3AAvram%3A%3AAttribute%3A%3AErrorMessage%3D%22isinvalid%22%2Callow_nil%3ABool%3Dfalse%29%3ABool-instance-method" class="signature"><strong>#validate_size_of</strong>(attribute : Avram::Attribute(String), *, is exact_size, message : Avram::Attribute::ErrorMessage = <span class="s">&quot;is invalid&quot;</span>, allow_nil : Bool = <span class="n">false</span>) : Bool</a>
         
           <div class="summary"><p>Validate the size of a <code><a href="../String.html">String</a></code> is exactly a certain size</p></div>
         
@@ -1697,12 +1698,12 @@
     Instance Method Detail
   </h2>
   
-    <div class="entry-detail" id="validate_acceptance_of(attribute:Avram::Attribute(Bool),message:Avram::Attribute::ErrorMessage=&quot;mustbeaccepted&quot;)-instance-method">
+    <div class="entry-detail" id="validate_acceptance_of(attribute:Avram::Attribute(Bool),message:Avram::Attribute::ErrorMessage=&quot;mustbeaccepted&quot;):Bool-instance-method">
       <div class="signature">
         
-        def <strong>validate_acceptance_of</strong>(attribute : <a href="../Avram/Attribute.html">Avram::Attribute</a>(<a href="../Bool.html">Bool</a>), message : <a href="../Avram/Attribute/ErrorMessage.html">Avram::Attribute::ErrorMessage</a> = <span class="s">&quot;must be accepted&quot;</span>)
+        def <strong>validate_acceptance_of</strong>(attribute : <a href="../Avram/Attribute.html">Avram::Attribute</a>(<a href="../Bool.html">Bool</a>), message : <a href="../Avram/Attribute/ErrorMessage.html">Avram::Attribute::ErrorMessage</a> = <span class="s">&quot;must be accepted&quot;</span>) : <a href="../Bool.html">Bool</a>
 
-        <a class="method-permalink" href="#validate_acceptance_of%28attribute%3AAvram%3A%3AAttribute%28Bool%29%2Cmessage%3AAvram%3A%3AAttribute%3A%3AErrorMessage%3D%22mustbeaccepted%22%29-instance-method">#</a>
+        <a class="method-permalink" href="#validate_acceptance_of%28attribute%3AAvram%3A%3AAttribute%28Bool%29%2Cmessage%3AAvram%3A%3AAttribute%3A%3AErrorMessage%3D%22mustbeaccepted%22%29%3ABool-instance-method">#</a>
       </div>
       
         <div class="doc">
@@ -1715,17 +1716,17 @@ as invalid for any value other than <code>true</code>.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/7528131fef4a1c69847b9c4421f44048fda37122/src/avram/validations.cr#L61" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/f409ee4c481a42e59c2c598d2524b790b2941315/src/avram/validations.cr#L75" target="_blank">View source</a>]
         
       </div>
     </div>
   
-    <div class="entry-detail" id="validate_at_most_one_filled(*attributes,message:Avram::Attribute::ErrorMessage=&quot;mustbeblank&quot;)-instance-method">
+    <div class="entry-detail" id="validate_at_most_one_filled(*attributes,message:Avram::Attribute::ErrorMessage=&quot;mustbeblank&quot;):Bool-instance-method">
       <div class="signature">
         
-        def <strong>validate_at_most_one_filled</strong>(*attributes, message : <a href="../Avram/Attribute/ErrorMessage.html">Avram::Attribute::ErrorMessage</a> = <span class="s">&quot;must be blank&quot;</span>)
+        def <strong>validate_at_most_one_filled</strong>(*attributes, message : <a href="../Avram/Attribute/ErrorMessage.html">Avram::Attribute::ErrorMessage</a> = <span class="s">&quot;must be blank&quot;</span>) : <a href="../Bool.html">Bool</a>
 
-        <a class="method-permalink" href="#validate_at_most_one_filled%28%2Aattributes%2Cmessage%3AAvram%3A%3AAttribute%3A%3AErrorMessage%3D%22mustbeblank%22%29-instance-method">#</a>
+        <a class="method-permalink" href="#validate_at_most_one_filled%28%2Aattributes%2Cmessage%3AAvram%3A%3AAttribute%3A%3AErrorMessage%3D%22mustbeblank%22%29%3ABool-instance-method">#</a>
       </div>
       
         <div class="doc">
@@ -1738,17 +1739,17 @@ field invalid.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/7528131fef4a1c69847b9c4421f44048fda37122/src/avram/validations.cr#L13" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/f409ee4c481a42e59c2c598d2524b790b2941315/src/avram/validations.cr#L14" target="_blank">View source</a>]
         
       </div>
     </div>
   
-    <div class="entry-detail" id="validate_confirmation_of(attribute:Avram::Attribute(T),withconfirmation_attribute:Avram::Attribute(T),message:Avram::Attribute::ErrorMessage=&quot;mustmatch&quot;)forallT-instance-method">
+    <div class="entry-detail" id="validate_confirmation_of(attribute:Avram::Attribute(T),withconfirmation_attribute:Avram::Attribute(T),message:Avram::Attribute::ErrorMessage=&quot;mustmatch&quot;):BoolforallT-instance-method">
       <div class="signature">
         
-        def <strong>validate_confirmation_of</strong>(attribute : <a href="../Avram/Attribute.html">Avram::Attribute</a>(T), with confirmation_attribute : <a href="../Avram/Attribute.html">Avram::Attribute</a>(T), message : <a href="../Avram/Attribute/ErrorMessage.html">Avram::Attribute::ErrorMessage</a> = <span class="s">&quot;must match&quot;</span>) forall T
+        def <strong>validate_confirmation_of</strong>(attribute : <a href="../Avram/Attribute.html">Avram::Attribute</a>(T), with confirmation_attribute : <a href="../Avram/Attribute.html">Avram::Attribute</a>(T), message : <a href="../Avram/Attribute/ErrorMessage.html">Avram::Attribute::ErrorMessage</a> = <span class="s">&quot;must match&quot;</span>) : <a href="../Bool.html">Bool</a> forall T
 
-        <a class="method-permalink" href="#validate_confirmation_of%28attribute%3AAvram%3A%3AAttribute%28T%29%2Cwithconfirmation_attribute%3AAvram%3A%3AAttribute%28T%29%2Cmessage%3AAvram%3A%3AAttribute%3A%3AErrorMessage%3D%22mustmatch%22%29forallT-instance-method">#</a>
+        <a class="method-permalink" href="#validate_confirmation_of%28attribute%3AAvram%3A%3AAttribute%28T%29%2Cwithconfirmation_attribute%3AAvram%3A%3AAttribute%28T%29%2Cmessage%3AAvram%3A%3AAttribute%3A%3AErrorMessage%3D%22mustmatch%22%29%3ABoolforallT-instance-method">#</a>
       </div>
       
         <div class="doc">
@@ -1764,17 +1765,17 @@ field invalid.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/7528131fef4a1c69847b9c4421f44048fda37122/src/avram/validations.cr#L79" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/f409ee4c481a42e59c2c598d2524b790b2941315/src/avram/validations.cr#L97" target="_blank">View source</a>]
         
       </div>
     </div>
   
-    <div class="entry-detail" id="validate_exactly_one_filled(*attributes,message:Avram::Attribute::ErrorMessage=&quot;atleastonemustbefilled&quot;)-instance-method">
+    <div class="entry-detail" id="validate_exactly_one_filled(*attributes,message:Avram::Attribute::ErrorMessage=&quot;atleastonemustbefilled&quot;):Bool-instance-method">
       <div class="signature">
         
-        def <strong>validate_exactly_one_filled</strong>(*attributes, message : <a href="../Avram/Attribute/ErrorMessage.html">Avram::Attribute::ErrorMessage</a> = <span class="s">&quot;at least one must be filled&quot;</span>)
+        def <strong>validate_exactly_one_filled</strong>(*attributes, message : <a href="../Avram/Attribute/ErrorMessage.html">Avram::Attribute::ErrorMessage</a> = <span class="s">&quot;at least one must be filled&quot;</span>) : <a href="../Bool.html">Bool</a>
 
-        <a class="method-permalink" href="#validate_exactly_one_filled%28%2Aattributes%2Cmessage%3AAvram%3A%3AAttribute%3A%3AErrorMessage%3D%22atleastonemustbefilled%22%29-instance-method">#</a>
+        <a class="method-permalink" href="#validate_exactly_one_filled%28%2Aattributes%2Cmessage%3AAvram%3A%3AAttribute%3A%3AErrorMessage%3D%22atleastonemustbefilled%22%29%3ABool-instance-method">#</a>
       </div>
       
         <div class="doc">
@@ -1790,17 +1791,17 @@ field invalid.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/7528131fef4a1c69847b9c4421f44048fda37122/src/avram/validations.cr#L30" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/f409ee4c481a42e59c2c598d2524b790b2941315/src/avram/validations.cr#L37" target="_blank">View source</a>]
         
       </div>
     </div>
   
-    <div class="entry-detail" id="validate_inclusion_of(attribute:Avram::Attribute(T),inallowed_values:Enumerable(T),message:Avram::Attribute::ErrorMessage=&quot;isinvalid&quot;,allow_nil:Bool=false)forallT-instance-method">
+    <div class="entry-detail" id="validate_inclusion_of(attribute:Avram::Attribute(T),inallowed_values:Enumerable(T),message:Avram::Attribute::ErrorMessage=&quot;isinvalid&quot;,allow_nil:Bool=false):BoolforallT-instance-method">
       <div class="signature">
         
-        def <strong>validate_inclusion_of</strong>(attribute : <a href="../Avram/Attribute.html">Avram::Attribute</a>(T), in allowed_values : Enumerable(T), message : <a href="../Avram/Attribute/ErrorMessage.html">Avram::Attribute::ErrorMessage</a> = <span class="s">&quot;is invalid&quot;</span>, allow_nil : <a href="../Bool.html">Bool</a> = <span class="n">false</span>) forall T
+        def <strong>validate_inclusion_of</strong>(attribute : <a href="../Avram/Attribute.html">Avram::Attribute</a>(T), in allowed_values : Enumerable(T), message : <a href="../Avram/Attribute/ErrorMessage.html">Avram::Attribute::ErrorMessage</a> = <span class="s">&quot;is invalid&quot;</span>, allow_nil : <a href="../Bool.html">Bool</a> = <span class="n">false</span>) : <a href="../Bool.html">Bool</a> forall T
 
-        <a class="method-permalink" href="#validate_inclusion_of%28attribute%3AAvram%3A%3AAttribute%28T%29%2Cinallowed_values%3AEnumerable%28T%29%2Cmessage%3AAvram%3A%3AAttribute%3A%3AErrorMessage%3D%22isinvalid%22%2Callow_nil%3ABool%3Dfalse%29forallT-instance-method">#</a>
+        <a class="method-permalink" href="#validate_inclusion_of%28attribute%3AAvram%3A%3AAttribute%28T%29%2Cinallowed_values%3AEnumerable%28T%29%2Cmessage%3AAvram%3A%3AAttribute%3A%3AErrorMessage%3D%22isinvalid%22%2Callow_nil%3ABool%3Dfalse%29%3ABoolforallT-instance-method">#</a>
       </div>
       
         <div class="doc">
@@ -1813,17 +1814,17 @@ field invalid.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/7528131fef4a1c69847b9c4421f44048fda37122/src/avram/validations.cr#L96" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/f409ee4c481a42e59c2c598d2524b790b2941315/src/avram/validations.cr#L118" target="_blank">View source</a>]
         
       </div>
     </div>
   
-    <div class="entry-detail" id="validate_numeric(attribute:Avram::Attribute(Number),greater_than=nil,less_than=nil,message=nil,allow_nil:Bool=false)-instance-method">
+    <div class="entry-detail" id="validate_numeric(attribute:Avram::Attribute(Number),greater_than=nil,less_than=nil,message=nil,allow_nil:Bool=false):Bool-instance-method">
       <div class="signature">
         
-        def <strong>validate_numeric</strong>(attribute : <a href="../Avram/Attribute.html">Avram::Attribute</a>(Number), greater_than = <span class="n">nil</span>, less_than = <span class="n">nil</span>, message = <span class="n">nil</span>, allow_nil : <a href="../Bool.html">Bool</a> = <span class="n">false</span>)
+        def <strong>validate_numeric</strong>(attribute : <a href="../Avram/Attribute.html">Avram::Attribute</a>(Number), greater_than = <span class="n">nil</span>, less_than = <span class="n">nil</span>, message = <span class="n">nil</span>, allow_nil : <a href="../Bool.html">Bool</a> = <span class="n">false</span>) : <a href="../Bool.html">Bool</a>
 
-        <a class="method-permalink" href="#validate_numeric%28attribute%3AAvram%3A%3AAttribute%28Number%29%2Cgreater_than%3Dnil%2Cless_than%3Dnil%2Cmessage%3Dnil%2Callow_nil%3ABool%3Dfalse%29-instance-method">#</a>
+        <a class="method-permalink" href="#validate_numeric%28attribute%3AAvram%3A%3AAttribute%28Number%29%2Cgreater_than%3Dnil%2Cless_than%3Dnil%2Cmessage%3Dnil%2Callow_nil%3ABool%3Dfalse%29%3ABool-instance-method">#</a>
       </div>
       
         <div class="doc">
@@ -1837,17 +1838,17 @@ validate_numeric count, greater_than: <span class="n">0</span>, less_than: <span
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/7528131fef4a1c69847b9c4421f44048fda37122/src/avram/validations.cr#L164" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/f409ee4c481a42e59c2c598d2524b790b2941315/src/avram/validations.cr#L203" target="_blank">View source</a>]
         
       </div>
     </div>
   
-    <div class="entry-detail" id="validate_required(*attributes,message:Avram::Attribute::ErrorMessage=&quot;isrequired&quot;)-instance-method">
+    <div class="entry-detail" id="validate_required(*attributes,message:Avram::Attribute::ErrorMessage=&quot;isrequired&quot;):Bool-instance-method">
       <div class="signature">
         
-        def <strong>validate_required</strong>(*attributes, message : <a href="../Avram/Attribute/ErrorMessage.html">Avram::Attribute::ErrorMessage</a> = <span class="s">&quot;is required&quot;</span>)
+        def <strong>validate_required</strong>(*attributes, message : <a href="../Avram/Attribute/ErrorMessage.html">Avram::Attribute::ErrorMessage</a> = <span class="s">&quot;is required&quot;</span>) : <a href="../Bool.html">Bool</a>
 
-        <a class="method-permalink" href="#validate_required%28%2Aattributes%2Cmessage%3AAvram%3A%3AAttribute%3A%3AErrorMessage%3D%22isrequired%22%29-instance-method">#</a>
+        <a class="method-permalink" href="#validate_required%28%2Aattributes%2Cmessage%3AAvram%3A%3AAttribute%3A%3AErrorMessage%3D%22isrequired%22%29%3ABool-instance-method">#</a>
       </div>
       
         <div class="doc">
@@ -1862,17 +1863,17 @@ marked as invalid if the value is <code>nil</code>, or &quot;blank&quot; (empty 
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/7528131fef4a1c69847b9c4421f44048fda37122/src/avram/validations.cr#L49" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/f409ee4c481a42e59c2c598d2524b790b2941315/src/avram/validations.cr#L59" target="_blank">View source</a>]
         
       </div>
     </div>
   
-    <div class="entry-detail" id="validate_size_of(attribute:Avram::Attribute(String),min=nil,max=nil,message=nil,allow_nil:Bool=false)-instance-method">
+    <div class="entry-detail" id="validate_size_of(attribute:Avram::Attribute(String),min=nil,max=nil,message=nil,allow_nil:Bool=false):Bool-instance-method">
       <div class="signature">
         
-        def <strong>validate_size_of</strong>(attribute : <a href="../Avram/Attribute.html">Avram::Attribute</a>(<a href="../String.html">String</a>), min = <span class="n">nil</span>, max = <span class="n">nil</span>, message = <span class="n">nil</span>, allow_nil : <a href="../Bool.html">Bool</a> = <span class="n">false</span>)
+        def <strong>validate_size_of</strong>(attribute : <a href="../Avram/Attribute.html">Avram::Attribute</a>(<a href="../String.html">String</a>), min = <span class="n">nil</span>, max = <span class="n">nil</span>, message = <span class="n">nil</span>, allow_nil : <a href="../Bool.html">Bool</a> = <span class="n">false</span>) : <a href="../Bool.html">Bool</a>
 
-        <a class="method-permalink" href="#validate_size_of%28attribute%3AAvram%3A%3AAttribute%28String%29%2Cmin%3Dnil%2Cmax%3Dnil%2Cmessage%3Dnil%2Callow_nil%3ABool%3Dfalse%29-instance-method">#</a>
+        <a class="method-permalink" href="#validate_size_of%28attribute%3AAvram%3A%3AAttribute%28String%29%2Cmin%3Dnil%2Cmax%3Dnil%2Cmessage%3Dnil%2Callow_nil%3ABool%3Dfalse%29%3ABool-instance-method">#</a>
       </div>
       
         <div class="doc">
@@ -1886,17 +1887,17 @@ validate_size_of password, min: <span class="n">12</span></code></pre>
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/7528131fef4a1c69847b9c4421f44048fda37122/src/avram/validations.cr#L131" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/f409ee4c481a42e59c2c598d2524b790b2941315/src/avram/validations.cr#L165" target="_blank">View source</a>]
         
       </div>
     </div>
   
-    <div class="entry-detail" id="validate_size_of(attribute:Avram::Attribute(String),*,isexact_size,message:Avram::Attribute::ErrorMessage=&quot;isinvalid&quot;,allow_nil:Bool=false)-instance-method">
+    <div class="entry-detail" id="validate_size_of(attribute:Avram::Attribute(String),*,isexact_size,message:Avram::Attribute::ErrorMessage=&quot;isinvalid&quot;,allow_nil:Bool=false):Bool-instance-method">
       <div class="signature">
         
-        def <strong>validate_size_of</strong>(attribute : <a href="../Avram/Attribute.html">Avram::Attribute</a>(<a href="../String.html">String</a>), *, is exact_size, message : <a href="../Avram/Attribute/ErrorMessage.html">Avram::Attribute::ErrorMessage</a> = <span class="s">&quot;is invalid&quot;</span>, allow_nil : <a href="../Bool.html">Bool</a> = <span class="n">false</span>)
+        def <strong>validate_size_of</strong>(attribute : <a href="../Avram/Attribute.html">Avram::Attribute</a>(<a href="../String.html">String</a>), *, is exact_size, message : <a href="../Avram/Attribute/ErrorMessage.html">Avram::Attribute::ErrorMessage</a> = <span class="s">&quot;is invalid&quot;</span>, allow_nil : <a href="../Bool.html">Bool</a> = <span class="n">false</span>) : <a href="../Bool.html">Bool</a>
 
-        <a class="method-permalink" href="#validate_size_of%28attribute%3AAvram%3A%3AAttribute%28String%29%2C%2A%2Cisexact_size%2Cmessage%3AAvram%3A%3AAttribute%3A%3AErrorMessage%3D%22isinvalid%22%2Callow_nil%3ABool%3Dfalse%29-instance-method">#</a>
+        <a class="method-permalink" href="#validate_size_of%28attribute%3AAvram%3A%3AAttribute%28String%29%2C%2A%2Cisexact_size%2Cmessage%3AAvram%3A%3AAttribute%3A%3AErrorMessage%3D%22isinvalid%22%2Callow_nil%3ABool%3Dfalse%29%3ABool-instance-method">#</a>
       </div>
       
         <div class="doc">
@@ -1908,7 +1909,7 @@ validate_size_of password, min: <span class="n">12</span></code></pre>
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/7528131fef4a1c69847b9c4421f44048fda37122/src/avram/validations.cr#L112" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/f409ee4c481a42e59c2c598d2524b790b2941315/src/avram/validations.cr#L140" target="_blank">View source</a>]
         
       </div>
     </div>
