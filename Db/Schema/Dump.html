@@ -1543,7 +1543,7 @@
   </h2>
   
     
-      <a href="https://github.com/luckyframework/avram/blob/5aed4d6ea4000e2cd713906c7d27a362cd8044d4/src/avram/tasks/db/schema_dump.cr#L1" target="_blank">
+      <a href="https://github.com/luckyframework/avram/blob/f6ad76fdb2e75fd014294cd70507d248d49191ab/src/avram/tasks/db/schema_dump.cr#L1" target="_blank">
         avram/tasks/db/schema_dump.cr
       </a>
     
@@ -1565,7 +1565,7 @@
   <dl>
     
       <dt class="entry-const" id="PARSER_OPTS">
-        <strong>PARSER_OPTS</strong> = <code><span class="o">[]</span> <span class="k">of</span> <span class="t">Symbol</span></code>
+        <strong>PARSER_OPTS</strong> = <code>[<span class="n">:dump_to</span>] <span class="k">of</span> <span class="t">Symbol</span></code>
       </dt>
       
     
@@ -1584,7 +1584,7 @@
   <ul class="list-summary">
     
       <li class="entry-summary">
-        <a href="#new%28dump_to%3AString%3F%3Dnil%2Cquiet%3ABool%3Dfalse%29-class-method" class="signature"><strong>.new</strong>(dump_to : String? = <span class="n">nil</span>, quiet : Bool = <span class="n">false</span>)</a>
+        <a href="#new%28quiet%3ABool%3Dfalse%29-class-method" class="signature"><strong>.new</strong>(quiet : Bool = <span class="n">false</span>)</a>
         
       </li>
     
@@ -1603,6 +1603,11 @@
     Instance Method Summary
   </h2>
   <ul class="list-summary">
+    
+      <li class="entry-summary">
+        <a href="#dump_to%3AString-instance-method" class="signature"><strong>#dump_to</strong> : String</a>
+        
+      </li>
     
       <li class="entry-summary">
         <a href="#help_message-instance-method" class="signature"><strong>#help_message</strong></a>
@@ -1641,6 +1646,11 @@
     
       <li class="entry-summary">
         <a href="#run_task-instance-method" class="signature"><strong>#run_task</strong></a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#set_opt_for_dump_to%28args%3AArray%28String%29%29-instance-method" class="signature"><strong>#set_opt_for_dump_to</strong>(args : Array(String))</a>
         
       </li>
     
@@ -1777,18 +1787,18 @@
     Constructor Detail
   </h2>
   
-    <div class="entry-detail" id="new(dump_to:String?=nil,quiet:Bool=false)-class-method">
+    <div class="entry-detail" id="new(quiet:Bool=false)-class-method">
       <div class="signature">
         
-        def self.<strong>new</strong>(dump_to : <a href="../../String.html">String</a>? = <span class="n">nil</span>, quiet : <a href="../../Bool.html">Bool</a> = <span class="n">false</span>)
+        def self.<strong>new</strong>(quiet : <a href="../../Bool.html">Bool</a> = <span class="n">false</span>)
 
-        <a class="method-permalink" href="#new%28dump_to%3AString%3F%3Dnil%2Cquiet%3ABool%3Dfalse%29-class-method">#</a>
+        <a class="method-permalink" href="#new%28quiet%3ABool%3Dfalse%29-class-method">#</a>
       </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/5aed4d6ea4000e2cd713906c7d27a362cd8044d4/src/avram/tasks/db/schema_dump.cr#L4" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/f6ad76fdb2e75fd014294cd70507d248d49191ab/src/avram/tasks/db/schema_dump.cr#L6" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1807,6 +1817,22 @@
     Instance Method Detail
   </h2>
   
+    <div class="entry-detail" id="dump_to:String-instance-method">
+      <div class="signature">
+        
+        def <strong>dump_to</strong> : <a href="../../String.html">String</a>
+
+        <a class="method-permalink" href="#dump_to%3AString-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/luckyframework/avram/blob/f6ad76fdb2e75fd014294cd70507d248d49191ab/src/avram/tasks/db/schema_dump.cr#L4" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
     <div class="entry-detail" id="help_message-instance-method">
       <div class="signature">
         
@@ -1818,7 +1844,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/5aed4d6ea4000e2cd713906c7d27a362cd8044d4/src/avram/tasks/db/schema_dump.cr#L7" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/f6ad76fdb2e75fd014294cd70507d248d49191ab/src/avram/tasks/db/schema_dump.cr#L9" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1834,7 +1860,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/5aed4d6ea4000e2cd713906c7d27a362cd8044d4/src/avram/tasks/db/schema_dump.cr#L1" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/f6ad76fdb2e75fd014294cd70507d248d49191ab/src/avram/tasks/db/schema_dump.cr#L1" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1906,7 +1932,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/5aed4d6ea4000e2cd713906c7d27a362cd8044d4/src/avram/tasks/db/schema_dump.cr#L1" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/f6ad76fdb2e75fd014294cd70507d248d49191ab/src/avram/tasks/db/schema_dump.cr#L1" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1922,7 +1948,23 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/5aed4d6ea4000e2cd713906c7d27a362cd8044d4/src/avram/tasks/db/schema_dump.cr#L21" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/f6ad76fdb2e75fd014294cd70507d248d49191ab/src/avram/tasks/db/schema_dump.cr#L23" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="set_opt_for_dump_to(args:Array(String))-instance-method">
+      <div class="signature">
+        
+        def <strong>set_opt_for_dump_to</strong>(args : <a href="../../Array.html">Array</a>(<a href="../../String.html">String</a>))
+
+        <a class="method-permalink" href="#set_opt_for_dump_to%28args%3AArray%28String%29%29-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/luckyframework/avram/blob/f6ad76fdb2e75fd014294cd70507d248d49191ab/src/avram/tasks/db/schema_dump.cr#L4" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1938,7 +1980,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/5aed4d6ea4000e2cd713906c7d27a362cd8044d4/src/avram/tasks/db/schema_dump.cr#L2" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/f6ad76fdb2e75fd014294cd70507d248d49191ab/src/avram/tasks/db/schema_dump.cr#L2" target="_blank">View source</a>]
         
       </div>
     </div>
