@@ -21,6 +21,8 @@ module Avram
     setting lazy_load_enabled : Bool = true
     setting database_to_migrate : Avram::Database.class, example: "AppDatabase"
     setting time_formats : Array(String) = [] of String
+    # This is the default format for storing the Time
+    setting default_time_format : String? = nil, example: "%F %X.%6N %:z"
   end
 
   Log            = ::Log.for(Avram)

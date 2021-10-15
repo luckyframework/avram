@@ -72,7 +72,11 @@ struct Time
     end
 
     def to_db(value : Time)
-      value.to_s
+      if default_format = Avram.settings.default_time_format
+        value.to_s(default_format)
+      else
+        value.to_s
+      end
     end
 
     class Criteria(T, V) < Avram::Criteria(T, V)
