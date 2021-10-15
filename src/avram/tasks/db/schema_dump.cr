@@ -1,7 +1,9 @@
 class Db::Schema::Dump < BaseTask
   summary "Export database schema to a sql file"
 
-  def initialize(@dump_to : String? = nil, @quiet : Bool = false)
+  positional_arg :dump_to, "The path to store the SQL file"
+
+  def initialize(@quiet : Bool = false)
   end
 
   def help_message
@@ -19,7 +21,6 @@ class Db::Schema::Dump < BaseTask
   end
 
   def run_task
-    dump_to = @dump_to || ARGV.first? || raise "Must pass a file path to dump the db structure to"
     Avram::Migrator::Runner.dump_db(dump_to, @quiet)
   end
 end
