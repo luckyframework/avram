@@ -140,7 +140,10 @@ module Avram::Polymorphic
 
     macro finished
       class SaveOperation
-        before_save do
+        # These validations must be run after all of the `before_save`
+        # in case anyone sets their polymorphic association in a callback.
+        # These are ran in the SaveOperation#valid? method
+        default_validations do
           {% list_of_foreign_keys = associations.map(&.id).map { |assoc| "#{assoc.id}_id".id } %}
 
           # TODO: Needs to actually get the foreign key from the ASSOCIATIONS constant

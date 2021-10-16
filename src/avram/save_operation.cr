@@ -206,9 +206,16 @@ abstract class Avram::SaveOperation(T)
     end
   end
 
+  # Runs all required validations for required types
+  # as well as any additional valitaions the type needs to run
+  # e.g. polymorphic validations
   def run_default_validations
     validate_required *required_attributes
+    default_validations
   end
+
+  # :nodoc:
+  def default_validations; end
 
   # This allows you to skip the default validations
   # which may be used as an escape hatch when you want

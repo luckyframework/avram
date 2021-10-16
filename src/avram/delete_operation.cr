@@ -73,9 +73,13 @@ abstract class Avram::DeleteOperation(T)
     end
   end
 
+  # :nodoc:
+  def default_validations; end
+
   # Returns `true` if all attributes are valid,
   # and there's no custom errors
   def valid?
+    default_validations
     custom_errors.empty? && attributes.all?(&.valid?)
   end
 

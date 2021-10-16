@@ -30,7 +30,21 @@ private class OptionalPolymorphicEvent < BaseModel
   end
 end
 
+class TestPolymorphicSave < PolymorphicEvent::SaveOperation
+  before_save do
+    task = PolymorphicTask::SaveOperation.create!(title: "Use Lucky")
+    task_id.value = task.id
+  end
+end
+
 describe "polymorphic belongs to" do
+  it "allows you to set the association before save" do
+    TestPolymorphicSave.create do |op, tp|
+      op.valid?.should eq(true)
+      tp.should_not be_nil
+    end
+  end
+
   it "sets up a method for accessing associated record" do
     task = PolymorphicTask::SaveOperation.create!(title: "Use Lucky")
     event = PolymorphicEvent::SaveOperation.create!(task_id: task.id)
