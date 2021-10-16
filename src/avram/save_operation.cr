@@ -206,6 +206,18 @@ abstract class Avram::SaveOperation(T)
     end
   end
 
+  def run_default_validations
+    validate_required *required_attributes
+  end
+
+  # This allows you to skip the default validations
+  # which may be used as an escape hatch when you want
+  # to allow storing an empty string value.
+  macro skip_default_validations
+    def run_default_validations
+    end
+  end
+
   # Runs required validation,
   # then returns `true` if all attributes are valid,
   # and there's no custom errors
@@ -213,7 +225,7 @@ abstract class Avram::SaveOperation(T)
     # These validations must be ran after all `before_save` callbacks have completed
     # in the case that someone has set a required field in a `before_save`. If we run
     # this in a `before_save` ourselves, the ordering would cause this to be ran first.
-    validate_required *required_attributes
+    run_default_validations
     custom_errors.empty? && attributes.all?(&.valid?)
   end
 
