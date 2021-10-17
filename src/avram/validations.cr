@@ -7,6 +7,31 @@ require "./validations/callable_error_message"
 module Avram::Validations
   extend self
 
+  macro included
+    abstract def default_validations
+  end
+
+  # Defines an instance method that gets called
+  # during validation of an operation. Define your default
+  # validations inside of the block.
+  # ```
+  # default_validations do
+  #   validate_required some_attribute
+  # end
+  # ```
+  macro default_validations
+    # :nodoc:
+    def default_validations
+      {% if @type.methods.map(&.name).includes?(:default_validations.id) %}
+        previous_def
+      {% else %}
+        super
+      {% end %}
+
+      {{ yield }}
+    end
+  end
+
   # Validates that at most one attribute is filled
   #
   # If more than one attribute is filled it will mark all but the first filled

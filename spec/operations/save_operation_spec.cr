@@ -87,7 +87,34 @@ private class AllowBlankComment < Comment::SaveOperation
   end
 end
 
+module DefaultUserValidations
+  macro included
+    property starts_nil : String? = nil
+
+    default_validations do
+      self.starts_nil = self.starts_nil.to_s + "!"
+      validate_required nickname
+    end
+  end
+end
+
+private class UserWithDefaultValidations < User::SaveOperation
+  include DefaultUserValidations
+
+  before_save do
+    self.starts_nil = "not nil"
+  end
+end
+
 describe "Avram::SaveOperation" do
+  it "calls the default validations after the before_save" do
+    UserWithDefaultValidations.create(name: "TestName", nickname: "TestNickname", joined_at: Time.utc, age: 400) do |op, u|
+      op.starts_nil.should eq("not nil!")
+      u.should_not be_nil
+      u.not_nil!.nickname.should eq("TestNickname")
+    end
+  end
+
   it "allows overriding the param_key" do
     ParamKeySaveOperation.param_key.should eq "custom_param"
   end
