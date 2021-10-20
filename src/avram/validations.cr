@@ -261,4 +261,31 @@ module Avram::Validations
 
     no_errors
   end
+
+  # Validates that the passed in attributes matches the given regex
+  #
+  # ```
+  # validate_format_of email, with: /[^@]+@[^\.]+\..+/
+  # ```
+  #
+  # Alternatively, the `match` argument can be set to `false` to not match the
+  # given regex.
+  def validate_format_of(
+    attribute : Avram::Attribute(String),
+    with regex : Regex,
+    match : Bool = true,
+    message : Avram::Attribute::ErrorMessage = "is invalid",
+    allow_nil : Bool = false
+  ) : Bool
+    unless allow_nil && attribute.value.nil?
+      matching = attribute.value.to_s.match(regex)
+
+      if (match && !matching) || (!match && matching)
+        attribute.add_error(message)
+        return false
+      end
+    end
+
+    true
+  end
 end
