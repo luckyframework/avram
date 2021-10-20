@@ -359,4 +359,46 @@ describe Avram::Validations do
       attribute.valid?.should be_true
     end
   end
+
+  describe "validate_format_of" do
+    it "validates" do
+      invalid_attribute = attribute("hi AT hey DOT com")
+      result = Avram::Validations.validate_format_of(
+        invalid_attribute,
+        /[^@]+@[^\.]+\..+/
+      )
+      result.should eq(false)
+      invalid_attribute.errors.should eq ["is invalid"]
+
+      valid_attribute = attribute("hi@hey.com")
+      result = Avram::Validations.validate_format_of(
+        valid_attribute,
+        /[^@]+@[^\.]+\..+/
+      )
+      result.should eq(true)
+      valid_attribute.valid?.should be_true
+    end
+
+    it "validates negatively" do
+      invalid_attribute = attribute("hi AT hey DOT com")
+      result = Avram::Validations.validate_format_of(
+        invalid_attribute,
+        with: /DOT/,
+        match: false
+      )
+      result.should eq(false)
+      invalid_attribute.errors.should eq ["is invalid"]
+    end
+
+    it "can allow nil" do
+      nil_attribute = nil_attribute(String)
+      result = Avram::Validations.validate_format_of(
+        nil_attribute,
+        with: /[^@]+@[^\.]+\..+/,
+        allow_nil: true
+      )
+      result.should eq(true)
+      nil_attribute.valid?.should be_true
+    end
+  end
 end
