@@ -1586,7 +1586,7 @@ All validation methods return <code><a href="../Bool.html">Bool</a></code>. <cod
   </h2>
   
     
-      <a href="https://github.com/luckyframework/avram/blob/73bbc8519b2eaaa7c3e313a68b9cdd4284529a56/src/avram/validations.cr#L7" target="_blank">
+      <a href="https://github.com/luckyframework/avram/blob/c3df8428e82ff5355480db9fc5e251550eed33b7/src/avram/validations.cr#L7" target="_blank">
         avram/validations.cr
       </a>
     
@@ -1636,6 +1636,13 @@ All validation methods return <code><a href="../Bool.html">Bool</a></code>. <cod
         <a href="#validate_exactly_one_filled%28%2Aattributes%2Cmessage%3AAvram%3A%3AAttribute%3A%3AErrorMessage%3D%22atleastonemustbefilled%22%29%3ABool-instance-method" class="signature"><strong>#validate_exactly_one_filled</strong>(*attributes, message : Avram::Attribute::ErrorMessage = <span class="s">&quot;at least one must be filled&quot;</span>) : Bool</a>
         
           <div class="summary"><p>Validates that at exactly one attribute is filled</p></div>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#validate_format_of%28attribute%3AAvram%3A%3AAttribute%28String%29%2Cwithregex%3ARegex%2Cmatch%3ABool%3Dtrue%2Cmessage%3AAvram%3A%3AAttribute%3A%3AErrorMessage%3D%22isinvalid%22%2Callow_nil%3ABool%3Dfalse%29%3ABool-instance-method" class="signature"><strong>#validate_format_of</strong>(attribute : Avram::Attribute(String), with regex : Regex, match : Bool = <span class="n">true</span>, message : Avram::Attribute::ErrorMessage = <span class="s">&quot;is invalid&quot;</span>, allow_nil : Bool = <span class="n">false</span>) : Bool</a>
+        
+          <div class="summary"><p>Validates that the passed in attributes matches the given regex</p></div>
         
       </li>
     
@@ -1735,7 +1742,7 @@ as invalid for any value other than <code>true</code>.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/73bbc8519b2eaaa7c3e313a68b9cdd4284529a56/src/avram/validations.cr#L100" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/c3df8428e82ff5355480db9fc5e251550eed33b7/src/avram/validations.cr#L100" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1758,7 +1765,7 @@ field invalid.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/73bbc8519b2eaaa7c3e313a68b9cdd4284529a56/src/avram/validations.cr#L39" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/c3df8428e82ff5355480db9fc5e251550eed33b7/src/avram/validations.cr#L39" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1784,7 +1791,7 @@ field invalid.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/73bbc8519b2eaaa7c3e313a68b9cdd4284529a56/src/avram/validations.cr#L122" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/c3df8428e82ff5355480db9fc5e251550eed33b7/src/avram/validations.cr#L122" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1810,7 +1817,31 @@ field invalid.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/73bbc8519b2eaaa7c3e313a68b9cdd4284529a56/src/avram/validations.cr#L62" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/c3df8428e82ff5355480db9fc5e251550eed33b7/src/avram/validations.cr#L62" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="validate_format_of(attribute:Avram::Attribute(String),withregex:Regex,match:Bool=true,message:Avram::Attribute::ErrorMessage=&quot;isinvalid&quot;,allow_nil:Bool=false):Bool-instance-method">
+      <div class="signature">
+        
+        def <strong>validate_format_of</strong>(attribute : <a href="../Avram/Attribute.html">Avram::Attribute</a>(<a href="../String.html">String</a>), with regex : Regex, match : <a href="../Bool.html">Bool</a> = <span class="n">true</span>, message : <a href="../Avram/Attribute/ErrorMessage.html">Avram::Attribute::ErrorMessage</a> = <span class="s">&quot;is invalid&quot;</span>, allow_nil : <a href="../Bool.html">Bool</a> = <span class="n">false</span>) : <a href="../Bool.html">Bool</a>
+
+        <a class="method-permalink" href="#validate_format_of%28attribute%3AAvram%3A%3AAttribute%28String%29%2Cwithregex%3ARegex%2Cmatch%3ABool%3Dtrue%2Cmessage%3AAvram%3A%3AAttribute%3A%3AErrorMessage%3D%22isinvalid%22%2Callow_nil%3ABool%3Dfalse%29%3ABool-instance-method">#</a>
+      </div>
+      
+        <div class="doc">
+          
+          <p>Validates that the passed in attributes matches the given regex</p>
+<pre><code class="language-crystal">validate_format_of email, <span class="k">with</span>: <span class="s">/[^@]+@[^\.]+\..+/</span></code></pre>
+<p>Alternatively, the <code>match</code> argument can be set to <code>false</code> to not match the
+given regex.</p>
+        </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/luckyframework/avram/blob/c3df8428e82ff5355480db9fc5e251550eed33b7/src/avram/validations.cr#L273" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1833,7 +1864,7 @@ field invalid.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/73bbc8519b2eaaa7c3e313a68b9cdd4284529a56/src/avram/validations.cr#L143" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/c3df8428e82ff5355480db9fc5e251550eed33b7/src/avram/validations.cr#L143" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1857,7 +1888,7 @@ validate_numeric count, greater_than: <span class="n">0</span>, less_than: <span
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/73bbc8519b2eaaa7c3e313a68b9cdd4284529a56/src/avram/validations.cr#L228" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/c3df8428e82ff5355480db9fc5e251550eed33b7/src/avram/validations.cr#L228" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1882,7 +1913,7 @@ marked as invalid if the value is <code>nil</code>, or &quot;blank&quot; (empty 
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/73bbc8519b2eaaa7c3e313a68b9cdd4284529a56/src/avram/validations.cr#L84" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/c3df8428e82ff5355480db9fc5e251550eed33b7/src/avram/validations.cr#L84" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1906,7 +1937,7 @@ validate_size_of password, min: <span class="n">12</span></code></pre>
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/73bbc8519b2eaaa7c3e313a68b9cdd4284529a56/src/avram/validations.cr#L190" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/c3df8428e82ff5355480db9fc5e251550eed33b7/src/avram/validations.cr#L190" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1928,7 +1959,7 @@ validate_size_of password, min: <span class="n">12</span></code></pre>
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/73bbc8519b2eaaa7c3e313a68b9cdd4284529a56/src/avram/validations.cr#L165" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/c3df8428e82ff5355480db9fc5e251550eed33b7/src/avram/validations.cr#L165" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1966,7 +1997,7 @@ validations inside of the block.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/73bbc8519b2eaaa7c3e313a68b9cdd4284529a56/src/avram/validations.cr#L22" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/c3df8428e82ff5355480db9fc5e251550eed33b7/src/avram/validations.cr#L22" target="_blank">View source</a>]
         
       </div>
     </div>
