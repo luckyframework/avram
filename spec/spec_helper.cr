@@ -19,8 +19,9 @@ Db::Create.new(quiet: true).run_task
 Db::Migrate.new(quiet: true).run_task
 Db::VerifyConnection.new(quiet: true).run_task
 
-Spec.before_each do
+Spec.after_each do
   TestDatabase.truncate
+  TestDatabase.reset_cache!
 end
 
 class SampleBackupDatabase < Avram::Database

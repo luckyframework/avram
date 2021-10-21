@@ -34,6 +34,9 @@ dependencies:
   pulsar:
     github: luckyframework/pulsar
     version: ~> 0.2.2
+  splay_tree_map:
+    github: wyhaines/splay_tree_map.cr
+    version: ~> 0.1.3
 
 development_dependencies:
   ameba:

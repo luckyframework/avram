@@ -9,6 +9,15 @@ abstract class Avram::Database
     Habitat.create do
       setting credentials : Avram::Credentials, example: %(Avram::Credentials.new(database: "my_database", username: "postgres") or Avram::Credentials.parse(ENV["DB_URL"]))
     end
+
+    # Each database gets its own query cache
+    include Avram::QueryCache
+  end
+
+  def self.reset_cache!
+    {% for db in @type.subclasses %}
+    {{ db }}.reset_cache!
+    {% end %}
   end
 
   # :nodoc:
@@ -79,6 +88,7 @@ abstract class Avram::Database
     def {{ crystal_db_alias.id }}(query, *args_, args : Array? = nil, queryable : String? = nil, **named_args)
       publish_query_event(query, args_, args, queryable) do
         run do |db|
+          #DB::ExecResult
           db.{{ crystal_db_alias.id }}(query, *args_, **named_args, args: args)
         end
       end
@@ -89,6 +99,42 @@ abstract class Avram::Database
       new.{{ crystal_db_alias.id }}(query, *args_, **named_args, args: args, queryable: queryable)
     end
   {% end %}
+
+  # Things to consider with cache..
+  # Q. What happens if you query for a record, then call .reload ...
+  # A. It should probably skip the cache somehow, but then re-load the cache?
+  # Q. Can we build an object from a closed ResultSet?
+  # A. no. This is why we need the `Avram::ResultSet`
+  # Q. Which queries should we circumvent?
+  # A. Right now, inserts, updates, deletes, scalar, and any using `exec` are ignored.
+  #    Also any custom query unless they were to use this method...
+  # Q. Should cache be opt-in, or opt-out?
+  # A. Right now it's opt-in by using this method
+  # Q. What happens during a transaction?
+  # A. ...
+  # Q. What happens if someone queries for a user, then updates that user?
+  # A. In most cases this shouldn't matter because the SaveOperation would return the non-cached version
+  #    using postgres RETURNING statement.
+  def query_with_cache(query, *args_, args : Array? = nil, queryable : String? = nil)
+    publish_query_event(query, args_, args, queryable) do
+      run do |db|
+        key = build_cache_key(query, args.try(&.join('_')), queryable)
+        result_set = with_cache(key) do
+          db.query(query, *args_, args: args) do |rs|
+            Avram::ResultSet.new(rs.statement, rs)
+          end
+        end
+
+        yield result_set
+      end
+    end
+  end
+
+  def self.query_with_cache(query, *, args : Array? = nil, queryable : String? = nil, skip_cache : Bool = false)
+    new.query_with_cache(query, args: args, queryable: queryable, skip_cache: skip_cache) do |rs|
+      yield rs
+    end
+  end
 
   # Methods with a block
   {% for crystal_db_alias in [:query, :query_all, :query_one, :query_one?, :query_each] %}

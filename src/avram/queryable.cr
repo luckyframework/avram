@@ -252,7 +252,7 @@ module Avram::Queryable(T)
   end
 
   private def exec_query
-    database.query query.statement, args: query.args, queryable: schema_class.name do |rs|
+    database.query_with_cache query.statement, args: query.args, queryable: schema_class.name do |rs|
       schema_class.from_rs(rs)
     end
   end

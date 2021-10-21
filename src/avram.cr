@@ -5,6 +5,7 @@ require "pulsar"
 require "db"
 require "pg"
 require "uuid"
+require "splay_tree_map"
 
 require "./avram/object_extensions"
 require "./avram/criteria"
