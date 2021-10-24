@@ -1,6 +1,7 @@
 require "../spec_helper"
 
 include LazyLoadHelpers
+include QueryCacheHelpers
 
 class SignInCredential::BaseQuery
   include QuerySpy
@@ -35,13 +36,15 @@ describe "Preloading has_one associations" do
 
   it "works with optional association" do
     with_lazy_load(enabled: false) do
-      UserFactory.create
-      user = User::BaseQuery.new.preload_sign_in_credential.first
-      user.sign_in_credential.should be_nil
+      without_query_cache do
+        UserFactory.create
+        user = User::BaseQuery.new.preload_sign_in_credential.first
+        user.sign_in_credential.should be_nil
 
-      sign_in_credential = SignInCredentialFactory.new.user_id(user.id).create
-      user = User::BaseQuery.new.preload_sign_in_credential.first
-      user.sign_in_credential.should eq sign_in_credential
+        sign_in_credential = SignInCredentialFactory.create &.user_id(user.id)
+        user = User::BaseQuery.new.preload_sign_in_credential.first
+        user.sign_in_credential.should eq sign_in_credential
+      end
     end
   end
 

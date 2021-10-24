@@ -1358,7 +1358,7 @@ describe Avram::Queryable do
 
       users = UserQuery.new.group(&.age).group(&.id)
       users.query.statement.should eq "SELECT #{User::COLUMN_SQL} FROM users GROUP BY users.age, users.id"
-      users.map(&.name).should eq ["Dwight", "Michael", "Jim"]
+      users.map(&.name).sort!.should eq ["Dwight", "Jim", "Michael"]
     end
 
     it "raises an error when grouped incorrectly" do

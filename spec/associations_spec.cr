@@ -1,30 +1,36 @@
 require "./spec_helper"
 
+include QueryCacheHelpers
+
 describe Avram::Model do
   describe "has_many" do
     it "gets the related records" do
-      post = PostFactory.create
-      post2 = PostFactory.create
-      comment = CommentFactory.new.post_id(post.id).create
+      without_query_cache do
+        post = PostFactory.create
+        post2 = PostFactory.create
+        comment = CommentFactory.create &.post_id(post.id)
 
-      post = Post::BaseQuery.new.find(post.id)
+        post = Post::BaseQuery.new.find(post.id)
 
-      post.comments.should eq [comment]
-      comment.post.should eq post
-      post2.comments.size.should eq 0
+        post.comments.should eq [comment]
+        comment.post.should eq post
+        post2.comments.size.should eq 0
+      end
     end
 
     it "gets the related records for nilable association that exists" do
-      manager = ManagerFactory.create
-      employee = EmployeeFactory.new.manager_id(manager.id).create
-      customer = CustomerFactory.new.employee_id(employee.id).create
+      without_query_cache do
+        manager = ManagerFactory.create
+        employee = EmployeeFactory.create &.manager_id(manager.id)
+        customer = CustomerFactory.create &.employee_id(employee.id)
 
-      manager = Manager::BaseQuery.new.find(manager.id)
+        manager = Manager::BaseQuery.new.find(manager.id)
 
-      manager.employees.to_a.should eq [employee]
-      employee.manager.should eq manager
-      employee.customers.should eq [customer]
-      manager.customers.should eq [customer]
+        manager.employees.to_a.should eq [employee]
+        employee.manager.should eq manager
+        employee.customers.should eq [customer]
+        manager.customers.should eq [customer]
+      end
     end
 
     it "returns nil for nilable association that doesn't exist" do

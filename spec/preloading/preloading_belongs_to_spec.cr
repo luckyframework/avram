@@ -1,6 +1,7 @@
 require "../spec_helper"
 
 include LazyLoadHelpers
+include QueryCacheHelpers
 
 class Post::BaseQuery
   include QuerySpy
@@ -22,18 +23,20 @@ describe "Preloading belongs_to associations" do
 
   it "works with optional association" do
     with_lazy_load(enabled: false) do
-      employee = EmployeeFactory.create
-      manager = ManagerFactory.create
+      without_query_cache do
+        employee = EmployeeFactory.create
+        manager = ManagerFactory.create
 
-      employees = Employee::BaseQuery.new.preload_manager
-      employees.first.manager.should be_nil
+        employees = Employee::BaseQuery.new.preload_manager
+        employees.first.manager.should be_nil
 
-      Employee::SaveOperation.new(employee).tap do |operation|
-        operation.manager_id.value = manager.id
-        operation.update!
+        Employee::SaveOperation.new(employee).tap do |operation|
+          operation.manager_id.value = manager.id
+          operation.update!
+        end
+        employees = Employee::BaseQuery.new.preload_manager
+        employees.first.manager.should eq(manager)
       end
-      employees = Employee::BaseQuery.new.preload_manager
-      employees.first.manager.should eq(manager)
     end
   end
 

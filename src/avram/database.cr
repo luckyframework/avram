@@ -8,6 +8,7 @@ abstract class Avram::Database
   macro inherited
     Habitat.create do
       setting credentials : Avram::Credentials, example: %(Avram::Credentials.new(database: "my_database", username: "postgres") or Avram::Credentials.parse(ENV["DB_URL"]))
+      setting enable_query_cache : Bool = true
     end
 
     # Each database gets its own query cache
@@ -116,7 +117,6 @@ abstract class Avram::Database
   # A. In most cases this shouldn't matter because the SaveOperation would return the non-cached version
   #    using postgres RETURNING statement.
   def query_with_cache(query, *args_, args : Array? = nil, queryable : String? = nil)
-    queryable = queryable ? "#{queryable}Cache" : nil
     publish_query_event(query, args_, args, queryable) do
       run do |db|
         key = build_cache_key(query, args.try(&.join('_')), queryable)
@@ -132,8 +132,14 @@ abstract class Avram::Database
   end
 
   def self.query_with_cache(query, *args_, args : Array? = nil, queryable : String? = nil)
-    new.query_with_cache(query, *args_, args: args, queryable: queryable) do |rs|
-      yield rs
+    if settings.enable_query_cache
+      new.query_with_cache(query, *args_, args: args, queryable: queryable) do |rs|
+        yield rs
+      end
+    else
+      new.query(query, *args_, args: args, queryable: queryable) do |rs|
+        yield rs
+      end
     end
   end
 
