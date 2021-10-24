@@ -116,6 +116,7 @@ abstract class Avram::Database
   # A. In most cases this shouldn't matter because the SaveOperation would return the non-cached version
   #    using postgres RETURNING statement.
   def query_with_cache(query, *args_, args : Array? = nil, queryable : String? = nil)
+    queryable = queryable ? "#{queryable}Cache" : nil
     publish_query_event(query, args_, args, queryable) do
       run do |db|
         key = build_cache_key(query, args.try(&.join('_')), queryable)
@@ -130,8 +131,8 @@ abstract class Avram::Database
     end
   end
 
-  def self.query_with_cache(query, *, args : Array? = nil, queryable : String? = nil, skip_cache : Bool = false)
-    new.query_with_cache(query, args: args, queryable: queryable, skip_cache: skip_cache) do |rs|
+  def self.query_with_cache(query, *args_, args : Array? = nil, queryable : String? = nil)
+    new.query_with_cache(query, *args_, args: args, queryable: queryable) do |rs|
       yield rs
     end
   end

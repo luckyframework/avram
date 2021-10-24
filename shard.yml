@@ -17,8 +17,9 @@ dependencies:
     github: luckyframework/lucky_task
     version: ~> 0.1.0
   pg:
-    github: will/crystal-pg
-    version: ~> 0.24.0
+    # TODO: https://github.com/will/crystal-pg/pull/236
+    github: jwoertink/crystal-pg
+    branch: register_uuid_array
   habitat:
     github: luckyframework/habitat
     version: ~> 0.4.7

@@ -1,6 +1,6 @@
 class Avram::ResultSet < ::DB::ResultSet
-  alias AllTypes = (Array(PG::BoolArray) | Array(PG::CharArray) | Array(PG::Float32Array) | Array(PG::Float64Array) | Array(PG::Int16Array) | Array(PG::Int32Array) | Array(PG::Int64Array) | Array(PG::NumericArray) | Array(PG::StringArray) | Array(PG::TimeArray) | Bool | Char | DB::Mappable | Float32 | Float64 | Int16 | Int32 | Int64 | JSON::PullParser | PG::Geo::Box | PG::Geo::Circle | PG::Geo::Line | PG::Geo::LineSegment | PG::Geo::Path | PG::Geo::Point | PG::Geo::Polygon | PG::Interval | PG::Numeric | Slice(UInt8) | String | Time | UInt32 | UUID | Nil)
-  alias ConvertedTypes = (Array(Bool) | Array(Int16) | Array(Int64) | Array(PG::Numeric) | Array(String) | Array(UUID) | Array(PG::BoolArray) | Array(PG::CharArray) | Array(PG::Float32Array) | Array(PG::Float64Array) | Array(PG::Int16Array) | Array(PG::Int32Array) | Array(PG::Int64Array) | Array(PG::NumericArray) | Array(PG::StringArray) | Array(PG::TimeArray) | Bool | Char | DB::Mappable | Float32 | Float64 | Int16 | Int32 | Int64 | JSON::PullParser | PG::Geo::Box | PG::Geo::Circle | PG::Geo::Line | PG::Geo::LineSegment | PG::Geo::Path | PG::Geo::Point | PG::Geo::Polygon | PG::Interval | PG::Numeric | Slice(UInt8) | String | Time | UInt32 | UUID | Nil)
+  alias AllTypes = (Array(PG::BoolArray) | Array(PG::CharArray) | Array(PG::Float32Array) | Array(PG::Float64Array) | Array(PG::Int16Array) | Array(PG::Int32Array) | Array(PG::Int64Array) | Array(PG::NumericArray) | Array(PG::StringArray) | Array(PG::TimeArray) | Array(PG::UUIDArray) | Bool | Char | DB::Mappable | Float32 | Float64 | Int16 | Int32 | Int64 | JSON::PullParser | PG::Geo::Box | PG::Geo::Circle | PG::Geo::Line | PG::Geo::LineSegment | PG::Geo::Path | PG::Geo::Point | PG::Geo::Polygon | PG::Interval | PG::Numeric | Slice(UInt8) | String | Time | UInt32 | UUID | Nil)
+  alias ConvertedTypes = (Array(Bool) | Array(Int16) | Array(Int32) | Array(Int64) | Array(PG::Numeric) | Array(String) | Array(UUID) | Array(PG::BoolArray) | Array(PG::CharArray) | Array(PG::Float32Array) | Array(PG::Float64Array) | Array(PG::Int16Array) | Array(PG::Int32Array) | Array(PG::Int64Array) | Array(PG::NumericArray) | Array(PG::StringArray) | Array(PG::TimeArray) | Array(PG::UUIDArray) | Bool | Char | DB::Mappable | Float32 | Float64 | Int16 | Int32 | Int64 | JSON::PullParser | PG::Geo::Box | PG::Geo::Circle | PG::Geo::Line | PG::Geo::LineSegment | PG::Geo::Path | PG::Geo::Point | PG::Geo::Polygon | PG::Interval | PG::Numeric | Slice(UInt8) | String | Time | UInt32 | UUID | Nil)
   # From RS
   @column_count : Int32
   @column_names : Array(String)
@@ -10,7 +10,7 @@ class Avram::ResultSet < ::DB::ResultSet
   @current_column_index : Int32 = -1
   @table : Array(Array(ConvertedTypes))
 
-  def initialize(@statement : DB::Statement, @rs : DB::ResultSet)
+  def initialize(@statement : DB::Statement, @rs : PG::ResultSet)
     # From RS
     @column_count = rs.column_count
     @column_names = rs.column_names
@@ -20,9 +20,10 @@ class Avram::ResultSet < ::DB::ResultSet
     @rs.each do
       # starting to process a new row
       row = Array(ConvertedTypes).new
-      @column_count.times do
-        readed_value = @rs.read
-        row << pre_process(readed_value)
+      @column_count.times do |i|
+        read_value = @rs.read
+        # type = @rs.column_type(i)
+        row << pre_process(read_value)
       end
       @table << row
     end
@@ -32,16 +33,14 @@ class Avram::ResultSet < ::DB::ResultSet
     value
   end
 
-  def pre_process(value : Array(UUID))
-    value.map { |v| UUID.new(v) }
+  {% for t in ["Bool", "Int16", "Int32", "Int64", "String", "UUID"] %}
+  def pre_process(value : Array(PG::{{ t.id }}Array))
+    value.map(&.as({{ t.id }}))
   end
+  {% end %}
 
-  def pre_process(value : Array(PG::StringArray))
-    value.map(&.to_s)
-  end
-
-  def pre_process(value : Array(PG::BoolArray))
-    value.map { |x| !!x }
+  def pre_process(value : Array(PG::NumericArray))
+    value.map(&.as(PG::Numeric))
   end
 
   protected def do_close
