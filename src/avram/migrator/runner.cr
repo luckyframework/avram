@@ -197,11 +197,15 @@ class Avram::Migrator::Runner
   end
 
   private def migrated_migrations
-    @@migrations.select &.new.migrated?
+    sorted_migrations.select &.new.migrated?
   end
 
   private def pending_migrations
-    @@migrations.select &.new.pending?
+    sorted_migrations.select &.new.pending?
+  end
+
+  private def sorted_migrations
+    @@migrations.sort { |a, b| a.new.version <=> b.new.version }
   end
 
   private def prepare_for_migration
