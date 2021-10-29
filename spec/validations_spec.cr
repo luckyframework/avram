@@ -124,7 +124,7 @@ describe Avram::Validations do
       with_i18n_backend(backend: TestI18nBackend.new) do
         empty_attribute = attribute("")
 
-        result = Avram::Validations.validate_required(empty_attribute)
+        Avram::Validations.validate_required(empty_attribute)
         empty_attribute.errors.should eq ["is terribly missed"]
       end
     end
@@ -249,7 +249,7 @@ describe Avram::Validations do
       with_i18n_backend(backend: TestI18nBackend.new) do
         first = attribute("first")
         second = attribute("second")
-        result = Avram::Validations.validate_confirmation_of first, with: second
+        Avram::Validations.validate_confirmation_of first, with: second
         second.errors.should eq(["is totally wrong"])
       end
     end
