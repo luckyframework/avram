@@ -218,14 +218,14 @@ module Avram::Validations
 
       if !min.nil? && size < min
         attribute.add_error(
-          message || Avram.settings.i18n_backend.get(:validate_min_size_of) % min
+          (message || Avram.settings.i18n_backend.get(:validate_min_size_of)) % min
         )
         no_errors = false
       end
 
       if !max.nil? && size > max
         attribute.add_error(
-          message || Avram.settings.i18n_backend.get(:validate_max_size_of) % max
+          (message || Avram.settings.i18n_backend.get(:validate_max_size_of)) % max
         )
         no_errors = false
       end
@@ -269,14 +269,14 @@ module Avram::Validations
 
     if greater_than && number < greater_than
       attribute.add_error(
-        message || Avram.settings.i18n_backend.get(:validate_numeric_min) % greater_than
+        (message || Avram.settings.i18n_backend.get(:validate_numeric_min)) % greater_than
       )
       no_errors = false
     end
 
     if less_than && number > less_than
       attribute.add_error(
-        message || Avram.settings.i18n_backend.get(:validate_numeric_max) % less_than
+        (message || Avram.settings.i18n_backend.get(:validate_numeric_max)) % less_than
       )
       no_errors = false
     end
