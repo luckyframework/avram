@@ -36,7 +36,10 @@ module Avram::Validations
   #
   # If more than one attribute is filled it will mark all but the first filled
   # field invalid.
-  def validate_at_most_one_filled(*attributes, message : Avram::Attribute::ErrorMessage = "must be blank") : Bool
+  def validate_at_most_one_filled(
+    *attributes,
+    message : Avram::Attribute::ErrorMessage = Avram.settings.i18n_backend.get(:validate_at_most_one_filled)
+  ) : Bool
     no_errors = true
     present_attributes = attributes.reject(&.value.blank?)
 
@@ -59,7 +62,10 @@ module Avram::Validations
   # field invalid.
   #
   # If no field is filled, the first field will be marked as invalid.
-  def validate_exactly_one_filled(*attributes, message : Avram::Attribute::ErrorMessage = "at least one must be filled") : Bool
+  def validate_exactly_one_filled(
+    *attributes,
+    message : Avram::Attribute::ErrorMessage = Avram.settings.i18n_backend.get(:validate_exactly_one_filled)
+  ) : Bool
     no_errors = validate_at_most_one_filled(*attributes)
     present_attributes = attributes.reject(&.value.blank?)
 
@@ -81,7 +87,10 @@ module Avram::Validations
   # ```
   # validate_required name, age, email
   # ```
-  def validate_required(*attributes, message : Avram::Attribute::ErrorMessage = "is required") : Bool
+  def validate_required(
+    *attributes,
+    message : Avram::Attribute::ErrorMessage = Avram.settings.i18n_backend.get(:validate_required)
+  ) : Bool
     no_errors = true
     attributes.each do |attribute|
       if attribute.value.blank_for_validates_required?
@@ -97,7 +106,10 @@ module Avram::Validations
   #
   # This validation is only for Boolean Attributes. The attribute will be marked
   # as invalid for any value other than `true`.
-  def validate_acceptance_of(attribute : Avram::Attribute(Bool), message : Avram::Attribute::ErrorMessage = "must be accepted") : Bool
+  def validate_acceptance_of(
+    attribute : Avram::Attribute(Bool),
+    message : Avram::Attribute::ErrorMessage = Avram.settings.i18n_backend.get(:validate_acceptance_of)
+  ) : Bool
     no_errors = true
     if attribute.value != true
       attribute.add_error(message)
@@ -122,7 +134,7 @@ module Avram::Validations
   def validate_confirmation_of(
     attribute : Avram::Attribute(T),
     with confirmation_attribute : Avram::Attribute(T),
-    message : Avram::Attribute::ErrorMessage = "must match"
+    message : Avram::Attribute::ErrorMessage = Avram.settings.i18n_backend.get(:validate_confirmation_of)
   ) : Bool forall T
     no_errors = true
     if attribute.value != confirmation_attribute.value
@@ -143,7 +155,7 @@ module Avram::Validations
   def validate_inclusion_of(
     attribute : Avram::Attribute(T),
     in allowed_values : Enumerable(T),
-    message : Avram::Attribute::ErrorMessage = "is invalid",
+    message : Avram::Attribute::ErrorMessage = Avram.settings.i18n_backend.get(:validate_inclusion_of),
     allow_nil : Bool = false
   ) : Bool forall T
     no_errors = true
@@ -166,13 +178,13 @@ module Avram::Validations
     attribute : Avram::Attribute(String),
     *,
     is exact_size,
-    message : Avram::Attribute::ErrorMessage = "is invalid",
+    message : Avram::Attribute::ErrorMessage = Avram.settings.i18n_backend.get(:validate_exact_size_of),
     allow_nil : Bool = false
   ) : Bool
     no_errors = true
     if attribute.value.to_s.size != exact_size
       if !(allow_nil && attribute.value.nil?)
-        attribute.add_error(message)
+        attribute.add_error(message % exact_size)
         no_errors = false
       end
     end
@@ -191,7 +203,7 @@ module Avram::Validations
     attribute : Avram::Attribute(String),
     min = nil,
     max = nil,
-    message = nil,
+    message : Avram::Attribute::ErrorMessage? = nil,
     allow_nil : Bool = false
   ) : Bool
     no_errors = true
@@ -205,12 +217,16 @@ module Avram::Validations
       size = attribute.value.to_s.size
 
       if !min.nil? && size < min
-        attribute.add_error(message || "is too short")
+        attribute.add_error(
+          message || Avram.settings.i18n_backend.get(:validate_min_size_of) % min
+        )
         no_errors = false
       end
 
       if !max.nil? && size > max
-        attribute.add_error(message || "is too long")
+        attribute.add_error(
+          message || Avram.settings.i18n_backend.get(:validate_max_size_of) % max
+        )
         no_errors = false
       end
     end
@@ -243,19 +259,25 @@ module Avram::Validations
 
     if number.nil?
       unless allow_nil
-        attribute.add_error("is nil")
+        attribute.add_error(
+          Avram.settings.i18n_backend.get(:validate_numeric_nil)
+        )
         no_errors = false
       end
       return no_errors
     end
 
     if greater_than && number < greater_than
-      attribute.add_error(message || "is too small")
+      attribute.add_error(
+        message || Avram.settings.i18n_backend.get(:validate_numeric_min) % greater_than
+      )
       no_errors = false
     end
 
     if less_than && number > less_than
-      attribute.add_error(message || "is too large")
+      attribute.add_error(
+        message || Avram.settings.i18n_backend.get(:validate_numeric_max) % less_than
+      )
       no_errors = false
     end
 
