@@ -1,7 +1,5 @@
 require "./spec_helper"
 
-include I18nBackendHelpers
-
 class UniquenessSaveOperation < User::SaveOperation
   before_save do
     validate_uniqueness_of name
@@ -121,7 +119,7 @@ describe Avram::Validations do
     end
 
     it "can use a custom backend" do
-      with_i18n_backend(backend: TestI18nBackend.new) do
+      Avram.temp_config(i18n_backend: TestI18nBackend.new) do
         empty_attribute = attribute("")
 
         Avram::Validations.validate_required(empty_attribute)
@@ -246,7 +244,7 @@ describe Avram::Validations do
     end
 
     it "can use a custom backend" do
-      with_i18n_backend(backend: TestI18nBackend.new) do
+      Avram.temp_config(i18n_backend: TestI18nBackend.new) do
         first = attribute("first")
         second = attribute("second")
         Avram::Validations.validate_confirmation_of first, with: second
