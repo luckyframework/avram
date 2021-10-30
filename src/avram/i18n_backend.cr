@@ -11,12 +11,12 @@ struct Avram::I18n < Avram::I18nBackend
       validate_acceptance_of:      "must be accepted",
       validate_confirmation_of:    "must match",
       validate_inclusion_of:       "is not included in the list",
-      validate_exact_size_of:      "must be exactly %s characters long",
-      validate_min_size_of:        "must have at least %s characters",
-      validate_max_size_of:        "must not have more than %s characters",
+      validate_exact_size_of:      "must be exactly %d characters long",
+      validate_min_size_of:        "must have at least %d characters",
+      validate_max_size_of:        "must not have more than %d characters",
       validate_numeric_nil:        "must not be nil",
-      validate_numeric_min:        "must be greater than %s",
-      validate_numeric_max:        "must be less than %s",
+      validate_numeric_min:        "must be greater than %d",
+      validate_numeric_max:        "must be less than %d",
     }[key]
   end
 end
