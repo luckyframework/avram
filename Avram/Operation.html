@@ -281,6 +281,16 @@
       
     </li>
   
+  <li class=" " data-id="avram/Avram/I18n" data-name="avram::i18n">
+      <a href="../Avram/I18n.html">I18n</a>
+      
+    </li>
+  
+  <li class=" " data-id="avram/Avram/I18nBackend" data-name="avram::i18nbackend">
+      <a href="../Avram/I18nBackend.html">I18nBackend</a>
+      
+    </li>
+  
   <li class=" " data-id="avram/Avram/ImpossibleValidation" data-name="avram::impossiblevalidation">
       <a href="../Avram/ImpossibleValidation.html">ImpossibleValidation</a>
       
@@ -1567,7 +1577,7 @@
   </h2>
   
     
-      <a href="https://github.com/luckyframework/avram/blob/76e34c0e46d984c037eae9c8607514dc0b51eeec/src/avram/operation.cr#L8" target="_blank">
+      <a href="https://github.com/luckyframework/avram/blob/7f6f9ddfd0ac20997bec54053efafb92b0ec439f/src/avram/operation.cr#L8" target="_blank">
         avram/operation.cr
       </a>
     
@@ -1789,23 +1799,23 @@
   <h3>Instance methods inherited from module <code><a href="../Avram/Validations.html">Avram::Validations</a></code></h3>
   
   
-    <a href="../Avram/Validations.html#validate_acceptance_of%28attribute%3AAvram%3A%3AAttribute%28Bool%29%2Cmessage%3AAvram%3A%3AAttribute%3A%3AErrorMessage%3D%22mustbeaccepted%22%29%3ABool-instance-method" class="tooltip">
-      <span>validate_acceptance_of(attribute : Avram::Attribute(Bool), message : Avram::Attribute::ErrorMessage = <span class="s">&quot;must be accepted&quot;</span>) : Bool</span>
+    <a href="../Avram/Validations.html#validate_acceptance_of%28attribute%3AAvram%3A%3AAttribute%28Bool%29%2Cmessage%3AAvram%3A%3AAttribute%3A%3AErrorMessage%3DAvram.settings.i18n_backend.get%28%3Avalidate_acceptance_of%29%29%3ABool-instance-method" class="tooltip">
+      <span>validate_acceptance_of(attribute : Avram::Attribute(Bool), message : Avram::Attribute::ErrorMessage = <span class="t">Avram</span>.settings.i18n_backend.get(<span class="n">:validate_acceptance_of</span>)) : Bool</span>
     validate_acceptance_of</a>, 
     
   
-    <a href="../Avram/Validations.html#validate_at_most_one_filled%28%2Aattributes%2Cmessage%3AAvram%3A%3AAttribute%3A%3AErrorMessage%3D%22mustbeblank%22%29%3ABool-instance-method" class="tooltip">
-      <span>validate_at_most_one_filled(*attributes, message : Avram::Attribute::ErrorMessage = <span class="s">&quot;must be blank&quot;</span>) : Bool</span>
+    <a href="../Avram/Validations.html#validate_at_most_one_filled%28%2Aattributes%2Cmessage%3AAvram%3A%3AAttribute%3A%3AErrorMessage%3DAvram.settings.i18n_backend.get%28%3Avalidate_at_most_one_filled%29%29%3ABool-instance-method" class="tooltip">
+      <span>validate_at_most_one_filled(*attributes, message : Avram::Attribute::ErrorMessage = <span class="t">Avram</span>.settings.i18n_backend.get(<span class="n">:validate_at_most_one_filled</span>)) : Bool</span>
     validate_at_most_one_filled</a>, 
     
   
-    <a href="../Avram/Validations.html#validate_confirmation_of%28attribute%3AAvram%3A%3AAttribute%28T%29%2Cwithconfirmation_attribute%3AAvram%3A%3AAttribute%28T%29%2Cmessage%3AAvram%3A%3AAttribute%3A%3AErrorMessage%3D%22mustmatch%22%29%3ABoolforallT-instance-method" class="tooltip">
-      <span>validate_confirmation_of(attribute : Avram::Attribute(T), with confirmation_attribute : Avram::Attribute(T), message : Avram::Attribute::ErrorMessage = <span class="s">&quot;must match&quot;</span>) : Bool forall T</span>
+    <a href="../Avram/Validations.html#validate_confirmation_of%28attribute%3AAvram%3A%3AAttribute%28T%29%2Cwithconfirmation_attribute%3AAvram%3A%3AAttribute%28T%29%2Cmessage%3AAvram%3A%3AAttribute%3A%3AErrorMessage%3DAvram.settings.i18n_backend.get%28%3Avalidate_confirmation_of%29%29%3ABoolforallT-instance-method" class="tooltip">
+      <span>validate_confirmation_of(attribute : Avram::Attribute(T), with confirmation_attribute : Avram::Attribute(T), message : Avram::Attribute::ErrorMessage = <span class="t">Avram</span>.settings.i18n_backend.get(<span class="n">:validate_confirmation_of</span>)) : Bool forall T</span>
     validate_confirmation_of</a>, 
     
   
-    <a href="../Avram/Validations.html#validate_exactly_one_filled%28%2Aattributes%2Cmessage%3AAvram%3A%3AAttribute%3A%3AErrorMessage%3D%22atleastonemustbefilled%22%29%3ABool-instance-method" class="tooltip">
-      <span>validate_exactly_one_filled(*attributes, message : Avram::Attribute::ErrorMessage = <span class="s">&quot;at least one must be filled&quot;</span>) : Bool</span>
+    <a href="../Avram/Validations.html#validate_exactly_one_filled%28%2Aattributes%2Cmessage%3AAvram%3A%3AAttribute%3A%3AErrorMessage%3DAvram.settings.i18n_backend.get%28%3Avalidate_exactly_one_filled%29%29%3ABool-instance-method" class="tooltip">
+      <span>validate_exactly_one_filled(*attributes, message : Avram::Attribute::ErrorMessage = <span class="t">Avram</span>.settings.i18n_backend.get(<span class="n">:validate_exactly_one_filled</span>)) : Bool</span>
     validate_exactly_one_filled</a>, 
     
   
@@ -1814,8 +1824,8 @@
     validate_format_of</a>, 
     
   
-    <a href="../Avram/Validations.html#validate_inclusion_of%28attribute%3AAvram%3A%3AAttribute%28T%29%2Cinallowed_values%3AEnumerable%28T%29%2Cmessage%3AAvram%3A%3AAttribute%3A%3AErrorMessage%3D%22isinvalid%22%2Callow_nil%3ABool%3Dfalse%29%3ABoolforallT-instance-method" class="tooltip">
-      <span>validate_inclusion_of(attribute : Avram::Attribute(T), in allowed_values : Enumerable(T), message : Avram::Attribute::ErrorMessage = <span class="s">&quot;is invalid&quot;</span>, allow_nil : Bool = <span class="n">false</span>) : Bool forall T</span>
+    <a href="../Avram/Validations.html#validate_inclusion_of%28attribute%3AAvram%3A%3AAttribute%28T%29%2Cinallowed_values%3AEnumerable%28T%29%2Cmessage%3AAvram%3A%3AAttribute%3A%3AErrorMessage%3DAvram.settings.i18n_backend.get%28%3Avalidate_inclusion_of%29%2Callow_nil%3ABool%3Dfalse%29%3ABoolforallT-instance-method" class="tooltip">
+      <span>validate_inclusion_of(attribute : Avram::Attribute(T), in allowed_values : Enumerable(T), message : Avram::Attribute::ErrorMessage = <span class="t">Avram</span>.settings.i18n_backend.get(<span class="n">:validate_inclusion_of</span>), allow_nil : Bool = <span class="n">false</span>) : Bool forall T</span>
     validate_inclusion_of</a>, 
     
   
@@ -1824,13 +1834,13 @@
     validate_numeric</a>, 
     
   
-    <a href="../Avram/Validations.html#validate_required%28%2Aattributes%2Cmessage%3AAvram%3A%3AAttribute%3A%3AErrorMessage%3D%22isrequired%22%29%3ABool-instance-method" class="tooltip">
-      <span>validate_required(*attributes, message : Avram::Attribute::ErrorMessage = <span class="s">&quot;is required&quot;</span>) : Bool</span>
+    <a href="../Avram/Validations.html#validate_required%28%2Aattributes%2Cmessage%3AAvram%3A%3AAttribute%3A%3AErrorMessage%3DAvram.settings.i18n_backend.get%28%3Avalidate_required%29%29%3ABool-instance-method" class="tooltip">
+      <span>validate_required(*attributes, message : Avram::Attribute::ErrorMessage = <span class="t">Avram</span>.settings.i18n_backend.get(<span class="n">:validate_required</span>)) : Bool</span>
     validate_required</a>, 
     
   
-    <a href="../Avram/Validations.html#validate_size_of%28attribute%3AAvram%3A%3AAttribute%28String%29%2Cmin%3Dnil%2Cmax%3Dnil%2Cmessage%3Dnil%2Callow_nil%3ABool%3Dfalse%29%3ABool-instance-method" class="tooltip">
-      <span>validate_size_of(attribute : Avram::Attribute(String), min = <span class="n">nil</span>, max = <span class="n">nil</span>, message = <span class="n">nil</span>, allow_nil : Bool = <span class="n">false</span>) : Bool<br/>validate_size_of(attribute : Avram::Attribute(String), *, is exact_size, message : Avram::Attribute::ErrorMessage = <span class="s">&quot;is invalid&quot;</span>, allow_nil : Bool = <span class="n">false</span>) : Bool</span>
+    <a href="../Avram/Validations.html#validate_size_of%28attribute%3AAvram%3A%3AAttribute%28String%29%2Cmin%3Dnil%2Cmax%3Dnil%2Cmessage%3AAvram%3A%3AAttribute%3A%3AErrorMessage%3F%3Dnil%2Callow_nil%3ABool%3Dfalse%29%3ABool-instance-method" class="tooltip">
+      <span>validate_size_of(attribute : Avram::Attribute(String), min = <span class="n">nil</span>, max = <span class="n">nil</span>, message : Avram::Attribute::ErrorMessage? = <span class="n">nil</span>, allow_nil : Bool = <span class="n">false</span>) : Bool<br/>validate_size_of(attribute : Avram::Attribute(String), *, is exact_size, message : Avram::Attribute::ErrorMessage = <span class="t">Avram</span>.settings.i18n_backend.get(<span class="n">:validate_exact_size_of</span>), allow_nil : Bool = <span class="n">false</span>) : Bool</span>
     validate_size_of</a>
     
   
@@ -1934,7 +1944,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/76e34c0e46d984c037eae9c8607514dc0b51eeec/src/avram/operation.cr#L88" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/7f6f9ddfd0ac20997bec54053efafb92b0ec439f/src/avram/operation.cr#L88" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1950,7 +1960,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/76e34c0e46d984c037eae9c8607514dc0b51eeec/src/avram/operation.cr#L91" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/7f6f9ddfd0ac20997bec54053efafb92b0ec439f/src/avram/operation.cr#L91" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1978,7 +1988,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/76e34c0e46d984c037eae9c8607514dc0b51eeec/src/avram/operation.cr#L105" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/7f6f9ddfd0ac20997bec54053efafb92b0ec439f/src/avram/operation.cr#L105" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2003,7 +2013,7 @@ the <code><a href="../Avram/Operation.html#run-instance-method">#run</a></code> 
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/76e34c0e46d984c037eae9c8607514dc0b51eeec/src/avram/operation.cr#L53" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/7f6f9ddfd0ac20997bec54053efafb92b0ec439f/src/avram/operation.cr#L53" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2028,7 +2038,7 @@ the <code><a href="../Avram/Operation.html#run-instance-method">#run</a></code> 
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/76e34c0e46d984c037eae9c8607514dc0b51eeec/src/avram/operation.cr#L27" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/7f6f9ddfd0ac20997bec54053efafb92b0ec439f/src/avram/operation.cr#L27" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2051,7 +2061,7 @@ or raise <code><a href="../Avram/FailedOperation.html">Avram::FailedOperation</a
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/76e34c0e46d984c037eae9c8607514dc0b51eeec/src/avram/operation.cr#L73" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/7f6f9ddfd0ac20997bec54053efafb92b0ec439f/src/avram/operation.cr#L73" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2074,7 +2084,7 @@ or raise <code><a href="../Avram/FailedOperation.html">Avram::FailedOperation</a
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/76e34c0e46d984c037eae9c8607514dc0b51eeec/src/avram/operation.cr#L40" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/7f6f9ddfd0ac20997bec54053efafb92b0ec439f/src/avram/operation.cr#L40" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2102,7 +2112,7 @@ or raise <code><a href="../Avram/FailedOperation.html">Avram::FailedOperation</a
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/76e34c0e46d984c037eae9c8607514dc0b51eeec/src/avram/operation.cr#L85" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/7f6f9ddfd0ac20997bec54053efafb92b0ec439f/src/avram/operation.cr#L85" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2118,7 +2128,7 @@ or raise <code><a href="../Avram/FailedOperation.html">Avram::FailedOperation</a
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/76e34c0e46d984c037eae9c8607514dc0b51eeec/src/avram/operation.cr#L80" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/7f6f9ddfd0ac20997bec54053efafb92b0ec439f/src/avram/operation.cr#L80" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2148,7 +2158,7 @@ or raise <code><a href="../Avram/FailedOperation.html">Avram::FailedOperation</a
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/76e34c0e46d984c037eae9c8607514dc0b51eeec/src/avram/operation.cr#L17" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/7f6f9ddfd0ac20997bec54053efafb92b0ec439f/src/avram/operation.cr#L17" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2164,7 +2174,7 @@ or raise <code><a href="../Avram/FailedOperation.html">Avram::FailedOperation</a
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/76e34c0e46d984c037eae9c8607514dc0b51eeec/src/avram/operation.cr#L83" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/7f6f9ddfd0ac20997bec54053efafb92b0ec439f/src/avram/operation.cr#L83" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2186,7 +2196,7 @@ and there's no custom errors</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/76e34c0e46d984c037eae9c8607514dc0b51eeec/src/avram/operation.cr#L100" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/7f6f9ddfd0ac20997bec54053efafb92b0ec439f/src/avram/operation.cr#L100" target="_blank">View source</a>]
         
       </div>
     </div>
