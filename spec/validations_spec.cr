@@ -14,6 +14,17 @@ class UniquenessWithCustomMessageSaveOperation < User::SaveOperation
   end
 end
 
+struct TestI18nBackend < Avram::I18nBackend
+  def get(key : String | Symbol) : String
+    case key
+    when :validate_required
+      "is terribly missed"
+    else
+      "is totally wrong"
+    end
+  end
+end
+
 private def attribute(value : T) : Avram::Attribute(T) forall T
   Avram::Attribute.new(value: value, param: nil, param_key: "fake", name: :fake)
 end
@@ -105,6 +116,15 @@ describe Avram::Validations do
       result = Avram::Validations.validate_required false_attribute
       result.should eq(true)
       false_attribute.valid?.should be_true
+    end
+
+    it "can use a custom backend" do
+      Avram.temp_config(i18n_backend: TestI18nBackend.new) do
+        empty_attribute = attribute("")
+
+        Avram::Validations.validate_required(empty_attribute)
+        empty_attribute.errors.should eq ["is terribly missed"]
+      end
     end
   end
 
@@ -222,6 +242,15 @@ describe Avram::Validations do
       result.should eq(true)
       second.valid?.should be_true
     end
+
+    it "can use a custom backend" do
+      Avram.temp_config(i18n_backend: TestI18nBackend.new) do
+        first = attribute("first")
+        second = attribute("second")
+        Avram::Validations.validate_confirmation_of first, with: second
+        second.errors.should eq(["is totally wrong"])
+      end
+    end
   end
 
   describe "validate_inclusion_of" do
@@ -234,7 +263,7 @@ describe Avram::Validations do
       forbidden_name = attribute("123123123")
       result = Avram::Validations.validate_inclusion_of(forbidden_name, in: ["Jamie"])
       result.should eq(false)
-      forbidden_name.errors.should eq(["is invalid"])
+      forbidden_name.errors.should eq(["is not included in the list"])
     end
 
     it "can allow nil" do
@@ -259,17 +288,17 @@ describe Avram::Validations do
       incorrect_size_attribute = attribute("P")
       result = Avram::Validations.validate_size_of(incorrect_size_attribute, is: 2)
       result.should eq(false)
-      incorrect_size_attribute.errors.should eq(["is invalid"])
+      incorrect_size_attribute.errors.should eq(["must be exactly 2 characters long"])
 
       too_short_attribute = attribute("P")
       result = Avram::Validations.validate_size_of(too_short_attribute, min: 2)
       result.should eq(false)
-      too_short_attribute.errors.should eq(["is too short"])
+      too_short_attribute.errors.should eq(["must have at least 2 characters"])
 
       too_long_attribute = attribute("Supercalifragilisticexpialidocious")
       result = Avram::Validations.validate_size_of(too_long_attribute, max: 32)
       result.should eq(false)
-      too_long_attribute.errors.should eq(["is too long"])
+      too_long_attribute.errors.should eq(["must not have more than 32 characters"])
 
       just_right_attribute = attribute("Goldilocks")
       result = Avram::Validations.validate_size_of(just_right_attribute, is: 10)
@@ -311,12 +340,12 @@ describe Avram::Validations do
       too_small_attribute = attribute(1)
       result = Avram::Validations.validate_numeric(too_small_attribute, greater_than: 2)
       result.should eq(false)
-      too_small_attribute.errors.should eq(["is too small"])
+      too_small_attribute.errors.should eq(["must be greater than 2"])
 
       too_large_attribute = attribute(38)
       result = Avram::Validations.validate_numeric(too_large_attribute, less_than: 32)
       result.should eq(false)
-      too_large_attribute.errors.should eq(["is too large"])
+      too_large_attribute.errors.should eq(["must be less than 32"])
 
       just_right_attribute = attribute(10)
       result = Avram::Validations.validate_numeric(just_right_attribute, greater_than: 9, less_than: 11)
