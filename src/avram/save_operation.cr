@@ -23,7 +23,7 @@ abstract class Avram::SaveOperation(T)
   include Avram::InheritColumnAttributes
   include Avram::Upsert
 
-  enum SaveStatus
+  enum OperationStatus
     Saved
     SaveFailed
     Unperformed
@@ -39,7 +39,7 @@ abstract class Avram::SaveOperation(T)
   # :nodoc:
   setter :record
   getter :params, :record
-  property save_status : SaveStatus = SaveStatus::Unperformed
+  property save_status : OperationStatus = OperationStatus::Unperformed
 
   abstract def attributes
 
@@ -238,12 +238,12 @@ abstract class Avram::SaveOperation(T)
 
   # Returns true if the operation has run and saved the record successfully
   def saved?
-    save_status == SaveStatus::Saved
+    save_status == OperationStatus::Saved
   end
 
   # Return true if the operation has run and the record failed to save
   def save_failed?
-    save_status == SaveStatus::SaveFailed
+    save_status == OperationStatus::SaveFailed
   end
 
   macro permit_columns(*attribute_names)
@@ -323,7 +323,7 @@ abstract class Avram::SaveOperation(T)
       end
 
       if transaction_committed
-        self.save_status = SaveStatus::Saved
+        self.save_status = OperationStatus::Saved
         after_commit(record.not_nil!)
         Avram::Events::SaveSuccessEvent.publish(
           operation_class: self.class.name,

@@ -329,7 +329,7 @@ describe "Avram::SaveOperation" do
       operation.save
 
       operation.save_failed?.should be_true
-      operation.save_status.should eq(Avram::SaveOperation::SaveStatus::SaveFailed)
+      operation.save_status.should eq(SaveUser::OperationStatus::SaveFailed)
       operation.valid?.should be_false
     end
 
@@ -338,7 +338,7 @@ describe "Avram::SaveOperation" do
       operation = SaveUser.new(params)
 
       operation.save_failed?.should be_false
-      operation.save_status.should eq(Avram::SaveOperation::SaveStatus::Unperformed)
+      operation.save_status.should eq(SaveUser::OperationStatus::Unperformed)
       operation.saved?.should be_false
       operation.valid?.should be_false
     end
