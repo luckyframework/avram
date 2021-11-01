@@ -15,7 +15,7 @@ abstract class Avram::DeleteOperation(T)
   include Avram::Callbacks
   include Avram::InheritColumnAttributes
 
-  enum DeleteStatus
+  enum OperationStatus
     Deleted
     DeleteFailed
     Unperformed
@@ -27,7 +27,7 @@ abstract class Avram::DeleteOperation(T)
     @record : T
     @params : Avram::Paramable
     getter :record, :params
-    property delete_status : DeleteStatus = DeleteStatus::Unperformed
+    property delete_status : OperationStatus = OperationStatus::Unperformed
   end
 
   def self.param_key
@@ -84,17 +84,17 @@ abstract class Avram::DeleteOperation(T)
   end
 
   def mark_as_deleted
-    self.delete_status = DeleteStatus::Deleted
+    self.delete_status = OperationStatus::Deleted
     true
   end
 
   # Returns true if the operation has run and saved the record successfully
   def deleted?
-    delete_status == DeleteStatus::Deleted
+    delete_status == OperationStatus::Deleted
   end
 
   def mark_as_failed
-    self.delete_status = DeleteStatus::DeleteFailed
+    self.delete_status = OperationStatus::DeleteFailed
     false
   end
 

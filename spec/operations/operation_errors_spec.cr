@@ -55,7 +55,7 @@ describe Avram::OperationErrors do
       value.should eq nil
       op.valid?.should eq false
       op.errors[:failure].should eq ["This failed quick", "Like, really quick"]
-      op.save_status.should eq SaveUserButNotReally::SaveStatus::SaveFailed
+      op.save_status.should eq SaveUserButNotReally::OperationStatus::SaveFailed
     end
   end
 end
