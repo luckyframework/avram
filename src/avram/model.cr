@@ -18,6 +18,7 @@ abstract class Avram::Model
   macro inherited
     COLUMNS = [] of Nil # types are not checked in macros
     ASSOCIATIONS = [] of Nil # types are not checked in macros
+    include LuckyCache::Cachable
   end
 
   def self.primary_key_name : Symbol?

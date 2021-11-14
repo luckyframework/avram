@@ -19,8 +19,14 @@ Db::Create.new(quiet: true).run_task
 Db::Migrate.new(quiet: true).run_task
 Db::VerifyConnection.new(quiet: true).run_task
 
+LuckyCache.configure do |settings|
+  settings.storage = LuckyCache::NullStore.new
+  settings.default_duration = 1.millisecond
+end
+
 Spec.before_each do
   TestDatabase.truncate
+  LuckyCache.settings.storage.flush
 end
 
 class SampleBackupDatabase < Avram::Database

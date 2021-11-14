@@ -10,6 +10,8 @@ module Avram::Queryable(T)
   delegate :database, :table_name, :primary_key_name, to: T
 
   macro included
+    #private property cache_duration : Time::Span = LuckyCache.settings.default_duration
+
     def self.new_with_existing_query(query : Avram::QueryBuilder)
       new.tap do |queryable|
         queryable.query = query
@@ -245,9 +247,25 @@ module Avram::Queryable(T)
     @preloads << block
   end
 
+  # TODO: https://github.com/crystal-lang/crystal/issues/11453
+  # e.g. UserQuery.new.with_cache_length(1.hour)
+  # def with_cache_length(@cache_duration : Time::Span) : self
+  #   self
+  # end
+
+  def cache_store
+    LuckyCache.settings.storage
+  end
+
+  private def cache_key : String
+    [query.statement, query.args].join(':')
+  end
+
   def results : Array(T)
-    exec_query.tap do |records|
-      preloads.each(&.call(records))
+    cache_store.fetch(cache_key, as: Array(T)) do
+      exec_query.tap do |records|
+        preloads.each(&.call(records))
+      end
     end
   end
 
