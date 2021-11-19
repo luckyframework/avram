@@ -183,7 +183,7 @@ class Avram::QueryBuilder
   end
 
   def orders
-    @orders.uniq!(&.uid)
+    @orders.uniq!(&.column)
   end
 
   def group_by(column : ColumnName)

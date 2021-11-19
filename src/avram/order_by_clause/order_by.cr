@@ -17,7 +17,7 @@ module Avram
 
     def_clone
 
-    getter column
+    getter column : String | Symbol
     getter direction
     getter nulls
 
@@ -38,10 +38,6 @@ module Avram
     def reversed : self
       @direction = @direction.asc? ? Direction::DESC : Direction::ASC
       self
-    end
-
-    def uid : String
-      "#{column}_column"
     end
   end
 end
