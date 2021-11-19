@@ -8,7 +8,7 @@ class Avram::QueryBuilder
   @offset : Int32?
   @wheres = [] of Avram::Where::Condition
   @joins = [] of Avram::Join::SqlClause
-  @orders = [] of Avram::OrderBy
+  @orders = [] of Avram::OrderByClause
   @groups = [] of ColumnName
   @selections : String = "*"
   @prepared_statement_placeholder = 0
@@ -150,8 +150,15 @@ class Avram::QueryBuilder
     self
   end
 
-  def order_by(order : OrderBy)
+  def order_by(order : OrderByClause)
+    reset_order if ordered_randomly?
     @orders << order
+    self
+  end
+
+  def random_order
+    reset_order
+    @orders << Avram::OrderByRandom.new
     self
   end
 
@@ -165,7 +172,7 @@ class Avram::QueryBuilder
   end
 
   def reverse_order
-    @orders = @orders.map(&.reversed).reverse!
+    @orders = @orders.map(&.reversed).reverse! unless ordered_randomly?
     self
   end
 
@@ -176,7 +183,7 @@ class Avram::QueryBuilder
   end
 
   def orders
-    @orders.uniq!(&.column)
+    @orders.uniq!(&.uid)
   end
 
   def group_by(column : ColumnName)
@@ -258,6 +265,10 @@ class Avram::QueryBuilder
 
   def ordered?
     !@orders.empty?
+  end
+
+  def ordered_randomly?
+    ordered? && @orders.first.is_a?(Avram::OrderByRandom)
   end
 
   private def select_sql

@@ -168,8 +168,12 @@ module Avram::Queryable(T)
     raise "#{e.message}. Accepted values are: :asc, :desc"
   end
 
-  def order_by(order : Avram::OrderBy) : self
+  def order_by(order : Avram::OrderByClause) : self
     clone.tap &.query.order_by(order)
+  end
+
+  def random_order : self
+    clone.tap &.query.random_order
   end
 
   def group(&block) : self

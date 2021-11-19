@@ -257,6 +257,17 @@ describe Avram::Queryable do
     it "returns nil if last record is not found" do
       UserQuery.last?.should be_nil
     end
+
+    it "allows queries with random order" do
+      UserFactory.new.name("First").create
+      UserFactory.new.name("Last").create
+
+      user = UserQuery.new.random_order.last?
+      user_query = Avram::Events::QueryEvent.logged_events.last.query
+
+      user.should_not be_nil
+      user_query.should eq "SELECT #{User::COLUMN_SQL} FROM users ORDER BY RANDOM () LIMIT 1"
+    end
   end
 
   describe "#last?" do
@@ -1238,6 +1249,28 @@ describe Avram::Queryable do
       query.name.asc_order
 
       query.to_sql.should eq original_query_sql
+    end
+
+    it "resets random order clauses" do
+      query = Post::BaseQuery.new.random_order.published_at.asc_order
+
+      query.to_sql[0].should contain "ORDER BY posts.published_at ASC"
+      query.to_sql[0].should_not contain "RANDOM ()"
+    end
+  end
+
+  describe "#random_order" do
+    it "orders randomly" do
+      query = Post::BaseQuery.new.random_order
+
+      query.to_sql[0].should contain "ORDER BY RANDOM ()"
+    end
+
+    it "resets previous order clauses" do
+      query = Post::BaseQuery.new.published_at.desc_order.random_order
+
+      query.to_sql[0].should_not contain "posts.published_at DESC"
+      query.to_sql[0].should contain "ORDER BY RANDOM ()"
     end
   end
 
