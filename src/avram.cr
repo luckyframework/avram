@@ -23,6 +23,7 @@ module Avram
     setting database_to_migrate : Avram::Database.class, example: "AppDatabase"
     setting time_formats : Array(String) = [] of String
     setting i18n_backend : Avram::I18nBackend = Avram::I18n.new, example: "Avram::I18n.new"
+    setting query_cache_enabled : Bool = false
   end
 
   Log            = ::Log.for(Avram)

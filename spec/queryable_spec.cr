@@ -1487,7 +1487,9 @@ describe Avram::Queryable do
 
   describe "with query cache" do
     it "only runs the query once" do
-      LuckyCache.temp_config(storage: LuckyCache::MemoryStore.new) do
+      # We're testing the actual caching
+      Fiber.current.query_cache = LuckyCache::MemoryStore.new
+      Avram.temp_config(query_cache_enabled: true) do
         UserFactory.create &.name("Amy")
         UserQuery.query_counter.should eq(0)
 

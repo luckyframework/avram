@@ -254,7 +254,7 @@ module Avram::Queryable(T)
   # end
 
   def cache_store
-    LuckyCache.settings.storage
+    Fiber.current.query_cache
   end
 
   private def cache_key : String
