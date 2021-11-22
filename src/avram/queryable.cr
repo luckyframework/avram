@@ -214,10 +214,12 @@ module Avram::Queryable(T)
   end
 
   def any? : Bool
-    queryable = clone
-    new_query = queryable.query.limit(1).select("1 AS one")
-    results = database.query_one?(new_query.statement, args: new_query.args, queryable: schema_class.name, as: Int32)
-    !results.nil?
+    cache_store.fetch(cache_key, as: Bool) do
+      queryable = clone
+      new_query = queryable.query.limit(1).select("1 AS one")
+      results = database.query_one?(new_query.statement, args: new_query.args, queryable: schema_class.name, as: Int32)
+      !results.nil?
+    end
   end
 
   def none? : Bool
@@ -225,12 +227,16 @@ module Avram::Queryable(T)
   end
 
   def select_count : Int64
-    table = "(#{query.statement}) AS temp"
-    new_query = Avram::QueryBuilder.new(table).select_count
-    result = database.scalar new_query.statement, args: query.args, queryable: schema_class.name
-    result.as(Int64)
-  rescue e : DB::NoResultsError
-    0_i64
+    cache_store.fetch(cache_key, as: Int64) do
+      begin
+        table = "(#{query.statement}) AS temp"
+        new_query = Avram::QueryBuilder.new(table).select_count
+        result = database.scalar new_query.statement, args: query.args, queryable: schema_class.name
+        result.as(Int64)
+      rescue e : DB::NoResultsError
+        0_i64
+      end
+    end
   end
 
   def each
@@ -249,7 +255,7 @@ module Avram::Queryable(T)
     Fiber.current.query_cache
   end
 
-  private def cache_key : String
+  def cache_key : String
     [query.statement, query.args].join(':')
   end
 
