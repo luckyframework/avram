@@ -32,7 +32,20 @@ end
 class PostQuery < Post::BaseQuery
 end
 
+class UserQuery
+  class_property query_counter : Int32 = 0
+
+  private def exec_query
+    @@query_counter += 1
+    super
+  end
+end
+
 describe Avram::Queryable do
+  Spec.before_each do
+    UserQuery.query_counter = 0
+  end
+
   it "can chain scope methods" do
     ChainedQuery.new.young.named("Paul")
   end
@@ -1358,7 +1371,7 @@ describe Avram::Queryable do
 
       users = UserQuery.new.group(&.age).group(&.id)
       users.query.statement.should eq "SELECT #{User::COLUMN_SQL} FROM users GROUP BY users.age, users.id"
-      users.map(&.name).should eq ["Dwight", "Michael", "Jim"]
+      users.map(&.name).sort!.should eq ["Dwight", "Jim", "Michael"]
     end
 
     it "raises an error when grouped incorrectly" do
@@ -1469,6 +1482,24 @@ describe Avram::Queryable do
       query.reset_offset
 
       query.to_sql.should eq original_query_sql
+    end
+  end
+
+  describe "with query cache" do
+    it "only runs the query once" do
+      # We're testing the actual caching
+      Fiber.current.query_cache = LuckyCache::MemoryStore.new
+      Avram.temp_config(query_cache_enabled: true) do
+        UserFactory.create &.name("Amy")
+        UserQuery.query_counter.should eq(0)
+
+        UserQuery.new.name("Amy").first
+        UserQuery.new.name("Amy").first
+        user = UserQuery.new.name("Amy").first
+
+        UserQuery.query_counter.should eq(1)
+        user.name.should eq("Amy")
+      end
     end
   end
 end

@@ -21,6 +21,10 @@ Db::VerifyConnection.new(quiet: true).run_task
 
 Spec.before_each do
   TestDatabase.truncate
+  # All specs seem to run on the same Fiber,
+  # so we set back to NullStore before each spec
+  # to ensure queries aren't randomly cached
+  Fiber.current.query_cache = LuckyCache::NullStore.new
 end
 
 class SampleBackupDatabase < Avram::Database
