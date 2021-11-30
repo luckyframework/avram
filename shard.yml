@@ -1,5 +1,5 @@
 name: avram
-version: 0.21.1
+version: 0.22.0
 
 crystal: ">= 1.0.0"
 
@@ -30,7 +30,7 @@ dependencies:
     version: ~> 0.3.3
   shell-table:
     github: luckyframework/shell-table.cr
-    branch: master
+    version: ~> 0.9.3
   pulsar:
     github: luckyframework/pulsar
     version: ~> 0.2.2
@@ -41,7 +41,7 @@ dependencies:
 development_dependencies:
   ameba:
     github: crystal-ameba/ameba
-    version: ~> 0.14.2
+    version: ~> 0.14.3
 
 scripts:
   postinstall: BUILD_WITHOUT_DEVELOPMENT=true script/precompile_tasks
