@@ -8,7 +8,7 @@ class Avram::Migrator::Runner
 
   extend LuckyTask::TextHelpers
 
-  @@migrations = [] of Avram::Migrator::Migration::V1.class
+  class_getter migrations = [] of Avram::Migrator::Migration::V1.class
 
   def initialize(@quiet : Bool = false)
   end
@@ -31,10 +31,6 @@ class Avram::Migrator::Runner
 
   def self.db_password
     credentials.password
-  end
-
-  def self.migrations
-    @@migrations
   end
 
   def self.credentials
@@ -166,7 +162,7 @@ class Avram::Migrator::Runner
   def rollback_to(last_version : Int64)
     self.class.setup_migration_tracking_tables
     subset = migrated_migrations.select do |mm|
-      mm.new.version.to_i64 > last_version
+      mm.new.version > last_version
     end
     subset.reverse.each &.new.down
     puts "Done rolling back to #{last_version}".colorize(:green)
@@ -205,7 +201,7 @@ class Avram::Migrator::Runner
   end
 
   private def sorted_migrations
-    @@migrations.sort { |a, b| a.new.version <=> b.new.version }
+    self.class.migrations.sort_by(&.new.version)
   end
 
   private def prepare_for_migration

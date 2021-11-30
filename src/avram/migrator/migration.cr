@@ -9,8 +9,8 @@ abstract class Avram::Migrator::Migration::V1
   macro inherited
     Avram::Migrator::Runner.migrations << self
 
-    def version
-      get_version_from_filename
+    def version : Int64
+      get_version_from_filename.to_i64
     end
 
     macro get_version_from_filename
@@ -19,7 +19,7 @@ abstract class Avram::Migrator::Migration::V1
   end
 
   abstract def migrate
-  abstract def version
+  abstract def version : Int64
 
   getter prepared_statements = [] of String
 
