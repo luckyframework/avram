@@ -201,7 +201,7 @@ class Avram::Migrator::Runner
   end
 
   private def sorted_migrations
-    self.class.migrations.sort_by(&.new.version)
+    self.class.migrations.sort_by(&.new.version.as(Int64))
   end
 
   private def prepare_for_migration
