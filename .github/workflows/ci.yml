@@ -15,7 +15,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2.4.0
       - name: Install Crystal
-        uses: oprypin/install-crystal@v1
+        uses: crystal-lang/install-crystal@v1
         with:
           crystal: latest
       - name: Install shards
