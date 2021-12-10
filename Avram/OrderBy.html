@@ -721,6 +721,16 @@
       
     </li>
   
+  <li class=" " data-id="avram/Avram/OrderByClause" data-name="avram::orderbyclause">
+      <a href="../Avram/OrderByClause.html">OrderByClause</a>
+      
+    </li>
+  
+  <li class=" " data-id="avram/Avram/OrderByRandom" data-name="avram::orderbyrandom">
+      <a href="../Avram/OrderByRandom.html">OrderByRandom</a>
+      
+    </li>
+  
   <li class=" " data-id="avram/Avram/Paramable" data-name="avram::paramable">
       <a href="../Avram/Paramable.html">Paramable</a>
       
@@ -1530,7 +1540,7 @@
 </h1>
 
 
-  <ul class="superclass-hierarchy"><li class="superclass"><a href="../Avram/OrderBy.html">Avram::OrderBy</a></li><li class="superclass">Reference</li><li class="superclass"><a href="../Object.html">Object</a></li></ul>
+  <ul class="superclass-hierarchy"><li class="superclass"><a href="../Avram/OrderBy.html">Avram::OrderBy</a></li><li class="superclass"><a href="../Avram/OrderByClause.html">Avram::OrderByClause</a></li><li class="superclass">Reference</li><li class="superclass"><a href="../Object.html">Object</a></li></ul>
 
 
 
@@ -1558,8 +1568,8 @@
   </h2>
   
     
-      <a href="https://github.com/luckyframework/avram/blob/c445cb7a5a6d4032fe59ab8609f63dbd3e88080e/src/avram/order_by.cr#L2" target="_blank">
-        avram/order_by.cr
+      <a href="https://github.com/luckyframework/avram/blob/e377697bb562963a1ab2d319c206f2c296e208d5/src/avram/order_by_clause/order_by.cr#L2" target="_blank">
+        avram/order_by_clause/order_by.cr
       </a>
     
     <br/>
@@ -1623,12 +1633,12 @@
       </li>
     
       <li class="entry-summary">
-        <a href="#prepare-instance-method" class="signature"><strong>#prepare</strong></a>
+        <a href="#prepare%3AString-instance-method" class="signature"><strong>#prepare</strong> : String</a>
         
       </li>
     
       <li class="entry-summary">
-        <a href="#reversed-instance-method" class="signature"><strong>#reversed</strong></a>
+        <a href="#reversed%3Aself-instance-method" class="signature"><strong>#reversed</strong> : <span class="k">self</span></a>
         
       </li>
     
@@ -1639,6 +1649,35 @@
 
 
 <div class="methods-inherited">
+  
+    
+
+  <h3>Instance methods inherited from class <code><a href="../Avram/OrderByClause.html">Avram::OrderByClause</a></code></h3>
+  
+  
+    <a href="../Avram/OrderByClause.html#column%3AString%7CSymbol-instance-method" class="tooltip">
+      <span>column : String | Symbol</span>
+    column</a>, 
+    
+  
+    <a href="../Avram/OrderByClause.html#prepare%3AString-instance-method" class="tooltip">
+      <span>prepare : String</span>
+    prepare</a>, 
+    
+  
+    <a href="../Avram/OrderByClause.html#reversed%3Aself-instance-method" class="tooltip">
+      <span>reversed : <span class="k">self</span></span>
+    reversed</a>
+    
+  
+
+
+    
+
+
+    
+
+
   
     
 
@@ -1702,7 +1741,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/c445cb7a5a6d4032fe59ab8609f63dbd3e88080e/src/avram/order_by.cr#L24" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/e377697bb562963a1ab2d319c206f2c296e208d5/src/avram/order_by_clause/order_by.cr#L24" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1737,7 +1776,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/c445cb7a5a6d4032fe59ab8609f63dbd3e88080e/src/avram/order_by.cr#L18" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/e377697bb562963a1ab2d319c206f2c296e208d5/src/avram/order_by_clause/order_by.cr#L18" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1753,7 +1792,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/c445cb7a5a6d4032fe59ab8609f63dbd3e88080e/src/avram/order_by.cr#L20" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/e377697bb562963a1ab2d319c206f2c296e208d5/src/avram/order_by_clause/order_by.cr#L20" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1769,7 +1808,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/c445cb7a5a6d4032fe59ab8609f63dbd3e88080e/src/avram/order_by.cr#L21" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/e377697bb562963a1ab2d319c206f2c296e208d5/src/avram/order_by_clause/order_by.cr#L21" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1785,39 +1824,39 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/c445cb7a5a6d4032fe59ab8609f63dbd3e88080e/src/avram/order_by.cr#L22" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/e377697bb562963a1ab2d319c206f2c296e208d5/src/avram/order_by_clause/order_by.cr#L22" target="_blank">View source</a>]
         
       </div>
     </div>
   
-    <div class="entry-detail" id="prepare-instance-method">
+    <div class="entry-detail" id="prepare:String-instance-method">
       <div class="signature">
         
-        def <strong>prepare</strong>
+        def <strong>prepare</strong> : <a href="../String.html">String</a>
 
-        <a class="method-permalink" href="#prepare-instance-method">#</a>
+        <a class="method-permalink" href="#prepare%3AString-instance-method">#</a>
       </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/c445cb7a5a6d4032fe59ab8609f63dbd3e88080e/src/avram/order_by.cr#L32" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/e377697bb562963a1ab2d319c206f2c296e208d5/src/avram/order_by_clause/order_by.cr#L31" target="_blank">View source</a>]
         
       </div>
     </div>
   
-    <div class="entry-detail" id="reversed-instance-method">
+    <div class="entry-detail" id="reversed:self-instance-method">
       <div class="signature">
         
-        def <strong>reversed</strong>
+        def <strong>reversed</strong> : <span class="k">self</span>
 
-        <a class="method-permalink" href="#reversed-instance-method">#</a>
+        <a class="method-permalink" href="#reversed%3Aself-instance-method">#</a>
       </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/c445cb7a5a6d4032fe59ab8609f63dbd3e88080e/src/avram/order_by.cr#L27" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/e377697bb562963a1ab2d319c206f2c296e208d5/src/avram/order_by_clause/order_by.cr#L38" target="_blank">View source</a>]
         
       </div>
     </div>
