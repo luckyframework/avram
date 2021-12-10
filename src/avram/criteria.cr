@@ -14,6 +14,10 @@ class Avram::Criteria(T, V)
     rows.order_by(Avram::OrderBy.new(column, :asc, null_sorting))
   end
 
+  def random_order : T
+    rows.order_by(Avram::OrderByRandom.new)
+  end
+
   def eq(value) : T
     check_just_nil!(typeof(value))
     check_nilable!(value)

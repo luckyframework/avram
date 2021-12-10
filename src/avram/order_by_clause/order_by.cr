@@ -1,5 +1,5 @@
 module Avram
-  class OrderBy
+  class OrderBy < OrderByClause
     enum NullSorting
       DEFAULT
       NULLS_FIRST
@@ -17,23 +17,27 @@ module Avram
 
     def_clone
 
-    getter column
+    getter column : String | Symbol
     getter direction
     getter nulls
 
-    def initialize(@column : String | Symbol, @direction : Direction, @nulls : NullSorting = :default)
+    def initialize(
+      @column : String | Symbol,
+      @direction : Direction,
+      @nulls : NullSorting = :default
+    )
     end
 
-    def reversed
-      @direction = @direction.asc? ? Direction::DESC : Direction::ASC
-      self
-    end
-
-    def prepare
+    def prepare : String
       String.build do |str|
         str << "#{column} #{direction}"
         str << " #{nulls}" unless nulls.default?
       end
+    end
+
+    def reversed : self
+      @direction = @direction.asc? ? Direction::DESC : Direction::ASC
+      self
     end
   end
 end
