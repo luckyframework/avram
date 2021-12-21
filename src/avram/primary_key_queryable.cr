@@ -7,7 +7,7 @@ module Avram::PrimaryKeyQueryable(T)
     end
 
     def find(id)
-      id(id).limit(1).first? || raise Avram::RecordNotFoundError.new(model: table_name, id: id.to_s)
+      id(id).first? || raise Avram::RecordNotFoundError.new(model: table_name, id: id.to_s)
     end
 
     {% primary_key_name = T.constant("PRIMARY_KEY_NAME") %}
