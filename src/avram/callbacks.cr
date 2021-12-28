@@ -504,61 +504,6 @@ module Avram::Callbacks
     end
   end
 
-  # Run the given method after the SaveOperation has completed everything.
-  # During normal operations, this runs after the `after_commit`.
-  # This is the only SaveOperation callback that runs when no changes
-  # are made to an existing record.
-  #
-  # The record will be passed to the method.
-  #
-  # ```
-  # class SaveComment < Comment::SaveOperation
-  #   after_completed pass_info_to_author
-  #
-  #   private def pass_info_to_author(comment : Comment)
-  #     SaveAuthor
-  #   end
-  # end
-  # ```
-  #
-  macro after_completed(method_name)
-    {% raise <<-ERROR
-      after_completed has been removed
-
-      The after_save and after_commit callbacks are called even if no changes were made
-
-      Try this...
-
-        ▸ after_commit #{method_name.id}
-      ERROR
-    %}
-  end
-
-  # Run the given block after save and after successful transaction commit
-  # This is the only SaveOperation callback that runs when no changes
-  # are made to an existing record.
-  #
-  # The record will be passed to the method.
-  #
-  # ```
-  # class SaveComment < Comment::SaveOperation
-  #   after_completed do |comment|
-  #   end
-  # end
-  # ```
-  macro after_completed(&block)
-    {% raise <<-ERROR
-      after_completed has been removed
-
-      The after_save and after_commit callbacks are called even if no changes were made
-
-      Try this...
-
-        ▸ after_commit #{block.id}
-      ERROR
-    %}
-  end
-
   # :nodoc:
   macro before(callback_method)
     {% raise <<-ERROR
