@@ -53,16 +53,6 @@ module Avram
       @errors = operation.errors
       super message
     end
-
-    def save_operation_errors
-      {% raise "Avram::InvalidSaveOperationError#save_operation_errors has been renamed to 'errors'" %}
-    end
-  end
-
-  class InvalidSaveOperationError
-    def initialize(*args, **named_args)
-      {% raise "#{@type} has been renamed to Avram::InvalidOperationError" %}
-    end
   end
 
   # Raised when an unimplemented or deprecated query is made.
