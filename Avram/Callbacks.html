@@ -116,11 +116,6 @@
       
     </li>
   
-  <li class=" " data-id="avram/Avram/Box" data-name="avram::box">
-      <a href="../Avram/Box.html">Box</a>
-      
-    </li>
-  
   <li class=" " data-id="avram/Avram/CallableErrorMessage" data-name="avram::callableerrormessage">
       <a href="../Avram/CallableErrorMessage.html">CallableErrorMessage</a>
       
@@ -333,11 +328,6 @@
   
   <li class=" " data-id="avram/Avram/InvalidQueryError" data-name="avram::invalidqueryerror">
       <a href="../Avram/InvalidQueryError.html">InvalidQueryError</a>
-      
-    </li>
-  
-  <li class=" " data-id="avram/Avram/InvalidSaveOperationError" data-name="avram::invalidsaveoperationerror">
-      <a href="../Avram/InvalidSaveOperationError.html">InvalidSaveOperationError</a>
       
     </li>
   
@@ -803,11 +793,6 @@
   
   <li class=" " data-id="avram/Avram/RecordNotFoundError" data-name="avram::recordnotfounderror">
       <a href="../Avram/RecordNotFoundError.html">RecordNotFoundError</a>
-      
-    </li>
-  
-  <li class=" " data-id="avram/Avram/Repo" data-name="avram::repo">
-      <a href="../Avram/Repo.html">Repo</a>
       
     </li>
   
@@ -1584,7 +1569,7 @@
   </h2>
   
     
-      <a href="https://github.com/luckyframework/avram/blob/1b3b403b8e764bd4f8944c602a4a727783451ea2/src/avram/callbacks.cr#L1" target="_blank">
+      <a href="https://github.com/luckyframework/avram/blob/6f6ffdfb1d6f269e26b04a00bf194992d8de4c25/src/avram/callbacks.cr#L1" target="_blank">
         avram/callbacks.cr
       </a>
     
@@ -1622,20 +1607,6 @@
         <a href="#after_commit%28if_if%3Dnil%2Cunless_unless%3Dnil%2C%26block%29-macro" class="signature"><strong>after_commit</strong>(if _if = <span class="n">nil</span>, unless _unless = <span class="n">nil</span>, &block)</a>
         
           <div class="summary"><p>Run the given block after save and after successful transaction commit</p></div>
-        
-      </li>
-    
-      <li class="entry-summary">
-        <a href="#after_completed%28method_name%29-macro" class="signature"><strong>after_completed</strong>(method_name)</a>
-        
-          <div class="summary"><p>Run the given method after the SaveOperation has completed everything.</p></div>
-        
-      </li>
-    
-      <li class="entry-summary">
-        <a href="#after_completed%28%26block%29-macro" class="signature"><strong>after_completed</strong>(&block)</a>
-        
-          <div class="summary"><p>Run the given block after save and after successful transaction commit This is the only SaveOperation callback that runs when no changes are made to an existing record.</p></div>
         
       </li>
     
@@ -1775,7 +1746,7 @@ that returns a truthy/falsey value</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/1b3b403b8e764bd4f8944c602a4a727783451ea2/src/avram/callbacks.cr#L439" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/6f6ffdfb1d6f269e26b04a00bf194992d8de4c25/src/avram/callbacks.cr#L439" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1802,67 +1773,7 @@ that returns a truthy/falsey value</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/1b3b403b8e764bd4f8944c602a4a727783451ea2/src/avram/callbacks.cr#L462" target="_blank">View source</a>]
-        
-      </div>
-    </div>
-  
-    <div class="entry-detail" id="after_completed(method_name)-macro">
-      <div class="signature">
-        
-        macro <strong>after_completed</strong>(method_name)
-
-        <a class="method-permalink" href="#after_completed%28method_name%29-macro">#</a>
-      </div>
-      
-        <div class="doc">
-          
-          <p>Run the given method after the SaveOperation has completed everything.
-During normal operations, this runs after the <code><a href="../Avram/Callbacks.html#after_commit%28method_name%2Cif_if%3Dnil%2Cunless_unless%3Dnil%29-macro">after_commit</a></code>.
-This is the only SaveOperation callback that runs when no changes
-are made to an existing record.</p>
-<p>The record will be passed to the method.</p>
-<pre><code class="language-crystal"><span class="k">class</span> <span class="t">SaveComment</span> <span class="o">&lt;</span> <span class="t">Comment</span><span class="t">::</span><span class="t">SaveOperation</span>
-  after_completed pass_info_to_author
-
-  <span class="k">private</span> <span class="k">def</span> <span class="m">pass_info_to_author</span>(comment : <span class="t">Comment</span>)
-    <span class="t">SaveAuthor</span>
-  <span class="k">end</span>
-<span class="k">end</span></code></pre>
-        </div>
-      
-      <br/>
-      <div>
-        
-          [<a href="https://github.com/luckyframework/avram/blob/1b3b403b8e764bd4f8944c602a4a727783451ea2/src/avram/callbacks.cr#L524" target="_blank">View source</a>]
-        
-      </div>
-    </div>
-  
-    <div class="entry-detail" id="after_completed(&amp;block)-macro">
-      <div class="signature">
-        
-        macro <strong>after_completed</strong>(&block)
-
-        <a class="method-permalink" href="#after_completed%28%26block%29-macro">#</a>
-      </div>
-      
-        <div class="doc">
-          
-          <p>Run the given block after save and after successful transaction commit
-This is the only SaveOperation callback that runs when no changes
-are made to an existing record.</p>
-<p>The record will be passed to the method.</p>
-<pre><code class="language-crystal"><span class="k">class</span> <span class="t">SaveComment</span> <span class="o">&lt;</span> <span class="t">Comment</span><span class="t">::</span><span class="t">SaveOperation</span>
-  after_completed <span class="k">do</span> <span class="o">|</span>comment<span class="o">|</span>
-  <span class="k">end</span>
-<span class="k">end</span></code></pre>
-        </div>
-      
-      <br/>
-      <div>
-        
-          [<a href="https://github.com/luckyframework/avram/blob/1b3b403b8e764bd4f8944c602a4a727783451ea2/src/avram/callbacks.cr#L549" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/6f6ffdfb1d6f269e26b04a00bf194992d8de4c25/src/avram/callbacks.cr#L462" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1883,7 +1794,7 @@ are made to an existing record.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/1b3b403b8e764bd4f8944c602a4a727783451ea2/src/avram/callbacks.cr#L243" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/6f6ffdfb1d6f269e26b04a00bf194992d8de4c25/src/avram/callbacks.cr#L243" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1899,7 +1810,7 @@ are made to an existing record.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/1b3b403b8e764bd4f8944c602a4a727783451ea2/src/avram/callbacks.cr#L323" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/6f6ffdfb1d6f269e26b04a00bf194992d8de4c25/src/avram/callbacks.cr#L323" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1926,7 +1837,7 @@ The return value of the <code>run</code> method is passed to <code>method_name</
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/1b3b403b8e764bd4f8944c602a4a727783451ea2/src/avram/callbacks.cr#L378" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/6f6ffdfb1d6f269e26b04a00bf194992d8de4c25/src/avram/callbacks.cr#L378" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1957,7 +1868,7 @@ The return value of the <code>run</code> method is passed to <code>method_name</
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/1b3b403b8e764bd4f8944c602a4a727783451ea2/src/avram/callbacks.cr#L399" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/6f6ffdfb1d6f269e26b04a00bf194992d8de4c25/src/avram/callbacks.cr#L399" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1997,7 +1908,7 @@ Instead use <code><a href="../Avram/Callbacks.html#after_commit%28method_name%2C
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/1b3b403b8e764bd4f8944c602a4a727783451ea2/src/avram/callbacks.cr#L230" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/6f6ffdfb1d6f269e26b04a00bf194992d8de4c25/src/avram/callbacks.cr#L230" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2035,7 +1946,7 @@ Instead use <code><a href="../Avram/Callbacks.html#after_commit%28method_name%2C
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/1b3b403b8e764bd4f8944c602a4a727783451ea2/src/avram/callbacks.cr#L278" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/6f6ffdfb1d6f269e26b04a00bf194992d8de4c25/src/avram/callbacks.cr#L278" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2056,7 +1967,7 @@ Instead use <code><a href="../Avram/Callbacks.html#after_commit%28method_name%2C
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/1b3b403b8e764bd4f8944c602a4a727783451ea2/src/avram/callbacks.cr#L76" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/6f6ffdfb1d6f269e26b04a00bf194992d8de4c25/src/avram/callbacks.cr#L76" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2072,7 +1983,7 @@ Instead use <code><a href="../Avram/Callbacks.html#after_commit%28method_name%2C
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/1b3b403b8e764bd4f8944c602a4a727783451ea2/src/avram/callbacks.cr#L154" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/6f6ffdfb1d6f269e26b04a00bf194992d8de4c25/src/avram/callbacks.cr#L154" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2098,7 +2009,7 @@ Instead use <code><a href="../Avram/Callbacks.html#after_commit%28method_name%2C
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/1b3b403b8e764bd4f8944c602a4a727783451ea2/src/avram/callbacks.cr#L97" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/6f6ffdfb1d6f269e26b04a00bf194992d8de4c25/src/avram/callbacks.cr#L97" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2122,7 +2033,7 @@ Instead use <code><a href="../Avram/Callbacks.html#after_commit%28method_name%2C
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/1b3b403b8e764bd4f8944c602a4a727783451ea2/src/avram/callbacks.cr#L193" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/6f6ffdfb1d6f269e26b04a00bf194992d8de4c25/src/avram/callbacks.cr#L193" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2163,7 +2074,7 @@ before_save <span class="n">:validate_can_internet</span>, <span class="k">unles
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/1b3b403b8e764bd4f8944c602a4a727783451ea2/src/avram/callbacks.cr#L63" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/6f6ffdfb1d6f269e26b04a00bf194992d8de4c25/src/avram/callbacks.cr#L63" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2197,7 +2108,7 @@ that returns a truthy/falsey value</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/1b3b403b8e764bd4f8944c602a4a727783451ea2/src/avram/callbacks.cr#L122" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/6f6ffdfb1d6f269e26b04a00bf194992d8de4c25/src/avram/callbacks.cr#L122" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2213,7 +2124,7 @@ that returns a truthy/falsey value</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/1b3b403b8e764bd4f8944c602a4a727783451ea2/src/avram/callbacks.cr#L19" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/6f6ffdfb1d6f269e26b04a00bf194992d8de4c25/src/avram/callbacks.cr#L19" target="_blank">View source</a>]
         
       </div>
     </div>
