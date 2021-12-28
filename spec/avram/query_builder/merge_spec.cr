@@ -1,4 +1,4 @@
-require "../spec_helper"
+require "../../spec_helper"
 
 describe "Avram::QueryBuilder#merge" do
   it "merges the wheres and joins" do

@@ -1,4 +1,4 @@
-require "../spec_helper"
+require "../../spec_helper"
 
 describe "UUID column type" do
   describe ".parse" do

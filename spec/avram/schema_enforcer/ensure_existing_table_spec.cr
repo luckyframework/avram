@@ -1,4 +1,4 @@
-require "../spec_helper"
+require "../../spec_helper"
 
 private class MissingTable < BaseModel
   table :definitely_a_missing_table do

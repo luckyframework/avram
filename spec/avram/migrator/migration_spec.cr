@@ -1,4 +1,4 @@
-require "../spec_helper"
+require "../../spec_helper"
 
 class MigrationThatPartiallyWorks::V999 < Avram::Migrator::Migration::V1
   def migrate

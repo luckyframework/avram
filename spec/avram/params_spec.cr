@@ -1,4 +1,4 @@
-require "./spec_helper"
+require "../spec_helper"
 
 private class TestOperationWithDefaultParamKey < Avram::Operation
   attribute title : String

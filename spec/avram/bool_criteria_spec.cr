@@ -1,4 +1,4 @@
-require "./spec_helper"
+require "../spec_helper"
 
 private class QueryMe < BaseModel
   COLUMN_SQL = "users.id, users.created_at, users.updated_at, users.admin"

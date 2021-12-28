@@ -1,4 +1,4 @@
-require "./spec_helper"
+require "../spec_helper"
 
 describe Avram::Credentials do
   it "strips space and newlines from the username" do

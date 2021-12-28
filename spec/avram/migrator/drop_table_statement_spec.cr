@@ -1,4 +1,4 @@
-require "../spec_helper"
+require "../../spec_helper"
 
 describe Avram::Migrator::DropTableStatement do
   it "can drop table" do

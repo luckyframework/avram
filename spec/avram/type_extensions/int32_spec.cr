@@ -1,4 +1,4 @@
-require "../spec_helper"
+require "../../spec_helper"
 
 describe "Int32" do
   it "parses Int32 from String" do

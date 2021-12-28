@@ -1,4 +1,4 @@
-require "./spec_helper"
+require "../spec_helper"
 
 describe "Models with different default columns" do
   describe "when there are no timestamps and the primary key is not 'id'" do

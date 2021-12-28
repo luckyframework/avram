@@ -1,4 +1,4 @@
-require "./spec_helper"
+require "../spec_helper"
 
 describe Avram::Database do
   describe "listen" do

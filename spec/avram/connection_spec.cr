@@ -1,4 +1,4 @@
-require "./spec_helper"
+require "../spec_helper"
 
 describe Avram::Connection do
   it "displays a helpful error when failing to connect" do

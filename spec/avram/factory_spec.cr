@@ -1,4 +1,4 @@
-require "./spec_helper"
+require "../spec_helper"
 
 describe Avram::Factory do
   it "can create a model without additional columns" do

@@ -1,4 +1,4 @@
-require "./spec_helper"
+require "../spec_helper"
 
 describe "Instrumentation" do
   it "publishes the query and args" do

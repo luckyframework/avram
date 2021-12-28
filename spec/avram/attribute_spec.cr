@@ -1,4 +1,4 @@
-require "./spec_helper.cr"
+require "../spec_helper"
 
 private class CallableMessage
   include Avram::CallableErrorMessage

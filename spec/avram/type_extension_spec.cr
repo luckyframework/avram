@@ -1,4 +1,4 @@
-require "./spec_helper.cr"
+require "../spec_helper"
 
 class CompanyQuery < Company::BaseQuery
 end

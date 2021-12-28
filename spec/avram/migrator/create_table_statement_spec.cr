@@ -1,4 +1,4 @@
-require "../spec_helper"
+require "../../spec_helper"
 
 describe Avram::Migrator::CreateTableStatement do
   it "can create tables with no user defined columns" do

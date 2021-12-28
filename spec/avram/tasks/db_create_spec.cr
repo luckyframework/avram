@@ -1,4 +1,4 @@
-require "../spec_helper"
+require "../../spec_helper"
 
 describe Db::Create do
   # This is currently failing with the wrong message.

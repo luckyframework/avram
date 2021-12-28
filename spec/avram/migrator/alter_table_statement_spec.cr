@@ -1,4 +1,4 @@
-require "../spec_helper"
+require "../../spec_helper"
 
 describe Avram::Migrator::AlterTableStatement do
   it "can alter tables with defaults, indices and options" do

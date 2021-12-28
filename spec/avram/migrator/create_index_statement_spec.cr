@@ -1,4 +1,4 @@
-require "../spec_helper"
+require "../../spec_helper"
 
 describe Avram::Migrator::CreateIndexStatement do
   it "generates correct CREATE INDEX sql" do

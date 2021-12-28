@@ -1,4 +1,4 @@
-require "./spec_helper"
+require "../spec_helper"
 
 private class SaveBucket < Bucket::SaveOperation
   permit_columns numbers

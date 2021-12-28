@@ -1,4 +1,4 @@
-require "./spec_helper"
+require "../spec_helper"
 
 describe "DatabaseCleaner" do
   describe "delete strategy" do

@@ -1,4 +1,4 @@
-require "../spec_helper"
+require "../../spec_helper"
 
 SQL_DUMP_FILE = "spec/support/files/sample_backup.sql"
 

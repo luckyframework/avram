@@ -1,4 +1,4 @@
-require "./spec_helper"
+require "../spec_helper"
 
 describe Avram::QueryBuilder do
   it "ensures uniqueness for orders, and joins" do

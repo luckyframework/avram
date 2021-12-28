@@ -1,4 +1,4 @@
-require "../spec_helper"
+require "../../spec_helper"
 
 describe "Array" do
   it "parses Array(Bool) from Array(String)" do

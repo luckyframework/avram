@@ -1,4 +1,4 @@
-require "./spec_helper"
+require "../spec_helper"
 
 private class PostTransactionSaveOperation < Post::SaveOperation
   permit_columns title

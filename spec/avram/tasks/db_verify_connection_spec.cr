@@ -1,4 +1,4 @@
-require "../spec_helper"
+require "../../spec_helper"
 
 describe Db::VerifyConnection do
   it "throws a helpful error" do

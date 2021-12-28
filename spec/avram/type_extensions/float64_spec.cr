@@ -1,4 +1,4 @@
-require "../spec_helper"
+require "../../spec_helper"
 
 describe "Float64" do
   it "parses Float64 from Float64" do

@@ -1,4 +1,4 @@
-require "../spec_helper"
+require "../../spec_helper"
 
 describe Avram::Migrator::DropFunctionStatement do
   it "builds the proper SQL for dropping a function" do

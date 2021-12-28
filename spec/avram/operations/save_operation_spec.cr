@@ -1,4 +1,4 @@
-require "../spec_helper"
+require "../../spec_helper"
 
 private class SaveUser < User::SaveOperation
   # There was a bug where adding a non-database attribute would make it so

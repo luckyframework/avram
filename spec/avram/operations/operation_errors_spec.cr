@@ -1,4 +1,4 @@
-require "../spec_helper"
+require "../../spec_helper"
 
 class SaveUserButNotReally < User::SaveOperation
   needs failure : Bool = false

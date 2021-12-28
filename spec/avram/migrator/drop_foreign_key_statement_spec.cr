@@ -1,4 +1,4 @@
-require "../spec_helper"
+require "../../spec_helper"
 
 describe Avram::Migrator::DropForeignKeyStatement do
   it "generates correct sql" do

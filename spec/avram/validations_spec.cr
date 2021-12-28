@@ -1,4 +1,4 @@
-require "./spec_helper"
+require "../spec_helper"
 
 class UniquenessSaveOperation < User::SaveOperation
   before_save do

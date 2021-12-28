@@ -1,4 +1,4 @@
-require "./spec_helper"
+require "../spec_helper"
 
 macro should_negate(original_where, expected_negated_where)
   {% if original_where.resolve < Avram::Where::NullSqlClause %}

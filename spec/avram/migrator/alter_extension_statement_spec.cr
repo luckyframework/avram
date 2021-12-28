@@ -1,4 +1,4 @@
-require "../spec_helper"
+require "../../spec_helper"
 
 describe Avram::Migrator::AlterExtensionStatement do
   it "builds the proper SQL to update an extension" do

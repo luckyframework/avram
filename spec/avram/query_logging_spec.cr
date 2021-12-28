@@ -1,4 +1,4 @@
-require "./spec_helper"
+require "../spec_helper"
 
 describe "Query logging" do
   it "logs the statement and args" do

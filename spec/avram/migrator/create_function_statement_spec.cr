@@ -1,4 +1,4 @@
-require "../spec_helper"
+require "../../spec_helper"
 
 describe Avram::Migrator::CreateFunctionStatement do
   it "builds the proper SQL for creating a function" do
