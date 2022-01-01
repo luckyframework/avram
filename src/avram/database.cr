@@ -4,6 +4,7 @@ abstract class Avram::Database
   @@db : DB::Database? = nil
   @@lock = Mutex.new
   class_getter transactions = {} of FiberId => DB::Transaction
+  class_setter lock_id : FiberId?
 
   macro inherited
     Habitat.create do
@@ -154,7 +155,7 @@ abstract class Avram::Database
     Avram::Connection.new(url, database_class: self.class)
   end
 
-  private def db : DB::Database
+  def db : DB::Database
     @@db ||= @@lock.synchronize do
       # check @@db again because a previous request could have set it after
       # the first time it was checked
@@ -163,7 +164,11 @@ abstract class Avram::Database
   end
 
   private def current_transaction : DB::Transaction?
-    transactions[Fiber.current.object_id]?
+    transactions[current_object_id]?
+  end
+
+  def current_object_id : FiberId
+    @@lock_id || Fiber.current.object_id
   end
 
   protected def truncate
@@ -196,14 +201,14 @@ abstract class Avram::Database
 
   private def wrap_in_transaction
     db.transaction do |tx|
-      transactions[Fiber.current.object_id] ||= tx
+      transactions[current_object_id] ||= tx
       yield
     end
     true
   rescue e : Avram::Rollback
     false
   ensure
-    transactions.delete(Fiber.current.object_id)
+    transactions.delete(current_object_id)
   end
 
   class DatabaseCleaner

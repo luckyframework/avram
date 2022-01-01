@@ -204,7 +204,7 @@ describe "Avram::SaveOperation callbacks" do
     ])
   end
 
-  it "does not run after_commit if rolled back" do
+  it "does not run after_commit if rolled back", tags: "disable_transaction" do
     post = PostFactory.create
     operation = CallbacksSaveOperation.new(post, rollback: true)
     operation.callbacks_that_ran.should eq([] of String)

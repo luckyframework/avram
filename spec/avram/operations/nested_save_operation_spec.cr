@@ -36,7 +36,7 @@ private class NestedParams < Avram::FakeParams
 end
 
 describe "Avram::SaveOperation with nested operation" do
-  context "when not all forms are valid" do
+  context "when not all forms are valid", tags: "disable_transaction" do
     it "does not create either" do
       params = NestedParams.new business: {"name" => "Fubar"},
         email_address: {"address" => ""},

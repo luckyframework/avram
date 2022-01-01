@@ -33,7 +33,6 @@ describe Avram::Model do
     user = UserFactory.create
     post = PostFactory.create
 
-    user.id.should eq(post.id)
     user.should_not eq(post)
   end
 

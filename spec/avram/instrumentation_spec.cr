@@ -2,7 +2,8 @@ require "../spec_helper"
 
 describe "Instrumentation" do
   it "publishes the query and args" do
-    TestDatabase.query "SELECT * FROM users"
+    # using block form to make sure the ResultSet is closed
+    TestDatabase.query "SELECT * FROM users" { }
 
     event = Avram::Events::QueryEvent.logged_events.last
     event.query.should eq("SELECT * FROM users")
