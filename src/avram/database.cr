@@ -204,7 +204,7 @@ abstract class Avram::Database
   end
 
   private def wrap_in_transaction
-    (current_transaction || current_connection).transaction do |tx|
+    (current_transaction || current_connection).transaction do
       yield
     end
     true
