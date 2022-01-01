@@ -211,7 +211,11 @@ abstract class Avram::Database
   rescue e : Avram::Rollback
     false
   ensure
-    connections.delete(current_object_id) if current_connection.stack.empty?
+    # TODO: not sure of this
+    if current_connection.stack.empty?
+      current_connection.release
+      connections.delete(current_object_id)
+    end
   end
 
   class DatabaseCleaner
