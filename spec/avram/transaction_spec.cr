@@ -19,7 +19,7 @@ private class BadSaveOperation < Post::SaveOperation
   end
 end
 
-describe "Avram::SaveOperation", tags: "disable_transaction" do
+describe "Avram::SaveOperation" do
   describe "wrapping multiple saves in a transaction" do
     it "rolls them all back" do
       TestDatabase.transaction do

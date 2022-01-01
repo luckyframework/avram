@@ -1,4 +1,8 @@
 module DB
+  abstract class Transaction
+    property? joinable = true
+  end
+
   class TopLevelTransaction < Transaction
     def initialize(@connection : Connection)
       @nested_transaction = false

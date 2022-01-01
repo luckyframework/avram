@@ -20,7 +20,6 @@ Db::Migrate.new(quiet: true).run_task
 Db::VerifyConnection.new(quiet: true).run_task
 
 Spec.around_each do |spec|
-  # TestDatabase.truncate
   disable_transaction = false
   current = spec.example
   while !disable_transaction && !current.is_a?(Spec::RootContext)
@@ -40,16 +39,16 @@ Spec.around_each do |spec|
   TestDatabase.new.db.pool.total
     .select(::DB::Connection)
     .each do |connection|
-      tracked_transactions << connection.begin_transaction
+      tracked_transactions << connection.begin_transaction.tap(&.joinable=(false))
     end
 
   DB::Pool::ConnectionStartedEvent.subscribe do |event|
-    tracked_transactions << event.connection.begin_transaction
+    tracked_transactions << event.connection.begin_transaction.tap(&.joinable=(false))
   end
 
   lock_id = Fiber.current.object_id
   TestDatabase.lock_id = lock_id
-  TestDatabase.transactions[lock_id] ||= TestDatabase.new.db.checkout.begin_transaction
+  TestDatabase.new.current_connection
 
   spec.run
 
@@ -60,7 +59,8 @@ Spec.around_each do |spec|
     transaction.connection.release
   end
   tracked_transactions.clear
-  TestDatabase.transactions.clear
+  TestDatabase.connections.clear
+  DB::Pool::ConnectionStartedEvent.clear_subscribers
 end
 
 Spec.before_each do

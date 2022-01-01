@@ -3,7 +3,7 @@ abstract class Avram::Database
 
   @@db : DB::Database? = nil
   @@lock = Mutex.new
-  class_getter transactions = {} of FiberId => DB::Transaction
+  class_getter connections = {} of FiberId => DB::Connection
   class_setter lock_id : FiberId?
 
   macro inherited
@@ -143,7 +143,7 @@ abstract class Avram::Database
 
   # :nodoc:
   def run
-    yield current_transaction.try(&.connection) || db
+    yield current_connection || db
   end
 
   # :nodoc:
@@ -163,8 +163,12 @@ abstract class Avram::Database
     end
   end
 
+  def current_connection : DB::Connection
+    connections[current_object_id] ||= db.checkout
+  end
+
   private def current_transaction : DB::Transaction?
-    transactions[current_object_id]?
+    current_connection.stack.last?
   end
 
   def current_object_id : FiberId
@@ -185,7 +189,7 @@ abstract class Avram::Database
 
   # :nodoc:
   def transaction : Bool
-    if current_transaction
+    if current_transaction.try(&.joinable?)
       yield
       true
     else
@@ -195,20 +199,19 @@ abstract class Avram::Database
     end
   end
 
-  private def transactions
-    self.class.transactions
+  private def connections
+    self.class.connections
   end
 
   private def wrap_in_transaction
-    db.transaction do |tx|
-      transactions[current_object_id] ||= tx
+    (current_transaction || current_connection).transaction do |tx|
       yield
     end
     true
   rescue e : Avram::Rollback
     false
   ensure
-    transactions.delete(current_object_id)
+    connections.delete(current_object_id) if current_connection.stack.empty?
   end
 
   class DatabaseCleaner

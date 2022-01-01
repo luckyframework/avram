@@ -15,6 +15,10 @@ module DB
     end
 
     class ConnectionStartedEvent < Pulsar::Event
+      def self.clear_subscribers
+        subscribers.clear
+      end
+
       getter connection : ::DB::Connection
 
       def initialize(@connection)
