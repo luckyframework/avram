@@ -151,7 +151,7 @@ abstract class Avram::Database
     connection.connect_listen(*channels, &block)
   end
 
-  private def connection : Avram::Connection
+  def connection : Avram::Connection
     Avram::Connection.new(url, database_class: self.class)
   end
 

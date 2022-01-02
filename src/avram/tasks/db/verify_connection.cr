@@ -20,10 +20,9 @@ class Db::VerifyConnection < BaseTask
   end
 
   def run_task
-    DB.open(Avram::Migrator::Runner.database_url) do |_db|
-    end
+    Avram.settings.database_to_migrate.new.connection.open
     puts "✔ Connection verified" unless quiet?
-  rescue PQ::ConnectionError | DB::ConnectionRefused
+  rescue Avram::ConnectionError
     raise <<-ERROR
     Unable to connect to Postgres for database '#{Avram.settings.database_to_migrate}'.
 
