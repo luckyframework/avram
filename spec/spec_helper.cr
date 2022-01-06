@@ -18,6 +18,7 @@ Log.builder.bind("avram.*", :error, backend)
 Db::Create.new(quiet: true).run_task
 Db::Migrate.new(quiet: true).run_task
 Db::VerifyConnection.new(quiet: true).run_task
+TestDatabase.connections.clear # remove the reference to the connection used to setup the database
 
 Spec.around_each do |spec|
   disable_transaction = false
@@ -36,14 +37,8 @@ Spec.around_each do |spec|
 
   tracked_transactions = [] of DB::Transaction
 
-  TestDatabase.new.db.pool.total
-    .select(::DB::Connection)
-    .each do |connection|
-      tracked_transactions << connection.begin_transaction.tap(&.joinable=(false))
-    end
-
-  DB::Pool::ConnectionStartedEvent.subscribe do |event|
-    tracked_transactions << event.connection.begin_transaction.tap(&.joinable=(false))
+  TestDatabase.setup_connection do |conn|
+    tracked_transactions << conn.begin_transaction.tap(&.joinable=(false))
   end
 
   lock_id = Fiber.current.object_id
@@ -60,7 +55,7 @@ Spec.around_each do |spec|
   end
   tracked_transactions.clear
   TestDatabase.connections.clear
-  DB::Pool::ConnectionStartedEvent.clear_subscribers
+  TestDatabase.setup_connection { }
 end
 
 Spec.before_each do

@@ -25,6 +25,12 @@ abstract class Avram::Database
     %}
   end
 
+  def self.setup_connection(&block : DB::Connection -> Nil)
+    new.db.setup_connection do |conn|
+      block.call conn
+    end
+  end
+
   # Rollback the current transaction
   def self.rollback
     new.rollback
