@@ -4,7 +4,6 @@ abstract class Avram::Database
   @@db : DB::Database? = nil
   @@lock = Mutex.new
   class_getter connections = {} of FiberId => DB::Connection
-  class_setter lock_id : FiberId?
 
   macro inherited
     Habitat.create do
@@ -29,6 +28,10 @@ abstract class Avram::Database
     new.db.setup_connection do |conn|
       block.call conn
     end
+  end
+
+  def self.verify_connection
+    new.connection.open
   end
 
   # Rollback the current transaction
@@ -157,11 +160,11 @@ abstract class Avram::Database
     connection.connect_listen(*channels, &block)
   end
 
-  def connection : Avram::Connection
+  protected def connection : Avram::Connection
     Avram::Connection.new(url, database_class: self.class)
   end
 
-  def db : DB::Database
+  protected def db : DB::Database
     @@db ||= @@lock.synchronize do
       # check @@db again because a previous request could have set it after
       # the first time it was checked
@@ -169,16 +172,12 @@ abstract class Avram::Database
     end
   end
 
-  def current_connection : DB::Connection
-    connections[current_object_id] ||= db.checkout
+  private def current_connection : DB::Connection
+    connections[Fiber.current.object_id] ||= db.checkout
   end
 
   private def current_transaction : DB::Transaction?
     current_connection.stack.last?
-  end
-
-  def current_object_id : FiberId
-    @@lock_id || Fiber.current.object_id
   end
 
   protected def truncate
@@ -220,7 +219,7 @@ abstract class Avram::Database
     # TODO: not sure of this
     if current_connection.stack.empty?
       current_connection.release
-      connections.delete(current_object_id)
+      connections.delete(Fiber.current.object_id)
     end
   end
 

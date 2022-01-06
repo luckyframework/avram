@@ -41,10 +41,6 @@ Spec.around_each do |spec|
     tracked_transactions << conn.begin_transaction.tap(&.joinable=(false))
   end
 
-  lock_id = Fiber.current.object_id
-  TestDatabase.lock_id = lock_id
-  TestDatabase.new.current_connection
-
   spec.run
 
   tracked_transactions.each do |transaction|

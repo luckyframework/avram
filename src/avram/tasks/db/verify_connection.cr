@@ -20,7 +20,7 @@ class Db::VerifyConnection < BaseTask
   end
 
   def run_task
-    Avram.settings.database_to_migrate.new.connection.open
+    Avram.settings.database_to_migrate.verify_connection
     puts "✔ Connection verified" unless quiet?
   rescue Avram::ConnectionError
     raise <<-ERROR
