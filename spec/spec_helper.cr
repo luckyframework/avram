@@ -18,40 +18,9 @@ Log.builder.bind("avram.*", :error, backend)
 Db::Create.new(quiet: true).run_task
 Db::Migrate.new(quiet: true).run_task
 Db::VerifyConnection.new(quiet: true).run_task
-TestDatabase.connections.clear # remove the reference to the connection used to setup the database
 
 Spec.around_each do |spec|
-  disable_transaction = false
-  current = spec.example
-  while !disable_transaction && !current.is_a?(Spec::RootContext)
-    temp = current.as(Spec::Item)
-    disable_transaction = temp.tags.try(&.includes?("disable_transaction"))
-    current = temp.parent
-  end
-
-  if disable_transaction
-    spec.run
-    TestDatabase.truncate
-    next
-  end
-
-  tracked_transactions = [] of DB::Transaction
-
-  TestDatabase.setup_connection do |conn|
-    tracked_transactions << conn.begin_transaction.tap(&.joinable=(false))
-  end
-
-  spec.run
-
-  tracked_transactions.each do |transaction|
-    next if transaction.closed? || transaction.connection.closed?
-
-    transaction.rollback
-    transaction.connection.release
-  end
-  tracked_transactions.clear
-  TestDatabase.connections.clear
-  TestDatabase.setup_connection { }
+  Avram::Test.wrap_spec_in_transaction(spec, database: TestDatabase)
 end
 
 Spec.before_each do
