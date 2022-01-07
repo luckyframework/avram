@@ -5,7 +5,7 @@ module DB
 
     # :nodoc:
     def _avram_in_transaction? : Bool
-      _avram_stack.any?
+      !_avram_stack.empty?
     end
   end
 end
