@@ -1,7 +1,7 @@
 require "../spec_helper"
 
 describe Avram::Database do
-  describe "listen", tags: Avram::Test::TRUNCATE do
+  describe "listen", tags: Avram::SpecHelper::TRUNCATE do
     it "yields the payload from a notify" do
       done = Channel(Nil).new
       TestDatabase.listen("dinner_time") do |notification|

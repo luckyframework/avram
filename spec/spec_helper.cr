@@ -19,9 +19,7 @@ Db::Create.new(quiet: true).run_task
 Db::Migrate.new(quiet: true).run_task
 Db::VerifyConnection.new(quiet: true).run_task
 
-Spec.around_each do |spec|
-  Avram::Test.wrap_spec_in_transaction(spec, TestDatabase)
-end
+Avram::SpecHelper.use_transactional_specs(TestDatabase)
 
 Spec.before_each do
   # All specs seem to run on the same Fiber,

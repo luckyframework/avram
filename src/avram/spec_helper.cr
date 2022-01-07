@@ -1,5 +1,11 @@
-module Avram::Test
+module Avram::SpecHelper
   TRUNCATE = "truncate"
+
+  macro use_transactional_specs(*databases)
+    Spec.around_each do |spec|
+      Avram::SpecHelper.wrap_spec_in_transaction(spec, {{ databases.splat }})
+    end
+  end
 
   def self.wrap_spec_in_transaction(spec : Spec::Example::Procsy, *databases)
     if use_truncation?(spec)
