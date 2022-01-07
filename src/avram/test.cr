@@ -10,6 +10,7 @@ module Avram::Test
 
     tracked_transactions = [] of DB::Transaction
 
+    database.lock_id = Fiber.current.object_id
     database.connections.values.each do |conn|
       tracked_transactions << conn.begin_transaction.tap(&.joinable=(false))
     end

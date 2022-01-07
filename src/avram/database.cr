@@ -4,6 +4,7 @@ abstract class Avram::Database
   @@db : DB::Database? = nil
   @@lock = Mutex.new
   class_getter connections = {} of FiberId => DB::Connection
+  class_property lock_id : UInt64?
 
   macro inherited
     Habitat.create do
@@ -173,7 +174,11 @@ abstract class Avram::Database
   end
 
   private def current_connection : DB::Connection
-    connections[Fiber.current.object_id] ||= db.checkout
+    connections[object_id] ||= db.checkout
+  end
+
+  private def object_id : UInt64
+    self.class.lock_id || Fiber.current.object_id
   end
 
   private def current_transaction : DB::Transaction?
@@ -219,7 +224,7 @@ abstract class Avram::Database
     # TODO: not sure of this
     if current_connection.stack.empty?
       current_connection.release
-      connections.delete(Fiber.current.object_id)
+      connections.delete(object_id)
     end
   end
 
