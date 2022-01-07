@@ -20,7 +20,7 @@ Db::Migrate.new(quiet: true).run_task
 Db::VerifyConnection.new(quiet: true).run_task
 
 Spec.around_each do |spec|
-  Avram::Test.wrap_spec_in_transaction(spec, database: TestDatabase)
+  Avram::Test.wrap_spec_in_transaction(spec, TestDatabase)
 end
 
 Spec.before_each do

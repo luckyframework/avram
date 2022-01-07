@@ -1,22 +1,24 @@
 module Avram::Test
   TRUNCATE = "truncate"
 
-  def self.wrap_spec_in_transaction(spec : Spec::Example::Procsy, database : Avram::Database.class)
+  def self.wrap_spec_in_transaction(spec : Spec::Example::Procsy, *databases)
     if use_truncation?(spec)
       spec.run
-      database.truncate
+      databases.each(&.truncate)
       return
     end
 
     tracked_transactions = [] of DB::Transaction
 
-    database.lock_id = Fiber.current.object_id
-    database.connections.values.each do |conn|
-      tracked_transactions << conn.begin_transaction.tap(&._avram_joinable=(false))
-    end
+    databases.each do |database|
+      database.lock_id = Fiber.current.object_id
+      database.connections.values.each do |conn|
+        tracked_transactions << conn.begin_transaction.tap(&._avram_joinable=(false))
+      end
 
-    database.setup_connection do |conn|
-      tracked_transactions << conn.begin_transaction.tap(&._avram_joinable=(false))
+      database.setup_connection do |conn|
+        tracked_transactions << conn.begin_transaction.tap(&._avram_joinable=(false))
+      end
     end
 
     spec.run
@@ -28,8 +30,10 @@ module Avram::Test
       transaction.connection.release
     end
     tracked_transactions.clear
-    database.connections.clear
-    database.setup_connection { }
+    databases.each do |database|
+      database.connections.clear
+      database.setup_connection { }
+    end
   end
 
   private def self.use_truncation?(spec : Spec::Example::Procsy) : Bool
