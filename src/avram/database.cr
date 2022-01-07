@@ -32,7 +32,7 @@ abstract class Avram::Database
   end
 
   def self.verify_connection
-    new.connection.open
+    new.connection.open.close
   end
 
   # Rollback the current transaction
