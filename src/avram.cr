@@ -7,6 +7,7 @@ require "db"
 require "pg"
 require "uuid"
 
+require "./ext/db/*"
 require "./avram/object_extensions"
 require "./avram/criteria"
 require "./avram/type"

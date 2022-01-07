@@ -13,7 +13,7 @@ describe "Query logging" do
   it "does not log truncate statements" do
     Avram::QueryLog.dexter.temp_config do |log_io|
       TestDatabase.truncate
-      log_io.to_s.should eq("")
+      log_io.to_s.should_not contain("TRUNCATE TABLE")
     end
   end
 

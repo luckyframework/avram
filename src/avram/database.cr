@@ -3,7 +3,8 @@ abstract class Avram::Database
 
   @@db : DB::Database? = nil
   @@lock = Mutex.new
-  class_getter transactions = {} of FiberId => DB::Transaction
+  class_getter connections = {} of FiberId => DB::Connection
+  class_property lock_id : UInt64?
 
   macro inherited
     Habitat.create do
@@ -22,6 +23,16 @@ abstract class Avram::Database
         ▸ If you have not created a class that inherits from Avram::Database, create one and configure it.
       ERROR
     %}
+  end
+
+  def self.setup_connection(&block : DB::Connection -> Nil)
+    new.db.setup_connection do |conn|
+      block.call conn
+    end
+  end
+
+  def self.verify_connection
+    new.connection.open.close
   end
 
   # Rollback the current transaction
@@ -142,7 +153,7 @@ abstract class Avram::Database
 
   # :nodoc:
   def run
-    yield current_transaction.try(&.connection) || db
+    yield current_connection || db
   end
 
   # :nodoc:
@@ -150,11 +161,11 @@ abstract class Avram::Database
     connection.connect_listen(*channels, &block)
   end
 
-  private def connection : Avram::Connection
+  protected def connection : Avram::Connection
     Avram::Connection.new(url, database_class: self.class)
   end
 
-  private def db : DB::Database
+  protected def db : DB::Database
     @@db ||= @@lock.synchronize do
       # check @@db again because a previous request could have set it after
       # the first time it was checked
@@ -162,8 +173,16 @@ abstract class Avram::Database
     end
   end
 
+  private def current_connection : DB::Connection
+    connections[object_id] ||= db.checkout
+  end
+
+  private def object_id : UInt64
+    self.class.lock_id || Fiber.current.object_id
+  end
+
   private def current_transaction : DB::Transaction?
-    transactions[Fiber.current.object_id]?
+    current_connection._avram_stack.last?
   end
 
   protected def truncate
@@ -180,7 +199,7 @@ abstract class Avram::Database
 
   # :nodoc:
   def transaction : Bool
-    if current_transaction
+    if current_transaction.try(&._avram_joinable?)
       yield
       true
     else
@@ -190,20 +209,23 @@ abstract class Avram::Database
     end
   end
 
-  private def transactions
-    self.class.transactions
+  private def connections
+    self.class.connections
   end
 
   private def wrap_in_transaction
-    db.transaction do |tx|
-      transactions[Fiber.current.object_id] ||= tx
+    (current_transaction || current_connection).transaction do
       yield
     end
     true
   rescue e : Avram::Rollback
     false
   ensure
-    transactions.delete(Fiber.current.object_id)
+    # TODO: not sure of this
+    if current_connection._avram_in_transaction?
+      current_connection.release
+      connections.delete(object_id)
+    end
   end
 
   class DatabaseCleaner

@@ -27,7 +27,7 @@ class TestChangeType::V20190723233131 < Avram::Migrator::Migration::V1
       change_type id : Int64
     end
 
-    TempUserInt64::BaseQuery.first # should not raise
+    TempUserInt64::BaseQuery.first.delete # should not raise
   end
 
   def rollback
