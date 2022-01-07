@@ -11,9 +11,7 @@ class Avram::Migrator::Runner
   class_getter migrations = [] of Avram::Migrator::Migration::V1.class
 
   def initialize(@quiet : Bool = false)
-    if @quiet
-      Avram::Log.dexter.configure(:none)
-    end
+    Avram::Log.dexter.configure(:none)
   end
 
   def self.db_name
