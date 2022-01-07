@@ -1,18 +1,19 @@
 module DB
   abstract class Transaction
-    property? joinable = true
+    # :nodoc:
+    property? _avram_joinable = true
   end
 
   class TopLevelTransaction < Transaction
     def initialize(@connection : Connection)
       @nested_transaction = false
       @connection.perform_begin_transaction
-      @connection.stack.push(self)
+      @connection._avram_stack.push(self)
     end
 
     protected def do_close
       @connection.release_from_transaction
-      @connection.stack.pop
+      @connection._avram_stack.pop
     end
   end
 
@@ -21,12 +22,12 @@ module DB
       @nested_transaction = false
       @connection = @parent.connection
       @connection.perform_create_savepoint(@savepoint_name)
-      @connection.stack.push(self)
+      @connection._avram_stack.push(self)
     end
 
     protected def do_close
       @parent.release_from_nested_transaction
-      @connection.stack.pop
+      @connection._avram_stack.pop
     end
   end
 end

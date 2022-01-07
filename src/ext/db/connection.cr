@@ -1,5 +1,11 @@
 module DB
   abstract class Connection
-    getter stack = [] of DB::Transaction
+    # :nodoc:
+    getter _avram_stack = [] of DB::Transaction
+
+    # :nodoc:
+    def _avram_in_transaction? : Bool
+      _avram_stack.any?
+    end
   end
 end

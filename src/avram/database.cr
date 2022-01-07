@@ -182,7 +182,7 @@ abstract class Avram::Database
   end
 
   private def current_transaction : DB::Transaction?
-    current_connection.stack.last?
+    current_connection._avram_stack.last?
   end
 
   protected def truncate
@@ -199,7 +199,7 @@ abstract class Avram::Database
 
   # :nodoc:
   def transaction : Bool
-    if current_transaction.try(&.joinable?)
+    if current_transaction.try(&._avram_joinable?)
       yield
       true
     else
@@ -222,7 +222,7 @@ abstract class Avram::Database
     false
   ensure
     # TODO: not sure of this
-    if current_connection.stack.empty?
+    if current_connection._avram_in_transaction?
       current_connection.release
       connections.delete(object_id)
     end

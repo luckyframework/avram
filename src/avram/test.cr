@@ -12,11 +12,11 @@ module Avram::Test
 
     database.lock_id = Fiber.current.object_id
     database.connections.values.each do |conn|
-      tracked_transactions << conn.begin_transaction.tap(&.joinable=(false))
+      tracked_transactions << conn.begin_transaction.tap(&._avram_joinable=(false))
     end
 
     database.setup_connection do |conn|
-      tracked_transactions << conn.begin_transaction.tap(&.joinable=(false))
+      tracked_transactions << conn.begin_transaction.tap(&._avram_joinable=(false))
     end
 
     spec.run
