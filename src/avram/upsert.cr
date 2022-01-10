@@ -100,5 +100,11 @@ module Avram::Upsert
         \{% raise "Please use the 'upsert_lookup_columns' macro in #{@type} before using '{{ method.id }}'" %}
       end
     {% end %}
+
+    def self.bulk_upsert(params : Array(Avram::BulkUpsert::Params))
+      Avram::BulkUpsert
+        .new(T.table_name, params, T.column_names)
+        .statement
+    end
   end
 end

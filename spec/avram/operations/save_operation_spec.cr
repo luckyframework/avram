@@ -307,6 +307,26 @@ describe "Avram::SaveOperation" do
     end
   end
 
+  describe ".bulk_upsert" do
+    context "when the records are not persisted" do
+      it "should create the records" do
+        record_args = (1..50).to_a.map do |i|
+          {
+            :name     => "Test #{i}",
+            :nickname => "Test Nickname #{i}",
+          }.as(Avram::BulkUpsert::Params)
+        end
+
+        result = SaveUser.bulk_upsert(record_args)
+
+        pp result
+      end
+    end
+
+    context "when the records are persisted" do
+    end
+  end
+
   describe "#errors" do
     it "includes errors for all operation attributes" do
       operation = SaveUser.new
