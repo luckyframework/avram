@@ -243,6 +243,22 @@ module Avram::Queryable(T)
     end
   end
 
+  # Remove when PG::PGValue matches rs.read possibilities
+  alias PGValue = Bool | Float32 | Float64 | Int16 | Int32 | Int64 | PG::Numeric | String | Time | UUID | Nil
+
+  def group_count : Hash(Array(PGValue), Int64)
+    database.query_all(
+      query.select_direct(query.groups + ["COUNT(*)"]).statement,
+      args: query.args,
+      queryable: schema_class.name,
+    ) do |rs|
+      {
+        query.groups.map { rs.read PGValue },
+        rs.read Int64,
+      }
+    end.to_h
+  end
+
   def each
     results.each do |result|
       yield result

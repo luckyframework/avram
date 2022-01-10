@@ -856,6 +856,96 @@ describe Avram::Queryable do
     end
   end
 
+  describe "#group_count" do
+    context "when no records exist" do
+      it "0 grouped columns returns { [] => 0 }" do
+        query = UserQuery.new
+
+        query.group_count.should eq({[] of String => 0})
+      end
+
+      # Return an empty set when grouped, which mirrors
+      # postgresql handling of empty aggregated results
+      it "1 grouped columns returns { [] => 0 }" do
+        query = UserQuery.new.group(&.name)
+
+        query.group_count.should eq({} of Array(PG::PGValue) => Int64)
+      end
+
+      it "2 grouped columns returns { [] => 0 }" do
+        query = UserQuery.new.group(&.name)
+
+        query.group_count.should eq({} of Array(PG::PGValue) => Int64)
+      end
+    end
+
+    context "when 1 record exists" do
+      before_each do
+        UserFactory.create do |user|
+          user.age(32)
+          user.name("Taylor")
+        end
+      end
+
+      it "0 grouped columns returns { [] => 1 }" do
+        query = UserQuery.new
+
+        query.group_count.should eq({[] of String => 1})
+      end
+
+      it "1 grouped column (age) returns grouping" do
+        query = UserQuery.new.group &.age
+
+        query.group_count.should eq({[32] => 1})
+      end
+
+      it "2 grouped columns (age, name) returns grouping" do
+        query = UserQuery.new.group(&.age).group(&.name)
+
+        query.group_count.should eq({[32, "Taylor"] => 1})
+      end
+    end
+
+    context "when matrix [32, Daniel] [32, Taylor] [32, Taylor] [44, Shakira]" do
+      before_each do
+        UserFactory.create do |user|
+          user.age(32)
+          user.name("Daniel")
+        end
+        UserFactory.create do |user|
+          user.age(32)
+          user.name("Taylor")
+        end
+        UserFactory.create do |user|
+          user.age(32)
+          user.name("Taylor")
+        end
+        UserFactory.create do |user|
+          user.age(44)
+          user.name("Shakira")
+        end
+      end
+
+      it "0 grouped columns returns { [] => 4 }" do
+        query = UserQuery.new
+
+        query.group_count.should eq({[] of String => 4})
+      end
+
+      it "1 grouped columns (age) returns grouping" do
+        query = UserQuery.new.group &.age
+
+        query.group_count.should eq({[32] => 3, [44] => 1})
+      end
+
+      it "1 grouped columns (age, name) returns grouping" do
+        query = UserQuery.new.group(&.age).group(&.name)
+
+        query.group_count.should eq({[32, "Daniel"] => 1, [32, "Taylor"] => 2, [44, "Shakira"] => 1})
+      end
+    end
+  end
+
   describe "#not" do
     context "with an argument" do
       it "negates the given where condition as 'equal'" do

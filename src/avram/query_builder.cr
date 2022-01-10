@@ -254,6 +254,11 @@ class Avram::QueryBuilder
       .map(&.split('.').last)
   end
 
+  def select_direct(selection : Array(ColumnName))
+    @selections = selection.join(", ")
+    self
+  end
+
   def select(selection : Array(ColumnName))
     @selections = selection.join(", ") { |column| "#{@table}.#{column}" }
     self
