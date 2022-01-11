@@ -37,6 +37,9 @@ dependencies:
   lucky_cache:
     github: luckyframework/lucky_cache
     version: ~> 0.1.0
+  cadmium_transliterator:
+    github: cadmiumcr/transliterator
+    branch: master
 
 development_dependencies:
   ameba:
