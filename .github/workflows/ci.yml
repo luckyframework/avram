@@ -12,9 +12,10 @@ jobs:
       fail-fast: false
       matrix:
         crystal_version:
-          - 1.0.0
-          - 1.1.0
-          - 1.2.0
+          - 1.0
+          - 1.1
+          - 1.2
+          - 1.3
         experimental:
           - false
         include:
@@ -43,9 +44,10 @@ jobs:
           - 12
           - 13
         crystal_version:
-          - 1.0.0
-          - 1.1.0
-          - 1.2.0
+          - 1.0
+          - 1.1
+          - 1.2
+          - 1.3
         experimental:
           - false
         include:
