@@ -6,6 +6,7 @@ require "lucky_cache"
 require "db"
 require "pg"
 require "uuid"
+require "cadmium_transliterator"
 
 require "./ext/db/*"
 require "./avram/object_extensions"
