@@ -1594,7 +1594,7 @@ or <code>Connection#begin_transaction</code>.</p>
 <p>Use <code>Transaction#connection</code> to submit statements to the database.</p>
 <p>Use <code>Transaction#commit</code> or <code>Transaction#rollback</code> to close the ongoing transaction
 explicitly. Or refer to <code>BeginTransaction#transaction</code> for documentation on how to
-use <code>#transaction(&block)</code> methods in <code><a href="../DB.html">DB</a></code> and <code><a href="../DB/Connection.html">Connection</a></code>.</p>
+use <code>#transaction(&amp;block)</code> methods in <code><a href="../DB.html">DB</a></code> and <code><a href="../DB/Connection.html">Connection</a></code>.</p>
 <p>Nested transactions are supported by using sql <code>SAVEPOINT</code>. To start a nested
 transaction use <code>Transaction#transaction</code> or <code>Transaction#begin_transaction</code>.</p>
 
@@ -1653,14 +1653,14 @@ transaction use <code>Transaction#transaction</code> or <code>Transaction#begin_
   </h2>
   
     
-      <a href="https://github.com/luckyframework/avram/blob/ac281f490a85283eaf8b74fd23357dd70a6d7f22/lib/db/src/db/transaction.cr#L14" target="_blank">
+      <a href="https://github.com/luckyframework/avram/blob/519213e5c5f6a7a61766d16e815a2f6220500cae/lib/db/src/db/transaction.cr#L14" target="_blank">
         lib/db/src/db/transaction.cr
       </a>
     
     <br/>
   
     
-      <a href="https://github.com/luckyframework/avram/blob/ac281f490a85283eaf8b74fd23357dd70a6d7f22/src/ext/db/transaction.cr#L2" target="_blank">
+      <a href="https://github.com/luckyframework/avram/blob/519213e5c5f6a7a61766d16e815a2f6220500cae/src/ext/db/transaction.cr#L2" target="_blank">
         ext/db/transaction.cr
       </a>
     
