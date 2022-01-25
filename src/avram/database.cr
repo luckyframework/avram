@@ -221,8 +221,7 @@ abstract class Avram::Database
   rescue e : Avram::Rollback
     false
   ensure
-    # TODO: not sure of this
-    if current_connection._avram_in_transaction?
+    if !current_connection._avram_in_transaction?
       current_connection.release
       connections.delete(object_id)
     end
