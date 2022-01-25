@@ -66,6 +66,11 @@ describe "Avram::SaveOperation" do
         operation.saved?.should be_true
       end
     end
+
+    it "releases connection after operation finishes and no transactions open", tags: Avram::SpecHelper::TRUNCATE do
+      PostTransactionSaveOperation.create!(title: "New Title", rollback_after_save: false)
+      TestDatabase.connections.should be_empty
+    end
   end
 
   describe "raising an error" do
