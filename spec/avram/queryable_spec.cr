@@ -62,6 +62,12 @@ describe Avram::Queryable do
     query.statement.should eq "SELECT #{User::COLUMN_SQL} FROM users WHERE users.age >= $1 AND users.name = $2"
   end
 
+  it "releases connection if no open transaction", tags: Avram::SpecHelper::TRUNCATE do
+    UserQuery.new.first?
+
+    TestDatabase.connections.should be_empty
+  end
+
   describe "#distinct" do
     it "selects distinct" do
       query = UserQuery.new.distinct.query
