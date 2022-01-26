@@ -153,7 +153,9 @@ abstract class Avram::Database
 
   # :nodoc:
   def run
-    yield current_connection || db
+    yield current_connection
+  ensure
+    try_releasing_connection
   end
 
   # :nodoc:
@@ -221,6 +223,10 @@ abstract class Avram::Database
   rescue e : Avram::Rollback
     false
   ensure
+    try_releasing_connection
+  end
+
+  private def try_releasing_connection
     if !current_connection._avram_in_transaction?
       current_connection.release
       connections.delete(object_id)
