@@ -70,6 +70,25 @@ describe "JSON Columns" do
     })
   end
 
+  it "should convert pre-stringified json objects" do
+    form = SaveBlob.new
+    form.set_doc_from_param({"foo" => {"bar" => "baz"}}.to_json)
+    form.set_metadata_from_param(BlobMetadata.from_json("{}"))
+    form.doc.value.should eq JSON::Any.new({
+      "foo" => JSON::Any.new({
+        "bar" => JSON::Any.new("baz"),
+      }),
+    })
+    form.save!
+
+    blob = BlobQuery.new.last
+    blob.doc.should eq JSON::Any.new({
+      "foo" => JSON::Any.new({
+        "bar" => JSON::Any.new("baz"),
+      }),
+    })
+  end
+
   describe "serialized" do
     it "saves the serialized value" do
       SaveBlob.create(metadata: BlobMetadata.from_json("{}")) do |operation, blob|
