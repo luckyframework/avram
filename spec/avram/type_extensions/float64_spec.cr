@@ -42,7 +42,7 @@ describe "Float64" do
   end
 end
 
-# See: https://github.com/will/crystal-pg/blob/master/spec/pg/numeric_spec.cr#L4
+# See: https://github.com/will/crystal-pg/blob/cafec021f96f84e4b9d607f19920d9d62fdc6b90/spec/pg/numeric_spec.cr#L4-L6
 private def n(nd, w, s, ds, d)
   PG::Numeric.new(nd.to_i16, w.to_i16, s.to_i16, ds.to_i16, d.map(&.to_i16))
 end
