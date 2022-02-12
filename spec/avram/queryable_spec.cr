@@ -1640,9 +1640,9 @@ describe Avram::Queryable do
         store = query.cache_store.as(LuckyCache::MemoryStore)
         # TODO: https://github.com/luckyframework/lucky_cache/issues/7
         store.@cache.size.should eq(0)
-        query.any?.should eq(true)
+        query.any?.should eq(true) # ameba:disable Performance/AnyInsteadOfEmpty
         query.results.size.should eq(1)
-        query.any?.should eq(true)
+        query.any?.should eq(true) # ameba:disable Performance/AnyInsteadOfEmpty
 
         store.@cache.size.should eq(2)
       end
