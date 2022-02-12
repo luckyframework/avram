@@ -218,7 +218,7 @@ module Avram::Queryable(T)
   end
 
   def any? : Bool
-    cache_store.fetch(cache_key, as: Bool) do
+    cache_store.fetch(cache_key(:any?), as: Bool) do
       queryable = clone
       new_query = queryable.query.limit(1).select("1 AS one")
       results = database.query_one?(new_query.statement, args: new_query.args, queryable: schema_class.name, as: Int32)
@@ -231,7 +231,7 @@ module Avram::Queryable(T)
   end
 
   def select_count : Int64
-    cache_store.fetch(cache_key, as: Int64) do
+    cache_store.fetch(cache_key(:select_count), as: Int64) do
       begin
         table = "(#{query.statement}) AS temp"
         new_query = Avram::QueryBuilder.new(table).select_count
@@ -277,6 +277,10 @@ module Avram::Queryable(T)
 
   def cache_key : String
     [query.statement, query.args].join(':')
+  end
+
+  def cache_key(operation : Symbol) : String
+    [cache_key, operation].join(':')
   end
 
   def results : Array(T)

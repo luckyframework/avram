@@ -32,7 +32,7 @@ end
 class PostQuery < Post::BaseQuery
 end
 
-class UserQuery
+class CachedUserQuery < User::BaseQuery
   class_property query_counter : Int32 = 0
 
   private def exec_query
@@ -43,7 +43,7 @@ end
 
 describe Avram::Queryable do
   Spec.before_each do
-    UserQuery.query_counter = 0
+    CachedUserQuery.query_counter = 0
   end
 
   it "can chain scope methods" do
@@ -1620,14 +1620,48 @@ describe Avram::Queryable do
       Fiber.current.query_cache = LuckyCache::MemoryStore.new
       Avram.temp_config(query_cache_enabled: true) do
         UserFactory.create &.name("Amy")
-        UserQuery.query_counter.should eq(0)
+        CachedUserQuery.query_counter.should eq(0)
 
-        UserQuery.new.name("Amy").first
-        UserQuery.new.name("Amy").first
-        user = UserQuery.new.name("Amy").first
+        CachedUserQuery.new.name("Amy").first
+        CachedUserQuery.new.name("Amy").first
+        user = CachedUserQuery.new.name("Amy").first
 
-        UserQuery.query_counter.should eq(1)
+        CachedUserQuery.query_counter.should eq(1)
         user.name.should eq("Amy")
+      end
+    end
+
+    it "uses the correct cache_key for .any?" do
+      Fiber.current.query_cache = LuckyCache::MemoryStore.new
+      Avram.temp_config(query_cache_enabled: true) do
+        UserFactory.create &.name("Amy")
+
+        query = CachedUserQuery.new.name("Amy")
+        store = query.cache_store.as(LuckyCache::MemoryStore)
+        # TODO: https://github.com/luckyframework/lucky_cache/issues/7
+        store.@cache.size.should eq(0)
+        query.any?.should eq(true) # ameba:disable Performance/AnyInsteadOfEmpty
+        query.results.size.should eq(1)
+        query.any?.should eq(true) # ameba:disable Performance/AnyInsteadOfEmpty
+
+        store.@cache.size.should eq(2)
+      end
+    end
+
+    it "uses the correct cache_key for .select_count" do
+      Fiber.current.query_cache = LuckyCache::MemoryStore.new
+      Avram.temp_config(query_cache_enabled: true) do
+        UserFactory.create &.name("Amy")
+
+        query = CachedUserQuery.new
+        store = query.cache_store.as(LuckyCache::MemoryStore)
+        # TODO: https://github.com/luckyframework/lucky_cache/issues/7
+        store.@cache.size.should eq(0)
+        query.select_count.should eq(1)
+        query.results.size.should eq(1)
+        query.select_count.should eq(1)
+
+        store.@cache.size.should eq(2)
       end
     end
   end
