@@ -30,6 +30,12 @@ module Avram
     end
   end
 
+  class MissingRequiredAssociationError < AvramError
+    def initialize(model : Avram::Model.class, association : Avram::Model.class)
+      super "Expected #{model} to have an association with #{association} but one was not found."
+    end
+  end
+
   # Raised when a validation is expecting an impossible constraint
   class ImpossibleValidation < AvramError
     def initialize(attribute : Symbol, message = "an impossible validation")

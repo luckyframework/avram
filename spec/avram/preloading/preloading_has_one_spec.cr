@@ -57,11 +57,12 @@ describe "Preloading has_one associations" do
   end
 
   it "does not fail when getting results multiple times" do
-    AdminFactory.create
+    admin = AdminFactory.create
+    SignInCredentialFactory.create &.user_id(admin.id)
 
-    admin = Admin::BaseQuery.new.preload_sign_in_credential
+    admin_query = Admin::BaseQuery.new.preload_sign_in_credential
 
-    2.times { admin.results }
+    2.times { admin_query.results }
   end
 
   it "lazy loads if nothing is preloaded" do
@@ -77,6 +78,12 @@ describe "Preloading has_one associations" do
     admin.results
 
     SignInCredential::BaseQuery.times_called.should eq 0
+  end
+
+  it "raises error if association not nilable but no record found" do
+    AdminFactory.create
+
+    expect_raises(Avram::MissingRequiredAssociationError) { Admin::BaseQuery.new.preload_sign_in_credential.results }
   end
 
   context "with existing record" do
