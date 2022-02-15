@@ -24,7 +24,7 @@ module Avram::Associations::BelongsTo
 
     define_belongs_to_private_assoc_getter({{ assoc_name }}, {{ model }}, {{ foreign_key.id }}, {{ nilable }})
     Avram::Associations.__define_public_preloaded_getters({{ assoc_name }}, {{ model }}, {{ nilable }})
-    Avram::Associations.__define_preloaded_setter({{ assoc_name }}, {{ model }})
+    Avram::Associations.__define_preloaded_setter({{ assoc_name }}, {{ model }}, {{ nilable }})
     define_belongs_to_base_query({{ assoc_name }}, {{ model }}, {{ foreign_key.id }})
   end
 
