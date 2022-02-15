@@ -97,7 +97,7 @@ describe "Preloading belongs_to associations" do
 
   it "raises error if association not nilable but no record found" do
     post = PostFactory.create &.title("Title A")
-    comment = CommentFactory.create &.post_id(post.id)
+    CommentFactory.create &.post_id(post.id)
 
     expect_raises(Avram::MissingRequiredAssociationError) do
       Comment::BaseQuery.new.preload_post(Post::BaseQuery.new.title("Title B")).results

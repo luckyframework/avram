@@ -81,7 +81,7 @@ describe "Preloading has_one associations" do
   end
 
   it "raises error if association not nilable but no record found" do
-    admin = AdminFactory.create
+    AdminFactory.create
 
     expect_raises(Avram::MissingRequiredAssociationError) { Admin::BaseQuery.new.preload_sign_in_credential.results }
   end
