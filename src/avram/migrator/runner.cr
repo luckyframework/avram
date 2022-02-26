@@ -103,7 +103,9 @@ class Avram::Migrator::Runner
   end
 
   def self.setup_migration_tracking_tables
-    Avram.settings.database_to_migrate.exec create_table_for_tracking_migrations
+    db = Avram.settings.database_to_migrate
+    db.exec create_table_for_tracking_migrations
+    db.exec create_unique_index_for_migrations
   end
 
   private def self.create_table_for_tracking_migrations
@@ -112,6 +114,13 @@ class Avram::Migrator::Runner
       id bigserial PRIMARY KEY,
       version bigint NOT NULL
     )
+    SQL
+  end
+
+  private def self.create_unique_index_for_migrations
+    <<-SQL
+    CREATE UNIQUE INDEX IF NOT EXISTS migrations_version_index
+    ON #{MIGRATIONS_TABLE_NAME} (version)
     SQL
   end
 
