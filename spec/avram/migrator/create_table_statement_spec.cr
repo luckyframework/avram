@@ -29,8 +29,8 @@ describe Avram::Migrator::CreateTableStatement do
     built.statements.first.should eq <<-SQL
     CREATE TABLE users (
       id serial PRIMARY KEY,
-      created_at timestamptz NOT NULL,
-      updated_at timestamptz NOT NULL,
+      created_at timestamptz NOT NULL DEFAULT NOW(),
+      updated_at timestamptz NOT NULL DEFAULT NOW(),
       name text NOT NULL,
       age int NOT NULL,
       completed boolean NOT NULL,
