@@ -34,14 +34,6 @@ describe Avram::Slugify do
 
         op.slug.value.should eq("software-developer")
       end
-
-      it "it sets slug from a single string" do
-        op = build_op
-
-        slugify(op.slug, "Software Developer")
-
-        op.slug.value.should eq("software-developer")
-      end
     end
 
     describe "with an array of slug candidates" do
@@ -121,6 +113,40 @@ describe Avram::Slugify do
       op = build_op(title: "The Boss")
       slugify(op.slug, op.title, ArticleQuery.new.title("A"))
       op.slug.value.to_s.should start_with("the-boss-") # Has UUID appended
+    end
+  end
+
+  describe ".generate" do
+    it "skips blank slug candidates" do
+      slug = Avram::Slugify.generate(["", "Software Developer"])
+
+      slug.should eq("software-developer")
+    end
+
+    describe "with a single slug candidate" do
+      it "sets slug from a single attribute" do
+        op = build_op(title: "Software Developer")
+        slug = Avram::Slugify.generate(op.title)
+
+        slug.should eq("software-developer")
+      end
+
+      it "sets slug from a single string" do
+        slug = Avram::Slugify.generate("Software Developer")
+
+        slug.should eq("software-developer")
+      end
+    end
+
+    describe "with an array of slug candidates" do
+      it "sets when using multiple attributes" do
+        op = build_op(title: "How Do Magnets Work?", sub_heading: "And Why?")
+
+        slugify(op.slug, [[op.title, op.sub_heading]])
+        slug = Avram::Slugify.generate([[op.title, op.sub_heading]])
+
+        slug.should eq("how-do-magnets-work-and-why")
+      end
     end
   end
 end

@@ -23,6 +23,23 @@
 #   end
 # end
 # ```
+#
+# The `set` method will use `query` to determine if that `slug` has already
+# been used, and fall back to appending a random UUID to the end. If the `slug`
+# value has already been set, then no new slug will be generated. If you just need
+# the value to set on your own, you can use the `generate` method as an escape hatch.
+# It will be up to you to ensure it's unique.
+#
+# ```
+# class SaveArticle < Article::SaveOperation
+#   before_save do
+#     if title.changed?
+#       slug.value = Avram::Slugify.generate(using: title)
+#       validate_uniqueness_of slug, query: ArticleQuery.new.slug
+#     end
+#   end
+# end
+# ```
 module Avram::Slugify
   extend self
 
@@ -36,9 +53,7 @@ module Avram::Slugify
           using slug_candidates : Array(String | Avram::Attribute(String) | Array(Avram::Attribute(String))),
           query : Avram::Queryable) : Nil
     if slug.value.blank?
-      slug_candidates = slug_candidates.map do |candidate|
-        parameterize(candidate)
-      end.reject(&.blank?)
+      slug_candidates = format_candidates(slug_candidates)
 
       slug_candidates.find { |candidate| query.where(slug.name, candidate).none? }
         .tap { |candidate| slug.value = candidate }
@@ -47,6 +62,22 @@ module Avram::Slugify
     if slug.value.blank? && (candidate = slug_candidates.first?)
       slug.value = "#{candidate}-#{UUID.random}"
     end
+  end
+
+  def generate(using slug_candidate : Avram::Attribute(String) | String) : String
+    generate([slug_candidate])
+  end
+
+  def generate(using slug_candidates : Array(String | Avram::Attribute(String) | Array(Avram::Attribute(String)))) : String
+    slug_candidates = format_candidates(slug_candidates)
+
+    slug_candidates.first? || UUID.random.to_s
+  end
+
+  private def format_candidates(slug_candidates : Array(String | Avram::Attribute(String) | Array(Avram::Attribute(String)))) : Array(String)
+    slug_candidates.map do |candidate|
+      parameterize(candidate)
+    end.reject(&.blank?)
   end
 
   private def parameterize(value : String) : String
