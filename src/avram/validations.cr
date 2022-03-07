@@ -145,6 +145,43 @@ module Avram::Validations
     no_errors
   end
 
+  def validate_inclusion_of(
+    attribute : Avram::Attribute(T),
+    in allowed_values : Range(T, T),
+    message : Avram::Attribute::ErrorMessage = Avram.settings.i18n_backend.get(:validate_inclusion_of)
+  ) : Bool forall T
+    no_errors = true
+    if value = attribute.value
+      if !allowed_values.includes?(value)
+        attribute.add_error(message)
+        no_errors = false
+      end
+    else
+      attribute.add_error(message)
+      no_errors = false
+    end
+
+    no_errors
+  end
+
+  def validate_inclusion_of(
+    attribute : Avram::Attribute(T),
+    in allowed_values : Range(T, T),
+    allow_nil : Bool,
+    message : Avram::Attribute::ErrorMessage = Avram.settings.i18n_backend.get(:validate_inclusion_of)
+  ) : Bool forall T
+    {%
+      raise <<-ERROR
+      Ranges do not support `nil`.
+      If you need to allow nil values, call `validate_inclusion_of` with an Array instead.
+
+      Try this...
+
+        ▸ validate_inclusion_of attr, in: [1, 2, 3], allow_nil: true
+      ERROR
+    %}
+  end
+
   # Validates that the attribute value is in a list of allowed values
   #
   # ```
