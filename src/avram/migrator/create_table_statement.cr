@@ -82,8 +82,8 @@ class Avram::Migrator::CreateTableStatement
   end
 
   macro add_timestamps
-    add created_at : Time
-    add updated_at : Time
+    add created_at : Time, default: :now
+    add updated_at : Time, default: :now
   end
 
   macro add(type_declaration, default = nil, index = false, unique = false, using = :btree, **type_options)
