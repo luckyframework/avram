@@ -118,7 +118,8 @@ describe Avram::Slugify do
 
   describe ".generate" do
     it "skips blank slug candidates" do
-      slug = Avram::Slugify.generate(["", "Software Developer"])
+      op = build_op(title: "Software Developer")
+      slug = Avram::Slugify.generate(op.slug, ["", "Software Developer"], ArticleQuery.new)
 
       slug.should eq("software-developer")
     end
@@ -126,13 +127,14 @@ describe Avram::Slugify do
     describe "with a single slug candidate" do
       it "sets slug from a single attribute" do
         op = build_op(title: "Software Developer")
-        slug = Avram::Slugify.generate(op.title)
+        slug = Avram::Slugify.generate(op.slug, op.title, ArticleQuery.new)
 
         slug.should eq("software-developer")
       end
 
       it "sets slug from a single string" do
-        slug = Avram::Slugify.generate("Software Developer")
+        op = build_op(title: "Software Developer")
+        slug = Avram::Slugify.generate(op.slug, "Software Developer", ArticleQuery.new)
 
         slug.should eq("software-developer")
       end
@@ -142,8 +144,7 @@ describe Avram::Slugify do
       it "sets when using multiple attributes" do
         op = build_op(title: "How Do Magnets Work?", sub_heading: "And Why?")
 
-        slugify(op.slug, [[op.title, op.sub_heading]])
-        slug = Avram::Slugify.generate([[op.title, op.sub_heading]])
+        slug = Avram::Slugify.generate(op.slug, [[op.title, op.sub_heading]], ArticleQuery.new)
 
         slug.should eq("how-do-magnets-work-and-why")
       end

@@ -53,25 +53,32 @@ module Avram::Slugify
           using slug_candidates : Array(String | Avram::Attribute(String) | Array(Avram::Attribute(String))),
           query : Avram::Queryable) : Nil
     if slug.value.blank?
-      slug_candidates = format_candidates(slug_candidates)
-
-      slug_candidates.find { |candidate| query.where(slug.name, candidate).none? }
-        .tap { |candidate| slug.value = candidate }
-    end
-
-    if slug.value.blank? && (candidate = slug_candidates.first?)
-      slug.value = "#{candidate}-#{UUID.random}"
+      slug.value = generate(slug, slug_candidates, query)
     end
   end
 
-  def generate(using slug_candidate : Avram::Attribute(String) | String) : String
-    generate([slug_candidate])
+  def generate(slug : Avram::Attribute(String),
+               using slug_candidate : Avram::Attribute(String) | String,
+               query : Avram::Queryable) : String?
+    generate(slug, [slug_candidate], query)
   end
 
-  def generate(using slug_candidates : Array(String | Avram::Attribute(String) | Array(Avram::Attribute(String)))) : String
+  def generate(slug : Avram::Attribute(String),
+               using slug_candidates : Array(String | Avram::Attribute(String) | Array(Avram::Attribute(String))),
+               query : Avram::Queryable) : String?
     slug_candidates = format_candidates(slug_candidates)
 
-    slug_candidates.first? || UUID.random.to_s
+    result = slug_candidates.find { |candidate|
+      query.where(slug.name, candidate).none?
+    }
+
+    if result.nil?
+      if candidate = slug_candidates.first?
+        "#{candidate}-#{UUID.random}"
+      end
+    else
+      result
+    end
   end
 
   private def format_candidates(slug_candidates : Array(String | Avram::Attribute(String) | Array(Avram::Attribute(String)))) : Array(String)
