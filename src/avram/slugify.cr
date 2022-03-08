@@ -72,12 +72,10 @@ module Avram::Slugify
       query.where(slug.name, candidate).none?
     }
 
-    if result.nil?
-      if candidate = slug_candidates.first?
-        "#{candidate}-#{UUID.random}"
-      end
-    else
+    if result
       result
+    elsif candidate = slug_candidates.first?
+      "#{candidate}-#{UUID.random}"
     end
   end
 
