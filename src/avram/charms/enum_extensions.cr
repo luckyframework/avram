@@ -7,7 +7,7 @@ abstract struct Enum
 
   module Lucky(T)
     include Avram::Type
-    alias ColumnType = Int32
+    alias ColumnType = Int32 | Int64
 
     def parse(value : String)
       is_int = value.to_i?
@@ -20,7 +20,7 @@ abstract struct Enum
       end
     end
 
-    def parse(value : Int32)
+    def parse(value : Int32 | Int64)
       if result = T.from_value?(value)
         SuccessfulCast.new(result)
       else
