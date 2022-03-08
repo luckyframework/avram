@@ -13,7 +13,7 @@
 <script type="text/javascript" src="../js/doc.js"></script>
 
   <meta name="repository-name" content="avram">
-  <title>Avram::InvalidOperationError - avram main</title>
+  <title>Avram::InvalidOperationError(T) - avram main</title>
   <script type="text/javascript">
     CrystalDocs.base_path = "../";
   </script>
@@ -321,7 +321,7 @@
       
     </li>
   
-  <li class=" current" data-id="avram/Avram/InvalidOperationError" data-name="avram::invalidoperationerror">
+  <li class=" current" data-id="avram/Avram/InvalidOperationError" data-name="avram::invalidoperationerror(t)">
       <a href="../Avram/InvalidOperationError.html">InvalidOperationError</a>
       
     </li>
@@ -1575,12 +1575,12 @@
 <div class="main-content">
 <h1 class="type-name">
 
-  <span class="kind">class</span> Avram::InvalidOperationError
+  <span class="kind">class</span> Avram::InvalidOperationError(T)
 
 </h1>
 
 
-  <ul class="superclass-hierarchy"><li class="superclass"><a href="../Avram/InvalidOperationError.html">Avram::InvalidOperationError</a></li><li class="superclass"><a href="../Avram/AvramError.html">Avram::AvramError</a></li><li class="superclass">Exception</li><li class="superclass">Reference</li><li class="superclass"><a href="../Object.html">Object</a></li></ul>
+  <ul class="superclass-hierarchy"><li class="superclass"><a href="../Avram/InvalidOperationError.html">Avram::InvalidOperationError(T)</a></li><li class="superclass"><a href="../Avram/AvramError.html">Avram::AvramError</a></li><li class="superclass">Exception</li><li class="superclass">Reference</li><li class="superclass"><a href="../Object.html">Object</a></li></ul>
 
 
 
@@ -1619,7 +1619,7 @@
   </h2>
   
     
-      <a href="https://github.com/luckyframework/avram/blob/60108b570fee5128e0f47f3d12c49d48007c3eb8/src/avram/errors.cr#L47" target="_blank">
+      <a href="https://github.com/luckyframework/avram/blob/c798fbbda4cd9bd40ad9800022b4c6203e6f4fe7/src/avram/errors.cr#L59" target="_blank">
         avram/errors.cr
       </a>
     
@@ -1641,7 +1641,7 @@
   <ul class="list-summary">
     
       <li class="entry-summary">
-        <a href="#new%28operation%29-class-method" class="signature"><strong>.new</strong>(operation)</a>
+        <a href="#new%28operation%3AT%29-class-method" class="signature"><strong>.new</strong>(operation : T)</a>
         
       </li>
     
@@ -1663,6 +1663,11 @@
     
       <li class="entry-summary">
         <a href="#errors%3AHash%28Symbol%2CArray%28String%29%29-instance-method" class="signature"><strong>#errors</strong> : Hash(Symbol, Array(String))</a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#operation-instance-method" class="signature"><strong>#operation</strong></a>
         
       </li>
     
@@ -1745,18 +1750,18 @@
     Constructor Detail
   </h2>
   
-    <div class="entry-detail" id="new(operation)-class-method">
+    <div class="entry-detail" id="new(operation:T)-class-method">
       <div class="signature">
         
-        def self.<strong>new</strong>(operation)
+        def self.<strong>new</strong>(operation : T)
 
-        <a class="method-permalink" href="#new%28operation%29-class-method">#</a>
+        <a class="method-permalink" href="#new%28operation%3AT%29-class-method">#</a>
       </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/60108b570fee5128e0f47f3d12c49d48007c3eb8/src/avram/errors.cr#L50" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/c798fbbda4cd9bd40ad9800022b4c6203e6f4fe7/src/avram/errors.cr#L63" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1786,7 +1791,23 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/60108b570fee5128e0f47f3d12c49d48007c3eb8/src/avram/errors.cr#L48" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/c798fbbda4cd9bd40ad9800022b4c6203e6f4fe7/src/avram/errors.cr#L61" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="operation-instance-method">
+      <div class="signature">
+        
+        def <strong>operation</strong>
+
+        <a class="method-permalink" href="#operation-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/luckyframework/avram/blob/c798fbbda4cd9bd40ad9800022b4c6203e6f4fe7/src/avram/errors.cr#L60" target="_blank">View source</a>]
         
       </div>
     </div>
