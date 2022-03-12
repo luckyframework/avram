@@ -1460,7 +1460,7 @@ describe Avram::Queryable do
       posts = Post::BaseQuery.new.published_at.between(start_date, end_date)
 
       posts.query.statement.should eq "SELECT posts.custom_id, posts.created_at, posts.updated_at, posts.title, posts.published_at FROM posts WHERE posts.published_at >= $1 AND posts.published_at <= $2"
-      posts.query.args.should eq [start_date.to_s("%Y-%m-%d %H:%M:%S %:z"), end_date.to_s("%Y-%m-%d %H:%M:%S %:z")]
+      posts.query.args.should eq [start_date.to_s("%Y-%m-%d %H:%M:%S.%6N %z"), end_date.to_s("%Y-%m-%d %H:%M:%S.%6N %z")]
       posts.first.should eq post
     end
 
@@ -1576,7 +1576,7 @@ describe Avram::Queryable do
         .available_for_hire(true)
         .created_at(a_day)
 
-      query.to_prepared_sql.should eq(%{SELECT users.id, users.created_at, users.updated_at, users.name, users.age, users.year_born, users.nickname, users.joined_at, users.total_score, users.average_score, users.available_for_hire FROM users WHERE users.name = 'Don' AND users.age > '21' AND users.age < '99' AND users.nickname ILIKE 'j%' AND users.nickname ILIKE '%y' AND users.joined_at > '#{a_week}' AND users.joined_at < '#{an_hour}' AND users.average_score > '1.2' AND users.average_score < '4.9' AND users.available_for_hire = 'true' AND users.created_at = '#{a_day}'})
+      query.to_prepared_sql.should eq(%{SELECT users.id, users.created_at, users.updated_at, users.name, users.age, users.year_born, users.nickname, users.joined_at, users.total_score, users.average_score, users.available_for_hire FROM users WHERE users.name = 'Don' AND users.age > '21' AND users.age < '99' AND users.nickname ILIKE 'j%' AND users.nickname ILIKE '%y' AND users.joined_at > '#{a_week.to_s("%F %X.%6N %z")}' AND users.joined_at < '#{an_hour.to_s("%F %X.%6N %z")}' AND users.average_score > '1.2' AND users.average_score < '4.9' AND users.available_for_hire = 'true' AND users.created_at = '#{a_day.to_s("%F %X.%6N %z")}'})
     end
   end
 

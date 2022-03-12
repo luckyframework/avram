@@ -72,7 +72,7 @@ struct Time
     end
 
     def to_db(value : Time)
-      value.to_s
+      value.to_s("%F %X.%6N %z")
     end
 
     class Criteria(T, V) < Avram::Criteria(T, V)
