@@ -23,6 +23,25 @@
 #   end
 # end
 # ```
+#
+# The `set` method will use `query` to determine if that `slug` has already
+# been used, and fall back to appending a random UUID to the end. If the `slug`
+# value has already been set, then no new slug will be generated. If you just need
+# the value to set on your own, you can use the `generate` method as an escape hatch.
+# This method returns the String value used in the `set` method.
+#
+# ```
+# class SaveArticle < Article::SaveOperation
+#   before_save do
+#     if title.changed?
+#       slug_value = Avram::Slugify.generate(slug,
+#         using: title,
+#         query: ArticleQuery.new)
+#       slug.value = slug_value
+#     end
+#   end
+# end
+# ```
 module Avram::Slugify
   extend self
 
@@ -36,17 +55,36 @@ module Avram::Slugify
           using slug_candidates : Array(String | Avram::Attribute(String) | Array(Avram::Attribute(String))),
           query : Avram::Queryable) : Nil
     if slug.value.blank?
-      slug_candidates = slug_candidates.map do |candidate|
-        parameterize(candidate)
-      end.reject(&.blank?)
-
-      slug_candidates.find { |candidate| query.where(slug.name, candidate).none? }
-        .tap { |candidate| slug.value = candidate }
+      slug.value = generate(slug, slug_candidates, query)
     end
+  end
 
-    if slug.value.blank? && (candidate = slug_candidates.first?)
-      slug.value = "#{candidate}-#{UUID.random}"
+  def generate(slug : Avram::Attribute(String),
+               using slug_candidate : Avram::Attribute(String) | String,
+               query : Avram::Queryable) : String?
+    generate(slug, [slug_candidate], query)
+  end
+
+  def generate(slug : Avram::Attribute(String),
+               using slug_candidates : Array(String | Avram::Attribute(String) | Array(Avram::Attribute(String))),
+               query : Avram::Queryable) : String?
+    slug_candidates = format_candidates(slug_candidates)
+
+    result = slug_candidates.find { |candidate|
+      query.where(slug.name, candidate).none?
+    }
+
+    if result
+      result
+    elsif candidate = slug_candidates.first?
+      "#{candidate}-#{UUID.random}"
     end
+  end
+
+  private def format_candidates(slug_candidates : Array(String | Avram::Attribute(String) | Array(Avram::Attribute(String)))) : Array(String)
+    slug_candidates.map do |candidate|
+      parameterize(candidate)
+    end.reject(&.blank?)
   end
 
   private def parameterize(value : String) : String
