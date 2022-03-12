@@ -28,14 +28,16 @@
 # been used, and fall back to appending a random UUID to the end. If the `slug`
 # value has already been set, then no new slug will be generated. If you just need
 # the value to set on your own, you can use the `generate` method as an escape hatch.
-# It will be up to you to ensure it's unique.
+# This method returns the String value used in the `set` method.
 #
 # ```
 # class SaveArticle < Article::SaveOperation
 #   before_save do
 #     if title.changed?
-#       slug.value = Avram::Slugify.generate(using: title)
-#       validate_uniqueness_of slug, query: ArticleQuery.new.slug
+#       slug_value = Avram::Slugify.generate(slug,
+#         using: title,
+#         query: ArticleQuery.new)
+#       slug.value = slug_value
 #     end
 #   end
 # end
