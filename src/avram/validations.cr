@@ -145,28 +145,6 @@ module Avram::Validations
     no_errors
   end
 
-  def validate_inclusion_of(
-    attribute : Avram::Attribute(T),
-    in allowed_values : Range(T, T),
-    message : Avram::Attribute::ErrorMessage = Avram.settings.i18n_backend.get(:validate_inclusion_of),
-    allow_nil : Bool = false
-  ) : Bool forall T
-    no_errors = true
-    if value = attribute.value
-      if !allowed_values.includes?(value)
-        attribute.add_error(message)
-        no_errors = false
-      end
-    else
-      if !allow_nil
-        attribute.add_error(message)
-        no_errors = false
-      end
-    end
-
-    no_errors
-  end
-
   # Validates that the attribute value is in a list of allowed values
   #
   # ```
@@ -181,8 +159,13 @@ module Avram::Validations
     allow_nil : Bool = false
   ) : Bool forall T
     no_errors = true
-    if !allowed_values.includes?(attribute.value)
-      if !(allow_nil && attribute.value.nil?)
+    if value = attribute.value
+      if !allowed_values.includes?(value)
+        attribute.add_error(message)
+        no_errors = false
+      end
+    else
+      if !allow_nil
         attribute.add_error(message)
         no_errors = false
       end
