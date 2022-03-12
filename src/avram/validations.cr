@@ -159,8 +159,13 @@ module Avram::Validations
     allow_nil : Bool = false
   ) : Bool forall T
     no_errors = true
-    if !allowed_values.includes?(attribute.value)
-      if !(allow_nil && attribute.value.nil?)
+    if value = attribute.value
+      if !allowed_values.includes?(value)
+        attribute.add_error(message)
+        no_errors = false
+      end
+    else
+      if !allow_nil
         attribute.add_error(message)
         no_errors = false
       end

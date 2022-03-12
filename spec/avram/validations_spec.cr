@@ -260,6 +260,11 @@ describe Avram::Validations do
       result.should eq(true)
       allowed_name.valid?.should be_true
 
+      allowed_number = attribute(4)
+      result = Avram::Validations.validate_inclusion_of(allowed_number, in: 0..5)
+      result.should eq(true)
+      allowed_number.valid?.should eq(true)
+
       forbidden_name = attribute("123123123")
       result = Avram::Validations.validate_inclusion_of(forbidden_name, in: ["Jamie"])
       result.should eq(false)
