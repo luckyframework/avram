@@ -1612,6 +1612,21 @@ that will be passed through the URL instead of an <code>id</code>.</p>
       query: <span class="t">ArticleQuery</span>.<span class="k">new</span>
   <span class="k">end</span>
 <span class="k">end</span></code></pre>
+<p>The <code><a href="../Avram/Slugify.html#set%28slug%3AAvram%3A%3AAttribute%28String%29%2Cusingslug_candidate%3AAvram%3A%3AAttribute%28String%29%7CString%2Cquery%3AAvram%3A%3AQueryable%29%3ANil-instance-method">#set</a></code> method will use <code>query</code> to determine if that <code>slug</code> has already
+been used, and fall back to appending a random UUID to the end. If the <code>slug</code>
+value has already been set, then no new slug will be generated. If you just need
+the value to set on your own, you can use the <code><a href="../Avram/Slugify.html#generate%28slug%3AAvram%3A%3AAttribute%28String%29%2Cusingslug_candidate%3AAvram%3A%3AAttribute%28String%29%7CString%2Cquery%3AAvram%3A%3AQueryable%29%3AString%3F-instance-method">#generate</a></code> method as an escape hatch.
+This method returns the String value used in the <code><a href="../Avram/Slugify.html#set%28slug%3AAvram%3A%3AAttribute%28String%29%2Cusingslug_candidate%3AAvram%3A%3AAttribute%28String%29%7CString%2Cquery%3AAvram%3A%3AQueryable%29%3ANil-instance-method">#set</a></code> method.</p>
+<pre><code class="language-crystal"><span class="k">class</span> <span class="t">SaveArticle</span> <span class="o">&lt;</span> <span class="t">Article</span><span class="t">::</span><span class="t">SaveOperation</span>
+  before_save <span class="k">do</span>
+    <span class="k">if</span> title.changed?
+      slug_value <span class="o">=</span> <span class="t">Avram</span><span class="t">::</span><span class="t">Slugify</span>.generate(slug,
+        using: title,
+        query: <span class="t">ArticleQuery</span>.<span class="k">new</span>)
+      slug.value <span class="o">=</span> slug_value
+    <span class="k">end</span>
+  <span class="k">end</span>
+<span class="k">end</span></code></pre>
 
 
 
@@ -1650,7 +1665,7 @@ that will be passed through the URL instead of an <code>id</code>.</p>
   </h2>
   
     
-      <a href="https://github.com/luckyframework/avram/blob/c798fbbda4cd9bd40ad9800022b4c6203e6f4fe7/src/avram/slugify.cr#L26" target="_blank">
+      <a href="https://github.com/luckyframework/avram/blob/6fd5479fa4c9ddeedac31d9776d6fcd533bb36e8/src/avram/slugify.cr#L45" target="_blank">
         avram/slugify.cr
       </a>
     
@@ -1674,6 +1689,16 @@ that will be passed through the URL instead of an <code>id</code>.</p>
     Instance Method Summary
   </h2>
   <ul class="list-summary">
+    
+      <li class="entry-summary">
+        <a href="#generate%28slug%3AAvram%3A%3AAttribute%28String%29%2Cusingslug_candidate%3AAvram%3A%3AAttribute%28String%29%7CString%2Cquery%3AAvram%3A%3AQueryable%29%3AString%3F-instance-method" class="signature"><strong>#generate</strong>(slug : Avram::Attribute(String), using slug_candidate : Avram::Attribute(String) | String, query : Avram::Queryable) : String?</a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#generate%28slug%3AAvram%3A%3AAttribute%28String%29%2Cusingslug_candidates%3AArray%28String%7CAvram%3A%3AAttribute%28String%29%7CArray%28Avram%3A%3AAttribute%28String%29%29%29%2Cquery%3AAvram%3A%3AQueryable%29%3AString%3F-instance-method" class="signature"><strong>#generate</strong>(slug : Avram::Attribute(String), using slug_candidates : Array(String | Avram::Attribute(String) | Array(Avram::Attribute(String))), query : Avram::Queryable) : String?</a>
+        
+      </li>
     
       <li class="entry-summary">
         <a href="#set%28slug%3AAvram%3A%3AAttribute%28String%29%2Cusingslug_candidate%3AAvram%3A%3AAttribute%28String%29%7CString%2Cquery%3AAvram%3A%3AQueryable%29%3ANil-instance-method" class="signature"><strong>#set</strong>(slug : Avram::Attribute(String), using slug_candidate : Avram::Attribute(String) | String, query : Avram::Queryable) : Nil</a>
@@ -1709,6 +1734,38 @@ that will be passed through the URL instead of an <code>id</code>.</p>
     Instance Method Detail
   </h2>
   
+    <div class="entry-detail" id="generate(slug:Avram::Attribute(String),usingslug_candidate:Avram::Attribute(String)|String,query:Avram::Queryable):String?-instance-method">
+      <div class="signature">
+        
+        def <strong>generate</strong>(slug : <a href="../Avram/Attribute.html">Avram::Attribute</a>(<a href="../String.html">String</a>), using slug_candidate : <a href="../Avram/Attribute.html">Avram::Attribute</a>(<a href="../String.html">String</a>) | <a href="../String.html">String</a>, query : <a href="../Avram/Queryable.html">Avram::Queryable</a>) : <a href="../String.html">String</a>?
+
+        <a class="method-permalink" href="#generate%28slug%3AAvram%3A%3AAttribute%28String%29%2Cusingslug_candidate%3AAvram%3A%3AAttribute%28String%29%7CString%2Cquery%3AAvram%3A%3AQueryable%29%3AString%3F-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/luckyframework/avram/blob/6fd5479fa4c9ddeedac31d9776d6fcd533bb36e8/src/avram/slugify.cr#L62" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="generate(slug:Avram::Attribute(String),usingslug_candidates:Array(String|Avram::Attribute(String)|Array(Avram::Attribute(String))),query:Avram::Queryable):String?-instance-method">
+      <div class="signature">
+        
+        def <strong>generate</strong>(slug : <a href="../Avram/Attribute.html">Avram::Attribute</a>(<a href="../String.html">String</a>), using slug_candidates : <a href="../Array.html">Array</a>(<a href="../String.html">String</a> | <a href="../Avram/Attribute.html">Avram::Attribute</a>(<a href="../String.html">String</a>) | <a href="../Array.html">Array</a>(<a href="../Avram/Attribute.html">Avram::Attribute</a>(<a href="../String.html">String</a>))), query : <a href="../Avram/Queryable.html">Avram::Queryable</a>) : <a href="../String.html">String</a>?
+
+        <a class="method-permalink" href="#generate%28slug%3AAvram%3A%3AAttribute%28String%29%2Cusingslug_candidates%3AArray%28String%7CAvram%3A%3AAttribute%28String%29%7CArray%28Avram%3A%3AAttribute%28String%29%29%29%2Cquery%3AAvram%3A%3AQueryable%29%3AString%3F-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/luckyframework/avram/blob/6fd5479fa4c9ddeedac31d9776d6fcd533bb36e8/src/avram/slugify.cr#L68" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
     <div class="entry-detail" id="set(slug:Avram::Attribute(String),usingslug_candidate:Avram::Attribute(String)|String,query:Avram::Queryable):Nil-instance-method">
       <div class="signature">
         
@@ -1720,7 +1777,7 @@ that will be passed through the URL instead of an <code>id</code>.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/c798fbbda4cd9bd40ad9800022b4c6203e6f4fe7/src/avram/slugify.cr#L29" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/6fd5479fa4c9ddeedac31d9776d6fcd533bb36e8/src/avram/slugify.cr#L48" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1736,7 +1793,7 @@ that will be passed through the URL instead of an <code>id</code>.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/c798fbbda4cd9bd40ad9800022b4c6203e6f4fe7/src/avram/slugify.cr#L35" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/6fd5479fa4c9ddeedac31d9776d6fcd533bb36e8/src/avram/slugify.cr#L54" target="_blank">View source</a>]
         
       </div>
     </div>
