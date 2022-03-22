@@ -18,6 +18,7 @@ struct Avram::I18n < Avram::I18nBackend
       validate_numeric_min:        "must be greater than %d",
       validate_numeric_nil:        "must not be nil",
       validate_required:           "is required",
+      validate_uniqueness_of:      "is already taken",
     }[key]
   end
 end
