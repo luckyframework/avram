@@ -301,7 +301,7 @@ module Avram::Validations
     attribute : Avram::Attribute(String),
     with regex : Regex,
     match : Bool = true,
-    message : Avram::Attribute::ErrorMessage = "is invalid",
+    message : Avram::Attribute::ErrorMessage = Avram.settings.i18n_backend.get(:validate_format_of),
     allow_nil : Bool = false
   ) : Bool
     unless allow_nil && attribute.value.nil?
