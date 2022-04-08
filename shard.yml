@@ -1,5 +1,5 @@
 name: avram
-version: 0.22.0
+version: 0.23.0
 
 crystal: ">= 1.0.0"
 
@@ -15,7 +15,7 @@ authors:
 dependencies:
   lucky_task:
     github: luckyframework/lucky_task
-    version: ~> 0.1.0
+    version: ~> 0.1.1
   pg:
     github: will/crystal-pg
     version: ~> 0.26.0
@@ -27,16 +27,16 @@ dependencies:
     version: ~> 0.3.0
   dexter:
     github: luckyframework/dexter
-    version: ~> 0.3.3
+    version: ~> 0.3.4
   shell-table:
     github: luckyframework/shell-table.cr
     version: ~> 0.9.3
   pulsar:
     github: luckyframework/pulsar
-    version: ~> 0.2.2
+    version: ~> 0.2.3
   lucky_cache:
     github: luckyframework/lucky_cache
-    version: ~> 0.1.0
+    version: ~> 0.1.1
   cadmium_transliterator:
     github: cadmiumcr/transliterator
     branch: master
