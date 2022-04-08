@@ -56,11 +56,10 @@ module Avram
   end
 
   # Raised when using the create!, update!, or delete! methods on an operation when it does not have the proper attributes
-  class InvalidOperationError(T) < AvramError
-    getter operation
+  class InvalidOperationError < AvramError
     getter errors : Hash(Symbol, Array(String))
 
-    def initialize(@operation : T)
+    def initialize(operation)
       message = String.build do |string|
         string << "Could not perform #{operation.class.name}."
         string << "\n"
