@@ -109,21 +109,6 @@ class Avram::BaseQueryTemplate
           assoc_query = yield {{ assoc[:type] }}::BaseQuery.new
           merge_query(assoc_query.query)
         end
-
-        def {{ assoc[:assoc_name] }}
-          \{% raise <<-ERROR
-            The methods for querying associations have changed
-
-              * They are now prefixed with 'where_'.
-              * The query is no longer yielded. You must pass it explicitly.
-
-            Example:
-
-              where_{{ assoc[:assoc_name] }}({{ assoc[:type] }}Query.new.some_condition)
-            ERROR
-          %}
-          yield # This is not used. Just there so it works with blocks.
-        end
       {% end %}
     end
   end

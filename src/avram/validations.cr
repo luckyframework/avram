@@ -159,8 +159,13 @@ module Avram::Validations
     allow_nil : Bool = false
   ) : Bool forall T
     no_errors = true
-    if !allowed_values.includes?(attribute.value)
-      if !(allow_nil && attribute.value.nil?)
+    if value = attribute.value
+      if !allowed_values.includes?(value)
+        attribute.add_error(message)
+        no_errors = false
+      end
+    else
+      if !allow_nil
         attribute.add_error(message)
         no_errors = false
       end
@@ -296,7 +301,7 @@ module Avram::Validations
     attribute : Avram::Attribute(String),
     with regex : Regex,
     match : Bool = true,
-    message : Avram::Attribute::ErrorMessage = "is invalid",
+    message : Avram::Attribute::ErrorMessage = Avram.settings.i18n_backend.get(:validate_format_of),
     allow_nil : Bool = false
   ) : Bool
     unless allow_nil && attribute.value.nil?

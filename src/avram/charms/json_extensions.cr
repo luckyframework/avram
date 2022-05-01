@@ -54,6 +54,15 @@ struct JSON::Any
       SuccessfulCast(JSON::Any).new value
     end
 
+    def parse(value : String)
+      value = begin
+        JSON.parse(value)
+      rescue JSON::ParseException
+        JSON.parse(value.to_json)
+      end
+      SuccessfulCast(JSON::Any).new value
+    end
+
     def parse(value)
       SuccessfulCast(JSON::Any).new JSON.parse(value.to_json)
     end

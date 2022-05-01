@@ -14,25 +14,43 @@ module Avram
   # Raised when trying to access a record that was not preloaded and lazy load
   # is disabled.
   class LazyLoadError < AvramError
-    def initialize(model : String, association : String)
+    getter model
+    getter association
+
+    def initialize(@model : String, @association : String)
       super "#{association} for #{model} must be preloaded with 'preload_#{association}'"
     end
   end
 
   # Raised when Avram cannot find a record by given id
   class RecordNotFoundError < AvramError
-    def initialize(model : TableName, id : String)
+    getter model
+    getter id = nil
+    getter query = nil
+
+    def initialize(@model : TableName, @id : String)
       super "Could not find #{model} with id of #{id}"
     end
 
-    def initialize(model : TableName, query : Symbol)
+    def initialize(@model : TableName, @query : Symbol)
       super "Could not find #{query} record in #{model}"
+    end
+  end
+
+  class MissingRequiredAssociationError < AvramError
+    getter model
+    getter association
+
+    def initialize(@model : Avram::Model.class, @association : Avram::Model.class)
+      super "Expected #{model} to have an association with #{association} but one was not found."
     end
   end
 
   # Raised when a validation is expecting an impossible constraint
   class ImpossibleValidation < AvramError
-    def initialize(attribute : Symbol, message = "an impossible validation")
+    getter attribute
+
+    def initialize(@attribute : Symbol, message = "an impossible validation")
       super "Validation for #{attribute} can never satisfy #{message}"
     end
   end
@@ -53,16 +71,6 @@ module Avram
       @errors = operation.errors
       super message
     end
-
-    def save_operation_errors
-      {% raise "Avram::InvalidSaveOperationError#save_operation_errors has been renamed to 'errors'" %}
-    end
-  end
-
-  class InvalidSaveOperationError
-    def initialize(*args, **named_args)
-      {% raise "#{@type} has been renamed to Avram::InvalidOperationError" %}
-    end
   end
 
   # Raised when an unimplemented or deprecated query is made.
@@ -75,7 +83,10 @@ module Avram
   class ConnectionError < AvramError
     DEFAULT_PG_PORT = 5432
 
-    def initialize(connection_details : URI, database_class : Avram::Database.class)
+    getter connection_details
+    getter database_class
+
+    def initialize(@connection_details : URI, @database_class : Avram::Database.class)
       error = String.build do |message|
         message << "#{database_class.name}: Failed to connect to database '#{connection_details.path.try(&.[1..-1])}' with username '#{connection_details.user}'.\n"
         message << "Try this..."
@@ -148,7 +159,10 @@ module Avram
   end
 
   class FailedMigration < AvramError
-    def initialize(@migration : String, statements : Array(String), cause : Exception)
+    getter migration
+    getter statements
+
+    def initialize(@migration : String, @statements : Array(String), cause : Exception)
       super(message(statements), cause)
     end
 

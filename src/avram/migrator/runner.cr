@@ -11,6 +11,7 @@ class Avram::Migrator::Runner
   class_getter migrations = [] of Avram::Migrator::Migration::V1.class
 
   def initialize(@quiet : Bool = false)
+    Avram::Log.dexter.configure(:none)
   end
 
   def self.db_name
@@ -35,10 +36,6 @@ class Avram::Migrator::Runner
 
   def self.credentials
     Avram.settings.database_to_migrate.credentials
-  end
-
-  def self.database_url
-    credentials.url
   end
 
   def self.cmd_args
@@ -106,9 +103,9 @@ class Avram::Migrator::Runner
   end
 
   def self.setup_migration_tracking_tables
-    DB.open(database_url) do |db|
-      db.exec create_table_for_tracking_migrations
-    end
+    db = Avram.settings.database_to_migrate
+    db.exec create_table_for_tracking_migrations
+    db.exec create_unique_index_for_migrations
   end
 
   private def self.create_table_for_tracking_migrations
@@ -117,6 +114,13 @@ class Avram::Migrator::Runner
       id bigserial PRIMARY KEY,
       version bigint NOT NULL
     )
+    SQL
+  end
+
+  private def self.create_unique_index_for_migrations
+    <<-SQL
+    CREATE UNIQUE INDEX IF NOT EXISTS migrations_version_index
+    ON #{MIGRATIONS_TABLE_NAME} (version)
     SQL
   end
 

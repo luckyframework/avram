@@ -23,9 +23,9 @@ Db::Create.new(quiet: true).run_task
 Db::Migrate.new(quiet: true).run_task
 Db::VerifyConnection.new(quiet: true).run_task
 
+Avram::SpecHelper.use_transactional_specs(TestDatabase)
+
 Spec.before_each do
-  ARGV.clear
-  TestDatabase.truncate
   # All specs seem to run on the same Fiber,
   # so we set back to NullStore before each spec
   # to ensure queries aren't randomly cached

@@ -23,7 +23,7 @@ module Avram::Associations::HasOne
       relationship_type: :has_one
 
     Avram::Associations.__define_public_preloaded_getters({{ assoc_name }}, {{ model }}, {{ nilable }})
-    Avram::Associations.__define_preloaded_setter({{ assoc_name }}, {{ model }})
+    Avram::Associations.__define_preloaded_setter({{ assoc_name }}, {{ model }}, {{ nilable }})
     define_has_one_private_assoc_getter({{ assoc_name }}, {{ model }}, {{ foreign_key }}, {{ nilable }})
     define_has_one_base_query({{ assoc_name }}, {{ model }}, {{ foreign_key }})
   end

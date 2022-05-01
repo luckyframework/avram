@@ -1,0 +1,25 @@
+dependencies:
+  lucky_task:
+    github: luckyframework/lucky_task
+    branch: main
+  pg:
+    github: will/crystal-pg
+    branch: master
+  habitat:
+    github: luckyframework/habitat
+    branch: main
+  wordsmith:
+    github: luckyframework/wordsmith
+    branch: main
+  dexter:
+    github: luckyframework/dexter
+    branch: main
+  shell-table:
+    github: luckyframework/shell-table.cr
+    branch: main
+  pulsar:
+    github: luckyframework/pulsar
+    branch: main
+  lucky_cache:
+    github: luckyframework/lucky_cache
+    branch: main

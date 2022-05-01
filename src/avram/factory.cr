@@ -1,9 +1,3 @@
-abstract class Avram::Box
-  macro inherited
-    {% raise "Avram::Box has been renamed to Avram::Factory" %}
-  end
-end
-
 abstract class Avram::Factory
   getter operation
 

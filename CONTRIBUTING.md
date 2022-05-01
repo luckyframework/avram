@@ -52,7 +52,7 @@ already been submitted.
   asking for help. We love helping!
 * Please don't update the Shard version.
 
-[repo]: https://github.com/luckyframework/avram/tree/master
+[repo]: https://github.com/luckyframework/avram
 [fork]: https://help.github.com/articles/fork-a-repo/
 [branch]: https://help.github.com/articles/creating-and-deleting-branches-within-your-repository/
 [pr]: https://help.github.com/articles/using-pull-requests/
