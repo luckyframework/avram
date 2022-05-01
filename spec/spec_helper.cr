@@ -26,6 +26,8 @@ Db::VerifyConnection.new(quiet: true).run_task
 Avram::SpecHelper.use_transactional_specs(TestDatabase)
 
 Spec.before_each do
+  # This clears args between each CLI task spec.
+  ARGV.clear
   # All specs seem to run on the same Fiber,
   # so we set back to NullStore before each spec
   # to ensure queries aren't randomly cached
