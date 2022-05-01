@@ -1,7 +1,7 @@
 class Issue < BaseModel
   COLUMN_SQL = "issues.id, issues.status, issues.role"
 
-  enum Status
+  enum Status : Int64
     Opened
     Closed
     Duplicated
