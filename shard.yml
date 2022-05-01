@@ -46,8 +46,8 @@ development_dependencies:
     github: crystal-ameba/ameba
     version: ~> 0.14.4
   lucky:
-    github: matthewmcgarvey/lucky
-    branch: extract-lucky_avram
+    github: luckyframework/lucky
+    branch: main
 
 scripts:
   postinstall: BUILD_WITHOUT_DEVELOPMENT=true script/precompile_tasks
