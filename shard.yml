@@ -1,7 +1,7 @@
 name: avram
 version: 0.23.0
 
-crystal: ">= 1.0.0"
+crystal: ">= 1.4.0"
 
 license: MIT
 
@@ -44,7 +44,7 @@ dependencies:
 development_dependencies:
   ameba:
     github: crystal-ameba/ameba
-    version: ~> 0.14.4
+    version: ~> 1.0.0
   lucky:
     github: luckyframework/lucky
     branch: main
