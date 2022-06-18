@@ -1,5 +1,7 @@
 require "../../spec_helper"
 
+include ParamHelper
+
 private class OperationWithNeeds < Avram::Operation
   needs tags : Array(String)
   needs id : Int32
@@ -51,7 +53,7 @@ describe "Avram::Operation needs" do
   end
 
   it "allows params to be passed in along with named args for needs" do
-    params = Avram::Params.new({"title" => "test", "published" => "true"})
+    params = build_params("operation_with_needs:title=test&operation_with_needs:published=true")
     OperationWithNeeds.run(params, tags: ["one", "two"], id: 3) do |operation, value|
       value.should eq "one, two"
       operation.tags.should eq ["one", "two"]
@@ -71,7 +73,7 @@ end
 
 describe "Avram::SaveOperation needs" do
   it "sets up a method arg for save, update, and new" do
-    params = Avram::Params.new({"name" => "Paul"})
+    params = build_params("needs_save_operation:name=Paul")
     UserFactory.create
     user = UserQuery.new.first
 
@@ -115,7 +117,7 @@ describe "Avram::DeleteOperation needs" do
   end
 
   it "also generates named args for other attributes" do
-    params = Avram::Params.new({"confirm_delete" => "yeah, do it"})
+    params = build_params("needy_delete_operation:confirm_delete=yeah,%20do%20it")
     user = UserFactory.create
     post = PostFactory.create
 

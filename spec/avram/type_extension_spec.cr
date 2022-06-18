@@ -1,5 +1,7 @@
 require "../spec_helper"
 
+include ParamHelper
+
 class CompanyQuery < Company::BaseQuery
 end
 
@@ -29,7 +31,8 @@ describe "TypeExtensions" do
   end
 
   it "should convert params and save forms" do
-    operation = SaveCompany.new(Avram::Params.new({"sales" => "10", "earnings" => "10"}))
+    params = build_params("save_company:sales=10&save_company:earnings=10")
+    operation = SaveCompany.new(params)
     operation.sales.value.should eq 10_i64
     operation.earnings.value.should eq 10.0
   end
