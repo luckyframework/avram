@@ -600,7 +600,7 @@ describe "Avram::SaveOperation" do
       it "overrides all of the defaults through params" do
         published_at = 1.day.ago.to_utc.at_beginning_of_day
         drafted_at = 1.week.ago.to_utc.at_beginning_of_day
-        params = build_params("model_with_default_values:greeting=Hi&model_with_default_values:admin=true&model_with_default_values:age=4&model_with_default_values:money=100.23&model_with_default_values:published_at=#{published_at.to_s}&model_with_default_values:drafted_at=#{drafted_at.to_s}")
+        params = build_params("model_with_default_values:greeting=Hi&model_with_default_values:admin=true&model_with_default_values:age=4&model_with_default_values:money=100.23&model_with_default_values:published_at=#{published_at}&model_with_default_values:drafted_at=#{drafted_at}")
         OverrideDefaults.create(params) do |_operation, record|
           record.should_not eq nil
           r = record.not_nil!
