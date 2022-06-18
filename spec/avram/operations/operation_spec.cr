@@ -102,7 +102,7 @@ describe Avram::Operation do
       params = build_params("custom_key:page=1&custom_key:per=50")
       TestOperationWithParamKey.run(params) do |operation, value|
         operation.params.should eq params
-        operation.params.get("page").should eq "1"
+        operation.params.nested("custom_key").should eq({"page" => "1", "per" => "50"})
         value.should eq "Custom Key Test"
       end
     end

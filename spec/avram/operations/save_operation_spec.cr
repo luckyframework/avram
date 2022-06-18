@@ -141,7 +141,7 @@ describe "Avram::SaveOperation" do
   end
 
   it "treats empty strings as nil for Time? types instead of failing to parse" do
-    params = build_params("save_post:title=Test&save_post:published_at=")
+    params = build_params("post:title=Test&post:published_at=")
     post = SavePost.create!(params)
 
     post.published_at.should eq nil
@@ -348,7 +348,7 @@ describe "Avram::SaveOperation" do
   describe "initializer" do
     it "works with a record and named args" do
       UserFactory.new.name("Old Name").create
-      params = build_params("save_user:name=New Name")
+      params = build_params("user:name=New Name")
       user = UserQuery.new.first
 
       operation = SaveUser.new(user, params)
@@ -366,7 +366,7 @@ describe "Avram::SaveOperation" do
   describe "parsing" do
     it "parse integers, time objects, etc." do
       time = 1.day.ago.at_beginning_of_minute
-      params = build_params("save_user:joined_at=#{time.to_s("%FT%X%z")}")
+      params = build_params("user:joined_at=#{time.to_s("%FT%X%z")}")
       operation = SaveUser.new(params)
 
       operation.joined_at.value.should eq time
@@ -374,7 +374,7 @@ describe "Avram::SaveOperation" do
     end
 
     it "gracefully handles bad inputs when parsing" do
-      params = build_params("save_user:joined_at=this is not a time&save_user:age=not an int")
+      params = build_params("user:joined_at=this is not a time&user:age=not an int")
       operation = SaveUser.new(params)
 
       operation.joined_at.errors.should eq ["is invalid"]
@@ -388,14 +388,14 @@ describe "Avram::SaveOperation" do
 
   describe "permit_columns" do
     it "ignores params that are not permitted" do
-      params = build_params("save_limited_user:name=someone&save_limited_user:nickname=nothing")
+      params = build_params("user:name=someone&user:nickname=nothing")
       operation = SaveLimitedUser.new(params)
       operation.changes.has_key?(:nickname).should be_false
       operation.changes[:name]?.should eq "someone"
     end
 
     it "returns a Avram::PermittedAttribute" do
-      params = build_params("save_limited_user:name=someone&save_limited_user:nickname=nothing")
+      params = build_params("user:name=someone&user:nickname=nothing")
       operation = SaveLimitedUser.new(params)
       operation.nickname.value.should be_nil
       operation.nickname.is_a?(Avram::Attribute).should be_true
@@ -406,7 +406,7 @@ describe "Avram::SaveOperation" do
 
   describe "settings values from params" do
     it "sets the values" do
-      params = build_params("save_user:name=Paul&save_user:nickname=Pablito")
+      params = build_params("user:name=Paul&user:nickname=Pablito")
 
       operation = SaveUser.new(params)
 
@@ -417,11 +417,11 @@ describe "Avram::SaveOperation" do
 
     it "returns the value from params for updates" do
       user = UserFactory.build
-      params = build_params("save_user:name=New Name From Params")
+      params = build_params("user:name=New+Name+From+Params")
 
       operation = SaveUser.new(user, params)
 
-      operation.name.value.should eq params.get("name")
+      operation.name.value.should eq "New Name From Params"
       operation.nickname.value.should eq user.nickname
       operation.age.value.should eq user.age
     end
@@ -429,7 +429,7 @@ describe "Avram::SaveOperation" do
 
   describe "params" do
     it "creates a param method for each of the permit_columns attributes" do
-      params = build_params("save_user:name=Paul&save_user:nickname=Pablito")
+      params = build_params("user:name=Paul&user:nickname=Pablito")
 
       operation = SaveUser.new(params)
 
@@ -440,16 +440,24 @@ describe "Avram::SaveOperation" do
     it "uses the value if param is empty" do
       user = UserFactory.build
 
-      params = build_params("")
-      operation = SaveUser.new(user, params)
+      operation = SaveUser.new(user)
 
       operation.name.param.should eq user.name
+    end
+
+    it "raises an exception when you pass empty params" do
+      user = UserFactory.build
+
+      params = build_params("")
+      expect_raises(Exception) do
+        SaveUser.new(user, params)
+      end
     end
   end
 
   describe "errors" do
     it "creates an error method for each of the permit_columns attributes" do
-      params = build_params("save_user:name=Paul&save_user:age=30&save_user:joined_at=#{now_as_string}")
+      params = build_params("user:name=Paul&user:age=30&user:joined_at=#{now_as_string}")
       operation = SaveUser.new(params)
       operation.valid?.should be_true
 
@@ -461,7 +469,7 @@ describe "Avram::SaveOperation" do
     end
 
     it "only returns unique errors" do
-      params = build_params("save_user:name=Paul&save_user:nickname=Pablito")
+      params = build_params("user:name=Paul&user:nickname=Pablito")
       operation = SaveUser.new(params)
 
       operation.name.add_error "is not valid"
@@ -473,15 +481,14 @@ describe "Avram::SaveOperation" do
 
   describe "attributes" do
     it "creates a method for each of the permit_columns attributes" do
-      params = build_params("")
-      operation = SaveLimitedUser.new(params)
+      operation = SaveLimitedUser.new
 
       operation.responds_to?(:name).should be_true
       operation.responds_to?(:nickname).should be_true
     end
 
     it "returns an attribute with the attribute name, value and errors" do
-      params = build_params("save_user:name=Joe")
+      params = build_params("user:name=Joe")
       operation = SaveUser.new(params)
       operation.name.add_error "wrong"
 
@@ -520,7 +527,7 @@ describe "Avram::SaveOperation" do
 
     context "on success" do
       it "yields the operation and the saved record" do
-        params = build_params("save_user:joined_at=#{now_as_string}&save_user:name=New Name&save_user:age=30")
+        params = build_params("user:joined_at=#{now_as_string}&user:name=New Name&user:age=30")
         SaveUser.create params do |operation, record|
           operation.saved?.should be_true
           record.is_a?(User).should be_true
@@ -530,7 +537,7 @@ describe "Avram::SaveOperation" do
 
     context "on failure" do
       it "yields the operation and nil" do
-        params = build_params("save_user:name=&save_user:age=30")
+        params = build_params("user:name=&user:age=30")
         SaveUser.create params do |operation, record|
           operation.save_failed?.should be_true
           record.should be_nil
@@ -547,7 +554,7 @@ describe "Avram::SaveOperation" do
 
     context "with a uuid backed model" do
       it "can create with params" do
-        params = build_params("save_line_item:name=A fancy hat")
+        params = build_params("line_item:name=A fancy hat")
         SaveLineItem.create params do |operation, record|
           operation.saved?.should be_true
           record.should be_a(LineItem)
@@ -593,7 +600,7 @@ describe "Avram::SaveOperation" do
       it "overrides all of the defaults through params" do
         published_at = 1.day.ago.to_utc.at_beginning_of_day
         drafted_at = 1.week.ago.to_utc.at_beginning_of_day
-        params = build_params("override_defaults:greeting=Hi&override_defaults:admin=true&override_defaults:age=4&override_defaults:money=100.23&override_defaults:published_at=#{published_at.to_s}&override_defaults:drafted_at=#{drafted_at.to_s}")
+        params = build_params("model_with_default_values:greeting=Hi&model_with_default_values:admin=true&model_with_default_values:age=4&model_with_default_values:money=100.23&model_with_default_values:published_at=#{published_at.to_s}&model_with_default_values:drafted_at=#{drafted_at.to_s}")
         OverrideDefaults.create(params) do |_operation, record|
           record.should_not eq nil
           r = record.not_nil!
@@ -623,7 +630,7 @@ describe "Avram::SaveOperation" do
 
     context "on success" do
       it "saves and returns the record" do
-        params = build_params("save_user:joined_at=#{now_as_string}&save_user:name=New Name&save_user:age=30")
+        params = build_params("user:joined_at=#{now_as_string}&user:name=New Name&user:age=30")
 
         record = SaveUser.create!(params)
 
@@ -634,7 +641,7 @@ describe "Avram::SaveOperation" do
 
     context "on failure" do
       it "raises an exception" do
-        params = build_params("save_user:name=&save_user:age=30")
+        params = build_params("user:name=&user:age=30")
 
         expect_raises Avram::InvalidOperationError do
           SaveUser.create!(params)
@@ -662,8 +669,8 @@ describe "Avram::SaveOperation" do
     it "works when there are no changes" do
       UserFactory.new.name("Old Name").create
       user = UserQuery.new.first
-      params = build_params("")
-      SaveUser.update user, with: params do |operation, _record|
+
+      SaveUser.update(user) do |operation, _record|
         operation.saved?.should be_true
       end
     end
@@ -690,7 +697,7 @@ describe "Avram::SaveOperation" do
       it "yields the operation and the updated record" do
         UserFactory.new.name("Old Name").create
         user = UserQuery.new.first
-        params = build_params("save_user:name=New Name")
+        params = build_params("user:name=New Name")
         SaveUser.update user, with: params do |operation, record|
           operation.saved?.should be_true
           record.name.should eq "New Name"
@@ -699,7 +706,7 @@ describe "Avram::SaveOperation" do
 
       it "updates updated_at" do
         user = UserFactory.new.updated_at(1.day.ago).create
-        params = build_params("save_user:name=New Name")
+        params = build_params("user:name=New Name")
         SaveUser.update user, with: params do |operation, record|
           operation.saved?.should be_true
           record.updated_at.should be > 1.second.ago
@@ -711,7 +718,7 @@ describe "Avram::SaveOperation" do
       it "yields the operation and nil" do
         UserFactory.new.name("Old Name").create
         user = UserQuery.new.first
-        params = build_params("save_user:name=")
+        params = build_params("user:name=")
         SaveUser.update user, with: params do |operation, record|
           operation.save_failed?.should be_true
           record.name.should eq "Old Name"
@@ -732,7 +739,7 @@ describe "Avram::SaveOperation" do
     context "with a uuid backed model" do
       it "doesn't generate a new uuid" do
         line_item = LineItemFactory.create
-        params = build_params("save_line_item:name=Another pair of shoes")
+        params = build_params("line_item:name=Another pair of shoes")
         SaveLineItem.update(line_item, params) do |operation, record|
           operation.saved?.should be_true
           record.id.should eq line_item.id
@@ -766,7 +773,7 @@ describe "Avram::SaveOperation" do
       it "updates and returns the record" do
         UserFactory.new.name("Old Name").create
         user = UserQuery.new.first
-        params = build_params("save_user:name=New Name")
+        params = build_params("user:name=New Name")
 
         record = SaveUser.update! user, with: params
 
@@ -779,7 +786,7 @@ describe "Avram::SaveOperation" do
       it "raises an exception" do
         UserFactory.new.name("Old Name").create
         user = UserQuery.new.first
-        params = build_params("save_user:name=")
+        params = build_params("user:name=")
 
         expect_raises Avram::InvalidOperationError do
           SaveUser.update! user, with: params

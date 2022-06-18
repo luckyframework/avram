@@ -31,7 +31,7 @@ describe "TypeExtensions" do
   end
 
   it "should convert params and save forms" do
-    params = build_params("save_company:sales=10&save_company:earnings=10")
+    params = build_params("company:sales=10&company:earnings=10")
     operation = SaveCompany.new(params)
     operation.sales.value.should eq 10_i64
     operation.earnings.value.should eq 10.0

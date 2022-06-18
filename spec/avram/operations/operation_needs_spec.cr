@@ -73,7 +73,7 @@ end
 
 describe "Avram::SaveOperation needs" do
   it "sets up a method arg for save, update, and new" do
-    params = build_params("needs_save_operation:name=Paul")
+    params = build_params("user:name=Paul")
     UserFactory.create
     user = UserQuery.new.first
 
@@ -117,7 +117,7 @@ describe "Avram::DeleteOperation needs" do
   end
 
   it "also generates named args for other attributes" do
-    params = build_params("needy_delete_operation:confirm_delete=yeah,%20do%20it")
+    params = build_params("post:confirm_delete=yeah,%20do%20it")
     user = UserFactory.create
     post = PostFactory.create
 

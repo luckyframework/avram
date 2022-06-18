@@ -20,7 +20,6 @@ private class OperationWithAttributes < Avram::Operation
 end
 
 private class SaveOperationWithAttributes < Post::SaveOperation
-  param_key :save_data
   attribute password_confirmation : String
   attribute terms_of_service : Bool
   attribute best_kind_of_bear : String = "black bear"
@@ -39,7 +38,6 @@ private class SaveOperationWithAttributes < Post::SaveOperation
 end
 
 private class DeleteOperationWithAttributes < Post::DeleteOperation
-  param_key :delete_data
   attribute accept_delete : Bool = false
   attribute confirm_delete : String
   file_attribute :biometric_confirmation
@@ -116,9 +114,9 @@ describe "attribute in operations" do
     operation("data:title=Random+Food").title.value.should eq "Random Food"
     operation("data:count=4").count.value.should eq 4
     operation("data:checked=true").checked.value.should eq true
-    save_operation("save_data:best_kind_of_bear=brown+bear").best_kind_of_bear.value.should eq "brown bear"
-    save_operation("save_data:best_kind_of_bear=").best_kind_of_bear.value.should be_nil
-    delete_operation("delete_data:accept_delete=true").accept_delete.value.should be_true
+    save_operation("post:best_kind_of_bear=brown+bear").best_kind_of_bear.value.should eq "brown bear"
+    save_operation("post:best_kind_of_bear=").best_kind_of_bear.value.should be_nil
+    delete_operation("post:accept_delete=true").accept_delete.value.should be_true
   end
 
   it "sets the param and value based on the passed in params" do
@@ -126,17 +124,17 @@ describe "attribute in operations" do
     operation.title.value.should eq "secret"
     operation.title.param.should eq "secret"
 
-    save_operation = save_operation("save_data:password_confirmation=password")
+    save_operation = save_operation("post:password_confirmation=password")
     save_operation.password_confirmation.value.should eq "password"
     save_operation.password_confirmation.param.should eq "password"
 
-    delete_operation = delete_operation("delete_data:confirm_delete=yeah sure")
+    delete_operation = delete_operation("post:confirm_delete=yeah sure")
     delete_operation.confirm_delete.value.should eq "yeah sure"
     delete_operation.confirm_delete.param.should eq "yeah sure"
   end
 
   it "is memoized so you can change the attribute in `prepare`" do
-    operation = save_operation("save_data:password_confirmation=password")
+    operation = save_operation("post:password_confirmation=password")
     operation.password_confirmation.value.should eq "password"
 
     operation.prepare
@@ -144,27 +142,27 @@ describe "attribute in operations" do
   end
 
   it "parses the value using the declared type" do
-    operation = save_operation("save_data:terms_of_service=1")
+    operation = save_operation("post:terms_of_service=1")
     operation.terms_of_service.value.should be_true
 
-    operation = save_operation("save_data:terms_of_service=0")
+    operation = save_operation("post:terms_of_service=0")
     operation.terms_of_service.value.should be_false
   end
 
   it "gracefully handles invalid params" do
-    operation = save_operation("save_data:terms_of_service=not a boolean")
+    operation = save_operation("post:terms_of_service=not a boolean")
     operation.terms_of_service.value.should be_nil
     operation.terms_of_service.errors.first.should eq "is invalid"
   end
 
   it "includes attribute errors when calling SaveOperation#valid?" do
-    operation = save_operation("save_data:terms_of_service=not a boolean")
+    operation = save_operation("post:terms_of_service=not a boolean")
     operation.setup_required_database_columns
     operation.valid?.should be_false
   end
 
   it "can still save to the database" do
-    params = "save_data:password_confirmation=password&save_data:terms_of_service=1"
+    params = "post:password_confirmation=password&post:terms_of_service=1"
     operation = save_operation(params)
     operation.setup_required_database_columns
     operation.save.should eq true
@@ -209,17 +207,17 @@ describe "file_attribute in operation" do
     operation.thumb.value.should be_nil
     operation.thumb.errors.first.should eq "is invalid"
 
-    save_operation = save_operation("save_data:thumb=not a file")
+    save_operation = save_operation("post:thumb=not a file")
     save_operation.thumb.value.should be_nil
     save_operation.thumb.errors.first.should eq "is invalid"
 
-    delete_operation = delete_operation("delete_data:biometric_confirmation=not a file")
+    delete_operation = delete_operation("post:biometric_confirmation=not a file")
     delete_operation.biometric_confirmation.value.should be_nil
     delete_operation.biometric_confirmation.errors.first.should eq "is invalid"
   end
 
   it "includes file attribute errors when calling SaveOperation#valid?" do
-    operation = save_operation("save_data:thumb=not a file")
+    operation = save_operation("post:thumb=not a file")
     operation.setup_required_database_columns
     operation.valid?.should be_false
   end
@@ -232,22 +230,35 @@ describe "file_attribute in operation" do
   end
 end
 
-private def operation(body : String = "")
+private def operation(body : String)
   params = build_params(body)
   OperationWithAttributes.new(params)
 end
 
-private def save_operation(body : String = "")
+private def operation
+  OperationWithAttributes.new
+end
+
+private def save_operation(body : String)
   params = build_params(body)
   SaveOperationWithAttributes.new(params)
+end
+
+private def save_operation
+  SaveOperationWithAttributes.new
 end
 
 private def upload_save_operation(attrs = {} of String => Avram::Uploadable)
   SaveOperationWithAttributes.new(Avram::UploadParams.new(attrs))
 end
 
-private def delete_operation(body : String = "")
+private def delete_operation(body : String)
   params = build_params(body)
   post = PostFactory.create
   DeleteOperationWithAttributes.new(post, params)
+end
+
+private def delete_operation
+  post = PostFactory.create
+  DeleteOperationWithAttributes.new(post)
 end
