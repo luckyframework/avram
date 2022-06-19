@@ -156,14 +156,15 @@ describe "attribute in operations" do
   end
 
   it "includes attribute errors when calling SaveOperation#valid?" do
-    operation = save_operation("post:terms_of_service=not a boolean")
+    params = Avram::Params.new({"terms_of_service" => ["not a boolean"]})
+    operation = SaveOperationWithAttributes.new(params)
     operation.setup_required_database_columns
     operation.valid?.should be_false
   end
 
   it "can still save to the database" do
-    params = "post:password_confirmation=password&post:terms_of_service=1"
-    operation = save_operation(params)
+    params = Avram::Params.new({"password_confirmation" => ["password"], "terms_of_service" => ["1"]})
+    operation = SaveOperationWithAttributes.new(params)
     operation.setup_required_database_columns
     operation.save.should eq true
   end
@@ -203,21 +204,25 @@ describe "file_attribute in operation" do
   end
 
   it "gracefully handles invalid params" do
-    operation = operation("data:thumb=not a file")
+    params = Avram::Params.new({"thumb" => ["not a file"]})
+    operation = OperationWithAttributes.new(params)
     operation.thumb.value.should be_nil
     operation.thumb.errors.first.should eq "is invalid"
 
-    save_operation = save_operation("post:thumb=not a file")
+    save_operation = SaveOperationWithAttributes.new(params)
     save_operation.thumb.value.should be_nil
     save_operation.thumb.errors.first.should eq "is invalid"
 
-    delete_operation = delete_operation("post:biometric_confirmation=not a file")
+    params = Avram::Params.new({"biometric_confirmation" => ["not a file"]})
+    post = PostFactory.create
+    delete_operation = DeleteOperationWithAttributes.new(post, params)
     delete_operation.biometric_confirmation.value.should be_nil
     delete_operation.biometric_confirmation.errors.first.should eq "is invalid"
   end
 
   it "includes file attribute errors when calling SaveOperation#valid?" do
-    operation = save_operation("post:thumb=not a file")
+    params = Avram::Params.new({"thumb" => ["not a file"]})
+    operation = SaveOperationWithAttributes.new(params)
     operation.setup_required_database_columns
     operation.valid?.should be_false
   end
