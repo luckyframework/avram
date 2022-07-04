@@ -4,7 +4,7 @@ class Avram::Attribute(T)
   setter value : T?
   getter param_key : String
   @errors = [] of String
-  @param : Avram::Uploadable | String | Nil
+  @param : Avram::Uploadable | Array(String) | String | Nil
 
   # This can be used as an escape hatch when you
   # may have a blank string that's allowed to be saved.
@@ -26,7 +26,7 @@ class Avram::Attribute(T)
     end
   end
 
-  def param : Avram::Uploadable | String
+  def param : Avram::Uploadable | Array(String) | String
     @param || value.to_s
   end
 

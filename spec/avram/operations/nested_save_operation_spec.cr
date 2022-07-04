@@ -14,7 +14,8 @@ private class SaveBusiness < Business::SaveOperation
   has_one save_tax_id : SaveTaxId
 end
 
-private class NestedParams < Avram::FakeParams
+private class FakeNestedParams
+  include Avram::Paramable
   @business : Hash(String, String) = {} of String => String
   @email_address : Hash(String, String) = {} of String => String
   @tax_id : Hash(String, String) = {} of String => String
@@ -22,23 +23,70 @@ private class NestedParams < Avram::FakeParams
   def initialize(@business, @email_address, @tax_id)
   end
 
+  def nested(key : String) : Hash(String, String)
+    nested?(key)
+  end
+
   def nested?(key : String) : Hash(String, String)
-    if key == "email_address"
-      @email_address
-    elsif key == "tax_id"
-      @tax_id
-    elsif key == "business"
-      @business
-    else
-      raise "What is this key!? #{key}"
-    end
+    data = case key
+           when "email_address"
+             @email_address
+           when "tax_id"
+             @tax_id
+           when "business"
+             @business
+           else
+             {} of String => String
+           end
+
+    data
+  end
+
+  def nested_arrays(key : String) : Hash(String, Array(String))
+    nested_arrays?(key)
+  end
+
+  def nested_arrays?(key : String) : Hash(String, Array(String))
+    {} of String => Array(String)
+  end
+
+  def nested_file(key : String) : Hash(String, String)
+    nested(key)
+  end
+
+  def nested_file?(key : String) : Hash(String, String)
+    nested?(key)
+  end
+
+  def many_nested(key : String) : Array(Hash(String, String))
+    many_nested?(key)
+  end
+
+  def many_nested?(key : String) : Array(Hash(String, String))
+    [] of Hash(String, String)
+  end
+
+  def get(key : String)
+    get?(key)
+  end
+
+  def get?(key : String)
+    nil
+  end
+
+  def get_all(key : String)
+    get_all?(key)
+  end
+
+  def get_all?(key : String)
+    nil
   end
 end
 
 describe "Avram::SaveOperation with nested operation" do
   context "when not all forms are valid" do
     it "does not create either" do
-      params = NestedParams.new business: {"name" => "Fubar"},
+      params = FakeNestedParams.new business: {"name" => "Fubar"},
         email_address: {"address" => ""},
         tax_id: {"number" => ""}
 
@@ -48,7 +96,7 @@ describe "Avram::SaveOperation with nested operation" do
         operations_saved?(operation, false)
       end
 
-      params = NestedParams.new business: {"name" => "Fubar"},
+      params = FakeNestedParams.new business: {"name" => "Fubar"},
         email_address: {"address" => "123 Main St."},
         tax_id: {"number" => ""}
 
@@ -58,7 +106,7 @@ describe "Avram::SaveOperation with nested operation" do
         operations_saved?(operation, false)
       end
 
-      params = NestedParams.new business: {"name" => "Fubar"},
+      params = FakeNestedParams.new business: {"name" => "Fubar"},
         email_address: {"address" => ""},
         tax_id: {"number" => "123"}
 
@@ -83,7 +131,7 @@ describe "Avram::SaveOperation with nested operation" do
         .address(address)
       tax = TaxIdFactory.create &.business_id(business.id).number(tax_num)
 
-      params = NestedParams.new business: {"name" => new_name},
+      params = FakeNestedParams.new business: {"name" => new_name},
         email_address: {"address" => new_address},
         tax_id: {"number" => new_tax_num.to_s}
 
@@ -118,7 +166,7 @@ describe "Avram::SaveOperation with nested operation" do
       email.reload.address.should eq(address)
       tax.reload.number.should eq(tax_num)
 
-      params = NestedParams.new business: {"name" => name},
+      params = FakeNestedParams.new business: {"name" => name},
         email_address: {"address" => new_address},
         tax_id: {"number" => new_tax_num.to_s}
 
@@ -136,7 +184,7 @@ describe "Avram::SaveOperation with nested operation" do
 
   context "when all forms are valid" do
     it "sets the relationship and creates both" do
-      params = NestedParams.new business: {"name" => "Fubar", "latitude" => "46.383488", "longitude" => "22.774896"},
+      params = FakeNestedParams.new business: {"name" => "Fubar", "latitude" => "46.383488", "longitude" => "22.774896"},
         email_address: {"address" => "foo@bar.com"},
         tax_id: {"number" => "123"}
 
@@ -169,7 +217,7 @@ describe "Avram::SaveOperation with nested operation" do
       EmailAddressFactory.create &.business_id(business.id).address(address)
       TaxIdFactory.create &.business_id(business.id).number(tax_num)
 
-      params = NestedParams.new business: {"name" => new_name},
+      params = FakeNestedParams.new business: {"name" => new_name},
         email_address: {"address" => new_address},
         tax_id: {"number" => new_tax_num.to_s}
 
@@ -188,7 +236,7 @@ describe "Avram::SaveOperation with nested operation" do
 
       business = business.reload
 
-      params = NestedParams.new business: {"name" => business.name},
+      params = FakeNestedParams.new business: {"name" => business.name},
         email_address: {"address" => new_address},
         tax_id: {"number" => new_tax_num.to_s}
 
