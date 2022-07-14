@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="generator" content="Crystal Docs 1.3.2">
+<meta name="generator" content="Crystal Docs 1.4.1">
 <meta name="crystal_docs.project_version" content="main">
 <meta name="crystal_docs.project_name" content="avram">
 
@@ -60,6 +60,11 @@
       <a href="../Avram.html">Avram</a>
       
         <ul>
+  
+  <li class=" " data-id="avram/Avram/AddColumnAttributes" data-name="avram::addcolumnattributes">
+      <a href="../Avram/AddColumnAttributes.html">AddColumnAttributes</a>
+      
+    </li>
   
   <li class="parent " data-id="avram/Avram/Associations" data-name="avram::associations">
       <a href="../Avram/Associations.html">Associations</a>
@@ -1667,7 +1672,7 @@
   </h2>
   
     
-      <a href="https://github.com/luckyframework/avram/blob/5c553aa7bd67a8ec8f00050eddda8adcdd0a72f8/src/avram/params.cr#L1" target="_blank">
+      <a href="https://github.com/luckyframework/avram/blob/781609ba8513abdf6e6ae041a63063a97a24c255/src/avram/params.cr#L1" target="_blank">
         avram/params.cr
       </a>
     
@@ -1689,17 +1694,12 @@
   <ul class="list-summary">
     
       <li class="entry-summary">
-        <a href="#new%28hash%29-class-method" class="signature"><strong>.new</strong>(hash)</a>
+        <a href="#new%28hash%3AHash%28String%2CArray%28String%29%29%29-class-method" class="signature"><strong>.new</strong>(hash : Hash(String, Array(String)))</a>
         
       </li>
     
       <li class="entry-summary">
         <a href="#new-class-method" class="signature"><strong>.new</strong></a>
-        
-      </li>
-    
-      <li class="entry-summary">
-        <a href="#new%28%2A%2Aargs%29-class-method" class="signature"><strong>.new</strong>(**args)</a>
         
       </li>
     
@@ -1720,42 +1720,67 @@
   <ul class="list-summary">
     
       <li class="entry-summary">
-        <a href="#get%28key%29-instance-method" class="signature"><strong>#get</strong>(key)</a>
+        <a href="#get%28key%3AString%29-instance-method" class="signature"><strong>#get</strong>(key : String)</a>
         
       </li>
     
       <li class="entry-summary">
-        <a href="#get%3F%28key%29-instance-method" class="signature"><strong>#get?</strong>(key)</a>
+        <a href="#get%3F%28key%3AString%29-instance-method" class="signature"><strong>#get?</strong>(key : String)</a>
         
       </li>
     
       <li class="entry-summary">
-        <a href="#many_nested%28key%29%3AArray%28Hash%28String%2CString%29%29-instance-method" class="signature"><strong>#many_nested</strong>(key) : Array(Hash(String, String))</a>
+        <a href="#get_all%28key%3AString%29-instance-method" class="signature"><strong>#get_all</strong>(key : String)</a>
         
       </li>
     
       <li class="entry-summary">
-        <a href="#many_nested%3F%28key%29%3AArray%28Hash%28String%2CString%29%29-instance-method" class="signature"><strong>#many_nested?</strong>(key) : Array(Hash(String, String))</a>
+        <a href="#get_all%3F%28key%3AString%29-instance-method" class="signature"><strong>#get_all?</strong>(key : String)</a>
         
       </li>
     
       <li class="entry-summary">
-        <a href="#nested%28key%29%3AHash%28String%2CString%29-instance-method" class="signature"><strong>#nested</strong>(key) : Hash(String, String)</a>
+        <a href="#get_all_files%28key%3AString%29-instance-method" class="signature"><strong>#get_all_files</strong>(key : String)</a>
         
       </li>
     
       <li class="entry-summary">
-        <a href="#nested%3F%28key%29%3AHash%28String%2CString%29-instance-method" class="signature"><strong>#nested?</strong>(key) : Hash(String, String)</a>
+        <a href="#many_nested%28key%3AString%29%3AArray%28Hash%28String%2CString%29%29-instance-method" class="signature"><strong>#many_nested</strong>(key : String) : Array(Hash(String, String))</a>
         
       </li>
     
       <li class="entry-summary">
-        <a href="#nested_file%28key%29%3AHash%28String%2CString%29-instance-method" class="signature"><strong>#nested_file</strong>(key) : Hash(String, String)</a>
+        <a href="#many_nested%3F%28key%3AString%29%3AArray%28Hash%28String%2CString%29%29-instance-method" class="signature"><strong>#many_nested?</strong>(key : String) : Array(Hash(String, String))</a>
         
       </li>
     
       <li class="entry-summary">
-        <a href="#nested_file%3F%28key%29%3AHash%28String%2CString%29-instance-method" class="signature"><strong>#nested_file?</strong>(key) : Hash(String, String)</a>
+        <a href="#nested%28key%3AString%29%3AHash%28String%2CString%29-instance-method" class="signature"><strong>#nested</strong>(key : String) : Hash(String, String)</a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#nested%3F%28key%3AString%29%3AHash%28String%2CString%29-instance-method" class="signature"><strong>#nested?</strong>(key : String) : Hash(String, String)</a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#nested_arrays%28key%3AString%29%3AHash%28String%2CArray%28String%29%29-instance-method" class="signature"><strong>#nested_arrays</strong>(key : String) : Hash(String, Array(String))</a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#nested_arrays%3F%28key%3AString%29%3AHash%28String%2CArray%28String%29%29-instance-method" class="signature"><strong>#nested_arrays?</strong>(key : String) : Hash(String, Array(String))</a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#nested_file%28key%3AString%29%3AHash%28String%2CString%29-instance-method" class="signature"><strong>#nested_file</strong>(key : String) : Hash(String, String)</a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#nested_file%3F%28key%3AString%29%3AHash%28String%2CString%29-instance-method" class="signature"><strong>#nested_file?</strong>(key : String) : Hash(String, String)</a>
         
       </li>
     
@@ -1782,6 +1807,16 @@
     get?</a>, 
     
   
+    <a href="../Avram/Paramable.html#get_all%28key%3AString%29-instance-method" class="tooltip">
+      <span>get_all(key : String)</span>
+    get_all</a>, 
+    
+  
+    <a href="../Avram/Paramable.html#get_all%3F%28key%3AString%29-instance-method" class="tooltip">
+      <span>get_all?(key : String)</span>
+    get_all?</a>, 
+    
+  
     <a href="../Avram/Paramable.html#has_key_for%3F%28operation%3AAvram%3A%3AOperation.class%7CAvram%3A%3ASaveOperation.class%29%3ABool-instance-method" class="tooltip">
       <span>has_key_for?(operation : <span class="t">Avram</span><span class="t">::</span><span class="t">Operation</span>.<span class="k">class</span> | <span class="t">Avram</span><span class="t">::</span><span class="t">SaveOperation</span>.<span class="k">class</span>) : Bool</span>
     has_key_for?</a>, 
@@ -1804,7 +1839,17 @@
   
     <a href="../Avram/Paramable.html#nested%3F%28key%3AString%29%3AHash%28String%2CString%29-instance-method" class="tooltip">
       <span>nested?(key : String) : Hash(String, String)</span>
-    nested?</a>
+    nested?</a>, 
+    
+  
+    <a href="../Avram/Paramable.html#nested_arrays%28key%3AString%29%3AHash%28String%2CArray%28String%29%29-instance-method" class="tooltip">
+      <span>nested_arrays(key : String) : Hash(String, Array(String))</span>
+    nested_arrays</a>, 
+    
+  
+    <a href="../Avram/Paramable.html#nested_arrays%3F%28key%3AString%29%3AHash%28String%2CArray%28String%29%29-instance-method" class="tooltip">
+      <span>nested_arrays?(key : String) : Hash(String, Array(String))</span>
+    nested_arrays?</a>
     
   
 
@@ -1857,18 +1902,18 @@
     Constructor Detail
   </h2>
   
-    <div class="entry-detail" id="new(hash)-class-method">
+    <div class="entry-detail" id="new(hash:Hash(String,Array(String)))-class-method">
       <div class="signature">
         
-        def self.<strong>new</strong>(hash)
+        def self.<strong>new</strong>(hash : Hash(<a href="../String.html">String</a>, <a href="../Array.html">Array</a>(<a href="../String.html">String</a>)))
 
-        <a class="method-permalink" href="#new%28hash%29-class-method">#</a>
+        <a class="method-permalink" href="#new%28hash%3AHash%28String%2CArray%28String%29%29%29-class-method">#</a>
       </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/5c553aa7bd67a8ec8f00050eddda8adcdd0a72f8/src/avram/params.cr#L9" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/781609ba8513abdf6e6ae041a63063a97a24c255/src/avram/params.cr#L10" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1884,23 +1929,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/5c553aa7bd67a8ec8f00050eddda8adcdd0a72f8/src/avram/params.cr#L6" target="_blank">View source</a>]
-        
-      </div>
-    </div>
-  
-    <div class="entry-detail" id="new(**args)-class-method">
-      <div class="signature">
-        
-        def self.<strong>new</strong>(**args)
-
-        <a class="method-permalink" href="#new%28%2A%2Aargs%29-class-method">#</a>
-      </div>
-      
-      <br/>
-      <div>
-        
-          [<a href="https://github.com/luckyframework/avram/blob/5c553aa7bd67a8ec8f00050eddda8adcdd0a72f8/src/avram/params.cr#L12" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/781609ba8513abdf6e6ae041a63063a97a24c255/src/avram/params.cr#L6" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1919,130 +1948,210 @@
     Instance Method Detail
   </h2>
   
-    <div class="entry-detail" id="get(key)-instance-method">
+    <div class="entry-detail" id="get(key:String)-instance-method">
       <div class="signature">
         
-        def <strong>get</strong>(key)
+        def <strong>get</strong>(key : <a href="../String.html">String</a>)
 
-        <a class="method-permalink" href="#get%28key%29-instance-method">#</a>
+        <a class="method-permalink" href="#get%28key%3AString%29-instance-method">#</a>
       </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/5c553aa7bd67a8ec8f00050eddda8adcdd0a72f8/src/avram/params.cr#L38" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/781609ba8513abdf6e6ae041a63063a97a24c255/src/avram/params.cr#L45" target="_blank">View source</a>]
         
       </div>
     </div>
   
-    <div class="entry-detail" id="get?(key)-instance-method">
+    <div class="entry-detail" id="get?(key:String)-instance-method">
       <div class="signature">
         
-        def <strong>get?</strong>(key)
+        def <strong>get?</strong>(key : <a href="../String.html">String</a>)
 
-        <a class="method-permalink" href="#get%3F%28key%29-instance-method">#</a>
+        <a class="method-permalink" href="#get%3F%28key%3AString%29-instance-method">#</a>
       </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/5c553aa7bd67a8ec8f00050eddda8adcdd0a72f8/src/avram/params.cr#L34" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/781609ba8513abdf6e6ae041a63063a97a24c255/src/avram/params.cr#L41" target="_blank">View source</a>]
         
       </div>
     </div>
   
-    <div class="entry-detail" id="many_nested(key):Array(Hash(String,String))-instance-method">
+    <div class="entry-detail" id="get_all(key:String)-instance-method">
       <div class="signature">
         
-        def <strong>many_nested</strong>(key) : <a href="../Array.html">Array</a>(Hash(<a href="../String.html">String</a>, <a href="../String.html">String</a>))
+        def <strong>get_all</strong>(key : <a href="../String.html">String</a>)
 
-        <a class="method-permalink" href="#many_nested%28key%29%3AArray%28Hash%28String%2CString%29%29-instance-method">#</a>
+        <a class="method-permalink" href="#get_all%28key%3AString%29-instance-method">#</a>
       </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/5c553aa7bd67a8ec8f00050eddda8adcdd0a72f8/src/avram/params.cr#L30" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/781609ba8513abdf6e6ae041a63063a97a24c255/src/avram/params.cr#L53" target="_blank">View source</a>]
         
       </div>
     </div>
   
-    <div class="entry-detail" id="many_nested?(key):Array(Hash(String,String))-instance-method">
+    <div class="entry-detail" id="get_all?(key:String)-instance-method">
       <div class="signature">
         
-        def <strong>many_nested?</strong>(key) : <a href="../Array.html">Array</a>(Hash(<a href="../String.html">String</a>, <a href="../String.html">String</a>))
+        def <strong>get_all?</strong>(key : <a href="../String.html">String</a>)
 
-        <a class="method-permalink" href="#many_nested%3F%28key%29%3AArray%28Hash%28String%2CString%29%29-instance-method">#</a>
+        <a class="method-permalink" href="#get_all%3F%28key%3AString%29-instance-method">#</a>
       </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/5c553aa7bd67a8ec8f00050eddda8adcdd0a72f8/src/avram/params.cr#L26" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/781609ba8513abdf6e6ae041a63063a97a24c255/src/avram/params.cr#L49" target="_blank">View source</a>]
         
       </div>
     </div>
   
-    <div class="entry-detail" id="nested(key):Hash(String,String)-instance-method">
+    <div class="entry-detail" id="get_all_files(key:String)-instance-method">
       <div class="signature">
         
-        def <strong>nested</strong>(key) : Hash(<a href="../String.html">String</a>, <a href="../String.html">String</a>)
+        def <strong>get_all_files</strong>(key : <a href="../String.html">String</a>)
 
-        <a class="method-permalink" href="#nested%28key%29%3AHash%28String%2CString%29-instance-method">#</a>
+        <a class="method-permalink" href="#get_all_files%28key%3AString%29-instance-method">#</a>
       </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/5c553aa7bd67a8ec8f00050eddda8adcdd0a72f8/src/avram/params.cr#L22" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/781609ba8513abdf6e6ae041a63063a97a24c255/src/avram/params.cr#L65" target="_blank">View source</a>]
         
       </div>
     </div>
   
-    <div class="entry-detail" id="nested?(key):Hash(String,String)-instance-method">
+    <div class="entry-detail" id="many_nested(key:String):Array(Hash(String,String))-instance-method">
       <div class="signature">
         
-        def <strong>nested?</strong>(key) : Hash(<a href="../String.html">String</a>, <a href="../String.html">String</a>)
+        def <strong>many_nested</strong>(key : <a href="../String.html">String</a>) : <a href="../Array.html">Array</a>(Hash(<a href="../String.html">String</a>, <a href="../String.html">String</a>))
 
-        <a class="method-permalink" href="#nested%3F%28key%29%3AHash%28String%2CString%29-instance-method">#</a>
+        <a class="method-permalink" href="#many_nested%28key%3AString%29%3AArray%28Hash%28String%2CString%29%29-instance-method">#</a>
       </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/5c553aa7bd67a8ec8f00050eddda8adcdd0a72f8/src/avram/params.cr#L18" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/781609ba8513abdf6e6ae041a63063a97a24c255/src/avram/params.cr#L37" target="_blank">View source</a>]
         
       </div>
     </div>
   
-    <div class="entry-detail" id="nested_file(key):Hash(String,String)-instance-method">
+    <div class="entry-detail" id="many_nested?(key:String):Array(Hash(String,String))-instance-method">
       <div class="signature">
         
-        def <strong>nested_file</strong>(key) : Hash(<a href="../String.html">String</a>, <a href="../String.html">String</a>)
+        def <strong>many_nested?</strong>(key : <a href="../String.html">String</a>) : <a href="../Array.html">Array</a>(Hash(<a href="../String.html">String</a>, <a href="../String.html">String</a>))
 
-        <a class="method-permalink" href="#nested_file%28key%29%3AHash%28String%2CString%29-instance-method">#</a>
+        <a class="method-permalink" href="#many_nested%3F%28key%3AString%29%3AArray%28Hash%28String%2CString%29%29-instance-method">#</a>
       </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/5c553aa7bd67a8ec8f00050eddda8adcdd0a72f8/src/avram/params.cr#L46" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/781609ba8513abdf6e6ae041a63063a97a24c255/src/avram/params.cr#L33" target="_blank">View source</a>]
         
       </div>
     </div>
   
-    <div class="entry-detail" id="nested_file?(key):Hash(String,String)-instance-method">
+    <div class="entry-detail" id="nested(key:String):Hash(String,String)-instance-method">
       <div class="signature">
         
-        def <strong>nested_file?</strong>(key) : Hash(<a href="../String.html">String</a>, <a href="../String.html">String</a>)
+        def <strong>nested</strong>(key : <a href="../String.html">String</a>) : Hash(<a href="../String.html">String</a>, <a href="../String.html">String</a>)
 
-        <a class="method-permalink" href="#nested_file%3F%28key%29%3AHash%28String%2CString%29-instance-method">#</a>
+        <a class="method-permalink" href="#nested%28key%3AString%29%3AHash%28String%2CString%29-instance-method">#</a>
       </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/5c553aa7bd67a8ec8f00050eddda8adcdd0a72f8/src/avram/params.cr#L42" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/781609ba8513abdf6e6ae041a63063a97a24c255/src/avram/params.cr#L17" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="nested?(key:String):Hash(String,String)-instance-method">
+      <div class="signature">
+        
+        def <strong>nested?</strong>(key : <a href="../String.html">String</a>) : Hash(<a href="../String.html">String</a>, <a href="../String.html">String</a>)
+
+        <a class="method-permalink" href="#nested%3F%28key%3AString%29%3AHash%28String%2CString%29-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/luckyframework/avram/blob/781609ba8513abdf6e6ae041a63063a97a24c255/src/avram/params.cr#L13" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="nested_arrays(key:String):Hash(String,Array(String))-instance-method">
+      <div class="signature">
+        
+        def <strong>nested_arrays</strong>(key : <a href="../String.html">String</a>) : Hash(<a href="../String.html">String</a>, <a href="../Array.html">Array</a>(<a href="../String.html">String</a>))
+
+        <a class="method-permalink" href="#nested_arrays%28key%3AString%29%3AHash%28String%2CArray%28String%29%29-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/luckyframework/avram/blob/781609ba8513abdf6e6ae041a63063a97a24c255/src/avram/params.cr#L29" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="nested_arrays?(key:String):Hash(String,Array(String))-instance-method">
+      <div class="signature">
+        
+        def <strong>nested_arrays?</strong>(key : <a href="../String.html">String</a>) : Hash(<a href="../String.html">String</a>, <a href="../Array.html">Array</a>(<a href="../String.html">String</a>))
+
+        <a class="method-permalink" href="#nested_arrays%3F%28key%3AString%29%3AHash%28String%2CArray%28String%29%29-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/luckyframework/avram/blob/781609ba8513abdf6e6ae041a63063a97a24c255/src/avram/params.cr#L25" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="nested_file(key:String):Hash(String,String)-instance-method">
+      <div class="signature">
+        
+        def <strong>nested_file</strong>(key : <a href="../String.html">String</a>) : Hash(<a href="../String.html">String</a>, <a href="../String.html">String</a>)
+
+        <a class="method-permalink" href="#nested_file%28key%3AString%29%3AHash%28String%2CString%29-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/luckyframework/avram/blob/781609ba8513abdf6e6ae041a63063a97a24c255/src/avram/params.cr#L61" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="nested_file?(key:String):Hash(String,String)-instance-method">
+      <div class="signature">
+        
+        def <strong>nested_file?</strong>(key : <a href="../String.html">String</a>) : Hash(<a href="../String.html">String</a>, <a href="../String.html">String</a>)
+
+        <a class="method-permalink" href="#nested_file%3F%28key%3AString%29%3AHash%28String%2CString%29-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/luckyframework/avram/blob/781609ba8513abdf6e6ae041a63063a97a24c255/src/avram/params.cr#L57" target="_blank">View source</a>]
         
       </div>
     </div>
