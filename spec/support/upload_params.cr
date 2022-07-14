@@ -4,6 +4,7 @@ class Avram::UploadParams < Avram::Params
   @uploads : Hash(String, Avram::UploadedFile) = {} of String => Avram::UploadedFile
 
   def initialize(@uploads)
+    @hash = {} of String => Array(String)
   end
 
   def nested_file?(key) : Hash(String, Avram::UploadedFile)

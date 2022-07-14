@@ -1,6 +1,6 @@
 require "../../spec_helper"
 
-include LazyLoadHelpers
+include ParamHelper
 
 private class TestSaveIssue < Issue::SaveOperation
   permit_columns role, status
@@ -41,7 +41,7 @@ describe "models using enums" do
   end
 
   it "can use Int values from params" do
-    params = Avram::Params.new({"role" => "3", "status" => "0"})
+    params = build_params("issue:role=3&issue:status=0")
     TestSaveIssue.create!(params)
 
     issue = IssueQuery.new.first
@@ -50,7 +50,7 @@ describe "models using enums" do
   end
 
   it "can use String values from params" do
-    params = Avram::Params.new({"role" => "Critical", "status" => "Opened"})
+    params = build_params("issue:role=Critical&issue:status=Opened")
     TestSaveIssue.create!(params)
 
     issue = IssueQuery.new.first

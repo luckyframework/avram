@@ -229,8 +229,7 @@ describe "Avram::SaveOperation callbacks" do
   end
 
   it "runs before_save in parent class and before_save in child class" do
-    params = Avram::Params.new({"name" => "A fancy hat"})
-    SaveLineItemSub.create params do |operation, record|
+    SaveLineItemSub.create name: "A fancy hat" do |operation, record|
       operation.locked.should be_true
       operation.loaded.should be_true
       operation.saved?.should be_true
@@ -240,9 +239,8 @@ describe "Avram::SaveOperation callbacks" do
 
   it "skips running specified callbacks" do
     post = PostFactory.create &.title("Existing Post")
-    params = Avram::Params.new({"title" => "A fancy post"})
 
-    UpdateOperationWithSkipCallbacks.update(post, params) do |operation, updated_post|
+    UpdateOperationWithSkipCallbacks.update(post, title: "A fancy post") do |operation, updated_post|
       updated_post.should_not eq nil
       updated_post.not_nil!.title.should eq "A fancy post"
 

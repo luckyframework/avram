@@ -4,7 +4,7 @@ class Avram::Attribute(T)
   setter value : T?
   getter param_key : String
   @errors = [] of String
-  @param : Avram::Uploadable | String | Nil
+  @param : Avram::Uploadable | Array(String) | String | Nil
 
   # This can be used as an escape hatch when you
   # may have a blank string that's allowed to be saved.
@@ -26,7 +26,7 @@ class Avram::Attribute(T)
     end
   end
 
-  def param : Avram::Uploadable | String
+  def param : Avram::Uploadable | Array(String) | String
     @param || value.to_s
   end
 
@@ -83,6 +83,20 @@ class Avram::Attribute(T)
 
   def extract(params : Avram::Paramable)
     extract(params, type: T)
+  end
+
+  private def extract(params, type : Array(T).class) forall T
+    nested_params = params.nested_arrays(param_key)
+    param_val = nested_params[name.to_s]?
+    @param = param_val.try(&.first?)
+    return if param_val.nil?
+
+    parse_result = T.adapter.parse(param_val)
+    if parse_result.is_a? Avram::Type::SuccessfulCast
+      self.value = parse_result.value
+    else
+      add_error("is invalid")
+    end
   end
 
   private def extract(params, type : Avram::Uploadable.class)

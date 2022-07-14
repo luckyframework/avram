@@ -87,7 +87,7 @@ module Avram::NeedyInitializerAndSaveMethods
       Try this...
 
         * Use named arguments (recommended) - #{@type}.#{method.id}(#{additional_args.id if additional_args}title: "My Title")
-        * Convert hash to params (not as safe) - Avram::Params.new({"title" => "My Title"})
+        * Convert hash to params (not as safe) - Avram::Params.new({"title" => ["My Title"]})
 
       ERROR
     %}
