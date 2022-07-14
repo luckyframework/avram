@@ -151,8 +151,17 @@ class Avram::Migrator::AlterTableStatement
       %}
     {% end %}
 
-    {% if default && fill_existing_with %}
-      {% type_declaration.raise "Cannot use both 'default' and 'fill_existing_with' arguments" %}
+    {% if (default != nil) && (fill_existing_with != nil) %}
+      {% type_declaration.raise <<-ERROR
+
+        Cannot use both 'default' and 'fill_existing_with' arguments for add(#{type_declaration}).
+
+        Try this...
+
+          ▸ Use `default` to set the default value, and backfill existing columns
+          ▸ Use `fill_existing_with` to backfill existing columns without a default value
+        ERROR
+      %}
     {% end %}
 
     rows << Avram::Migrator::Columns::{{ type }}Column(
