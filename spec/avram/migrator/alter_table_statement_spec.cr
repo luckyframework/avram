@@ -65,11 +65,26 @@ describe Avram::Migrator::AlterTableStatement do
     built = Avram::Migrator::AlterTableStatement.new(:users).build do
       change_type id : Int64
       change_type age : Float64, precision: 1, scale: 2
+      change_type name : String, case_sensitive: false
     end
 
-    built.statements.size.should eq 2
+    built.statements.size.should eq 3
     built.statements[0].should eq "ALTER TABLE users ALTER COLUMN id SET DATA TYPE bigint;"
     built.statements[1].should eq "ALTER TABLE users ALTER COLUMN age SET DATA TYPE decimal(1,2);"
+    built.statements[2].should eq "ALTER TABLE users ALTER COLUMN name SET DATA TYPE citext;"
+  end
+
+  it "can change column defaults" do
+    built = Avram::Migrator::AlterTableStatement.new(:test_defaults).build do
+      change_default greeting : String, default: "General Kenobi"
+      change_default published_at : Time, default: :now
+      change_default money : Float64, default: 29.99
+    end
+
+    built.statements.size.should eq 3
+    built.statements[0].should eq "ALTER TABLE ONLY test_defaults ALTER COLUMN greeting SET DEFAULT 'General Kenobi';"
+    built.statements[1].should eq "ALTER TABLE ONLY test_defaults ALTER COLUMN published_at SET DEFAULT NOW();"
+    built.statements[2].should eq "ALTER TABLE ONLY test_defaults ALTER COLUMN money SET DEFAULT '29.99';"
   end
 
   describe "fill_existing_with" do
