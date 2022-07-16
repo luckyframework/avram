@@ -10,14 +10,28 @@ class Avram::Migrator::AlterTableStatement
   getter dropped_rows = [] of String
   getter fill_existing_with_statements = [] of String
   getter change_type_statements = [] of String
+  getter change_default_statements = [] of String
 
   def initialize(@table_name : TableName)
   end
 
+  # Change the column's type from whatever it is currently to
+  # `type_declaration.type`. The only exceptions are when changing
+  # from `text` to `citext` with `String` using `case_sensitive`, or changing to
+  # a `Float64` column which requires setting the `precision`, and `scale`.
+  # ```
+  # alter table_for(User) do
+  #   change_type email : String, case_sensitive: false
+  # end
+  # ```
   macro change_type(type_declaration, **type_options)
-    {% if !type_declaration.is_a?(TypeDeclaration) %}
-      {% type_declaration.raise "Must pass a type declaration to 'change_type'. Example: change_type age : Int32" %}
-    {% end %}
+    {%
+      if !type_declaration.is_a?(TypeDeclaration)
+        raise "Must pass a type declaration to 'change_type'. Example: change_type age : Int32"
+      elsif type_options.keys.includes?("default".id)
+        raise "Cannot change the default value from `change_type`. Use `change_default` instead."
+      end
+    %}
     %column = ::Avram::Migrator::Columns::{{ type_declaration.type }}Column({{ type_declaration.type }}).new(
       name: {{ type_declaration.var.stringify }},
       nilable: false,
@@ -27,8 +41,32 @@ class Avram::Migrator::AlterTableStatement
     add_change_type_statement %column
   end
 
+  # Change the columns' default value to `default`
+  # ```
+  # alter table_for(Post) do
+  #   change_default published_at, default: :now
+  # end
+  # ```
+  macro change_default(type_declaration, default)
+    {%
+      if !type_declaration.is_a?(TypeDeclaration)
+        raise "Must pass a type declaration to 'change_default'. Example: change_default count : Int32, default: 1"
+      end
+    %}
+    %column = ::Avram::Migrator::Columns::{{ type_declaration.type }}Column({{ type_declaration.type }}).new(
+      name: {{ type_declaration.var.stringify }},
+      nilable: false,
+      default: {{ default }}
+    )
+    add_change_default_statement %column
+  end
+
   def add_change_type_statement(column : ::Avram::Migrator::Columns::Base)
     change_type_statements << column.build_change_type_statement(@table_name)
+  end
+
+  def add_change_default_statement(column : ::Avram::Migrator::Columns::Base)
+    change_default_statements << column.build_change_default_statement(@table_name)
   end
 
   # Accepts a block to alter a table using the `add` method. The generated sql
@@ -57,7 +95,7 @@ class Avram::Migrator::AlterTableStatement
   end
 
   def statements
-    alter_statements + change_type_statements + index_statements + fill_existing_with_statements
+    alter_statements + change_default_statements + change_type_statements + index_statements + fill_existing_with_statements
   end
 
   def alter_statements : Array(String)
