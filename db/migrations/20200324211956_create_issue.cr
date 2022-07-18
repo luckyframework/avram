@@ -4,6 +4,7 @@ class CreateIssue::V20200324211956 < Avram::Migrator::Migration::V1
       primary_key id : Int64
       add status : Int32
       add role : Int32
+      add permissions : Int64
       add_timestamps
     end
   end
