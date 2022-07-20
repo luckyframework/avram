@@ -10,14 +10,14 @@ require "./validations"
 require "./operation_errors"
 require "./upsert"
 
-abstract class Avram::SaveOperation(T)
+abstract class Avram::SaveOperation(AvramModel)
   include Avram::DefineAttribute
   include Avram::Validations
   include Avram::OperationErrors
   include Avram::ParamKeyOverride
   include Avram::NeedyInitializerAndSaveMethods
   include Avram::Callbacks
-  include Avram::DatabaseValidations(T)
+  include Avram::DatabaseValidations(AvramModel)
   include Avram::NestedSaveOperation
   include Avram::MarkAsFailed
   include Avram::InheritColumnAttributes
@@ -34,7 +34,7 @@ abstract class Avram::SaveOperation(T)
     @@permitted_param_keys = [] of String
   end
 
-  @record : T?
+  @record : AvramModel?
   @params : Avram::Paramable
 
   # :nodoc:
@@ -45,7 +45,7 @@ abstract class Avram::SaveOperation(T)
   abstract def attributes
 
   def self.param_key
-    T.name.underscore
+    AvramModel.name.underscore
   end
 
   def initialize(@params)
@@ -55,7 +55,7 @@ abstract class Avram::SaveOperation(T)
     @params = Avram::Params.new
   end
 
-  delegate :database, :table_name, :primary_key_name, to: T
+  delegate :database, :table_name, :primary_key_name, to: AvramModel
 
   private def publish_save_failed_event
     Avram::Events::SaveFailedEvent.publish(
@@ -233,7 +233,7 @@ abstract class Avram::SaveOperation(T)
     end
   end
 
-  def save! : T
+  def save! : AvramModel
     if save
       record.not_nil!
     else
@@ -241,7 +241,7 @@ abstract class Avram::SaveOperation(T)
     end
   end
 
-  def update! : T
+  def update! : AvramModel
     save!
   end
 
@@ -272,11 +272,11 @@ abstract class Avram::SaveOperation(T)
 
   def before_save; end
 
-  def after_save(_record : T); end
+  def after_save(_record : AvramModel); end
 
-  def after_commit(_record : T); end
+  def after_commit(_record : AvramModel); end
 
-  private def insert : T
+  private def insert : AvramModel
     self.created_at.value ||= Time.utc if responds_to?(:created_at)
     self.updated_at.value ||= Time.utc if responds_to?(:updated_at)
     @record = database.query insert_sql.statement, args: insert_sql.args do |rs|
@@ -284,7 +284,7 @@ abstract class Avram::SaveOperation(T)
     end
   end
 
-  private def update(id) : T
+  private def update(id) : AvramModel
     self.updated_at.value = Time.utc if responds_to?(:updated_at)
     @record = database.query update_query(id).statement_for_update(changes), args: update_query(id).args_for_update(changes) do |rs|
       @record = T.from_rs(rs).first
@@ -294,13 +294,13 @@ abstract class Avram::SaveOperation(T)
   private def update_query(id)
     Avram::QueryBuilder
       .new(table_name)
-      .select(T.column_names)
+      .select(AvramModel.column_names)
       .where(Avram::Where::Equal.new(primary_key_name, id.to_s))
   end
 
   private def insert_sql
     insert_values = attributes_to_hash(column_attributes).compact
-    Avram::Insert.new(table_name, insert_values, T.column_names)
+    Avram::Insert.new(table_name, insert_values, AvramModel.column_names)
   end
 
   private def attributes_to_hash(attributes) : Hash(Symbol, String?)

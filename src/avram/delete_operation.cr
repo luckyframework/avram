@@ -6,7 +6,7 @@ require "./param_key_override"
 require "./inherit_column_attributes"
 require "./needy_initializer_and_delete_methods"
 
-abstract class Avram::DeleteOperation(T)
+abstract class Avram::DeleteOperation(AvramModel)
   include Avram::NeedyInitializerAndDeleteMethods
   include Avram::DefineAttribute
   include Avram::Validations
@@ -25,14 +25,14 @@ abstract class Avram::DeleteOperation(T)
   macro inherited
     @@permitted_param_keys = [] of String
 
-    @record : T
+    @record : AvramModel
     @params : Avram::Paramable
     getter :record, :params
     property delete_status : OperationStatus = OperationStatus::Unperformed
   end
 
   def self.param_key
-    T.name.underscore
+    AvramModel.name.underscore
   end
 
   def delete : Bool
@@ -85,7 +85,7 @@ abstract class Avram::DeleteOperation(T)
 
   def before_delete; end
 
-  def after_delete(_record : T); end
+  def after_delete(_record : AvramModel); end
 
   # :nodoc:
   def publish_delete_failed_event
@@ -102,7 +102,7 @@ abstract class Avram::DeleteOperation(T)
     )
   end
 
-  private def delete_or_soft_delete(record : T) : T
+  private def delete_or_soft_delete(record : AvramModel) : AvramModel
     if record.is_a?(Avram::SoftDelete::Model)
       record.soft_delete
     else
