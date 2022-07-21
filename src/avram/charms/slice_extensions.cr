@@ -15,6 +15,10 @@ struct Slice(T)
       value
     end
 
+    def parse(value : String)
+      parse(value.to_slice)
+    end
+
     def parse(value : Bytes)
       SuccessfulCast(Bytes).new(value)
     end
