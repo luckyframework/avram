@@ -77,6 +77,7 @@ struct Time
 
     class Criteria(T, V) < Avram::Criteria(T, V)
       include Avram::BetweenCriteria(T, V)
+      include Avram::ExtractCriteria
     end
   end
 end
