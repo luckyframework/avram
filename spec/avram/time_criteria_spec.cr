@@ -120,14 +120,14 @@ describe Time::Lucky::Criteria do
 
       it "timezone_hour" do
         output_query = "SELECT users.id, users.created_at, users.updated_at, users.activated_at FROM users WHERE extract(timezone_hour from users.activated_at) = $1"
-        activated_at.extract(Avram::ChronoUnits::Timezone_hour).eq(5).to_sql.should eq [output_query, "5"]
+        activated_at.extract(Avram::ChronoUnits::TimezoneHour).eq(5).to_sql.should eq [output_query, "5"]
         activated_at.extract(:timezone_hour).eq(5).to_sql.should eq [output_query, "5"]
         activated_at.extract_timezone_hour.eq(5).to_sql.should eq [output_query, "5"]
       end
 
       it "timezone_minute" do
         output_query = "SELECT users.id, users.created_at, users.updated_at, users.activated_at FROM users WHERE extract(timezone_minute from users.activated_at) = $1"
-        activated_at.extract(Avram::ChronoUnits::Timezone_minute).eq(5).to_sql.should eq [output_query, "5"]
+        activated_at.extract(Avram::ChronoUnits::TimezoneMinute).eq(5).to_sql.should eq [output_query, "5"]
         activated_at.extract(:timezone_minute).eq(5).to_sql.should eq [output_query, "5"]
         activated_at.extract_timezone_minute.eq(5).to_sql.should eq [output_query, "5"]
       end
