@@ -13,9 +13,16 @@ class Issue < BaseModel
     Critical = 3
   end
 
+  @[Flags]
+  enum Permissions : Int64
+    Read
+    Write
+  end
+
   table do
     column status : Issue::Status
     column role : Issue::Role = Issue::Role::Issue
+    column permissions : Issue::Permissions = Issue::Permissions::Read | Issue::Permissions::Write
   end
 end
 
