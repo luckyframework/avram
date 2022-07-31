@@ -13,7 +13,7 @@
 <script type="text/javascript" src="../js/doc.js"></script>
 
   <meta name="repository-name" content="avram">
-  <title>Avram::ConnectionError - avram main</title>
+  <title>Avram::ChronoUnits - avram main</title>
   <script type="text/javascript">
     CrystalDocs.base_path = "../";
   </script>
@@ -131,7 +131,7 @@
       
     </li>
   
-  <li class=" " data-id="avram/Avram/ChronoUnits" data-name="avram::chronounits">
+  <li class=" current" data-id="avram/Avram/ChronoUnits" data-name="avram::chronounits">
       <a href="../Avram/ChronoUnits.html">ChronoUnits</a>
       
     </li>
@@ -141,7 +141,7 @@
       
     </li>
   
-  <li class=" current" data-id="avram/Avram/ConnectionError" data-name="avram::connectionerror">
+  <li class=" " data-id="avram/Avram/ConnectionError" data-name="avram::connectionerror">
       <a href="../Avram/ConnectionError.html">ConnectionError</a>
       
     </li>
@@ -1635,12 +1635,10 @@
 <div class="main-content">
 <h1 class="type-name">
 
-  <span class="kind">class</span> Avram::ConnectionError
+  <span class="kind">enum</span> Avram::ChronoUnits
 
 </h1>
 
-
-  <ul class="superclass-hierarchy"><li class="superclass"><a href="../Avram/ConnectionError.html">Avram::ConnectionError</a></li><li class="superclass"><a href="../Avram/AvramError.html">Avram::AvramError</a></li><li class="superclass">Exception</li><li class="superclass">Reference</li><li class="superclass"><a href="../Object.html">Object</a></li></ul>
 
 
 
@@ -1668,8 +1666,8 @@
   </h2>
   
     
-      <a href="https://github.com/luckyframework/avram/blob/f0148f4274798124f5457c85fa35f7ba985636b6/src/avram/errors.cr#L83" target="_blank">
-        avram/errors.cr
+      <a href="https://github.com/luckyframework/avram/blob/f0148f4274798124f5457c85fa35f7ba985636b6/src/avram/chrono_units.cr#L2" target="_blank">
+        avram/chrono_units.cr
       </a>
     
     <br/>
@@ -1679,41 +1677,129 @@
 
   
     <h2>
-      <a id="constant-summary" class="anchor" href="#constant-summary">
+      <a id="enum-members" class="anchor" href="#enum-members">
   <svg class="octicon-link" aria-hidden="true">
     <use href="#octicon-link"/>
   </svg>
 </a>
-      Constant Summary
+      Enum Members
     </h2>
   
   <dl>
     
-      <dt class="entry-const" id="DEFAULT_PG_PORT">
-        <strong>DEFAULT_PG_PORT</strong> = <code><span class="n">5432</span></code>
+      <dt class="entry-const" id="Century">
+        <strong>Century</strong> = <code><span class="n">0</span></code>
+      </dt>
+      
+    
+      <dt class="entry-const" id="Day">
+        <strong>Day</strong> = <code><span class="n">1</span></code>
+      </dt>
+      
+    
+      <dt class="entry-const" id="Decade">
+        <strong>Decade</strong> = <code><span class="n">2</span></code>
+      </dt>
+      
+    
+      <dt class="entry-const" id="Dow">
+        <strong>Dow</strong> = <code><span class="n">3</span></code>
+      </dt>
+      
+    
+      <dt class="entry-const" id="Doy">
+        <strong>Doy</strong> = <code><span class="n">4</span></code>
+      </dt>
+      
+    
+      <dt class="entry-const" id="Epoch">
+        <strong>Epoch</strong> = <code><span class="n">5</span></code>
+      </dt>
+      
+    
+      <dt class="entry-const" id="Hour">
+        <strong>Hour</strong> = <code><span class="n">6</span></code>
+      </dt>
+      
+    
+      <dt class="entry-const" id="Isodow">
+        <strong>Isodow</strong> = <code><span class="n">7</span></code>
+      </dt>
+      
+    
+      <dt class="entry-const" id="Isoyear">
+        <strong>Isoyear</strong> = <code><span class="n">8</span></code>
+      </dt>
+      
+    
+      <dt class="entry-const" id="Julian">
+        <strong>Julian</strong> = <code><span class="n">9</span></code>
+      </dt>
+      
+    
+      <dt class="entry-const" id="Microseconds">
+        <strong>Microseconds</strong> = <code><span class="n">10</span></code>
+      </dt>
+      
+    
+      <dt class="entry-const" id="Millennium">
+        <strong>Millennium</strong> = <code><span class="n">11</span></code>
+      </dt>
+      
+    
+      <dt class="entry-const" id="Milliseconds">
+        <strong>Milliseconds</strong> = <code><span class="n">12</span></code>
+      </dt>
+      
+    
+      <dt class="entry-const" id="Minute">
+        <strong>Minute</strong> = <code><span class="n">13</span></code>
+      </dt>
+      
+    
+      <dt class="entry-const" id="Month">
+        <strong>Month</strong> = <code><span class="n">14</span></code>
+      </dt>
+      
+    
+      <dt class="entry-const" id="Quarter">
+        <strong>Quarter</strong> = <code><span class="n">15</span></code>
+      </dt>
+      
+    
+      <dt class="entry-const" id="Second">
+        <strong>Second</strong> = <code><span class="n">16</span></code>
+      </dt>
+      
+    
+      <dt class="entry-const" id="Timezone">
+        <strong>Timezone</strong> = <code><span class="n">17</span></code>
+      </dt>
+      
+    
+      <dt class="entry-const" id="TimezoneHour">
+        <strong>TimezoneHour</strong> = <code><span class="n">18</span></code>
+      </dt>
+      
+    
+      <dt class="entry-const" id="TimezoneMinute">
+        <strong>TimezoneMinute</strong> = <code><span class="n">19</span></code>
+      </dt>
+      
+    
+      <dt class="entry-const" id="Week">
+        <strong>Week</strong> = <code><span class="n">20</span></code>
+      </dt>
+      
+    
+      <dt class="entry-const" id="Year">
+        <strong>Year</strong> = <code><span class="n">21</span></code>
       </dt>
       
     
   </dl>
 
 
-
-  <h2>
-    <a id="constructors" class="anchor" href="#constructors">
-  <svg class="octicon-link" aria-hidden="true">
-    <use href="#octicon-link"/>
-  </svg>
-</a>
-    Constructors
-  </h2>
-  <ul class="list-summary">
-    
-      <li class="entry-summary">
-        <a href="#new%28connection_details%3AURI%2Cdatabase_class%3AAvram%3A%3ADatabase.class%29-class-method" class="signature"><strong>.new</strong>(connection_details : URI, database_class : <span class="t">Avram</span><span class="t">::</span><span class="t">Database</span>.<span class="k">class</span>)</a>
-        
-      </li>
-    
-  </ul>
 
 
 
@@ -1730,12 +1816,112 @@
   <ul class="list-summary">
     
       <li class="entry-summary">
-        <a href="#connection_details%3AURI-instance-method" class="signature"><strong>#connection_details</strong> : URI</a>
+        <a href="#century%3F-instance-method" class="signature"><strong>#century?</strong></a>
         
       </li>
     
       <li class="entry-summary">
-        <a href="#database_class%3AAvram%3A%3ADatabase.class-instance-method" class="signature"><strong>#database_class</strong> : Avram::Database.class</a>
+        <a href="#day%3F-instance-method" class="signature"><strong>#day?</strong></a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#decade%3F-instance-method" class="signature"><strong>#decade?</strong></a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#dow%3F-instance-method" class="signature"><strong>#dow?</strong></a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#doy%3F-instance-method" class="signature"><strong>#doy?</strong></a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#epoch%3F-instance-method" class="signature"><strong>#epoch?</strong></a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#hour%3F-instance-method" class="signature"><strong>#hour?</strong></a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#isodow%3F-instance-method" class="signature"><strong>#isodow?</strong></a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#isoyear%3F-instance-method" class="signature"><strong>#isoyear?</strong></a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#julian%3F-instance-method" class="signature"><strong>#julian?</strong></a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#microseconds%3F-instance-method" class="signature"><strong>#microseconds?</strong></a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#millennium%3F-instance-method" class="signature"><strong>#millennium?</strong></a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#milliseconds%3F-instance-method" class="signature"><strong>#milliseconds?</strong></a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#minute%3F-instance-method" class="signature"><strong>#minute?</strong></a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#month%3F-instance-method" class="signature"><strong>#month?</strong></a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#quarter%3F-instance-method" class="signature"><strong>#quarter?</strong></a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#second%3F-instance-method" class="signature"><strong>#second?</strong></a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#timezone%3F-instance-method" class="signature"><strong>#timezone?</strong></a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#timezone_hour%3F-instance-method" class="signature"><strong>#timezone_hour?</strong></a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#timezone_minute%3F-instance-method" class="signature"><strong>#timezone_minute?</strong></a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#week%3F-instance-method" class="signature"><strong>#week?</strong></a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#year%3F-instance-method" class="signature"><strong>#year?</strong></a>
         
       </li>
     
@@ -1754,6 +1940,15 @@
 
 
     
+
+  <h3>Class methods inherited from struct <code><a href="../Enum.html">Enum</a></code></h3>
+  
+  
+    <a href="../Enum.html#adapter-class-method" class="tooltip">
+      <span>adapter</span>
+    adapter</a>
+    
+  
 
 
   
@@ -1799,32 +1994,6 @@
 </div>
 
 
-  <h2>
-    <a id="constructor-detail" class="anchor" href="#constructor-detail">
-  <svg class="octicon-link" aria-hidden="true">
-    <use href="#octicon-link"/>
-  </svg>
-</a>
-    Constructor Detail
-  </h2>
-  
-    <div class="entry-detail" id="new(connection_details:URI,database_class:Avram::Database.class)-class-method">
-      <div class="signature">
-        
-        def self.<strong>new</strong>(connection_details : URI, database_class : <span class="t">Avram</span><span class="t">::</span><span class="t">Database</span>.<span class="k">class</span>)
-
-        <a class="method-permalink" href="#new%28connection_details%3AURI%2Cdatabase_class%3AAvram%3A%3ADatabase.class%29-class-method">#</a>
-      </div>
-      
-      <br/>
-      <div>
-        
-          [<a href="https://github.com/luckyframework/avram/blob/f0148f4274798124f5457c85fa35f7ba985636b6/src/avram/errors.cr#L89" target="_blank">View source</a>]
-        
-      </div>
-    </div>
-  
-
 
 
 
@@ -1838,34 +2007,354 @@
     Instance Method Detail
   </h2>
   
-    <div class="entry-detail" id="connection_details:URI-instance-method">
+    <div class="entry-detail" id="century?-instance-method">
       <div class="signature">
         
-        def <strong>connection_details</strong> : URI
+        def <strong>century?</strong>
 
-        <a class="method-permalink" href="#connection_details%3AURI-instance-method">#</a>
+        <a class="method-permalink" href="#century%3F-instance-method">#</a>
       </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/f0148f4274798124f5457c85fa35f7ba985636b6/src/avram/errors.cr#L86" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/f0148f4274798124f5457c85fa35f7ba985636b6/src/avram/chrono_units.cr#L3" target="_blank">View source</a>]
         
       </div>
     </div>
   
-    <div class="entry-detail" id="database_class:Avram::Database.class-instance-method">
+    <div class="entry-detail" id="day?-instance-method">
       <div class="signature">
         
-        def <strong>database_class</strong> : Avram::Database.class
+        def <strong>day?</strong>
 
-        <a class="method-permalink" href="#database_class%3AAvram%3A%3ADatabase.class-instance-method">#</a>
+        <a class="method-permalink" href="#day%3F-instance-method">#</a>
       </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/f0148f4274798124f5457c85fa35f7ba985636b6/src/avram/errors.cr#L87" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/f0148f4274798124f5457c85fa35f7ba985636b6/src/avram/chrono_units.cr#L4" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="decade?-instance-method">
+      <div class="signature">
+        
+        def <strong>decade?</strong>
+
+        <a class="method-permalink" href="#decade%3F-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/luckyframework/avram/blob/f0148f4274798124f5457c85fa35f7ba985636b6/src/avram/chrono_units.cr#L5" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="dow?-instance-method">
+      <div class="signature">
+        
+        def <strong>dow?</strong>
+
+        <a class="method-permalink" href="#dow%3F-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/luckyframework/avram/blob/f0148f4274798124f5457c85fa35f7ba985636b6/src/avram/chrono_units.cr#L6" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="doy?-instance-method">
+      <div class="signature">
+        
+        def <strong>doy?</strong>
+
+        <a class="method-permalink" href="#doy%3F-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/luckyframework/avram/blob/f0148f4274798124f5457c85fa35f7ba985636b6/src/avram/chrono_units.cr#L7" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="epoch?-instance-method">
+      <div class="signature">
+        
+        def <strong>epoch?</strong>
+
+        <a class="method-permalink" href="#epoch%3F-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/luckyframework/avram/blob/f0148f4274798124f5457c85fa35f7ba985636b6/src/avram/chrono_units.cr#L8" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="hour?-instance-method">
+      <div class="signature">
+        
+        def <strong>hour?</strong>
+
+        <a class="method-permalink" href="#hour%3F-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/luckyframework/avram/blob/f0148f4274798124f5457c85fa35f7ba985636b6/src/avram/chrono_units.cr#L9" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="isodow?-instance-method">
+      <div class="signature">
+        
+        def <strong>isodow?</strong>
+
+        <a class="method-permalink" href="#isodow%3F-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/luckyframework/avram/blob/f0148f4274798124f5457c85fa35f7ba985636b6/src/avram/chrono_units.cr#L10" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="isoyear?-instance-method">
+      <div class="signature">
+        
+        def <strong>isoyear?</strong>
+
+        <a class="method-permalink" href="#isoyear%3F-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/luckyframework/avram/blob/f0148f4274798124f5457c85fa35f7ba985636b6/src/avram/chrono_units.cr#L11" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="julian?-instance-method">
+      <div class="signature">
+        
+        def <strong>julian?</strong>
+
+        <a class="method-permalink" href="#julian%3F-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/luckyframework/avram/blob/f0148f4274798124f5457c85fa35f7ba985636b6/src/avram/chrono_units.cr#L12" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="microseconds?-instance-method">
+      <div class="signature">
+        
+        def <strong>microseconds?</strong>
+
+        <a class="method-permalink" href="#microseconds%3F-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/luckyframework/avram/blob/f0148f4274798124f5457c85fa35f7ba985636b6/src/avram/chrono_units.cr#L13" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="millennium?-instance-method">
+      <div class="signature">
+        
+        def <strong>millennium?</strong>
+
+        <a class="method-permalink" href="#millennium%3F-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/luckyframework/avram/blob/f0148f4274798124f5457c85fa35f7ba985636b6/src/avram/chrono_units.cr#L14" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="milliseconds?-instance-method">
+      <div class="signature">
+        
+        def <strong>milliseconds?</strong>
+
+        <a class="method-permalink" href="#milliseconds%3F-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/luckyframework/avram/blob/f0148f4274798124f5457c85fa35f7ba985636b6/src/avram/chrono_units.cr#L15" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="minute?-instance-method">
+      <div class="signature">
+        
+        def <strong>minute?</strong>
+
+        <a class="method-permalink" href="#minute%3F-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/luckyframework/avram/blob/f0148f4274798124f5457c85fa35f7ba985636b6/src/avram/chrono_units.cr#L16" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="month?-instance-method">
+      <div class="signature">
+        
+        def <strong>month?</strong>
+
+        <a class="method-permalink" href="#month%3F-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/luckyframework/avram/blob/f0148f4274798124f5457c85fa35f7ba985636b6/src/avram/chrono_units.cr#L17" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="quarter?-instance-method">
+      <div class="signature">
+        
+        def <strong>quarter?</strong>
+
+        <a class="method-permalink" href="#quarter%3F-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/luckyframework/avram/blob/f0148f4274798124f5457c85fa35f7ba985636b6/src/avram/chrono_units.cr#L18" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="second?-instance-method">
+      <div class="signature">
+        
+        def <strong>second?</strong>
+
+        <a class="method-permalink" href="#second%3F-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/luckyframework/avram/blob/f0148f4274798124f5457c85fa35f7ba985636b6/src/avram/chrono_units.cr#L19" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="timezone?-instance-method">
+      <div class="signature">
+        
+        def <strong>timezone?</strong>
+
+        <a class="method-permalink" href="#timezone%3F-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/luckyframework/avram/blob/f0148f4274798124f5457c85fa35f7ba985636b6/src/avram/chrono_units.cr#L20" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="timezone_hour?-instance-method">
+      <div class="signature">
+        
+        def <strong>timezone_hour?</strong>
+
+        <a class="method-permalink" href="#timezone_hour%3F-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/luckyframework/avram/blob/f0148f4274798124f5457c85fa35f7ba985636b6/src/avram/chrono_units.cr#L21" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="timezone_minute?-instance-method">
+      <div class="signature">
+        
+        def <strong>timezone_minute?</strong>
+
+        <a class="method-permalink" href="#timezone_minute%3F-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/luckyframework/avram/blob/f0148f4274798124f5457c85fa35f7ba985636b6/src/avram/chrono_units.cr#L22" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="week?-instance-method">
+      <div class="signature">
+        
+        def <strong>week?</strong>
+
+        <a class="method-permalink" href="#week%3F-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/luckyframework/avram/blob/f0148f4274798124f5457c85fa35f7ba985636b6/src/avram/chrono_units.cr#L23" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="year?-instance-method">
+      <div class="signature">
+        
+        def <strong>year?</strong>
+
+        <a class="method-permalink" href="#year%3F-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/luckyframework/avram/blob/f0148f4274798124f5457c85fa35f7ba985636b6/src/avram/chrono_units.cr#L24" target="_blank">View source</a>]
         
       </div>
     </div>

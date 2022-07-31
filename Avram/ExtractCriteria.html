@@ -13,7 +13,7 @@
 <script type="text/javascript" src="../js/doc.js"></script>
 
   <meta name="repository-name" content="avram">
-  <title>Avram::ConnectionError - avram main</title>
+  <title>Avram::ExtractCriteria - avram main</title>
   <script type="text/javascript">
     CrystalDocs.base_path = "../";
   </script>
@@ -141,7 +141,7 @@
       
     </li>
   
-  <li class=" current" data-id="avram/Avram/ConnectionError" data-name="avram::connectionerror">
+  <li class=" " data-id="avram/Avram/ConnectionError" data-name="avram::connectionerror">
       <a href="../Avram/ConnectionError.html">ConnectionError</a>
       
     </li>
@@ -261,7 +261,7 @@
       
     </li>
   
-  <li class=" " data-id="avram/Avram/ExtractCriteria" data-name="avram::extractcriteria">
+  <li class=" current" data-id="avram/Avram/ExtractCriteria" data-name="avram::extractcriteria">
       <a href="../Avram/ExtractCriteria.html">ExtractCriteria</a>
       
     </li>
@@ -1635,12 +1635,11 @@
 <div class="main-content">
 <h1 class="type-name">
 
-  <span class="kind">class</span> Avram::ConnectionError
+  <span class="kind">module</span> Avram::ExtractCriteria
 
 </h1>
 
 
-  <ul class="superclass-hierarchy"><li class="superclass"><a href="../Avram/ConnectionError.html">Avram::ConnectionError</a></li><li class="superclass"><a href="../Avram/AvramError.html">Avram::AvramError</a></li><li class="superclass">Exception</li><li class="superclass">Reference</li><li class="superclass"><a href="../Object.html">Object</a></li></ul>
 
 
 
@@ -1654,6 +1653,19 @@
 
 
 
+  <h2>
+    <a id="direct-including-types" class="anchor" href="#direct-including-types">
+  <svg class="octicon-link" aria-hidden="true">
+    <use href="#octicon-link"/>
+  </svg>
+</a>
+    Direct including types
+  </h2>
+  <ul class="other-types-list">
+    
+      <li class="other-type"><a href="../Time/Lucky/Criteria.html">Time::Lucky::Criteria(T, V)</a></li>
+    
+  </ul>
 
 
 
@@ -1668,8 +1680,8 @@
   </h2>
   
     
-      <a href="https://github.com/luckyframework/avram/blob/f0148f4274798124f5457c85fa35f7ba985636b6/src/avram/errors.cr#L83" target="_blank">
-        avram/errors.cr
+      <a href="https://github.com/luckyframework/avram/blob/f0148f4274798124f5457c85fa35f7ba985636b6/src/avram/criteria_extensions/extract_criteria.cr#L3" target="_blank">
+        avram/criteria_extensions/extract_criteria.cr
       </a>
     
     <br/>
@@ -1677,69 +1689,11 @@
 
 
 
-  
-    <h2>
-      <a id="constant-summary" class="anchor" href="#constant-summary">
-  <svg class="octicon-link" aria-hidden="true">
-    <use href="#octicon-link"/>
-  </svg>
-</a>
-      Constant Summary
-    </h2>
-  
-  <dl>
-    
-      <dt class="entry-const" id="DEFAULT_PG_PORT">
-        <strong>DEFAULT_PG_PORT</strong> = <code><span class="n">5432</span></code>
-      </dt>
-      
-    
-  </dl>
-
-
-
-  <h2>
-    <a id="constructors" class="anchor" href="#constructors">
-  <svg class="octicon-link" aria-hidden="true">
-    <use href="#octicon-link"/>
-  </svg>
-</a>
-    Constructors
-  </h2>
-  <ul class="list-summary">
-    
-      <li class="entry-summary">
-        <a href="#new%28connection_details%3AURI%2Cdatabase_class%3AAvram%3A%3ADatabase.class%29-class-method" class="signature"><strong>.new</strong>(connection_details : URI, database_class : <span class="t">Avram</span><span class="t">::</span><span class="t">Database</span>.<span class="k">class</span>)</a>
-        
-      </li>
-    
-  </ul>
 
 
 
 
 
-  <h2>
-    <a id="instance-method-summary" class="anchor" href="#instance-method-summary">
-  <svg class="octicon-link" aria-hidden="true">
-    <use href="#octicon-link"/>
-  </svg>
-</a>
-    Instance Method Summary
-  </h2>
-  <ul class="list-summary">
-    
-      <li class="entry-summary">
-        <a href="#connection_details%3AURI-instance-method" class="signature"><strong>#connection_details</strong> : URI</a>
-        
-      </li>
-    
-      <li class="entry-summary">
-        <a href="#database_class%3AAvram%3A%3ADatabase.class-instance-method" class="signature"><strong>#database_class</strong> : Avram::Database.class</a>
-        
-      </li>
-    
-  </ul>
 
 
 
@@ -1747,129 +1701,12 @@
 
 <div class="methods-inherited">
   
-    
-
-
-    
-
-
-    
-
-
-  
-    
-
-
-    
-
-
-    
-
-
-  
-    
-
-
-    
-
-
-    
-
-
-  
-    
-
-  <h3>Instance methods inherited from class <code><a href="../Object.html">Object</a></code></h3>
-  
-  
-    <a href="../Object.html#blank_for_validates_required%3F%3ABool-instance-method" class="tooltip">
-      <span>blank_for_validates_required? : Bool</span>
-    blank_for_validates_required?</a>
-    
-  
-
-
-    
-
-
-    
-
-
-  
 </div>
 
 
-  <h2>
-    <a id="constructor-detail" class="anchor" href="#constructor-detail">
-  <svg class="octicon-link" aria-hidden="true">
-    <use href="#octicon-link"/>
-  </svg>
-</a>
-    Constructor Detail
-  </h2>
-  
-    <div class="entry-detail" id="new(connection_details:URI,database_class:Avram::Database.class)-class-method">
-      <div class="signature">
-        
-        def self.<strong>new</strong>(connection_details : URI, database_class : <span class="t">Avram</span><span class="t">::</span><span class="t">Database</span>.<span class="k">class</span>)
-
-        <a class="method-permalink" href="#new%28connection_details%3AURI%2Cdatabase_class%3AAvram%3A%3ADatabase.class%29-class-method">#</a>
-      </div>
-      
-      <br/>
-      <div>
-        
-          [<a href="https://github.com/luckyframework/avram/blob/f0148f4274798124f5457c85fa35f7ba985636b6/src/avram/errors.cr#L89" target="_blank">View source</a>]
-        
-      </div>
-    </div>
-  
 
 
 
-
-
-  <h2>
-    <a id="instance-method-detail" class="anchor" href="#instance-method-detail">
-  <svg class="octicon-link" aria-hidden="true">
-    <use href="#octicon-link"/>
-  </svg>
-</a>
-    Instance Method Detail
-  </h2>
-  
-    <div class="entry-detail" id="connection_details:URI-instance-method">
-      <div class="signature">
-        
-        def <strong>connection_details</strong> : URI
-
-        <a class="method-permalink" href="#connection_details%3AURI-instance-method">#</a>
-      </div>
-      
-      <br/>
-      <div>
-        
-          [<a href="https://github.com/luckyframework/avram/blob/f0148f4274798124f5457c85fa35f7ba985636b6/src/avram/errors.cr#L86" target="_blank">View source</a>]
-        
-      </div>
-    </div>
-  
-    <div class="entry-detail" id="database_class:Avram::Database.class-instance-method">
-      <div class="signature">
-        
-        def <strong>database_class</strong> : Avram::Database.class
-
-        <a class="method-permalink" href="#database_class%3AAvram%3A%3ADatabase.class-instance-method">#</a>
-      </div>
-      
-      <br/>
-      <div>
-        
-          [<a href="https://github.com/luckyframework/avram/blob/f0148f4274798124f5457c85fa35f7ba985636b6/src/avram/errors.cr#L87" target="_blank">View source</a>]
-        
-      </div>
-    </div>
-  
 
 
 

@@ -131,6 +131,11 @@
       
     </li>
   
+  <li class=" " data-id="avram/Avram/ChronoUnits" data-name="avram::chronounits">
+      <a href="../../Avram/ChronoUnits.html">ChronoUnits</a>
+      
+    </li>
+  
   <li class=" " data-id="avram/Avram/Connection" data-name="avram::connection">
       <a href="../../Avram/Connection.html">Connection</a>
       
@@ -253,6 +258,11 @@
   
 </ul>
 
+      
+    </li>
+  
+  <li class=" " data-id="avram/Avram/ExtractCriteria" data-name="avram::extractcriteria">
+      <a href="../../Avram/ExtractCriteria.html">ExtractCriteria</a>
       
     </li>
   
@@ -1651,6 +1661,8 @@
     
       <li class="other-type"><a href="../../Avram/BetweenCriteria.html">Avram::BetweenCriteria(T, V)</a></li>
     
+      <li class="other-type"><a href="../../Avram/ExtractCriteria.html">Avram::ExtractCriteria</a></li>
+    
   </ul>
 
 
@@ -1672,7 +1684,7 @@
   </h2>
   
     
-      <a href="https://github.com/luckyframework/avram/blob/4b1cb28fa704db693dee8503700be13c73611dc5/src/avram/charms/time_extensions.cr#L78" target="_blank">
+      <a href="https://github.com/luckyframework/avram/blob/f0148f4274798124f5457c85fa35f7ba985636b6/src/avram/charms/time_extensions.cr#L78" target="_blank">
         avram/charms/time_extensions.cr
       </a>
     
@@ -1721,6 +1733,126 @@
         
       </li>
     
+      <li class="entry-summary">
+        <a href="#extract%28chrono_unit%3AAvram%3A%3AChronoUnits%29-instance-method" class="signature"><strong>#extract</strong>(chrono_unit : Avram::ChronoUnits)</a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#extract%28symbol%3ASymbol%29-instance-method" class="signature"><strong>#extract</strong>(symbol : Symbol)</a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#extract_century-instance-method" class="signature"><strong>#extract_century</strong></a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#extract_day-instance-method" class="signature"><strong>#extract_day</strong></a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#extract_decade-instance-method" class="signature"><strong>#extract_decade</strong></a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#extract_dow-instance-method" class="signature"><strong>#extract_dow</strong></a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#extract_doy-instance-method" class="signature"><strong>#extract_doy</strong></a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#extract_epoch-instance-method" class="signature"><strong>#extract_epoch</strong></a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#extract_hour-instance-method" class="signature"><strong>#extract_hour</strong></a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#extract_isodow-instance-method" class="signature"><strong>#extract_isodow</strong></a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#extract_isoyear-instance-method" class="signature"><strong>#extract_isoyear</strong></a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#extract_julian-instance-method" class="signature"><strong>#extract_julian</strong></a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#extract_microseconds-instance-method" class="signature"><strong>#extract_microseconds</strong></a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#extract_millennium-instance-method" class="signature"><strong>#extract_millennium</strong></a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#extract_milliseconds-instance-method" class="signature"><strong>#extract_milliseconds</strong></a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#extract_minute-instance-method" class="signature"><strong>#extract_minute</strong></a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#extract_month-instance-method" class="signature"><strong>#extract_month</strong></a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#extract_quarter-instance-method" class="signature"><strong>#extract_quarter</strong></a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#extract_second-instance-method" class="signature"><strong>#extract_second</strong></a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#extract_timezone-instance-method" class="signature"><strong>#extract_timezone</strong></a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#extract_timezone_hour-instance-method" class="signature"><strong>#extract_timezone_hour</strong></a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#extract_timezone_minute-instance-method" class="signature"><strong>#extract_timezone_minute</strong></a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#extract_week-instance-method" class="signature"><strong>#extract_week</strong></a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#extract_year-instance-method" class="signature"><strong>#extract_year</strong></a>
+        
+      </li>
+    
   </ul>
 
 
@@ -1728,6 +1860,16 @@
 
 
 <div class="methods-inherited">
+  
+    
+
+
+    
+
+
+    
+
+
   
     
 
@@ -1924,7 +2066,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/4b1cb28fa704db693dee8503700be13c73611dc5/src/avram/criteria.cr#L5" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/f0148f4274798124f5457c85fa35f7ba985636b6/src/avram/criteria.cr#L5" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1959,7 +2101,391 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/4b1cb28fa704db693dee8503700be13c73611dc5/src/avram/charms/time_extensions.cr#L79" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/f0148f4274798124f5457c85fa35f7ba985636b6/src/avram/charms/time_extensions.cr#L79" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="extract(chrono_unit:Avram::ChronoUnits)-instance-method">
+      <div class="signature">
+        
+        def <strong>extract</strong>(chrono_unit : <a href="../../Avram/ChronoUnits.html">Avram::ChronoUnits</a>)
+
+        <a class="method-permalink" href="#extract%28chrono_unit%3AAvram%3A%3AChronoUnits%29-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/luckyframework/avram/blob/f0148f4274798124f5457c85fa35f7ba985636b6/src/avram/charms/time_extensions.cr#L80" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="extract(symbol:Symbol)-instance-method">
+      <div class="signature">
+        
+        def <strong>extract</strong>(symbol : Symbol)
+
+        <a class="method-permalink" href="#extract%28symbol%3ASymbol%29-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/luckyframework/avram/blob/f0148f4274798124f5457c85fa35f7ba985636b6/src/avram/charms/time_extensions.cr#L80" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="extract_century-instance-method">
+      <div class="signature">
+        
+        def <strong>extract_century</strong>
+
+        <a class="method-permalink" href="#extract_century-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/luckyframework/avram/blob/f0148f4274798124f5457c85fa35f7ba985636b6/src/avram/charms/time_extensions.cr#L80" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="extract_day-instance-method">
+      <div class="signature">
+        
+        def <strong>extract_day</strong>
+
+        <a class="method-permalink" href="#extract_day-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/luckyframework/avram/blob/f0148f4274798124f5457c85fa35f7ba985636b6/src/avram/charms/time_extensions.cr#L80" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="extract_decade-instance-method">
+      <div class="signature">
+        
+        def <strong>extract_decade</strong>
+
+        <a class="method-permalink" href="#extract_decade-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/luckyframework/avram/blob/f0148f4274798124f5457c85fa35f7ba985636b6/src/avram/charms/time_extensions.cr#L80" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="extract_dow-instance-method">
+      <div class="signature">
+        
+        def <strong>extract_dow</strong>
+
+        <a class="method-permalink" href="#extract_dow-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/luckyframework/avram/blob/f0148f4274798124f5457c85fa35f7ba985636b6/src/avram/charms/time_extensions.cr#L80" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="extract_doy-instance-method">
+      <div class="signature">
+        
+        def <strong>extract_doy</strong>
+
+        <a class="method-permalink" href="#extract_doy-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/luckyframework/avram/blob/f0148f4274798124f5457c85fa35f7ba985636b6/src/avram/charms/time_extensions.cr#L80" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="extract_epoch-instance-method">
+      <div class="signature">
+        
+        def <strong>extract_epoch</strong>
+
+        <a class="method-permalink" href="#extract_epoch-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/luckyframework/avram/blob/f0148f4274798124f5457c85fa35f7ba985636b6/src/avram/charms/time_extensions.cr#L80" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="extract_hour-instance-method">
+      <div class="signature">
+        
+        def <strong>extract_hour</strong>
+
+        <a class="method-permalink" href="#extract_hour-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/luckyframework/avram/blob/f0148f4274798124f5457c85fa35f7ba985636b6/src/avram/charms/time_extensions.cr#L80" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="extract_isodow-instance-method">
+      <div class="signature">
+        
+        def <strong>extract_isodow</strong>
+
+        <a class="method-permalink" href="#extract_isodow-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/luckyframework/avram/blob/f0148f4274798124f5457c85fa35f7ba985636b6/src/avram/charms/time_extensions.cr#L80" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="extract_isoyear-instance-method">
+      <div class="signature">
+        
+        def <strong>extract_isoyear</strong>
+
+        <a class="method-permalink" href="#extract_isoyear-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/luckyframework/avram/blob/f0148f4274798124f5457c85fa35f7ba985636b6/src/avram/charms/time_extensions.cr#L80" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="extract_julian-instance-method">
+      <div class="signature">
+        
+        def <strong>extract_julian</strong>
+
+        <a class="method-permalink" href="#extract_julian-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/luckyframework/avram/blob/f0148f4274798124f5457c85fa35f7ba985636b6/src/avram/charms/time_extensions.cr#L80" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="extract_microseconds-instance-method">
+      <div class="signature">
+        
+        def <strong>extract_microseconds</strong>
+
+        <a class="method-permalink" href="#extract_microseconds-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/luckyframework/avram/blob/f0148f4274798124f5457c85fa35f7ba985636b6/src/avram/charms/time_extensions.cr#L80" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="extract_millennium-instance-method">
+      <div class="signature">
+        
+        def <strong>extract_millennium</strong>
+
+        <a class="method-permalink" href="#extract_millennium-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/luckyframework/avram/blob/f0148f4274798124f5457c85fa35f7ba985636b6/src/avram/charms/time_extensions.cr#L80" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="extract_milliseconds-instance-method">
+      <div class="signature">
+        
+        def <strong>extract_milliseconds</strong>
+
+        <a class="method-permalink" href="#extract_milliseconds-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/luckyframework/avram/blob/f0148f4274798124f5457c85fa35f7ba985636b6/src/avram/charms/time_extensions.cr#L80" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="extract_minute-instance-method">
+      <div class="signature">
+        
+        def <strong>extract_minute</strong>
+
+        <a class="method-permalink" href="#extract_minute-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/luckyframework/avram/blob/f0148f4274798124f5457c85fa35f7ba985636b6/src/avram/charms/time_extensions.cr#L80" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="extract_month-instance-method">
+      <div class="signature">
+        
+        def <strong>extract_month</strong>
+
+        <a class="method-permalink" href="#extract_month-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/luckyframework/avram/blob/f0148f4274798124f5457c85fa35f7ba985636b6/src/avram/charms/time_extensions.cr#L80" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="extract_quarter-instance-method">
+      <div class="signature">
+        
+        def <strong>extract_quarter</strong>
+
+        <a class="method-permalink" href="#extract_quarter-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/luckyframework/avram/blob/f0148f4274798124f5457c85fa35f7ba985636b6/src/avram/charms/time_extensions.cr#L80" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="extract_second-instance-method">
+      <div class="signature">
+        
+        def <strong>extract_second</strong>
+
+        <a class="method-permalink" href="#extract_second-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/luckyframework/avram/blob/f0148f4274798124f5457c85fa35f7ba985636b6/src/avram/charms/time_extensions.cr#L80" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="extract_timezone-instance-method">
+      <div class="signature">
+        
+        def <strong>extract_timezone</strong>
+
+        <a class="method-permalink" href="#extract_timezone-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/luckyframework/avram/blob/f0148f4274798124f5457c85fa35f7ba985636b6/src/avram/charms/time_extensions.cr#L80" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="extract_timezone_hour-instance-method">
+      <div class="signature">
+        
+        def <strong>extract_timezone_hour</strong>
+
+        <a class="method-permalink" href="#extract_timezone_hour-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/luckyframework/avram/blob/f0148f4274798124f5457c85fa35f7ba985636b6/src/avram/charms/time_extensions.cr#L80" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="extract_timezone_minute-instance-method">
+      <div class="signature">
+        
+        def <strong>extract_timezone_minute</strong>
+
+        <a class="method-permalink" href="#extract_timezone_minute-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/luckyframework/avram/blob/f0148f4274798124f5457c85fa35f7ba985636b6/src/avram/charms/time_extensions.cr#L80" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="extract_week-instance-method">
+      <div class="signature">
+        
+        def <strong>extract_week</strong>
+
+        <a class="method-permalink" href="#extract_week-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/luckyframework/avram/blob/f0148f4274798124f5457c85fa35f7ba985636b6/src/avram/charms/time_extensions.cr#L80" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="extract_year-instance-method">
+      <div class="signature">
+        
+        def <strong>extract_year</strong>
+
+        <a class="method-permalink" href="#extract_year-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/luckyframework/avram/blob/f0148f4274798124f5457c85fa35f7ba985636b6/src/avram/charms/time_extensions.cr#L80" target="_blank">View source</a>]
         
       </div>
     </div>
