@@ -225,6 +225,7 @@ module Avram::NeedyInitializerAndSaveMethods
     end
 
     def set_attributes({{ attribute_method_args.id }})
+      extract_changes_from_params
       {% if @type.constant :COLUMN_ATTRIBUTES %}
         {% for attribute in COLUMN_ATTRIBUTES.uniq %}
           unless {{ attribute[:name] }}.is_a? Avram::Nothing
@@ -238,7 +239,6 @@ module Avram::NeedyInitializerAndSaveMethods
           self.{{ attribute.var }}.value = {{ attribute.var }}
         end
       {% end %}
-      extract_changes_from_params
     end
   end
 end

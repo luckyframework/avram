@@ -619,6 +619,25 @@ describe "Avram::SaveOperation" do
         record.greeting.should eq "Hi"
         record.admin.should eq false
       end
+
+      it "lets named args take precedence over param values" do
+        params = build_params("model_with_default_values:greeting=Hi")
+        OverrideDefaults.create(params, greeting: "sup") do |_operation, record|
+          record.should_not eq nil
+          r = record.not_nil!
+          r.greeting.should eq "sup"
+        end
+
+        model = ModelWithDefaultValues::SaveOperation.create!
+        model.greeting.should eq("Hello there!")
+
+        params = build_params("model_with_default_values:greeting=Hi")
+        OverrideDefaults.update(model, params, greeting: "General Kenobi") do |_operation, record|
+          record.should_not eq nil
+          r = record.not_nil!
+          r.greeting.should eq "General Kenobi"
+        end
+      end
     end
   end
 
