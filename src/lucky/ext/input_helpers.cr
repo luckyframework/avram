@@ -86,6 +86,21 @@ module Lucky::InputHelpers
 
   generate_helpful_error_for checkbox
 
+  def grouped_checkbox(
+    field : Avram::PermittedAttribute(Array),
+    checked_value : String,
+    attrs : Array(Symbol) = [] of Symbol,
+    **html_options
+  ) : Nil
+    if field.value.try(&.includes?(checked_value))
+      attrs = attrs | [:checked]
+    end
+    html_options = merge_options(html_options, {"value" => checked_value})
+    generate_input(field, "checkbox", html_options, attrs: attrs)
+  end
+
+  generate_helpful_error_for grouped_checkbox
+
   # Returns a radio input field.
   #
   # ```
