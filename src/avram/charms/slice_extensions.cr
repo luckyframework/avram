@@ -24,6 +24,10 @@ struct Slice(T)
     end
 
     def to_db(value : Bytes)
+      String.new(value)
+    end
+
+    def to_db(value : String)
       value
     end
 
