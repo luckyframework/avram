@@ -57,3 +57,9 @@ class Array(T)
     empty?
   end
 end
+
+struct Slice(T)
+  def blank?
+    empty?
+  end
+end

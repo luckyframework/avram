@@ -620,6 +620,18 @@ describe "Avram::SaveOperation" do
         record.admin.should eq false
       end
     end
+
+    context "with bytes" do
+      it "saves the byte column" do
+        Beat::SaveOperation.create(hash: "boots and pants".to_slice) do |op, beat|
+          op.saved?.should eq(true)
+          beat.should_not be_nil
+          beat.not_nil!.hash.blank?.should eq(false)
+          beat.not_nil!.hash.should eq(Bytes[98, 111, 111, 116, 115, 32, 97, 110, 100, 32, 112, 97, 110, 116, 115])
+          String.new(beat.not_nil!.hash).should eq("boots and pants")
+        end
+      end
+    end
   end
 
   describe ".create!" do
