@@ -32,9 +32,27 @@ class Avram::Migrator::AlterTableStatement
         raise "Cannot change the default value from `change_type`. Use `change_default` instead."
       end
     %}
-    %column = ::Avram::Migrator::Columns::{{ type_declaration.type }}Column({{ type_declaration.type }}).new(
+    {%
+      type = type_declaration.type.resolve
+      nilable = false
+      bytes = false
+    %}
+    {%
+      if type.nilable?
+        type = type.union_types.reject(&.==(Nil)).first
+        nilable = true
+      end
+    %}
+    {%
+      if type < Slice
+        type = "Bytes".id
+        bytes = true
+      end
+    %}
+
+    %column = ::Avram::Migrator::Columns::{{ type }}Column({{ type }}).new(
       name: {{ type_declaration.var.stringify }},
-      nilable: false,
+      nilable: {{ nilable }},
       default: nil,
       {{ **type_options }}
     )
