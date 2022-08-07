@@ -255,7 +255,7 @@ abstract class Avram::SaveOperation(AvramModel)
   # This method should always return `true` for a create or `false`
   # for an update, independent of the stage we are at in the operation.
   def new_record? : Bool
-    {{ T.constant(:PRIMARY_KEY_NAME).id }}.value.nil?
+    {{ AvramModel.constant(:PRIMARY_KEY_NAME).id }}.value.nil?
   end
 
   private def insert_or_update
@@ -280,14 +280,14 @@ abstract class Avram::SaveOperation(AvramModel)
     self.created_at.value ||= Time.utc if responds_to?(:created_at)
     self.updated_at.value ||= Time.utc if responds_to?(:updated_at)
     @record = database.query insert_sql.statement, args: insert_sql.args do |rs|
-      @record = T.from_rs(rs).first
+      @record = AvramModel.from_rs(rs).first
     end
   end
 
   private def update(id) : AvramModel
     self.updated_at.value = Time.utc if responds_to?(:updated_at)
     @record = database.query update_query(id).statement_for_update(changes), args: update_query(id).args_for_update(changes) do |rs|
-      @record = T.from_rs(rs).first
+      @record = AvramModel.from_rs(rs).first
     end
   end
 

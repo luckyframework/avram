@@ -7,13 +7,13 @@ module Avram::NestedSaveOperation
          t.stringify.starts_with?("Avram::SaveOperation(")
        end.type_vars.first %}
 
-    {% assoc = T.constant(:ASSOCIATIONS).find do |assoc|
+    {% assoc = AvramModel.constant(:ASSOCIATIONS).find do |assoc|
          assoc[:relationship_type] == :has_one &&
            assoc[:type].resolve.name == model_type.name
        end %}
 
     {% unless assoc %}
-      {% raise "#{T} must have a has_one association with #{model_type}" %}
+      {% raise "#{AvramModel} must have a has_one association with #{model_type}" %}
     {% end %}
 
     @_{{ name }} : {{ type }} | Nil

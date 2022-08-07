@@ -296,7 +296,7 @@ module Avram::Callbacks
         ERR
       end
     %}
-    def after_save(%object : T)
+    def after_save(%object : AvramModel)
       {% if @type.methods.map(&.name).includes?(:after_save.id) %}
         previous_def
       {% else %}
@@ -341,7 +341,7 @@ module Avram::Callbacks
         ERR
       end
     %}
-    def after_delete(%object : T)
+    def after_delete(%object : AvramModel)
       {% if @type.methods.map(&.name).includes?(:after_delete.id) %}
         previous_def
       {% else %}
@@ -480,7 +480,7 @@ module Avram::Callbacks
         ERR
       end
     %}
-    def after_commit(%object : T)
+    def after_commit(%object : AvramModel)
       {% if @type.methods.map(&.name).includes?(:after_commit.id) %}
         previous_def
       {% else %}
