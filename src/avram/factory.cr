@@ -38,14 +38,18 @@ abstract class Avram::Factory
 
   macro setup_callbacks(model_name)
     # Run `block` before the record is created
-    def before_save(&block : -> Nil) : Nil
+    def before_save(&block : -> Nil) : self
       @before_saves << block
+
+      self
     end
 
     # Run `block` after the record is created.
     # The block will yield the created record instance
-    def after_save(&block : {{ model_name.id }} -> Nil) : Nil
+    def after_save(&block : {{ model_name.id }} -> Nil) : self
       @after_saves << block
+
+      self
     end
 
     private def run_before_save_callbacks

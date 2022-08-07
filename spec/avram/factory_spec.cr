@@ -70,6 +70,13 @@ describe Avram::Factory do
       scan = factory.create
       scan.line_item_id.should eq line_item_id
     end
+
+    it "returns self and can be chaind" do
+      factory = ScanFactory.new
+      line_item_id = LineItemFactory.create.id
+      scan = factory.before_save { factory.line_item_id(line_item_id) }.create
+      scan.line_item_id.should eq line_item_id
+    end
   end
 
   describe "after_save" do
@@ -80,6 +87,14 @@ describe Avram::Factory do
       end
       line_item = factory.create
 
+      line_item.scans_count.should eq 1
+    end
+
+    it "returns self and can be chained" do
+      line_item = LineItemFactory.create
+      line_item.scans_count.should eq 0
+
+      line_item = LineItemFactory.create &.with_scan
       line_item.scans_count.should eq 1
     end
   end
