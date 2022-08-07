@@ -619,6 +619,37 @@ describe "Avram::SaveOperation" do
         record.greeting.should eq "Hi"
         record.admin.should eq false
       end
+
+      it "lets named args take precedence over param values" do
+        params = build_params("model_with_default_values:greeting=Hi")
+        OverrideDefaults.create(params, greeting: "sup") do |_operation, record|
+          record.should_not eq nil
+          r = record.not_nil!
+          r.greeting.should eq "sup"
+        end
+
+        model = ModelWithDefaultValues::SaveOperation.create!
+        model.greeting.should eq("Hello there!")
+
+        params = build_params("model_with_default_values:greeting=Hi")
+        OverrideDefaults.update(model, params, greeting: "General Kenobi") do |_operation, record|
+          record.should_not eq nil
+          r = record.not_nil!
+          r.greeting.should eq "General Kenobi"
+        end
+      end
+    end
+
+    context "with bytes" do
+      it "saves the byte column" do
+        Beat::SaveOperation.create(hash: "boots and pants".to_slice) do |op, beat|
+          op.saved?.should eq(true)
+          beat.should_not be_nil
+          beat.not_nil!.hash.blank?.should eq(false)
+          beat.not_nil!.hash.should eq(Bytes[98, 111, 111, 116, 115, 32, 97, 110, 100, 32, 112, 97, 110, 116, 115])
+          String.new(beat.not_nil!.hash).should eq("boots and pants")
+        end
+      end
     end
   end
 

@@ -1219,6 +1219,18 @@ describe Avram::Queryable do
     end
   end
 
+  context "when querying bytes" do
+    context "simple where query" do
+      it "returns the correct result" do
+        BeatFactory.create &.hash("test".to_slice)
+
+        Beat::BaseQuery.new.hash("test").select_count.should eq(1)
+        Beat::BaseQuery.new.hash(Bytes[116, 101, 115, 116]).select_count.should eq(1)
+        Beat::BaseQuery.new.hash(Bytes.empty).select_count.should eq(0)
+      end
+    end
+  end
+
   describe ".truncate" do
     it "truncates the table" do
       10.times { UserFactory.create }

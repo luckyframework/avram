@@ -54,6 +54,17 @@ class InputTestForm
   end
 end
 
+class ComplexInputTestForm
+  def names(value : Array(String))
+    Avram::PermittedAttribute(Array(String)).new(
+      name: :names,
+      param: nil,
+      value: value,
+      param_key: "bucket"
+    )
+  end
+end
+
 private class TestPage
   include Lucky::HTMLPage
 
@@ -102,6 +113,21 @@ describe Lucky::InputHelpers do
       HTML
       view(&.checkbox(true_field, attrs: [:required])).should contain <<-HTML
       <input type="checkbox" id="user_admin" name="user:admin" value="true" required checked>
+      HTML
+    end
+  end
+
+  describe "grouped checkboxes" do
+    it "renders the grouped checkboxes" do
+      array_field = complex_form.names(["Green", "Sky Blue", "Gold"])
+      view(&.grouped_checkbox(array_field, "WiggleBrown")).should contain <<-HTML
+      <input type="checkbox" id="bucket_names_0" name="bucket:names[]" value="WiggleBrown">
+      HTML
+      view(&.grouped_checkbox(array_field, "Sky Blue")).should contain <<-HTML
+      <input type="checkbox" id="bucket_names_0" name="bucket:names[]" value="Sky Blue" checked>
+      HTML
+      view(&.grouped_checkbox(array_field, "Sky Blue", attrs: [:required], class: "inline")).should contain <<-HTML
+      <input type="checkbox" id="bucket_names_0" name="bucket:names[]" value="Sky Blue" class="inline" required checked>
       HTML
     end
   end
@@ -323,6 +349,10 @@ end
 
 private def form
   InputTestForm.new
+end
+
+private def complex_form
+  ComplexInputTestForm.new
 end
 
 private def array_attribute

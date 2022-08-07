@@ -87,17 +87,31 @@ class Avram::Migrator::CreateTableStatement
   end
 
   macro add(type_declaration, default = nil, index = false, unique = false, using = :btree, **type_options)
-    {% type = type_declaration.type.resolve %}
-    {% nilable = false %}
-    {% array = false %}
-    {% if type.nilable? %}
-      {% type = type.union_types.reject(&.==(Nil)).first %}
-      {% nilable = true %}
-    {% end %}
-    {% if type < Array %}
-      {% type = type.type_vars.first %}
-      {% array = true %}
-    {% end %}
+    {%
+      type = type_declaration.type.resolve
+      nilable = false
+      array = false
+      bytes = false
+    %}
+    {%
+      if type.nilable?
+        type = type.union_types.reject(&.==(Nil)).first
+        nilable = true
+      end
+    %}
+    {%
+      if type < Array
+        type = type.type_vars.first
+        array = true
+      end
+    %}
+    {%
+      if type < Slice
+        type = "Bytes".id
+        bytes = true
+      end
+    %}
+
 
     rows << Avram::Migrator::Columns::{{ type }}Column(
     {% if array %}Array({{ type }}){% else %}{{ type }}{% end %}
