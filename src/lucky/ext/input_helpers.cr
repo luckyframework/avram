@@ -5,7 +5,7 @@ module Lucky::InputHelpers
     {% raise <<-ERROR
       The database attribute for the operation is not permitted and cannot be used in a form.
 
-      Try allowing the attribute to be filled...
+      Try allowing the attribute to be permitted...
 
           class MySaveOperation # SaveUser, SaveTask, etc.
             permit_columns {attribute_name}
