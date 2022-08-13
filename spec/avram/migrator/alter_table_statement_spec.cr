@@ -66,12 +66,14 @@ describe Avram::Migrator::AlterTableStatement do
       change_type id : Int64
       change_type age : Float64, precision: 1, scale: 2
       change_type name : String, case_sensitive: false
+      change_type total_score : Int32?
     end
 
-    built.statements.size.should eq 3
+    built.statements.size.should eq 4
     built.statements[0].should eq "ALTER TABLE users ALTER COLUMN id SET DATA TYPE bigint;"
     built.statements[1].should eq "ALTER TABLE users ALTER COLUMN age SET DATA TYPE decimal(1,2);"
     built.statements[2].should eq "ALTER TABLE users ALTER COLUMN name SET DATA TYPE citext;"
+    built.statements[3].should eq "ALTER TABLE users ALTER COLUMN total_score SET DATA TYPE int;"
   end
 
   it "can change column defaults" do
