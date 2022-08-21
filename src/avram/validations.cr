@@ -239,6 +239,17 @@ module Avram::Validations
     no_errors
   end
 
+  @[Deprecated("Use validate_numeric with at_least/no_more_than instead of greater_than/less_than")]
+  def validate_numeric(
+    attribute : Avram::Attribute(Number),
+    greater_than = nil,
+    less_than = nil,
+    message = nil,
+    allow_nil : Bool = false
+  ) : Bool
+    validate_numeric(attribute, at_least: greater_than, no_more_than: less_than, message: message, allow_nil: allow_nil)
+  end
+
   # Validate a number is `at_least` and/or `no_more_than`
   #
   # ```
@@ -248,6 +259,7 @@ module Avram::Validations
   # ameba:disable Metrics/CyclomaticComplexity
   def validate_numeric(
     attribute : Avram::Attribute(Number),
+    *,
     at_least = nil,
     no_more_than = nil,
     message = nil,
