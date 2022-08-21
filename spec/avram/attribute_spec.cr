@@ -3,8 +3,8 @@ require "../spec_helper"
 private class CallableMessage
   include Avram::CallableErrorMessage
 
-  def call(name, value)
-    "Error: #{name} with value of '#{value}' is invalid"
+  def call(attribute_name, attribute_value)
+    "Error: #{attribute_name} with value of '#{attribute_value}' is invalid"
   end
 end
 
