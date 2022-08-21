@@ -7,6 +7,7 @@ describe "Errors" do
       operation.valid?.should be_false
 
       error = Avram::InvalidOperationError.new(operation)
+      error.operation.should eq(operation)
 
       error.should be_a(Lucky::RenderableError)
       error.invalid_attribute_name.should eq("name")
