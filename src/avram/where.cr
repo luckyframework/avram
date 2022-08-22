@@ -257,7 +257,7 @@ module Avram::Where
       @clause = build_clause(statement, bind_vars)
     end
 
-    def prepare(_placeholder_supplier : Proc(String)) : String
+    def prepare(placeholder_supplier : Proc(String)) : String
       @clause
     end
 
