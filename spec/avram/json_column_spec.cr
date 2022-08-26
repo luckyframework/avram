@@ -22,6 +22,7 @@ describe "JSON Columns" do
     SaveBlob.update!(blob, doc: nil)
     blob = BlobQuery.new.first
     blob.doc.should eq nil
+    blob.doc.class.should eq Nil
   end
 
   it "should convert scalars and save forms" do
