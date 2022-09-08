@@ -1746,7 +1746,7 @@ All validation methods return <code><a href="../Bool.html">Bool</a></code>. <cod
   </h2>
   
     
-      <a href="https://github.com/luckyframework/avram/blob/b404d04069c0d21fbedf06c81efb8e973e660af0/src/avram/validations.cr#L7" target="_blank">
+      <a href="https://github.com/luckyframework/avram/blob/9e36747832a1f387c290ba3e61d4b1963148062e/src/avram/validations.cr#L7" target="_blank">
         avram/validations.cr
       </a>
     
@@ -1816,7 +1816,14 @@ All validation methods return <code><a href="../Bool.html">Bool</a></code>. <cod
       <li class="entry-summary">
         <a href="#validate_numeric%28attribute%3AAvram%3A%3AAttribute%28Number%29%2Cgreater_than%3Dnil%2Cless_than%3Dnil%2Cmessage%3Dnil%2Callow_nil%3ABool%3Dfalse%29%3ABool-instance-method" class="signature"><strong>#validate_numeric</strong>(attribute : Avram::Attribute(Number), greater_than = <span class="n">nil</span>, less_than = <span class="n">nil</span>, message = <span class="n">nil</span>, allow_nil : Bool = <span class="n">false</span>) : Bool</a>
         
-          <div class="summary"><p>Validate a number is <code>greater_than</code> and/or <code>less_than</code></p></div>
+          <div class="summary"><p><span class="flag red">DEPRECATED</span>  Use validate_numeric with at_least/no_more_than instead of greater_than/less_than</p></div>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#validate_numeric%28attribute%3AAvram%3A%3AAttribute%28Number%29%2C%2A%2Cat_least%3Dnil%2Cno_more_than%3Dnil%2Cmessage%3Dnil%2Callow_nil%3ABool%3Dfalse%29%3ABool-instance-method" class="signature"><strong>#validate_numeric</strong>(attribute : Avram::Attribute(Number), *, at_least = <span class="n">nil</span>, no_more_than = <span class="n">nil</span>, message = <span class="n">nil</span>, allow_nil : Bool = <span class="n">false</span>) : Bool</a>
+        
+          <div class="summary"><p>Validate a number is <code>at_least</code> and/or <code>no_more_than</code></p></div>
         
       </li>
     
@@ -1902,7 +1909,7 @@ as invalid for any value other than <code>true</code>.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/b404d04069c0d21fbedf06c81efb8e973e660af0/src/avram/validations.cr#L109" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/9e36747832a1f387c290ba3e61d4b1963148062e/src/avram/validations.cr#L109" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1925,7 +1932,7 @@ field invalid.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/b404d04069c0d21fbedf06c81efb8e973e660af0/src/avram/validations.cr#L39" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/9e36747832a1f387c290ba3e61d4b1963148062e/src/avram/validations.cr#L39" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1951,7 +1958,7 @@ field invalid.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/b404d04069c0d21fbedf06c81efb8e973e660af0/src/avram/validations.cr#L134" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/9e36747832a1f387c290ba3e61d4b1963148062e/src/avram/validations.cr#L134" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1977,7 +1984,7 @@ field invalid.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/b404d04069c0d21fbedf06c81efb8e973e660af0/src/avram/validations.cr#L65" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/9e36747832a1f387c290ba3e61d4b1963148062e/src/avram/validations.cr#L65" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2001,7 +2008,7 @@ given regex.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/b404d04069c0d21fbedf06c81efb8e973e660af0/src/avram/validations.cr#L300" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/9e36747832a1f387c290ba3e61d4b1963148062e/src/avram/validations.cr#L312" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2024,7 +2031,7 @@ given regex.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/b404d04069c0d21fbedf06c81efb8e973e660af0/src/avram/validations.cr#L155" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/9e36747832a1f387c290ba3e61d4b1963148062e/src/avram/validations.cr#L155" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2039,16 +2046,37 @@ given regex.</p>
       
         <div class="doc">
           
-          <p>Validate a number is <code>greater_than</code> and/or <code>less_than</code></p>
-<pre><code class="language-crystal">validate_numeric age, greater_than: <span class="n">18</span>
-validate_numeric count, greater_than: <span class="n">0</span>, less_than: <span class="n">1200</span></code></pre>
+          <p><span class="flag red">DEPRECATED</span>  Use validate_numeric with at_least/no_more_than instead of greater_than/less_than</p>
+        </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/luckyframework/avram/blob/9e36747832a1f387c290ba3e61d4b1963148062e/src/avram/validations.cr#L243" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="validate_numeric(attribute:Avram::Attribute(Number),*,at_least=nil,no_more_than=nil,message=nil,allow_nil:Bool=false):Bool-instance-method">
+      <div class="signature">
+        
+        def <strong>validate_numeric</strong>(attribute : <a href="../Avram/Attribute.html">Avram::Attribute</a>(Number), *, at_least = <span class="n">nil</span>, no_more_than = <span class="n">nil</span>, message = <span class="n">nil</span>, allow_nil : <a href="../Bool.html">Bool</a> = <span class="n">false</span>) : <a href="../Bool.html">Bool</a>
+
+        <a class="method-permalink" href="#validate_numeric%28attribute%3AAvram%3A%3AAttribute%28Number%29%2C%2A%2Cat_least%3Dnil%2Cno_more_than%3Dnil%2Cmessage%3Dnil%2Callow_nil%3ABool%3Dfalse%29%3ABool-instance-method">#</a>
+      </div>
+      
+        <div class="doc">
+          
+          <p>Validate a number is <code>at_least</code> and/or <code>no_more_than</code></p>
+<pre><code class="language-crystal">validate_numeric age, at_least: <span class="n">18</span>
+validate_numeric count, at_least: <span class="n">0</span>, no_more_than: <span class="n">1200</span></code></pre>
 <p>ameba:disable Metrics/CyclomaticComplexity</p>
         </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/b404d04069c0d21fbedf06c81efb8e973e660af0/src/avram/validations.cr#L249" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/9e36747832a1f387c290ba3e61d4b1963148062e/src/avram/validations.cr#L260" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2073,7 +2101,7 @@ marked as invalid if the value is <code>nil</code>, or &quot;blank&quot; (empty 
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/b404d04069c0d21fbedf06c81efb8e973e660af0/src/avram/validations.cr#L90" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/9e36747832a1f387c290ba3e61d4b1963148062e/src/avram/validations.cr#L90" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2097,7 +2125,7 @@ validate_size_of password, min: <span class="n">12</span></code></pre>
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/b404d04069c0d21fbedf06c81efb8e973e660af0/src/avram/validations.cr#L207" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/9e36747832a1f387c290ba3e61d4b1963148062e/src/avram/validations.cr#L207" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2119,7 +2147,7 @@ validate_size_of password, min: <span class="n">12</span></code></pre>
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/b404d04069c0d21fbedf06c81efb8e973e660af0/src/avram/validations.cr#L182" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/9e36747832a1f387c290ba3e61d4b1963148062e/src/avram/validations.cr#L182" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2157,7 +2185,7 @@ validations inside of the block.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/b404d04069c0d21fbedf06c81efb8e973e660af0/src/avram/validations.cr#L22" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/9e36747832a1f387c290ba3e61d4b1963148062e/src/avram/validations.cr#L22" target="_blank">View source</a>]
         
       </div>
     </div>
