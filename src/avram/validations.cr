@@ -239,13 +239,7 @@ module Avram::Validations
     no_errors
   end
 
-  # Validate a number is `greater_than` and/or `less_than`
-  #
-  # ```
-  # validate_numeric age, greater_than: 18
-  # validate_numeric count, greater_than: 0, less_than: 1200
-  # ```
-  # ameba:disable Metrics/CyclomaticComplexity
+  @[Deprecated("Use validate_numeric with at_least/no_more_than instead of greater_than/less_than")]
   def validate_numeric(
     attribute : Avram::Attribute(Number),
     greater_than = nil,
@@ -253,11 +247,29 @@ module Avram::Validations
     message = nil,
     allow_nil : Bool = false
   ) : Bool
+    validate_numeric(attribute, at_least: greater_than, no_more_than: less_than, message: message, allow_nil: allow_nil)
+  end
+
+  # Validate a number is `at_least` and/or `no_more_than`
+  #
+  # ```
+  # validate_numeric age, at_least: 18
+  # validate_numeric count, at_least: 0, no_more_than: 1200
+  # ```
+  # ameba:disable Metrics/CyclomaticComplexity
+  def validate_numeric(
+    attribute : Avram::Attribute(Number),
+    *,
+    at_least = nil,
+    no_more_than = nil,
+    message = nil,
+    allow_nil : Bool = false
+  ) : Bool
     no_errors = true
-    if greater_than && less_than && greater_than > less_than
+    if at_least && no_more_than && at_least > no_more_than
       raise ImpossibleValidation.new(
         attribute: attribute.name,
-        message: "number greater than #{greater_than} but less than #{less_than}")
+        message: "number at least #{at_least} but no more than #{no_more_than}")
     end
 
     number = attribute.value
@@ -272,16 +284,16 @@ module Avram::Validations
       return no_errors
     end
 
-    if greater_than && number < greater_than
+    if at_least && number < at_least
       attribute.add_error(
-        (message || Avram.settings.i18n_backend.get(:validate_numeric_min)) % greater_than
+        (message || Avram.settings.i18n_backend.get(:validate_numeric_min)) % at_least
       )
       no_errors = false
     end
 
-    if less_than && number > less_than
+    if no_more_than && number > no_more_than
       attribute.add_error(
-        (message || Avram.settings.i18n_backend.get(:validate_numeric_max)) % less_than
+        (message || Avram.settings.i18n_backend.get(:validate_numeric_max)) % no_more_than
       )
       no_errors = false
     end
