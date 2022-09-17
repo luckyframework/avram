@@ -7,13 +7,22 @@ describe "Errors" do
       operation.valid?.should be_false
 
       error = Avram::InvalidOperationError.new(operation)
-      error.operation.should eq(operation)
 
       error.should be_a(Lucky::RenderableError)
       error.invalid_attribute_name.should eq("name")
       error.renderable_status.should eq(400)
       error.renderable_message.should contain("Invalid params")
       error.renderable_details.should eq("name is required")
+    end
+
+    it "includes an escape hatch for a custom error" do
+      operation = User::SaveOperation.new
+
+      error = Avram::InvalidOperationError.new(operation)
+      error.message.should eq("Could not perform User::SaveOperation.\n\n")
+
+      error = Avram::InvalidOperationError.new(operation, "operation go boom")
+      error.message.should eq("operation go boom")
     end
   end
 end

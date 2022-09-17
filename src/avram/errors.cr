@@ -1,6 +1,6 @@
 module Avram
   # Generic Avram exception class.
-  class AvramError < Exception
+  class AvramError < ::Exception
   end
 
   # Raise to rollback a transaction.
@@ -56,15 +56,13 @@ module Avram
   end
 
   # Raised when using the create!, update!, or delete! methods on an operation when it does not have the proper attributes
-  class InvalidOperationError(AvramOperationType) < AvramError
+  class InvalidOperationError < AvramError
     getter errors : Hash(Symbol, Array(String))
-    getter operation : AvramOperationType
 
-    def initialize(@operation : AvramOperationType)
-      message = String.build do |string|
-        string << "Could not perform #{operation.class.name}."
-        string << "\n"
-        string << "\n"
+    def initialize(operation, error_message : String? = nil)
+      message = error_message || String.build do |string|
+        string << "Could not perform #{operation.class.name}.\n\n"
+
         operation.errors.each do |attribute_name, errors|
           string << "  ▸ #{attribute_name}: #{errors.join(", ")}\n"
         end

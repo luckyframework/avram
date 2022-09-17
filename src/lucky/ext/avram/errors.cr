@@ -1,5 +1,5 @@
 module Avram
-  class InvalidOperationError(AvramOperationType) < AvramError
+  class InvalidOperationError < AvramError
     include Lucky::RenderableError
 
     def renderable_status : Int32
