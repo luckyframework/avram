@@ -59,8 +59,8 @@ module Avram
   class InvalidOperationError < AvramError
     getter errors : Hash(Symbol, Array(String))
 
-    def initialize(operation, error_message : String? = nil)
-      message = error_message || String.build do |string|
+    def initialize(operation)
+      message = String.build do |string|
         string << "Could not perform #{operation.class.name}.\n\n"
 
         operation.errors.each do |attribute_name, errors|
