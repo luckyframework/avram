@@ -7,7 +7,7 @@ describe "Errors" do
       operation.valid?.should be_false
 
       error = Avram::InvalidOperationError.new(operation)
-      error.operation.should eq(operation)
+      error.message.to_s.should start_with("Could not perform User::SaveOperation.\n\n")
 
       error.should be_a(Lucky::RenderableError)
       error.invalid_attribute_name.should eq("name")
