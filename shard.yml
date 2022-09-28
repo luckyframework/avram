@@ -47,7 +47,7 @@ development_dependencies:
     version: ~> 1.1.0
   lucky:
     github: luckyframework/lucky
-    version: ~> 1.0.0
+    version: ">= 1.0.0-rc1"
 
 scripts:
   postinstall: BUILD_WITHOUT_DEVELOPMENT=true script/precompile_tasks
