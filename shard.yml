@@ -1,5 +1,5 @@
 name: avram
-version: 0.23.0
+version: 1.0.0-rc1
 
 crystal: ">= 1.4.0"
 
@@ -24,7 +24,7 @@ dependencies:
     version: ~> 0.4.7
   wordsmith:
     github: luckyframework/wordsmith
-    version: ~> 0.3.0
+    version: ~> 0.4.0
   dexter:
     github: luckyframework/dexter
     version: ~> 0.3.4
@@ -44,10 +44,10 @@ dependencies:
 development_dependencies:
   ameba:
     github: crystal-ameba/ameba
-    version: ~> 1.0.0
+    version: ~> 1.1.0
   lucky:
     github: luckyframework/lucky
-    branch: main
+    version: ">= 1.0.0-rc1"
 
 scripts:
   postinstall: BUILD_WITHOUT_DEVELOPMENT=true script/precompile_tasks
