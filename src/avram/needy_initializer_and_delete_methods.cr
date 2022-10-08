@@ -125,7 +125,7 @@ module Avram::NeedyInitializerAndDeleteMethods
         operation.delete!
       {% else %}
         operation.delete
-        yield operation, operation.record.not_nil!
+        yield operation, operation.record
       {% end %}
     end
   end
