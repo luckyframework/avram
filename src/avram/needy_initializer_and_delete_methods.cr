@@ -125,12 +125,7 @@ module Avram::NeedyInitializerAndDeleteMethods
         operation.delete!
       {% else %}
         operation.delete
-        case operation.delete_status
-        when :DeleteFailed
-          yield operation, nil
-        when :Deleted
-          yield operation, operation.record
-        end
+        yield operation, operation.record.not_nil!
       {% end %}
     end
   end
