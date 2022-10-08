@@ -42,7 +42,7 @@ describe "Avram::DeleteOperation" do
       FailedToDeleteUser.delete(user) do |operation, deleted_user|
         operation.valid?.should be_false
         operation.delete_status.should eq FailedToDeleteUser::OperationStatus::DeleteFailed
-        deleted_user.should eq nil
+        deleted_user.should be_truthy
         operation.errors[:nope].should contain "not today"
         UserQuery.new.select_count.should eq 1
       end
