@@ -1,10 +1,12 @@
 class Avram::Params
   include Avram::Paramable
 
-  @hash : Hash(String, Array(String))
+  @hash : Hash(String, Array(String) | String) | \
+    Hash(String, Array(String)) | \
+    Hash(String, String)
 
   def initialize
-    @hash = {} of String => Array(String)
+    @hash = {} of String => String
   end
 
   def initialize(@hash)
@@ -15,9 +17,9 @@ class Avram::Params
   end
 
   def nested(key : String) : Hash(String, String)
-    Hash(String, String).new.tap do |h|
-      @hash.each do |k, v|
-        h[k] = v.first?.to_s
+    Hash(String, String).new.tap do |params|
+      @hash.each do |_key, _value|
+        params[_key] = _value if _value.is_a?(String)
       end
     end
   end
@@ -27,7 +29,11 @@ class Avram::Params
   end
 
   def nested_arrays(key : String) : Hash(String, Array(String))
-    @hash
+    Hash(String, Array(String)).new.tap do |params|
+      @hash.each do |_key, _value|
+        params[_key] = _value if _value.is_a?(Array)
+      end
+    end
   end
 
   def many_nested?(key : String) : Array(Hash(String, String))
@@ -39,19 +45,19 @@ class Avram::Params
   end
 
   def get?(key : String)
-    @hash[key]?.try(&.first?)
+    @hash[key]?.try { |value| value if value.is_a?(String) }
   end
 
   def get(key : String)
-    @hash[key].first
+    get?(key).not_nil!
   end
 
   def get_all?(key : String)
-    @hash[key]? || [] of String
+    @hash[key]?.try { |value| value if value.is_a?(Array) }
   end
 
   def get_all(key : String)
-    @hash[key]
+    get_all?(key).not_nil!
   end
 
   def nested_file?(key : String) : Hash(String, String)
@@ -63,6 +69,6 @@ class Avram::Params
   end
 
   def get_all_files(key : String)
-    @hash[key]
+    get_all(key)
   end
 end

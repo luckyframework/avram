@@ -53,7 +53,7 @@ describe "Avram::Operation needs" do
   end
 
   it "allows params to be passed in along with named args for needs" do
-    params = Avram::Params.new({"title" => ["test"], "published" => ["true"]})
+    params = Avram::Params.new({"title" => "test", "published" => "true"})
 
     OperationWithNeeds.run(params, tags: ["one", "two"], id: 3) do |operation, value|
       value.should eq "one, two"
@@ -74,7 +74,7 @@ end
 
 describe "Avram::SaveOperation needs" do
   it "sets up a method arg for save, update, and new" do
-    params = Avram::Params.new({"name" => ["Paul"]})
+    params = Avram::Params.new({"name" => "Paul"})
     UserFactory.create
     user = UserQuery.new.first
 
