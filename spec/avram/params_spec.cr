@@ -75,3 +75,54 @@ describe Avram::Paramable do
     end
   end
 end
+
+private class SaveToken < Token::SaveOperation
+  permit_columns :name, :scopes
+end
+
+describe Avram::Params do
+  it "accepts hashes with all string values" do
+    name = "Auth token"
+    params = Avram::Params.new({"name" => name})
+
+    SaveToken.create(params) do |_, token|
+      token.should be_a(Token)
+
+      token.try do |_token|
+        _token.name.should eq(name)
+      end
+    end
+  end
+
+  it "accepts hashes with all array values" do
+    scopes = ["profile", "openid"]
+    params = Avram::Params.new({"scopes" => scopes})
+
+    SaveToken.create(params) do |_, token|
+      token.should be_a(Token)
+
+      token.try do |_token|
+        _token.scopes.should eq(scopes)
+      end
+    end
+  end
+
+  it "accepts hashes with a mixture of array and string values" do
+    name = "Auth token"
+    scopes = ["profile", "openid"]
+
+    params = Avram::Params.new({
+      "name"   => "Auth token",
+      "scopes" => scopes,
+    })
+
+    SaveToken.create(params) do |_, token|
+      token.should be_a(Token)
+
+      token.try do |_token|
+        _token.name.should eq(name)
+        _token.scopes.should eq(scopes)
+      end
+    end
+  end
+end
