@@ -29,7 +29,7 @@ module Lucky::SelectHelpers
       bool_attrs = [] of Symbol
 
       if value = field.value
-        is_selected = value.includes?(option_value.to_s)
+        is_selected = value.includes?(option_value)
         bool_attrs << :selected if is_selected
       end
 
