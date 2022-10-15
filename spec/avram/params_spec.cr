@@ -112,7 +112,7 @@ describe Avram::Params do
     scopes = ["profile", "openid"]
 
     params = Avram::Params.new({
-      "name"   => "Auth token",
+      "name"   => name,
       "scopes" => scopes,
     })
 
