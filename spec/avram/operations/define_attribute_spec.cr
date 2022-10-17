@@ -156,14 +156,14 @@ describe "attribute in operations" do
   end
 
   it "includes attribute errors when calling SaveOperation#valid?" do
-    params = Avram::Params.new({"terms_of_service" => ["not a boolean"]})
+    params = Avram::Params.new({"terms_of_service" => "not a boolean"})
     operation = SaveOperationWithAttributes.new(params)
     operation.setup_required_database_columns
     operation.valid?.should be_false
   end
 
   it "can still save to the database" do
-    params = Avram::Params.new({"password_confirmation" => ["password"], "terms_of_service" => ["1"]})
+    params = Avram::Params.new({"password_confirmation" => "password", "terms_of_service" => "1"})
     operation = SaveOperationWithAttributes.new(params)
     operation.setup_required_database_columns
     operation.save.should eq true
@@ -204,7 +204,7 @@ describe "file_attribute in operation" do
   end
 
   it "gracefully handles invalid params" do
-    params = Avram::Params.new({"thumb" => ["not a file"]})
+    params = Avram::Params.new({"thumb" => "not a file"})
     operation = OperationWithAttributes.new(params)
     operation.thumb.value.should be_nil
     operation.thumb.errors.first.should eq "is invalid"
@@ -213,7 +213,7 @@ describe "file_attribute in operation" do
     save_operation.thumb.value.should be_nil
     save_operation.thumb.errors.first.should eq "is invalid"
 
-    params = Avram::Params.new({"biometric_confirmation" => ["not a file"]})
+    params = Avram::Params.new({"biometric_confirmation" => "not a file"})
     post = PostFactory.create
     delete_operation = DeleteOperationWithAttributes.new(post, params)
     delete_operation.biometric_confirmation.value.should be_nil
@@ -221,7 +221,7 @@ describe "file_attribute in operation" do
   end
 
   it "includes file attribute errors when calling SaveOperation#valid?" do
-    params = Avram::Params.new({"thumb" => ["not a file"]})
+    params = Avram::Params.new({"thumb" => "not a file"})
     operation = SaveOperationWithAttributes.new(params)
     operation.setup_required_database_columns
     operation.valid?.should be_false
