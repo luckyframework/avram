@@ -21,6 +21,9 @@ private class AMixedBag < Bucket::SaveOperation
   attribute brand : String
 end
 
+private class AnEmptyBag < Bucket::SaveOperation
+end
+
 describe "OperationParams" do
   it "passes permitted params to the save operation with no arrays" do
     req = build_request(method: "POST", body: "oooo:name=Dandy&oooo:nickname=mmmm&oooo:joined_at=2020-02-02T20:20:02&oooo:age=49&oooo:extra=cheers")
@@ -63,5 +66,12 @@ describe "OperationParams" do
     expect_raises(Lucky::MissingNestedParamError) do
       AMixedBag.new(params)
     end
+  end
+
+  it "does not fail when params are passed in with invalid param keys if no attributes are extracted" do
+    req = build_request(method: "POST", body: "names[]=None&boop:names[]=Bool&berp:names[]=Berp&blep:names[]=Blep")
+    params = Lucky::Params.new(req)
+
+    AnEmptyBag.new(params)
   end
 end
