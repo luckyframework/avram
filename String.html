@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="generator" content="Crystal Docs 1.4.1">
+<meta name="generator" content="Crystal Docs 1.5.0">
 <meta name="crystal_docs.project_version" content="main">
 <meta name="crystal_docs.project_name" content="avram">
 
@@ -1752,7 +1752,7 @@ from <code>String.build</code> or <code>IO::Memory</code>. No exception will be 
 invalid byte sequences, when asked as chars, will use the unicode replacement
 char (value 0xFFFD). For example:</p>
 <pre><code class="language-crystal"><span class="c"># here 255 is not a valid byte value in the UTF-8 encoding</span>
-string <span class="o">=</span> <span class="t">String</span>.<span class="k">new</span>(<span class="t">Bytes</span>[<span class="n">255</span>, <span class="n">97</span>])
+string <span class="o">=</span> <span class="t">String</span>.new(<span class="t">Bytes</span>[<span class="n">255</span>, <span class="n">97</span>])
 string.valid_encoding? <span class="c"># =&gt; false</span>
 
 <span class="c"># The first char here is the unicode replacement char</span>
@@ -1811,14 +1811,14 @@ show a replacement character when there's an error in incoming data.</p>
   </h2>
   
     
-      <a href="https://github.com/luckyframework/avram/blob/9c8caecf052641d15dbe027e0cafb1741d8af33f/lib/lucky/src/charms/string_extensions.cr#L1" target="_blank">
+      <a href="https://github.com/luckyframework/avram/blob/77eda150d546f5cad61f367aabfc80336a691122/lib/lucky/src/charms/string_extensions.cr#L1" target="_blank">
         lib/lucky/src/charms/string_extensions.cr
       </a>
     
     <br/>
   
     
-      <a href="https://github.com/luckyframework/avram/blob/9c8caecf052641d15dbe027e0cafb1741d8af33f/src/avram/charms/string_extensions.cr#L1" target="_blank">
+      <a href="https://github.com/luckyframework/avram/blob/77eda150d546f5cad61f367aabfc80336a691122/src/avram/charms/string_extensions.cr#L1" target="_blank">
         avram/charms/string_extensions.cr
       </a>
     
@@ -1920,7 +1920,7 @@ show a replacement character when there's an error in incoming data.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/9c8caecf052641d15dbe027e0cafb1741d8af33f/src/avram/charms/string_extensions.cr#L2" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/77eda150d546f5cad61f367aabfc80336a691122/src/avram/charms/string_extensions.cr#L2" target="_blank">View source</a>]
         
       </div>
     </div>

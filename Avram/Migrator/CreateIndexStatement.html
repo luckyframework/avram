@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="generator" content="Crystal Docs 1.4.1">
+<meta name="generator" content="Crystal Docs 1.5.0">
 <meta name="crystal_docs.project_version" content="main">
 <meta name="crystal_docs.project_name" content="avram">
 
@@ -1697,13 +1697,13 @@ name(s), index type and unique flag.</p>
   </svg>
 </a>Usage</h3>
 <p>For a single column:</p>
-<pre><code class="language-crystal"><span class="t">CreateIndexStatement</span>.<span class="k">new</span>(<span class="n">:users</span>, columns: <span class="n">:email</span>, using: <span class="n">:btree</span>, unique: <span class="n">true</span>).build
+<pre><code class="language-crystal"><span class="t">CreateIndexStatement</span>.new(<span class="n">:users</span>, columns: <span class="n">:email</span>, using: <span class="n">:btree</span>, unique: <span class="n">true</span>).build
 <span class="c"># =&gt; &quot;CREATE UNIQUE INDEX users_email_index ON users USING btree (email);&quot;</span></code></pre>
 <p>For multiple columns:</p>
-<pre><code class="language-crystal"><span class="t">CreateIndexStatement</span>.<span class="k">new</span>(<span class="n">:users</span>, columns: [<span class="n">:email</span>, <span class="n">:username</span>], using: <span class="n">:btree</span>, unique: <span class="n">true</span>).build
+<pre><code class="language-crystal"><span class="t">CreateIndexStatement</span>.new(<span class="n">:users</span>, columns: [<span class="n">:email</span>, <span class="n">:username</span>], using: <span class="n">:btree</span>, unique: <span class="n">true</span>).build
 <span class="c"># =&gt; &quot;CREATE UNIQUE INDEX users_email_username_index ON users USING btree (email, username);&quot;</span></code></pre>
 <p>With custom name:</p>
-<pre><code class="language-crystal"><span class="t">CreateIndexStatement</span>.<span class="k">new</span>(<span class="n">:users</span>, columns: [<span class="n">:email</span>, <span class="n">:username</span>], name: <span class="n">:custom_index_name</span>).build
+<pre><code class="language-crystal"><span class="t">CreateIndexStatement</span>.new(<span class="n">:users</span>, columns: [<span class="n">:email</span>, <span class="n">:username</span>], name: <span class="n">:custom_index_name</span>).build
 <span class="c"># =&gt; &quot;CREATE INDEX custom_index_name ON users USING btree (email, username);&quot;</span></code></pre>
 
 
@@ -1743,7 +1743,7 @@ name(s), index type and unique flag.</p>
   </h2>
   
     
-      <a href="https://github.com/luckyframework/avram/blob/9c8caecf052641d15dbe027e0cafb1741d8af33f/src/avram/migrator/create_index_statement.cr#L28" target="_blank">
+      <a href="https://github.com/luckyframework/avram/blob/77eda150d546f5cad61f367aabfc80336a691122/src/avram/migrator/create_index_statement.cr#L28" target="_blank">
         avram/migrator/create_index_statement.cr
       </a>
     
@@ -1893,7 +1893,7 @@ name(s), index type and unique flag.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/9c8caecf052641d15dbe027e0cafb1741d8af33f/src/avram/migrator/create_index_statement.cr#L33" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/77eda150d546f5cad61f367aabfc80336a691122/src/avram/migrator/create_index_statement.cr#L33" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1923,7 +1923,7 @@ name(s), index type and unique flag.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/9c8caecf052641d15dbe027e0cafb1741d8af33f/src/avram/migrator/create_index_statement.cr#L37" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/77eda150d546f5cad61f367aabfc80336a691122/src/avram/migrator/create_index_statement.cr#L37" target="_blank">View source</a>]
         
       </div>
     </div>

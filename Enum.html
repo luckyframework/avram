@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="generator" content="Crystal Docs 1.4.1">
+<meta name="generator" content="Crystal Docs 1.5.0">
 <meta name="crystal_docs.project_version" content="main">
 <meta name="crystal_docs.project_name" content="avram">
 
@@ -1720,10 +1720,10 @@
   </svg>
 </a>Enums from integers</h3>
 <p>An enum can be created from an integer:</p>
-<pre><code class="language-crystal"><span class="t">Color</span>.<span class="k">new</span>(<span class="n">1</span>).to_s <span class="c"># =&gt; &quot;Green&quot;</span></code></pre>
+<pre><code class="language-crystal"><span class="t">Color</span>.new(<span class="n">1</span>).to_s <span class="c"># =&gt; &quot;Green&quot;</span></code></pre>
 <p>Values that don't correspond to enum's constants are allowed: the value
 will still be of type Color, but when printed you will get the underlying value:</p>
-<pre><code class="language-crystal"><span class="t">Color</span>.<span class="k">new</span>(<span class="n">10</span>).to_s <span class="c"># =&gt; &quot;10&quot;</span></code></pre>
+<pre><code class="language-crystal"><span class="t">Color</span>.new(<span class="n">10</span>).to_s <span class="c"># =&gt; &quot;10&quot;</span></code></pre>
 <p>This method is mainly intended to convert integers from C to enums in Crystal.</p>
 <h3><a id="question-methods" class="anchor" href="#question-methods">
   <svg class="octicon-link" aria-hidden="true">
@@ -1752,6 +1752,19 @@ mode.async? <span class="c"># =&gt; true</span></code></pre>
 <span class="k">when</span> .blue?
   puts <span class="s">&quot;Got blue&quot;</span>
 <span class="k">end</span></code></pre>
+<h3><a id="changing-the-base-type" class="anchor" href="#changing-the-base-type">
+  <svg class="octicon-link" aria-hidden="true">
+    <use href="#octicon-link"/>
+  </svg>
+</a>Changing the Base Type</h3>
+<p>The type of the underlying enum value is <code><a href="Int32.html">Int32</a></code> by default, but it can be changed to any type in <code>Int::Primitive</code>.</p>
+<pre><code class="language-crystal"><span class="k">enum</span> <span class="t">Color</span> : <span class="t">UInt8</span>
+  <span class="t">Red</span>
+  <span class="t">Green</span>
+  <span class="t">Blue</span>
+<span class="k">end</span>
+
+<span class="t">Color</span><span class="t">::</span><span class="t">Red</span>.value <span class="c"># : UInt8</span></code></pre>
 
 
 
@@ -1790,7 +1803,7 @@ mode.async? <span class="c"># =&gt; true</span></code></pre>
   </h2>
   
     
-      <a href="https://github.com/luckyframework/avram/blob/9c8caecf052641d15dbe027e0cafb1741d8af33f/src/avram/charms/enum_extensions.cr#L3" target="_blank">
+      <a href="https://github.com/luckyframework/avram/blob/77eda150d546f5cad61f367aabfc80336a691122/src/avram/charms/enum_extensions.cr#L3" target="_blank">
         avram/charms/enum_extensions.cr
       </a>
     
@@ -1892,7 +1905,7 @@ mode.async? <span class="c"># =&gt; true</span></code></pre>
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/9c8caecf052641d15dbe027e0cafb1741d8af33f/src/avram/charms/enum_extensions.cr#L4" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/77eda150d546f5cad61f367aabfc80336a691122/src/avram/charms/enum_extensions.cr#L4" target="_blank">View source</a>]
         
       </div>
     </div>

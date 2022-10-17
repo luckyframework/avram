@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="generator" content="Crystal Docs 1.4.1">
+<meta name="generator" content="Crystal Docs 1.5.0">
 <meta name="crystal_docs.project_version" content="main">
 <meta name="crystal_docs.project_name" content="avram">
 
@@ -1704,7 +1704,7 @@ that will be passed through the URL instead of an <code>id</code>.</p>
   before_save <span class="k">do</span>
     <span class="t">Avram</span><span class="t">::</span><span class="t">Slugify</span>.set slug,
       using: title,
-      query: <span class="t">ArticleQuery</span>.<span class="k">new</span>
+      query: <span class="t">ArticleQuery</span>.new
   <span class="k">end</span>
 <span class="k">end</span></code></pre>
 <p>The <code><a href="../Avram/Slugify.html#set%28slug%3AAvram%3A%3AAttribute%28String%29%2Cusingslug_candidate%3AAvram%3A%3AAttribute%28String%29%7CString%2Cquery%3AAvram%3A%3AQueryable%29%3ANil-instance-method">#set</a></code> method will use <code>query</code> to determine if that <code>slug</code> has already
@@ -1717,7 +1717,7 @@ This method returns the String value used in the <code><a href="../Avram/Slugify
     <span class="k">if</span> title.changed?
       slug_value <span class="o">=</span> <span class="t">Avram</span><span class="t">::</span><span class="t">Slugify</span>.generate(slug,
         using: title,
-        query: <span class="t">ArticleQuery</span>.<span class="k">new</span>)
+        query: <span class="t">ArticleQuery</span>.new)
       slug.value <span class="o">=</span> slug_value
     <span class="k">end</span>
   <span class="k">end</span>
@@ -1760,7 +1760,7 @@ This method returns the String value used in the <code><a href="../Avram/Slugify
   </h2>
   
     
-      <a href="https://github.com/luckyframework/avram/blob/9c8caecf052641d15dbe027e0cafb1741d8af33f/src/avram/slugify.cr#L45" target="_blank">
+      <a href="https://github.com/luckyframework/avram/blob/77eda150d546f5cad61f367aabfc80336a691122/src/avram/slugify.cr#L45" target="_blank">
         avram/slugify.cr
       </a>
     
@@ -1840,7 +1840,7 @@ This method returns the String value used in the <code><a href="../Avram/Slugify
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/9c8caecf052641d15dbe027e0cafb1741d8af33f/src/avram/slugify.cr#L62" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/77eda150d546f5cad61f367aabfc80336a691122/src/avram/slugify.cr#L62" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1856,7 +1856,7 @@ This method returns the String value used in the <code><a href="../Avram/Slugify
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/9c8caecf052641d15dbe027e0cafb1741d8af33f/src/avram/slugify.cr#L68" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/77eda150d546f5cad61f367aabfc80336a691122/src/avram/slugify.cr#L68" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1872,7 +1872,7 @@ This method returns the String value used in the <code><a href="../Avram/Slugify
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/9c8caecf052641d15dbe027e0cafb1741d8af33f/src/avram/slugify.cr#L48" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/77eda150d546f5cad61f367aabfc80336a691122/src/avram/slugify.cr#L48" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1888,7 +1888,7 @@ This method returns the String value used in the <code><a href="../Avram/Slugify
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/9c8caecf052641d15dbe027e0cafb1741d8af33f/src/avram/slugify.cr#L54" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/77eda150d546f5cad61f367aabfc80336a691122/src/avram/slugify.cr#L54" target="_blank">View source</a>]
         
       </div>
     </div>

@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="generator" content="Crystal Docs 1.4.1">
+<meta name="generator" content="Crystal Docs 1.5.0">
 <meta name="crystal_docs.project_version" content="main">
 <meta name="crystal_docs.project_name" content="avram">
 
@@ -1701,7 +1701,7 @@
   </h2>
   
     
-      <a href="https://github.com/luckyframework/avram/blob/9c8caecf052641d15dbe027e0cafb1741d8af33f/src/avram/primary_key_methods.cr#L1" target="_blank">
+      <a href="https://github.com/luckyframework/avram/blob/77eda150d546f5cad61f367aabfc80336a691122/src/avram/primary_key_methods.cr#L1" target="_blank">
         avram/primary_key_methods.cr
       </a>
     
@@ -1797,7 +1797,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/9c8caecf052641d15dbe027e0cafb1741d8af33f/src/avram/primary_key_methods.cr#L2" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/77eda150d546f5cad61f367aabfc80336a691122/src/avram/primary_key_methods.cr#L2" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1813,7 +1813,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/9c8caecf052641d15dbe027e0cafb1741d8af33f/src/avram/primary_key_methods.cr#L75" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/77eda150d546f5cad61f367aabfc80336a691122/src/avram/primary_key_methods.cr#L75" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1829,7 +1829,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/9c8caecf052641d15dbe027e0cafb1741d8af33f/src/avram/primary_key_methods.cr#L4" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/77eda150d546f5cad61f367aabfc80336a691122/src/avram/primary_key_methods.cr#L4" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1869,7 +1869,7 @@ user.name</code></pre>
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/9c8caecf052641d15dbe027e0cafb1741d8af33f/src/avram/primary_key_methods.cr#L33" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/77eda150d546f5cad61f367aabfc80336a691122/src/avram/primary_key_methods.cr#L33" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1891,7 +1891,7 @@ user.name</code></pre>
 
 <span class="c"># We want to display the list of articles the user has commented on, so let&#39;s #</span>
 <span class="c"># preload them to avoid N+1 performance issues</span>
-user <span class="o">=</span> user.reload(<span class="o">&amp;</span>.preload_comments(<span class="t">CommentQuery</span>.<span class="k">new</span>.preload_article))
+user <span class="o">=</span> user.reload(<span class="o">&amp;</span>.preload_comments(<span class="t">CommentQuery</span>.new.preload_article))
 
 <span class="c"># Now we can safely get all the comment authors</span>
 user.comments.map(<span class="o">&amp;</span>.article)</code></pre>
@@ -1900,13 +1900,13 @@ methods defined on your customized query. This is usually fine since
 typically reload only uses preloads.</p>
 <p>If you do need to do something more custom you can manually reload:</p>
 <pre><code class="language-crystal">user <span class="o">=</span> <span class="t">SaveUser</span>.create!(name: <span class="s">&quot;Helen&quot;</span>)
-<span class="t">UserQuery</span>.<span class="k">new</span>.some_custom_preload_method.find(user.id)</code></pre>
+<span class="t">UserQuery</span>.new.some_custom_preload_method.find(user.id)</code></pre>
         </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/9c8caecf052641d15dbe027e0cafb1741d8af33f/src/avram/primary_key_methods.cr#L64" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/77eda150d546f5cad61f367aabfc80336a691122/src/avram/primary_key_methods.cr#L64" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1928,7 +1928,7 @@ This allows an <code><a href="../Avram/Model.html">Avram::Model</a></code> to be
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/9c8caecf052641d15dbe027e0cafb1741d8af33f/src/avram/primary_key_methods.cr#L71" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/77eda150d546f5cad61f367aabfc80336a691122/src/avram/primary_key_methods.cr#L71" target="_blank">View source</a>]
         
       </div>
     </div>
