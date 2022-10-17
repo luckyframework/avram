@@ -53,6 +53,15 @@ class SomeFormWithCompany
       param_key: "company"
     )
   end
+
+  def numbers
+    Avram::PermittedAttribute(Array(Int32)).new(
+      name: :numbers,
+      param: "",
+      value: [1, 2],
+      param_key: "company"
+    )
+  end
 end
 
 describe Lucky::SelectHelpers do
@@ -79,6 +88,13 @@ describe Lucky::SelectHelpers do
     view.render_options(form.tags, [{"One", "one"}, {"Two", "two"}, {"Three", "three"}])
       .html.to_s.should eq <<-HTML
       <option value="one" selected>One</option><option value="two" selected>Two</option><option value="three">Three</option>
+      HTML
+  end
+
+  it "renders multi-select Int32 options" do
+    view.render_options(form.numbers, [{"One", 1}, {"Two", 2}, {"Three", 3}])
+      .html.to_s.should eq <<-HTML
+      <option value="1" selected>One</option><option value="2" selected>Two</option><option value="3">Three</option>
       HTML
   end
 
