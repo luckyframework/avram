@@ -48,16 +48,16 @@ module Avram::Associations::BelongsTo
 
   private macro define_belongs_to_base_query(class_type, assoc_name, model, foreign_key)
     class BaseQuery
-      def self.preload_{{ assoc_name }}(record : {{ class_type }}, force : Bool = false)
+      def self.preload_{{ assoc_name }}(record : {{ class_type }}, force : Bool = false) : {{ class_type }}
         preload_{{ assoc_name }}(record: record, preload_query: {{ model }}::BaseQuery.new, force: force)
       end
 
-      def self.preload_{{ assoc_name }}(record : {{ class_type }}, force : Bool = false)
+      def self.preload_{{ assoc_name }}(record : {{ class_type }}, force : Bool = false) : {{ class_type }}
         modified_query = yield {{ model }}::BaseQuery.new
         preload_{{ assoc_name }}(record: record, preload_query: modified_query, force: force)
       end
 
-      def self.preload_{{ assoc_name }}(record : {{ class_type }}, preload_query : {{ model }}::BaseQuery, force : Bool = false)
+      def self.preload_{{ assoc_name }}(record : {{ class_type }}, preload_query : {{ model }}::BaseQuery, force : Bool = false) : {{ class_type }}
         return record if record._{{ assoc_name }}_preloaded? && !force
 
         new_record = record.dup
@@ -66,16 +66,16 @@ module Avram::Associations::BelongsTo
         new_record
       end
 
-      def self.preload_{{ assoc_name }}(records : Enumerable({{ class_type }}), force : Bool = false)
+      def self.preload_{{ assoc_name }}(records : Enumerable({{ class_type }}), force : Bool = false) : Array({{ class_type }})
         preload_{{ assoc_name }}(records: records, preload_query: {{ model }}::BaseQuery.new, force: force)
       end
 
-      def self.preload_{{ assoc_name }}(records : Enumerable({{ class_type }}), force : Bool = false)
+      def self.preload_{{ assoc_name }}(records : Enumerable({{ class_type }}), force : Bool = false) : Array({{ class_type }})
         modified_query = yield {{ model }}::BaseQuery.new
         preload_{{ assoc_name }}(records: records, preload_query: modified_query, force: force)
       end
 
-      def self.preload_{{ assoc_name }}(records : Enumerable({{ class_type }}), preload_query : {{ model }}::BaseQuery, force : Bool = false)
+      def self.preload_{{ assoc_name }}(records : Enumerable({{ class_type }}), preload_query : {{ model }}::BaseQuery, force : Bool = false) : Array({{ class_type }})
         ids = records.compact_map do |record|
           if record._{{ assoc_name }}_preloaded? && !force
             nil
@@ -98,16 +98,16 @@ module Avram::Associations::BelongsTo
         end
       end
 
-      def preload_{{ assoc_name }}
+      def preload_{{ assoc_name }} : self
         preload_{{ assoc_name }}({{ model }}::BaseQuery.new)
       end
 
-      def preload_{{ assoc_name }}
+      def preload_{{ assoc_name }} : self
         modified_query = yield {{ model }}::BaseQuery.new
         preload_{{ assoc_name }}(modified_query)
       end
 
-      def preload_{{ assoc_name }}(preload_query : {{ model }}::BaseQuery)
+      def preload_{{ assoc_name }}(preload_query : {{ model }}::BaseQuery) : self
         add_preload do |records|
           ids = records.compact_map(&.{{ foreign_key }})
           empty_results = {} of {{ model }}::PrimaryKeyType => Array({{ model }})
