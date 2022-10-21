@@ -48,38 +48,54 @@ module Avram::Associations::BelongsTo
 
   private macro define_belongs_to_base_query(class_type, assoc_name, model, foreign_key)
     class BaseQuery
-      def self.preload_{{ assoc_name }}(record : {{ class_type }})
-        preload_{{ assoc_name }}(record: record, preload_query: {{ model }}::BaseQuery.new)
+      def self.preload_{{ assoc_name }}(record : {{ class_type }}, force : Bool = false)
+        preload_{{ assoc_name }}(record: record, preload_query: {{ model }}::BaseQuery.new, force: force)
       end
 
-      def self.preload_{{ assoc_name }}(record : {{ class_type }})
+      def self.preload_{{ assoc_name }}(record : {{ class_type }}, force : Bool = false)
         modified_query = yield {{ model }}::BaseQuery.new
-        preload_{{ assoc_name }}(record: record, preload_query: modified_query)
+        preload_{{ assoc_name }}(record: record, preload_query: modified_query, force: force)
       end
 
-      def self.preload_{{ assoc_name }}(record : {{ class_type }}, preload_query : {{ model }}::BaseQuery)
-        preload_{{ assoc_name }}(records: [record], preload_query: preload_query).first
+      def self.preload_{{ assoc_name }}(record : {{ class_type }}, preload_query : {{ model }}::BaseQuery, force : Bool = false)
+        return record if record._{{ assoc_name }}_preloaded? && !force
+
+        new_record = record.dup
+        assoc = preload_query.id(record.{{ foreign_key }}).first?
+        new_record.__set_preloaded_{{ assoc_name }}(assoc)
+        new_record
       end
 
-      def self.preload_{{ assoc_name }}(records : Enumerable({{ class_type }}))
-        preload_{{ assoc_name }}(records: records, preload_query: {{ model }}::BaseQuery.new)
+      def self.preload_{{ assoc_name }}(records : Enumerable({{ class_type }}), force : Bool = false)
+        preload_{{ assoc_name }}(records: records, preload_query: {{ model }}::BaseQuery.new, force: force)
       end
 
-      def self.preload_{{ assoc_name }}(records : Enumerable({{ class_type }}))
+      def self.preload_{{ assoc_name }}(records : Enumerable({{ class_type }}), force : Bool = false)
         modified_query = yield {{ model }}::BaseQuery.new
-        preload_{{ assoc_name }}(records: records, preload_query: modified_query)
+        preload_{{ assoc_name }}(records: records, preload_query: modified_query, force: force)
       end
 
-      def self.preload_{{ assoc_name }}(records : Enumerable({{ class_type }}), preload_query : {{ model }}::BaseQuery)
-        ids = records.compact_map(&.{{ foreign_key }})
+      def self.preload_{{ assoc_name }}(records : Enumerable({{ class_type }}), preload_query : {{ model }}::BaseQuery, force : Bool = false)
+        ids = records.compact_map do |record|
+          if record._{{ assoc_name }}_preloaded? && !force
+            nil
+          else
+            record.{{ foreign_key }}
+          end
+        end
         empty_results = {} of {{ model }}::PrimaryKeyType => Array({{ model }})
         {{ assoc_name }} = ids.empty? ? empty_results  : preload_query.id.in(ids).results.group_by(&.id)
-        records.map(&.dup)
-          .map do |record|
-            id = record.{{ foreign_key }}
-            assoc = id.nil? ? nil : {{ assoc_name }}[id]?.try(&.first?)
-            record.tap(&.__set_preloaded_{{ assoc_name }}(assoc))
+        records.map do |record|
+          if record._{{ assoc_name }}_preloaded? && !force
+            next record
           end
+
+          record = record.dup
+          id = record.{{ foreign_key }}
+          assoc = id.nil? ? nil : {{ assoc_name }}[id]?.try(&.first?)
+          record.__set_preloaded_{{ assoc_name }}(assoc)
+          record
+        end
       end
 
       def preload_{{ assoc_name }}
