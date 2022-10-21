@@ -138,9 +138,7 @@ describe "Preloading has_many through associations" do
       end
     end
 
-    # TODO: do not refetch if already preloaded
-
-    it "refetches association even if already preloaded" do
+    it "does not refetch association from database if already loaded (even if association has changed)" do
       with_lazy_load(enabled: false) do
         tag = TagFactory.create
         post = PostFactory.create
@@ -150,29 +148,30 @@ describe "Preloading has_many through associations" do
 
         post = Post::BaseQuery.preload_tags(post)
 
-        post.tags.first.name.should eq("THIS IS CHANGED")
+        post.tags.first.name.should_not eq("THIS IS CHANGED")
       end
     end
 
-    it "refetches all in multiple even if already preloaded" do
-      with_lazy_load(enabled: false) do
-        tag1 = TagFactory.create
-        post1 = PostFactory.create
-        TaggingFactory.create &.tag_id(tag1.id).post_id(post1.id)
-        post = Post::BaseQuery.preload_tags(post1)
-        Tag::SaveOperation.update!(tag1, name: "THIS IS CHANGED")
+    # TODO
+    # it "refetches unfetched in multiple" do
+    #   with_lazy_load(enabled: false) do
+    #     tag1 = TagFactory.create
+    #     post1 = PostFactory.create
+    #     TaggingFactory.create &.tag_id(tag1.id).post_id(post1.id)
+    #     post = Post::BaseQuery.preload_tags(post1)
+    #     Tag::SaveOperation.update!(tag1, name: "THIS IS CHANGED")
 
-        tag2 = TagFactory.create
-        post2 = PostFactory.create
-        TaggingFactory.create &.tag_id(tag2.id).post_id(post2.id)
-        Tag::SaveOperation.update!(tag2, name: "THIS IS CHANGED")
+    #     tag2 = TagFactory.create
+    #     post2 = PostFactory.create
+    #     TaggingFactory.create &.tag_id(tag2.id).post_id(post2.id)
+    #     Tag::SaveOperation.update!(tag1, name: "THIS IS CHANGED")
 
-        posts = Post::BaseQuery.preload_tags([post1, post2])
+    #     posts = Post::BaseQuery.preload_tags([post1, post2])
 
-        posts[0].tags.first.name.should eq("THIS IS CHANGED")
-        posts[1].tags.first.name.should eq("THIS IS CHANGED")
-      end
-    end
+    #     posts[0].tags.first.name.should_not eq("THIS IS CHANGED")
+    #     posts[1].tags.first.name.should eq("THIS IS CHANGED")
+    #   end
+    # end
 
     it "allows forcing refetch if already loaded" do
       with_lazy_load(enabled: false) do

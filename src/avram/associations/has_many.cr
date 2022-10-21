@@ -57,8 +57,9 @@ module Avram::Associations::HasMany
       end
 
       {% if through %}
-      # force is an accepted argument, but is ignored
       def self.preload_{{ assoc_name }}(record : {{ class_type }}, preload_query : {{ model }}::BaseQuery, force : Bool = false) : {{ class_type }}
+        return record if record._{{ assoc_name }}_preloaded? && !force
+
         preload_{{ assoc_name }}(records: [record], preload_query: preload_query, force: force).first
       end
       {% else %}
