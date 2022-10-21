@@ -158,7 +158,7 @@ describe "Preloading has_many through associations" do
     #     tag1 = TagFactory.create
     #     post1 = PostFactory.create
     #     TaggingFactory.create &.tag_id(tag1.id).post_id(post1.id)
-    #     post = Post::BaseQuery.preload_tags(post1)
+    #     post1 = Post::BaseQuery.preload_tags(post1)
     #     Tag::SaveOperation.update!(tag1, name: "THIS IS CHANGED")
 
     #     tag2 = TagFactory.create
@@ -192,7 +192,7 @@ describe "Preloading has_many through associations" do
         tag1 = TagFactory.create
         post1 = PostFactory.create
         TaggingFactory.create &.tag_id(tag1.id).post_id(post1.id)
-        post = Post::BaseQuery.preload_tags(post1)
+        post1 = Post::BaseQuery.preload_tags(post1)
         Tag::SaveOperation.update!(tag1, name: "THIS IS CHANGED")
 
         tag2 = TagFactory.create
