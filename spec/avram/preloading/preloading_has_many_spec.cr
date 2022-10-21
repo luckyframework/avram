@@ -193,5 +193,65 @@ describe "Preloading has_many associations" do
         end
       end
     end
+
+    it "does not refetch association from database if already loaded (even if association has changed)" do
+      with_lazy_load(enabled: false) do
+        post = PostFactory.create
+        comment = CommentFactory.create &.post_id(post.id)
+        post = Post::BaseQuery.preload_comments(post)
+        Comment::SaveOperation.update!(comment, body: "THIS IS CHANGED")
+
+        post = Post::BaseQuery.preload_comments(post)
+
+        post.comments.first.body.should_not eq("THIS IS CHANGED")
+      end
+    end
+
+    it "refetches unfetched in multiple" do
+      with_lazy_load(enabled: false) do
+        post1 = PostFactory.create
+        post2 = PostFactory.create
+        comment1 = CommentFactory.create &.post_id(post1.id)
+        post1 = Post::BaseQuery.preload_comments(post1)
+        Comment::SaveOperation.update!(comment1, body: "THIS IS CHANGED")
+        comment2 = CommentFactory.create &.post_id(post2.id)
+        Comment::SaveOperation.update!(comment2, body: "THIS IS CHANGED")
+
+        posts = Post::BaseQuery.preload_comments([post1, post2])
+
+        posts[0].comments.first.body.should_not eq("THIS IS CHANGED")
+        posts[1].comments.first.body.should eq("THIS IS CHANGED")
+      end
+    end
+
+    it "allows forcing refetch if already loaded" do
+      with_lazy_load(enabled: false) do
+        post = PostFactory.create
+        comment = CommentFactory.create &.post_id(post.id)
+        post = Post::BaseQuery.preload_comments(post)
+        Comment::SaveOperation.update!(comment, body: "THIS IS CHANGED")
+
+        post = Post::BaseQuery.preload_comments(post, force: true)
+
+        post.comments.first.body.should eq("THIS IS CHANGED")
+      end
+    end
+
+    it "allows forcing refetch if already loaded with multiple" do
+      with_lazy_load(enabled: false) do
+        post1 = PostFactory.create
+        post2 = PostFactory.create
+        comment1 = CommentFactory.create &.post_id(post1.id)
+        post1 = Post::BaseQuery.preload_comments(post1)
+        Comment::SaveOperation.update!(comment1, body: "THIS IS CHANGED")
+        comment2 = CommentFactory.create &.post_id(post2.id)
+        Comment::SaveOperation.update!(comment2, body: "THIS IS CHANGED")
+
+        posts = Post::BaseQuery.preload_comments([post1, post2], force: true)
+
+        posts[0].comments.first.body.should eq("THIS IS CHANGED")
+        posts[1].comments.first.body.should eq("THIS IS CHANGED")
+      end
+    end
   end
 end
