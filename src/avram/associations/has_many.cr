@@ -42,35 +42,35 @@ module Avram::Associations::HasMany
     {% model = type_declaration.type %}
 
     define_has_many_lazy_loading({{ assoc_name }}, {{ model }}, {{ foreign_key }}, {{ through }})
-    define_has_many_base_query({{ assoc_name }}, {{ model }}, {{ foreign_key }}, {{ through }})
+    define_has_many_base_query({{ @type }}, {{ assoc_name }}, {{ model }}, {{ foreign_key }}, {{ through }})
   end
 
-  private macro define_has_many_base_query(assoc_name, model, foreign_key, through)
+  private macro define_has_many_base_query(class_type, assoc_name, model, foreign_key, through)
     class BaseQuery
-      def self.preload_{{ assoc_name }}(record)
+      def self.preload_{{ assoc_name }}(record : {{ class_type }}) : {{ class_type }}
         preload_{{ assoc_name }}(record: record, preload_query: {{ model }}::BaseQuery.new)
       end
 
-      def self.preload_{{ assoc_name }}(record)
+      def self.preload_{{ assoc_name }}(record : {{ class_type }}) : {{ class_type }}
         modified_query = yield {{ model }}::BaseQuery.new
         preload_{{ assoc_name }}(record: record, preload_query: modified_query)
       end
 
-      def self.preload_{{ assoc_name }}(record, preload_query)
+      def self.preload_{{ assoc_name }}(record : {{ class_type }}, preload_query : {{ model }}::BaseQuery) : {{ class_type }}
         preload_{{ assoc_name }}(records: [record], preload_query: preload_query).first
       end
 
-      def self.preload_{{ assoc_name }}(records : Enumerable)
+      def self.preload_{{ assoc_name }}(records : Enumerable({{ class_type }})) : Array({{ class_type }})
         preload_{{ assoc_name }}(records: records, preload_query: {{ model }}::BaseQuery.new)
       end
 
-      def self.preload_{{ assoc_name }}(records : Enumerable)
+      def self.preload_{{ assoc_name }}(records : Enumerable({{ class_type }})) : Array({{ class_type }})
         modified_query = yield {{ model }}::BaseQuery.new
         preload_{{ assoc_name }}(records: records, preload_query: modified_query)
       end
 
       {% if through %}
-      def self.preload_{{ assoc_name }}(records : Enumerable, preload_query)
+      def self.preload_{{ assoc_name }}(records : Enumerable({{ class_type }}), preload_query : {{ model }}::BaseQuery) : Array({{ class_type }})
         intermediary_records = preload_{{ through.first.id }}(records) do |through_query|
           through_query.preload_{{ through[1].id }}(preload_query)
         end
@@ -87,7 +87,7 @@ module Avram::Associations::HasMany
           end
       end
       {% else %}
-      def self.preload_{{ assoc_name }}(records : Enumerable, preload_query)
+      def self.preload_{{ assoc_name }}(records : Enumerable({{ class_type }}), preload_query : {{ model }}::BaseQuery) : Array({{ class_type }})
         ids = records.map(&.id)
         empty_results = {} of {{ model }}::PrimaryKeyType => Array({{ model }})
         {{ assoc_name }} = ids.empty? ? empty_results  : preload_query.{{ foreign_key }}.in(ids).results.group_by(&.{{ foreign_key }})
@@ -99,17 +99,17 @@ module Avram::Associations::HasMany
       end
       {% end %}
 
-      def preload_{{ assoc_name }}
+      def preload_{{ assoc_name }} : self
         preload_{{ assoc_name }}({{ model }}::BaseQuery.new)
       end
 
-      def preload_{{ assoc_name }}
+      def preload_{{ assoc_name }} : self
         modified_query = yield {{ model }}::BaseQuery.new
         preload_{{ assoc_name }}(modified_query)
       end
 
       {% if through %}
-        def preload_{{ assoc_name }}(preload_query : {{ model }}::BaseQuery)
+        def preload_{{ assoc_name }}(preload_query : {{ model }}::BaseQuery) : self
           preload_{{ through.first.id }} do |through_query|
             through_query.preload_{{ through[1].id }}(preload_query)
           end
@@ -126,7 +126,7 @@ module Avram::Associations::HasMany
           self
         end
       {% else %}
-        def preload_{{ assoc_name }}(preload_query : {{ model }}::BaseQuery)
+        def preload_{{ assoc_name }}(preload_query : {{ model }}::BaseQuery) : self
           add_preload do |records|
             ids = records.map(&.id)
             if ids.empty?
