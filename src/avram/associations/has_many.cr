@@ -57,6 +57,7 @@ module Avram::Associations::HasMany
       end
 
       {% if through %}
+      # force is an accepted argument, but is ignored
       def self.preload_{{ assoc_name }}(record : {{ class_type }}, preload_query : {{ model }}::BaseQuery, force : Bool = false) : {{ class_type }}
         preload_{{ assoc_name }}(records: [record], preload_query: preload_query, force: force).first
       end
@@ -80,8 +81,9 @@ module Avram::Associations::HasMany
       end
 
       {% if through %}
+      # force is an accepted argument, but is ignored
       def self.preload_{{ assoc_name }}(records : Enumerable({{ class_type }}), preload_query : {{ model }}::BaseQuery, force : Bool = false) : Array({{ class_type }})
-        intermediary_records = preload_{{ through.first.id }}(records) do |through_query|
+        intermediary_records = preload_{{ through.first.id }}(records, force: true) do |through_query|
           through_query.preload_{{ through[1].id }}(preload_query)
         end
         intermediary_records.map(&.dup)
