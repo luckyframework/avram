@@ -25,7 +25,7 @@ module Avram::Associations::BelongsTo
     define_belongs_to_private_assoc_getter({{ assoc_name }}, {{ model }}, {{ foreign_key.id }}, {{ nilable }})
     Avram::Associations.__define_public_preloaded_getters({{ assoc_name }}, {{ model }}, {{ nilable }})
     Avram::Associations.__define_preloaded_setter({{ assoc_name }}, {{ model }}, {{ nilable }})
-    define_belongs_to_base_query({{ assoc_name }}, {{ model }}, {{ foreign_key.id }})
+    define_belongs_to_base_query({{ @type }}, {{ assoc_name }}, {{ model }}, {{ foreign_key.id }})
   end
 
   private macro define_belongs_to_private_assoc_getter(assoc_name, model, foreign_key, nilable)
@@ -46,31 +46,31 @@ module Avram::Associations::BelongsTo
     end
   end
 
-  private macro define_belongs_to_base_query(assoc_name, model, foreign_key)
+  private macro define_belongs_to_base_query(class_type, assoc_name, model, foreign_key)
     class BaseQuery
-      def self.preload_{{ assoc_name }}(record)
+      def self.preload_{{ assoc_name }}(record : {{ class_type }})
         preload_{{ assoc_name }}(record: record, preload_query: {{ model }}::BaseQuery.new)
       end
 
-      def self.preload_{{ assoc_name }}(record)
+      def self.preload_{{ assoc_name }}(record : {{ class_type }})
         modified_query = yield {{ model }}::BaseQuery.new
         preload_{{ assoc_name }}(record: record, preload_query: modified_query)
       end
 
-      def self.preload_{{ assoc_name }}(record, preload_query)
+      def self.preload_{{ assoc_name }}(record : {{ class_type }}, preload_query : {{ model }}::BaseQuery)
         preload_{{ assoc_name }}(records: [record], preload_query: preload_query).first
       end
 
-      def self.preload_{{ assoc_name }}(records : Enumerable)
+      def self.preload_{{ assoc_name }}(records : Enumerable({{ class_type }}))
         preload_{{ assoc_name }}(records: records, preload_query: {{ model }}::BaseQuery.new)
       end
 
-      def self.preload_{{ assoc_name }}(records : Enumerable)
+      def self.preload_{{ assoc_name }}(records : Enumerable({{ class_type }}))
         modified_query = yield {{ model }}::BaseQuery.new
         preload_{{ assoc_name }}(records: records, preload_query: modified_query)
       end
 
-      def self.preload_{{ assoc_name }}(records : Enumerable, preload_query)
+      def self.preload_{{ assoc_name }}(records : Enumerable({{ class_type }}), preload_query : {{ model }}::BaseQuery)
         ids = records.compact_map(&.{{ foreign_key }})
         empty_results = {} of {{ model }}::PrimaryKeyType => Array({{ model }})
         {{ assoc_name }} = ids.empty? ? empty_results  : preload_query.id.in(ids).results.group_by(&.id)
