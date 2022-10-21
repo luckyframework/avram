@@ -4,6 +4,7 @@ class CreateSignInCredentials::V20170127143151 < Avram::Migrator::Migration::V1
       primary_key id : Int64
       add_timestamps
       add user_id : Int64
+      add value : String
     end
   end
 
