@@ -135,5 +135,67 @@ describe "Preloading has_one associations" do
         end
       end
     end
+
+    it "does not refetch association from database if already loaded (even if association has changed)" do
+      with_lazy_load(enabled: false) do
+        admin = AdminFactory.create
+        sign_in_credential = SignInCredentialFactory.create &.user_id(admin.id)
+        admin = Admin::BaseQuery.preload_sign_in_credential(admin)
+        SignInCredential::SaveOperation.update!(sign_in_credential, value: "THIS IS CHANGED")
+
+        admin = Admin::BaseQuery.preload_sign_in_credential(admin)
+
+        admin.sign_in_credential.value.should_not eq("THIS IS CHANGED")
+      end
+    end
+
+    it "refetches unfetched in multiple" do
+      with_lazy_load(enabled: false) do
+        admin1 = AdminFactory.create
+        sign_in_credential1 = SignInCredentialFactory.create &.user_id(admin1.id)
+        admin1 = Admin::BaseQuery.preload_sign_in_credential(admin1)
+        SignInCredential::SaveOperation.update!(sign_in_credential1, value: "THIS IS CHANGED")
+
+        admin2 = AdminFactory.create
+        sign_in_credential2 = SignInCredentialFactory.create &.user_id(admin2.id)
+        SignInCredential::SaveOperation.update!(sign_in_credential2, value: "THIS IS CHANGED")
+
+        admins = Admin::BaseQuery.preload_sign_in_credential([admin1, admin2])
+
+        admins[0].sign_in_credential.value.should_not eq("THIS IS CHANGED")
+        admins[1].sign_in_credential.value.should eq("THIS IS CHANGED")
+      end
+    end
+
+    it "allows forcing refetch if already loaded" do
+      with_lazy_load(enabled: false) do
+        admin = AdminFactory.create
+        sign_in_credential = SignInCredentialFactory.create &.user_id(admin.id)
+        admin = Admin::BaseQuery.preload_sign_in_credential(admin)
+        SignInCredential::SaveOperation.update!(sign_in_credential, value: "THIS IS CHANGED")
+
+        admin = Admin::BaseQuery.preload_sign_in_credential(admin, force: true)
+
+        admin.sign_in_credential.value.should eq("THIS IS CHANGED")
+      end
+    end
+
+    it "allows forcing refetch if already loaded with multiple" do
+      with_lazy_load(enabled: false) do
+        admin1 = AdminFactory.create
+        sign_in_credential1 = SignInCredentialFactory.create &.user_id(admin1.id)
+        admin1 = Admin::BaseQuery.preload_sign_in_credential(admin1)
+        SignInCredential::SaveOperation.update!(sign_in_credential1, value: "THIS IS CHANGED")
+
+        admin2 = AdminFactory.create
+        sign_in_credential2 = SignInCredentialFactory.create &.user_id(admin2.id)
+        SignInCredential::SaveOperation.update!(sign_in_credential2, value: "THIS IS CHANGED")
+
+        admins = Admin::BaseQuery.preload_sign_in_credential([admin1, admin2], force: true)
+
+        admins[0].sign_in_credential.value.should eq("THIS IS CHANGED")
+        admins[1].sign_in_credential.value.should eq("THIS IS CHANGED")
+      end
+    end
   end
 end

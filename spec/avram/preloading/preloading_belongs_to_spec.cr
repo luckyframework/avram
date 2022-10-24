@@ -153,5 +153,61 @@ describe "Preloading belongs_to associations" do
         end
       end
     end
+
+    it "does not refetch association from database if already loaded (even if association has changed)" do
+      with_lazy_load(enabled: false) do
+        post = PostFactory.create
+        comment = CommentFactory.create &.post_id(post.id)
+        comment = Comment::BaseQuery.preload_post(comment)
+        Post::SaveOperation.update!(post, title: "THIS IS CHANGED")
+
+        comment = Comment::BaseQuery.preload_post(comment)
+
+        comment.post.title.should_not eq("THIS IS CHANGED")
+      end
+    end
+
+    it "refetches unfetched in multiple" do
+      with_lazy_load(enabled: false) do
+        post = PostFactory.create
+        comment1 = CommentFactory.create &.post_id(post.id)
+        comment2 = CommentFactory.create &.post_id(post.id)
+        comment1 = Comment::BaseQuery.preload_post(comment1)
+        Post::SaveOperation.update!(post, title: "THIS IS CHANGED")
+
+        comments = Comment::BaseQuery.preload_post([comment1, comment2])
+
+        comments[0].post.title.should_not eq("THIS IS CHANGED")
+        comments[1].post.title.should eq("THIS IS CHANGED")
+      end
+    end
+
+    it "allows forcing refetch if already loaded" do
+      with_lazy_load(enabled: false) do
+        post = PostFactory.create
+        comment = CommentFactory.create &.post_id(post.id)
+        comment = Comment::BaseQuery.preload_post(comment)
+        Post::SaveOperation.update!(post, title: "THIS IS CHANGED")
+
+        comment = Comment::BaseQuery.preload_post(comment, force: true)
+
+        comment.post.title.should eq("THIS IS CHANGED")
+      end
+    end
+
+    it "allows forcing refetch if already loaded with multiple" do
+      with_lazy_load(enabled: false) do
+        post = PostFactory.create
+        comment1 = CommentFactory.create &.post_id(post.id)
+        comment2 = CommentFactory.create &.post_id(post.id)
+        comment1 = Comment::BaseQuery.preload_post(comment1)
+        Post::SaveOperation.update!(post, title: "THIS IS CHANGED")
+
+        comments = Comment::BaseQuery.preload_post([comment1, comment2], force: true)
+
+        comments[0].post.title.should eq("THIS IS CHANGED")
+        comments[1].post.title.should eq("THIS IS CHANGED")
+      end
+    end
   end
 end

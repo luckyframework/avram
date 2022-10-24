@@ -19,8 +19,7 @@ module Avram::Associations
       get_{{ assoc_name.id }}
     end
 
-    @_{{ assoc_name }}_preloaded : Bool = false
-    private getter? _{{ assoc_name }}_preloaded
+    protected getter? _{{ assoc_name }}_preloaded : Bool = false
     private getter _preloaded_{{ assoc_name }} : {{ model }}?
   end
 
