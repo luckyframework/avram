@@ -124,11 +124,8 @@ module Avram::NeedyInitializerAndDeleteMethods
       {% if with_bang %}
         operation.delete!
       {% else %}
-        if operation.delete
-          yield operation, operation.record.not_nil!
-        else
-          yield operation, nil
-        end
+        operation.delete
+        yield operation, operation.record
       {% end %}
     end
   end
