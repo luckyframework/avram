@@ -33,7 +33,6 @@ describe "models using enums" do
   end
 
   it "fails when querying for non defined enum constants" do
-    issue = IssueFactory.create
     query = IssueQuery.new
     error_message = ->(x : String | Int32) { "Value ->#{x}<- is not a valid constant for enum Issue::Status" }
 
