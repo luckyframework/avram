@@ -32,6 +32,21 @@ describe "models using enums" do
     query.status(0).first.should eq(issue)
   end
 
+  it "fails when querying for non defined enum constants" do
+    issue = IssueFactory.create
+    query = IssueQuery.new
+    error_message = ->(x : String | Int32) { "Value ->#{x}<- is not a valid constant for enum Issue::Status" }
+
+    wrong_enum_constant = "oh no!"
+    expect_raises(Avram::FailedCastError, error_message.call(wrong_enum_constant)) {
+      query.status(wrong_enum_constant)
+    }
+    wrong_enum_constant = 999
+    expect_raises(Avram::FailedCastError, error_message.call(wrong_enum_constant)) {
+      query.status(wrong_enum_constant)
+    }
+  end
+
   it "handles other queries" do
     IssueFactory.create &.role(Issue::Role::Issue)
     IssueFactory.create &.role(Issue::Role::Critical)

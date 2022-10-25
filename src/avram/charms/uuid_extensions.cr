@@ -22,7 +22,7 @@ struct UUID
     def parse(value : String)
       SuccessfulCast(UUID).new(UUID.new(value))
     rescue
-      FailedCast.new
+      FailedCast.new("->#{value}<- is not a valid UUID")
     end
 
     def to_db(value : UUID)

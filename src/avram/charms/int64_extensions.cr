@@ -26,7 +26,7 @@ struct Int64
     def parse(value : String)
       SuccessfulCast(Int64).new value.to_i64
     rescue ArgumentError
-      FailedCast.new
+      FailedCast.new("Value ->#{value}<- could not be cast to Int64")
     end
 
     def parse(value : Int32)

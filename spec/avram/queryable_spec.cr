@@ -374,7 +374,7 @@ describe Avram::Queryable do
     end
 
     it "raises PQ::PQError if no record is found with letter-only id (String)" do
-      expect_raises(Exception, "FailedCast") do
+      expect_raises(Avram::FailedCastError) do
         UserQuery.find("id")
       end
     end
@@ -401,7 +401,7 @@ describe Avram::Queryable do
     end
 
     it "raises PQ::PQError if no record is found with letter-only id (String)" do
-      expect_raises(Exception, "FailedCast") do
+      expect_raises(Avram::FailedCastError) do
         UserQuery.new.find("id")
       end
     end

@@ -16,7 +16,7 @@ abstract struct Enum
       if result = T.parse?(value)
         SuccessfulCast.new(result)
       else
-        FailedCast.new
+        FailedCast.new("Value ->#{value}<- is not a valid constant for enum #{T}")
       end
     end
 
@@ -24,7 +24,7 @@ abstract struct Enum
       if result = T.from_value?(value)
         SuccessfulCast.new(result)
       else
-        FailedCast.new
+        FailedCast.new("Value ->#{value}<- is not a valid constant for enum #{T}")
       end
     end
 

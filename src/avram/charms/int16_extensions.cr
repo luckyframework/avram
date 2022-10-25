@@ -26,13 +26,13 @@ struct Int16
     def parse(value : String)
       SuccessfulCast(Int16).new value.to_i16
     rescue ArgumentError
-      FailedCast.new
+      FailedCast.new("Value ->#{value}<- could not be converted to Int16")
     end
 
     def parse(value : Int32)
       SuccessfulCast(Int16).new value.to_i16
     rescue OverflowError
-      FailedCast.new
+      FailedCast.new("Value ->#{value}<- overflowed while being converted to Int16")
     end
 
     def to_db(value : Int16)

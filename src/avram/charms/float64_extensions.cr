@@ -38,7 +38,7 @@ struct Float64
     def parse(value : String)
       SuccessfulCast(Float64).new value.to_f64
     rescue ArgumentError
-      FailedCast.new
+      FailedCast.new("Value ->#{value}<- could not be converted to Float64")
     end
 
     def parse(value : Int32)

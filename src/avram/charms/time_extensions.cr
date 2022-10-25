@@ -36,7 +36,7 @@ struct Time
         # Then try default formats
         try_parsing_with_default_formatters(value) ||
         # Fail if none of them work
-        FailedCast.new
+        FailedCast.new("->#{value}<- cannot be parsed with current formatters to Time")
     end
 
     def self.try_parsing_with_default_formatters(value : String)
