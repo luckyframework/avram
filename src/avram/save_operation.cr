@@ -132,6 +132,14 @@ abstract class Avram::SaveOperation(T)
     save_status == OperationStatus::Saved
   end
 
+  def created?
+    saved? && new_record?
+  end
+
+  def updated?
+    saved? && !new_record?
+  end
+
   # Return true if the operation has run and the record failed to save
   def save_failed?
     save_status == OperationStatus::SaveFailed

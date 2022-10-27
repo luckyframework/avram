@@ -220,7 +220,9 @@ describe "Avram::SaveOperation" do
           nickname: nil,
           age: 30,
           joined_at: joined_at
-        ) do |_operation, user|
+        ) do |operation, user|
+          operation.created?.should be_false
+          operation.updated?.should be_true
           UserQuery.new.select_count.should eq(1)
           user = user.not_nil!
           user.id.should eq(existing_user.id)
@@ -241,7 +243,9 @@ describe "Avram::SaveOperation" do
           nickname: "R.",
           age: 30,
           joined_at: joined_at
-        ) do |_operation, user|
+        ) do |operation, user|
+          operation.created?.should be_true
+          operation.updated?.should be_false
           UserQuery.new.select_count.should eq(2)
           # Keep existing user the same
           user_with_different_nickname.age.should eq(20)
@@ -333,6 +337,8 @@ describe "Avram::SaveOperation" do
       operation.save_failed?.should be_true
       operation.save_status.should eq(SaveUser::OperationStatus::SaveFailed)
       operation.valid?.should be_false
+      operation.created?.should be_false
+      operation.updated?.should be_false
     end
 
     it "is false if the object is not marked as saved but no action was performed" do
@@ -342,6 +348,8 @@ describe "Avram::SaveOperation" do
       operation.save_status.should eq(SaveUser::OperationStatus::Unperformed)
       operation.saved?.should be_false
       operation.valid?.should be_false
+      operation.created?.should be_false
+      operation.updated?.should be_false
     end
   end
 
@@ -845,6 +853,52 @@ describe "Avram::SaveOperation" do
         operation.new_record?.should be_false
         operation.save.should be_true
         operation.new_record?.should be_false
+      end
+    end
+  end
+
+  describe "#created?" do
+    context "after creating" do
+      it "returns 'true'" do
+        operation = SaveUser.new(name: "Dan", age: 34, joined_at: Time.utc)
+
+        operation.created?.should be_false
+        operation.save.should be_true
+        operation.created?.should be_true
+      end
+    end
+
+    context "after updating" do
+      it "returns 'false'" do
+        user = UserFactory.create &.name("Dan").age(34).joined_at(Time.utc)
+        operation = SaveUser.new(user, name: "Tom")
+
+        operation.created?.should be_false
+        operation.save.should be_true
+        operation.created?.should be_false
+      end
+    end
+  end
+
+  describe "#updated?" do
+    context "after creating" do
+      it "returns 'false'" do
+        operation = SaveUser.new(name: "Dan", age: 34, joined_at: Time.utc)
+
+        operation.updated?.should be_false
+        operation.save.should be_true
+        operation.updated?.should be_false
+      end
+    end
+
+    context "after updating" do
+      it "returns 'true'" do
+        user = UserFactory.create &.name("Dan").age(34).joined_at(Time.utc)
+        operation = SaveUser.new(user, name: "Tom")
+
+        operation.updated?.should be_false
+        operation.save.should be_true
+        operation.updated?.should be_true
       end
     end
   end
