@@ -49,6 +49,8 @@ class Avram::SchemaEnforcer::EnsureMatchingColumns < Avram::SchemaEnforcer::Vali
     if best_match
       message += " Did you mean '#{best_match.colorize.yellow.bold}'?\n\n"
     else
+      # Enum column are mapped to Int32 in the database layer
+      missing_attribute_type_hint = "#{missing_attribute[:name]} : #{missing_attribute[:type].sub("Enum", "Int32")}"
       message += <<-TEXT
 
 
@@ -62,10 +64,10 @@ class Avram::SchemaEnforcer::EnsureMatchingColumns < Avram::SchemaEnforcer::Vali
 
             alter :#{table_name} do
               #{"# Add the column:".colorize.dim}
-              add #{missing_attribute[:name]} : #{missing_attribute[:type]}
+              add #{missing_attribute_type_hint}
 
               #{"# Or if this is a column for a belongs_to relationship:".colorize.dim}
-              add_belongs_to #{missing_attribute[:name]} : #{missing_attribute[:type]}
+              add_belongs_to #{missing_attribute_type_hint}
             end
 
       Or, you can skip schema checks for this model:
