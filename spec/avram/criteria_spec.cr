@@ -84,7 +84,3 @@ end
 private def nickname
   QueryMe::BaseQuery.new.nickname
 end
-
-private def created_at
-  QueryMe::BaseQuery.new.created_at
-end

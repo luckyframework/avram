@@ -14,7 +14,7 @@ describe Time::Lucky::Criteria do
     end
   end
 
-  it "in_date" do
+  it "as_date" do
     input_date = "2012-01-31"
     activated_at.as_date.eq(input_date).to_sql.should eq ["SELECT users.id, users.created_at, users.updated_at, users.activated_at FROM users WHERE DATE(users.activated_at) = $1", input_date]
   end
