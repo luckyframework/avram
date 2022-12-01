@@ -75,12 +75,6 @@ describe Avram::Criteria do
       age.not.gt("3").age.eq("20").to_sql.should eq ["SELECT #{QueryMe::COLUMN_SQL} FROM users WHERE users.age <= $1 AND users.age = $2", "3", "20"]
     end
   end
-
-  describe "with_default" do
-    it "provides a default value to the column in case it is null" do
-      age.with_default(5).gt(18).to_sql.should eq ["SELECT #{QueryMe::COLUMN_SQL} FROM users WHERE COALESCE(users.age, 5) > $1", "18"]
-    end
-  end
 end
 
 private def age
@@ -89,4 +83,8 @@ end
 
 private def nickname
   QueryMe::BaseQuery.new.nickname
+end
+
+private def created_at
+  QueryMe::BaseQuery.new.created_at
 end
