@@ -79,9 +79,7 @@ struct Time
       include Avram::BetweenCriteria(T, V)
       include Avram::ExtractCriteria
 
-      def as_date
-        Criteria(T, String).new(rows, "DATE(#{@column})")
-      end
+      define_function_criteria(as_date, String, "DATE")
     end
   end
 end

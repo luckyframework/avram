@@ -185,4 +185,20 @@ class Avram::Criteria(T, V)
       sql_clause
     end
   end
+
+  macro define_function_criteria(name, output_type = V, sql_name = nil)
+    {% sql_name = sql_name ? sql_name.id : name.id.upcase %}
+      def {{name}}
+        Criteria(T,{{output_type}}).new(rows, "{{sql_name}}(#{column})")
+      end
+  end
+
+  macro define_function_with_additional_argument_criteria(name, output_type = V, sql_name = nil)
+  {% sql_name = sql_name ? sql_name.id : name.id.upcase %}
+      def {{name}}(additional_argument : V)
+        Criteria(T,{{output_type}}).new(rows, "{{sql_name}}(#{column}, #{additional_argument})")
+      end
+  end
+
+  define_function_with_additional_argument_criteria(with_default, V, "COALESCE")
 end
