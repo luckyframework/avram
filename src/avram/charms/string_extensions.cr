@@ -41,23 +41,11 @@ class String
       end
 
       def upper
-        @upper = true
-        self
+        Criteria(T, V).new(rows, "UPPER(#{column})")
       end
 
       def lower
-        @lower = true
-        self
-      end
-
-      def column
-        if @upper
-          "UPPER(#{@column})"
-        elsif @lower
-          "LOWER(#{@column})"
-        else
-          @column
-        end
+        Criteria(T, V).new(rows, "LOWER(#{column})")
       end
     end
   end
