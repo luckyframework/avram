@@ -78,6 +78,8 @@ struct Time
     class Criteria(T, V) < Avram::Criteria(T, V)
       include Avram::BetweenCriteria(T, V)
       include Avram::ExtractCriteria
+
+      define_function_criteria(as_date, String, "DATE")
     end
   end
 end

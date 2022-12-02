@@ -185,4 +185,11 @@ class Avram::Criteria(T, V)
       sql_clause
     end
   end
+
+  macro define_function_criteria(name, output_type = V, sql_name = nil)
+    {% sql_name = sql_name ? sql_name.id : name.id.upcase %}
+      def {{name}}
+        Criteria(T,{{output_type}}).new(rows, "{{sql_name}}(#{column})")
+      end
+  end
 end

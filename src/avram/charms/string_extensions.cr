@@ -29,8 +29,6 @@ class String
 
     class Criteria(T, V) < Avram::Criteria(T, V)
       include Avram::IncludesCriteria(T, V)
-      @upper = false
-      @lower = false
 
       def like(value : String) : T
         add_clause(Avram::Where::Like.new(column, value))
@@ -40,25 +38,9 @@ class String
         add_clause(Avram::Where::Ilike.new(column, value))
       end
 
-      def upper
-        @upper = true
-        self
-      end
-
-      def lower
-        @lower = true
-        self
-      end
-
-      def column
-        if @upper
-          "UPPER(#{@column})"
-        elsif @lower
-          "LOWER(#{@column})"
-        else
-          @column
-        end
-      end
+      define_function_criteria(upper, V)
+      define_function_criteria(lower, V)
+      define_function_criteria(trim, String)
     end
   end
 end

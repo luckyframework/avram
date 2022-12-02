@@ -16,7 +16,7 @@ abstract class Avram::Model
   end
 
   macro inherited
-    COLUMNS = [] of Nil # types are not checked in macros
+    COLUMNS      = [] of Nil # types are not checked in macros
     ASSOCIATIONS = [] of Nil # types are not checked in macros
     include LuckyCache::Cachable
   end

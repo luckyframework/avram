@@ -20,7 +20,6 @@ module Avram::DefineAttribute
       ATTRIBUTES = [] of Nil
     \{% end %}
 
-
     \{% if !@type.ancestors.first.abstract? %}
       \{% for attribute in @type.ancestors.first.constant :ATTRIBUTES %}
         \{% ATTRIBUTES << attribute %}

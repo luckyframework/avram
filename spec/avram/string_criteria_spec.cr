@@ -33,6 +33,12 @@ describe String::Lucky::Criteria do
     end
   end
 
+  describe "trim" do
+    it "uses TRIM" do
+      name.trim.eq("elon").to_sql.should eq ["SELECT #{QueryMe::COLUMN_SQL} FROM users WHERE TRIM(users.name) = $1", "elon"]
+    end
+  end
+
   describe "not" do
     describe "with chained criteria" do
       it "negates the following criteria" do
