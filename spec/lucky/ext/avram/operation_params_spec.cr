@@ -24,6 +24,10 @@ end
 private class AnEmptyBag < Bucket::SaveOperation
 end
 
+private class SaveTaskFromJson < Task::SaveOperation
+  permit_columns :title, :body
+end
+
 describe "OperationParams" do
   it "passes permitted params to the save operation with no arrays" do
     req = build_request(method: "POST", body: "oooo:name=Dandy&oooo:nickname=mmmm&oooo:joined_at=2020-02-02T20:20:02&oooo:age=49&oooo:extra=cheers")
@@ -35,6 +39,24 @@ describe "OperationParams" do
     operation.joined_at.value.should eq(Time.utc(2020, 2, 2, 20, 20, 2))
     operation.age.value.should eq(49)
     operation.extra.value.should eq("cheers")
+  end
+
+  it "passes permitted params as JSON with a null value" do
+    req = build_request(method: "POST", body: %({"task": {"title": "Good", "body": null}}), content_type: "application/json")
+    params = Lucky::Params.new(req)
+    operation = SaveTaskFromJson.new(params)
+    operation.title.value.should eq("Good")
+    operation.body.value.should eq(nil)
+    operation.valid?.should eq(true)
+  end
+
+  it "passes permitted params as JSON" do
+    req = build_request(method: "POST", body: %({"task": {"title": "Good", "body": "food"}}), content_type: "application/json")
+    params = Lucky::Params.new(req)
+    operation = SaveTaskFromJson.new(params)
+    operation.title.value.should eq("Good")
+    operation.body.value.should eq("food")
+    operation.valid?.should eq(true)
   end
 
   it "passes permitted params to the save operation with only arrays" do
