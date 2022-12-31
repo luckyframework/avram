@@ -40,6 +40,7 @@ private class SaveLimitedUser < User::SaveOperation
 end
 
 private class SaveTask < Task::SaveOperation
+  permit_columns :completed_at
 end
 
 private class ValidSaveOperationWithoutParams < Post::SaveOperation
@@ -808,7 +809,7 @@ describe "Avram::SaveOperation" do
       post.title.should eq "My Title"
     end
 
-    it "updates a value back to nil", focus: true do
+    it "updates a value back to nil" do
       task = TaskFactory.new.title("Welcome").body("To the jungle").completed_at(1.day.ago).create
       params = build_params(%({"task": {"completed_at": null}}), content_type: "application/json")
 
