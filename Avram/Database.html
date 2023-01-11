@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="generator" content="Crystal Docs 1.5.0">
+<meta name="generator" content="Crystal Docs 1.6.2">
 <meta name="crystal_docs.project_version" content="main">
 <meta name="crystal_docs.project_name" content="avram">
 
@@ -1703,7 +1703,7 @@
   </h2>
   
     
-      <a href="https://github.com/luckyframework/avram/blob/0ea2a6140f5f9ac770eeaa5badf1d479a5b60f69/src/avram/database.cr#L1" target="_blank">
+      <a href="https://github.com/luckyframework/avram/blob/89bf1356c17f9cbc546f1a58e0b26ec1d91d7302/src/avram/database.cr#L1" target="_blank">
         avram/database.cr
       </a>
     
@@ -1749,7 +1749,7 @@
       </li>
     
       <li class="entry-summary">
-        <a href="#exec%28query%2C%2Aargs_%2Cargs%3AArray%3F%3Dnil%2Cqueryable%3AString%3F%3Dnil%2C%2A%2Anamed_args%29-class-method" class="signature"><strong>.exec</strong>(query, *args_, args : Array? = <span class="n">nil</span>, queryable : String? = <span class="n">nil</span>, **named_args)</a>
+        <a href="#exec%28query%2C%2Aargs_%2Cargs%3AArray%7CNil%3Dnil%2Cqueryable%3AString%7CNil%3Dnil%2C%2A%2Anamed_args%29-class-method" class="signature"><strong>.exec</strong>(query, *args_, args : Array | Nil = <span class="n">nil</span>, queryable : String | Nil = <span class="n">nil</span>, **named_args)</a>
         
           <div class="summary"><p>Same as crystal-db's <code>DB::QueryMethods#exec</code> but with instrumentation</p></div>
         
@@ -1763,73 +1763,73 @@
       </li>
     
       <li class="entry-summary">
-        <a href="#lock_id%3AUInt64%3F-class-method" class="signature"><strong>.lock_id</strong> : UInt64?</a>
+        <a href="#lock_id%3AUInt64%7CNil-class-method" class="signature"><strong>.lock_id</strong> : UInt64 | Nil</a>
         
       </li>
     
       <li class="entry-summary">
-        <a href="#lock_id%3D%28lock_id%3AUInt64%3F%29-class-method" class="signature"><strong>.lock_id=</strong>(lock_id : UInt64?)</a>
+        <a href="#lock_id%3D%28lock_id%3AUInt64%7CNil%29-class-method" class="signature"><strong>.lock_id=</strong>(lock_id : UInt64 | Nil)</a>
         
       </li>
     
       <li class="entry-summary">
-        <a href="#query%28query%2C%2Aargs_%2Cargs%3AArray%3F%3Dnil%2Cqueryable%3AString%3F%3Dnil%2C%2A%2Anamed_args%29-class-method" class="signature"><strong>.query</strong>(query, *args_, args : Array? = <span class="n">nil</span>, queryable : String? = <span class="n">nil</span>, **named_args)</a>
+        <a href="#query%28query%2C%2Aargs_%2Cargs%3AArray%7CNil%3Dnil%2Cqueryable%3AString%7CNil%3Dnil%2C%2A%2Anamed_args%29-class-method" class="signature"><strong>.query</strong>(query, *args_, args : Array | Nil = <span class="n">nil</span>, queryable : String | Nil = <span class="n">nil</span>, **named_args)</a>
         
           <div class="summary"><p>Same as crystal-db's <code>DB::QueryMethods#query</code> but with instrumentation</p></div>
         
       </li>
     
       <li class="entry-summary">
-        <a href="#query%28query%2C%2Aargs_%2Cargs%3AArray%3F%3Dnil%2Cqueryable%3AString%3F%3Dnil%2C%2A%2Anamed_args%2C%26%29-class-method" class="signature"><strong>.query</strong>(query, *args_, args : Array? = <span class="n">nil</span>, queryable : String? = <span class="n">nil</span>, **named_args, &)</a>
+        <a href="#query%28query%2C%2Aargs_%2Cargs%3AArray%7CNil%3Dnil%2Cqueryable%3AString%7CNil%3Dnil%2C%2A%2Anamed_args%2C%26%29-class-method" class="signature"><strong>.query</strong>(query, *args_, args : Array | Nil = <span class="n">nil</span>, queryable : String | Nil = <span class="n">nil</span>, **named_args, &)</a>
         
           <div class="summary"><p>Same as crystal-db's <code>DB::QueryMethods#:query</code> but with instrumentation</p></div>
         
       </li>
     
       <li class="entry-summary">
-        <a href="#query_all%28query%2C%2Aargs_%2Cargs%3AArray%3F%3Dnil%2Cqueryable%3AString%3F%3Dnil%2C%2A%2Anamed_args%29-class-method" class="signature"><strong>.query_all</strong>(query, *args_, args : Array? = <span class="n">nil</span>, queryable : String? = <span class="n">nil</span>, **named_args)</a>
+        <a href="#query_all%28query%2C%2Aargs_%2Cargs%3AArray%7CNil%3Dnil%2Cqueryable%3AString%7CNil%3Dnil%2C%2A%2Anamed_args%29-class-method" class="signature"><strong>.query_all</strong>(query, *args_, args : Array | Nil = <span class="n">nil</span>, queryable : String | Nil = <span class="n">nil</span>, **named_args)</a>
         
           <div class="summary"><p>Same as crystal-db's <code>DB::QueryMethods#query_all</code> but with instrumentation</p></div>
         
       </li>
     
       <li class="entry-summary">
-        <a href="#query_all%28query%2C%2Aargs_%2Cargs%3AArray%3F%3Dnil%2Cqueryable%3AString%3F%3Dnil%2C%2A%2Anamed_args%2C%26%29-class-method" class="signature"><strong>.query_all</strong>(query, *args_, args : Array? = <span class="n">nil</span>, queryable : String? = <span class="n">nil</span>, **named_args, &)</a>
+        <a href="#query_all%28query%2C%2Aargs_%2Cargs%3AArray%7CNil%3Dnil%2Cqueryable%3AString%7CNil%3Dnil%2C%2A%2Anamed_args%2C%26%29-class-method" class="signature"><strong>.query_all</strong>(query, *args_, args : Array | Nil = <span class="n">nil</span>, queryable : String | Nil = <span class="n">nil</span>, **named_args, &)</a>
         
           <div class="summary"><p>Same as crystal-db's <code>DB::QueryMethods#:query_all</code> but with instrumentation</p></div>
         
       </li>
     
       <li class="entry-summary">
-        <a href="#query_each%28query%2C%2Aargs_%2Cargs%3AArray%3F%3Dnil%2Cqueryable%3AString%3F%3Dnil%2C%2A%2Anamed_args%2C%26%29-class-method" class="signature"><strong>.query_each</strong>(query, *args_, args : Array? = <span class="n">nil</span>, queryable : String? = <span class="n">nil</span>, **named_args, &)</a>
+        <a href="#query_each%28query%2C%2Aargs_%2Cargs%3AArray%7CNil%3Dnil%2Cqueryable%3AString%7CNil%3Dnil%2C%2A%2Anamed_args%2C%26%29-class-method" class="signature"><strong>.query_each</strong>(query, *args_, args : Array | Nil = <span class="n">nil</span>, queryable : String | Nil = <span class="n">nil</span>, **named_args, &)</a>
         
           <div class="summary"><p>Same as crystal-db's <code>DB::QueryMethods#:query_each</code> but with instrumentation</p></div>
         
       </li>
     
       <li class="entry-summary">
-        <a href="#query_one%28query%2C%2Aargs_%2Cargs%3AArray%3F%3Dnil%2Cqueryable%3AString%3F%3Dnil%2C%2A%2Anamed_args%29-class-method" class="signature"><strong>.query_one</strong>(query, *args_, args : Array? = <span class="n">nil</span>, queryable : String? = <span class="n">nil</span>, **named_args)</a>
+        <a href="#query_one%28query%2C%2Aargs_%2Cargs%3AArray%7CNil%3Dnil%2Cqueryable%3AString%7CNil%3Dnil%2C%2A%2Anamed_args%29-class-method" class="signature"><strong>.query_one</strong>(query, *args_, args : Array | Nil = <span class="n">nil</span>, queryable : String | Nil = <span class="n">nil</span>, **named_args)</a>
         
           <div class="summary"><p>Same as crystal-db's <code>DB::QueryMethods#query_one</code> but with instrumentation</p></div>
         
       </li>
     
       <li class="entry-summary">
-        <a href="#query_one%28query%2C%2Aargs_%2Cargs%3AArray%3F%3Dnil%2Cqueryable%3AString%3F%3Dnil%2C%2A%2Anamed_args%2C%26%29-class-method" class="signature"><strong>.query_one</strong>(query, *args_, args : Array? = <span class="n">nil</span>, queryable : String? = <span class="n">nil</span>, **named_args, &)</a>
+        <a href="#query_one%28query%2C%2Aargs_%2Cargs%3AArray%7CNil%3Dnil%2Cqueryable%3AString%7CNil%3Dnil%2C%2A%2Anamed_args%2C%26%29-class-method" class="signature"><strong>.query_one</strong>(query, *args_, args : Array | Nil = <span class="n">nil</span>, queryable : String | Nil = <span class="n">nil</span>, **named_args, &)</a>
         
           <div class="summary"><p>Same as crystal-db's <code>DB::QueryMethods#:query_one</code> but with instrumentation</p></div>
         
       </li>
     
       <li class="entry-summary">
-        <a href="#query_one%3F%28query%2C%2Aargs_%2Cargs%3AArray%3F%3Dnil%2Cqueryable%3AString%3F%3Dnil%2C%2A%2Anamed_args%29-class-method" class="signature"><strong>.query_one?</strong>(query, *args_, args : Array? = <span class="n">nil</span>, queryable : String? = <span class="n">nil</span>, **named_args)</a>
+        <a href="#query_one%3F%28query%2C%2Aargs_%2Cargs%3AArray%7CNil%3Dnil%2Cqueryable%3AString%7CNil%3Dnil%2C%2A%2Anamed_args%29-class-method" class="signature"><strong>.query_one?</strong>(query, *args_, args : Array | Nil = <span class="n">nil</span>, queryable : String | Nil = <span class="n">nil</span>, **named_args)</a>
         
           <div class="summary"><p>Same as crystal-db's <code>DB::QueryMethods#query_one?</code> but with instrumentation</p></div>
         
       </li>
     
       <li class="entry-summary">
-        <a href="#query_one%3F%28query%2C%2Aargs_%2Cargs%3AArray%3F%3Dnil%2Cqueryable%3AString%3F%3Dnil%2C%2A%2Anamed_args%2C%26%29-class-method" class="signature"><strong>.query_one?</strong>(query, *args_, args : Array? = <span class="n">nil</span>, queryable : String? = <span class="n">nil</span>, **named_args, &)</a>
+        <a href="#query_one%3F%28query%2C%2Aargs_%2Cargs%3AArray%7CNil%3Dnil%2Cqueryable%3AString%7CNil%3Dnil%2C%2A%2Anamed_args%2C%26%29-class-method" class="signature"><strong>.query_one?</strong>(query, *args_, args : Array | Nil = <span class="n">nil</span>, queryable : String | Nil = <span class="n">nil</span>, **named_args, &)</a>
         
           <div class="summary"><p>Same as crystal-db's <code>DB::QueryMethods#:&quot;query_one?&quot;</code> but with instrumentation</p></div>
         
@@ -1848,7 +1848,7 @@
       </li>
     
       <li class="entry-summary">
-        <a href="#scalar%28query%2C%2Aargs_%2Cargs%3AArray%3F%3Dnil%2Cqueryable%3AString%3F%3Dnil%2C%2A%2Anamed_args%29-class-method" class="signature"><strong>.scalar</strong>(query, *args_, args : Array? = <span class="n">nil</span>, queryable : String? = <span class="n">nil</span>, **named_args)</a>
+        <a href="#scalar%28query%2C%2Aargs_%2Cargs%3AArray%7CNil%3Dnil%2Cqueryable%3AString%7CNil%3Dnil%2C%2A%2Anamed_args%29-class-method" class="signature"><strong>.scalar</strong>(query, *args_, args : Array | Nil = <span class="n">nil</span>, queryable : String | Nil = <span class="n">nil</span>, **named_args)</a>
         
           <div class="summary"><p>Same as crystal-db's <code>DB::QueryMethods#scalar</code> but with instrumentation</p></div>
         
@@ -1893,7 +1893,7 @@
   <ul class="list-summary">
     
       <li class="entry-summary">
-        <a href="#exec%28query%2C%2Aargs_%2Cargs%3AArray%3F%3Dnil%2Cqueryable%3AString%3F%3Dnil%2C%2A%2Anamed_args%29-instance-method" class="signature"><strong>#exec</strong>(query, *args_, args : Array? = <span class="n">nil</span>, queryable : String? = <span class="n">nil</span>, **named_args)</a>
+        <a href="#exec%28query%2C%2Aargs_%2Cargs%3AArray%7CNil%3Dnil%2Cqueryable%3AString%7CNil%3Dnil%2C%2A%2Anamed_args%29-instance-method" class="signature"><strong>#exec</strong>(query, *args_, args : Array | Nil = <span class="n">nil</span>, queryable : String | Nil = <span class="n">nil</span>, **named_args)</a>
         
           <div class="summary"><p>Same as crystal-db's <code>DB::QueryMethods#exec</code> but with instrumentation</p></div>
         
@@ -1905,70 +1905,70 @@
       </li>
     
       <li class="entry-summary">
-        <a href="#query%28query%2C%2Aargs_%2Cargs%3AArray%3F%3Dnil%2Cqueryable%3AString%3F%3Dnil%2C%2A%2Anamed_args%29-instance-method" class="signature"><strong>#query</strong>(query, *args_, args : Array? = <span class="n">nil</span>, queryable : String? = <span class="n">nil</span>, **named_args)</a>
+        <a href="#query%28query%2C%2Aargs_%2Cargs%3AArray%7CNil%3Dnil%2Cqueryable%3AString%7CNil%3Dnil%2C%2A%2Anamed_args%29-instance-method" class="signature"><strong>#query</strong>(query, *args_, args : Array | Nil = <span class="n">nil</span>, queryable : String | Nil = <span class="n">nil</span>, **named_args)</a>
         
           <div class="summary"><p>Same as crystal-db's <code>DB::QueryMethods#query</code> but with instrumentation</p></div>
         
       </li>
     
       <li class="entry-summary">
-        <a href="#query%28query%2C%2Aargs_%2Cargs%3AArray%3F%3Dnil%2Cqueryable%3AString%3F%3Dnil%2C%2A%2Anamed_args%2C%26%29-instance-method" class="signature"><strong>#query</strong>(query, *args_, args : Array? = <span class="n">nil</span>, queryable : String? = <span class="n">nil</span>, **named_args, &)</a>
+        <a href="#query%28query%2C%2Aargs_%2Cargs%3AArray%7CNil%3Dnil%2Cqueryable%3AString%7CNil%3Dnil%2C%2A%2Anamed_args%2C%26%29-instance-method" class="signature"><strong>#query</strong>(query, *args_, args : Array | Nil = <span class="n">nil</span>, queryable : String | Nil = <span class="n">nil</span>, **named_args, &)</a>
         
           <div class="summary"><p>Same as crystal-db's <code>DB::QueryMethods#:query</code> but with instrumentation</p></div>
         
       </li>
     
       <li class="entry-summary">
-        <a href="#query_all%28query%2C%2Aargs_%2Cargs%3AArray%3F%3Dnil%2Cqueryable%3AString%3F%3Dnil%2C%2A%2Anamed_args%29-instance-method" class="signature"><strong>#query_all</strong>(query, *args_, args : Array? = <span class="n">nil</span>, queryable : String? = <span class="n">nil</span>, **named_args)</a>
+        <a href="#query_all%28query%2C%2Aargs_%2Cargs%3AArray%7CNil%3Dnil%2Cqueryable%3AString%7CNil%3Dnil%2C%2A%2Anamed_args%29-instance-method" class="signature"><strong>#query_all</strong>(query, *args_, args : Array | Nil = <span class="n">nil</span>, queryable : String | Nil = <span class="n">nil</span>, **named_args)</a>
         
           <div class="summary"><p>Same as crystal-db's <code>DB::QueryMethods#query_all</code> but with instrumentation</p></div>
         
       </li>
     
       <li class="entry-summary">
-        <a href="#query_all%28query%2C%2Aargs_%2Cargs%3AArray%3F%3Dnil%2Cqueryable%3AString%3F%3Dnil%2C%2A%2Anamed_args%2C%26%29-instance-method" class="signature"><strong>#query_all</strong>(query, *args_, args : Array? = <span class="n">nil</span>, queryable : String? = <span class="n">nil</span>, **named_args, &)</a>
+        <a href="#query_all%28query%2C%2Aargs_%2Cargs%3AArray%7CNil%3Dnil%2Cqueryable%3AString%7CNil%3Dnil%2C%2A%2Anamed_args%2C%26%29-instance-method" class="signature"><strong>#query_all</strong>(query, *args_, args : Array | Nil = <span class="n">nil</span>, queryable : String | Nil = <span class="n">nil</span>, **named_args, &)</a>
         
           <div class="summary"><p>Same as crystal-db's <code>DB::QueryMethods#:query_all</code> but with instrumentation</p></div>
         
       </li>
     
       <li class="entry-summary">
-        <a href="#query_each%28query%2C%2Aargs_%2Cargs%3AArray%3F%3Dnil%2Cqueryable%3AString%3F%3Dnil%2C%2A%2Anamed_args%2C%26%29-instance-method" class="signature"><strong>#query_each</strong>(query, *args_, args : Array? = <span class="n">nil</span>, queryable : String? = <span class="n">nil</span>, **named_args, &)</a>
+        <a href="#query_each%28query%2C%2Aargs_%2Cargs%3AArray%7CNil%3Dnil%2Cqueryable%3AString%7CNil%3Dnil%2C%2A%2Anamed_args%2C%26%29-instance-method" class="signature"><strong>#query_each</strong>(query, *args_, args : Array | Nil = <span class="n">nil</span>, queryable : String | Nil = <span class="n">nil</span>, **named_args, &)</a>
         
           <div class="summary"><p>Same as crystal-db's <code>DB::QueryMethods#:query_each</code> but with instrumentation</p></div>
         
       </li>
     
       <li class="entry-summary">
-        <a href="#query_one%28query%2C%2Aargs_%2Cargs%3AArray%3F%3Dnil%2Cqueryable%3AString%3F%3Dnil%2C%2A%2Anamed_args%29-instance-method" class="signature"><strong>#query_one</strong>(query, *args_, args : Array? = <span class="n">nil</span>, queryable : String? = <span class="n">nil</span>, **named_args)</a>
+        <a href="#query_one%28query%2C%2Aargs_%2Cargs%3AArray%7CNil%3Dnil%2Cqueryable%3AString%7CNil%3Dnil%2C%2A%2Anamed_args%29-instance-method" class="signature"><strong>#query_one</strong>(query, *args_, args : Array | Nil = <span class="n">nil</span>, queryable : String | Nil = <span class="n">nil</span>, **named_args)</a>
         
           <div class="summary"><p>Same as crystal-db's <code>DB::QueryMethods#query_one</code> but with instrumentation</p></div>
         
       </li>
     
       <li class="entry-summary">
-        <a href="#query_one%28query%2C%2Aargs_%2Cargs%3AArray%3F%3Dnil%2Cqueryable%3AString%3F%3Dnil%2C%2A%2Anamed_args%2C%26%29-instance-method" class="signature"><strong>#query_one</strong>(query, *args_, args : Array? = <span class="n">nil</span>, queryable : String? = <span class="n">nil</span>, **named_args, &)</a>
+        <a href="#query_one%28query%2C%2Aargs_%2Cargs%3AArray%7CNil%3Dnil%2Cqueryable%3AString%7CNil%3Dnil%2C%2A%2Anamed_args%2C%26%29-instance-method" class="signature"><strong>#query_one</strong>(query, *args_, args : Array | Nil = <span class="n">nil</span>, queryable : String | Nil = <span class="n">nil</span>, **named_args, &)</a>
         
           <div class="summary"><p>Same as crystal-db's <code>DB::QueryMethods#:query_one</code> but with instrumentation</p></div>
         
       </li>
     
       <li class="entry-summary">
-        <a href="#query_one%3F%28query%2C%2Aargs_%2Cargs%3AArray%3F%3Dnil%2Cqueryable%3AString%3F%3Dnil%2C%2A%2Anamed_args%29-instance-method" class="signature"><strong>#query_one?</strong>(query, *args_, args : Array? = <span class="n">nil</span>, queryable : String? = <span class="n">nil</span>, **named_args)</a>
+        <a href="#query_one%3F%28query%2C%2Aargs_%2Cargs%3AArray%7CNil%3Dnil%2Cqueryable%3AString%7CNil%3Dnil%2C%2A%2Anamed_args%29-instance-method" class="signature"><strong>#query_one?</strong>(query, *args_, args : Array | Nil = <span class="n">nil</span>, queryable : String | Nil = <span class="n">nil</span>, **named_args)</a>
         
           <div class="summary"><p>Same as crystal-db's <code>DB::QueryMethods#query_one?</code> but with instrumentation</p></div>
         
       </li>
     
       <li class="entry-summary">
-        <a href="#query_one%3F%28query%2C%2Aargs_%2Cargs%3AArray%3F%3Dnil%2Cqueryable%3AString%3F%3Dnil%2C%2A%2Anamed_args%2C%26%29-instance-method" class="signature"><strong>#query_one?</strong>(query, *args_, args : Array? = <span class="n">nil</span>, queryable : String? = <span class="n">nil</span>, **named_args, &)</a>
+        <a href="#query_one%3F%28query%2C%2Aargs_%2Cargs%3AArray%7CNil%3Dnil%2Cqueryable%3AString%7CNil%3Dnil%2C%2A%2Anamed_args%2C%26%29-instance-method" class="signature"><strong>#query_one?</strong>(query, *args_, args : Array | Nil = <span class="n">nil</span>, queryable : String | Nil = <span class="n">nil</span>, **named_args, &)</a>
         
           <div class="summary"><p>Same as crystal-db's <code>DB::QueryMethods#:&quot;query_one?&quot;</code> but with instrumentation</p></div>
         
       </li>
     
       <li class="entry-summary">
-        <a href="#scalar%28query%2C%2Aargs_%2Cargs%3AArray%3F%3Dnil%2Cqueryable%3AString%3F%3Dnil%2C%2A%2Anamed_args%29-instance-method" class="signature"><strong>#scalar</strong>(query, *args_, args : Array? = <span class="n">nil</span>, queryable : String? = <span class="n">nil</span>, **named_args)</a>
+        <a href="#scalar%28query%2C%2Aargs_%2Cargs%3AArray%7CNil%3Dnil%2Cqueryable%3AString%7CNil%3Dnil%2C%2A%2Anamed_args%29-instance-method" class="signature"><strong>#scalar</strong>(query, *args_, args : Array | Nil = <span class="n">nil</span>, queryable : String | Nil = <span class="n">nil</span>, **named_args)</a>
         
           <div class="summary"><p>Same as crystal-db's <code>DB::QueryMethods#scalar</code> but with instrumentation</p></div>
         
@@ -2036,7 +2036,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/0ea2a6140f5f9ac770eeaa5badf1d479a5b60f69/src/avram/database.cr#L6" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/89bf1356c17f9cbc546f1a58e0b26ec1d91d7302/src/avram/database.cr#L6" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2052,7 +2052,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/0ea2a6140f5f9ac770eeaa5badf1d479a5b60f69/src/avram/database.cr#L140" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/89bf1356c17f9cbc546f1a58e0b26ec1d91d7302/src/avram/database.cr#L140" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2068,7 +2068,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/0ea2a6140f5f9ac770eeaa5badf1d479a5b60f69/src/avram/database.cr#L69" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/89bf1356c17f9cbc546f1a58e0b26ec1d91d7302/src/avram/database.cr#L69" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2089,17 +2089,17 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/0ea2a6140f5f9ac770eeaa5badf1d479a5b60f69/src/avram/database.cr#L49" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/89bf1356c17f9cbc546f1a58e0b26ec1d91d7302/src/avram/database.cr#L49" target="_blank">View source</a>]
         
       </div>
     </div>
   
-    <div class="entry-detail" id="exec(query,*args_,args:Array?=nil,queryable:String?=nil,**named_args)-class-method">
+    <div class="entry-detail" id="exec(query,*args_,args:Array|Nil=nil,queryable:String|Nil=nil,**named_args)-class-method">
       <div class="signature">
         
-        def self.<strong>exec</strong>(query, *args_, args : <a href="../Array.html">Array</a>? = <span class="n">nil</span>, queryable : <a href="../String.html">String</a>? = <span class="n">nil</span>, **named_args)
+        def self.<strong>exec</strong>(query, *args_, args : <a href="../Array.html">Array</a> | <a href="../Nil.html">Nil</a> = <span class="n">nil</span>, queryable : <a href="../String.html">String</a> | <a href="../Nil.html">Nil</a> = <span class="n">nil</span>, **named_args)
 
-        <a class="method-permalink" href="#exec%28query%2C%2Aargs_%2Cargs%3AArray%3F%3Dnil%2Cqueryable%3AString%3F%3Dnil%2C%2A%2Anamed_args%29-class-method">#</a>
+        <a class="method-permalink" href="#exec%28query%2C%2Aargs_%2Cargs%3AArray%7CNil%3Dnil%2Cqueryable%3AString%7CNil%3Dnil%2C%2A%2Anamed_args%29-class-method">#</a>
       </div>
       
         <div class="doc">
@@ -2110,7 +2110,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/0ea2a6140f5f9ac770eeaa5badf1d479a5b60f69/src/avram/database.cr#L88" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/89bf1356c17f9cbc546f1a58e0b26ec1d91d7302/src/avram/database.cr#L88" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2137,49 +2137,49 @@ Yields a <code>PQ::Notification</code> object with <code>channel</code>, <code>p
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/0ea2a6140f5f9ac770eeaa5badf1d479a5b60f69/src/avram/database.cr#L63" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/89bf1356c17f9cbc546f1a58e0b26ec1d91d7302/src/avram/database.cr#L63" target="_blank">View source</a>]
         
       </div>
     </div>
   
-    <div class="entry-detail" id="lock_id:UInt64?-class-method">
+    <div class="entry-detail" id="lock_id:UInt64|Nil-class-method">
       <div class="signature">
         
-        def self.<strong>lock_id</strong> : UInt64?
+        def self.<strong>lock_id</strong> : UInt64 | <a href="../Nil.html">Nil</a>
 
-        <a class="method-permalink" href="#lock_id%3AUInt64%3F-class-method">#</a>
+        <a class="method-permalink" href="#lock_id%3AUInt64%7CNil-class-method">#</a>
       </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/0ea2a6140f5f9ac770eeaa5badf1d479a5b60f69/src/avram/database.cr#L7" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/89bf1356c17f9cbc546f1a58e0b26ec1d91d7302/src/avram/database.cr#L7" target="_blank">View source</a>]
         
       </div>
     </div>
   
-    <div class="entry-detail" id="lock_id=(lock_id:UInt64?)-class-method">
+    <div class="entry-detail" id="lock_id=(lock_id:UInt64|Nil)-class-method">
       <div class="signature">
         
-        def self.<strong>lock_id=</strong>(lock_id : UInt64?)
+        def self.<strong>lock_id=</strong>(lock_id : UInt64 | <a href="../Nil.html">Nil</a>)
 
-        <a class="method-permalink" href="#lock_id%3D%28lock_id%3AUInt64%3F%29-class-method">#</a>
+        <a class="method-permalink" href="#lock_id%3D%28lock_id%3AUInt64%7CNil%29-class-method">#</a>
       </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/0ea2a6140f5f9ac770eeaa5badf1d479a5b60f69/src/avram/database.cr#L7" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/89bf1356c17f9cbc546f1a58e0b26ec1d91d7302/src/avram/database.cr#L7" target="_blank">View source</a>]
         
       </div>
     </div>
   
-    <div class="entry-detail" id="query(query,*args_,args:Array?=nil,queryable:String?=nil,**named_args)-class-method">
+    <div class="entry-detail" id="query(query,*args_,args:Array|Nil=nil,queryable:String|Nil=nil,**named_args)-class-method">
       <div class="signature">
         
-        def self.<strong>query</strong>(query, *args_, args : <a href="../Array.html">Array</a>? = <span class="n">nil</span>, queryable : <a href="../String.html">String</a>? = <span class="n">nil</span>, **named_args)
+        def self.<strong>query</strong>(query, *args_, args : <a href="../Array.html">Array</a> | <a href="../Nil.html">Nil</a> = <span class="n">nil</span>, queryable : <a href="../String.html">String</a> | <a href="../Nil.html">Nil</a> = <span class="n">nil</span>, **named_args)
 
-        <a class="method-permalink" href="#query%28query%2C%2Aargs_%2Cargs%3AArray%3F%3Dnil%2Cqueryable%3AString%3F%3Dnil%2C%2A%2Anamed_args%29-class-method">#</a>
+        <a class="method-permalink" href="#query%28query%2C%2Aargs_%2Cargs%3AArray%7CNil%3Dnil%2Cqueryable%3AString%7CNil%3Dnil%2C%2A%2Anamed_args%29-class-method">#</a>
       </div>
       
         <div class="doc">
@@ -2190,17 +2190,17 @@ Yields a <code>PQ::Notification</code> object with <code>channel</code>, <code>p
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/0ea2a6140f5f9ac770eeaa5badf1d479a5b60f69/src/avram/database.cr#L88" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/89bf1356c17f9cbc546f1a58e0b26ec1d91d7302/src/avram/database.cr#L88" target="_blank">View source</a>]
         
       </div>
     </div>
   
-    <div class="entry-detail" id="query(query,*args_,args:Array?=nil,queryable:String?=nil,**named_args,&amp;)-class-method">
+    <div class="entry-detail" id="query(query,*args_,args:Array|Nil=nil,queryable:String|Nil=nil,**named_args,&amp;)-class-method">
       <div class="signature">
         
-        def self.<strong>query</strong>(query, *args_, args : <a href="../Array.html">Array</a>? = <span class="n">nil</span>, queryable : <a href="../String.html">String</a>? = <span class="n">nil</span>, **named_args, &)
+        def self.<strong>query</strong>(query, *args_, args : <a href="../Array.html">Array</a> | <a href="../Nil.html">Nil</a> = <span class="n">nil</span>, queryable : <a href="../String.html">String</a> | <a href="../Nil.html">Nil</a> = <span class="n">nil</span>, **named_args, &)
 
-        <a class="method-permalink" href="#query%28query%2C%2Aargs_%2Cargs%3AArray%3F%3Dnil%2Cqueryable%3AString%3F%3Dnil%2C%2A%2Anamed_args%2C%26%29-class-method">#</a>
+        <a class="method-permalink" href="#query%28query%2C%2Aargs_%2Cargs%3AArray%7CNil%3Dnil%2Cqueryable%3AString%7CNil%3Dnil%2C%2A%2Anamed_args%2C%26%29-class-method">#</a>
       </div>
       
         <div class="doc">
@@ -2211,17 +2211,17 @@ Yields a <code>PQ::Notification</code> object with <code>channel</code>, <code>p
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/0ea2a6140f5f9ac770eeaa5badf1d479a5b60f69/src/avram/database.cr#L105" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/89bf1356c17f9cbc546f1a58e0b26ec1d91d7302/src/avram/database.cr#L105" target="_blank">View source</a>]
         
       </div>
     </div>
   
-    <div class="entry-detail" id="query_all(query,*args_,args:Array?=nil,queryable:String?=nil,**named_args)-class-method">
+    <div class="entry-detail" id="query_all(query,*args_,args:Array|Nil=nil,queryable:String|Nil=nil,**named_args)-class-method">
       <div class="signature">
         
-        def self.<strong>query_all</strong>(query, *args_, args : <a href="../Array.html">Array</a>? = <span class="n">nil</span>, queryable : <a href="../String.html">String</a>? = <span class="n">nil</span>, **named_args)
+        def self.<strong>query_all</strong>(query, *args_, args : <a href="../Array.html">Array</a> | <a href="../Nil.html">Nil</a> = <span class="n">nil</span>, queryable : <a href="../String.html">String</a> | <a href="../Nil.html">Nil</a> = <span class="n">nil</span>, **named_args)
 
-        <a class="method-permalink" href="#query_all%28query%2C%2Aargs_%2Cargs%3AArray%3F%3Dnil%2Cqueryable%3AString%3F%3Dnil%2C%2A%2Anamed_args%29-class-method">#</a>
+        <a class="method-permalink" href="#query_all%28query%2C%2Aargs_%2Cargs%3AArray%7CNil%3Dnil%2Cqueryable%3AString%7CNil%3Dnil%2C%2A%2Anamed_args%29-class-method">#</a>
       </div>
       
         <div class="doc">
@@ -2232,17 +2232,17 @@ Yields a <code>PQ::Notification</code> object with <code>channel</code>, <code>p
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/0ea2a6140f5f9ac770eeaa5badf1d479a5b60f69/src/avram/database.cr#L88" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/89bf1356c17f9cbc546f1a58e0b26ec1d91d7302/src/avram/database.cr#L88" target="_blank">View source</a>]
         
       </div>
     </div>
   
-    <div class="entry-detail" id="query_all(query,*args_,args:Array?=nil,queryable:String?=nil,**named_args,&amp;)-class-method">
+    <div class="entry-detail" id="query_all(query,*args_,args:Array|Nil=nil,queryable:String|Nil=nil,**named_args,&amp;)-class-method">
       <div class="signature">
         
-        def self.<strong>query_all</strong>(query, *args_, args : <a href="../Array.html">Array</a>? = <span class="n">nil</span>, queryable : <a href="../String.html">String</a>? = <span class="n">nil</span>, **named_args, &)
+        def self.<strong>query_all</strong>(query, *args_, args : <a href="../Array.html">Array</a> | <a href="../Nil.html">Nil</a> = <span class="n">nil</span>, queryable : <a href="../String.html">String</a> | <a href="../Nil.html">Nil</a> = <span class="n">nil</span>, **named_args, &)
 
-        <a class="method-permalink" href="#query_all%28query%2C%2Aargs_%2Cargs%3AArray%3F%3Dnil%2Cqueryable%3AString%3F%3Dnil%2C%2A%2Anamed_args%2C%26%29-class-method">#</a>
+        <a class="method-permalink" href="#query_all%28query%2C%2Aargs_%2Cargs%3AArray%7CNil%3Dnil%2Cqueryable%3AString%7CNil%3Dnil%2C%2A%2Anamed_args%2C%26%29-class-method">#</a>
       </div>
       
         <div class="doc">
@@ -2253,17 +2253,17 @@ Yields a <code>PQ::Notification</code> object with <code>channel</code>, <code>p
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/0ea2a6140f5f9ac770eeaa5badf1d479a5b60f69/src/avram/database.cr#L105" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/89bf1356c17f9cbc546f1a58e0b26ec1d91d7302/src/avram/database.cr#L105" target="_blank">View source</a>]
         
       </div>
     </div>
   
-    <div class="entry-detail" id="query_each(query,*args_,args:Array?=nil,queryable:String?=nil,**named_args,&amp;)-class-method">
+    <div class="entry-detail" id="query_each(query,*args_,args:Array|Nil=nil,queryable:String|Nil=nil,**named_args,&amp;)-class-method">
       <div class="signature">
         
-        def self.<strong>query_each</strong>(query, *args_, args : <a href="../Array.html">Array</a>? = <span class="n">nil</span>, queryable : <a href="../String.html">String</a>? = <span class="n">nil</span>, **named_args, &)
+        def self.<strong>query_each</strong>(query, *args_, args : <a href="../Array.html">Array</a> | <a href="../Nil.html">Nil</a> = <span class="n">nil</span>, queryable : <a href="../String.html">String</a> | <a href="../Nil.html">Nil</a> = <span class="n">nil</span>, **named_args, &)
 
-        <a class="method-permalink" href="#query_each%28query%2C%2Aargs_%2Cargs%3AArray%3F%3Dnil%2Cqueryable%3AString%3F%3Dnil%2C%2A%2Anamed_args%2C%26%29-class-method">#</a>
+        <a class="method-permalink" href="#query_each%28query%2C%2Aargs_%2Cargs%3AArray%7CNil%3Dnil%2Cqueryable%3AString%7CNil%3Dnil%2C%2A%2Anamed_args%2C%26%29-class-method">#</a>
       </div>
       
         <div class="doc">
@@ -2274,17 +2274,17 @@ Yields a <code>PQ::Notification</code> object with <code>channel</code>, <code>p
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/0ea2a6140f5f9ac770eeaa5badf1d479a5b60f69/src/avram/database.cr#L105" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/89bf1356c17f9cbc546f1a58e0b26ec1d91d7302/src/avram/database.cr#L105" target="_blank">View source</a>]
         
       </div>
     </div>
   
-    <div class="entry-detail" id="query_one(query,*args_,args:Array?=nil,queryable:String?=nil,**named_args)-class-method">
+    <div class="entry-detail" id="query_one(query,*args_,args:Array|Nil=nil,queryable:String|Nil=nil,**named_args)-class-method">
       <div class="signature">
         
-        def self.<strong>query_one</strong>(query, *args_, args : <a href="../Array.html">Array</a>? = <span class="n">nil</span>, queryable : <a href="../String.html">String</a>? = <span class="n">nil</span>, **named_args)
+        def self.<strong>query_one</strong>(query, *args_, args : <a href="../Array.html">Array</a> | <a href="../Nil.html">Nil</a> = <span class="n">nil</span>, queryable : <a href="../String.html">String</a> | <a href="../Nil.html">Nil</a> = <span class="n">nil</span>, **named_args)
 
-        <a class="method-permalink" href="#query_one%28query%2C%2Aargs_%2Cargs%3AArray%3F%3Dnil%2Cqueryable%3AString%3F%3Dnil%2C%2A%2Anamed_args%29-class-method">#</a>
+        <a class="method-permalink" href="#query_one%28query%2C%2Aargs_%2Cargs%3AArray%7CNil%3Dnil%2Cqueryable%3AString%7CNil%3Dnil%2C%2A%2Anamed_args%29-class-method">#</a>
       </div>
       
         <div class="doc">
@@ -2295,17 +2295,17 @@ Yields a <code>PQ::Notification</code> object with <code>channel</code>, <code>p
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/0ea2a6140f5f9ac770eeaa5badf1d479a5b60f69/src/avram/database.cr#L88" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/89bf1356c17f9cbc546f1a58e0b26ec1d91d7302/src/avram/database.cr#L88" target="_blank">View source</a>]
         
       </div>
     </div>
   
-    <div class="entry-detail" id="query_one(query,*args_,args:Array?=nil,queryable:String?=nil,**named_args,&amp;)-class-method">
+    <div class="entry-detail" id="query_one(query,*args_,args:Array|Nil=nil,queryable:String|Nil=nil,**named_args,&amp;)-class-method">
       <div class="signature">
         
-        def self.<strong>query_one</strong>(query, *args_, args : <a href="../Array.html">Array</a>? = <span class="n">nil</span>, queryable : <a href="../String.html">String</a>? = <span class="n">nil</span>, **named_args, &)
+        def self.<strong>query_one</strong>(query, *args_, args : <a href="../Array.html">Array</a> | <a href="../Nil.html">Nil</a> = <span class="n">nil</span>, queryable : <a href="../String.html">String</a> | <a href="../Nil.html">Nil</a> = <span class="n">nil</span>, **named_args, &)
 
-        <a class="method-permalink" href="#query_one%28query%2C%2Aargs_%2Cargs%3AArray%3F%3Dnil%2Cqueryable%3AString%3F%3Dnil%2C%2A%2Anamed_args%2C%26%29-class-method">#</a>
+        <a class="method-permalink" href="#query_one%28query%2C%2Aargs_%2Cargs%3AArray%7CNil%3Dnil%2Cqueryable%3AString%7CNil%3Dnil%2C%2A%2Anamed_args%2C%26%29-class-method">#</a>
       </div>
       
         <div class="doc">
@@ -2316,17 +2316,17 @@ Yields a <code>PQ::Notification</code> object with <code>channel</code>, <code>p
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/0ea2a6140f5f9ac770eeaa5badf1d479a5b60f69/src/avram/database.cr#L105" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/89bf1356c17f9cbc546f1a58e0b26ec1d91d7302/src/avram/database.cr#L105" target="_blank">View source</a>]
         
       </div>
     </div>
   
-    <div class="entry-detail" id="query_one?(query,*args_,args:Array?=nil,queryable:String?=nil,**named_args)-class-method">
+    <div class="entry-detail" id="query_one?(query,*args_,args:Array|Nil=nil,queryable:String|Nil=nil,**named_args)-class-method">
       <div class="signature">
         
-        def self.<strong>query_one?</strong>(query, *args_, args : <a href="../Array.html">Array</a>? = <span class="n">nil</span>, queryable : <a href="../String.html">String</a>? = <span class="n">nil</span>, **named_args)
+        def self.<strong>query_one?</strong>(query, *args_, args : <a href="../Array.html">Array</a> | <a href="../Nil.html">Nil</a> = <span class="n">nil</span>, queryable : <a href="../String.html">String</a> | <a href="../Nil.html">Nil</a> = <span class="n">nil</span>, **named_args)
 
-        <a class="method-permalink" href="#query_one%3F%28query%2C%2Aargs_%2Cargs%3AArray%3F%3Dnil%2Cqueryable%3AString%3F%3Dnil%2C%2A%2Anamed_args%29-class-method">#</a>
+        <a class="method-permalink" href="#query_one%3F%28query%2C%2Aargs_%2Cargs%3AArray%7CNil%3Dnil%2Cqueryable%3AString%7CNil%3Dnil%2C%2A%2Anamed_args%29-class-method">#</a>
       </div>
       
         <div class="doc">
@@ -2337,17 +2337,17 @@ Yields a <code>PQ::Notification</code> object with <code>channel</code>, <code>p
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/0ea2a6140f5f9ac770eeaa5badf1d479a5b60f69/src/avram/database.cr#L88" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/89bf1356c17f9cbc546f1a58e0b26ec1d91d7302/src/avram/database.cr#L88" target="_blank">View source</a>]
         
       </div>
     </div>
   
-    <div class="entry-detail" id="query_one?(query,*args_,args:Array?=nil,queryable:String?=nil,**named_args,&amp;)-class-method">
+    <div class="entry-detail" id="query_one?(query,*args_,args:Array|Nil=nil,queryable:String|Nil=nil,**named_args,&amp;)-class-method">
       <div class="signature">
         
-        def self.<strong>query_one?</strong>(query, *args_, args : <a href="../Array.html">Array</a>? = <span class="n">nil</span>, queryable : <a href="../String.html">String</a>? = <span class="n">nil</span>, **named_args, &)
+        def self.<strong>query_one?</strong>(query, *args_, args : <a href="../Array.html">Array</a> | <a href="../Nil.html">Nil</a> = <span class="n">nil</span>, queryable : <a href="../String.html">String</a> | <a href="../Nil.html">Nil</a> = <span class="n">nil</span>, **named_args, &)
 
-        <a class="method-permalink" href="#query_one%3F%28query%2C%2Aargs_%2Cargs%3AArray%3F%3Dnil%2Cqueryable%3AString%3F%3Dnil%2C%2A%2Anamed_args%2C%26%29-class-method">#</a>
+        <a class="method-permalink" href="#query_one%3F%28query%2C%2Aargs_%2Cargs%3AArray%7CNil%3Dnil%2Cqueryable%3AString%7CNil%3Dnil%2C%2A%2Anamed_args%2C%26%29-class-method">#</a>
       </div>
       
         <div class="doc">
@@ -2358,7 +2358,7 @@ Yields a <code>PQ::Notification</code> object with <code>channel</code>, <code>p
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/0ea2a6140f5f9ac770eeaa5badf1d479a5b60f69/src/avram/database.cr#L105" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/89bf1356c17f9cbc546f1a58e0b26ec1d91d7302/src/avram/database.cr#L105" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2379,7 +2379,7 @@ Yields a <code>PQ::Notification</code> object with <code>channel</code>, <code>p
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/0ea2a6140f5f9ac770eeaa5badf1d479a5b60f69/src/avram/database.cr#L39" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/89bf1356c17f9cbc546f1a58e0b26ec1d91d7302/src/avram/database.cr#L39" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2395,17 +2395,17 @@ Yields a <code>PQ::Notification</code> object with <code>channel</code>, <code>p
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/0ea2a6140f5f9ac770eeaa5badf1d479a5b60f69/src/avram/database.cr#L148" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/89bf1356c17f9cbc546f1a58e0b26ec1d91d7302/src/avram/database.cr#L148" target="_blank">View source</a>]
         
       </div>
     </div>
   
-    <div class="entry-detail" id="scalar(query,*args_,args:Array?=nil,queryable:String?=nil,**named_args)-class-method">
+    <div class="entry-detail" id="scalar(query,*args_,args:Array|Nil=nil,queryable:String|Nil=nil,**named_args)-class-method">
       <div class="signature">
         
-        def self.<strong>scalar</strong>(query, *args_, args : <a href="../Array.html">Array</a>? = <span class="n">nil</span>, queryable : <a href="../String.html">String</a>? = <span class="n">nil</span>, **named_args)
+        def self.<strong>scalar</strong>(query, *args_, args : <a href="../Array.html">Array</a> | <a href="../Nil.html">Nil</a> = <span class="n">nil</span>, queryable : <a href="../String.html">String</a> | <a href="../Nil.html">Nil</a> = <span class="n">nil</span>, **named_args)
 
-        <a class="method-permalink" href="#scalar%28query%2C%2Aargs_%2Cargs%3AArray%3F%3Dnil%2Cqueryable%3AString%3F%3Dnil%2C%2A%2Anamed_args%29-class-method">#</a>
+        <a class="method-permalink" href="#scalar%28query%2C%2Aargs_%2Cargs%3AArray%7CNil%3Dnil%2Cqueryable%3AString%7CNil%3Dnil%2C%2A%2Anamed_args%29-class-method">#</a>
       </div>
       
         <div class="doc">
@@ -2416,7 +2416,7 @@ Yields a <code>PQ::Notification</code> object with <code>channel</code>, <code>p
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/0ea2a6140f5f9ac770eeaa5badf1d479a5b60f69/src/avram/database.cr#L88" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/89bf1356c17f9cbc546f1a58e0b26ec1d91d7302/src/avram/database.cr#L88" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2432,7 +2432,7 @@ Yields a <code>PQ::Notification</code> object with <code>channel</code>, <code>p
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/0ea2a6140f5f9ac770eeaa5badf1d479a5b60f69/src/avram/database.cr#L28" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/89bf1356c17f9cbc546f1a58e0b26ec1d91d7302/src/avram/database.cr#L28" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2457,7 +2457,7 @@ Yields a <code>PQ::Notification</code> object with <code>channel</code>, <code>p
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/0ea2a6140f5f9ac770eeaa5badf1d479a5b60f69/src/avram/database.cr#L81" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/89bf1356c17f9cbc546f1a58e0b26ec1d91d7302/src/avram/database.cr#L81" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2478,7 +2478,7 @@ Yields a <code>PQ::Notification</code> object with <code>channel</code>, <code>p
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/0ea2a6140f5f9ac770eeaa5badf1d479a5b60f69/src/avram/database.cr#L44" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/89bf1356c17f9cbc546f1a58e0b26ec1d91d7302/src/avram/database.cr#L44" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2494,7 +2494,7 @@ Yields a <code>PQ::Notification</code> object with <code>channel</code>, <code>p
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/0ea2a6140f5f9ac770eeaa5badf1d479a5b60f69/src/avram/database.cr#L34" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/89bf1356c17f9cbc546f1a58e0b26ec1d91d7302/src/avram/database.cr#L34" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2511,12 +2511,12 @@ Yields a <code>PQ::Notification</code> object with <code>channel</code>, <code>p
     Instance Method Detail
   </h2>
   
-    <div class="entry-detail" id="exec(query,*args_,args:Array?=nil,queryable:String?=nil,**named_args)-instance-method">
+    <div class="entry-detail" id="exec(query,*args_,args:Array|Nil=nil,queryable:String|Nil=nil,**named_args)-instance-method">
       <div class="signature">
         
-        def <strong>exec</strong>(query, *args_, args : <a href="../Array.html">Array</a>? = <span class="n">nil</span>, queryable : <a href="../String.html">String</a>? = <span class="n">nil</span>, **named_args)
+        def <strong>exec</strong>(query, *args_, args : <a href="../Array.html">Array</a> | <a href="../Nil.html">Nil</a> = <span class="n">nil</span>, queryable : <a href="../String.html">String</a> | <a href="../Nil.html">Nil</a> = <span class="n">nil</span>, **named_args)
 
-        <a class="method-permalink" href="#exec%28query%2C%2Aargs_%2Cargs%3AArray%3F%3Dnil%2Cqueryable%3AString%3F%3Dnil%2C%2A%2Anamed_args%29-instance-method">#</a>
+        <a class="method-permalink" href="#exec%28query%2C%2Aargs_%2Cargs%3AArray%7CNil%3Dnil%2Cqueryable%3AString%7CNil%3Dnil%2C%2A%2Anamed_args%29-instance-method">#</a>
       </div>
       
         <div class="doc">
@@ -2527,7 +2527,7 @@ Yields a <code>PQ::Notification</code> object with <code>channel</code>, <code>p
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/0ea2a6140f5f9ac770eeaa5badf1d479a5b60f69/src/avram/database.cr#L88" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/89bf1356c17f9cbc546f1a58e0b26ec1d91d7302/src/avram/database.cr#L88" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2543,17 +2543,17 @@ Yields a <code>PQ::Notification</code> object with <code>channel</code>, <code>p
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/0ea2a6140f5f9ac770eeaa5badf1d479a5b60f69/src/avram/database.cr#L125" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/89bf1356c17f9cbc546f1a58e0b26ec1d91d7302/src/avram/database.cr#L125" target="_blank">View source</a>]
         
       </div>
     </div>
   
-    <div class="entry-detail" id="query(query,*args_,args:Array?=nil,queryable:String?=nil,**named_args)-instance-method">
+    <div class="entry-detail" id="query(query,*args_,args:Array|Nil=nil,queryable:String|Nil=nil,**named_args)-instance-method">
       <div class="signature">
         
-        def <strong>query</strong>(query, *args_, args : <a href="../Array.html">Array</a>? = <span class="n">nil</span>, queryable : <a href="../String.html">String</a>? = <span class="n">nil</span>, **named_args)
+        def <strong>query</strong>(query, *args_, args : <a href="../Array.html">Array</a> | <a href="../Nil.html">Nil</a> = <span class="n">nil</span>, queryable : <a href="../String.html">String</a> | <a href="../Nil.html">Nil</a> = <span class="n">nil</span>, **named_args)
 
-        <a class="method-permalink" href="#query%28query%2C%2Aargs_%2Cargs%3AArray%3F%3Dnil%2Cqueryable%3AString%3F%3Dnil%2C%2A%2Anamed_args%29-instance-method">#</a>
+        <a class="method-permalink" href="#query%28query%2C%2Aargs_%2Cargs%3AArray%7CNil%3Dnil%2Cqueryable%3AString%7CNil%3Dnil%2C%2A%2Anamed_args%29-instance-method">#</a>
       </div>
       
         <div class="doc">
@@ -2564,17 +2564,17 @@ Yields a <code>PQ::Notification</code> object with <code>channel</code>, <code>p
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/0ea2a6140f5f9ac770eeaa5badf1d479a5b60f69/src/avram/database.cr#L88" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/89bf1356c17f9cbc546f1a58e0b26ec1d91d7302/src/avram/database.cr#L88" target="_blank">View source</a>]
         
       </div>
     </div>
   
-    <div class="entry-detail" id="query(query,*args_,args:Array?=nil,queryable:String?=nil,**named_args,&amp;)-instance-method">
+    <div class="entry-detail" id="query(query,*args_,args:Array|Nil=nil,queryable:String|Nil=nil,**named_args,&amp;)-instance-method">
       <div class="signature">
         
-        def <strong>query</strong>(query, *args_, args : <a href="../Array.html">Array</a>? = <span class="n">nil</span>, queryable : <a href="../String.html">String</a>? = <span class="n">nil</span>, **named_args, &)
+        def <strong>query</strong>(query, *args_, args : <a href="../Array.html">Array</a> | <a href="../Nil.html">Nil</a> = <span class="n">nil</span>, queryable : <a href="../String.html">String</a> | <a href="../Nil.html">Nil</a> = <span class="n">nil</span>, **named_args, &)
 
-        <a class="method-permalink" href="#query%28query%2C%2Aargs_%2Cargs%3AArray%3F%3Dnil%2Cqueryable%3AString%3F%3Dnil%2C%2A%2Anamed_args%2C%26%29-instance-method">#</a>
+        <a class="method-permalink" href="#query%28query%2C%2Aargs_%2Cargs%3AArray%7CNil%3Dnil%2Cqueryable%3AString%7CNil%3Dnil%2C%2A%2Anamed_args%2C%26%29-instance-method">#</a>
       </div>
       
         <div class="doc">
@@ -2585,17 +2585,17 @@ Yields a <code>PQ::Notification</code> object with <code>channel</code>, <code>p
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/0ea2a6140f5f9ac770eeaa5badf1d479a5b60f69/src/avram/database.cr#L105" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/89bf1356c17f9cbc546f1a58e0b26ec1d91d7302/src/avram/database.cr#L105" target="_blank">View source</a>]
         
       </div>
     </div>
   
-    <div class="entry-detail" id="query_all(query,*args_,args:Array?=nil,queryable:String?=nil,**named_args)-instance-method">
+    <div class="entry-detail" id="query_all(query,*args_,args:Array|Nil=nil,queryable:String|Nil=nil,**named_args)-instance-method">
       <div class="signature">
         
-        def <strong>query_all</strong>(query, *args_, args : <a href="../Array.html">Array</a>? = <span class="n">nil</span>, queryable : <a href="../String.html">String</a>? = <span class="n">nil</span>, **named_args)
+        def <strong>query_all</strong>(query, *args_, args : <a href="../Array.html">Array</a> | <a href="../Nil.html">Nil</a> = <span class="n">nil</span>, queryable : <a href="../String.html">String</a> | <a href="../Nil.html">Nil</a> = <span class="n">nil</span>, **named_args)
 
-        <a class="method-permalink" href="#query_all%28query%2C%2Aargs_%2Cargs%3AArray%3F%3Dnil%2Cqueryable%3AString%3F%3Dnil%2C%2A%2Anamed_args%29-instance-method">#</a>
+        <a class="method-permalink" href="#query_all%28query%2C%2Aargs_%2Cargs%3AArray%7CNil%3Dnil%2Cqueryable%3AString%7CNil%3Dnil%2C%2A%2Anamed_args%29-instance-method">#</a>
       </div>
       
         <div class="doc">
@@ -2606,17 +2606,17 @@ Yields a <code>PQ::Notification</code> object with <code>channel</code>, <code>p
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/0ea2a6140f5f9ac770eeaa5badf1d479a5b60f69/src/avram/database.cr#L88" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/89bf1356c17f9cbc546f1a58e0b26ec1d91d7302/src/avram/database.cr#L88" target="_blank">View source</a>]
         
       </div>
     </div>
   
-    <div class="entry-detail" id="query_all(query,*args_,args:Array?=nil,queryable:String?=nil,**named_args,&amp;)-instance-method">
+    <div class="entry-detail" id="query_all(query,*args_,args:Array|Nil=nil,queryable:String|Nil=nil,**named_args,&amp;)-instance-method">
       <div class="signature">
         
-        def <strong>query_all</strong>(query, *args_, args : <a href="../Array.html">Array</a>? = <span class="n">nil</span>, queryable : <a href="../String.html">String</a>? = <span class="n">nil</span>, **named_args, &)
+        def <strong>query_all</strong>(query, *args_, args : <a href="../Array.html">Array</a> | <a href="../Nil.html">Nil</a> = <span class="n">nil</span>, queryable : <a href="../String.html">String</a> | <a href="../Nil.html">Nil</a> = <span class="n">nil</span>, **named_args, &)
 
-        <a class="method-permalink" href="#query_all%28query%2C%2Aargs_%2Cargs%3AArray%3F%3Dnil%2Cqueryable%3AString%3F%3Dnil%2C%2A%2Anamed_args%2C%26%29-instance-method">#</a>
+        <a class="method-permalink" href="#query_all%28query%2C%2Aargs_%2Cargs%3AArray%7CNil%3Dnil%2Cqueryable%3AString%7CNil%3Dnil%2C%2A%2Anamed_args%2C%26%29-instance-method">#</a>
       </div>
       
         <div class="doc">
@@ -2627,17 +2627,17 @@ Yields a <code>PQ::Notification</code> object with <code>channel</code>, <code>p
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/0ea2a6140f5f9ac770eeaa5badf1d479a5b60f69/src/avram/database.cr#L105" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/89bf1356c17f9cbc546f1a58e0b26ec1d91d7302/src/avram/database.cr#L105" target="_blank">View source</a>]
         
       </div>
     </div>
   
-    <div class="entry-detail" id="query_each(query,*args_,args:Array?=nil,queryable:String?=nil,**named_args,&amp;)-instance-method">
+    <div class="entry-detail" id="query_each(query,*args_,args:Array|Nil=nil,queryable:String|Nil=nil,**named_args,&amp;)-instance-method">
       <div class="signature">
         
-        def <strong>query_each</strong>(query, *args_, args : <a href="../Array.html">Array</a>? = <span class="n">nil</span>, queryable : <a href="../String.html">String</a>? = <span class="n">nil</span>, **named_args, &)
+        def <strong>query_each</strong>(query, *args_, args : <a href="../Array.html">Array</a> | <a href="../Nil.html">Nil</a> = <span class="n">nil</span>, queryable : <a href="../String.html">String</a> | <a href="../Nil.html">Nil</a> = <span class="n">nil</span>, **named_args, &)
 
-        <a class="method-permalink" href="#query_each%28query%2C%2Aargs_%2Cargs%3AArray%3F%3Dnil%2Cqueryable%3AString%3F%3Dnil%2C%2A%2Anamed_args%2C%26%29-instance-method">#</a>
+        <a class="method-permalink" href="#query_each%28query%2C%2Aargs_%2Cargs%3AArray%7CNil%3Dnil%2Cqueryable%3AString%7CNil%3Dnil%2C%2A%2Anamed_args%2C%26%29-instance-method">#</a>
       </div>
       
         <div class="doc">
@@ -2648,17 +2648,17 @@ Yields a <code>PQ::Notification</code> object with <code>channel</code>, <code>p
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/0ea2a6140f5f9ac770eeaa5badf1d479a5b60f69/src/avram/database.cr#L105" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/89bf1356c17f9cbc546f1a58e0b26ec1d91d7302/src/avram/database.cr#L105" target="_blank">View source</a>]
         
       </div>
     </div>
   
-    <div class="entry-detail" id="query_one(query,*args_,args:Array?=nil,queryable:String?=nil,**named_args)-instance-method">
+    <div class="entry-detail" id="query_one(query,*args_,args:Array|Nil=nil,queryable:String|Nil=nil,**named_args)-instance-method">
       <div class="signature">
         
-        def <strong>query_one</strong>(query, *args_, args : <a href="../Array.html">Array</a>? = <span class="n">nil</span>, queryable : <a href="../String.html">String</a>? = <span class="n">nil</span>, **named_args)
+        def <strong>query_one</strong>(query, *args_, args : <a href="../Array.html">Array</a> | <a href="../Nil.html">Nil</a> = <span class="n">nil</span>, queryable : <a href="../String.html">String</a> | <a href="../Nil.html">Nil</a> = <span class="n">nil</span>, **named_args)
 
-        <a class="method-permalink" href="#query_one%28query%2C%2Aargs_%2Cargs%3AArray%3F%3Dnil%2Cqueryable%3AString%3F%3Dnil%2C%2A%2Anamed_args%29-instance-method">#</a>
+        <a class="method-permalink" href="#query_one%28query%2C%2Aargs_%2Cargs%3AArray%7CNil%3Dnil%2Cqueryable%3AString%7CNil%3Dnil%2C%2A%2Anamed_args%29-instance-method">#</a>
       </div>
       
         <div class="doc">
@@ -2669,17 +2669,17 @@ Yields a <code>PQ::Notification</code> object with <code>channel</code>, <code>p
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/0ea2a6140f5f9ac770eeaa5badf1d479a5b60f69/src/avram/database.cr#L88" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/89bf1356c17f9cbc546f1a58e0b26ec1d91d7302/src/avram/database.cr#L88" target="_blank">View source</a>]
         
       </div>
     </div>
   
-    <div class="entry-detail" id="query_one(query,*args_,args:Array?=nil,queryable:String?=nil,**named_args,&amp;)-instance-method">
+    <div class="entry-detail" id="query_one(query,*args_,args:Array|Nil=nil,queryable:String|Nil=nil,**named_args,&amp;)-instance-method">
       <div class="signature">
         
-        def <strong>query_one</strong>(query, *args_, args : <a href="../Array.html">Array</a>? = <span class="n">nil</span>, queryable : <a href="../String.html">String</a>? = <span class="n">nil</span>, **named_args, &)
+        def <strong>query_one</strong>(query, *args_, args : <a href="../Array.html">Array</a> | <a href="../Nil.html">Nil</a> = <span class="n">nil</span>, queryable : <a href="../String.html">String</a> | <a href="../Nil.html">Nil</a> = <span class="n">nil</span>, **named_args, &)
 
-        <a class="method-permalink" href="#query_one%28query%2C%2Aargs_%2Cargs%3AArray%3F%3Dnil%2Cqueryable%3AString%3F%3Dnil%2C%2A%2Anamed_args%2C%26%29-instance-method">#</a>
+        <a class="method-permalink" href="#query_one%28query%2C%2Aargs_%2Cargs%3AArray%7CNil%3Dnil%2Cqueryable%3AString%7CNil%3Dnil%2C%2A%2Anamed_args%2C%26%29-instance-method">#</a>
       </div>
       
         <div class="doc">
@@ -2690,17 +2690,17 @@ Yields a <code>PQ::Notification</code> object with <code>channel</code>, <code>p
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/0ea2a6140f5f9ac770eeaa5badf1d479a5b60f69/src/avram/database.cr#L105" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/89bf1356c17f9cbc546f1a58e0b26ec1d91d7302/src/avram/database.cr#L105" target="_blank">View source</a>]
         
       </div>
     </div>
   
-    <div class="entry-detail" id="query_one?(query,*args_,args:Array?=nil,queryable:String?=nil,**named_args)-instance-method">
+    <div class="entry-detail" id="query_one?(query,*args_,args:Array|Nil=nil,queryable:String|Nil=nil,**named_args)-instance-method">
       <div class="signature">
         
-        def <strong>query_one?</strong>(query, *args_, args : <a href="../Array.html">Array</a>? = <span class="n">nil</span>, queryable : <a href="../String.html">String</a>? = <span class="n">nil</span>, **named_args)
+        def <strong>query_one?</strong>(query, *args_, args : <a href="../Array.html">Array</a> | <a href="../Nil.html">Nil</a> = <span class="n">nil</span>, queryable : <a href="../String.html">String</a> | <a href="../Nil.html">Nil</a> = <span class="n">nil</span>, **named_args)
 
-        <a class="method-permalink" href="#query_one%3F%28query%2C%2Aargs_%2Cargs%3AArray%3F%3Dnil%2Cqueryable%3AString%3F%3Dnil%2C%2A%2Anamed_args%29-instance-method">#</a>
+        <a class="method-permalink" href="#query_one%3F%28query%2C%2Aargs_%2Cargs%3AArray%7CNil%3Dnil%2Cqueryable%3AString%7CNil%3Dnil%2C%2A%2Anamed_args%29-instance-method">#</a>
       </div>
       
         <div class="doc">
@@ -2711,17 +2711,17 @@ Yields a <code>PQ::Notification</code> object with <code>channel</code>, <code>p
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/0ea2a6140f5f9ac770eeaa5badf1d479a5b60f69/src/avram/database.cr#L88" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/89bf1356c17f9cbc546f1a58e0b26ec1d91d7302/src/avram/database.cr#L88" target="_blank">View source</a>]
         
       </div>
     </div>
   
-    <div class="entry-detail" id="query_one?(query,*args_,args:Array?=nil,queryable:String?=nil,**named_args,&amp;)-instance-method">
+    <div class="entry-detail" id="query_one?(query,*args_,args:Array|Nil=nil,queryable:String|Nil=nil,**named_args,&amp;)-instance-method">
       <div class="signature">
         
-        def <strong>query_one?</strong>(query, *args_, args : <a href="../Array.html">Array</a>? = <span class="n">nil</span>, queryable : <a href="../String.html">String</a>? = <span class="n">nil</span>, **named_args, &)
+        def <strong>query_one?</strong>(query, *args_, args : <a href="../Array.html">Array</a> | <a href="../Nil.html">Nil</a> = <span class="n">nil</span>, queryable : <a href="../String.html">String</a> | <a href="../Nil.html">Nil</a> = <span class="n">nil</span>, **named_args, &)
 
-        <a class="method-permalink" href="#query_one%3F%28query%2C%2Aargs_%2Cargs%3AArray%3F%3Dnil%2Cqueryable%3AString%3F%3Dnil%2C%2A%2Anamed_args%2C%26%29-instance-method">#</a>
+        <a class="method-permalink" href="#query_one%3F%28query%2C%2Aargs_%2Cargs%3AArray%7CNil%3Dnil%2Cqueryable%3AString%7CNil%3Dnil%2C%2A%2Anamed_args%2C%26%29-instance-method">#</a>
       </div>
       
         <div class="doc">
@@ -2732,17 +2732,17 @@ Yields a <code>PQ::Notification</code> object with <code>channel</code>, <code>p
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/0ea2a6140f5f9ac770eeaa5badf1d479a5b60f69/src/avram/database.cr#L105" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/89bf1356c17f9cbc546f1a58e0b26ec1d91d7302/src/avram/database.cr#L105" target="_blank">View source</a>]
         
       </div>
     </div>
   
-    <div class="entry-detail" id="scalar(query,*args_,args:Array?=nil,queryable:String?=nil,**named_args)-instance-method">
+    <div class="entry-detail" id="scalar(query,*args_,args:Array|Nil=nil,queryable:String|Nil=nil,**named_args)-instance-method">
       <div class="signature">
         
-        def <strong>scalar</strong>(query, *args_, args : <a href="../Array.html">Array</a>? = <span class="n">nil</span>, queryable : <a href="../String.html">String</a>? = <span class="n">nil</span>, **named_args)
+        def <strong>scalar</strong>(query, *args_, args : <a href="../Array.html">Array</a> | <a href="../Nil.html">Nil</a> = <span class="n">nil</span>, queryable : <a href="../String.html">String</a> | <a href="../Nil.html">Nil</a> = <span class="n">nil</span>, **named_args)
 
-        <a class="method-permalink" href="#scalar%28query%2C%2Aargs_%2Cargs%3AArray%3F%3Dnil%2Cqueryable%3AString%3F%3Dnil%2C%2A%2Anamed_args%29-instance-method">#</a>
+        <a class="method-permalink" href="#scalar%28query%2C%2Aargs_%2Cargs%3AArray%7CNil%3Dnil%2Cqueryable%3AString%7CNil%3Dnil%2C%2A%2Anamed_args%29-instance-method">#</a>
       </div>
       
         <div class="doc">
@@ -2753,7 +2753,7 @@ Yields a <code>PQ::Notification</code> object with <code>channel</code>, <code>p
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/0ea2a6140f5f9ac770eeaa5badf1d479a5b60f69/src/avram/database.cr#L88" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/89bf1356c17f9cbc546f1a58e0b26ec1d91d7302/src/avram/database.cr#L88" target="_blank">View source</a>]
         
       </div>
     </div>

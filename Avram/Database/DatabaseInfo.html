@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="generator" content="Crystal Docs 1.5.0">
+<meta name="generator" content="Crystal Docs 1.6.2">
 <meta name="crystal_docs.project_version" content="main">
 <meta name="crystal_docs.project_name" content="avram">
 
@@ -1703,7 +1703,7 @@
   </h2>
   
     
-      <a href="https://github.com/luckyframework/avram/blob/0ea2a6140f5f9ac770eeaa5badf1d479a5b60f69/src/avram/database/database_info.cr#L2" target="_blank">
+      <a href="https://github.com/luckyframework/avram/blob/89bf1356c17f9cbc546f1a58e0b26ec1d91d7302/src/avram/database/database_info.cr#L2" target="_blank">
         avram/database/database_info.cr
       </a>
     
@@ -1744,6 +1744,11 @@
   <ul class="list-summary">
     
       <li class="entry-summary">
+        <a href="#load%28database%3AAvram%3A%3ADatabase.class%29%3ADatabaseInfo-class-method" class="signature"><strong>.load</strong>(database : <span class="t">Avram</span><span class="t">::</span><span class="t">Database</span>.<span class="k">class</span>) : DatabaseInfo</a>
+        
+      </li>
+    
+      <li class="entry-summary">
         <a href="#new%28table_infos%3AArray%28Avram%3A%3ADatabase%3A%3ATableInfo%29%29-class-method" class="signature"><strong>.new</strong>(table_infos : Array(Avram::Database::TableInfo))</a>
         
       </li>
@@ -1751,23 +1756,6 @@
   </ul>
 
 
-
-  <h2>
-    <a id="class-method-summary" class="anchor" href="#class-method-summary">
-  <svg class="octicon-link" aria-hidden="true">
-    <use href="#octicon-link"/>
-  </svg>
-</a>
-    Class Method Summary
-  </h2>
-  <ul class="list-summary">
-    
-      <li class="entry-summary">
-        <a href="#load%28database%3AAvram%3A%3ADatabase.class%29-class-method" class="signature"><strong>.load</strong>(database : <span class="t">Avram</span><span class="t">::</span><span class="t">Database</span>.<span class="k">class</span>)</a>
-        
-      </li>
-    
-  </ul>
 
 
 
@@ -1782,12 +1770,12 @@
   <ul class="list-summary">
     
       <li class="entry-summary">
-        <a href="#table%28name%3AString%29%3ATableInfo%3F-instance-method" class="signature"><strong>#table</strong>(name : String) : TableInfo?</a>
+        <a href="#table%28name%3AString%29%3ATableInfo%7CNil-instance-method" class="signature"><strong>#table</strong>(name : String) : TableInfo | Nil</a>
         
       </li>
     
       <li class="entry-summary">
-        <a href="#table%3F%28name%3AString%29-instance-method" class="signature"><strong>#table?</strong>(name : String)</a>
+        <a href="#table%3F%28name%3AString%29%3ABool-instance-method" class="signature"><strong>#table?</strong>(name : String) : Bool</a>
         
       </li>
     
@@ -1802,7 +1790,7 @@
       </li>
     
       <li class="entry-summary">
-        <a href="#table_names-instance-method" class="signature"><strong>#table_names</strong></a>
+        <a href="#table_names%3AArray%28String%29-instance-method" class="signature"><strong>#table_names</strong> : Array(String)</a>
         
       </li>
     
@@ -1865,6 +1853,22 @@
     Constructor Detail
   </h2>
   
+    <div class="entry-detail" id="load(database:Avram::Database.class):DatabaseInfo-class-method">
+      <div class="signature">
+        
+        def self.<strong>load</strong>(database : <span class="t">Avram</span><span class="t">::</span><span class="t">Database</span>.<span class="k">class</span>) : <a href="../../Avram/Database/DatabaseInfo.html">DatabaseInfo</a>
+
+        <a class="method-permalink" href="#load%28database%3AAvram%3A%3ADatabase.class%29%3ADatabaseInfo-class-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/luckyframework/avram/blob/89bf1356c17f9cbc546f1a58e0b26ec1d91d7302/src/avram/database/database_info.cr#L20" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
     <div class="entry-detail" id="new(table_infos:Array(Avram::Database::TableInfo))-class-method">
       <div class="signature">
         
@@ -1876,39 +1880,13 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/0ea2a6140f5f9ac770eeaa5badf1d479a5b60f69/src/avram/database/database_info.cr#L33" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/89bf1356c17f9cbc546f1a58e0b26ec1d91d7302/src/avram/database/database_info.cr#L33" target="_blank">View source</a>]
         
       </div>
     </div>
   
 
 
-
-  <h2>
-    <a id="class-method-detail" class="anchor" href="#class-method-detail">
-  <svg class="octicon-link" aria-hidden="true">
-    <use href="#octicon-link"/>
-  </svg>
-</a>
-    Class Method Detail
-  </h2>
-  
-    <div class="entry-detail" id="load(database:Avram::Database.class)-class-method">
-      <div class="signature">
-        
-        def self.<strong>load</strong>(database : <span class="t">Avram</span><span class="t">::</span><span class="t">Database</span>.<span class="k">class</span>)
-
-        <a class="method-permalink" href="#load%28database%3AAvram%3A%3ADatabase.class%29-class-method">#</a>
-      </div>
-      
-      <br/>
-      <div>
-        
-          [<a href="https://github.com/luckyframework/avram/blob/0ea2a6140f5f9ac770eeaa5badf1d479a5b60f69/src/avram/database/database_info.cr#L20" target="_blank">View source</a>]
-        
-      </div>
-    </div>
-  
 
 
 
@@ -1921,34 +1899,34 @@
     Instance Method Detail
   </h2>
   
-    <div class="entry-detail" id="table(name:String):TableInfo?-instance-method">
+    <div class="entry-detail" id="table(name:String):TableInfo|Nil-instance-method">
       <div class="signature">
         
-        def <strong>table</strong>(name : <a href="../../String.html">String</a>) : <a href="../../Avram/Database/TableInfo.html">TableInfo</a>?
+        def <strong>table</strong>(name : <a href="../../String.html">String</a>) : <a href="../../Avram/Database/TableInfo.html">TableInfo</a> | <a href="../../Nil.html">Nil</a>
 
-        <a class="method-permalink" href="#table%28name%3AString%29%3ATableInfo%3F-instance-method">#</a>
+        <a class="method-permalink" href="#table%28name%3AString%29%3ATableInfo%7CNil-instance-method">#</a>
       </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/0ea2a6140f5f9ac770eeaa5badf1d479a5b60f69/src/avram/database/database_info.cr#L44" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/89bf1356c17f9cbc546f1a58e0b26ec1d91d7302/src/avram/database/database_info.cr#L44" target="_blank">View source</a>]
         
       </div>
     </div>
   
-    <div class="entry-detail" id="table?(name:String)-instance-method">
+    <div class="entry-detail" id="table?(name:String):Bool-instance-method">
       <div class="signature">
         
-        def <strong>table?</strong>(name : <a href="../../String.html">String</a>)
+        def <strong>table?</strong>(name : <a href="../../String.html">String</a>) : <a href="../../Bool.html">Bool</a>
 
-        <a class="method-permalink" href="#table%3F%28name%3AString%29-instance-method">#</a>
+        <a class="method-permalink" href="#table%3F%28name%3AString%29%3ABool-instance-method">#</a>
       </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/0ea2a6140f5f9ac770eeaa5badf1d479a5b60f69/src/avram/database/database_info.cr#L36" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/89bf1356c17f9cbc546f1a58e0b26ec1d91d7302/src/avram/database/database_info.cr#L36" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1964,7 +1942,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/0ea2a6140f5f9ac770eeaa5badf1d479a5b60f69/src/avram/database/database_info.cr#L31" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/89bf1356c17f9cbc546f1a58e0b26ec1d91d7302/src/avram/database/database_info.cr#L31" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1980,23 +1958,23 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/0ea2a6140f5f9ac770eeaa5badf1d479a5b60f69/src/avram/database/database_info.cr#L31" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/89bf1356c17f9cbc546f1a58e0b26ec1d91d7302/src/avram/database/database_info.cr#L31" target="_blank">View source</a>]
         
       </div>
     </div>
   
-    <div class="entry-detail" id="table_names-instance-method">
+    <div class="entry-detail" id="table_names:Array(String)-instance-method">
       <div class="signature">
         
-        def <strong>table_names</strong>
+        def <strong>table_names</strong> : <a href="../../Array.html">Array</a>(<a href="../../String.html">String</a>)
 
-        <a class="method-permalink" href="#table_names-instance-method">#</a>
+        <a class="method-permalink" href="#table_names%3AArray%28String%29-instance-method">#</a>
       </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/0ea2a6140f5f9ac770eeaa5badf1d479a5b60f69/src/avram/database/database_info.cr#L40" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/89bf1356c17f9cbc546f1a58e0b26ec1d91d7302/src/avram/database/database_info.cr#L40" target="_blank">View source</a>]
         
       </div>
     </div>

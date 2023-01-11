@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="generator" content="Crystal Docs 1.5.0">
+<meta name="generator" content="Crystal Docs 1.6.2">
 <meta name="crystal_docs.project_version" content="main">
 <meta name="crystal_docs.project_name" content="avram">
 
@@ -1721,12 +1721,12 @@ requires having a specific time zone (for example for calendaric operations).</p
 <p><code><a href="Time.html">Time</a></code> instances representing a specific instant can be created by
 <code>.utc</code> or <code>.new</code> with the date-time specified as individual arguments:</p>
 <pre><code class="language-crystal">time <span class="o">=</span> <span class="t">Time</span>.utc(<span class="n">2016</span>, <span class="n">2</span>, <span class="n">15</span>, <span class="n">10</span>, <span class="n">20</span>, <span class="n">30</span>)
-time.to_s <span class="c"># =&gt; 2016-02-15 10:20:30 UTC</span>
+time.to_s <span class="c"># =&gt; &quot;2016-02-15 10:20:30 UTC&quot;</span>
 time <span class="o">=</span> <span class="t">Time</span>.local(<span class="n">2016</span>, <span class="n">2</span>, <span class="n">15</span>, <span class="n">10</span>, <span class="n">20</span>, <span class="n">30</span>, location: <span class="t">Time</span><span class="t">::</span><span class="t">Location</span>.load(<span class="s">&quot;Europe/Berlin&quot;</span>))
-time.to_s <span class="c"># =&gt; 2016-02-15 10:20:30 +01:00 Europe/Berlin</span>
+time.to_s <span class="c"># =&gt; &quot;2016-02-15 10:20:30 +01:00&quot;</span>
 <span class="c"># The time-of-day can be omitted and defaults to midnight (start of day):</span>
 time <span class="o">=</span> <span class="t">Time</span>.utc(<span class="n">2016</span>, <span class="n">2</span>, <span class="n">15</span>)
-time.to_s <span class="c"># =&gt; 2016-02-15 00:00:00 UTC</span></code></pre>
+time.to_s <span class="c"># =&gt; &quot;2016-02-15 00:00:00 UTC&quot;</span></code></pre>
 <h3><a id="retrieving-time-information" class="anchor" href="#retrieving-time-information">
   <svg class="octicon-link" aria-hidden="true">
     <use href="#octicon-link"/>
@@ -1891,14 +1891,14 @@ elapsed_time <span class="c"># =&gt; 20.milliseconds (approximately)</span></cod
   </h2>
   
     
-      <a href="https://github.com/luckyframework/avram/blob/0ea2a6140f5f9ac770eeaa5badf1d479a5b60f69/src/avram/blank_extensions.cr#L7" target="_blank">
+      <a href="https://github.com/luckyframework/avram/blob/89bf1356c17f9cbc546f1a58e0b26ec1d91d7302/src/avram/blank_extensions.cr#L7" target="_blank">
         avram/blank_extensions.cr
       </a>
     
     <br/>
   
     
-      <a href="https://github.com/luckyframework/avram/blob/0ea2a6140f5f9ac770eeaa5badf1d479a5b60f69/src/avram/charms/time_extensions.cr#L1" target="_blank">
+      <a href="https://github.com/luckyframework/avram/blob/89bf1356c17f9cbc546f1a58e0b26ec1d91d7302/src/avram/charms/time_extensions.cr#L1" target="_blank">
         avram/charms/time_extensions.cr
       </a>
     
@@ -1941,7 +1941,7 @@ elapsed_time <span class="c"># =&gt; 20.milliseconds (approximately)</span></cod
   <ul class="list-summary">
     
       <li class="entry-summary">
-        <a href="#blank%3F-instance-method" class="signature"><strong>#blank?</strong></a>
+        <a href="#blank%3F%3ABool-instance-method" class="signature"><strong>#blank?</strong> : Bool</a>
         
       </li>
     
@@ -2037,7 +2037,7 @@ elapsed_time <span class="c"># =&gt; 20.milliseconds (approximately)</span></cod
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/0ea2a6140f5f9ac770eeaa5badf1d479a5b60f69/src/avram/charms/time_extensions.cr#L2" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/89bf1356c17f9cbc546f1a58e0b26ec1d91d7302/src/avram/charms/time_extensions.cr#L2" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2054,18 +2054,18 @@ elapsed_time <span class="c"># =&gt; 20.milliseconds (approximately)</span></cod
     Instance Method Detail
   </h2>
   
-    <div class="entry-detail" id="blank?-instance-method">
+    <div class="entry-detail" id="blank?:Bool-instance-method">
       <div class="signature">
         
-        def <strong>blank?</strong>
+        def <strong>blank?</strong> : <a href="Bool.html">Bool</a>
 
-        <a class="method-permalink" href="#blank%3F-instance-method">#</a>
+        <a class="method-permalink" href="#blank%3F%3ABool-instance-method">#</a>
       </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/0ea2a6140f5f9ac770eeaa5badf1d479a5b60f69/src/avram/blank_extensions.cr#L8" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/89bf1356c17f9cbc546f1a58e0b26ec1d91d7302/src/avram/blank_extensions.cr#L8" target="_blank">View source</a>]
         
       </div>
     </div>

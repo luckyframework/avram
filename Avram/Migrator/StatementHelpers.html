@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="generator" content="Crystal Docs 1.5.0">
+<meta name="generator" content="Crystal Docs 1.6.2">
 <meta name="crystal_docs.project_version" content="main">
 <meta name="crystal_docs.project_name" content="avram">
 
@@ -1731,7 +1731,7 @@
   </h2>
   
     
-      <a href="https://github.com/luckyframework/avram/blob/0ea2a6140f5f9ac770eeaa5badf1d479a5b60f69/src/avram/migrator/statement_helpers.cr#L3" target="_blank">
+      <a href="https://github.com/luckyframework/avram/blob/89bf1356c17f9cbc546f1a58e0b26ec1d91d7302/src/avram/migrator/statement_helpers.cr#L3" target="_blank">
         avram/migrator/statement_helpers.cr
       </a>
     
@@ -1757,7 +1757,7 @@
   <ul class="list-summary">
     
       <li class="entry-summary">
-        <a href="#create_foreign_key%28from%3ATableName%2Cto%3ATableName%2Con_delete%3ASymbol%2Ccolumn%3ASymbol%3F%2Cprimary_key%3D%3Aid%29-instance-method" class="signature"><strong>#create_foreign_key</strong>(from : TableName, to : TableName, on_delete : Symbol, column : Symbol?, primary_key = <span class="n">:id</span>)</a>
+        <a href="#create_foreign_key%28from%3ATableName%2Cto%3ATableName%2Con_delete%3ASymbol%2Ccolumn%3ASymbol%7CNil%2Cprimary_key%3D%3Aid%29-instance-method" class="signature"><strong>#create_foreign_key</strong>(from : TableName, to : TableName, on_delete : Symbol, column : Symbol | Nil, primary_key = <span class="n">:id</span>)</a>
         
       </li>
     
@@ -1767,7 +1767,7 @@
       </li>
     
       <li class="entry-summary">
-        <a href="#create_index%28table_name%3ATableName%2Ccolumns%3AColumns%2Cunique%3Dfalse%2Cusing%3D%3Abtree%2Cname%3AString%3F%7CSymbol%3F%3Dnil%29-instance-method" class="signature"><strong>#create_index</strong>(table_name : TableName, columns : Columns, unique = <span class="n">false</span>, using = <span class="n">:btree</span>, name : String? | Symbol? = <span class="n">nil</span>)</a>
+        <a href="#create_index%28table_name%3ATableName%2Ccolumns%3AColumns%2Cunique%3Dfalse%2Cusing%3D%3Abtree%2Cname%3AString%7CNil%7CSymbol%7CNil%3Dnil%29-instance-method" class="signature"><strong>#create_index</strong>(table_name : TableName, columns : Columns, unique = <span class="n">false</span>, using = <span class="n">:btree</span>, name : String | Nil | Symbol | Nil = <span class="n">nil</span>)</a>
         
       </li>
     
@@ -1789,7 +1789,7 @@
       </li>
     
       <li class="entry-summary">
-        <a href="#drop_foreign_key%28from%3ATableName%2Creferences%3ATableName%2Ccolumn%3ASymbol%3F%29-instance-method" class="signature"><strong>#drop_foreign_key</strong>(from : TableName, references : TableName, column : Symbol?)</a>
+        <a href="#drop_foreign_key%28from%3ATableName%2Creferences%3ATableName%2Ccolumn%3ASymbol%7CNil%29-instance-method" class="signature"><strong>#drop_foreign_key</strong>(from : TableName, references : TableName, column : Symbol | Nil)</a>
         
       </li>
     
@@ -1799,7 +1799,7 @@
       </li>
     
       <li class="entry-summary">
-        <a href="#drop_index%28table_name%3ATableName%2Ccolumns%3AColumns%3F%3Dnil%2Cif_exists%3Dfalse%2Con_delete%3D%3Ado_nothing%2Cname%3AString%3F%7CSymbol%3F%3Dnil%29-instance-method" class="signature"><strong>#drop_index</strong>(table_name : TableName, columns : Columns? = <span class="n">nil</span>, if_exists = <span class="n">false</span>, on_delete = <span class="n">:do_nothing</span>, name : String? | Symbol? = <span class="n">nil</span>)</a>
+        <a href="#drop_index%28table_name%3ATableName%2Ccolumns%3AColumns%7CNil%3Dnil%2Cif_exists%3Dfalse%2Con_delete%3D%3Ado_nothing%2Cname%3AString%7CNil%7CSymbol%7CNil%3Dnil%29-instance-method" class="signature"><strong>#drop_index</strong>(table_name : TableName, columns : Columns | Nil = <span class="n">nil</span>, if_exists = <span class="n">false</span>, on_delete = <span class="n">:do_nothing</span>, name : String | Nil | Symbol | Nil = <span class="n">nil</span>)</a>
         
       </li>
     
@@ -1826,7 +1826,7 @@
       </li>
     
       <li class="entry-summary">
-        <a href="#update_extension%28name%3AString%2Cto%3AString%3F%3Dnil%29-instance-method" class="signature"><strong>#update_extension</strong>(name : String, to : String? = <span class="n">nil</span>)</a>
+        <a href="#update_extension%28name%3AString%2Cto%3AString%7CNil%3Dnil%29-instance-method" class="signature"><strong>#update_extension</strong>(name : String, to : String | Nil = <span class="n">nil</span>)</a>
         
       </li>
     
@@ -1910,18 +1910,18 @@
     Instance Method Detail
   </h2>
   
-    <div class="entry-detail" id="create_foreign_key(from:TableName,to:TableName,on_delete:Symbol,column:Symbol?,primary_key=:id)-instance-method">
+    <div class="entry-detail" id="create_foreign_key(from:TableName,to:TableName,on_delete:Symbol,column:Symbol|Nil,primary_key=:id)-instance-method">
       <div class="signature">
         
-        def <strong>create_foreign_key</strong>(from : <a href="../../Avram/TableName.html">TableName</a>, to : <a href="../../Avram/TableName.html">TableName</a>, on_delete : Symbol, column : Symbol?, primary_key = <span class="n">:id</span>)
+        def <strong>create_foreign_key</strong>(from : <a href="../../Avram/TableName.html">TableName</a>, to : <a href="../../Avram/TableName.html">TableName</a>, on_delete : Symbol, column : Symbol | <a href="../../Nil.html">Nil</a>, primary_key = <span class="n">:id</span>)
 
-        <a class="method-permalink" href="#create_foreign_key%28from%3ATableName%2Cto%3ATableName%2Con_delete%3ASymbol%2Ccolumn%3ASymbol%3F%2Cprimary_key%3D%3Aid%29-instance-method">#</a>
+        <a class="method-permalink" href="#create_foreign_key%28from%3ATableName%2Cto%3ATableName%2Con_delete%3ASymbol%2Ccolumn%3ASymbol%7CNil%2Cprimary_key%3D%3Aid%29-instance-method">#</a>
       </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/0ea2a6140f5f9ac770eeaa5badf1d479a5b60f69/src/avram/migrator/statement_helpers.cr#L31" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/89bf1356c17f9cbc546f1a58e0b26ec1d91d7302/src/avram/migrator/statement_helpers.cr#L31" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1937,23 +1937,23 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/0ea2a6140f5f9ac770eeaa5badf1d479a5b60f69/src/avram/migrator/statement_helpers.cr#L67" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/89bf1356c17f9cbc546f1a58e0b26ec1d91d7302/src/avram/migrator/statement_helpers.cr#L67" target="_blank">View source</a>]
         
       </div>
     </div>
   
-    <div class="entry-detail" id="create_index(table_name:TableName,columns:Columns,unique=false,using=:btree,name:String?|Symbol?=nil)-instance-method">
+    <div class="entry-detail" id="create_index(table_name:TableName,columns:Columns,unique=false,using=:btree,name:String|Nil|Symbol|Nil=nil)-instance-method">
       <div class="signature">
         
-        def <strong>create_index</strong>(table_name : <a href="../../Avram/TableName.html">TableName</a>, columns : <a href="../../Avram/Migrator/IndexStatementHelpers/Columns.html">Columns</a>, unique = <span class="n">false</span>, using = <span class="n">:btree</span>, name : <a href="../../String.html">String</a>? | Symbol? = <span class="n">nil</span>)
+        def <strong>create_index</strong>(table_name : <a href="../../Avram/TableName.html">TableName</a>, columns : <a href="../../Avram/Migrator/IndexStatementHelpers/Columns.html">Columns</a>, unique = <span class="n">false</span>, using = <span class="n">:btree</span>, name : <a href="../../String.html">String</a> | <a href="../../Nil.html">Nil</a> | Symbol | <a href="../../Nil.html">Nil</a> = <span class="n">nil</span>)
 
-        <a class="method-permalink" href="#create_index%28table_name%3ATableName%2Ccolumns%3AColumns%2Cunique%3Dfalse%2Cusing%3D%3Abtree%2Cname%3AString%3F%7CSymbol%3F%3Dnil%29-instance-method">#</a>
+        <a class="method-permalink" href="#create_index%28table_name%3ATableName%2Ccolumns%3AColumns%2Cunique%3Dfalse%2Cusing%3D%3Abtree%2Cname%3AString%7CNil%7CSymbol%7CNil%3Dnil%29-instance-method">#</a>
       </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/0ea2a6140f5f9ac770eeaa5badf1d479a5b60f69/src/avram/migrator/statement_helpers.cr#L39" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/89bf1356c17f9cbc546f1a58e0b26ec1d91d7302/src/avram/migrator/statement_helpers.cr#L39" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1981,7 +1981,7 @@ Postgres does not support updating or replacing a trigger as of version 12</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/0ea2a6140f5f9ac770eeaa5badf1d479a5b60f69/src/avram/migrator/statement_helpers.cr#L87" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/89bf1356c17f9cbc546f1a58e0b26ec1d91d7302/src/avram/migrator/statement_helpers.cr#L87" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1997,7 +1997,7 @@ Postgres does not support updating or replacing a trigger as of version 12</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/0ea2a6140f5f9ac770eeaa5badf1d479a5b60f69/src/avram/migrator/statement_helpers.cr#L59" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/89bf1356c17f9cbc546f1a58e0b26ec1d91d7302/src/avram/migrator/statement_helpers.cr#L59" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2013,23 +2013,23 @@ Postgres does not support updating or replacing a trigger as of version 12</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/0ea2a6140f5f9ac770eeaa5badf1d479a5b60f69/src/avram/migrator/statement_helpers.cr#L17" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/89bf1356c17f9cbc546f1a58e0b26ec1d91d7302/src/avram/migrator/statement_helpers.cr#L17" target="_blank">View source</a>]
         
       </div>
     </div>
   
-    <div class="entry-detail" id="drop_foreign_key(from:TableName,references:TableName,column:Symbol?)-instance-method">
+    <div class="entry-detail" id="drop_foreign_key(from:TableName,references:TableName,column:Symbol|Nil)-instance-method">
       <div class="signature">
         
-        def <strong>drop_foreign_key</strong>(from : <a href="../../Avram/TableName.html">TableName</a>, references : <a href="../../Avram/TableName.html">TableName</a>, column : Symbol?)
+        def <strong>drop_foreign_key</strong>(from : <a href="../../Avram/TableName.html">TableName</a>, references : <a href="../../Avram/TableName.html">TableName</a>, column : Symbol | <a href="../../Nil.html">Nil</a>)
 
-        <a class="method-permalink" href="#drop_foreign_key%28from%3ATableName%2Creferences%3ATableName%2Ccolumn%3ASymbol%3F%29-instance-method">#</a>
+        <a class="method-permalink" href="#drop_foreign_key%28from%3ATableName%2Creferences%3ATableName%2Ccolumn%3ASymbol%7CNil%29-instance-method">#</a>
       </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/0ea2a6140f5f9ac770eeaa5badf1d479a5b60f69/src/avram/migrator/statement_helpers.cr#L35" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/89bf1356c17f9cbc546f1a58e0b26ec1d91d7302/src/avram/migrator/statement_helpers.cr#L35" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2045,23 +2045,23 @@ Postgres does not support updating or replacing a trigger as of version 12</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/0ea2a6140f5f9ac770eeaa5badf1d479a5b60f69/src/avram/migrator/statement_helpers.cr#L71" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/89bf1356c17f9cbc546f1a58e0b26ec1d91d7302/src/avram/migrator/statement_helpers.cr#L71" target="_blank">View source</a>]
         
       </div>
     </div>
   
-    <div class="entry-detail" id="drop_index(table_name:TableName,columns:Columns?=nil,if_exists=false,on_delete=:do_nothing,name:String?|Symbol?=nil)-instance-method">
+    <div class="entry-detail" id="drop_index(table_name:TableName,columns:Columns|Nil=nil,if_exists=false,on_delete=:do_nothing,name:String|Nil|Symbol|Nil=nil)-instance-method">
       <div class="signature">
         
-        def <strong>drop_index</strong>(table_name : <a href="../../Avram/TableName.html">TableName</a>, columns : <a href="../../Avram/Migrator/IndexStatementHelpers/Columns.html">Columns</a>? = <span class="n">nil</span>, if_exists = <span class="n">false</span>, on_delete = <span class="n">:do_nothing</span>, name : <a href="../../String.html">String</a>? | Symbol? = <span class="n">nil</span>)
+        def <strong>drop_index</strong>(table_name : <a href="../../Avram/TableName.html">TableName</a>, columns : <a href="../../Avram/Migrator/IndexStatementHelpers/Columns.html">Columns</a> | <a href="../../Nil.html">Nil</a> = <span class="n">nil</span>, if_exists = <span class="n">false</span>, on_delete = <span class="n">:do_nothing</span>, name : <a href="../../String.html">String</a> | <a href="../../Nil.html">Nil</a> | Symbol | <a href="../../Nil.html">Nil</a> = <span class="n">nil</span>)
 
-        <a class="method-permalink" href="#drop_index%28table_name%3ATableName%2Ccolumns%3AColumns%3F%3Dnil%2Cif_exists%3Dfalse%2Con_delete%3D%3Ado_nothing%2Cname%3AString%3F%7CSymbol%3F%3Dnil%29-instance-method">#</a>
+        <a class="method-permalink" href="#drop_index%28table_name%3ATableName%2Ccolumns%3AColumns%7CNil%3Dnil%2Cif_exists%3Dfalse%2Con_delete%3D%3Ado_nothing%2Cname%3AString%7CNil%7CSymbol%7CNil%3Dnil%29-instance-method">#</a>
       </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/0ea2a6140f5f9ac770eeaa5badf1d479a5b60f69/src/avram/migrator/statement_helpers.cr#L43" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/89bf1356c17f9cbc546f1a58e0b26ec1d91d7302/src/avram/migrator/statement_helpers.cr#L43" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2082,7 +2082,7 @@ Postgres does not support updating or replacing a trigger as of version 12</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/0ea2a6140f5f9ac770eeaa5badf1d479a5b60f69/src/avram/migrator/statement_helpers.cr#L93" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/89bf1356c17f9cbc546f1a58e0b26ec1d91d7302/src/avram/migrator/statement_helpers.cr#L93" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2098,7 +2098,7 @@ Postgres does not support updating or replacing a trigger as of version 12</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/0ea2a6140f5f9ac770eeaa5badf1d479a5b60f69/src/avram/migrator/statement_helpers.cr#L55" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/89bf1356c17f9cbc546f1a58e0b26ec1d91d7302/src/avram/migrator/statement_helpers.cr#L55" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2114,7 +2114,7 @@ Postgres does not support updating or replacing a trigger as of version 12</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/0ea2a6140f5f9ac770eeaa5badf1d479a5b60f69/src/avram/migrator/statement_helpers.cr#L51" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/89bf1356c17f9cbc546f1a58e0b26ec1d91d7302/src/avram/migrator/statement_helpers.cr#L51" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2130,23 +2130,23 @@ Postgres does not support updating or replacing a trigger as of version 12</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/0ea2a6140f5f9ac770eeaa5badf1d479a5b60f69/src/avram/migrator/statement_helpers.cr#L47" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/89bf1356c17f9cbc546f1a58e0b26ec1d91d7302/src/avram/migrator/statement_helpers.cr#L47" target="_blank">View source</a>]
         
       </div>
     </div>
   
-    <div class="entry-detail" id="update_extension(name:String,to:String?=nil)-instance-method">
+    <div class="entry-detail" id="update_extension(name:String,to:String|Nil=nil)-instance-method">
       <div class="signature">
         
-        def <strong>update_extension</strong>(name : <a href="../../String.html">String</a>, to : <a href="../../String.html">String</a>? = <span class="n">nil</span>)
+        def <strong>update_extension</strong>(name : <a href="../../String.html">String</a>, to : <a href="../../String.html">String</a> | <a href="../../Nil.html">Nil</a> = <span class="n">nil</span>)
 
-        <a class="method-permalink" href="#update_extension%28name%3AString%2Cto%3AString%3F%3Dnil%29-instance-method">#</a>
+        <a class="method-permalink" href="#update_extension%28name%3AString%2Cto%3AString%7CNil%3Dnil%29-instance-method">#</a>
       </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/0ea2a6140f5f9ac770eeaa5badf1d479a5b60f69/src/avram/migrator/statement_helpers.cr#L63" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/89bf1356c17f9cbc546f1a58e0b26ec1d91d7302/src/avram/migrator/statement_helpers.cr#L63" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2174,7 +2174,7 @@ Postgres does not support updating or replacing a trigger as of version 12</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/0ea2a6140f5f9ac770eeaa5badf1d479a5b60f69/src/avram/migrator/statement_helpers.cr#L21" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/89bf1356c17f9cbc546f1a58e0b26ec1d91d7302/src/avram/migrator/statement_helpers.cr#L21" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2190,7 +2190,7 @@ Postgres does not support updating or replacing a trigger as of version 12</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/0ea2a6140f5f9ac770eeaa5badf1d479a5b60f69/src/avram/migrator/statement_helpers.cr#L7" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/89bf1356c17f9cbc546f1a58e0b26ec1d91d7302/src/avram/migrator/statement_helpers.cr#L7" target="_blank">View source</a>]
         
       </div>
     </div>

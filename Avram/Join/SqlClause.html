@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="generator" content="Crystal Docs 1.5.0">
+<meta name="generator" content="Crystal Docs 1.6.2">
 <meta name="crystal_docs.project_version" content="main">
 <meta name="crystal_docs.project_name" content="avram">
 
@@ -1723,7 +1723,7 @@
   </h2>
   
     
-      <a href="https://github.com/luckyframework/avram/blob/0ea2a6140f5f9ac770eeaa5badf1d479a5b60f69/src/avram/join.cr#L4" target="_blank">
+      <a href="https://github.com/luckyframework/avram/blob/89bf1356c17f9cbc546f1a58e0b26ec1d91d7302/src/avram/join.cr#L4" target="_blank">
         avram/join.cr
       </a>
     
@@ -1745,7 +1745,7 @@
   <ul class="list-summary">
     
       <li class="entry-summary">
-        <a href="#new%28from%3ATableName%2Cto%3ATableName%2Cprimary_key%3ASymbol%3F%3Dnil%2Cforeign_key%3ASymbol%3F%3Dnil%2Ccomparison%3AString%3F%3D%22%3D%22%2Cusing%3AArray%28Symbol%29%3D%5B%5DofSymbol%29-class-method" class="signature"><strong>.new</strong>(from : TableName, to : TableName, primary_key : Symbol? = <span class="n">nil</span>, foreign_key : Symbol? = <span class="n">nil</span>, comparison : String? = <span class="s">&quot;=&quot;</span>, using : Array(Symbol) = <span class="o">[]</span> <span class="k">of</span> <span class="t">Symbol</span>)</a>
+        <a href="#new%28from%3ATableName%2Cto%3ATableName%2Cprimary_key%3ASymbol%7CNil%3Dnil%2Cforeign_key%3ASymbol%7CNil%3Dnil%2Ccomparison%3AString%7CNil%3D%22%3D%22%2Cusing%3AArray%28Symbol%29%3D%5B%5DofSymbol%29-class-method" class="signature"><strong>.new</strong>(from : TableName, to : TableName, primary_key : Symbol | Nil = <span class="n">nil</span>, foreign_key : Symbol | Nil = <span class="n">nil</span>, comparison : String | Nil = <span class="s">&quot;=&quot;</span>, using : Array(Symbol) = <span class="o">[]</span> <span class="k">of</span> <span class="t">Symbol</span>)</a>
         
       </li>
     
@@ -1766,12 +1766,12 @@
   <ul class="list-summary">
     
       <li class="entry-summary">
-        <a href="#clone-instance-method" class="signature"><strong>#clone</strong></a>
+        <a href="#clone%3Aself-instance-method" class="signature"><strong>#clone</strong> : <span class="k">self</span></a>
         
       </li>
     
       <li class="entry-summary">
-        <a href="#default_foreign_key-instance-method" class="signature"><strong>#default_foreign_key</strong></a>
+        <a href="#default_foreign_key%3AString-instance-method" class="signature"><strong>#default_foreign_key</strong> : String</a>
         
       </li>
     
@@ -1781,7 +1781,7 @@
       </li>
     
       <li class="entry-summary">
-        <a href="#from_column-instance-method" class="signature"><strong>#from_column</strong></a>
+        <a href="#from_column%3AString-instance-method" class="signature"><strong>#from_column</strong> : String</a>
         
       </li>
     
@@ -1796,12 +1796,12 @@
       </li>
     
       <li class="entry-summary">
-        <a href="#to_column-instance-method" class="signature"><strong>#to_column</strong></a>
+        <a href="#to_column%3AString-instance-method" class="signature"><strong>#to_column</strong> : String</a>
         
       </li>
     
       <li class="entry-summary">
-        <a href="#to_sql-instance-method" class="signature"><strong>#to_sql</strong></a>
+        <a href="#to_sql%3AString-instance-method" class="signature"><strong>#to_sql</strong> : String</a>
         
       </li>
     
@@ -1854,18 +1854,18 @@
     Constructor Detail
   </h2>
   
-    <div class="entry-detail" id="new(from:TableName,to:TableName,primary_key:Symbol?=nil,foreign_key:Symbol?=nil,comparison:String?=&quot;=&quot;,using:Array(Symbol)=[]ofSymbol)-class-method">
+    <div class="entry-detail" id="new(from:TableName,to:TableName,primary_key:Symbol|Nil=nil,foreign_key:Symbol|Nil=nil,comparison:String|Nil=&quot;=&quot;,using:Array(Symbol)=[]ofSymbol)-class-method">
       <div class="signature">
         
-        def self.<strong>new</strong>(from : <a href="../../Avram/TableName.html">TableName</a>, to : <a href="../../Avram/TableName.html">TableName</a>, primary_key : Symbol? = <span class="n">nil</span>, foreign_key : Symbol? = <span class="n">nil</span>, comparison : <a href="../../String.html">String</a>? = <span class="s">&quot;=&quot;</span>, using : <a href="../../Array.html">Array</a>(Symbol) = <span class="o">[]</span> <span class="k">of</span> <span class="t">Symbol</span>)
+        def self.<strong>new</strong>(from : <a href="../../Avram/TableName.html">TableName</a>, to : <a href="../../Avram/TableName.html">TableName</a>, primary_key : Symbol | <a href="../../Nil.html">Nil</a> = <span class="n">nil</span>, foreign_key : Symbol | <a href="../../Nil.html">Nil</a> = <span class="n">nil</span>, comparison : <a href="../../String.html">String</a> | <a href="../../Nil.html">Nil</a> = <span class="s">&quot;=&quot;</span>, using : <a href="../../Array.html">Array</a>(Symbol) = <span class="o">[]</span> <span class="k">of</span> <span class="t">Symbol</span>)
 
-        <a class="method-permalink" href="#new%28from%3ATableName%2Cto%3ATableName%2Cprimary_key%3ASymbol%3F%3Dnil%2Cforeign_key%3ASymbol%3F%3Dnil%2Ccomparison%3AString%3F%3D%22%3D%22%2Cusing%3AArray%28Symbol%29%3D%5B%5DofSymbol%29-class-method">#</a>
+        <a class="method-permalink" href="#new%28from%3ATableName%2Cto%3ATableName%2Cprimary_key%3ASymbol%7CNil%3Dnil%2Cforeign_key%3ASymbol%7CNil%3Dnil%2Ccomparison%3AString%7CNil%3D%22%3D%22%2Cusing%3AArray%28Symbol%29%3D%5B%5DofSymbol%29-class-method">#</a>
       </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/0ea2a6140f5f9ac770eeaa5badf1d479a5b60f69/src/avram/join.cr#L7" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/89bf1356c17f9cbc546f1a58e0b26ec1d91d7302/src/avram/join.cr#L7" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1884,34 +1884,34 @@
     Instance Method Detail
   </h2>
   
-    <div class="entry-detail" id="clone-instance-method">
+    <div class="entry-detail" id="clone:self-instance-method">
       <div class="signature">
         
-        def <strong>clone</strong>
+        def <strong>clone</strong> : <span class="k">self</span>
 
-        <a class="method-permalink" href="#clone-instance-method">#</a>
+        <a class="method-permalink" href="#clone%3Aself-instance-method">#</a>
       </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/0ea2a6140f5f9ac770eeaa5badf1d479a5b60f69/src/avram/join.cr#L39" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/89bf1356c17f9cbc546f1a58e0b26ec1d91d7302/src/avram/join.cr#L39" target="_blank">View source</a>]
         
       </div>
     </div>
   
-    <div class="entry-detail" id="default_foreign_key-instance-method">
+    <div class="entry-detail" id="default_foreign_key:String-instance-method">
       <div class="signature">
         
-        def <strong>default_foreign_key</strong>
+        def <strong>default_foreign_key</strong> : <a href="../../String.html">String</a>
 
-        <a class="method-permalink" href="#default_foreign_key-instance-method">#</a>
+        <a class="method-permalink" href="#default_foreign_key%3AString-instance-method">#</a>
       </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/0ea2a6140f5f9ac770eeaa5badf1d479a5b60f69/src/avram/join.cr#L35" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/89bf1356c17f9cbc546f1a58e0b26ec1d91d7302/src/avram/join.cr#L35" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1927,23 +1927,23 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/0ea2a6140f5f9ac770eeaa5badf1d479a5b60f69/src/avram/join.cr#L5" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/89bf1356c17f9cbc546f1a58e0b26ec1d91d7302/src/avram/join.cr#L5" target="_blank">View source</a>]
         
       </div>
     </div>
   
-    <div class="entry-detail" id="from_column-instance-method">
+    <div class="entry-detail" id="from_column:String-instance-method">
       <div class="signature">
         
-        def <strong>from_column</strong>
+        def <strong>from_column</strong> : <a href="../../String.html">String</a>
 
-        <a class="method-permalink" href="#from_column-instance-method">#</a>
+        <a class="method-permalink" href="#from_column%3AString-instance-method">#</a>
       </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/0ea2a6140f5f9ac770eeaa5badf1d479a5b60f69/src/avram/join.cr#L27" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/89bf1356c17f9cbc546f1a58e0b26ec1d91d7302/src/avram/join.cr#L27" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1959,7 +1959,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/0ea2a6140f5f9ac770eeaa5badf1d479a5b60f69/src/avram/join.cr#L17" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/89bf1356c17f9cbc546f1a58e0b26ec1d91d7302/src/avram/join.cr#L17" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1975,39 +1975,39 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/0ea2a6140f5f9ac770eeaa5badf1d479a5b60f69/src/avram/join.cr#L5" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/89bf1356c17f9cbc546f1a58e0b26ec1d91d7302/src/avram/join.cr#L5" target="_blank">View source</a>]
         
       </div>
     </div>
   
-    <div class="entry-detail" id="to_column-instance-method">
+    <div class="entry-detail" id="to_column:String-instance-method">
       <div class="signature">
         
-        def <strong>to_column</strong>
+        def <strong>to_column</strong> : <a href="../../String.html">String</a>
 
-        <a class="method-permalink" href="#to_column-instance-method">#</a>
+        <a class="method-permalink" href="#to_column%3AString-instance-method">#</a>
       </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/0ea2a6140f5f9ac770eeaa5badf1d479a5b60f69/src/avram/join.cr#L31" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/89bf1356c17f9cbc546f1a58e0b26ec1d91d7302/src/avram/join.cr#L31" target="_blank">View source</a>]
         
       </div>
     </div>
   
-    <div class="entry-detail" id="to_sql-instance-method">
+    <div class="entry-detail" id="to_sql:String-instance-method">
       <div class="signature">
         
-        def <strong>to_sql</strong>
+        def <strong>to_sql</strong> : <a href="../../String.html">String</a>
 
-        <a class="method-permalink" href="#to_sql-instance-method">#</a>
+        <a class="method-permalink" href="#to_sql%3AString-instance-method">#</a>
       </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/0ea2a6140f5f9ac770eeaa5badf1d479a5b60f69/src/avram/join.cr#L19" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/89bf1356c17f9cbc546f1a58e0b26ec1d91d7302/src/avram/join.cr#L19" target="_blank">View source</a>]
         
       </div>
     </div>
