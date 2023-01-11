@@ -35,7 +35,7 @@ struct Int16
       FailedCast.new
     end
 
-    def to_db(value : Int16)
+    def to_db(value : Int16) : String
       value.to_s
     end
 

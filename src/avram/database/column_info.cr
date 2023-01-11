@@ -11,11 +11,11 @@ module Avram
     property column_default : String?
     property data_type : String
 
-    def nilable?
+    def nilable? : Bool
       is_nullable == "YES"
     end
 
-    def table
+    def table : Avram::Database::TableInfo
       TableInfo.new(
         table_name,
         table_type,

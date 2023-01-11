@@ -33,7 +33,7 @@ struct Int64
       SuccessfulCast(Int64).new value.to_i64
     end
 
-    def to_db(value : Int64)
+    def to_db(value : Int64) : String
       value.to_s
     end
 

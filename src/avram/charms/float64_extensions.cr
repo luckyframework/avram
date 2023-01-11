@@ -49,7 +49,7 @@ struct Float64
       SuccessfulCast(Float64).new value.to_f64
     end
 
-    def to_db(value : Float64)
+    def to_db(value : Float64) : String
       value.to_s
     end
 

@@ -24,7 +24,7 @@ module JSON::Serializable
       SuccessfulCast(JSON::Serializable).new T.from_json(value)
     end
 
-    def to_db(value)
+    def to_db(value) : String
       value.to_json
     end
 

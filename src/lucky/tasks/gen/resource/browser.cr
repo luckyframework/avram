@@ -136,11 +136,11 @@ class Gen::Resource::Browser < LuckyTask::Task
     io.puts "Generated #{class_name.colorize.bold} in #{filename.colorize.bold}"
   end
 
-  private def resource_name
-    resource_name?.not_nil!
+  private def resource_name : String
+    resource_name?.to_s
   end
 
-  private def resource_name?
+  private def resource_name? : String?
     ARGV.first?
   end
 end

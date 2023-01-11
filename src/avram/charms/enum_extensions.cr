@@ -32,7 +32,7 @@ abstract struct Enum
       SuccessfulCast.new(value)
     end
 
-    def to_db(value : T)
+    def to_db(value : T) : String
       value.value.to_s
     end
 

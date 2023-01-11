@@ -19,7 +19,7 @@ class Avram::Connection
     raise ConnectionError.new(connection_uri, database_class: @database_class)
   end
 
-  private def connection_uri
+  private def connection_uri : URI
     URI.parse(@connection_string)
   end
 end

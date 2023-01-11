@@ -28,7 +28,7 @@ describe "Preloading has_one associations" do
         SignInCredential::BaseQuery.new.preload_user
       ).first
 
-      user.sign_in_credential.not_nil!.user.should eq user
+      user.sign_in_credential.as(SignInCredential).user.should eq user
       SignInCredential::BaseQuery.times_called.should eq 1
     end
   end

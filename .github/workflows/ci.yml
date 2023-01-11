@@ -17,7 +17,7 @@ jobs:
       - name: Install Crystal
         uses: crystal-lang/install-crystal@v1
         with:
-          crystal: 1.4.1
+          crystal: 1.6.2
       - name: Install shards
         run: shards install
       - name: Format
@@ -36,7 +36,7 @@ jobs:
           - 13
           - 14
         crystal_version:
-          - 1.4.0
+          - 1.6.2
           - latest
         experimental:
           - false

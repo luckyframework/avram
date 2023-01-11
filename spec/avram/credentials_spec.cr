@@ -22,7 +22,7 @@ describe Avram::Credentials do
       conn = "postgres://user@/test?initial_pool_size=5&retry_attempts=4"
       creds = Avram::Credentials.parse?(conn)
 
-      creds.not_nil!.url.should eq conn
+      creds.as(Avram::Credentials).url.should eq conn
     end
   end
 

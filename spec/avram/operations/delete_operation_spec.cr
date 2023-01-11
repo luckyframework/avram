@@ -31,7 +31,7 @@ describe "Avram::DeleteOperation" do
       BasicDeleteUser.delete(user) do |operation, deleted_user|
         operation.valid?.should be_true
         operation.delete_status.should eq BasicDeleteUser::OperationStatus::Deleted
-        deleted_user.not_nil!.name.should eq user.name
+        deleted_user.as(User).name.should eq user.name
         UserQuery.new.select_count.should eq 0
       end
     end

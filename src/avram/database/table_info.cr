@@ -12,19 +12,19 @@ module Avram
     )
     end
 
-    def table?
+    def table? : Bool
       table_type == "BASE TABLE"
     end
 
-    def view?
+    def view? : Bool
       table_type == "VIEW"
     end
 
-    def column?(name : String)
+    def column?(name : String) : Bool
       column_names.includes?(name)
     end
 
-    def column_names
+    def column_names : Array(String)
       columns.map(&.column_name)
     end
 
@@ -32,7 +32,7 @@ module Avram
       columns.find(&.column_name.==(name))
     end
 
-    def migrations_table?
+    def migrations_table? : Bool
       table_name == "migrations"
     end
   end

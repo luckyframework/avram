@@ -189,7 +189,7 @@ describe Avram::Queryable do
 
       user = UserQuery.first?
       user.should_not be_nil
-      user.not_nil!.name.should eq "First"
+      user.as(User).name.should eq "First"
     end
 
     it "returns nil if no record found" do
@@ -206,7 +206,7 @@ describe Avram::Queryable do
       user_query = Avram::Events::QueryEvent.logged_events.last.query
 
       user.should_not be_nil
-      user.not_nil!.name.should eq "First"
+      user.as(User).name.should eq "First"
       user_query.should eq "SELECT #{User::COLUMN_SQL} FROM users ORDER BY users.id ASC LIMIT 1"
     end
 
@@ -270,7 +270,7 @@ describe Avram::Queryable do
       user = UserQuery.last?
 
       user.should_not be_nil
-      user.not_nil!.name.should eq "Last"
+      user.as(User).name.should eq "Last"
     end
 
     it "returns nil if last record is not found" do
@@ -298,7 +298,7 @@ describe Avram::Queryable do
       user_query = Avram::Events::QueryEvent.logged_events.last.query
 
       user.should_not be_nil
-      user.not_nil!.name.should eq "Last"
+      user.as(User).name.should eq "Last"
       user_query.should eq "SELECT #{User::COLUMN_SQL} FROM users ORDER BY users.id DESC LIMIT 1"
     end
 

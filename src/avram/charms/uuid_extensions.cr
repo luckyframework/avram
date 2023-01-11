@@ -25,7 +25,7 @@ struct UUID
       FailedCast.new
     end
 
-    def to_db(value : UUID)
+    def to_db(value : UUID) : String
       value.to_s
     end
 

@@ -242,7 +242,7 @@ describe "Avram::SaveOperation callbacks" do
 
     UpdateOperationWithSkipCallbacks.update(post, title: "A fancy post") do |operation, updated_post|
       updated_post.should_not eq nil
-      updated_post.not_nil!.title.should eq "A fancy post"
+      updated_post.as(Post).title.should eq "A fancy post"
 
       operation.callbacks_that_ran.should eq([
         "before_save_in_a_block",

@@ -49,7 +49,7 @@ class Avram::Params
   end
 
   def get(key : String)
-    get?(key).not_nil!
+    get?(key).not_nil! # ameba:disable Lint/NotNil
   end
 
   def get_all?(key : String)
@@ -57,7 +57,7 @@ class Avram::Params
   end
 
   def get_all(key : String)
-    get_all?(key).not_nil!
+    get_all?(key).not_nil! # ameba:disable Lint/NotNil
   end
 
   def nested_file?(key : String) : Hash(String, String)

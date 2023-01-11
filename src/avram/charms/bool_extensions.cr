@@ -29,7 +29,7 @@ struct Bool
       SuccessfulCast(Array(Bool)).new values
     end
 
-    def to_db(value : Bool)
+    def to_db(value : Bool) : String
       value.to_s
     end
 
