@@ -16,7 +16,7 @@ module Avram::Join
 
     abstract def join_type : String
 
-    def to_sql
+    def to_sql : String
       if !@using.empty?
         %(#{join_type} JOIN #{@to} USING (#{@using.join(", ")}))
       else
@@ -24,19 +24,19 @@ module Avram::Join
       end
     end
 
-    def from_column
+    def from_column : String
       "#{@from}.#{@primary_key || "id"}"
     end
 
-    def to_column
+    def to_column : String
       "#{@to}.#{@foreign_key || default_foreign_key}"
     end
 
-    def default_foreign_key
+    def default_foreign_key : String
       Wordsmith::Inflector.singularize(@from) + "_id"
     end
 
-    def clone
+    def clone : self
       self
     end
   end

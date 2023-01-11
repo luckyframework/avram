@@ -198,7 +198,7 @@ describe "Avram::SaveOperation with nested operation" do
       operation.save_tax_id.valid?.should be_true
       operation.save_email_address.valid?.should be_true
 
-      business = operation.record.not_nil!
+      business = operation.record.as(Business)
       business.name.should eq "Fubar"
       business.email_address!.address.should eq "foo@bar.com"
       business.tax_id!.number.should eq 123

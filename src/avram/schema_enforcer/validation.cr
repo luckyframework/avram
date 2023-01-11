@@ -6,15 +6,15 @@ abstract class Avram::SchemaEnforcer::Validation
 
   abstract def validate!
 
-  private def table_name
+  private def table_name : String
     model_class.table_name.to_s
   end
 
-  private def database_info
+  private def database_info : Avram::Database::DatabaseInfo
     model_class.database.database_info
   end
 
-  private def table_info
-    model_class.database_table_info.not_nil!
+  private def table_info : Avram::Database::TableInfo
+    model_class.database_table_info.as(Avram::Database::TableInfo)
   end
 end

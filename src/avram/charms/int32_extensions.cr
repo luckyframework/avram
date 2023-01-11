@@ -35,7 +35,7 @@ struct Int32
       SuccessfulCast(Array(Int32)).new values
     end
 
-    def to_db(value : Int32)
+    def to_db(value : Int32) : String
       value.to_s
     end
 

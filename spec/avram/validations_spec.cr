@@ -133,7 +133,7 @@ describe Avram::Validations do
       existing_user = UserFactory.new.name("Sally").nickname("Sal").create
       operation = UniquenessSaveOperation.new
       operation.name.value = existing_user.name
-      operation.nickname.value = existing_user.nickname.not_nil!.downcase
+      operation.nickname.value = existing_user.nickname.to_s.downcase
       operation.age.value = existing_user.age
 
       operation.save
@@ -148,7 +148,7 @@ describe Avram::Validations do
       existing_user = UserFactory.new.name("Sally").nickname("Sal").create
       operation = UniquenessSaveOperation.new(existing_user)
       operation.name.value = existing_user.name
-      operation.nickname.value = existing_user.nickname.not_nil!.downcase
+      operation.nickname.value = existing_user.nickname.to_s.downcase
       operation.age.value = existing_user.age
 
       operation.save

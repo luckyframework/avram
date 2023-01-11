@@ -100,7 +100,7 @@ describe "Avram::SaveOperation needs" do
       operation.created_by.should eq("Jane")
       operation.optional.should eq("bar")
       operation.not_db_related.value.should eq(4)
-      operation.image.value.not_nil!.filename.should eq "thumb.png"
+      operation.image.value.as(Avram::UploadedFile).filename.should eq "thumb.png"
     end
   end
 end

@@ -51,7 +51,7 @@ class Avram::SchemaEnforcer::EnsureExistingTable < Avram::SchemaEnforcer::Valida
     end
   end
 
-  private def table_missing?
+  private def table_missing? : Bool
     !model_class.database_table_info
   end
 end

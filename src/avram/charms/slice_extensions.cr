@@ -27,7 +27,7 @@ struct Slice(T)
       String.new(value)
     end
 
-    def to_db(value : String)
+    def to_db(value : String) : String
       value
     end
 

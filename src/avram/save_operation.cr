@@ -206,7 +206,7 @@ abstract class Avram::SaveOperation(T)
     # In most cases, that's just calling `to_s`, but in the case of an Array,
     # `value` is passed to `PQ::Param` to properly encode `[true]` to `{t}`, etc...
     private def cast_value(value : {{ column[:type] }})
-      value.not_nil!.class.adapter.to_db(value.as({{ column[:type] }}))
+      value.class.adapter.to_db(value.as({{ column[:type] }}))
     end
     {% end %}
   end
@@ -217,13 +217,13 @@ abstract class Avram::SaveOperation(T)
     if valid?
       transaction_committed = database.transaction do
         insert_or_update if !changes.empty? || !persisted?
-        after_save(record.not_nil!)
+        after_save(record.as(T))
         true
       end
 
       if transaction_committed
         self.save_status = OperationStatus::Saved
-        after_commit(record.not_nil!)
+        after_commit(record.as(T))
         Avram::Events::SaveSuccessEvent.publish(
           operation_class: self.class.name,
           attributes: generic_attributes
@@ -243,7 +243,7 @@ abstract class Avram::SaveOperation(T)
 
   def save! : T
     if save
-      record.not_nil!
+      record.as(T)
     else
       raise Avram::InvalidOperationError.new(operation: self)
     end

@@ -19,7 +19,7 @@ class String
       SuccessfulCast(Array(String)).new(values)
     end
 
-    def to_db(value : String)
+    def to_db(value : String) : String
       value
     end
 

@@ -116,7 +116,7 @@ describe "Avram::SaveOperation" do
     UserWithDefaultValidations.create(name: "TestName", nickname: "TestNickname", joined_at: Time.utc, age: 400) do |op, u|
       op.starts_nil.should eq("not nil!")
       u.should_not be_nil
-      u.not_nil!.nickname.should eq("TestNickname")
+      u.as(User).nickname.should eq("TestNickname")
     end
   end
 
@@ -161,7 +161,7 @@ describe "Avram::SaveOperation" do
     it "passes params to the block" do
       now = Time.utc.at_beginning_of_minute
       SaveUser.create(name: "Dan", age: 34, joined_at: now) do |_operation, user|
-        user = user.not_nil!
+        user = user.as(User)
         user.name.should eq "Dan"
         user.age.should eq 34
         user.joined_at.should eq now
@@ -225,7 +225,7 @@ describe "Avram::SaveOperation" do
           operation.created?.should be_false
           operation.updated?.should be_true
           UserQuery.new.select_count.should eq(1)
-          user = user.not_nil!
+          user = user.as(User)
           user.id.should eq(existing_user.id)
           user.name.should eq("Rich")
           user.nickname.should be_nil
@@ -252,7 +252,7 @@ describe "Avram::SaveOperation" do
           user_with_different_nickname.age.should eq(20)
           user_with_different_nickname.nickname.should eq(nil)
 
-          user = user.not_nil!
+          user = user.as(User)
           user.id.should_not eq(user_with_different_nickname.id)
           user.name.should eq("Rich")
           user.nickname.should eq("R.")
@@ -275,7 +275,7 @@ describe "Avram::SaveOperation" do
         )
 
         UserQuery.new.select_count.should eq(1)
-        user = user.not_nil!
+        user = user.as(User)
         user.id.should eq(existing_user.id)
         user.name.should eq("Rich")
         user.nickname.should be_nil
@@ -299,7 +299,7 @@ describe "Avram::SaveOperation" do
         user_with_different_nickname.age.should eq(20)
         user_with_different_nickname.nickname.should eq(nil)
 
-        user = user.not_nil!
+        user = user.as(User)
         user.id.should_not eq(user_with_different_nickname.id)
         user.name.should eq("Rich")
         user.nickname.should eq("R.")
@@ -379,7 +379,7 @@ describe "Avram::SaveOperation" do
       operation = SaveUser.new(params)
 
       operation.joined_at.value.should eq time
-      operation.joined_at.value.not_nil!.utc?.should be_true
+      operation.joined_at.value.as(Time).utc?.should be_true
     end
 
     it "gracefully handles bad inputs when parsing" do
@@ -575,7 +575,7 @@ describe "Avram::SaveOperation" do
       it "saves with all of the default values" do
         ModelWithDefaultValues::SaveOperation.create do |_operation, record|
           record.should_not eq nil
-          r = record.not_nil!
+          r = record.as(ModelWithDefaultValues)
           r.greeting.should eq "Hello there!"
           r.admin.should eq false
           r.age.should eq 30
@@ -588,7 +588,7 @@ describe "Avram::SaveOperation" do
       it "allows you to override the default values" do
         ModelWithDefaultValues::SaveOperation.create(greeting: "A fancy hat") do |_operation, record|
           record.should_not eq nil
-          r = record.not_nil!
+          r = record.as(ModelWithDefaultValues)
           r.greeting.should eq "A fancy hat"
           r.admin.should eq false
           r.age.should eq 30
@@ -612,7 +612,7 @@ describe "Avram::SaveOperation" do
         params = build_params("model_with_default_values:greeting=Hi&model_with_default_values:admin=true&model_with_default_values:age=4&model_with_default_values:money=100.23&model_with_default_values:published_at=#{published_at}&model_with_default_values:drafted_at=#{drafted_at}")
         OverrideDefaults.create(params) do |_operation, record|
           record.should_not eq nil
-          r = record.not_nil!
+          r = record.as(ModelWithDefaultValues)
           r.greeting.should eq "Hi"
           r.admin.should eq true
           r.age.should eq 4
@@ -633,7 +633,7 @@ describe "Avram::SaveOperation" do
         params = build_params("model_with_default_values:greeting=Hi")
         OverrideDefaults.create(params, greeting: "sup") do |_operation, record|
           record.should_not eq nil
-          r = record.not_nil!
+          r = record.as(ModelWithDefaultValues)
           r.greeting.should eq "sup"
         end
 
@@ -643,7 +643,7 @@ describe "Avram::SaveOperation" do
         params = build_params("model_with_default_values:greeting=Hi")
         OverrideDefaults.update(model, params, greeting: "General Kenobi") do |_operation, record|
           record.should_not eq nil
-          r = record.not_nil!
+          r = record.as(ModelWithDefaultValues)
           r.greeting.should eq "General Kenobi"
         end
       end
@@ -654,9 +654,9 @@ describe "Avram::SaveOperation" do
         Beat::SaveOperation.create(hash: "boots and pants".to_slice) do |op, beat|
           op.saved?.should eq(true)
           beat.should_not be_nil
-          beat.not_nil!.hash.blank?.should eq(false)
-          beat.not_nil!.hash.should eq(Bytes[98, 111, 111, 116, 115, 32, 97, 110, 100, 32, 112, 97, 110, 116, 115])
-          String.new(beat.not_nil!.hash).should eq("boots and pants")
+          beat.as(Beat).hash.blank?.should eq(false)
+          beat.as(Beat).hash.should eq(Bytes[98, 111, 111, 116, 115, 32, 97, 110, 100, 32, 112, 97, 110, 116, 115])
+          String.new(beat.as(Beat).hash).should eq("boots and pants")
         end
       end
     end
@@ -793,7 +793,7 @@ describe "Avram::SaveOperation" do
         params = build_params("false_val:nickname=falsey mcfalserson")
         SaveUserWithFalseValueValidations.update(user, params) do |operation, record|
           record.should_not eq nil
-          r = record.not_nil!
+          r = record.as(User)
           operation.valid?.should be_true
           r.nickname.should eq "falsey mcfalserson"
           r.available_for_hire.should eq false
@@ -918,7 +918,7 @@ describe "Avram::SaveOperation" do
       post = PostFactory.create
       AllowBlankComment.create(post_id: post.id, body: "") do |op, new_comment|
         op.valid?.should be_true
-        comment = new_comment.not_nil!
+        comment = new_comment.as(Comment)
         comment.body.should eq("")
       end
     end
@@ -926,7 +926,7 @@ describe "Avram::SaveOperation" do
       post = PostFactory.create
       AllowBlankComment.create(post_id: post.id, body: "not blank") do |op, new_comment|
         op.valid?.should be_true
-        comment = new_comment.not_nil!
+        comment = new_comment.as(Comment)
         comment.body.should eq("not blank")
       end
     end

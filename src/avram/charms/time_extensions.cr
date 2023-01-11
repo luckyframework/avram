@@ -71,7 +71,7 @@ struct Time
       SuccessfulCast(Array(Time)).new values
     end
 
-    def to_db(value : Time)
+    def to_db(value : Time) : String
       value.to_s("%F %X.%6N %z")
     end
 

@@ -17,7 +17,7 @@ module Avram
       WHERE columns.table_schema='public';
     SQL
 
-    def self.load(database : Avram::Database.class)
+    def self.load(database : Avram::Database.class) : DatabaseInfo
       column_infos = database.query(SQL_QUERY) { |rs| ColumnInfo.from_rs(rs) }
 
       grouped = column_infos.group_by(&.table)
@@ -33,11 +33,11 @@ module Avram
     def initialize(@table_infos)
     end
 
-    def table?(name : String)
+    def table?(name : String) : Bool
       table_names.includes?(name)
     end
 
-    def table_names
+    def table_names : Array(String)
       table_infos.map(&.table_name)
     end
 

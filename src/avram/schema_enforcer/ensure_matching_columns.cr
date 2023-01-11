@@ -38,7 +38,7 @@ class Avram::SchemaEnforcer::EnsureMatchingColumns < Avram::SchemaEnforcer::Vali
     end
   end
 
-  private def matching_error?
+  private def matching_error? : Bool
     !@missing_columns.empty? || !@optional_attribute_errors.empty? || !@required_attribute_errors.empty?
   end
 

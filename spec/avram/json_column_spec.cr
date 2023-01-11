@@ -95,9 +95,9 @@ describe "JSON Columns" do
       SaveBlob.create(metadata: BlobMetadata.from_json("{}")) do |operation, blob|
         operation.saved?.should be_true
         blob.should_not be_nil
-        blob.not_nil!.metadata.should be_a(BlobMetadata)
-        blob.not_nil!.metadata.name.should be_nil
-        blob.not_nil!.media.should be_nil
+        blob.as(Blob).metadata.should be_a(BlobMetadata)
+        blob.as(Blob).metadata.name.should be_nil
+        blob.as(Blob).media.should be_nil
       end
     end
 
