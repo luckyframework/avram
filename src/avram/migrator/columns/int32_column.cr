@@ -8,7 +8,7 @@ module Avram::Migrator::Columns
     end
 
     def column_type : String
-      "int"
+      "int4"
     end
   end
 end
