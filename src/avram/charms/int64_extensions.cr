@@ -46,8 +46,11 @@ struct Int64
       include Avram::IncludesCriteria(T, V)
 
       def select_sum : Int64?
-        if sum = super
-          sum.as(PG::Numeric).to_f.to_i64
+        case sum = super
+        when PG::Numeric
+          sum.to_f.to_i64
+        when Int
+          sum.to_i64
         end
       end
 

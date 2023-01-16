@@ -47,7 +47,12 @@ struct Int16
       include Avram::BetweenCriteria(T, V)
 
       def select_sum : Int64?
-        super.as(Int64?)
+        case sum = super
+        when PG::Numeric
+          sum.to_f.to_i64
+        when Int
+          sum.to_i64
+        end
       end
 
       def select_sum! : Int64
