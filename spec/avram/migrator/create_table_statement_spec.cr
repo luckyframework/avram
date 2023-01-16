@@ -28,11 +28,11 @@ describe Avram::Migrator::CreateTableStatement do
     built.statements.size.should eq 1
     built.statements.first.should eq <<-SQL
     CREATE TABLE users (
-      id serial PRIMARY KEY,
+      id serial4 PRIMARY KEY,
       created_at timestamptz NOT NULL DEFAULT NOW(),
       updated_at timestamptz NOT NULL DEFAULT NOW(),
       name text NOT NULL,
-      age int NOT NULL,
+      age int4 NOT NULL,
       completed boolean NOT NULL,
       joined_at timestamptz NOT NULL,
       amount_paid decimal(10,2) NOT NULL,
@@ -130,7 +130,7 @@ describe Avram::Migrator::CreateTableStatement do
     CREATE TABLE users (
       name text NOT NULL DEFAULT 'name',
       email text DEFAULT 'optional',
-      age int NOT NULL DEFAULT '1',
+      age int4 NOT NULL DEFAULT '1',
       num bigint NOT NULL DEFAULT '1',
       amount_paid decimal NOT NULL DEFAULT '1.0',
       completed boolean NOT NULL DEFAULT 'false',
@@ -157,7 +157,7 @@ describe Avram::Migrator::CreateTableStatement do
       built.statements.first.should eq <<-SQL
       CREATE TABLE users (
         name text NOT NULL,
-        age int NOT NULL,
+        age int4 NOT NULL,
         email text NOT NULL);
       SQL
       built.statements[1].should eq "CREATE INDEX users_name_index ON users USING btree (name);"

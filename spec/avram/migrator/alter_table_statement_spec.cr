@@ -32,7 +32,7 @@ describe Avram::Migrator::AlterTableStatement do
       ADD name text,
       ADD email text,
       ADD nickname text NOT NULL,
-      ADD age int NOT NULL DEFAULT '1',
+      ADD age int4 NOT NULL DEFAULT '1',
       ADD num bigint NOT NULL DEFAULT '1',
       ADD amount_paid decimal(10,5) NOT NULL DEFAULT '1.0',
       ADD completed boolean NOT NULL DEFAULT 'false',
@@ -41,7 +41,7 @@ describe Avram::Migrator::AlterTableStatement do
       ADD updated_at timestamptz,
       ADD future_time timestamptz NOT NULL DEFAULT '#{Time.local.to_utc}',
       ADD new_id uuid NOT NULL DEFAULT '46d9b2f0-0718-4d4c-a5a1-5af81d5b11e0',
-      ADD numbers int[],
+      ADD numbers int4[],
       DROP old_column,
       DROP employee_id;
     SQL
@@ -73,7 +73,7 @@ describe Avram::Migrator::AlterTableStatement do
     built.statements[0].should eq "ALTER TABLE users ALTER COLUMN id SET DATA TYPE bigint;"
     built.statements[1].should eq "ALTER TABLE users ALTER COLUMN age SET DATA TYPE decimal(1,2);"
     built.statements[2].should eq "ALTER TABLE users ALTER COLUMN name SET DATA TYPE citext;"
-    built.statements[3].should eq "ALTER TABLE users ALTER COLUMN total_score SET DATA TYPE int;"
+    built.statements[3].should eq "ALTER TABLE users ALTER COLUMN total_score SET DATA TYPE int4;"
   end
 
   it "can change column defaults" do
