@@ -209,5 +209,15 @@ describe "Preloading belongs_to associations" do
         comments[1].post.title.should eq("THIS IS CHANGED")
       end
     end
+
+    it "works for optional associations" do
+      with_lazy_load(enabled: false) do
+        business = BusinessFactory.new.create
+        email_address = EmailAddressFactory.create &.business_id(business.id)
+        email_address = EmailAddressQuery.preload_business(email_address)
+
+        email_address.business.try(&.id).should eq(business.id)
+      end
+    end
   end
 end
