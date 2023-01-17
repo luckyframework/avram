@@ -25,7 +25,7 @@ jobs:
       - name: Lint
         run: ./bin/ameba
 
-  specs:
+  specs__postgresql:
     strategy:
       fail-fast: false
       matrix:
@@ -77,3 +77,39 @@ jobs:
         env:
           BACKUP_DATABASE_URL: postgres://lucky:developer@localhost:5432/sample_backup
           DATABASE_URL: postgres://lucky:developer@localhost:5432/avram_dev
+  specs__cocroachdb:
+    strategy:
+      fail-fast: false
+      matrix:
+        cockroachdb_version: [22.2.2]
+        crystal_version: [1.6.2]
+    runs-on: ubuntu-latest
+    continue-on-error: false
+    steps:
+      - uses: actions/checkout@v2
+      - uses: crystal-lang/install-crystal@v1
+        with:
+          crystal: ${{matrix.crystal_version}}
+      - name: Install shards
+        run: shards install
+      - name: Install CockroachDB
+        run: |
+          sudo apt -y install tar wget
+          sudo mkdir -p /usr/local/lib/cockroach
+          wget https://binaries.cockroachdb.com/cockroach-v${{matrix.cockroachdb_version}}.linux-amd64.tgz
+          tar -xzf cockroach-v${{matrix.cockroachdb_version}}.linux-amd64.tgz
+          sudo cp -f cockroach-v${{matrix.cockroachdb_version}}.linux-amd64/cockroach /usr/local/bin/
+          sudo chmod +x /usr/local/bin/cockroach
+          sudo cp -rf cockroach-v${{matrix.cockroachdb_version}}.linux-amd64/lib/* /usr/local/lib/cockroach/
+        working-directory: /tmp
+      - name: Start CockroachDB
+        run: cockroach start-single-node --insecure --listen-addr=localhost:36257 --sql-addr=localhost:26257 --background
+      - name: Run integration test
+        run: ./script/integration_test
+        env:
+          DATABASE_URL: postgres://root@localhost:26257/avram_dev?sslmode=disable
+      - name: Run tests
+        run: crystal spec
+        env:
+          BACKUP_DATABASE_URL: postgres://root@localhost:26257/sample_backup?sslmode=disable
+          DATABASE_URL: postgres://root@localhost:26257/avram_dev?sslmode=disable
