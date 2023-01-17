@@ -107,9 +107,11 @@ jobs:
       - name: Run integration test
         run: ./script/integration_test
         env:
+          DATABASE_TYPE: cockroachdb
           DATABASE_URL: postgres://root@localhost:26257/avram_dev?sslmode=disable
       - name: Run tests
         run: crystal spec
         env:
           BACKUP_DATABASE_URL: postgres://root@localhost:26257/sample_backup?sslmode=disable
+          DATABASE_TYPE: cockroachdb
           DATABASE_URL: postgres://root@localhost:26257/avram_dev?sslmode=disable

@@ -1,5 +1,11 @@
 database_name = "avram_dev"
 
+module DbType
+  def self.cockroachdb?
+    ENV["DATABASE_TYPE"]? == "cockroachdb"
+  end
+end
+
 class TestDatabase < Avram::Database
 end
 
