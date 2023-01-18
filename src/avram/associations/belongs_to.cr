@@ -61,7 +61,8 @@ module Avram::Associations::BelongsTo
         return record if record._{{ assoc_name }}_preloaded? && !force
 
         new_record = record.dup
-        assoc = preload_query.id(record.{{ foreign_key }}).first?
+        assoc = record.{{ foreign_key }}.try { |id| preload_query.id(id).first? }
+
         new_record.__set_preloaded_{{ assoc_name }}(assoc)
         new_record
       end
