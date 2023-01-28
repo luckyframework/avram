@@ -6,7 +6,7 @@ module Avram::Migrator::Columns::PrimaryKeys
     end
 
     def column_type : String
-      "string"
+      "text"
     end
 
     def build : String

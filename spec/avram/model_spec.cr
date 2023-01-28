@@ -177,6 +177,26 @@ describe Avram::Model do
     end
   end
 
+  describe "models with custom string primary key" do
+    it "can be saved" do
+      item = LineItemFactory.create
+      DiscountFactory.create &.line_item_id(item.id)
+
+      discount = DiscountQuery.new.first
+      discount.id.should be_a String
+    end
+
+    it "can be deleted" do
+      item = LineItemFactory.create
+      DiscountFactory.create &.line_item_id(item.id)
+
+      discount = DiscountQuery.new.first
+      discount.delete
+
+      Discount::BaseQuery.all.size.should eq 0
+    end
+  end
+
   it "can infer the table name when omitted" do
     InferredTableNameModel.table_name.should eq("inferred_table_name_models")
   end

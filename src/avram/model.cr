@@ -107,23 +107,23 @@ abstract class Avram::Model
       :{{ type_declaration.var.stringify }}
     end
 
-    {% if type_declaration.type == "String" %}
-      {% if !value_genrator || value_generator && !value_generator.is_a?(Proc) %}
+    {% if type_declaration.type.stringify == "String" %}
+      {% if !value_generator || value_generator && !(value_generator.is_a?(ProcLiteral) || value_generator.is_a?(ProcPointer)) %}
           {% raise <<-ERROR
               When using a String primary_key, you must also specify a proc to generate the value.
 
               Example:
 
-                #{model_type.id} do
-                  primary_key id : String, -> { KSUID.new }
+                #{@type.id} do
+                  primary_key id : String, value_generator: ->{ KSUID.new }
                   ...
                 end
               ERROR
           %}
       {% end %}
 
-      def self.primary_key_value_generator
-        {{ value_generator.call }}
+      def self.primary_key_value_generator : String
+        {{value_generator}}.call
       end
     {% end %}
 
