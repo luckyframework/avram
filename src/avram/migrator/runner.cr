@@ -208,7 +208,7 @@ class Avram::Migrator::Runner
     self.class.migrations.sort_by(&.new.version.as(Int64))
   end
 
-  private def prepare_for_migration
+  private def prepare_for_migration(&)
     self.class.setup_migration_tracking_tables
     if pending_migrations.empty?
       unless @quiet

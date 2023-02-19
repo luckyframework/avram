@@ -127,7 +127,7 @@ class Gen::Migration < LuckyTask::Task
     TEXT
   end
 
-  def self.silence_output
+  def self.silence_output(&)
     temp_config(io: IO::Memory.new) do
       yield
     end

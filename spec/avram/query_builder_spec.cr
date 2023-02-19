@@ -345,7 +345,7 @@ private def new_query
   Avram::QueryBuilder.new(table: :users)
 end
 
-private def raises_unsupported_query
+private def raises_unsupported_query(&)
   expect_raises Avram::UnsupportedQueryError do
     yield Avram::QueryBuilder.new(table: :users)
   end
