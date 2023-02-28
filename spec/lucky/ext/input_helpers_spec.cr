@@ -359,7 +359,7 @@ private def array_attribute
   Avram::PermittedAttribute.new(name: :group, param: nil, value: ["one", "two"], param_key: "key")
 end
 
-private def view
+private def view(&)
   TestPage.new(build_context).tap do |page|
     yield page
   end.view.to_s

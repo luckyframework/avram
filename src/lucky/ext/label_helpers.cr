@@ -6,7 +6,7 @@ module Lucky::LabelHelpers
     )
   end
 
-  def label_for(field : Avram::PermittedAttribute, **html_options) : Nil
+  def label_for(field : Avram::PermittedAttribute, **html_options, &) : Nil
     label(merge_options(html_options, {"for" => input_id(field)})) do
       yield
     end
@@ -16,7 +16,7 @@ module Lucky::LabelHelpers
     Lucky::InputHelpers.error_message_for_unallowed_field
   end
 
-  def label_for(field, **options) : Nil
+  def label_for(field, **options, &) : Nil
     Lucky::InputHelpers.error_message_for_unallowed_field
     yield
   end

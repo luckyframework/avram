@@ -1,11 +1,11 @@
 module Lucky::SelectHelpers
-  def select_input(field : Avram::PermittedAttribute, **html_options) : Nil
+  def select_input(field : Avram::PermittedAttribute, **html_options, &) : Nil
     select_tag merge_options(html_options, {"name" => input_name(field)}) do
       yield
     end
   end
 
-  def multi_select_input(field : Avram::PermittedAttribute(Array), **html_options) : Nil
+  def multi_select_input(field : Avram::PermittedAttribute(Array), **html_options, &) : Nil
     select_tag [:multiple], merge_options(html_options, {"name" => input_name(field)}) do
       yield
     end

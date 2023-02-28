@@ -63,7 +63,7 @@ abstract class Avram::Factory
     end
   end
 
-  def self.build_attributes
+  def self.build_attributes(&)
     yield(new).attributes
   end
 
@@ -75,7 +75,7 @@ abstract class Avram::Factory
     new.create
   end
 
-  def self.create
+  def self.create(&)
     yield(new).create
   end
 
@@ -110,7 +110,7 @@ abstract class Avram::Factory
   #   factory.name("test")
   # end
   # ```
-  def self.create_pair
+  def self.create_pair(&)
     [1, 2].map do |n|
       self.create { |factory| yield(factory) }
     end

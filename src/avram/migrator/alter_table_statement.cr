@@ -107,7 +107,7 @@ class Avram::Migrator::AlterTableStatement
   #   DROP old_field"
   # ]
   # ```
-  def build
+  def build(&)
     with self yield
     self
   end

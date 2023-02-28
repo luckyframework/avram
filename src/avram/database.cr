@@ -13,7 +13,7 @@ abstract class Avram::Database
   end
 
   # :nodoc:
-  def self.configure(*args, **named_args, &block)
+  def self.configure(*args, **named_args, &_block)
     {% raise <<-ERROR
       You can't configure Avram::Database directly.
 
@@ -78,7 +78,7 @@ abstract class Avram::Database
   #   # Force a rollback with AppDatabase.rollback
   # end
   # ```
-  def self.transaction
+  def self.transaction(&)
     new.transaction do |*yield_args|
       yield *yield_args
     end
@@ -122,7 +122,7 @@ abstract class Avram::Database
     end
   {% end %}
 
-  def publish_query_event(query, args_, args, queryable)
+  def publish_query_event(query, args_, args, queryable, &)
     logging_args = DB::EnumerableConcat.build(args_, args).to_s
     Avram::Events::QueryEvent.publish(query: query, args: logging_args, queryable: queryable) do
       yield
@@ -145,14 +145,14 @@ abstract class Avram::Database
     settings.credentials.url
   end
 
-  def self.run
+  def self.run(&)
     new.run do |*yield_args|
       yield *yield_args
     end
   end
 
   # :nodoc:
-  def run
+  def run(&)
     with_connection do |conn|
       yield conn
     end
@@ -179,7 +179,7 @@ abstract class Avram::Database
   # must be passed a block and we
   # try to release the connection back to the pool
   # once the block is finished
-  private def with_connection
+  private def with_connection(&)
     key = object_id
     connections[key] ||= db.checkout
     connection = connections[key]
@@ -215,7 +215,7 @@ abstract class Avram::Database
   end
 
   # :nodoc:
-  def transaction : Bool
+  def transaction(&) : Bool
     with_connection do |conn|
       if current_transaction(conn).try(&._avram_joinable?)
         yield
@@ -232,7 +232,7 @@ abstract class Avram::Database
     self.class.connections
   end
 
-  private def wrap_in_transaction(conn)
+  private def wrap_in_transaction(conn, &)
     (current_transaction(conn) || conn).transaction do
       yield
     end

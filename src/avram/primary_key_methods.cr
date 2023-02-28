@@ -61,7 +61,7 @@ module Avram::PrimaryKeyMethods
   # user = SaveUser.create!(name: "Helen")
   # UserQuery.new.some_custom_preload_method.find(user.id)
   # ```
-  def reload : self
+  def reload(&) : self
     query = yield base_query_class.new
     query.find(id)
   end
