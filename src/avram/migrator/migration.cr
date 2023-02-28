@@ -91,7 +91,7 @@ abstract class Avram::Migrator::Migration::V1
   #   db.exec "DROP TABLE users;"
   # end
   # ```
-  private def execute_in_transaction(statements : Array(String))
+  private def execute_in_transaction(statements : Array(String), &)
     database = Avram.settings.database_to_migrate
     database.transaction do
       statements.each { |s| database.exec s }

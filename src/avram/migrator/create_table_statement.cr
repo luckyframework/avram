@@ -43,7 +43,7 @@ class Avram::Migrator::CreateTableStatement
   #   add :email : String, unique: true
   # end
   # ```
-  def build : CreateTableStatement
+  def build(&) : CreateTableStatement
     with self yield
     self
   end

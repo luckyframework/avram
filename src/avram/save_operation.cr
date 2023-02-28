@@ -84,7 +84,7 @@ abstract class Avram::SaveOperation(T)
   end
 
   # :nodoc:
-  def self.save(*args, **named_args, &block)
+  def self.save(*args, **named_args, &_block)
     {% raise <<-ERROR
       SaveOperations do not have a 'save' method.
 

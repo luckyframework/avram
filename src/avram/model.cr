@@ -39,7 +39,7 @@ abstract class Avram::Model
   end
 
   # Refer to `PrimaryKeyMethods#reload`
-  def reload(&block) : self
+  def reload(&) : self
     {% raise "Unable to call Avram::Model#reload on #{@type.name} because it does not have a primary key. Add a primary key or define your own `reload` method." %}
   end
 

@@ -24,7 +24,7 @@ abstract class Avram::Operation
   #   # operation is complete
   # end
   # ```
-  def self.run(*args, **named_args)
+  def self.run(*args, **named_args, &)
     params = Avram::Params.new
     run(params, *args, **named_args) do |operation, value|
       yield operation, value
@@ -50,7 +50,7 @@ abstract class Avram::Operation
   #   # operation is complete
   # end
   # ```
-  def self.run(params : Avram::Paramable, *args, **named_args)
+  def self.run(params : Avram::Paramable, *args, **named_args, &)
     operation = self.new(params, *args, **named_args)
     value = nil
 

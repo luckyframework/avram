@@ -63,7 +63,7 @@ end
 
 private class SaveLineItemBase < LineItem::SaveOperation
   permit_columns :name
-  getter locked : Bool = false
+  getter? locked : Bool = false
 
   before_save lock
 
@@ -74,7 +74,7 @@ end
 
 private class SaveLineItemSub < SaveLineItemBase
   permit_columns :name
-  getter loaded : Bool = false
+  getter? loaded : Bool = false
 
   before_save load
 
@@ -230,8 +230,8 @@ describe "Avram::SaveOperation callbacks" do
 
   it "runs before_save in parent class and before_save in child class" do
     SaveLineItemSub.create name: "A fancy hat" do |operation, record|
-      operation.locked.should be_true
-      operation.loaded.should be_true
+      operation.locked?.should be_true
+      operation.loaded?.should be_true
       operation.saved?.should be_true
       record.should be_a(LineItem)
     end

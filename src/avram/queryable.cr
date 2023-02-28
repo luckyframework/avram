@@ -80,12 +80,12 @@ module Avram::Queryable(T)
     clone.tap &.query.offset(nil)
   end
 
-  def distinct_on(&block) : self
+  def distinct_on(&) : self
     criteria = yield clone
     criteria.private_distinct_on
   end
 
-  def reset_where(&block) : self
+  def reset_where(&) : self
     criteria = yield clone
     criteria.private_reset_where
   end
@@ -137,7 +137,7 @@ module Avram::Queryable(T)
     clone.tap &.query.where(sql_clause)
   end
 
-  def where : self
+  def where(&) : self
     cloned = clone.tap &.query.where(Avram::Where::PrecedenceStart.new)
     result = yield cloned
 
@@ -156,7 +156,7 @@ module Avram::Queryable(T)
 
   # Run the `or` block first to grab the last WHERE clause and set its
   # conjunction to OR. Then call yield to set the next set of ORs
-  def or(&block) : self
+  def or(&) : self
     query.or &.itself
     yield self
   end
@@ -176,7 +176,7 @@ module Avram::Queryable(T)
     clone.tap &.query.random_order
   end
 
-  def group(&block) : self
+  def group(&) : self
     criteria = yield clone
     criteria.private_group
   end
@@ -259,7 +259,7 @@ module Avram::Queryable(T)
     end.to_h
   end
 
-  def each
+  def each(&)
     results.each do |result|
       yield result
     end
@@ -297,7 +297,7 @@ module Avram::Queryable(T)
     end
   end
 
-  def exec_scalar(&block)
+  def exec_scalar(&)
     new_query = yield query.clone
     database.scalar new_query.statement, args: new_query.args, queryable: schema_class.name
   end
@@ -312,7 +312,7 @@ module Avram::Queryable(T)
   #   end
   # end
   # ```
-  private def defaults : Nil
+  private def defaults(&) : Nil
     default = yield self
 
     self.query = default.query
