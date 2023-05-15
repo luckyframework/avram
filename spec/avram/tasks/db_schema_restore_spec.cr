@@ -17,15 +17,19 @@ describe Db::Schema::Restore do
 
   it "restores from the sample_backup file" do
     Avram.temp_config(database_to_migrate: SampleBackupDatabase) do
-      Db::Drop.new(quiet: true).run_task
-      Db::Create.new(quiet: true).run_task
-
+      Avram::Migrator::Runner.create_db(quiet?: true)
       Db::Schema::Restore.new(SQL_DUMP_FILE).run_task
 
       SampleBackupDatabase.run do |db|
         value = db.scalar("SELECT COUNT(*) FROM sample_records").as(Int64)
         value.should eq 0
       end
+
+      # HACK: This is needed because the `run` command above
+      # opens the DB, and since it's never closed, we can't drop it
+      SampleBackupDatabase.close_connections
+      # make sure this is dropped before another spec runs
+      Avram::Migrator::Runner.drop_db(quiet?: true)
     end
   end
 end

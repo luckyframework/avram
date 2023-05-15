@@ -34,18 +34,6 @@ Spec.before_each do
   Fiber.current.query_cache = LuckyCache::NullStore.new
 end
 
-class SampleBackupDatabase < Avram::Database
-end
-
-SampleBackupDatabase.configure do |settings|
-  settings.credentials = Avram::Credentials.parse?(ENV["BACKUP_DATABASE_URL"]?) || Avram::Credentials.new(
-    hostname: "db",
-    database: "sample_backup",
-    username: "lucky",
-    password: "developer"
-  )
-end
-
 Lucky::Session.configure do |settings|
   settings.key = "_app_session"
 end
