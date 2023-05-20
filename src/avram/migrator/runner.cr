@@ -48,7 +48,7 @@ class Avram::Migrator::Runner
   end
 
   def self.drop_db(quiet? : Bool = false)
-    DB.connect(credentials.connection_string) do |db|
+    DB.connect("#{credentials.connection_string}/#{db_user}") do |db|
       db.exec "DROP DATABASE IF EXISTS #{db_name}"
     end
     unless quiet?
@@ -57,7 +57,7 @@ class Avram::Migrator::Runner
   end
 
   def self.create_db(quiet? : Bool = false)
-    DB.connect(credentials.connection_string) do |db|
+    DB.connect("#{credentials.connection_string}/#{db_user}") do |db|
       db.exec "CREATE DATABASE #{db_name} WITH OWNER DEFAULT"
     end
     unless quiet?
