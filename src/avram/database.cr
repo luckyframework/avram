@@ -159,7 +159,7 @@ abstract class Avram::Database
   end
 
   # Close all available connections as well as the DB
-  def self.close_connections
+  def self.close_connections!
     connections.values.map(&.close)
     @@db.try(&.close)
   end
