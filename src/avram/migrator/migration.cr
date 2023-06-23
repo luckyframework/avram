@@ -111,9 +111,7 @@ abstract class Avram::Migrator::Migration::V1
     @prepared_statements = [] of String
   end
 
-  private def suppress_logging
-    Avram::QueryLog.dexter.temp_config(level: :none) do
-      yield
-    end
+  private def suppress_logging(&block)
+    Avram::QueryLog.dexter.temp_config(level: :none, &block)
   end
 end
