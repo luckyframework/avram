@@ -11,7 +11,6 @@ class Avram::Migrator::Runner
   class_getter migrations = [] of Avram::Migrator::Migration::V1.class
 
   def initialize(@quiet : Bool = false)
-    Avram::Log.dexter.configure(:none)
   end
 
   def self.db_name
@@ -103,9 +102,11 @@ class Avram::Migrator::Runner
   end
 
   def self.setup_migration_tracking_tables
-    db = Avram.settings.database_to_migrate
-    db.exec create_table_for_tracking_migrations
-    db.exec create_unique_index_for_migrations
+    suppress_logging do
+      db = Avram.settings.database_to_migrate
+      db.exec create_table_for_tracking_migrations
+      db.exec create_unique_index_for_migrations
+    end
   end
 
   private def self.create_table_for_tracking_migrations
@@ -134,6 +135,12 @@ class Avram::Migrator::Runner
     ENV.delete("PGPASSWORD") if self.db_password
     unless result.success?
       raise error_messages.to_s
+    end
+  end
+
+  private def self.suppress_logging
+    Avram::QueryLog.dexter.temp_config(level: :none) do
+      yield
     end
   end
 
