@@ -112,6 +112,8 @@ abstract class Avram::Migrator::Migration::V1
   end
 
   private def suppress_logging(&block)
-    Avram::QueryLog.dexter.temp_config(level: :none, &block)
+    Avram::QueryLog.dexter.temp_config(level: :none) do
+      return yield
+    end
   end
 end

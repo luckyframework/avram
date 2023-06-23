@@ -139,7 +139,9 @@ class Avram::Migrator::Runner
   end
 
   private def self.suppress_logging(&block)
-    Avram::QueryLog.dexter.temp_config(level: :none, &block)
+    Avram::QueryLog.dexter.temp_config(level: :none) do
+      return yield
+    end
   end
 
   def run_pending_migrations
