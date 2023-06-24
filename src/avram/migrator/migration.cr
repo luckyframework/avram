@@ -28,15 +28,17 @@ abstract class Avram::Migrator::Migration::V1
   # @prepared_statements array. Each statement is then executed in  a
   # transaction and tracked upon completion.
   def up(quiet = false)
-    if migrated?
-      puts "Already migrated #{self.class.name.colorize(:cyan)}"
-    else
-      reset_prepared_statements
-      migrate
-      execute_in_transaction @prepared_statements do |tx|
-        track_migration(tx)
-        unless quiet
-          puts "Migrated #{self.class.name.colorize(:green)}"
+    suppress_logging do
+      if migrated?
+        puts "Already migrated #{self.class.name.colorize(:cyan)}"
+      else
+        reset_prepared_statements
+        migrate
+        execute_in_transaction @prepared_statements do |tx|
+          track_migration(tx)
+          unless quiet
+            puts "Migrated #{self.class.name.colorize(:green)}"
+          end
         end
       end
     end
@@ -44,15 +46,17 @@ abstract class Avram::Migrator::Migration::V1
 
   # Same as #up except calls rollback method in migration.
   def down(quiet = false)
-    if pending?
-      puts "Already rolled back #{self.class.name.colorize(:cyan)}"
-    else
-      reset_prepared_statements
-      rollback
-      execute_in_transaction @prepared_statements do |tx|
-        untrack_migration(tx)
-        unless quiet
-          puts "Rolled back #{self.class.name.colorize(:green)}"
+    suppress_logging do
+      if pending?
+        puts "Already rolled back #{self.class.name.colorize(:cyan)}"
+      else
+        reset_prepared_statements
+        rollback
+        execute_in_transaction @prepared_statements do |tx|
+          untrack_migration(tx)
+          unless quiet
+            puts "Rolled back #{self.class.name.colorize(:green)}"
+          end
         end
       end
     end
@@ -63,9 +67,11 @@ abstract class Avram::Migrator::Migration::V1
   end
 
   def migrated?
-    Avram.settings
-      .database_to_migrate
-      .query_one? "SELECT id FROM migrations WHERE version = $1", version, as: MigrationId
+    suppress_logging do
+      Avram.settings
+        .database_to_migrate
+        .query_one? "SELECT id FROM migrations WHERE version = $1", version, as: MigrationId
+    end
   end
 
   private def track_migration(db : Avram::Database.class)
@@ -103,5 +109,11 @@ abstract class Avram::Migrator::Migration::V1
 
   def reset_prepared_statements
     @prepared_statements = [] of String
+  end
+
+  private def suppress_logging(&)
+    Avram::QueryLog.dexter.temp_config(level: :none) do
+      return yield
+    end
   end
 end
