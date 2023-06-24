@@ -15,6 +15,18 @@ TestDatabase.configure do |settings|
   )
 end
 
+class SampleBackupDatabase < Avram::Database
+end
+
+SampleBackupDatabase.configure do |settings|
+  settings.credentials = Avram::Credentials.parse?(ENV["BACKUP_DATABASE_URL"]?) || Avram::Credentials.new(
+    hostname: "db",
+    database: "sample_backup",
+    username: "lucky",
+    password: "developer"
+  )
+end
+
 DatabaseWithIncorrectSettings.configure do |settings|
   settings.credentials = Avram::Credentials.new(
     hostname: "db",

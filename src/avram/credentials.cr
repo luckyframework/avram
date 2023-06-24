@@ -80,6 +80,17 @@ class Avram::Credentials
     @query.try(&.strip).presence
   end
 
+  # This is the full connection string used
+  # to connect to the PostgreSQL server.
+  def connection_string : String
+    String.build do |io|
+      set_url_protocol(io)
+      set_url_creds(io)
+      set_url_host(io)
+      set_url_port(io)
+    end
+  end
+
   # Returns the postgres connection string without
   # any query params.
   def url_without_query_params : String
@@ -88,10 +99,7 @@ class Avram::Credentials
 
   private def build_url
     String.build do |io|
-      set_url_protocol(io)
-      set_url_creds(io)
-      set_url_host(io)
-      set_url_port(io)
+      io << connection_string
       set_url_db(io)
       set_url_query(io)
     end

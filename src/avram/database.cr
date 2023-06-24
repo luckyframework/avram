@@ -158,6 +158,12 @@ abstract class Avram::Database
     end
   end
 
+  # Close all available connections as well as the DB
+  def self.close_connections!
+    connections.values.map(&.close)
+    @@db.try(&.close)
+  end
+
   # :nodoc:
   def listen(*channels : String, &block : PQ::Notification ->) : Nil
     connection.connect_listen(*channels, &block)

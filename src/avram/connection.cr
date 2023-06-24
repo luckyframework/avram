@@ -1,10 +1,17 @@
 # Handles the connection to the DB.
 class Avram::Connection
+  private getter db : DB::Database? = nil
+
   def initialize(@connection_string : String, @database_class : Avram::Database.class)
   end
 
   def open : DB::Database
-    try_connection!
+    @db = try_connection!
+  end
+
+  def close
+    @db.try(&.close)
+    @db = nil
   end
 
   def connect_listen(*channels : String, &block : PQ::Notification ->) : Nil

@@ -47,33 +47,35 @@ class Avram::Migrator::Runner
   end
 
   def self.drop_db(quiet? : Bool = false)
-    run "dropdb #{cmd_args}"
+    DB.connect("#{credentials.connection_string}/#{db_user}") do |db|
+      db.exec "DROP DATABASE IF EXISTS #{db_name}"
+    end
     unless quiet?
       puts "Done dropping #{Avram::Migrator::Runner.db_name.colorize(:green)}"
-    end
-  rescue e : Exception
-    if (message = e.message) && message.includes?(%("#{self.db_name}" does not exist))
-      unless quiet?
-        puts "Already dropped #{self.db_name.colorize(:green)}"
-      end
-    else
-      raise e
     end
   end
 
   def self.create_db(quiet? : Bool = false)
-    run "createdb #{cmd_args}"
+    DB.connect("#{credentials.connection_string}/#{db_user}") do |db|
+      db.exec "CREATE DATABASE #{db_name} WITH OWNER DEFAULT"
+    end
     unless quiet?
-      puts "Done creating #{Avram::Migrator::Runner.db_name.colorize(:green)}"
+      puts "Done creating #{db_name.colorize(:green)}"
+    end
+  rescue e : DB::ConnectionRefused
+    message = e.message.to_s
+    if message.blank?
+      raise ConnectionError.new(URI.parse(credentials.url_without_query_params), Avram.settings.database_to_migrate)
+    else
+      raise e
     end
   rescue e : Exception
-    if (message = e.message) && message.includes?(%("#{self.db_name}" already exists))
+    message = e.message.to_s
+    if message.includes?(%("#{self.db_name}" already exists))
       unless quiet?
         puts "Already created #{self.db_name.colorize(:green)}"
       end
-    elsif (message = e.message) && (message.includes?("createdb: not found") || message.includes?("No command 'createdb' found"))
-      raise PGClientNotInstalledError.new(message)
-    elsif (message = e.message) && message.includes?("could not connect to database template")
+    elsif message.includes?("Cannot establish connection")
       raise PGNotRunningError.new(message)
     else
       raise e
