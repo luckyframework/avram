@@ -16,13 +16,21 @@ module JSON::Serializable
       value
     end
 
+    def parse(value : Array(JS)) forall JS
+      SuccessfulCast(Array(JS)).new value
+    end
+
     def parse(value : JSON::Serializable)
       SuccessfulCast(JSON::Serializable).new value
     end
 
-    def parse(value)
-      SuccessfulCast(JSON::Serializable).new T.from_json(value)
-    end
+    # def parse(value : String)
+    #   if value.starts_with?('[')
+    #     SuccessfulCast(JSON::Serializable).new Array(T).from_json(value)
+    #   else
+    #     SuccessfulCast(JSON::Serializable).new T.from_json(value)
+    #   end
+    # end
 
     def to_db(value) : String
       value.to_json

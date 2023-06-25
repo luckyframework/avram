@@ -1151,17 +1151,17 @@ describe Avram::Queryable do
         blob = BlobFactory.new.doc(JSON::Any.new({"foo" => JSON::Any.new("bar")})).create
 
         query = JSONQuery.new.static_foo
-        query.to_sql.should eq ["SELECT blobs.id, blobs.created_at, blobs.updated_at, blobs.doc, blobs.metadata, blobs.media FROM blobs WHERE blobs.doc = $1", "{\"foo\":\"bar\"}"]
+        query.to_sql.should eq ["SELECT blobs.id, blobs.created_at, blobs.updated_at, blobs.doc, blobs.metadata, blobs.media, blobs.servers FROM blobs WHERE blobs.doc = $1", "{\"foo\":\"bar\"}"]
         result = query.first
         result.should eq blob
 
         query2 = JSONQuery.new.foo_with_value("bar")
-        query2.to_sql.should eq ["SELECT blobs.id, blobs.created_at, blobs.updated_at, blobs.doc, blobs.metadata, blobs.media FROM blobs WHERE blobs.doc = $1", "{\"foo\":\"bar\"}"]
+        query2.to_sql.should eq ["SELECT blobs.id, blobs.created_at, blobs.updated_at, blobs.doc, blobs.metadata, blobs.media, blobs.servers FROM blobs WHERE blobs.doc = $1", "{\"foo\":\"bar\"}"]
         result = query2.first
         result.should eq blob
 
         query3 = JSONQuery.new.foo_with_value("baz")
-        query3.to_sql.should eq ["SELECT blobs.id, blobs.created_at, blobs.updated_at, blobs.doc, blobs.metadata, blobs.media FROM blobs WHERE blobs.doc = $1", "{\"foo\":\"baz\"}"]
+        query3.to_sql.should eq ["SELECT blobs.id, blobs.created_at, blobs.updated_at, blobs.doc, blobs.metadata, blobs.media, blobs.servers FROM blobs WHERE blobs.doc = $1", "{\"foo\":\"baz\"}"]
         expect_raises(Avram::RecordNotFoundError) do
           query3.first
         end
@@ -1564,7 +1564,7 @@ describe Avram::Queryable do
       query.to_prepared_sql.should eq(%{SELECT #{Bucket::COLUMN_SQL} FROM buckets WHERE buckets.names = '{"Larry","Moe","Curly"}' AND buckets.numbers = '{1,2,3}'})
 
       query = Blob::BaseQuery.new.doc(JSON::Any.new({"properties" => JSON::Any.new("sold")}))
-      query.to_prepared_sql.should eq(%{SELECT blobs.id, blobs.created_at, blobs.updated_at, blobs.doc, blobs.metadata, blobs.media FROM blobs WHERE blobs.doc = '{"properties":"sold"}'})
+      query.to_prepared_sql.should eq(%{SELECT blobs.id, blobs.created_at, blobs.updated_at, blobs.doc, blobs.metadata, blobs.media, blobs.servers FROM blobs WHERE blobs.doc = '{"properties":"sold"}'})
 
       query = UserQuery.new.name.in(["Don", "Juan"]).age.gt(30)
       query.to_prepared_sql.should eq(%{SELECT #{User::COLUMN_SQL} FROM users WHERE users.name = ANY ('{"Don","Juan"}') AND users.age > '30'})

@@ -11,7 +11,7 @@ module Avram::AddColumnAttributes
     private def extract_changes_from_params
       permitted_params.each do |key, value|
         {% for attribute in attributes %}
-          {% if attribute[:type].is_a?(Generic) %}
+          {% if attribute[:type].is_a?(Generic) && !attribute[:serialized] %}
             set_{{ attribute[:name] }}_from_param(value.as(Array(String))) if key == {{ attribute[:name].stringify }}
           {% else %}
             set_{{ attribute[:name] }}_from_param(value.as(String)) if key == {{ attribute[:name].stringify }}
@@ -72,7 +72,7 @@ module Avram::AddColumnAttributes
         {% end %}
       end
 
-      {% if attribute[:type].is_a?(Generic) %}
+      {% if attribute[:type].is_a?(Generic) && !attribute[:serialized] %}
       def set_{{ attribute[:name] }}_from_param(_value : Array(String))
         parse_result = {{ attribute[:type] }}.adapter.parse(_value)
 
@@ -81,6 +81,16 @@ module Avram::AddColumnAttributes
         else
           {{ attribute[:name] }}.add_error "is invalid"
         end
+      end
+      {% elsif attribute[:serialized] %}
+      def set_{{ attribute[:name] }}_from_param(_value : String)
+        {{ attribute[:name] }}.value = {{ attribute[:type] }}.from_json(_value)
+      rescue e : JSON::ParseException
+        {{ attribute[:name] }}.add_error "is invalid"
+      end
+
+      def set_{{ attribute[:name] }}_from_param(_value : {{ attribute[:type] }})
+        {{ attribute[:name] }}.value = _value
       end
       {% else %}
       def set_{{ attribute[:name] }}_from_param(_value)

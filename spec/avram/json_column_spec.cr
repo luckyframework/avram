@@ -92,12 +92,28 @@ describe "JSON Columns" do
 
   describe "serialized" do
     it "saves the serialized value" do
-      SaveBlob.create(metadata: BlobMetadata.from_json("{}")) do |operation, blob|
+      servers = Array(ServerMetadata).from_json(%([{"host":"east-1.example.com"}, {"host":"west-1.example.com"}]))
+      metadata = BlobMetadata.from_json("{}")
+      SaveBlob.create(metadata: metadata, servers: servers) do |operation, blob|
         operation.saved?.should be_true
         blob.should_not be_nil
         blob.as(Blob).metadata.should be_a(BlobMetadata)
         blob.as(Blob).metadata.name.should be_nil
         blob.as(Blob).media.should be_nil
+
+        blob.as(Blob).servers.should be_a(Array(ServerMetadata))
+        blob.as(Blob).servers.size.should eq(2)
+        blob.as(Blob).servers.first.host.should eq("east-1.example.com")
+      end
+    end
+
+    it "updates the serialized value" do
+      blob = BlobFactory.create(&.media(MediaMetadata.from_json(%({"image":"info.png"}))))
+      new_servers = Array(ServerMetadata).from_json(%([{"host":"east-1.example.com"}, {"host":"west-1.example.com"}]))
+      SaveBlob.update(blob, servers: new_servers, media: nil) do |operation, blobbed|
+        operation.saved?.should be_true
+        blobbed.media.should be_nil
+        blobbed.servers.size.should eq(2)
       end
     end
 
