@@ -397,6 +397,20 @@ describe Avram::Validations do
       result.should eq(true)
       attribute.valid?.should be_true
     end
+
+    it "properly displays errors for float" do
+      invalid_attribute = attribute(5.5)
+      result = Avram::Validations.validate_numeric(invalid_attribute, at_least: 9.8)
+      result.should eq(false)
+      invalid_attribute.valid?.should be_false
+      invalid_attribute.errors.should eq(["must be at least 9.8"])
+
+      invalid_attribute = attribute(34.6)
+      result = Avram::Validations.validate_numeric(invalid_attribute, no_more_than: 10.9)
+      result.should eq(false)
+      invalid_attribute.valid?.should be_false
+      invalid_attribute.errors.should eq(["must be no more than 10.9"])
+    end
   end
 
   describe "validate_format_of" do
