@@ -16,12 +16,12 @@ module JSON::Serializable
       value
     end
 
-    def parse(value : JSON::Serializable)
-      SuccessfulCast(JSON::Serializable).new value
+    def parse(value : Array(T))
+      SuccessfulCast(Array(T)).new value
     end
 
-    def parse(value)
-      SuccessfulCast(JSON::Serializable).new T.from_json(value)
+    def parse(value : JSON::Serializable)
+      SuccessfulCast(JSON::Serializable).new value
     end
 
     def to_db(value) : String
