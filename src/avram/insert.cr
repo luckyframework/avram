@@ -31,7 +31,7 @@ class Avram::Insert
   private def values_placeholders(params, offset = 0)
     String.build do |io|
       io << "("
-      io << params.values.map_with_index { |_v, index| "${offset + index + 1}" }.join(", ")
+      io << params.values.map_with_index { |_v, index| "$#{offset + index + 1}" }.join(", ")
       io << ")"
     end
   end
