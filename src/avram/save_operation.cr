@@ -23,6 +23,7 @@ abstract class Avram::SaveOperation(T)
   include Avram::InheritColumnAttributes
   include Avram::Upsert
   include Avram::AddColumnAttributes
+  include Avram::BulkInsert(T)
 
   enum OperationStatus
     Saved
@@ -196,6 +197,10 @@ abstract class Avram::SaveOperation(T)
     attributes_to_hash(column_attributes.select(&.changed?))
   end
 
+  def values : Hash(Symbol, String?)
+    attributes_to_hash(column_attributes)
+  end
+
   macro add_cast_value_methods(columns)
     private def cast_value(value : Nil)
       nil
@@ -307,8 +312,7 @@ abstract class Avram::SaveOperation(T)
   end
 
   private def insert_sql
-    insert_values = attributes_to_hash(column_attributes).compact
-    Avram::Insert.new(table_name, insert_values, T.column_names)
+    Avram::Insert.new(table_name, [values.compact], T.column_names)
   end
 
   private def attributes_to_hash(attributes) : Hash(Symbol, String?)
