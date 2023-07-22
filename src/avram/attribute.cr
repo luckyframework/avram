@@ -19,6 +19,7 @@ class Avram::Attribute(T)
   def permitted
     @_permitted ||= begin
       Avram::PermittedAttribute(T).new(name: @name, param: @param, value: @value, param_key: @param_key).tap do |attribute|
+        attribute.allow_blank = allow_blank?
         errors.each do |error|
           attribute.add_error error
         end

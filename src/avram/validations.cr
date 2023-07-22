@@ -93,7 +93,7 @@ module Avram::Validations
   ) : Bool
     no_errors = true
     attributes.each do |attribute|
-      if attribute.value.blank_for_validates_required?
+      if attribute.value.blank_for_validates_required? && !attribute.allow_blank?
         attribute.add_error(message)
         no_errors = false
       end

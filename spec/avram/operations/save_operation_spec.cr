@@ -83,13 +83,9 @@ private class SavePost < Post::SaveOperation
 end
 
 # This is to test an escape hatch where you don't want to
-# define a Nil type, but your field is optional
+# define a Nil type, but your String field can be an empty string
 private class AllowBlankComment < Comment::SaveOperation
-  skip_default_validations
-
-  before_save do
-    body.allow_blank = true
-  end
+  permit_columns body, post_id
 end
 
 module DefaultUserValidations
@@ -922,6 +918,15 @@ describe "Avram::SaveOperation" do
         comment.body.should eq("")
       end
     end
+    it "allows blank strings from params" do
+      post = PostFactory.create
+      params = build_params({comment: {post_id: post.id, body: ""}}.to_json, content_type: "application/json")
+      AllowBlankComment.create(params) do |op, new_comment|
+        op.valid?.should be_true
+        comment = new_comment.as(Comment)
+        comment.body.should eq("")
+      end
+    end
     it "still allows normal data to be saved" do
       post = PostFactory.create
       AllowBlankComment.create(post_id: post.id, body: "not blank") do |op, new_comment|
@@ -930,10 +935,18 @@ describe "Avram::SaveOperation" do
         comment.body.should eq("not blank")
       end
     end
-    it "fails at postgres when saving nil" do
+    it "fails at postgres when saving nil from named args" do
       post = PostFactory.create
       expect_raises(PQ::PQError) do
         AllowBlankComment.create(post_id: post.id) do |_op, _new_comment|
+        end
+      end
+    end
+    it "fails at postgres when saving nil from params" do
+      post = PostFactory.create
+      params = build_params({comment: {post_id: post.id}}.to_json, content_type: "application/json")
+      expect_raises(PQ::PQError) do
+        AllowBlankComment.create(params) do |_op, _new_comment|
         end
       end
     end

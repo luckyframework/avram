@@ -56,7 +56,9 @@ module Avram::AddColumnAttributes
           name: :{{ attribute[:name].id }},
           param: permitted_params["{{ attribute[:name] }}"]?,
           value: value,
-          param_key: self.class.param_key)
+          param_key: self.class.param_key).tap do |attr|
+            attr.allow_blank = {{ attribute[:allow_blank] }}
+        end
       end
 
       private def default_value_for_{{ attribute[:name] }}
@@ -96,7 +98,7 @@ module Avram::AddColumnAttributes
       def set_{{ attribute[:name] }}_from_param(_value)
         # In nilable types, `nil` is ok, and non-nilable types we will get the
         # "is required" error.
-        if _value.blank?
+        if _value.blank? && !{{ attribute[:name] }}.allow_blank?
           {{ attribute[:name] }}.value = nil
           return
         end
