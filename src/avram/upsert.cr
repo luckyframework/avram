@@ -63,7 +63,7 @@ module Avram::Upsert
       existing_record = find_existing_unique_record(operation)
 
       if existing_record
-        operation.record = existing_record
+        operation = new(existing_record, *args, **named_args)
       end
 
       operation.save!
@@ -74,7 +74,7 @@ module Avram::Upsert
       existing_record = find_existing_unique_record(operation)
 
       if existing_record
-        operation.record = existing_record
+        operation = new(existing_record, *args, **named_args)
       end
 
       operation.save
