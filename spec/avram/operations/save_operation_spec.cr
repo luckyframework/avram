@@ -107,6 +107,10 @@ private class UserWithDefaultValidations < User::SaveOperation
   end
 end
 
+private class ReturnOfTheBlob < Blob::SaveOperation
+  permit_columns :doc, :metadata
+end
+
 describe "Avram::SaveOperation" do
   it "calls the default validations after the before_save" do
     UserWithDefaultValidations.create(name: "TestName", nickname: "TestNickname", joined_at: Time.utc, age: 400) do |op, u|
@@ -674,6 +678,20 @@ describe "Avram::SaveOperation" do
         end
       end
     end
+
+    context "with JSON" do
+      it "creates the JSON value from params" do
+        params = build_params(%({"blob": {"doc": {"sort": "desc"}, "metadata": {"name": "filter", "code": 4}}}), content_type: "application/json")
+
+        ReturnOfTheBlob.create(params) do |op, blob|
+          op.valid?.should eq(true)
+          blob.should_not eq(nil)
+          blob.as(Blob).doc.as(JSON::Any)["sort"].as_s.should eq("desc")
+          blob.as(Blob).metadata.name.should eq("filter")
+          blob.as(Blob).metadata.code.should eq(4)
+        end
+      end
+    end
   end
 
   describe ".create!" do
@@ -811,6 +829,19 @@ describe "Avram::SaveOperation" do
           operation.valid?.should be_true
           r.nickname.should eq "falsey mcfalserson"
           r.available_for_hire.should eq false
+        end
+      end
+    end
+
+    context "with JSON" do
+      it "updates the JSON value from params" do
+        slime = BlobFactory.new.doc(JSON::Any.new({"sort" => JSON::Any.new("desc")})).create
+        params = build_params(%({"blob": {"doc": {"sort": "asc"}}}), content_type: "application/json")
+
+        ReturnOfTheBlob.update(slime, params) do |op, blob|
+          op.valid?.should eq(true)
+          blob.should_not eq(nil)
+          blob.as(Blob).doc.as(JSON::Any)["sort"].as_s.should eq("asc")
         end
       end
     end
