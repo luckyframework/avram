@@ -9,6 +9,7 @@ require "uuid"
 require "cadmium_transliterator"
 
 require "./ext/db/*"
+require "./ext/pg/*"
 require "./avram/object_extensions"
 require "./avram/criteria"
 require "./avram/type"
