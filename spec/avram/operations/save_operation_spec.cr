@@ -260,6 +260,17 @@ describe "Avram::SaveOperation" do
           user.joined_at.should eq(joined_at)
         end
       end
+
+      it "allows updating nilable fields to nil" do
+        UserFactory.create(&.name("test").total_score(100))
+        UpsertUserOperation.upsert(name: "test", total_score: nil) do |operation, updated_user|
+          operation.updated?.should eq(true)
+          updated_user.should_not eq(nil)
+          user = updated_user.as(User)
+          user.name.should eq("test")
+          user.total_score.should eq(nil)
+        end
+      end
     end
 
     describe ".upsert!" do
@@ -305,6 +316,13 @@ describe "Avram::SaveOperation" do
         user.nickname.should eq("R.")
         user.age.should eq(30)
         user.joined_at.should eq(joined_at)
+      end
+
+      it "allows updating nilable fields to nil" do
+        UserFactory.create(&.name("test").total_score(100))
+        user = UpsertUserOperation.upsert!(name: "test", total_score: nil)
+        user.name.should eq("test")
+        user.total_score.should eq(nil)
       end
 
       it "raises if the record is invalid" do
