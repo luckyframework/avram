@@ -4,7 +4,7 @@ class Comment < BaseModel
   table do
     primary_key custom_id : Int64
     timestamps
-    column body : String
+    column body : String, allow_blank: true
     belongs_to post : Post
   end
 end
