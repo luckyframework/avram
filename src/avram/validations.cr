@@ -174,20 +174,22 @@ module Avram::Validations
     no_errors
   end
 
-  # Validate the size of a `String` is exactly a certain size
+  # Validate the size of a `String` or `Array` is exactly a certain size
   #
   # ```
   # validate_size_of api_key, is: 32
+  # validate_size_of theme_colors, is: 4
   # ```
   def validate_size_of(
-    attribute : Avram::Attribute(String),
+    attribute : Avram::Attribute(String) | Avram::Attribute(Array(T)),
     *,
-    is exact_size,
+    is exact_size : Number,
     message : Avram::Attribute::ErrorMessage = Avram.settings.i18n_backend.get(:validate_exact_size_of),
     allow_nil : Bool = false
-  ) : Bool
+  ) : Bool forall T
     no_errors = true
-    if attribute.value.to_s.size != exact_size
+    size = attribute.value.try(&.size) || 0
+    if size != exact_size
       if !(allow_nil && attribute.value.nil?)
         attribute.add_error(message % exact_size)
         no_errors = false
@@ -197,20 +199,21 @@ module Avram::Validations
     no_errors
   end
 
-  # Validate the size of a `String` is within a `min` and/or `max`
+  # Validate the size of a `String` or `Array` is within a `min` and/or `max`
   #
   # ```
   # validate_size_of feedback, min: 18, max: 100
   # validate_size_of password, min: 12
+  # validate_size_of options, max: 10
   # ```
   # ameba:disable Metrics/CyclomaticComplexity
   def validate_size_of(
-    attribute : Avram::Attribute(String),
-    min = nil,
-    max = nil,
+    attribute : Avram::Attribute(String) | Avram::Attribute(Array(T)),
+    min : Number? = nil,
+    max : Number? = nil,
     message : Avram::Attribute::ErrorMessage? = nil,
     allow_nil : Bool = false
-  ) : Bool
+  ) : Bool forall T
     no_errors = true
     if !min.nil? && !max.nil? && min > max
       raise ImpossibleValidation.new(
@@ -219,7 +222,7 @@ module Avram::Validations
     end
 
     unless allow_nil && attribute.value.nil?
-      size = attribute.value.to_s.size
+      size = attribute.value.try(&.size) || 0
 
       if !min.nil? && size < min
         attribute.add_error(
