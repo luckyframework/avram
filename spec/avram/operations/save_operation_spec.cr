@@ -74,6 +74,10 @@ private class UpsertUserOperation < User::SaveOperation
   upsert_lookup_columns :name, :nickname
 end
 
+private class UpsertToken < Token::SaveOperation
+  upsert_lookup_columns :next_id
+end
+
 private class OverrideDefaults < ModelWithDefaultValues::SaveOperation
   permit_columns :greeting, :drafted_at, :published_at, :admin, :age, :money
 end
@@ -231,6 +235,17 @@ describe "Avram::SaveOperation" do
           user.nickname.should be_nil
           user.age.should eq(30)
           user.joined_at.should eq(joined_at)
+        end
+      end
+
+      it "updates the record using the same default value" do
+        TokenFactory.create(&.name("special").scopes(["name"]).next_id(4))
+
+        UpsertToken.upsert(next_id: 4, name: "Secret", scopes: ["red", "blue"]) do |op, token|
+          op.valid?.should eq(true)
+          token.should_not eq(nil)
+          token.as(Token).name.should eq("Secret")
+          token.as(Token).scopes.should eq(["red", "blue"])
         end
       end
 
