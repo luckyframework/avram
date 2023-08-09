@@ -1,6 +1,6 @@
 require "./validations/**"
 
-module Avram::DatabaseValidations(T)
+module Avram::DatabaseValidations(AvramModel)
   # Validates that the given attribute is unique in the database
   # All validation methods return `Bool`. `false` if any error is added, otherwise `true`
   #
@@ -25,7 +25,7 @@ module Avram::DatabaseValidations(T)
   # pass and Avram tries to save the record.
   private def validate_uniqueness_of(
     attribute : Avram::Attribute,
-    query : Avram::Criteria(T::BaseQuery, _),
+    query : Avram::Criteria(AvramModel::BaseQuery, _),
     message : Avram::Attribute::ErrorMessage = Avram.settings.i18n_backend.get(:validate_uniqueness_of)
   ) : Bool
     no_errors = true
@@ -64,7 +64,7 @@ module Avram::DatabaseValidations(T)
   # ```
   private def validate_uniqueness_of(
     attribute : Avram::Attribute,
-    query : T::BaseQuery,
+    query : AvramModel::BaseQuery,
     message : Avram::Attribute::ErrorMessage = Avram.settings.i18n_backend.get(:validate_uniqueness_of)
   ) : Bool
     no_errors = true
@@ -100,7 +100,7 @@ module Avram::DatabaseValidations(T)
     attribute : Avram::Attribute,
     message : Avram::Attribute::ErrorMessage = Avram.settings.i18n_backend.get(:validate_uniqueness_of)
   ) : Bool
-    validate_uniqueness_of(attribute: attribute, query: T::BaseQuery.new, message: message)
+    validate_uniqueness_of(attribute: attribute, query: AvramModel::BaseQuery.new, message: message)
   end
 
   private def limit_query(query)

@@ -93,7 +93,7 @@ module Avram::NeedyInitializerAndDeleteMethods
 
   macro generate_delete(attribute_method_args, attribute_params, with_params, with_bang)
     def self.delete{% if with_bang %}!{% end %}(
-      record : T,
+      record : AvramModel,
       params : Hash,
       **named_args
     )
@@ -105,7 +105,7 @@ module Avram::NeedyInitializerAndDeleteMethods
     end
 
     def self.delete{% if with_bang %}!{% end %}(
-        record : T,
+        record : AvramModel,
         {% if with_params %}params,{% end %}
         {% for type_declaration in OPERATION_NEEDS %}
           {{ type_declaration }},
@@ -144,7 +144,7 @@ module Avram::NeedyInitializerAndDeleteMethods
     {% end %}
 
     def initialize(
-        @record : T,
+        @record : AvramModel,
         @params : Avram::Paramable,
         {{ needs_method_args.id }}
         {{ attribute_method_args.id }}
@@ -153,7 +153,7 @@ module Avram::NeedyInitializerAndDeleteMethods
     end
 
     def initialize(
-        @record : T,
+        @record : AvramModel,
         {{ needs_method_args.id }}
         {{ attribute_method_args.id }}
     )

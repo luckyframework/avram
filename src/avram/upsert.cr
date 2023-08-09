@@ -58,7 +58,7 @@ module Avram::Upsert
   # end
   # ````
   macro upsert_lookup_columns(*attribute_names)
-    def self.upsert!(*args, **named_args) : T
+    def self.upsert!(*args, **named_args) : AvramModel
       operation = new(*args, **named_args)
       existing_record = find_existing_unique_record(operation)
 
@@ -81,8 +81,8 @@ module Avram::Upsert
       yield operation, operation.record
     end
 
-    def self.find_existing_unique_record(operation) : T?
-      T::BaseQuery.new
+    def self.find_existing_unique_record(operation) : AvramModel?
+      AvramModel::BaseQuery.new
         {% for attribute in attribute_names %}
           .{{ attribute.id }}.nilable_eq(operation.{{ attribute.id }}.value)
         {% end %}

@@ -133,7 +133,7 @@ module Avram::NeedyInitializerAndSaveMethods
 
   macro generate_update(attribute_method_args, attribute_params, with_params, with_bang)
     def self.update{% if with_bang %}!{% end %}(
-      record : T,
+      record : AvramModel,
       params : Hash,
       **named_args
     )
@@ -145,7 +145,7 @@ module Avram::NeedyInitializerAndSaveMethods
     end
 
     def self.update{% if with_bang %}!{% end %}(
-        record : T,
+        record : AvramModel,
         {% if with_params %}with params,{% end %}
         {% for type_declaration in OPERATION_NEEDS %}
           {{ type_declaration }},
@@ -189,7 +189,7 @@ module Avram::NeedyInitializerAndSaveMethods
     {% end %}
 
     def initialize(
-        @record : T,
+        @record : AvramModel,
         @params : Avram::Paramable,
         {{ needs_method_args.id }}
         {{ attribute_method_args.id }}
@@ -207,7 +207,7 @@ module Avram::NeedyInitializerAndSaveMethods
     end
 
     def initialize(
-        @record : T,
+        @record : AvramModel,
         {{ needs_method_args.id }}
         {{ attribute_method_args.id }}
     )
