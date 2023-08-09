@@ -14,6 +14,7 @@ describe "Preloading has_one associations" do
 
       admin = Admin::BaseQuery.new.preload_sign_in_credential
 
+      admin.first.sign_in_credential_preloaded?.should eq(true)
       admin.first.sign_in_credential.should eq sign_in_credential
     end
   end
@@ -49,6 +50,7 @@ describe "Preloading has_one associations" do
     with_lazy_load(enabled: false) do
       admin = AdminFactory.create
       SignInCredentialFactory.create &.user_id(admin.id)
+      admin.sign_in_credential_preloaded?.should eq(false)
 
       expect_raises Avram::LazyLoadError do
         admin.sign_in_credential
@@ -95,6 +97,7 @@ describe "Preloading has_one associations" do
         admin = Admin::BaseQuery.preload_sign_in_credential(admin)
 
         admin.sign_in_credential.should eq sign_in_credential
+        admin.sign_in_credential_preloaded?.should eq(true)
       end
     end
 

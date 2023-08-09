@@ -19,7 +19,8 @@ module Avram::Associations
       get_{{ assoc_name.id }}
     end
 
-    protected getter? _{{ assoc_name }}_preloaded : Bool = false
+    # Returns `true` if the association has been preloaded
+    getter? {{ assoc_name }}_preloaded : Bool = false
     private getter _preloaded_{{ assoc_name }} : {{ model }}?
   end
 
@@ -30,7 +31,7 @@ module Avram::Associations
       {% if !nilable %}
       raise Avram::MissingRequiredAssociationError.new(self.class, {{ model }}) if record.nil?
       {% end %}
-      @_{{ assoc_name }}_preloaded = true
+      @{{ assoc_name }}_preloaded = true
       @_preloaded_{{ assoc_name }} = record
     end
   end

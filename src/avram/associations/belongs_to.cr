@@ -30,7 +30,7 @@ module Avram::Associations::BelongsTo
 
   private macro define_belongs_to_private_assoc_getter(assoc_name, model, foreign_key, nilable)
     private def get_{{ assoc_name.id }}(allow_lazy : Bool = false) : {{ model }}{% if nilable %}?{% end %}
-      if _{{ assoc_name }}_preloaded?
+      if {{ assoc_name }}_preloaded?
         @_preloaded_{{ assoc_name }}{% unless nilable %}.not_nil!{% end %}
       elsif lazy_load_enabled? || allow_lazy
         {{ foreign_key }}.try do |value|
@@ -58,7 +58,7 @@ module Avram::Associations::BelongsTo
       end
 
       def self.preload_{{ assoc_name }}(record : {{ class_type }}, preload_query : {{ model }}::BaseQuery, force : Bool = false) : {{ class_type }}
-        return record if record._{{ assoc_name }}_preloaded? && !force
+        return record if record.{{ assoc_name }}_preloaded? && !force
 
         new_record = record.dup
         assoc = record.{{ foreign_key }}.try { |id| preload_query.id(id).first? }
@@ -78,7 +78,7 @@ module Avram::Associations::BelongsTo
 
       def self.preload_{{ assoc_name }}(records : Enumerable({{ class_type }}), preload_query : {{ model }}::BaseQuery, force : Bool = false) : Array({{ class_type }})
         ids = records.compact_map do |record|
-          if record._{{ assoc_name }}_preloaded? && !force
+          if record.{{ assoc_name }}_preloaded? && !force
             nil
           else
             record.{{ foreign_key }}
@@ -87,7 +87,7 @@ module Avram::Associations::BelongsTo
         empty_results = {} of {{ model }}::PrimaryKeyType => Array({{ model }})
         {{ assoc_name }} = ids.empty? ? empty_results  : preload_query.id.in(ids).results.group_by(&.id)
         records.map do |record|
-          if record._{{ assoc_name }}_preloaded? && !force
+          if record.{{ assoc_name }}_preloaded? && !force
             next record
           end
 

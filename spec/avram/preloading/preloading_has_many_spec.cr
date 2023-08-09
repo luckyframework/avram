@@ -17,6 +17,7 @@ describe "Preloading has_many associations" do
 
       posts.results.first.comments.should eq([comment])
       Comment::BaseQuery.times_called.should eq 1
+      posts.results.first.comments_preloaded?.should eq(true)
     end
   end
 
@@ -33,6 +34,7 @@ describe "Preloading has_many associations" do
       results = posts.results
       results.size.should eq(1)
       results.first.comments.should eq([comment])
+      results.first.comments_preloaded?.should eq(true)
     end
   end
 
@@ -76,6 +78,7 @@ describe "Preloading has_many associations" do
   it "raises error if accessing association without preloading first" do
     with_lazy_load(enabled: false) do
       post = PostFactory.create
+      post.comments_preloaded?.should eq(false)
 
       expect_raises Avram::LazyLoadError do
         post.comments
@@ -90,6 +93,7 @@ describe "Preloading has_many associations" do
       posts = Post::BaseQuery.new.preload_comments
 
       posts.results.first.comments.should eq([] of Comment)
+      posts.results.first.comments_preloaded?.should eq(true)
     end
   end
 
@@ -99,6 +103,7 @@ describe "Preloading has_many associations" do
     posts = Post::BaseQuery.new.preload_comments
 
     2.times { posts.results }
+    posts.results.first.comments_preloaded?.should eq(true)
   end
 
   it "does not fail when getting results multiple times with custom query" do

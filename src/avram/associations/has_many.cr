@@ -58,13 +58,13 @@ module Avram::Associations::HasMany
 
       {% if through %}
       def self.preload_{{ assoc_name }}(record : {{ class_type }}, preload_query : {{ model }}::BaseQuery, force : Bool = false) : {{ class_type }}
-        return record if record._{{ assoc_name }}_preloaded? && !force
+        return record if record.{{ assoc_name }}_preloaded? && !force
 
         preload_{{ assoc_name }}(records: [record], preload_query: preload_query, force: force).first
       end
       {% else %}
       def self.preload_{{ assoc_name }}(record : {{ class_type }}, preload_query : {{ model }}::BaseQuery, force : Bool = false) : {{ class_type }}
-        return record if record._{{ assoc_name }}_preloaded? && !force
+        return record if record.{{ assoc_name }}_preloaded? && !force
 
         new_record = record.dup
         new_record._preloaded_{{ assoc_name }} = preload_query.{{ foreign_key }}(record.id).results
@@ -102,7 +102,7 @@ module Avram::Associations::HasMany
       {% else %}
       def self.preload_{{ assoc_name }}(records : Enumerable({{ class_type }}), preload_query : {{ model }}::BaseQuery, force : Bool = false) : Array({{ class_type }})
         ids = records.compact_map do |record|
-          if record._{{ assoc_name }}_preloaded? && !force
+          if record.{{ assoc_name }}_preloaded? && !force
             nil
           else
             record.id
@@ -111,7 +111,7 @@ module Avram::Associations::HasMany
         empty_results = {} of {{ model }}::PrimaryKeyType => Array({{ model }})
         {{ assoc_name }} = ids.empty? ? empty_results  : preload_query.{{ foreign_key }}.in(ids).results.group_by(&.{{ foreign_key }})
         records.map do |record|
-            if record._{{ assoc_name }}_preloaded? && !force
+            if record.{{ assoc_name }}_preloaded? && !force
               next record
             end
 
@@ -171,10 +171,10 @@ module Avram::Associations::HasMany
 
   private macro define_has_many_lazy_loading(assoc_name, model, foreign_key, through)
     @_preloaded_{{ assoc_name }} : Array({{ model }})?
-    protected getter? _{{ assoc_name }}_preloaded : Bool = false
+    getter? {{ assoc_name }}_preloaded : Bool = false
 
     def _preloaded_{{ assoc_name }}=(vals : Array({{ model }})) : Array({{ model }})
-      @_{{ assoc_name }}_preloaded = true
+      @{{ assoc_name }}_preloaded = true
       @_preloaded_{{ assoc_name }} = vals
     end
 
