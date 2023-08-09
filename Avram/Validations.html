@@ -1752,7 +1752,7 @@ All validation methods return <code><a href="../Bool.html">Bool</a></code>. <cod
   </h2>
   
     
-      <a href="https://github.com/luckyframework/avram/blob/4b4d30bddfd1c00f734a783de746da16be35d953/src/avram/validations.cr#L7" target="_blank">
+      <a href="https://github.com/luckyframework/avram/blob/17d8dad324b73fb61a493cc3eb21620b4386ee2b/src/avram/validations.cr#L7" target="_blank">
         avram/validations.cr
       </a>
     
@@ -1841,16 +1841,16 @@ All validation methods return <code><a href="../Bool.html">Bool</a></code>. <cod
       </li>
     
       <li class="entry-summary">
-        <a href="#validate_size_of%28attribute%3AAvram%3A%3AAttribute%28String%29%2Cmin%3Dnil%2Cmax%3Dnil%2Cmessage%3AAvram%3A%3AAttribute%3A%3AErrorMessage%7CNil%3Dnil%2Callow_nil%3ABool%3Dfalse%29%3ABool-instance-method" class="signature"><strong>#validate_size_of</strong>(attribute : Avram::Attribute(String), min = <span class="n">nil</span>, max = <span class="n">nil</span>, message : Avram::Attribute::ErrorMessage | Nil = <span class="n">nil</span>, allow_nil : Bool = <span class="n">false</span>) : Bool</a>
+        <a href="#validate_size_of%28attribute%3AAvram%3A%3AAttribute%28String%29%7CAvram%3A%3AAttribute%28Array%28T%29%29%2Cmin%3ANumber%7CNil%3Dnil%2Cmax%3ANumber%7CNil%3Dnil%2Cmessage%3AAvram%3A%3AAttribute%3A%3AErrorMessage%7CNil%3Dnil%2Callow_nil%3ABool%3Dfalse%29%3ABoolforallT-instance-method" class="signature"><strong>#validate_size_of</strong>(attribute : Avram::Attribute(String) | Avram::Attribute(Array(T)), min : Number | Nil = <span class="n">nil</span>, max : Number | Nil = <span class="n">nil</span>, message : Avram::Attribute::ErrorMessage | Nil = <span class="n">nil</span>, allow_nil : Bool = <span class="n">false</span>) : Bool forall T</a>
         
-          <div class="summary"><p>Validate the size of a <code><a href="../String.html">String</a></code> is within a <code>min</code> and/or <code>max</code></p></div>
+          <div class="summary"><p>Validate the size of a <code><a href="../String.html">String</a></code> or <code><a href="../Array.html">Array</a></code> is within a <code>min</code> and/or <code>max</code></p></div>
         
       </li>
     
       <li class="entry-summary">
-        <a href="#validate_size_of%28attribute%3AAvram%3A%3AAttribute%28String%29%2C%2A%2Cisexact_size%2Cmessage%3AAvram%3A%3AAttribute%3A%3AErrorMessage%3DAvram.settings.i18n_backend.get%28%3Avalidate_exact_size_of%29%2Callow_nil%3ABool%3Dfalse%29%3ABool-instance-method" class="signature"><strong>#validate_size_of</strong>(attribute : Avram::Attribute(String), *, is exact_size, message : Avram::Attribute::ErrorMessage = <span class="t">Avram</span>.settings.i18n_backend.get(<span class="n">:validate_exact_size_of</span>), allow_nil : Bool = <span class="n">false</span>) : Bool</a>
+        <a href="#validate_size_of%28attribute%3AAvram%3A%3AAttribute%28String%29%7CAvram%3A%3AAttribute%28Array%28T%29%29%2C%2A%2Cisexact_size%3ANumber%2Cmessage%3AAvram%3A%3AAttribute%3A%3AErrorMessage%3DAvram.settings.i18n_backend.get%28%3Avalidate_exact_size_of%29%2Callow_nil%3ABool%3Dfalse%29%3ABoolforallT-instance-method" class="signature"><strong>#validate_size_of</strong>(attribute : Avram::Attribute(String) | Avram::Attribute(Array(T)), *, is exact_size : Number, message : Avram::Attribute::ErrorMessage = <span class="t">Avram</span>.settings.i18n_backend.get(<span class="n">:validate_exact_size_of</span>), allow_nil : Bool = <span class="n">false</span>) : Bool forall T</a>
         
-          <div class="summary"><p>Validate the size of a <code><a href="../String.html">String</a></code> is exactly a certain size</p></div>
+          <div class="summary"><p>Validate the size of a <code><a href="../String.html">String</a></code> or <code><a href="../Array.html">Array</a></code> is exactly a certain size</p></div>
         
       </li>
     
@@ -1915,7 +1915,7 @@ as invalid for any value other than <code>true</code>.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/4b4d30bddfd1c00f734a783de746da16be35d953/src/avram/validations.cr#L109" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/17d8dad324b73fb61a493cc3eb21620b4386ee2b/src/avram/validations.cr#L109" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1938,7 +1938,7 @@ field invalid.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/4b4d30bddfd1c00f734a783de746da16be35d953/src/avram/validations.cr#L39" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/17d8dad324b73fb61a493cc3eb21620b4386ee2b/src/avram/validations.cr#L39" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1964,7 +1964,7 @@ field invalid.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/4b4d30bddfd1c00f734a783de746da16be35d953/src/avram/validations.cr#L134" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/17d8dad324b73fb61a493cc3eb21620b4386ee2b/src/avram/validations.cr#L134" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1990,7 +1990,7 @@ field invalid.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/4b4d30bddfd1c00f734a783de746da16be35d953/src/avram/validations.cr#L65" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/17d8dad324b73fb61a493cc3eb21620b4386ee2b/src/avram/validations.cr#L65" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2014,7 +2014,7 @@ given regex.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/4b4d30bddfd1c00f734a783de746da16be35d953/src/avram/validations.cr#L312" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/17d8dad324b73fb61a493cc3eb21620b4386ee2b/src/avram/validations.cr#L315" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2037,7 +2037,7 @@ given regex.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/4b4d30bddfd1c00f734a783de746da16be35d953/src/avram/validations.cr#L155" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/17d8dad324b73fb61a493cc3eb21620b4386ee2b/src/avram/validations.cr#L155" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2058,7 +2058,7 @@ given regex.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/4b4d30bddfd1c00f734a783de746da16be35d953/src/avram/validations.cr#L243" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/17d8dad324b73fb61a493cc3eb21620b4386ee2b/src/avram/validations.cr#L246" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2082,7 +2082,7 @@ validate_numeric count, at_least: <span class="n">0</span>, no_more_than: <span 
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/4b4d30bddfd1c00f734a783de746da16be35d953/src/avram/validations.cr#L260" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/17d8dad324b73fb61a493cc3eb21620b4386ee2b/src/avram/validations.cr#L263" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2107,53 +2107,55 @@ marked as invalid if the value is <code>nil</code>, or &quot;blank&quot; (empty 
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/4b4d30bddfd1c00f734a783de746da16be35d953/src/avram/validations.cr#L90" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/17d8dad324b73fb61a493cc3eb21620b4386ee2b/src/avram/validations.cr#L90" target="_blank">View source</a>]
         
       </div>
     </div>
   
-    <div class="entry-detail" id="validate_size_of(attribute:Avram::Attribute(String),min=nil,max=nil,message:Avram::Attribute::ErrorMessage|Nil=nil,allow_nil:Bool=false):Bool-instance-method">
+    <div class="entry-detail" id="validate_size_of(attribute:Avram::Attribute(String)|Avram::Attribute(Array(T)),min:Number|Nil=nil,max:Number|Nil=nil,message:Avram::Attribute::ErrorMessage|Nil=nil,allow_nil:Bool=false):BoolforallT-instance-method">
       <div class="signature">
         
-        def <strong>validate_size_of</strong>(attribute : <a href="../Avram/Attribute.html">Avram::Attribute</a>(<a href="../String.html">String</a>), min = <span class="n">nil</span>, max = <span class="n">nil</span>, message : <a href="../Avram/Attribute/ErrorMessage.html">Avram::Attribute::ErrorMessage</a> | <a href="../Nil.html">Nil</a> = <span class="n">nil</span>, allow_nil : <a href="../Bool.html">Bool</a> = <span class="n">false</span>) : <a href="../Bool.html">Bool</a>
+        def <strong>validate_size_of</strong>(attribute : <a href="../Avram/Attribute.html">Avram::Attribute</a>(<a href="../String.html">String</a>) | <a href="../Avram/Attribute.html">Avram::Attribute</a>(<a href="../Array.html">Array</a>(T)), min : Number | <a href="../Nil.html">Nil</a> = <span class="n">nil</span>, max : Number | <a href="../Nil.html">Nil</a> = <span class="n">nil</span>, message : <a href="../Avram/Attribute/ErrorMessage.html">Avram::Attribute::ErrorMessage</a> | <a href="../Nil.html">Nil</a> = <span class="n">nil</span>, allow_nil : <a href="../Bool.html">Bool</a> = <span class="n">false</span>) : <a href="../Bool.html">Bool</a> forall T
 
-        <a class="method-permalink" href="#validate_size_of%28attribute%3AAvram%3A%3AAttribute%28String%29%2Cmin%3Dnil%2Cmax%3Dnil%2Cmessage%3AAvram%3A%3AAttribute%3A%3AErrorMessage%7CNil%3Dnil%2Callow_nil%3ABool%3Dfalse%29%3ABool-instance-method">#</a>
+        <a class="method-permalink" href="#validate_size_of%28attribute%3AAvram%3A%3AAttribute%28String%29%7CAvram%3A%3AAttribute%28Array%28T%29%29%2Cmin%3ANumber%7CNil%3Dnil%2Cmax%3ANumber%7CNil%3Dnil%2Cmessage%3AAvram%3A%3AAttribute%3A%3AErrorMessage%7CNil%3Dnil%2Callow_nil%3ABool%3Dfalse%29%3ABoolforallT-instance-method">#</a>
       </div>
       
         <div class="doc">
           
-          <p>Validate the size of a <code><a href="../String.html">String</a></code> is within a <code>min</code> and/or <code>max</code></p>
+          <p>Validate the size of a <code><a href="../String.html">String</a></code> or <code><a href="../Array.html">Array</a></code> is within a <code>min</code> and/or <code>max</code></p>
 <pre><code class="language-crystal">validate_size_of feedback, min: <span class="n">18</span>, max: <span class="n">100</span>
-validate_size_of password, min: <span class="n">12</span></code></pre>
+validate_size_of password, min: <span class="n">12</span>
+validate_size_of options, max: <span class="n">10</span></code></pre>
 <p>ameba:disable Metrics/CyclomaticComplexity</p>
         </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/4b4d30bddfd1c00f734a783de746da16be35d953/src/avram/validations.cr#L207" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/17d8dad324b73fb61a493cc3eb21620b4386ee2b/src/avram/validations.cr#L210" target="_blank">View source</a>]
         
       </div>
     </div>
   
-    <div class="entry-detail" id="validate_size_of(attribute:Avram::Attribute(String),*,isexact_size,message:Avram::Attribute::ErrorMessage=Avram.settings.i18n_backend.get(:validate_exact_size_of),allow_nil:Bool=false):Bool-instance-method">
+    <div class="entry-detail" id="validate_size_of(attribute:Avram::Attribute(String)|Avram::Attribute(Array(T)),*,isexact_size:Number,message:Avram::Attribute::ErrorMessage=Avram.settings.i18n_backend.get(:validate_exact_size_of),allow_nil:Bool=false):BoolforallT-instance-method">
       <div class="signature">
         
-        def <strong>validate_size_of</strong>(attribute : <a href="../Avram/Attribute.html">Avram::Attribute</a>(<a href="../String.html">String</a>), *, is exact_size, message : <a href="../Avram/Attribute/ErrorMessage.html">Avram::Attribute::ErrorMessage</a> = <span class="t">Avram</span>.settings.i18n_backend.get(<span class="n">:validate_exact_size_of</span>), allow_nil : <a href="../Bool.html">Bool</a> = <span class="n">false</span>) : <a href="../Bool.html">Bool</a>
+        def <strong>validate_size_of</strong>(attribute : <a href="../Avram/Attribute.html">Avram::Attribute</a>(<a href="../String.html">String</a>) | <a href="../Avram/Attribute.html">Avram::Attribute</a>(<a href="../Array.html">Array</a>(T)), *, is exact_size : Number, message : <a href="../Avram/Attribute/ErrorMessage.html">Avram::Attribute::ErrorMessage</a> = <span class="t">Avram</span>.settings.i18n_backend.get(<span class="n">:validate_exact_size_of</span>), allow_nil : <a href="../Bool.html">Bool</a> = <span class="n">false</span>) : <a href="../Bool.html">Bool</a> forall T
 
-        <a class="method-permalink" href="#validate_size_of%28attribute%3AAvram%3A%3AAttribute%28String%29%2C%2A%2Cisexact_size%2Cmessage%3AAvram%3A%3AAttribute%3A%3AErrorMessage%3DAvram.settings.i18n_backend.get%28%3Avalidate_exact_size_of%29%2Callow_nil%3ABool%3Dfalse%29%3ABool-instance-method">#</a>
+        <a class="method-permalink" href="#validate_size_of%28attribute%3AAvram%3A%3AAttribute%28String%29%7CAvram%3A%3AAttribute%28Array%28T%29%29%2C%2A%2Cisexact_size%3ANumber%2Cmessage%3AAvram%3A%3AAttribute%3A%3AErrorMessage%3DAvram.settings.i18n_backend.get%28%3Avalidate_exact_size_of%29%2Callow_nil%3ABool%3Dfalse%29%3ABoolforallT-instance-method">#</a>
       </div>
       
         <div class="doc">
           
-          <p>Validate the size of a <code><a href="../String.html">String</a></code> is exactly a certain size</p>
-<pre><code class="language-crystal">validate_size_of api_key, is: <span class="n">32</span></code></pre>
+          <p>Validate the size of a <code><a href="../String.html">String</a></code> or <code><a href="../Array.html">Array</a></code> is exactly a certain size</p>
+<pre><code class="language-crystal">validate_size_of api_key, is: <span class="n">32</span>
+validate_size_of theme_colors, is: <span class="n">4</span></code></pre>
         </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/4b4d30bddfd1c00f734a783de746da16be35d953/src/avram/validations.cr#L182" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/17d8dad324b73fb61a493cc3eb21620b4386ee2b/src/avram/validations.cr#L183" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2191,7 +2193,7 @@ validations inside of the block.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/4b4d30bddfd1c00f734a783de746da16be35d953/src/avram/validations.cr#L22" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/17d8dad324b73fb61a493cc3eb21620b4386ee2b/src/avram/validations.cr#L22" target="_blank">View source</a>]
         
       </div>
     </div>
