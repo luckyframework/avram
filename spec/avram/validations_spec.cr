@@ -309,6 +309,16 @@ describe Avram::Validations do
       result = Avram::Validations.validate_size_of(just_right_attribute, is: 10)
       result.should eq(true)
       just_right_attribute.valid?.should be_true
+
+      range_array_attribute = attribute(["one", "two"])
+      result = Avram::Validations.validate_size_of(range_array_attribute, min: 1, max: 3)
+      result.should eq(true)
+      range_array_attribute.valid?.should be_true
+
+      exact_array_attribute = attribute(["one", "two"])
+      result = Avram::Validations.validate_size_of(range_array_attribute, is: 2)
+      result.should eq(true)
+      exact_array_attribute.valid?.should be_true
     end
 
     it "raises an error for an impossible condition" do
