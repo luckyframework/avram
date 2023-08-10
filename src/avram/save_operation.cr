@@ -287,14 +287,16 @@ abstract class Avram::SaveOperation(T)
   private def insert : T
     self.created_at.value ||= Time.utc if responds_to?(:created_at)
     self.updated_at.value ||= Time.utc if responds_to?(:updated_at)
-    @record = database.query insert_sql.statement, args: insert_sql.args do |rs|
+    sql = insert_sql
+    @record = database.query sql.statement, args: sql.args do |rs|
       @record = T.from_rs(rs).first
     end
   end
 
   private def update(id) : T
     self.updated_at.value = Time.utc if responds_to?(:updated_at)
-    @record = database.query update_query(id).statement_for_update(changes), args: update_query(id).args_for_update(changes) do |rs|
+    query = update_query(id)
+    @record = database.query query.statement_for_update(changes), args: query.args_for_update(changes) do |rs|
       @record = T.from_rs(rs).first
     end
   end
