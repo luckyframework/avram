@@ -9,7 +9,7 @@ module Avram::ParamKeyOverride
 
   macro define_param_key_override
     macro param_key(key)
-      def self.param_key
+      def self.param_key : String
         \{{ key.id.stringify }}
       end
     end

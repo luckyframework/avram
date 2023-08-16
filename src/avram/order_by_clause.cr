@@ -5,3 +5,5 @@ module Avram
     abstract def reversed : self
   end
 end
+
+require "./order_by_clause/*"

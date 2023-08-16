@@ -31,7 +31,7 @@ abstract class Avram::DeleteOperation(T)
     property delete_status : OperationStatus = OperationStatus::Unperformed
   end
 
-  def self.param_key
+  def self.param_key : String
     T.name.underscore
   end
 
@@ -59,26 +59,27 @@ abstract class Avram::DeleteOperation(T)
   end
 
   # :nodoc:
-  def default_validations; end
+  def default_validations : Nil
+  end
 
   # Returns `true` if all attributes are valid,
   # and there's no custom errors
-  def valid?
+  def valid? : Bool
     default_validations
     custom_errors.empty? && attributes.all?(&.valid?)
   end
 
-  def mark_as_deleted
+  def mark_as_deleted : Bool
     self.delete_status = OperationStatus::Deleted
     true
   end
 
   # Returns true if the operation has run and saved the record successfully
-  def deleted?
+  def deleted? : Bool
     delete_status == OperationStatus::Deleted
   end
 
-  def mark_as_failed
+  def mark_as_failed : Bool
     self.delete_status = OperationStatus::DeleteFailed
     false
   end

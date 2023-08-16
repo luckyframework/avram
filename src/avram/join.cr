@@ -2,7 +2,8 @@ require "wordsmith"
 
 module Avram::Join
   abstract class SqlClause
-    getter :from, :to, :from_column, :to_column
+    getter from : TableName
+    getter to : TableName
 
     def initialize(
       @from : TableName,
