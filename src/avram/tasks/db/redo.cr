@@ -1,5 +1,3 @@
-require "colorize"
-
 class Db::Redo < BaseTask
   summary "Rollback and run just the last migration"
 

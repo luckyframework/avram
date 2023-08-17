@@ -1,5 +1,3 @@
-require "colorize"
-
 class Db::Migrate < BaseTask
   summary "Run any pending migrations"
 

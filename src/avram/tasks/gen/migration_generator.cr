@@ -1,22 +1,20 @@
-require "colorize"
 require "ecr"
 require "file_utils"
 
 class Avram::Migrator::MigrationGenerator
   include LuckyTask::TextHelpers
 
-  getter :name
+  getter name : String
   @_version : String?
-  @name : String
   @migrate_contents : String?
   @rollback_contents : String?
 
   ECR.def_to_s "#{__DIR__}/migration.ecr"
 
-  def initialize(@name)
+  def initialize(@name : String)
   end
 
-  def initialize(@name, @migrate_contents : String, @rollback_contents : String)
+  def initialize(@name : String, @migrate_contents : String, @rollback_contents : String)
   end
 
   def generate(@_version = @_version)

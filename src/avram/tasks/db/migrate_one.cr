@@ -1,5 +1,3 @@
-require "colorize"
-
 class Db::Migrate::One < BaseTask
   summary "Run just the next pending migration"
 

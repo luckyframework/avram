@@ -1,5 +1,3 @@
-require "colorize"
-
 class Db::Reset < BaseTask
   summary "Drop, recreate, and run migrations."
 

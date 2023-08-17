@@ -1,0 +1,4 @@
+dependencies:
+  lucky_task:
+    github: luckyframework/lucky_task
+    branch: issues/17

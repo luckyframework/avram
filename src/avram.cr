@@ -1,8 +1,10 @@
+require "colorize"
 require "dexter"
 require "wordsmith"
 require "habitat"
 require "pulsar"
 require "lucky_cache"
+require "lucky_task"
 require "db"
 require "pg"
 require "uuid"
@@ -21,7 +23,8 @@ require "./avram/*"
 require "./avram/database/*"
 require "./avram/soft_delete/*"
 require "./avram/events/*"
-require "./avram/tasks/**"
+require "./avram/tasks/db/*"
+require "./avram/tasks/gen/*"
 
 module Avram
   Habitat.create do

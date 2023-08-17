@@ -1,5 +1,3 @@
-require "colorize"
-
 class Db::Drop < BaseTask
   summary "Drop the database"
 
