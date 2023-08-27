@@ -1,4 +1,4 @@
 dependencies:
   lucky_task:
     github: luckyframework/lucky_task
-    branch: main
+    version: ~> 0.2.0

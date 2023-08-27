@@ -19,12 +19,8 @@ require "./avram/table_for"
 require "./avram/criteria_extensions/*"
 require "./avram/charms/**"
 require "./avram/migrator/**"
-require "./avram/*"
-require "./avram/database/*"
-require "./avram/soft_delete/*"
-require "./avram/events/*"
-require "./avram/tasks/db/*"
-require "./avram/tasks/gen/*"
+require "./avram/tasks/**"
+require "./avram/**"
 
 module Avram
   Habitat.create do

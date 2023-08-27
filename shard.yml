@@ -15,7 +15,7 @@ authors:
 dependencies:
   lucky_task:
     github: luckyframework/lucky_task
-    version: ~> 0.1.1
+    version: ~> 0.2.0
   pg:
     github: will/crystal-pg
     version: ~> 0.27.0
@@ -44,8 +44,7 @@ dependencies:
 development_dependencies:
   ameba:
     github: crystal-ameba/ameba
-    branch: master
-    # version: ~> 1.4
+    version: ~> 1.5.0
   lucky:
     github: luckyframework/lucky
     version: ">= 1.0.0"
