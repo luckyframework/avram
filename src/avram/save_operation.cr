@@ -278,6 +278,14 @@ abstract class Avram::SaveOperation(T)
     @record.try &.id
   end
 
+  def self.column_names
+    T.column_names
+  end
+
+  def self.database_table_info
+    T.database_table_info.not_nil!
+  end
+
   def before_save; end
 
   def after_save(_record : T); end
