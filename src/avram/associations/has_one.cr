@@ -30,7 +30,7 @@ module Avram::Associations::HasOne
 
   private macro define_has_one_private_assoc_getter(assoc_name, model, foreign_key, nilable)
     private def get_{{ assoc_name.id }}(allow_lazy : Bool = false) : {{ model }}{% if nilable %}?{% end %}
-      if _{{ assoc_name }}_preloaded?
+      if {{ assoc_name }}_preloaded?
         @_preloaded_{{ assoc_name }}{% unless nilable %}.not_nil!{% end %}
       elsif lazy_load_enabled? || allow_lazy
         {{ model }}::BaseQuery.new
@@ -54,7 +54,7 @@ module Avram::Associations::HasOne
       end
 
       def self.preload_{{ assoc_name }}(record : {{ class_type }}, preload_query : {{ model }}::BaseQuery, force : Bool = false) : {{ class_type }}
-        return record if record._{{ assoc_name }}_preloaded? && !force
+        return record if record.{{ assoc_name }}_preloaded? && !force
 
         new_record = record.dup
         assoc = preload_query.{{ foreign_key }}(record.id).first?
@@ -73,7 +73,7 @@ module Avram::Associations::HasOne
 
       def self.preload_{{ assoc_name }}(records : Enumerable({{ class_type }}), preload_query : {{ model }}::BaseQuery, force : Bool = false) : Array({{ class_type }})
         ids = records.compact_map do |record|
-          if record._{{ assoc_name }}_preloaded? && !force
+          if record.{{ assoc_name }}_preloaded? && !force
             nil
           else
             record.id
@@ -82,7 +82,7 @@ module Avram::Associations::HasOne
         empty_results = {} of {{ model }}::PrimaryKeyType => Array({{ model }})
         {{ assoc_name }} = ids.empty? ? empty_results : preload_query.{{ foreign_key }}.in(ids).results.group_by(&.{{ foreign_key }})
         records.map do |record|
-          if record._{{ assoc_name }}_preloaded? && !force
+          if record.{{ assoc_name }}_preloaded? && !force
             next record
           end
 

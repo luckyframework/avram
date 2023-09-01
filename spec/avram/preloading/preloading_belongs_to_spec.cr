@@ -14,26 +14,34 @@ describe "Preloading belongs_to associations" do
       CommentFactory.create &.post_id(post.id)
 
       comments = Comment::BaseQuery.new.preload_post
+      comment = comments.first.as(Comment)
 
-      comments.first.post.should eq(post)
+      comment.post.should eq(post)
+      comment.post_preloaded?.should eq(true)
       Post::BaseQuery.times_called.should eq 1
     end
   end
 
   it "works with optional association" do
     with_lazy_load(enabled: false) do
-      employee = EmployeeFactory.create
+      EmployeeFactory.create
       manager = ManagerFactory.create
 
       employees = Employee::BaseQuery.new.preload_manager
-      employees.first.manager.should be_nil
+      employee = employees.first.as(Employee)
+      employee.manager.should be_nil
+      # This is a strange edge case when the object went through
+      # preloading, but no association exists
+      employee.manager_preloaded?.should eq(true)
 
       Employee::SaveOperation.new(employee).tap do |operation|
         operation.manager_id.value = manager.id
         operation.update!
       end
       employees = Employee::BaseQuery.new.preload_manager
-      employees.first.manager.should eq(manager)
+      employee = employees.first.as(Employee)
+      employee.manager.should eq(manager)
+      employee.manager_preloaded?.should eq(true)
     end
   end
 
@@ -43,6 +51,7 @@ describe "Preloading belongs_to associations" do
       comment = CommentFactory.create &.post_id(post.id)
 
       comment = Comment::BaseQuery.find(comment.id)
+      comment.post_preloaded?.should eq(false)
 
       expect_raises Avram::LazyLoadError do
         comment.post
@@ -59,6 +68,8 @@ describe "Preloading belongs_to associations" do
       comment = Comment::BaseQuery.new.preload_post(Post::BaseQuery.new.preload_comments).find(comment.id)
 
       comment.post.comments.should eq([comment, comment2])
+      comment.post_preloaded?.should eq(true)
+      comment.post.comments_preloaded?.should eq(true)
     end
   end
 
@@ -69,6 +80,8 @@ describe "Preloading belongs_to associations" do
     query = Comment::BaseQuery.new.preload_post
 
     2.times { query.results }
+    comment = query.results.first.as(Comment)
+    comment.post_preloaded?.should eq(true)
   end
 
   it "works with uuid foreign keys" do
