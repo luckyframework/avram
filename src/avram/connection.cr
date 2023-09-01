@@ -9,7 +9,7 @@ class Avram::Connection
     @db = try_connection!
   end
 
-  def close
+  def close : Nil
     @db.try(&.close)
     @db = nil
   end
@@ -20,7 +20,7 @@ class Avram::Connection
     raise ConnectionError.new(connection_uri, database_class: @database_class)
   end
 
-  def try_connection!
+  def try_connection! : DB::Database
     DB.open(@connection_string)
   rescue DB::ConnectionRefused
     raise ConnectionError.new(connection_uri, database_class: @database_class)

@@ -13,8 +13,7 @@ abstract class Avram::Operation
   include Avram::ParamKeyOverride
   include Avram::Callbacks
 
-  @params : Avram::Paramable
-  getter params
+  getter params : Avram::Paramable
 
   # Yields the instance of the operation, and the return value from
   # the `run` instance method.
@@ -97,12 +96,12 @@ abstract class Avram::Operation
 
   # Returns `true` if all attributes are valid,
   # and there's no custom errors
-  def valid?
+  def valid? : Bool
     default_validations
     custom_errors.empty? && attributes.all?(&.valid?)
   end
 
-  def self.param_key
+  def self.param_key : String
     name.underscore
   end
 end

@@ -14,8 +14,8 @@ module Avram
   # Raised when trying to access a record that was not preloaded and lazy load
   # is disabled.
   class LazyLoadError < AvramError
-    getter model
-    getter association
+    getter model : String
+    getter association : String
 
     def initialize(@model : String, @association : String)
       super "#{association} for #{model} must be preloaded with 'preload_#{association}'"
@@ -24,9 +24,9 @@ module Avram
 
   # Raised when Avram cannot find a record by given id
   class RecordNotFoundError < AvramError
-    getter model
-    getter id = nil
-    getter query = nil
+    getter model : TableName
+    getter id : String? = nil
+    getter query : Symbol? = nil
 
     def initialize(@model : TableName, @id : String)
       super "Could not find #{model} with id of #{id}"
@@ -38,8 +38,8 @@ module Avram
   end
 
   class MissingRequiredAssociationError < AvramError
-    getter model
-    getter association
+    getter model : Avram::Model.class
+    getter association : Avram::Model.class
 
     def initialize(@model : Avram::Model.class, @association : Avram::Model.class)
       super "Expected #{model} to have an association with #{association} but one was not found."
@@ -48,9 +48,9 @@ module Avram
 
   # Raised when a validation is expecting an impossible constraint
   class ImpossibleValidation < AvramError
-    getter attribute
+    getter attribute : Symbol
 
-    def initialize(@attribute : Symbol, message = "an impossible validation")
+    def initialize(@attribute : Symbol, message : String = "an impossible validation")
       super "Validation for #{attribute} can never satisfy #{message}"
     end
   end
@@ -82,8 +82,8 @@ module Avram
   class ConnectionError < AvramError
     DEFAULT_PG_PORT = 5432
 
-    getter connection_details
-    getter database_class
+    getter connection_details : URI
+    getter database_class : Avram::Database.class
 
     def initialize(@connection_details : URI, @database_class : Avram::Database.class)
       error = String.build do |message|
@@ -158,8 +158,8 @@ module Avram
   end
 
   class FailedMigration < AvramError
-    getter migration
-    getter statements
+    getter migration : String
+    getter statements : Array(String)
 
     def initialize(@migration : String, @statements : Array(String), cause : Exception)
       super(message(statements), cause)

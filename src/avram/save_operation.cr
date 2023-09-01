@@ -34,17 +34,14 @@ abstract class Avram::SaveOperation(T)
     @@permitted_param_keys = [] of String
   end
 
-  @record : T?
-  @params : Avram::Paramable
-
   # :nodoc:
-  setter :record
-  getter :params, :record
+  property record : T?
+  getter params : Avram::Paramable
   property save_status : OperationStatus = OperationStatus::Unperformed
 
   abstract def attributes
 
-  def self.param_key
+  def self.param_key : String
     T.name.underscore
   end
 
@@ -64,7 +61,7 @@ abstract class Avram::SaveOperation(T)
     )
   end
 
-  def generic_attributes
+  def generic_attributes : Array(Avram::GenericAttribute)
     attributes.map do |attr|
       Avram::GenericAttribute.new(
         name: attr.name,
@@ -77,7 +74,7 @@ abstract class Avram::SaveOperation(T)
     end
   end
 
-  private def error_messages_as_string
+  private def error_messages_as_string : String
     errors.join(". ") do |attribute_name, messages|
       "#{attribute_name} #{messages.join(", ")}"
     end
@@ -100,13 +97,14 @@ abstract class Avram::SaveOperation(T)
   # Runs all required validations for required types
   # as well as any additional valitaions the type needs to run
   # e.g. polymorphic validations
-  def run_default_validations
+  def run_default_validations : Nil
     validate_required *required_attributes
     default_validations
   end
 
   # :nodoc:
-  def default_validations; end
+  def default_validations : Nil
+  end
 
   # This allows you to skip the default validations
   # which may be used as an escape hatch when you want
@@ -128,20 +126,20 @@ abstract class Avram::SaveOperation(T)
   end
 
   # Returns true if the operation has run and saved the record successfully
-  def saved?
+  def saved? : Bool
     save_status == OperationStatus::Saved
   end
 
-  def created?
+  def created? : Bool
     saved? && new_record?
   end
 
-  def updated?
+  def updated? : Bool
     saved? && !new_record?
   end
 
   # Return true if the operation has run and the record failed to save
-  def save_failed?
+  def save_failed? : Bool
     save_status == OperationStatus::SaveFailed
   end
 

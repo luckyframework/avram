@@ -193,18 +193,18 @@ module Avram::Queryable(T)
     clone.tap &.query.offset(amount)
   end
 
-  def first?
+  def first? : T?
     with_ordered_query
       .limit(1)
       .results
       .first?
   end
 
-  def first
+  def first : T
     first? || raise RecordNotFoundError.new(model: table_name, query: :first)
   end
 
-  def last?
+  def last? : T?
     with_ordered_query
       .clone
       .tap(&.query.reverse_order)
@@ -213,7 +213,7 @@ module Avram::Queryable(T)
       .first?
   end
 
-  def last
+  def last : T
     last? || raise RecordNotFoundError.new(model: table_name, query: :last)
   end
 

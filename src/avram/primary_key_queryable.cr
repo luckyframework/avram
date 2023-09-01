@@ -2,11 +2,11 @@ require "./errors"
 
 module Avram::PrimaryKeyQueryable(T)
   macro included
-    def self.find(id)
+    def self.find(id) : T
       new.find(id)
     end
 
-    def find(id)
+    def find(id) : T
       id(id).first? || raise Avram::RecordNotFoundError.new(model: table_name, id: id.to_s)
     end
 

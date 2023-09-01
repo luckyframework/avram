@@ -29,7 +29,7 @@ abstract class Avram::Model
     database.database_info.table(table_name.to_s)
   end
 
-  def model_name
+  def model_name : String
     self.class.name
   end
 

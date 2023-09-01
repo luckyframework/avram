@@ -97,7 +97,7 @@ class Avram::Credentials
     url.sub("?#{@query}", "")
   end
 
-  private def build_url
+  private def build_url : String
     String.build do |io|
       io << connection_string
       set_url_db(io)
@@ -105,23 +105,23 @@ class Avram::Credentials
     end
   end
 
-  private def set_url_db(io)
+  private def set_url_db(io : String::Builder) : Nil
     io << "/#{database}"
   end
 
-  private def set_url_port(io)
+  private def set_url_port(io : String::Builder) : Nil
     port.try do |the_port|
       io << ":#{the_port}"
     end
   end
 
-  private def set_url_host(io)
+  private def set_url_host(io : String::Builder) : Nil
     hostname.try do |host|
       io << host
     end
   end
 
-  private def set_url_creds(io)
+  private def set_url_creds(io : String::Builder) : Nil
     set_at = false
     username.try do |user|
       io << URI.encode_www_form(user)
@@ -136,11 +136,11 @@ class Avram::Credentials
     io << "@" if set_at
   end
 
-  private def set_url_protocol(io)
+  private def set_url_protocol(io : String::Builder) : Nil
     io << "postgres://"
   end
 
-  private def set_url_query(io)
+  private def set_url_query(io : String::Builder) : Nil
     query.try do |q|
       io << "?#{q}"
     end

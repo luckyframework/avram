@@ -1,5 +1,3 @@
-require "colorize"
-
 class Db::RollbackAll < BaseTask
   summary "Rollback all migrations"
 

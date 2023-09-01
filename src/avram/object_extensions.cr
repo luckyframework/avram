@@ -1,5 +1,5 @@
 class Object
-  def blank?
+  def blank? : Bool
     if self.responds_to?(:empty?)
       self.empty?
     else
@@ -7,7 +7,7 @@ class Object
     end
   end
 
-  def present?
+  def present? : Bool
     !blank?
   end
 
@@ -30,7 +30,7 @@ struct Bool
 end
 
 struct Char
-  def blank?
+  def blank? : Bool
     case ord
     when 9, 0xa, 0xb, 0xc, 0xd, 0x20, 0x85, 0xa0, 0x1680, 0x180e,
          0x2000, 0x2001, 0x2002, 0x2003, 0x2004, 0x2005, 0x2006,
@@ -48,7 +48,7 @@ struct Char
 end
 
 struct Nil
-  def blank?
+  def blank? : Bool
     true
   end
 
