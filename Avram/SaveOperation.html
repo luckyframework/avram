@@ -1745,7 +1745,7 @@
   </h2>
   
     
-      <a href="https://github.com/luckyframework/avram/blob/29d89adc4f716b41fa3da87fa3f875188bf8c477/src/avram/save_operation.cr#L13" target="_blank">
+      <a href="https://github.com/luckyframework/avram/blob/35c81b79d9cbb5aa97d6ecb4ff9f1d85723e50dd/src/avram/save_operation.cr#L13" target="_blank">
         avram/save_operation.cr
       </a>
     
@@ -1815,7 +1815,7 @@
   <ul class="list-summary">
     
       <li class="entry-summary">
-        <a href="#param_key-class-method" class="signature"><strong>.param_key</strong></a>
+        <a href="#param_key%3AString-class-method" class="signature"><strong>.param_key</strong> : String</a>
         
       </li>
     
@@ -1873,12 +1873,12 @@
       </li>
     
       <li class="entry-summary">
-        <a href="#created%3F-instance-method" class="signature"><strong>#created?</strong></a>
+        <a href="#created%3F%3ABool-instance-method" class="signature"><strong>#created?</strong> : Bool</a>
         
       </li>
     
       <li class="entry-summary">
-        <a href="#custom_errors-instance-method" class="signature"><strong>#custom_errors</strong></a>
+        <a href="#custom_errors%3AHash%28Symbol%2CArray%28String%29%29-instance-method" class="signature"><strong>#custom_errors</strong> : Hash(Symbol, Array(String))</a>
         
       </li>
     
@@ -1893,7 +1893,7 @@
       </li>
     
       <li class="entry-summary">
-        <a href="#generic_attributes-instance-method" class="signature"><strong>#generic_attributes</strong></a>
+        <a href="#generic_attributes%3AArray%28Avram%3A%3AGenericAttribute%29-instance-method" class="signature"><strong>#generic_attributes</strong> : Array(Avram::GenericAttribute)</a>
         
       </li>
     
@@ -1905,7 +1905,7 @@
       </li>
     
       <li class="entry-summary">
-        <a href="#params-instance-method" class="signature"><strong>#params</strong></a>
+        <a href="#params%3AAvram%3A%3AParamable-instance-method" class="signature"><strong>#params</strong> : Avram::Paramable</a>
         
       </li>
     
@@ -1925,12 +1925,7 @@
       </li>
     
       <li class="entry-summary">
-        <a href="#record-instance-method" class="signature"><strong>#record</strong></a>
-        
-      </li>
-    
-      <li class="entry-summary">
-        <a href="#run_default_validations-instance-method" class="signature"><strong>#run_default_validations</strong></a>
+        <a href="#run_default_validations%3ANil-instance-method" class="signature"><strong>#run_default_validations</strong> : Nil</a>
         
           <div class="summary"><p>Runs all required validations for required types as well as any additional valitaions the type needs to run e.g.</p></div>
         
@@ -1947,7 +1942,7 @@
       </li>
     
       <li class="entry-summary">
-        <a href="#save_failed%3F-instance-method" class="signature"><strong>#save_failed?</strong></a>
+        <a href="#save_failed%3F%3ABool-instance-method" class="signature"><strong>#save_failed?</strong> : Bool</a>
         
           <div class="summary"><p>Return true if the operation has run and the record failed to save</p></div>
         
@@ -1964,7 +1959,7 @@
       </li>
     
       <li class="entry-summary">
-        <a href="#saved%3F-instance-method" class="signature"><strong>#saved?</strong></a>
+        <a href="#saved%3F%3ABool-instance-method" class="signature"><strong>#saved?</strong> : Bool</a>
         
           <div class="summary"><p>Returns true if the operation has run and saved the record successfully</p></div>
         
@@ -1986,7 +1981,7 @@
       </li>
     
       <li class="entry-summary">
-        <a href="#updated%3F-instance-method" class="signature"><strong>#updated?</strong></a>
+        <a href="#updated%3F%3ABool-instance-method" class="signature"><strong>#updated?</strong> : Bool</a>
         
       </li>
     
@@ -2074,8 +2069,8 @@
   <h3>Instance methods inherited from module <code><a href="../Avram/MarkAsFailed.html">Avram::MarkAsFailed</a></code></h3>
   
   
-    <a href="../Avram/MarkAsFailed.html#mark_as_failed-instance-method" class="tooltip">
-      <span>mark_as_failed</span>
+    <a href="../Avram/MarkAsFailed.html#mark_as_failed%3ANil-instance-method" class="tooltip">
+      <span>mark_as_failed : Nil</span>
     mark_as_failed</a>
     
   
@@ -2306,7 +2301,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/29d89adc4f716b41fa3da87fa3f875188bf8c477/src/avram/save_operation.cr#L51" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/35c81b79d9cbb5aa97d6ecb4ff9f1d85723e50dd/src/avram/save_operation.cr#L48" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2322,7 +2317,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/29d89adc4f716b41fa3da87fa3f875188bf8c477/src/avram/save_operation.cr#L54" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/35c81b79d9cbb5aa97d6ecb4ff9f1d85723e50dd/src/avram/save_operation.cr#L51" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2339,18 +2334,18 @@
     Class Method Detail
   </h2>
   
-    <div class="entry-detail" id="param_key-class-method">
+    <div class="entry-detail" id="param_key:String-class-method">
       <div class="signature">
         
-        def self.<strong>param_key</strong>
+        def self.<strong>param_key</strong> : <a href="../String.html">String</a>
 
-        <a class="method-permalink" href="#param_key-class-method">#</a>
+        <a class="method-permalink" href="#param_key%3AString-class-method">#</a>
       </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/29d89adc4f716b41fa3da87fa3f875188bf8c477/src/avram/save_operation.cr#L47" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/35c81b79d9cbb5aa97d6ecb4ff9f1d85723e50dd/src/avram/save_operation.cr#L44" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2372,7 +2367,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/29d89adc4f716b41fa3da87fa3f875188bf8c477/src/avram/save_operation.cr#L24" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/35c81b79d9cbb5aa97d6ecb4ff9f1d85723e50dd/src/avram/save_operation.cr#L24" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2394,7 +2389,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/29d89adc4f716b41fa3da87fa3f875188bf8c477/src/avram/save_operation.cr#L24" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/35c81b79d9cbb5aa97d6ecb4ff9f1d85723e50dd/src/avram/save_operation.cr#L24" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2422,7 +2417,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/29d89adc4f716b41fa3da87fa3f875188bf8c477/src/avram/save_operation.cr#L285" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/35c81b79d9cbb5aa97d6ecb4ff9f1d85723e50dd/src/avram/save_operation.cr#L283" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2438,7 +2433,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/29d89adc4f716b41fa3da87fa3f875188bf8c477/src/avram/save_operation.cr#L283" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/35c81b79d9cbb5aa97d6ecb4ff9f1d85723e50dd/src/avram/save_operation.cr#L281" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2454,7 +2449,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/29d89adc4f716b41fa3da87fa3f875188bf8c477/src/avram/save_operation.cr#L45" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/35c81b79d9cbb5aa97d6ecb4ff9f1d85723e50dd/src/avram/save_operation.cr#L42" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2470,7 +2465,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/29d89adc4f716b41fa3da87fa3f875188bf8c477/src/avram/save_operation.cr#L281" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/35c81b79d9cbb5aa97d6ecb4ff9f1d85723e50dd/src/avram/save_operation.cr#L279" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2486,33 +2481,33 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/29d89adc4f716b41fa3da87fa3f875188bf8c477/src/avram/save_operation.cr#L195" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/35c81b79d9cbb5aa97d6ecb4ff9f1d85723e50dd/src/avram/save_operation.cr#L193" target="_blank">View source</a>]
         
       </div>
     </div>
   
-    <div class="entry-detail" id="created?-instance-method">
+    <div class="entry-detail" id="created?:Bool-instance-method">
       <div class="signature">
         
-        def <strong>created?</strong>
+        def <strong>created?</strong> : <a href="../Bool.html">Bool</a>
 
-        <a class="method-permalink" href="#created%3F-instance-method">#</a>
+        <a class="method-permalink" href="#created%3F%3ABool-instance-method">#</a>
       </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/29d89adc4f716b41fa3da87fa3f875188bf8c477/src/avram/save_operation.cr#L135" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/35c81b79d9cbb5aa97d6ecb4ff9f1d85723e50dd/src/avram/save_operation.cr#L133" target="_blank">View source</a>]
         
       </div>
     </div>
   
-    <div class="entry-detail" id="custom_errors-instance-method">
+    <div class="entry-detail" id="custom_errors:Hash(Symbol,Array(String))-instance-method">
       <div class="signature">
         
-        def <strong>custom_errors</strong>
+        def <strong>custom_errors</strong> : Hash(Symbol, <a href="../Array.html">Array</a>(<a href="../String.html">String</a>))
 
-        <a class="method-permalink" href="#custom_errors-instance-method">#</a>
+        <a class="method-permalink" href="#custom_errors%3AHash%28Symbol%2CArray%28String%29%29-instance-method">#</a>
       </div>
       
       <br/>
@@ -2532,7 +2527,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/29d89adc4f716b41fa3da87fa3f875188bf8c477/src/avram/save_operation.cr#L58" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/35c81b79d9cbb5aa97d6ecb4ff9f1d85723e50dd/src/avram/save_operation.cr#L55" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2548,23 +2543,23 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/29d89adc4f716b41fa3da87fa3f875188bf8c477/src/avram/save_operation.cr#L58" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/35c81b79d9cbb5aa97d6ecb4ff9f1d85723e50dd/src/avram/save_operation.cr#L55" target="_blank">View source</a>]
         
       </div>
     </div>
   
-    <div class="entry-detail" id="generic_attributes-instance-method">
+    <div class="entry-detail" id="generic_attributes:Array(Avram::GenericAttribute)-instance-method">
       <div class="signature">
         
-        def <strong>generic_attributes</strong>
+        def <strong>generic_attributes</strong> : <a href="../Array.html">Array</a>(<a href="../Avram/GenericAttribute.html">Avram::GenericAttribute</a>)
 
-        <a class="method-permalink" href="#generic_attributes-instance-method">#</a>
+        <a class="method-permalink" href="#generic_attributes%3AArray%28Avram%3A%3AGenericAttribute%29-instance-method">#</a>
       </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/29d89adc4f716b41fa3da87fa3f875188bf8c477/src/avram/save_operation.cr#L67" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/35c81b79d9cbb5aa97d6ecb4ff9f1d85723e50dd/src/avram/save_operation.cr#L64" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2588,23 +2583,23 @@ for an update, independent of the stage we are at in the operation.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/29d89adc4f716b41fa3da87fa3f875188bf8c477/src/avram/save_operation.cr#L265" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/35c81b79d9cbb5aa97d6ecb4ff9f1d85723e50dd/src/avram/save_operation.cr#L263" target="_blank">View source</a>]
         
       </div>
     </div>
   
-    <div class="entry-detail" id="params-instance-method">
+    <div class="entry-detail" id="params:Avram::Paramable-instance-method">
       <div class="signature">
         
-        def <strong>params</strong>
+        def <strong>params</strong> : <a href="../Avram/Paramable.html">Avram::Paramable</a>
 
-        <a class="method-permalink" href="#params-instance-method">#</a>
+        <a class="method-permalink" href="#params%3AAvram%3A%3AParamable-instance-method">#</a>
       </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/29d89adc4f716b41fa3da87fa3f875188bf8c477/src/avram/save_operation.cr#L42" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/35c81b79d9cbb5aa97d6ecb4ff9f1d85723e50dd/src/avram/save_operation.cr#L39" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2620,7 +2615,7 @@ for an update, independent of the stage we are at in the operation.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/29d89adc4f716b41fa3da87fa3f875188bf8c477/src/avram/save_operation.cr#L256" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/35c81b79d9cbb5aa97d6ecb4ff9f1d85723e50dd/src/avram/save_operation.cr#L254" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2636,7 +2631,7 @@ for an update, independent of the stage we are at in the operation.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/29d89adc4f716b41fa3da87fa3f875188bf8c477/src/avram/save_operation.cr#L58" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/35c81b79d9cbb5aa97d6ecb4ff9f1d85723e50dd/src/avram/save_operation.cr#L55" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2652,33 +2647,17 @@ for an update, independent of the stage we are at in the operation.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/29d89adc4f716b41fa3da87fa3f875188bf8c477/src/avram/save_operation.cr#L58" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/35c81b79d9cbb5aa97d6ecb4ff9f1d85723e50dd/src/avram/save_operation.cr#L55" target="_blank">View source</a>]
         
       </div>
     </div>
   
-    <div class="entry-detail" id="record-instance-method">
+    <div class="entry-detail" id="run_default_validations:Nil-instance-method">
       <div class="signature">
         
-        def <strong>record</strong>
+        def <strong>run_default_validations</strong> : <a href="../Nil.html">Nil</a>
 
-        <a class="method-permalink" href="#record-instance-method">#</a>
-      </div>
-      
-      <br/>
-      <div>
-        
-          [<a href="https://github.com/luckyframework/avram/blob/29d89adc4f716b41fa3da87fa3f875188bf8c477/src/avram/save_operation.cr#L42" target="_blank">View source</a>]
-        
-      </div>
-    </div>
-  
-    <div class="entry-detail" id="run_default_validations-instance-method">
-      <div class="signature">
-        
-        def <strong>run_default_validations</strong>
-
-        <a class="method-permalink" href="#run_default_validations-instance-method">#</a>
+        <a class="method-permalink" href="#run_default_validations%3ANil-instance-method">#</a>
       </div>
       
         <div class="doc">
@@ -2691,7 +2670,7 @@ e.g. polymorphic validations</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/29d89adc4f716b41fa3da87fa3f875188bf8c477/src/avram/save_operation.cr#L103" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/35c81b79d9cbb5aa97d6ecb4ff9f1d85723e50dd/src/avram/save_operation.cr#L100" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2707,7 +2686,7 @@ e.g. polymorphic validations</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/29d89adc4f716b41fa3da87fa3f875188bf8c477/src/avram/save_operation.cr#L214" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/35c81b79d9cbb5aa97d6ecb4ff9f1d85723e50dd/src/avram/save_operation.cr#L212" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2723,17 +2702,17 @@ e.g. polymorphic validations</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/29d89adc4f716b41fa3da87fa3f875188bf8c477/src/avram/save_operation.cr#L244" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/35c81b79d9cbb5aa97d6ecb4ff9f1d85723e50dd/src/avram/save_operation.cr#L242" target="_blank">View source</a>]
         
       </div>
     </div>
   
-    <div class="entry-detail" id="save_failed?-instance-method">
+    <div class="entry-detail" id="save_failed?:Bool-instance-method">
       <div class="signature">
         
-        def <strong>save_failed?</strong>
+        def <strong>save_failed?</strong> : <a href="../Bool.html">Bool</a>
 
-        <a class="method-permalink" href="#save_failed%3F-instance-method">#</a>
+        <a class="method-permalink" href="#save_failed%3F%3ABool-instance-method">#</a>
       </div>
       
         <div class="doc">
@@ -2744,7 +2723,7 @@ e.g. polymorphic validations</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/29d89adc4f716b41fa3da87fa3f875188bf8c477/src/avram/save_operation.cr#L144" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/35c81b79d9cbb5aa97d6ecb4ff9f1d85723e50dd/src/avram/save_operation.cr#L142" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2760,7 +2739,7 @@ e.g. polymorphic validations</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/29d89adc4f716b41fa3da87fa3f875188bf8c477/src/avram/save_operation.cr#L43" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/35c81b79d9cbb5aa97d6ecb4ff9f1d85723e50dd/src/avram/save_operation.cr#L40" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2776,17 +2755,17 @@ e.g. polymorphic validations</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/29d89adc4f716b41fa3da87fa3f875188bf8c477/src/avram/save_operation.cr#L43" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/35c81b79d9cbb5aa97d6ecb4ff9f1d85723e50dd/src/avram/save_operation.cr#L40" target="_blank">View source</a>]
         
       </div>
     </div>
   
-    <div class="entry-detail" id="saved?-instance-method">
+    <div class="entry-detail" id="saved?:Bool-instance-method">
       <div class="signature">
         
-        def <strong>saved?</strong>
+        def <strong>saved?</strong> : <a href="../Bool.html">Bool</a>
 
-        <a class="method-permalink" href="#saved%3F-instance-method">#</a>
+        <a class="method-permalink" href="#saved%3F%3ABool-instance-method">#</a>
       </div>
       
         <div class="doc">
@@ -2797,7 +2776,7 @@ e.g. polymorphic validations</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/29d89adc4f716b41fa3da87fa3f875188bf8c477/src/avram/save_operation.cr#L131" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/35c81b79d9cbb5aa97d6ecb4ff9f1d85723e50dd/src/avram/save_operation.cr#L129" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2813,7 +2792,7 @@ e.g. polymorphic validations</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/29d89adc4f716b41fa3da87fa3f875188bf8c477/src/avram/save_operation.cr#L58" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/35c81b79d9cbb5aa97d6ecb4ff9f1d85723e50dd/src/avram/save_operation.cr#L55" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2829,7 +2808,7 @@ e.g. polymorphic validations</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/29d89adc4f716b41fa3da87fa3f875188bf8c477/src/avram/save_operation.cr#L58" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/35c81b79d9cbb5aa97d6ecb4ff9f1d85723e50dd/src/avram/save_operation.cr#L55" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2845,23 +2824,23 @@ e.g. polymorphic validations</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/29d89adc4f716b41fa3da87fa3f875188bf8c477/src/avram/save_operation.cr#L252" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/35c81b79d9cbb5aa97d6ecb4ff9f1d85723e50dd/src/avram/save_operation.cr#L250" target="_blank">View source</a>]
         
       </div>
     </div>
   
-    <div class="entry-detail" id="updated?-instance-method">
+    <div class="entry-detail" id="updated?:Bool-instance-method">
       <div class="signature">
         
-        def <strong>updated?</strong>
+        def <strong>updated?</strong> : <a href="../Bool.html">Bool</a>
 
-        <a class="method-permalink" href="#updated%3F-instance-method">#</a>
+        <a class="method-permalink" href="#updated%3F%3ABool-instance-method">#</a>
       </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/29d89adc4f716b41fa3da87fa3f875188bf8c477/src/avram/save_operation.cr#L139" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/35c81b79d9cbb5aa97d6ecb4ff9f1d85723e50dd/src/avram/save_operation.cr#L137" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2884,7 +2863,7 @@ and there's no custom errors</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/29d89adc4f716b41fa3da87fa3f875188bf8c477/src/avram/save_operation.cr#L122" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/35c81b79d9cbb5aa97d6ecb4ff9f1d85723e50dd/src/avram/save_operation.cr#L120" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2912,7 +2891,7 @@ and there's no custom errors</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/29d89adc4f716b41fa3da87fa3f875188bf8c477/src/avram/save_operation.cr#L199" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/35c81b79d9cbb5aa97d6ecb4ff9f1d85723e50dd/src/avram/save_operation.cr#L197" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2942,7 +2921,7 @@ and there's no custom errors</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/29d89adc4f716b41fa3da87fa3f875188bf8c477/src/avram/save_operation.cr#L148" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/35c81b79d9cbb5aa97d6ecb4ff9f1d85723e50dd/src/avram/save_operation.cr#L146" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2965,7 +2944,7 @@ to allow storing an empty string value.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/29d89adc4f716b41fa3da87fa3f875188bf8c477/src/avram/save_operation.cr#L114" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/35c81b79d9cbb5aa97d6ecb4ff9f1d85723e50dd/src/avram/save_operation.cr#L112" target="_blank">View source</a>]
         
       </div>
     </div>
