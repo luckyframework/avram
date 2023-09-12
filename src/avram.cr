@@ -38,6 +38,9 @@ module Avram
 
   alias TableName = String | Symbol
 
+  # This subscribes to several `Pulsar` events.
+  # These events are triggered during query and
+  # operation events
   def self.initialize_logging
     Avram::Events::QueryEvent.subscribe do |event, duration|
       next if event.query.starts_with?("TRUNCATE")
@@ -85,5 +88,3 @@ module Avram
     end
   end
 end
-
-Avram.initialize_logging

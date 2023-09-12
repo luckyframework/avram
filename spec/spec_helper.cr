@@ -19,6 +19,8 @@ backend = Log::IOBackend.new(STDERR)
 backend.formatter = Dexter::JSONLogFormatter.proc
 Log.builder.bind("avram.*", :error, backend)
 
+Avram.initialize_logging
+
 Db::Create.new(quiet: true).run_task
 Db::Migrate.new(quiet: true).run_task
 Db::VerifyConnection.new(quiet: true).run_task
