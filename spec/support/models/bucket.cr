@@ -8,5 +8,8 @@ class Bucket < BaseModel
     column names : Array(String) = [] of String
     column floaty_numbers : Array(Float64) = [] of Float64
     column oody_things : Array(UUID) = [] of UUID
+
+    # These are citext strings
+    column tags : Array(String) = [] of String
   end
 end

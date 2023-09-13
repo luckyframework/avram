@@ -1203,6 +1203,14 @@ describe Avram::Queryable do
         query.select_count.should eq(1)
         query.first.id.should eq(bucket2.id)
       end
+
+      it "queries with citext strings" do
+        BucketFactory.create &.tags(["ONE", "two", "tHrEe"])
+
+        BucketQuery.new.tags.includes("one").select_count.should eq(1)
+        BucketQuery.new.tags.includes("tWo").select_count.should eq(1)
+        BucketQuery.new.tags.includes("THRee").select_count.should eq(1)
+      end
     end
   end
 
