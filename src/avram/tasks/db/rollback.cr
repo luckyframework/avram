@@ -1,16 +1,13 @@
 class Db::Rollback < BaseTask
   summary "Rollback the last migration"
+  help_message <<-TEXT
+  #{task_summary}
 
-  def help_message
-    <<-TEXT
-    #{summary}
+  Example:
 
-    Example:
+    lucky db.rollback
 
-      lucky db.rollback
-
-    TEXT
-  end
+  TEXT
 
   def run_task
     Avram::Migrator::Runner.new.rollback_one

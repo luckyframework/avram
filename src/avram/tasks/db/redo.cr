@@ -1,16 +1,13 @@
 class Db::Redo < BaseTask
   summary "Rollback and run just the last migration"
+  help_message <<-TEXT
+  #{task_summary}
 
-  def help_message
-    <<-TEXT
-    #{summary}
+  Example:
 
-    Example:
+    lucky db.redo
 
-      lucky db.redo
-
-    TEXT
-  end
+  TEXT
 
   def run_task
     Db::Rollback.new.run_task

@@ -2,6 +2,15 @@ require "shell-table"
 
 class Db::Migrations::Status < BaseTask
   summary "Print the current status of migrations"
+  help_message <<-TEXT
+  Shows which migrations are pending and which have been run.
+
+  Examples:
+
+    lucky db.migrations.status
+    LUCKY_ENV=test lucky db.migrations.status # Show migration status for test db
+
+  TEXT
 
   def run_task
     if migrations.none?
@@ -10,18 +19,6 @@ class Db::Migrations::Status < BaseTask
       ensure_migration_tracking_tables_exist
       print_migration_statuses
     end
-  end
-
-  def help_message
-    <<-TEXT
-    Shows which migrations are pending and which have been run.
-
-    Examples:
-
-      lucky db.migrations.status
-      LUCKY_ENV=test lucky db.migrations.status # Show migration status for test db
-
-    TEXT
   end
 
   private def migrations

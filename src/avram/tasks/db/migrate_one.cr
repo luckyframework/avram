@@ -1,16 +1,13 @@
 class Db::Migrate::One < BaseTask
   summary "Run just the next pending migration"
+  help_message <<-TEXT
+  #{task_summary}
 
-  def help_message
-    <<-TEXT
-    #{summary}
+  Example:
 
-    Example:
+    lucky db.migrate.one
 
-      lucky db.migrate.one
-
-    TEXT
-  end
+  TEXT
 
   def run_task
     Avram::Migrator::Runner.new.run_next_migration

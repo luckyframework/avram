@@ -1,19 +1,17 @@
 class Db::Console < LuckyTask::Task
   summary "Access PostgreSQL console"
 
-  def help_message
-    <<-TEXT
-    #{summary}
+  help_message <<-TEXT
+  #{task_summary}
 
-    Enters the postgres REPL. Check config/database.cr
-    for database configuration.
+  Enters the postgres REPL. Check config/database.cr
+  for database configuration.
 
-    Examples:
+  Examples:
 
-      lucky db.console
+    lucky db.console
 
-    TEXT
-  end
+  TEXT
 
   def call
     puts banner_message
