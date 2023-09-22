@@ -1709,7 +1709,7 @@
   </h2>
   
     
-      <a href="https://github.com/luckyframework/avram/blob/17ccff0612ed8ee346120a489db909777ca88bcb/src/avram/tasks/db/migrations_status.cr#L3" target="_blank">
+      <a href="https://github.com/luckyframework/avram/blob/cf6a55b00ba4cbe81b3b571448b5406b06ab0750/src/avram/tasks/db/migrations_status.cr#L3" target="_blank">
         avram/tasks/db/migrations_status.cr
       </a>
     
@@ -1741,6 +1741,39 @@
 
 
 
+  <h2>
+    <a id="class-method-summary" class="anchor" href="#class-method-summary">
+  <svg class="octicon-link" aria-hidden="true">
+    <use href="#octicon-link"/>
+  </svg>
+</a>
+    Class Method Summary
+  </h2>
+  <ul class="list-summary">
+    
+      <li class="entry-summary">
+        <a href="#task_help_message%3AString-class-method" class="signature"><strong>.task_help_message</strong> : String</a>
+        
+          <div class="summary"><p>The help text to be displayed when a help flag is passed in (e.g.</p></div>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#task_name%3AString-class-method" class="signature"><strong>.task_name</strong> : String</a>
+        
+          <div class="summary"><p>The name of your task as derived by the class name Use the <code><a href="../../Db/Migrations/Status.html#task_name%3AString-class-method">.task_name</a></code> macro to define a custom task name</p></div>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#task_summary%3AString-class-method" class="signature"><strong>.task_summary</strong> : String</a>
+        
+          <div class="summary"><p>By default, task summaries are optional.</p></div>
+        
+      </li>
+    
+  </ul>
+
 
 
   <h2>
@@ -1752,18 +1785,6 @@
     Instance Method Summary
   </h2>
   <ul class="list-summary">
-    
-      <li class="entry-summary">
-        <a href="#help_message-instance-method" class="signature"><strong>#help_message</strong></a>
-        
-      </li>
-    
-      <li class="entry-summary">
-        <a href="#name%3AString-instance-method" class="signature"><strong>#name</strong> : String</a>
-        
-          <div class="summary"><p><span class="flag red">DEPRECATED</span>  Use <code><a href="../../Db/Migrations/Status.html#task_name%3AString-instance-method">#task_name</a></code> instead.</p></div>
-        
-      </li>
     
       <li class="entry-summary">
         <a href="#option_parser%3AOptionParser-instance-method" class="signature"><strong>#option_parser</strong> : OptionParser</a>
@@ -1795,16 +1816,6 @@
         
       </li>
     
-      <li class="entry-summary">
-        <a href="#summary%3AString-instance-method" class="signature"><strong>#summary</strong> : String</a>
-        
-      </li>
-    
-      <li class="entry-summary">
-        <a href="#task_name%3AString-instance-method" class="signature"><strong>#task_name</strong> : String</a>
-        
-      </li>
-    
   </ul>
 
 
@@ -1821,16 +1832,6 @@
     <a href="../../BaseTask.html#call-instance-method" class="tooltip">
       <span>call</span>
     call</a>, 
-    
-  
-    <a href="../../BaseTask.html#help_message%3AString-instance-method" class="tooltip">
-      <span>help_message : String</span>
-    help_message</a>, 
-    
-  
-    <a href="../../BaseTask.html#name%3AString-instance-method" class="tooltip">
-      <span>name : String</span>
-    name</a>, 
     
   
     <a href="../../BaseTask.html#option_parser%3AOptionParser-instance-method" class="tooltip">
@@ -1860,20 +1861,34 @@
   
     <a href="../../BaseTask.html#run_task-instance-method" class="tooltip">
       <span>run_task</span>
-    run_task</a>, 
+    run_task</a>
     
   
-    <a href="../../BaseTask.html#task_name%3AString-instance-method" class="tooltip">
+
+
+    
+
+
+    
+
+  <h3>Class methods inherited from class <code><a href="../../BaseTask.html">BaseTask</a></code></h3>
+  
+  
+    <a href="../../BaseTask.html#task_help_message%3AString-class-method" class="tooltip">
+      <span>task_help_message : String</span>
+    task_help_message</a>, 
+    
+  
+    <a href="../../BaseTask.html#task_name%3AString-class-method" class="tooltip">
       <span>task_name : String</span>
-    task_name</a>
+    task_name</a>, 
     
   
-
-
+    <a href="../../BaseTask.html#task_summary%3AString-class-method" class="tooltip">
+      <span>task_summary : String</span>
+    task_summary</a>
     
-
-
-    
+  
 
 
   
@@ -1921,6 +1936,83 @@
 
 
 
+  <h2>
+    <a id="class-method-detail" class="anchor" href="#class-method-detail">
+  <svg class="octicon-link" aria-hidden="true">
+    <use href="#octicon-link"/>
+  </svg>
+</a>
+    Class Method Detail
+  </h2>
+  
+    <div class="entry-detail" id="task_help_message:String-class-method">
+      <div class="signature">
+        
+        def self.<strong>task_help_message</strong> : <a href="../../String.html">String</a>
+
+        <a class="method-permalink" href="#task_help_message%3AString-class-method">#</a>
+      </div>
+      
+        <div class="doc">
+          
+          <p>The help text to be displayed when a help flag
+is passed in (e.g. -h, --help)
+Use the <code>help_message</code></p>
+        </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/luckyframework/avram/blob/cf6a55b00ba4cbe81b3b571448b5406b06ab0750/src/avram/tasks/db/migrations_status.cr#L5" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="task_name:String-class-method">
+      <div class="signature">
+        
+        def self.<strong>task_name</strong> : <a href="../../String.html">String</a>
+
+        <a class="method-permalink" href="#task_name%3AString-class-method">#</a>
+      </div>
+      
+        <div class="doc">
+          
+          <p>The name of your task as derived by the class name
+Use the <code><a href="../../Db/Migrations/Status.html#task_name%3AString-class-method">.task_name</a></code> macro to define a custom task name</p>
+        </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/luckyframework/avram/blob/cf6a55b00ba4cbe81b3b571448b5406b06ab0750/src/avram/tasks/db/migrations_status.cr#L3" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="task_summary:String-class-method">
+      <div class="signature">
+        
+        def self.<strong>task_summary</strong> : <a href="../../String.html">String</a>
+
+        <a class="method-permalink" href="#task_summary%3AString-class-method">#</a>
+      </div>
+      
+        <div class="doc">
+          
+          <p>By default, task summaries are optional.
+Use the <code>summary</code> macro to define a custom summary</p>
+        </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/luckyframework/avram/blob/cf6a55b00ba4cbe81b3b571448b5406b06ab0750/src/avram/tasks/db/migrations_status.cr#L4" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+
 
 
   <h2>
@@ -1931,43 +2023,6 @@
 </a>
     Instance Method Detail
   </h2>
-  
-    <div class="entry-detail" id="help_message-instance-method">
-      <div class="signature">
-        
-        def <strong>help_message</strong>
-
-        <a class="method-permalink" href="#help_message-instance-method">#</a>
-      </div>
-      
-      <br/>
-      <div>
-        
-          [<a href="https://github.com/luckyframework/avram/blob/17ccff0612ed8ee346120a489db909777ca88bcb/src/avram/tasks/db/migrations_status.cr#L15" target="_blank">View source</a>]
-        
-      </div>
-    </div>
-  
-    <div class="entry-detail" id="name:String-instance-method">
-      <div class="signature">
-        
-        def <strong>name</strong> : <a href="../../String.html">String</a>
-
-        <a class="method-permalink" href="#name%3AString-instance-method">#</a>
-      </div>
-      
-        <div class="doc">
-          
-          <p><span class="flag red">DEPRECATED</span>  Use <code><a href="../../Db/Migrations/Status.html#task_name%3AString-instance-method">#task_name</a></code> instead.</p>
-        </div>
-      
-      <br/>
-      <div>
-        
-          [<a href="https://github.com/luckyframework/avram/blob/17ccff0612ed8ee346120a489db909777ca88bcb/src/avram/tasks/db/migrations_status.cr#L3" target="_blank">View source</a>]
-        
-      </div>
-    </div>
   
     <div class="entry-detail" id="option_parser:OptionParser-instance-method">
       <div class="signature">
@@ -2036,7 +2091,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/17ccff0612ed8ee346120a489db909777ca88bcb/src/avram/tasks/db/migrations_status.cr#L3" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/cf6a55b00ba4cbe81b3b571448b5406b06ab0750/src/avram/tasks/db/migrations_status.cr#L3" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2052,39 +2107,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/17ccff0612ed8ee346120a489db909777ca88bcb/src/avram/tasks/db/migrations_status.cr#L6" target="_blank">View source</a>]
-        
-      </div>
-    </div>
-  
-    <div class="entry-detail" id="summary:String-instance-method">
-      <div class="signature">
-        
-        def <strong>summary</strong> : <a href="../../String.html">String</a>
-
-        <a class="method-permalink" href="#summary%3AString-instance-method">#</a>
-      </div>
-      
-      <br/>
-      <div>
-        
-          [<a href="https://github.com/luckyframework/avram/blob/17ccff0612ed8ee346120a489db909777ca88bcb/src/avram/tasks/db/migrations_status.cr#L4" target="_blank">View source</a>]
-        
-      </div>
-    </div>
-  
-    <div class="entry-detail" id="task_name:String-instance-method">
-      <div class="signature">
-        
-        def <strong>task_name</strong> : <a href="../../String.html">String</a>
-
-        <a class="method-permalink" href="#task_name%3AString-instance-method">#</a>
-      </div>
-      
-      <br/>
-      <div>
-        
-          [<a href="https://github.com/luckyframework/avram/blob/17ccff0612ed8ee346120a489db909777ca88bcb/src/avram/tasks/db/migrations_status.cr#L3" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/cf6a55b00ba4cbe81b3b571448b5406b06ab0750/src/avram/tasks/db/migrations_status.cr#L15" target="_blank">View source</a>]
         
       </div>
     </div>

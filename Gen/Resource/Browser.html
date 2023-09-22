@@ -1723,7 +1723,7 @@
   </h2>
   
     
-      <a href="https://github.com/luckyframework/avram/blob/17ccff0612ed8ee346120a489db909777ca88bcb/src/lucky/tasks/gen/resource/browser.cr#L8" target="_blank">
+      <a href="https://github.com/luckyframework/avram/blob/cf6a55b00ba4cbe81b3b571448b5406b06ab0750/src/lucky/tasks/gen/resource/browser.cr#L8" target="_blank">
         lucky/tasks/gen/resource/browser.cr
       </a>
     
@@ -1755,6 +1755,39 @@
 
 
 
+  <h2>
+    <a id="class-method-summary" class="anchor" href="#class-method-summary">
+  <svg class="octicon-link" aria-hidden="true">
+    <use href="#octicon-link"/>
+  </svg>
+</a>
+    Class Method Summary
+  </h2>
+  <ul class="list-summary">
+    
+      <li class="entry-summary">
+        <a href="#task_help_message%3AString-class-method" class="signature"><strong>.task_help_message</strong> : String</a>
+        
+          <div class="summary"><p>The help text to be displayed when a help flag is passed in (e.g.</p></div>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#task_name%3AString-class-method" class="signature"><strong>.task_name</strong> : String</a>
+        
+          <div class="summary"><p>The name of your task as derived by the class name Use the <code><a href="../../Gen/Resource/Browser.html#task_name%3AString-class-method">.task_name</a></code> macro to define a custom task name</p></div>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#task_summary%3AString-class-method" class="signature"><strong>.task_summary</strong> : String</a>
+        
+          <div class="summary"><p>By default, task summaries are optional.</p></div>
+        
+      </li>
+    
+  </ul>
+
 
 
   <h2>
@@ -1783,13 +1816,6 @@
       </li>
     
       <li class="entry-summary">
-        <a href="#name%3AString-instance-method" class="signature"><strong>#name</strong> : String</a>
-        
-          <div class="summary"><p><span class="flag red">DEPRECATED</span>  Use <code><a href="../../Gen/Resource/Browser.html#task_name%3AString-instance-method">#task_name</a></code> instead.</p></div>
-        
-      </li>
-    
-      <li class="entry-summary">
         <a href="#option_parser%3AOptionParser-instance-method" class="signature"><strong>#option_parser</strong> : OptionParser</a>
         
       </li>
@@ -1811,16 +1837,6 @@
     
       <li class="entry-summary">
         <a href="#print_help_or_call%28args%3AArray%28String%29%29-instance-method" class="signature"><strong>#print_help_or_call</strong>(args : Array(String))</a>
-        
-      </li>
-    
-      <li class="entry-summary">
-        <a href="#summary%3AString-instance-method" class="signature"><strong>#summary</strong> : String</a>
-        
-      </li>
-    
-      <li class="entry-summary">
-        <a href="#task_name%3AString-instance-method" class="signature"><strong>#task_name</strong> : String</a>
         
       </li>
     
@@ -1895,6 +1911,83 @@
 
 
 
+  <h2>
+    <a id="class-method-detail" class="anchor" href="#class-method-detail">
+  <svg class="octicon-link" aria-hidden="true">
+    <use href="#octicon-link"/>
+  </svg>
+</a>
+    Class Method Detail
+  </h2>
+  
+    <div class="entry-detail" id="task_help_message:String-class-method">
+      <div class="signature">
+        
+        def self.<strong>task_help_message</strong> : <a href="../../String.html">String</a>
+
+        <a class="method-permalink" href="#task_help_message%3AString-class-method">#</a>
+      </div>
+      
+        <div class="doc">
+          
+          <p>The help text to be displayed when a help flag
+is passed in (e.g. -h, --help)
+Use the <code><a href="../../Gen/Resource/Browser.html#help_message-instance-method">#help_message</a></code></p>
+        </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/luckyframework/avram/blob/cf6a55b00ba4cbe81b3b571448b5406b06ab0750/src/lucky/tasks/gen/resource/browser.cr#L8" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="task_name:String-class-method">
+      <div class="signature">
+        
+        def self.<strong>task_name</strong> : <a href="../../String.html">String</a>
+
+        <a class="method-permalink" href="#task_name%3AString-class-method">#</a>
+      </div>
+      
+        <div class="doc">
+          
+          <p>The name of your task as derived by the class name
+Use the <code><a href="../../Gen/Resource/Browser.html#task_name%3AString-class-method">.task_name</a></code> macro to define a custom task name</p>
+        </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/luckyframework/avram/blob/cf6a55b00ba4cbe81b3b571448b5406b06ab0750/src/lucky/tasks/gen/resource/browser.cr#L8" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="task_summary:String-class-method">
+      <div class="signature">
+        
+        def self.<strong>task_summary</strong> : <a href="../../String.html">String</a>
+
+        <a class="method-permalink" href="#task_summary%3AString-class-method">#</a>
+      </div>
+      
+        <div class="doc">
+          
+          <p>By default, task summaries are optional.
+Use the <code>summary</code> macro to define a custom summary</p>
+        </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/luckyframework/avram/blob/cf6a55b00ba4cbe81b3b571448b5406b06ab0750/src/lucky/tasks/gen/resource/browser.cr#L11" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+
 
 
   <h2>
@@ -1917,7 +2010,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/17ccff0612ed8ee346120a489db909777ca88bcb/src/lucky/tasks/gen/resource/browser.cr#L34" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/cf6a55b00ba4cbe81b3b571448b5406b06ab0750/src/lucky/tasks/gen/resource/browser.cr#L34" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1933,7 +2026,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/17ccff0612ed8ee346120a489db909777ca88bcb/src/lucky/tasks/gen/resource/browser.cr#L20" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/cf6a55b00ba4cbe81b3b571448b5406b06ab0750/src/lucky/tasks/gen/resource/browser.cr#L20" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1949,28 +2042,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/17ccff0612ed8ee346120a489db909777ca88bcb/src/lucky/tasks/gen/resource/browser.cr#L12" target="_blank">View source</a>]
-        
-      </div>
-    </div>
-  
-    <div class="entry-detail" id="name:String-instance-method">
-      <div class="signature">
-        
-        def <strong>name</strong> : <a href="../../String.html">String</a>
-
-        <a class="method-permalink" href="#name%3AString-instance-method">#</a>
-      </div>
-      
-        <div class="doc">
-          
-          <p><span class="flag red">DEPRECATED</span>  Use <code><a href="../../Gen/Resource/Browser.html#task_name%3AString-instance-method">#task_name</a></code> instead.</p>
-        </div>
-      
-      <br/>
-      <div>
-        
-          [<a href="https://github.com/luckyframework/avram/blob/17ccff0612ed8ee346120a489db909777ca88bcb/src/lucky/tasks/gen/resource/browser.cr#L8" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/cf6a55b00ba4cbe81b3b571448b5406b06ab0750/src/lucky/tasks/gen/resource/browser.cr#L12" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2042,39 +2114,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/17ccff0612ed8ee346120a489db909777ca88bcb/src/lucky/tasks/gen/resource/browser.cr#L8" target="_blank">View source</a>]
-        
-      </div>
-    </div>
-  
-    <div class="entry-detail" id="summary:String-instance-method">
-      <div class="signature">
-        
-        def <strong>summary</strong> : <a href="../../String.html">String</a>
-
-        <a class="method-permalink" href="#summary%3AString-instance-method">#</a>
-      </div>
-      
-      <br/>
-      <div>
-        
-          [<a href="https://github.com/luckyframework/avram/blob/17ccff0612ed8ee346120a489db909777ca88bcb/src/lucky/tasks/gen/resource/browser.cr#L11" target="_blank">View source</a>]
-        
-      </div>
-    </div>
-  
-    <div class="entry-detail" id="task_name:String-instance-method">
-      <div class="signature">
-        
-        def <strong>task_name</strong> : <a href="../../String.html">String</a>
-
-        <a class="method-permalink" href="#task_name%3AString-instance-method">#</a>
-      </div>
-      
-      <br/>
-      <div>
-        
-          [<a href="https://github.com/luckyframework/avram/blob/17ccff0612ed8ee346120a489db909777ca88bcb/src/lucky/tasks/gen/resource/browser.cr#L8" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/cf6a55b00ba4cbe81b3b571448b5406b06ab0750/src/lucky/tasks/gen/resource/browser.cr#L8" target="_blank">View source</a>]
         
       </div>
     </div>
