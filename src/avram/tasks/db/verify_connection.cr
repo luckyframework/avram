@@ -1,22 +1,20 @@
 class Db::VerifyConnection < BaseTask
   summary "Verify connection to postgres"
+  help_message <<-TEXT
+  #{task_summary}
+
+  The connection settings are typically defined in config/database.cr
+
+  Examples:
+
+    lucky db.verify_connection
+    LUCKY_ENV=test lucky db.verify_connection # Verify test db connection
+
+  TEXT
+
   getter? quiet
 
   def initialize(@quiet : Bool = false)
-  end
-
-  def help_message
-    <<-TEXT
-    #{summary}
-
-    The connection settings are typically defined in config/database.cr
-
-    Examples:
-
-      lucky db.verify_connection
-      LUCKY_ENV=test lucky db.verify_connection # Verify test db connection
-
-    TEXT
   end
 
   def run_task

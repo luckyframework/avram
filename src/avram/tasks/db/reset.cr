@@ -1,22 +1,19 @@
 class Db::Reset < BaseTask
   summary "Drop, recreate, and run migrations."
+  help_message <<-TEXT
+  #{task_summary}
+
+  Example:
+
+    lucky db.reset
+
+  To drop the test database:
+
+     LUCKY_ENV=test lucky db.reset
+
+  TEXT
 
   def initialize(@quiet : Bool = false)
-  end
-
-  def help_message
-    <<-TEXT
-    #{summary}
-
-    Example:
-
-      lucky db.reset
-
-    To drop the test database:
-
-       LUCKY_ENV=test lucky db.reset
-
-    TEXT
   end
 
   def run_task

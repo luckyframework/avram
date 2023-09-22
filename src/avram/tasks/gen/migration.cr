@@ -2,24 +2,21 @@ require "./migration_generator"
 
 class Gen::Migration < LuckyTask::Task
   summary "Generate a new migration"
+  help_message <<-TEXT
+  Generate a new migration using the passed in migration name.
+
+  The migration name must be CamelCase. No other options are available.
+
+  Examples:
+
+    lucky gen.migration CreateUsers
+    lucky gen.migration AddAgeToUsers
+    lucky gen.migration MakeUserNameOptional
+
+  TEXT
 
   Habitat.create do
     setting io : IO = STDOUT
-  end
-
-  def help_message
-    <<-TEXT
-    Generate a new migration using the passed in migration name.
-
-    The migration name must be CamelCase. No other options are available.
-
-    Examples:
-
-      lucky gen.migration CreateUsers
-      lucky gen.migration AddAgeToUsers
-      lucky gen.migration MakeUserNameOptional
-
-    TEXT
   end
 
   def self.silence_output(&)
