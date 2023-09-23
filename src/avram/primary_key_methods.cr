@@ -80,7 +80,7 @@ module Avram::PrimaryKeyMethods
     id
   end
 
-  private def escape_primary_key(id : UUID)
+  private def escape_primary_key(id : UUID | String)
     PG::EscapeHelper.escape_literal(id.to_s)
   end
 end
