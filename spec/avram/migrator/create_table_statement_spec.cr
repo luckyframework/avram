@@ -166,9 +166,9 @@ describe Avram::Migrator::CreateTableStatement do
     end
 
     it "raises error on columns with non allowed index types" do
-      expect_raises Exception, "index type 'gist' not supported" do
+      expect_raises Exception, "index type 'sp_gist' not supported" do
         Avram::Migrator::CreateTableStatement.new(:users).build do
-          add email : String, index: true, using: :gist
+          add email : String, index: true, using: :sp_gist
         end
       end
     end
