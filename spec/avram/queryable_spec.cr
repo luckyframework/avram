@@ -1229,6 +1229,16 @@ describe Avram::Queryable do
         Beat::BaseQuery.new.hash(Bytes.empty).select_count.should eq(0)
       end
     end
+
+    context "binary data query" do
+      it "returns the correct result" do
+        hash = Bytes[0, 1, 2, 256]
+        BeatFactory.create &.hash(hash)
+
+        Beat::BaseQuery.new.hash(hash).select_count.should eq(1)
+        Beat::BaseQuery.new.hash(Bytes.empty).select_count.should eq(0)
+      end
+    end
   end
 
   describe ".truncate" do
