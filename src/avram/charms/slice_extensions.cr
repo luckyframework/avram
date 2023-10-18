@@ -24,7 +24,13 @@ struct Slice(T)
     end
 
     def to_db(value : Bytes)
-      String.new(value)
+      ssize = value.size * 2 + 2
+      String.new(ssize) do |buffer|
+        buffer[0] = '\\'.ord.to_u8
+        buffer[1] = 'x'.ord.to_u8
+        value.hexstring(buffer + 2)
+        {ssize, ssize}
+      end
     end
 
     def to_db(value : String) : String
