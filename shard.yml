@@ -1,7 +1,7 @@
 name: avram
 version: 1.0.0
 
-crystal: ">= 1.6.0"
+crystal: ~> 1.6
 
 license: MIT
 
@@ -15,31 +15,31 @@ authors:
 dependencies:
   lucky_task:
     github: luckyframework/lucky_task
-    version: ~> 0.3.0
+    version: ">= 0.3, < 0.4"
   pg:
     github: will/crystal-pg
-    version: ~> 0.27.0
+    version: ">= 0.27, < 0.28"
   habitat:
     github: luckyframework/habitat
-    version: ~> 0.4.7
+    version: ">= 0.4.7, < 0.5"
   wordsmith:
     github: luckyframework/wordsmith
-    version: ~> 0.4.0
+    version: ">= 0.4, < 0.5"
   dexter:
     github: luckyframework/dexter
-    version: ~> 0.3.4
+    version: ">= 0.3.4, < 0.4"
   shell-table:
     github: luckyframework/shell-table.cr
-    version: ~> 0.9.3
+    version: ">= 0.9.3, < 0.10"
   pulsar:
     github: luckyframework/pulsar
-    version: ~> 0.2.3
+    version: ">= 0.2.3, < 0.3"
   lucky_cache:
     github: luckyframework/lucky_cache
-    version: ~> 0.1.1
+    version: ">= 0.1.1, < 0.2"
   cadmium_transliterator:
     github: cadmiumcr/transliterator
-    branch: master
+    commit: 46c4c14594057dbcfaf27e7e7c8c164d3f0ce3f1
 
 development_dependencies:
   ameba:
@@ -47,7 +47,7 @@ development_dependencies:
     version: ~> 1.5.0
   lucky:
     github: luckyframework/lucky
-    version: ">= 1.0.0"
+    version: ~> 1
 
 scripts:
   postinstall: BUILD_WITHOUT_DEVELOPMENT=true script/precompile_tasks
