@@ -263,7 +263,7 @@ abstract class Avram::Database
     def truncate
       return if table_names.empty?
 
-      statement = ("TRUNCATE TABLE #{table_names.map { |name| name }.join(", ")} RESTART IDENTITY CASCADE;")
+      statement = "TRUNCATE TABLE #{table_names.join(", ")} CASCADE;"
       database.exec statement
     end
 
