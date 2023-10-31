@@ -53,10 +53,13 @@ module Avram::Queryable(T)
     #
     # To delete all data referenced by foreign keys as well, set *cascade*
     # to true.
-    def self.truncate(*, cascade : Bool = false)
+    def self.truncate(*, cascade : Bool = false, restart_identity : Bool = false)
       query = self.new
-      cascade_str = cascade ? " CASCADE" : ""
-      query.database.exec "TRUNCATE TABLE #{query.table_name}#{cascade_str}"
+      cascade_sql = cascade ? " CASCADE" : ""
+      restart_id_sql = restart_identity ? " RESTART IDENTITY" : ""
+      sql = "TRUNCATE TABLE #{query.table_name}#{restart_id_sql}#{cascade_sql}"
+
+      query.database.exec(sql)
     end
   end
 
