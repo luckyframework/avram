@@ -260,11 +260,15 @@ abstract class Avram::Database
         .map(&.table_name)
     end
 
-    def truncate
+    def truncate(*, cascade : Bool = true, restart_identity : Bool = true)
       return if table_names.empty?
 
-      statement = ("TRUNCATE TABLE #{table_names.map { |name| name }.join(", ")} RESTART IDENTITY CASCADE;")
-      database.exec statement
+      cascade_sql = cascade ? " CASCADE" : ""
+      restart_id_sql = restart_identity ? " RESTART IDENTITY" : ""
+      table_names_sql = table_names.join(", ")
+      sql = "TRUNCATE TABLE #{table_names_sql}#{restart_id_sql}#{cascade_sql}"
+
+      database.exec(sql)
     end
 
     def delete

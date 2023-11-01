@@ -57,7 +57,7 @@ class Avram::Migrator::Runner
 
   def self.create_db(quiet? : Bool = false)
     DB.connect("#{credentials.connection_string}/#{db_user}") do |db|
-      db.exec "CREATE DATABASE #{db_name} WITH OWNER DEFAULT"
+      db.exec "CREATE DATABASE #{db_name}"
     end
     unless quiet?
       puts "Done creating #{db_name.colorize(:green)}"
