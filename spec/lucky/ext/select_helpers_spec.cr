@@ -14,8 +14,20 @@ private class TestPage
     self
   end
 
+  def render_disabled_select(field)
+    select_input field, attrs: [:disabled] do
+    end
+    self
+  end
+
   def render_multi_select(field)
     multi_select_input field do
+    end
+    self
+  end
+
+  def render_disabled_multi_select(field)
+    multi_select_input field, attrs: [:disabled] do
     end
     self
   end
@@ -69,11 +81,19 @@ describe Lucky::SelectHelpers do
     view.render_select(form.company_id).html.to_s.should eq <<-HTML
     <select name="company:company_id"></select>
     HTML
+
+    view.render_disabled_select(form.company_id).html.to_s.should eq <<-HTML
+    <select name="company:company_id" disabled></select>
+    HTML
   end
 
   it "renders multi-select" do
     view.render_multi_select(form.tags).html.to_s.should eq <<-HTML
     <select name="company:tags[]" multiple></select>
+    HTML
+
+    view.render_disabled_multi_select(form.tags).html.to_s.should eq <<-HTML
+    <select name="company:tags[]" multiple disabled></select>
     HTML
   end
 
