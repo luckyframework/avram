@@ -187,15 +187,18 @@ abstract class Avram::Database
   # once the block is finished
   private def with_connection(&)
     key = object_id
-    connections[key] ||= db.checkout
-    connection = connections[key]
 
-    begin
-      yield connection
-    ensure
-      if !connection._avram_in_transaction?
-        connection.release
-        connections.delete(key)
+    db.retry do
+      connections[key] ||= db.checkout
+      connection = connections[key]
+
+      begin
+        yield connection
+      ensure
+        if !connection._avram_in_transaction?
+          connection.release
+          connections.delete(key)
+        end
       end
     end
   end
