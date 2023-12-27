@@ -54,7 +54,7 @@ class Avram::Migrator::AlterTableStatement
       name: {{ type_declaration.var.stringify }},
       nilable: {{ nilable }},
       default: nil,
-      {{ **type_options }}
+      {{ type_options.double_splat }}
     )
     add_change_type_statement %column
   end
@@ -226,7 +226,7 @@ class Avram::Migrator::AlterTableStatement
       name: {{ type_declaration.var.stringify }},
       nilable: {{ nilable || should_fill_existing }},
       default: {{ default }},
-      {{ **type_options }}
+      {{ type_options.double_splat }}
     )
     {% if array %}
     .array!

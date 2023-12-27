@@ -119,7 +119,7 @@ class Avram::Migrator::CreateTableStatement
       name: {{ type_declaration.var.stringify }},
       nilable: {{ nilable }},
       default: {{ default }},
-      {{ **type_options }}
+      {{ type_options.double_splat }}
     )
     {% if array %}
     .array!
