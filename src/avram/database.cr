@@ -41,8 +41,8 @@ abstract class Avram::Database
   end
 
   # Run a SQL `TRUNCATE` on all tables in the database
-  def self.truncate
-    new.truncate
+  def self.truncate(**named_args)
+    new.truncate(**named_args)
   end
 
   # Run a SQL `DELETE` on all tables in the database
@@ -211,8 +211,8 @@ abstract class Avram::Database
     connection._avram_stack.last?
   end
 
-  protected def truncate
-    DatabaseCleaner.new(self).truncate
+  protected def truncate(**named_args)
+    DatabaseCleaner.new(self).truncate(**named_args)
   end
 
   protected def delete
