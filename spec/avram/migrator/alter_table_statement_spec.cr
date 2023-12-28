@@ -186,4 +186,24 @@ describe Avram::Migrator::AlterTableStatement do
       end
     end
   end
+
+  context "IF EXISTS" do
+    it "adds the option to the table" do
+      built = Avram::Migrator::AlterTableStatement.new(:users, if_exists: true).build do
+        add name : String?
+        rename :old_name, :new_name
+        rename_belongs_to :owner, :boss
+      end
+
+      built.statements.size.should eq 3
+
+      built.statements[0].should eq "ALTER TABLE IF EXISTS users RENAME COLUMN old_name TO new_name;"
+      built.statements[1].should eq "ALTER TABLE IF EXISTS users RENAME COLUMN owner_id TO boss_id;"
+
+      built.statements[2].should eq <<-SQL
+      ALTER TABLE IF EXISTS users
+        ADD name text;
+      SQL
+    end
+  end
 end

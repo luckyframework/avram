@@ -4,8 +4,8 @@ module Avram::Migrator::StatementHelpers
   include Avram::Migrator::IndexStatementHelpers
   include Avram::TableFor
 
-  macro create(table_name)
-    statements = Avram::Migrator::CreateTableStatement.new({{ table_name }}).build do
+  macro create(table_name, *, if_not_exists = false)
+    statements = Avram::Migrator::CreateTableStatement.new({{ table_name }}, if_not_exists: {{ if_not_exists }}).build do
       {{ yield }}
     end.statements
 
@@ -18,8 +18,8 @@ module Avram::Migrator::StatementHelpers
     prepared_statements << Avram::Migrator::DropTableStatement.new(table_name).build
   end
 
-  macro alter(table_name)
-    statements = Avram::Migrator::AlterTableStatement.new({{ table_name }}).build do
+  macro alter(table_name, *, if_exists = false)
+    statements = Avram::Migrator::AlterTableStatement.new({{ table_name }}, if_exists: {{ if_exists }}).build do
       {{ yield }}
     end.statements
 
