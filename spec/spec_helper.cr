@@ -23,7 +23,6 @@ Avram.initialize_logging
 
 Db::Create.new(quiet: true).run_task
 Db::Migrate.new(quiet: true).run_task
-Db::VerifyConnection.new(quiet: true).run_task
 
 Avram::SpecHelper.use_transactional_specs(TestDatabase)
 

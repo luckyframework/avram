@@ -18,9 +18,12 @@ class Db::VerifyConnection < BaseTask
   end
 
   def run_task
-    Avram.settings.database_to_migrate.verify_connection
-    puts "✔ Connection verified" unless quiet?
-  rescue Avram::ConnectionError
+    # Using this block method instead of the previous `Database.verify_connection`
+    # due to some random race conditions that cause this task to fail for some people
+    DB.open(Avram.settings.database_to_migrate.settings.credentials.url) do |_db|
+      output.puts "✔ Connection verified" unless quiet?
+    end
+  rescue Avram::ConnectionError | DB::ConnectionRefused
     raise <<-ERROR
     Unable to connect to Postgres for database '#{Avram.settings.database_to_migrate}'.
 
