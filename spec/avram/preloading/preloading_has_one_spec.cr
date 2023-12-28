@@ -34,6 +34,18 @@ describe "Preloading has_one associations" do
     end
   end
 
+  it "works with a block" do
+    with_lazy_load(enabled: false) do
+      admin = AdminFactory.create
+      sign_in_credential = SignInCredentialFactory.create &.user_id(admin.id)
+
+      admin = Admin::BaseQuery.new.preload_sign_in_credential(&.user_id(admin.id))
+
+      admin.first.sign_in_credential_preloaded?.should eq(true)
+      admin.first.sign_in_credential.should eq sign_in_credential
+    end
+  end
+
   it "works with optional association" do
     with_lazy_load(enabled: false) do
       UserFactory.create
