@@ -1735,7 +1735,7 @@
   </h2>
   
     
-      <a href="https://github.com/luckyframework/avram/blob/9ad64b90928458e07e35b6a02a404aa6fb90de33/src/avram/migrator/alter_table_statement.cr#L4" target="_blank">
+      <a href="https://github.com/luckyframework/avram/blob/82eef3e980a83e93f43900b43c7f18e3c1c57311/src/avram/migrator/alter_table_statement.cr#L4" target="_blank">
         avram/migrator/alter_table_statement.cr
       </a>
     
@@ -1757,7 +1757,7 @@
   <ul class="list-summary">
     
       <li class="entry-summary">
-        <a href="#new%28table_name%3ATableName%29-class-method" class="signature"><strong>.new</strong>(table_name : TableName)</a>
+        <a href="#new%28table_name%3ATableName%2C%2A%2Cif_exists%3ABool%3Dfalse%29-class-method" class="signature"><strong>.new</strong>(table_name : TableName, *, if_exists : Bool = <span class="n">false</span>)</a>
         
       </li>
     
@@ -1821,6 +1821,11 @@
     
       <li class="entry-summary">
         <a href="#fill_existing_with_statements%3AArray%28String%29-instance-method" class="signature"><strong>#fill_existing_with_statements</strong> : Array(String)</a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#if_exists_statement-instance-method" class="signature"><strong>#if_exists_statement</strong></a>
         
       </li>
     
@@ -1985,18 +1990,18 @@
     Constructor Detail
   </h2>
   
-    <div class="entry-detail" id="new(table_name:TableName)-class-method">
+    <div class="entry-detail" id="new(table_name:TableName,*,if_exists:Bool=false)-class-method">
       <div class="signature">
         
-        def self.<strong>new</strong>(table_name : <a href="../../Avram/TableName.html">TableName</a>)
+        def self.<strong>new</strong>(table_name : <a href="../../Avram/TableName.html">TableName</a>, *, if_exists : <a href="../../Bool.html">Bool</a> = <span class="n">false</span>)
 
-        <a class="method-permalink" href="#new%28table_name%3ATableName%29-class-method">#</a>
+        <a class="method-permalink" href="#new%28table_name%3ATableName%2C%2A%2Cif_exists%3ABool%3Dfalse%29-class-method">#</a>
       </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/9ad64b90928458e07e35b6a02a404aa6fb90de33/src/avram/migrator/alter_table_statement.cr#L15" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/82eef3e980a83e93f43900b43c7f18e3c1c57311/src/avram/migrator/alter_table_statement.cr#L16" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2026,7 +2031,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/9ad64b90928458e07e35b6a02a404aa6fb90de33/src/avram/migrator/alter_table_statement.cr#L86" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/82eef3e980a83e93f43900b43c7f18e3c1c57311/src/avram/migrator/alter_table_statement.cr#L87" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2042,7 +2047,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/9ad64b90928458e07e35b6a02a404aa6fb90de33/src/avram/migrator/alter_table_statement.cr#L82" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/82eef3e980a83e93f43900b43c7f18e3c1c57311/src/avram/migrator/alter_table_statement.cr#L83" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2058,7 +2063,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/9ad64b90928458e07e35b6a02a404aa6fb90de33/src/avram/migrator/alter_table_statement.cr#L250" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/82eef3e980a83e93f43900b43c7f18e3c1c57311/src/avram/migrator/alter_table_statement.cr#L257" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2074,7 +2079,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/9ad64b90928458e07e35b6a02a404aa6fb90de33/src/avram/migrator/alter_table_statement.cr#L119" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/82eef3e980a83e93f43900b43c7f18e3c1c57311/src/avram/migrator/alter_table_statement.cr#L126" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2114,7 +2119,7 @@ built.statements
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/9ad64b90928458e07e35b6a02a404aa6fb90de33/src/avram/migrator/alter_table_statement.cr#L110" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/82eef3e980a83e93f43900b43c7f18e3c1c57311/src/avram/migrator/alter_table_statement.cr#L111" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2130,7 +2135,7 @@ built.statements
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/9ad64b90928458e07e35b6a02a404aa6fb90de33/src/avram/migrator/alter_table_statement.cr#L13" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/82eef3e980a83e93f43900b43c7f18e3c1c57311/src/avram/migrator/alter_table_statement.cr#L13" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2146,7 +2151,7 @@ built.statements
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/9ad64b90928458e07e35b6a02a404aa6fb90de33/src/avram/migrator/alter_table_statement.cr#L12" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/82eef3e980a83e93f43900b43c7f18e3c1c57311/src/avram/migrator/alter_table_statement.cr#L12" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2162,7 +2167,7 @@ built.statements
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/9ad64b90928458e07e35b6a02a404aa6fb90de33/src/avram/migrator/alter_table_statement.cr#L10" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/82eef3e980a83e93f43900b43c7f18e3c1c57311/src/avram/migrator/alter_table_statement.cr#L10" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2178,7 +2183,23 @@ built.statements
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/9ad64b90928458e07e35b6a02a404aa6fb90de33/src/avram/migrator/alter_table_statement.cr#L11" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/82eef3e980a83e93f43900b43c7f18e3c1c57311/src/avram/migrator/alter_table_statement.cr#L11" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="if_exists_statement-instance-method">
+      <div class="signature">
+        
+        def <strong>if_exists_statement</strong>
+
+        <a class="method-permalink" href="#if_exists_statement-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/luckyframework/avram/blob/82eef3e980a83e93f43900b43c7f18e3c1c57311/src/avram/migrator/alter_table_statement.cr#L120" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2194,7 +2215,7 @@ built.statements
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/9ad64b90928458e07e35b6a02a404aa6fb90de33/src/avram/migrator/alter_table_statement.cr#L9" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/82eef3e980a83e93f43900b43c7f18e3c1c57311/src/avram/migrator/alter_table_statement.cr#L9" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2210,7 +2231,7 @@ built.statements
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/9ad64b90928458e07e35b6a02a404aa6fb90de33/src/avram/migrator/alter_table_statement.cr#L8" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/82eef3e980a83e93f43900b43c7f18e3c1c57311/src/avram/migrator/alter_table_statement.cr#L8" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2226,7 +2247,7 @@ built.statements
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/9ad64b90928458e07e35b6a02a404aa6fb90de33/src/avram/migrator/alter_table_statement.cr#L115" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/82eef3e980a83e93f43900b43c7f18e3c1c57311/src/avram/migrator/alter_table_statement.cr#L116" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2254,7 +2275,7 @@ built.statements
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/9ad64b90928458e07e35b6a02a404aa6fb90de33/src/avram/migrator/alter_table_statement.cr#L181" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/82eef3e980a83e93f43900b43c7f18e3c1c57311/src/avram/migrator/alter_table_statement.cr#L188" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2275,7 +2296,7 @@ built.statements
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/9ad64b90928458e07e35b6a02a404aa6fb90de33/src/avram/migrator/alter_table_statement.cr#L135" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/82eef3e980a83e93f43900b43c7f18e3c1c57311/src/avram/migrator/alter_table_statement.cr#L142" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2299,7 +2320,7 @@ built.statements
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/9ad64b90928458e07e35b6a02a404aa6fb90de33/src/avram/migrator/alter_table_statement.cr#L68" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/82eef3e980a83e93f43900b43c7f18e3c1c57311/src/avram/migrator/alter_table_statement.cr#L69" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2326,7 +2347,7 @@ a <code><a href="../../Float64.html">Float64</a></code> column which requires se
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/9ad64b90928458e07e35b6a02a404aa6fb90de33/src/avram/migrator/alter_table_statement.cr#L27" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/82eef3e980a83e93f43900b43c7f18e3c1c57311/src/avram/migrator/alter_table_statement.cr#L28" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2342,7 +2363,7 @@ a <code><a href="../../Float64.html">Float64</a></code> column which requires se
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/9ad64b90928458e07e35b6a02a404aa6fb90de33/src/avram/migrator/alter_table_statement.cr#L294" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/82eef3e980a83e93f43900b43c7f18e3c1c57311/src/avram/migrator/alter_table_statement.cr#L301" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2358,7 +2379,7 @@ a <code><a href="../../Float64.html">Float64</a></code> column which requires se
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/9ad64b90928458e07e35b6a02a404aa6fb90de33/src/avram/migrator/alter_table_statement.cr#L301" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/82eef3e980a83e93f43900b43c7f18e3c1c57311/src/avram/migrator/alter_table_statement.cr#L308" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2374,7 +2395,7 @@ a <code><a href="../../Float64.html">Float64</a></code> column which requires se
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/9ad64b90928458e07e35b6a02a404aa6fb90de33/src/avram/migrator/alter_table_statement.cr#L276" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/82eef3e980a83e93f43900b43c7f18e3c1c57311/src/avram/migrator/alter_table_statement.cr#L283" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2390,7 +2411,7 @@ a <code><a href="../../Float64.html">Float64</a></code> column which requires se
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/9ad64b90928458e07e35b6a02a404aa6fb90de33/src/avram/migrator/alter_table_statement.cr#L285" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/82eef3e980a83e93f43900b43c7f18e3c1c57311/src/avram/migrator/alter_table_statement.cr#L292" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2406,7 +2427,7 @@ a <code><a href="../../Float64.html">Float64</a></code> column which requires se
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/9ad64b90928458e07e35b6a02a404aa6fb90de33/src/avram/migrator/alter_table_statement.cr#L255" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/82eef3e980a83e93f43900b43c7f18e3c1c57311/src/avram/migrator/alter_table_statement.cr#L262" target="_blank">View source</a>]
         
       </div>
     </div>
