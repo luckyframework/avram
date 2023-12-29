@@ -79,21 +79,21 @@ end
 describe Lucky::SelectHelpers do
   it "renders select" do
     view.render_select(form.company_id).html.to_s.should eq <<-HTML
-    <select name="company:company_id"></select>
+    <select id="company_company_id" name="company:company_id"></select>
     HTML
 
     view.render_disabled_select(form.company_id).html.to_s.should eq <<-HTML
-    <select name="company:company_id" disabled></select>
+    <select id="company_company_id" name="company:company_id" disabled></select>
     HTML
   end
 
   it "renders multi-select" do
     view.render_multi_select(form.tags).html.to_s.should eq <<-HTML
-    <select name="company:tags[]" multiple></select>
+    <select id="company_tags_0" name="company:tags[]" multiple></select>
     HTML
 
     view.render_disabled_multi_select(form.tags).html.to_s.should eq <<-HTML
-    <select name="company:tags[]" multiple disabled></select>
+    <select id="company_tags_0" name="company:tags[]" multiple disabled></select>
     HTML
   end
 

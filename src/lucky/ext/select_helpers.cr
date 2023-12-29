@@ -1,13 +1,13 @@
 module Lucky::SelectHelpers
   def select_input(field : Avram::PermittedAttribute, attrs : Array(Symbol) = [] of Symbol, **html_options, &) : Nil
-    select_tag attrs, merge_options(html_options, {"name" => input_name(field)}) do
+    select_tag attrs, merge_options(html_options, {"id" => input_id(field), "name" => input_name(field)}) do
       yield
     end
   end
 
   def multi_select_input(field : Avram::PermittedAttribute(Array), attrs : Array(Symbol) = [] of Symbol, **html_options, &) : Nil
     merged_attrs = [:multiple].concat(attrs)
-    select_tag merged_attrs, merge_options(html_options, {"name" => input_name(field)}) do
+    select_tag merged_attrs, merge_options(html_options, {"id" => input_id(field), "name" => input_name(field)}) do
       yield
     end
   end
@@ -42,6 +42,14 @@ module Lucky::SelectHelpers
   # The text is set to `label`.
   def select_prompt(label : String) : Nil
     option(label, value: "")
+  end
+
+  private def input_id(field)
+    "#{field.param_key}_#{field.name}"
+  end
+
+  private def input_id(field : Avram::PermittedAttribute(Array))
+    "#{field.param_key}_#{field.name}_#{array_id_counter[field.name]}"
   end
 
   private def input_name(field)
