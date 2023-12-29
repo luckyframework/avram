@@ -1320,6 +1320,15 @@ describe Avram::Queryable do
       bucket = bucket.reload
       bucket.names.should eq(["Rey"])
     end
+
+    it "updates with joins" do
+      manager1 = ManagerFactory.create(&.name("Mr. Krabs"))
+      manager2 = ManagerFactory.create(&.name("Mr. Robot"))
+      EmployeeFactory.create(&.name("Spongebob Alderson").manager_id(manager1.id))
+      Employee::BaseQuery.new.where_manager(Manager::BaseQuery.new.id(manager1.id)).update(manager_id: manager2.id)
+      manager1.employees!.first?.should be_nil
+      manager2.employees!.first.name.should eq("Spongebob Alderson")
+    end
   end
 
   describe "#delete" do
