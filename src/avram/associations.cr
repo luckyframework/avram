@@ -20,7 +20,9 @@ module Avram::Associations
     end
 
     # Returns `true` if the association has been preloaded
+    @[DB::Field(ignore: true)]
     getter? {{ assoc_name }}_preloaded : Bool = false
+    @[DB::Field(ignore: true)]
     private getter _preloaded_{{ assoc_name }} : {{ model }}?
   end
 
