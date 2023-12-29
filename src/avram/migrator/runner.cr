@@ -46,6 +46,28 @@ class Avram::Migrator::Runner
     end
   end
 
+  # Returns the DB connection args used
+  # for postgres in an array so you can pass
+  # them to `Process.run`
+  def self.cmd_args_array : Array(String)
+    args = [] of String
+    if user = self.db_user
+      args << "-U"
+      args << user
+    end
+    if host = self.db_host
+      args << "-h"
+      args << host
+    end
+    if port = self.db_port
+      args << "-p"
+      args << port.to_s
+    end
+
+    args << self.db_name
+    args
+  end
+
   def self.drop_db(quiet? : Bool = false)
     DB.connect("#{credentials.connection_string}/#{db_user}") do |db|
       db.exec "DROP DATABASE IF EXISTS #{db_name}"
@@ -84,7 +106,9 @@ class Avram::Migrator::Runner
 
   def self.restore_db(restore_file : String, quiet : Bool = false)
     if File.exists?(restore_file)
-      run "psql -q #{cmd_args} -v ON_ERROR_STOP=1 < #{restore_file}"
+      File.open(restore_file) do |f|
+        run("psql", ["-q", *cmd_args_array, "-v", "ON_ERROR_STOP=1"], input: f)
+      end
       unless quiet
         puts "Done restoring #{db_name.colorize(:green)}"
       end
@@ -97,7 +121,10 @@ class Avram::Migrator::Runner
   # and includes the migtation data.
   def self.dump_db(dump_to : String = "db/structure.sql", quiet : Bool = false)
     Db::VerifyConnection.new(quiet: true).run_task
-    run "pg_dump -s #{cmd_args} > #{dump_to}; pg_dump -t migrations --data-only #{cmd_args} >> #{dump_to}"
+    File.open(dump_to, "w+") do |f|
+      run("pg_dump", ["-s", *cmd_args_array], output: f)
+      run("pg_dump", ["-t", "migrations", "--data-only", *cmd_args_array], output: f)
+    end
     unless quiet
       puts "Done dumping #{db_name.colorize(:green)}"
     end
@@ -127,13 +154,22 @@ class Avram::Migrator::Runner
     SQL
   end
 
-  def self.run(command : String, output : IO = STDOUT)
+  @[Deprecated("Calling run with a single string is deprecated. Pass the args as a separate Array")]
+  def self.run(command : String, output : IO = STDOUT, input : Process::Stdio = Process::Redirect::Close)
+    program, *args = command.split(' ')
+    self.run(program, args, output, input)
+  end
+
+  def self.run(command : String, args : Array(String), output : IO = STDOUT, input : Process::Stdio = Process::Redirect::Close)
     error_messages = IO::Memory.new
     ENV["PGPASSWORD"] = self.db_password if self.db_password
-    result = Process.run command,
-      shell: true,
+    result = Process.run(
+      command: command,
+      args: args,
+      input: input,
       output: output,
       error: error_messages
+    )
     ENV.delete("PGPASSWORD") if self.db_password
     unless result.success?
       raise error_messages.to_s
