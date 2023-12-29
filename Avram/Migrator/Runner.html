@@ -1733,7 +1733,7 @@
   </h2>
   
     
-      <a href="https://github.com/luckyframework/avram/blob/795b0056cc8dfbb7b7085a82942a839d4cc44df6/src/avram/migrator/runner.cr#L6" target="_blank">
+      <a href="https://github.com/luckyframework/avram/blob/95bf07fe70dba3805367b47b17811ae9f7068e5b/src/avram/migrator/runner.cr#L6" target="_blank">
         avram/migrator/runner.cr
       </a>
     
@@ -1798,6 +1798,13 @@
       </li>
     
       <li class="entry-summary">
+        <a href="#cmd_args_array%3AArray%28String%29-class-method" class="signature"><strong>.cmd_args_array</strong> : Array(String)</a>
+        
+          <div class="summary"><p>Returns the DB connection args used for postgres in an array so you can pass them to <code>Process.run</code></p></div>
+        
+      </li>
+    
+      <li class="entry-summary">
         <a href="#create_db%28quiet%3F%3ABool%3Dfalse%29-class-method" class="signature"><strong>.create_db</strong>(quiet? : Bool = <span class="n">false</span>)</a>
         
       </li>
@@ -1855,7 +1862,14 @@
       </li>
     
       <li class="entry-summary">
-        <a href="#run%28command%3AString%2Coutput%3AIO%3DSTDOUT%29-class-method" class="signature"><strong>.run</strong>(command : String, output : IO = <span class="t">STDOUT</span>)</a>
+        <a href="#run%28command%3AString%2Coutput%3AIO%3DSTDOUT%2Cinput%3AProcess%3A%3AStdio%3DProcess%3A%3ARedirect%3A%3AClose%29-class-method" class="signature"><strong>.run</strong>(command : String, output : IO = <span class="t">STDOUT</span>, input : Process::Stdio = <span class="t">Process</span><span class="t">::</span><span class="t">Redirect</span><span class="t">::</span><span class="t">Close</span>)</a>
+        
+          <div class="summary"><p><span class="flag red">DEPRECATED</span>  Calling run with a single string is deprecated. Pass the args as a separate Array</p></div>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#run%28command%3AString%2Cargs%3AArray%28String%29%2Coutput%3AIO%3DSTDOUT%2Cinput%3AProcess%3A%3AStdio%3DProcess%3A%3ARedirect%3A%3AClose%29-class-method" class="signature"><strong>.run</strong>(command : String, args : Array(String), output : IO = <span class="t">STDOUT</span>, input : Process::Stdio = <span class="t">Process</span><span class="t">::</span><span class="t">Redirect</span><span class="t">::</span><span class="t">Close</span>)</a>
         
       </li>
     
@@ -1968,7 +1982,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/795b0056cc8dfbb7b7085a82942a839d4cc44df6/src/avram/migrator/runner.cr#L13" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/95bf07fe70dba3805367b47b17811ae9f7068e5b/src/avram/migrator/runner.cr#L13" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1996,7 +2010,30 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/795b0056cc8dfbb7b7085a82942a839d4cc44df6/src/avram/migrator/runner.cr#L40" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/95bf07fe70dba3805367b47b17811ae9f7068e5b/src/avram/migrator/runner.cr#L40" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="cmd_args_array:Array(String)-class-method">
+      <div class="signature">
+        
+        def self.<strong>cmd_args_array</strong> : <a href="../../Array.html">Array</a>(<a href="../../String.html">String</a>)
+
+        <a class="method-permalink" href="#cmd_args_array%3AArray%28String%29-class-method">#</a>
+      </div>
+      
+        <div class="doc">
+          
+          <p>Returns the DB connection args used
+for postgres in an array so you can pass
+them to <code>Process.run</code></p>
+        </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/luckyframework/avram/blob/95bf07fe70dba3805367b47b17811ae9f7068e5b/src/avram/migrator/runner.cr#L52" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2012,7 +2049,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/795b0056cc8dfbb7b7085a82942a839d4cc44df6/src/avram/migrator/runner.cr#L58" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/95bf07fe70dba3805367b47b17811ae9f7068e5b/src/avram/migrator/runner.cr#L80" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2028,7 +2065,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/795b0056cc8dfbb7b7085a82942a839d4cc44df6/src/avram/migrator/runner.cr#L36" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/95bf07fe70dba3805367b47b17811ae9f7068e5b/src/avram/migrator/runner.cr#L36" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2044,7 +2081,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/795b0056cc8dfbb7b7085a82942a839d4cc44df6/src/avram/migrator/runner.cr#L20" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/95bf07fe70dba3805367b47b17811ae9f7068e5b/src/avram/migrator/runner.cr#L20" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2060,7 +2097,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/795b0056cc8dfbb7b7085a82942a839d4cc44df6/src/avram/migrator/runner.cr#L16" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/95bf07fe70dba3805367b47b17811ae9f7068e5b/src/avram/migrator/runner.cr#L16" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2076,7 +2113,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/795b0056cc8dfbb7b7085a82942a839d4cc44df6/src/avram/migrator/runner.cr#L32" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/95bf07fe70dba3805367b47b17811ae9f7068e5b/src/avram/migrator/runner.cr#L32" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2092,7 +2129,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/795b0056cc8dfbb7b7085a82942a839d4cc44df6/src/avram/migrator/runner.cr#L24" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/95bf07fe70dba3805367b47b17811ae9f7068e5b/src/avram/migrator/runner.cr#L24" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2108,7 +2145,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/795b0056cc8dfbb7b7085a82942a839d4cc44df6/src/avram/migrator/runner.cr#L28" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/95bf07fe70dba3805367b47b17811ae9f7068e5b/src/avram/migrator/runner.cr#L28" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2124,7 +2161,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/795b0056cc8dfbb7b7085a82942a839d4cc44df6/src/avram/migrator/runner.cr#L49" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/95bf07fe70dba3805367b47b17811ae9f7068e5b/src/avram/migrator/runner.cr#L71" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2146,7 +2183,7 @@ and includes the migtation data.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/795b0056cc8dfbb7b7085a82942a839d4cc44df6/src/avram/migrator/runner.cr#L98" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/95bf07fe70dba3805367b47b17811ae9f7068e5b/src/avram/migrator/runner.cr#L122" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2162,7 +2199,7 @@ and includes the migtation data.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/795b0056cc8dfbb7b7085a82942a839d4cc44df6/src/avram/migrator/runner.cr#L11" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/95bf07fe70dba3805367b47b17811ae9f7068e5b/src/avram/migrator/runner.cr#L11" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2178,23 +2215,44 @@ and includes the migtation data.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/795b0056cc8dfbb7b7085a82942a839d4cc44df6/src/avram/migrator/runner.cr#L85" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/95bf07fe70dba3805367b47b17811ae9f7068e5b/src/avram/migrator/runner.cr#L107" target="_blank">View source</a>]
         
       </div>
     </div>
   
-    <div class="entry-detail" id="run(command:String,output:IO=STDOUT)-class-method">
+    <div class="entry-detail" id="run(command:String,output:IO=STDOUT,input:Process::Stdio=Process::Redirect::Close)-class-method">
       <div class="signature">
         
-        def self.<strong>run</strong>(command : <a href="../../String.html">String</a>, output : IO = <span class="t">STDOUT</span>)
+        def self.<strong>run</strong>(command : <a href="../../String.html">String</a>, output : IO = <span class="t">STDOUT</span>, input : Process::Stdio = <span class="t">Process</span><span class="t">::</span><span class="t">Redirect</span><span class="t">::</span><span class="t">Close</span>)
 
-        <a class="method-permalink" href="#run%28command%3AString%2Coutput%3AIO%3DSTDOUT%29-class-method">#</a>
+        <a class="method-permalink" href="#run%28command%3AString%2Coutput%3AIO%3DSTDOUT%2Cinput%3AProcess%3A%3AStdio%3DProcess%3A%3ARedirect%3A%3AClose%29-class-method">#</a>
+      </div>
+      
+        <div class="doc">
+          
+          <p><span class="flag red">DEPRECATED</span>  Calling run with a single string is deprecated. Pass the args as a separate Array</p>
+        </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/luckyframework/avram/blob/95bf07fe70dba3805367b47b17811ae9f7068e5b/src/avram/migrator/runner.cr#L158" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="run(command:String,args:Array(String),output:IO=STDOUT,input:Process::Stdio=Process::Redirect::Close)-class-method">
+      <div class="signature">
+        
+        def self.<strong>run</strong>(command : <a href="../../String.html">String</a>, args : <a href="../../Array.html">Array</a>(<a href="../../String.html">String</a>), output : IO = <span class="t">STDOUT</span>, input : Process::Stdio = <span class="t">Process</span><span class="t">::</span><span class="t">Redirect</span><span class="t">::</span><span class="t">Close</span>)
+
+        <a class="method-permalink" href="#run%28command%3AString%2Cargs%3AArray%28String%29%2Coutput%3AIO%3DSTDOUT%2Cinput%3AProcess%3A%3AStdio%3DProcess%3A%3ARedirect%3A%3AClose%29-class-method">#</a>
       </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/795b0056cc8dfbb7b7085a82942a839d4cc44df6/src/avram/migrator/runner.cr#L130" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/95bf07fe70dba3805367b47b17811ae9f7068e5b/src/avram/migrator/runner.cr#L163" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2210,7 +2268,7 @@ and includes the migtation data.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/795b0056cc8dfbb7b7085a82942a839d4cc44df6/src/avram/migrator/runner.cr#L106" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/95bf07fe70dba3805367b47b17811ae9f7068e5b/src/avram/migrator/runner.cr#L133" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2238,7 +2296,7 @@ and includes the migtation data.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/795b0056cc8dfbb7b7085a82942a839d4cc44df6/src/avram/migrator/runner.cr#L184" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/95bf07fe70dba3805367b47b17811ae9f7068e5b/src/avram/migrator/runner.cr#L220" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2254,7 +2312,7 @@ and includes the migtation data.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/795b0056cc8dfbb7b7085a82942a839d4cc44df6/src/avram/migrator/runner.cr#L161" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/95bf07fe70dba3805367b47b17811ae9f7068e5b/src/avram/migrator/runner.cr#L197" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2270,7 +2328,7 @@ and includes the migtation data.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/795b0056cc8dfbb7b7085a82942a839d4cc44df6/src/avram/migrator/runner.cr#L166" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/95bf07fe70dba3805367b47b17811ae9f7068e5b/src/avram/migrator/runner.cr#L202" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2286,7 +2344,7 @@ and includes the migtation data.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/795b0056cc8dfbb7b7085a82942a839d4cc44df6/src/avram/migrator/runner.cr#L175" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/95bf07fe70dba3805367b47b17811ae9f7068e5b/src/avram/migrator/runner.cr#L211" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2302,7 +2360,7 @@ and includes the migtation data.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/795b0056cc8dfbb7b7085a82942a839d4cc44df6/src/avram/migrator/runner.cr#L155" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/95bf07fe70dba3805367b47b17811ae9f7068e5b/src/avram/migrator/runner.cr#L191" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2318,7 +2376,7 @@ and includes the migtation data.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/795b0056cc8dfbb7b7085a82942a839d4cc44df6/src/avram/migrator/runner.cr#L149" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/95bf07fe70dba3805367b47b17811ae9f7068e5b/src/avram/migrator/runner.cr#L185" target="_blank">View source</a>]
         
       </div>
     </div>
