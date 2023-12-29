@@ -11,8 +11,9 @@ class Avram::Migrator::AlterTableStatement
   getter fill_existing_with_statements = [] of String
   getter change_type_statements = [] of String
   getter change_default_statements = [] of String
+  private getter? if_exists : Bool = false
 
-  def initialize(@table_name : TableName)
+  def initialize(@table_name : TableName, *, @if_exists : Bool = false)
   end
 
   # Change the column's type from whatever it is currently to
@@ -116,13 +117,19 @@ class Avram::Migrator::AlterTableStatement
     alter_statements + change_default_statements + change_type_statements + index_statements + fill_existing_with_statements
   end
 
+  def if_exists_statement
+    if if_exists?
+      "IF EXISTS "
+    end
+  end
+
   def alter_statements : Array(String)
     alterations = renamed_rows.map do |statement|
-      "ALTER TABLE #{@table_name} #{statement};"
+      "ALTER TABLE #{if_exists_statement}#{@table_name} #{statement};"
     end
     unless (rows + dropped_rows).empty?
       alterations << String.build do |statement|
-        statement << "ALTER TABLE #{@table_name}"
+        statement << "ALTER TABLE #{if_exists_statement}#{@table_name}"
         statement << "\n"
         statement << (rows + dropped_rows).join(",\n")
         statement << ';'
@@ -249,7 +256,7 @@ class Avram::Migrator::AlterTableStatement
 
   def add_fill_existing_with_statements(column : Symbol | String, type, value, nilable)
     @fill_existing_with_statements << "UPDATE #{@table_name} SET #{column} = #{value};"
-    @fill_existing_with_statements << "ALTER TABLE #{@table_name} ALTER COLUMN #{column} SET NOT NULL;" unless nilable
+    @fill_existing_with_statements << "ALTER TABLE #{if_exists_statement}#{@table_name} ALTER COLUMN #{column} SET NOT NULL;" unless nilable
   end
 
   macro symbol_expected_error(action, name)

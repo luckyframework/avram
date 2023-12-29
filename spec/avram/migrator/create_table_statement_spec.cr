@@ -236,4 +236,16 @@ describe Avram::Migrator::CreateTableStatement do
       end
     end
   end
+
+  context "IF NOT EXISTS" do
+    it "adds the option to the table" do
+      built = Avram::Migrator::CreateTableStatement.new(:users, if_not_exists: true).build do
+      end
+
+      built.statements.size.should eq 1
+      built.statements.first.should eq <<-SQL
+      CREATE TABLE IF NOT EXISTS users (\n);
+      SQL
+    end
+  end
 end

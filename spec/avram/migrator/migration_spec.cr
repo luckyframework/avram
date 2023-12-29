@@ -64,6 +64,20 @@ class MigrationWithFunctionAndTrigger::V996 < Avram::Migrator::Migration::V1
   end
 end
 
+class MigrationCreateTableIfNotExists::V995 < Avram::Migrator::Migration::V1
+  def migrate
+    create :fake_things, if_not_exists: true do
+      add foo : String
+    end
+  end
+
+  def rollback
+    alter :fake_things, if_exists: true do
+      add foo : String?
+    end
+  end
+end
+
 describe Avram::Migrator::Migration::V1 do
   it "executes statements in a transaction" do
     expect_raises Avram::FailedMigration do
@@ -111,6 +125,19 @@ describe Avram::Migrator::Migration::V1 do
       sql.should contain "CREATE OR REPLACE FUNCTION touch_updated_at"
       sql.should contain "DROP TRIGGER IF EXISTS trigger_touch_updated_at"
       sql.should contain "CREATE TRIGGER trigger_touch_updated_at"
+    end
+  end
+
+  describe "if _not_ exists" do
+    it "passes the option through the macro" do
+      migration = MigrationCreateTableIfNotExists::V995.new
+      migration.migrate
+      sql = migration.prepared_statements.join("\n")
+      sql.should contain "CREATE TABLE IF NOT EXISTS fake_things"
+
+      migration.rollback
+      sql = migration.prepared_statements.join("\n")
+      sql.should contain "ALTER TABLE IF EXISTS fake_things"
     end
   end
 end
