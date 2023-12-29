@@ -96,6 +96,11 @@ module Avram::Associations::HasOne
         preload_{{ assoc_name }}({{ model }}::BaseQuery.new)
       end
 
+      def preload_{{ assoc_name }} : self
+        modified_query = yield {{ model }}::BaseQuery.new
+        preload_{{ assoc_name }}(modified_query)
+      end
+
       def preload_{{ assoc_name }}(preload_query : {{ model }}::BaseQuery) : self
         add_preload do |records|
           ids = records.map(&.id)

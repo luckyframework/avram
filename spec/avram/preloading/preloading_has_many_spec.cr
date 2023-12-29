@@ -51,6 +51,17 @@ describe "Preloading has_many associations" do
     end
   end
 
+  it "works with blocks" do
+    with_lazy_load(enabled: false) do
+      post = PostFactory.create
+      comment = CommentFactory.create &.post_id(post.id)
+
+      posts = Post::BaseQuery.new.preload_comments(&.id.not.eq(comment.id))
+
+      posts.results.first.comments.should eq([] of Comment)
+    end
+  end
+
   it "works with UUID foreign keys" do
     with_lazy_load(enabled: false) do
       item = LineItemFactory.create
