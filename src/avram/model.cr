@@ -116,12 +116,12 @@ abstract class Avram::Model
         ensure_value_is_string!({{value_generator}}.call)
       end
 
-      def self.ensure_value_is_string(value : String)
+      def self.ensure_value_is_string!(value : String)
         value
       end
 
-      def self.ensure_value_is_string(value)
-        {% raise "Your primary_key value_generator proc does not return a string" %}
+      def self.ensure_value_is_string!(value)
+        raise "Your primary_key value_generator proc must return a string"
       end
     {% end %}
 
