@@ -109,13 +109,13 @@ abstract class Avram::Model
               Your value generator must return a non-nullable String.
 
               Example:
-                #{@type.id} do
+                table do
                   primary_key id : String = Random::Secure.hex
                   ...
                 end
 
               Or with a proc:
-                #{@type} do
+                table do
                   primary_key id : String = -> { Random::Secure.hex }
                   ...
                 end
