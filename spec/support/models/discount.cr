@@ -2,7 +2,7 @@ class Discount < BaseModel
   skip_default_columns
 
   table do
-    primary_key id : String, Random::Secure.hex
+    primary_key id : String = Random::Secure.hex
     timestamps
     column description : String
     column in_cents : Int32
