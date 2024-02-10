@@ -235,6 +235,16 @@ describe Avram::Migrator::CreateTableStatement do
         end
       end
     end
+
+    it "skips creating the index" do
+      built = Avram::Migrator::CreateTableStatement.new(:challenges).build do
+        add_belongs_to host : User, on_delete: :cascade, index: false
+        add_belongs_to guest : User, on_delete: :cascade
+      end
+
+      built.statements[1].should eq "CREATE INDEX challenges_guest_id_index ON challenges USING btree (guest_id);"
+      built.statements.size.should eq(2)
+    end
   end
 
   context "IF NOT EXISTS" do
