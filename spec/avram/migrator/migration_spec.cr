@@ -78,6 +78,16 @@ class MigrationCreateTableIfNotExists::V995 < Avram::Migrator::Migration::V1
   end
 end
 
+class MigrationCreateAndDropSequences::V994 < Avram::Migrator::Migration::V1
+  def migrate
+    create_sequence(:accounts, :number)
+  end
+
+  def rollback
+    drop_sequence(:accounts, :number)
+  end
+end
+
 describe Avram::Migrator::Migration::V1 do
   it "executes statements in a transaction" do
     expect_raises Avram::FailedMigration do
@@ -138,6 +148,19 @@ describe Avram::Migrator::Migration::V1 do
       migration.rollback
       sql = migration.prepared_statements.join("\n")
       sql.should contain "ALTER TABLE IF EXISTS fake_things"
+    end
+  end
+
+  describe "sequences" do
+    it "creates the sequences" do
+      migration = MigrationCreateAndDropSequences::V994.new
+      migration.migrate
+      sql = migration.prepared_statements.join("\n")
+      sql.should contain "CREATE SEQUENCE IF NOT EXISTS accounts_number_seq OWNED BY accounts.number"
+
+      migration.rollback
+      sql = migration.prepared_statements.join("\n")
+      sql.should contain "DROP SEQUENCE IF EXISTS accounts_number_seq"
     end
   end
 end
