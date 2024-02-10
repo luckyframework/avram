@@ -66,9 +66,17 @@ class Avram::QueryBuilder
     clone.statement_for_update!(params, returning?)
   end
 
+  # Creates the SQL for updating. If any joins are present, it
+  # moves the WHERE clause to a subquery allowing for joins
   def statement_for_update!(params, return_columns returning? : Bool = true)
     sql = ["UPDATE #{table}", set_sql_clause(params)]
-    sql += sql_condition_clauses
+    if joins_sql.presence
+      sql += ["WHERE EXISTS", "(", select_sql]
+      sql += sql_condition_clauses
+      sql += [")"]
+    else
+      sql += sql_condition_clauses
+    end
     sql += ["RETURNING #{@selections}"] if returning?
 
     join_sql sql
