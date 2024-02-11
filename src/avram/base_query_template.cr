@@ -14,6 +14,12 @@ class Avram::BaseQueryTemplate
         end
       end
 
+      {% if named_args[:materialized_view] %}
+      def self.refresh_view(*, concurrent : Bool = false)
+        {{ type }}.database.exec("REFRESH MATERIALIZED VIEW #{concurrent ? "CONCURRENTLY" : ""} #{{{ type }}.table_name}")
+      end
+      {% end %}
+
       def update(
           {% for column in columns %}
             {{ column[:name] }} : {{ column[:type] }} | Avram::Nothing{% if column[:nilable] %} | Nil{% end %} = Avram::Nothing.new,

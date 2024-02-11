@@ -25,4 +25,16 @@ describe "views" do
     AdminUser.ensure_correct_column_mappings!
     NicknameInfo.ensure_correct_column_mappings!
   end
+
+  describe "materialized views" do
+    it "works" do
+      UserFactory.create(&.name("Yoozur"))
+      AdminFactory.create(&.name("Aadmyn"))
+      emp = EmployeeFactory.create(&.name("Hemploie"))
+      CustomerFactory.create(&.name("Kustoomur").employee_id(emp.id))
+      Name::BaseQuery.new.select_count.should eq(0)
+      Name::BaseQuery.refresh_view
+      Name::BaseQuery.new.select_count.should eq(4)
+    end
+  end
 end
