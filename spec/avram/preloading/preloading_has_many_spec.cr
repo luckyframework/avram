@@ -270,4 +270,44 @@ describe "Preloading has_many associations" do
       end
     end
   end
+
+  describe "override base_query_class", focus: true do
+    it "uses the custom query class to ignore soft_deleted records" do
+      user = UserFactory.create
+      good_txn = TransactionFactory.create(&.user(user))
+      deleted_txn = TransactionFactory.create(&.user(user).soft_deleted_at(1.day.ago))
+
+      u = UserQuery.new.preload_transactions.first
+      u.transactions_count.should eq(1)
+      ids = u.transactions.map(&.id)
+      ids.should contain(good_txn.id)
+      ids.should_not contain(deleted_txn.id)
+    end
+
+    it "has an escape hatch" do
+      user = UserFactory.create
+      good_txn = TransactionFactory.create(&.user(user))
+      deleted_txn = TransactionFactory.create(&.user(user).soft_deleted_at(1.day.ago))
+
+      u = UserQuery.new.preload_transactions(Transaction::BaseQuery.new).first
+      u.transactions_count.should eq(2)
+      ids = u.transactions.map(&.id)
+      ids.should contain(good_txn.id)
+      ids.should contain(deleted_txn.id)
+    end
+
+    it "extends the custom base query class" do
+      user = UserFactory.create
+      non_special_txn = TransactionFactory.create(&.user(user))
+      deleted_txn = TransactionFactory.create(&.user(user).soft_deleted_at(1.day.ago))
+      special_txn = TransactionFactory.create(&.user(user).type(Transaction::Type::Special))
+
+      u = UserQuery.new.preload_transactions(&.special).first
+      u.transactions_count.should eq(1)
+      ids = u.transactions.map(&.id)
+      ids.should_not contain(non_special_txn.id)
+      ids.should_not contain(deleted_txn.id)
+      ids.should contain(special_txn.id)
+    end
+  end
 end
