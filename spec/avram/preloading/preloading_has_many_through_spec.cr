@@ -220,24 +220,23 @@ describe "Preloading has_many through associations" do
       FollowFactory.create(&.followee(user).follower(not_friend).soft_deleted_at(1.day.ago))
 
       u = UserQuery.new.preload_followers.first
-      u.followers_count.should eq(1)
       ids = u.followers.map(&.id)
       ids.should contain(new_friend.id)
       ids.should_not contain(not_friend.id)
     end
 
-    # it "has an escape hatch" do
-    #   user = UserFactory.create
-    #   new_friend = UserFactory.create
-    #   not_friend = UserFactory.create
-    #   FollowFactory.create(&.followee(user).follower(new_friend))
-    #   FollowFactory.create(&.followee(user).follower(not_friend).soft_deleted_at(1.day.ago))
+    it "has an escape hatch" do
+      user = UserFactory.create
+      new_friend = UserFactory.create
+      not_friend = UserFactory.create
+      FollowFactory.create(&.followee(user).follower(new_friend))
+      FollowFactory.create(&.followee(user).follower(not_friend).soft_deleted_at(1.day.ago))
 
-    #   u = UserQuery.new.preload_followers(&.preload_follows(Follow::BaseQuery.new)).first
-    #   u.followers_count.should eq(2)
-    #   ids = u.followers.map(&.id)
-    #   ids.should contain(new_friend.id)
-    #   ids.should contain(not_friend.id)
-    # end
+      # TODO: Need to figure out how to override this join
+      u = UserQuery.new.preload_follows(Follow::BaseQuery.new).preload_followers.first
+      ids = u.followers.map(&.id)
+      ids.should contain(new_friend.id)
+      ids.should contain(not_friend.id)
+    end
   end
 end

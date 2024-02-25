@@ -127,7 +127,7 @@ module Avram::Associations::HasMany
         preload_{{ assoc_name }}({{ query_class }}.new)
       end
 
-      def preload_{{ assoc_name }} : self
+      def preload_{{ assoc_name }}(&) : self
         modified_query = yield {{ query_class }}.new
         preload_{{ assoc_name }}(modified_query)
       end
