@@ -39,7 +39,8 @@ module Avram::Associations::HasMany
       type: {{ type_declaration.type }},
       foreign_key: :{{ foreign_key }},
       through: {{ through }},
-      relationship_type: :has_many
+      relationship_type: :has_many,
+      base_query_class: {{ query_class }}
 
     define_has_many_lazy_loading({{ assoc_name }}, {{ model }}, {{ foreign_key }}, {{ through }}, {{ query_class }})
     define_has_many_base_query({{ @type }}, {{ assoc_name }}, {{ model }}, {{ foreign_key }}, {{ through }}, {{ query_class }})

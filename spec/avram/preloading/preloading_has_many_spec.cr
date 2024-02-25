@@ -271,7 +271,7 @@ describe "Preloading has_many associations" do
     end
   end
 
-  describe "override base_query_class", focus: true do
+  describe "override base_query_class" do
     it "uses the custom query class to ignore soft_deleted records" do
       user = UserFactory.create
       good_txn = TransactionFactory.create(&.user(user))
