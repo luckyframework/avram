@@ -18,7 +18,7 @@ struct Int32
     def parse(value : String)
       SuccessfulCast(Int32).new value.to_i
     rescue ArgumentError
-      FailedCast.new
+      FailedCast.new("Value ->#{value}<- could not be converted to Int32")
     end
 
     def parse(value : Int32)
@@ -28,7 +28,7 @@ struct Int32
     def parse(value : Int64)
       SuccessfulCast(Int32).new value.to_i32
     rescue OverflowError
-      FailedCast.new
+      FailedCast.new("Value ->#{value}<- overflowed while being converted to Int32")
     end
 
     def parse(values : Array(Int32))

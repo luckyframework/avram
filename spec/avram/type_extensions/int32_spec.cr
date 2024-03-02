@@ -13,7 +13,7 @@ describe "Int32" do
 
   it "returns FailedCast when overflow from Int64 to Int32" do
     result = Int32.adapter.parse(2147483648)
-    result.value.should eq(nil)
     result.should be_a(Avram::Type::FailedCast)
+    expect_raises(Avram::FailedCastError) { result.value }
   end
 end

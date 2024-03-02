@@ -12,12 +12,14 @@ struct Bool
     end
 
     def parse(value : String)
-      if %w(true 1).includes? value
+      true_vals = %w(true 1)
+      false_vals = %w(false 0)
+      if true_vals.includes? value
         SuccessfulCast(Bool).new true
-      elsif %w(false 0).includes? value
+      elsif false_vals.includes? value
         SuccessfulCast(Bool).new false
       else
-        FailedCast.new
+        FailedCast.new("Value ->#{value}<- could not be converted to boolean - allowed values: #{true_vals + false_vals}")
       end
     end
 
