@@ -42,7 +42,7 @@ module Avram::Associations::HasMany
       relationship_type: :has_many,
       base_query_class: {{ query_class }}
 
-    define_has_many_lazy_loading({{ assoc_name }}, {{ model }}, {{ foreign_key }}, {{ through }}, {{ query_class }})
+    define_has_many_lazy_loading({{ assoc_name }}, {{ model }}, {{ foreign_key }}, {{ through }})
     define_has_many_base_query({{ @type }}, {{ assoc_name }}, {{ model }}, {{ foreign_key }}, {{ through }}, {{ query_class }})
   end
 
@@ -123,19 +123,36 @@ module Avram::Associations::HasMany
       end
       {% end %}
 
+      {% if through %}
+      def preload_{{ assoc_name }}(*, through : Avram::Queryable? = nil) : self
+        preload_{{ assoc_name }}({{ query_class }}.new, through: through)
+      end
+      {% else %}
       def preload_{{ assoc_name }} : self
         preload_{{ assoc_name }}({{ query_class }}.new)
       end
+      {% end %}
 
+      {% if through %}
+      def preload_{{ assoc_name }}(*, through : Avram::Queryable? = nil, &) : self
+        modified_query = yield {{ query_class }}.new
+        preload_{{ assoc_name }}(modified_query, through: through)
+      end
+      {% else %}
       def preload_{{ assoc_name }}(&) : self
         modified_query = yield {{ query_class }}.new
         preload_{{ assoc_name }}(modified_query)
       end
+      {% end %}
 
       {% if through %}
-        def preload_{{ assoc_name }}(preload_query : {{ model }}::BaseQuery) : self
+        def preload_{{ assoc_name }}(preload_query : {{ model }}::BaseQuery, *, through : Avram::Queryable? = nil) : self
           preload_{{ through.first.id }} do |through_query|
-            through_query.preload_{{ through[1].id }}(preload_query)
+            if base_q = through
+              base_q.preload_{{ through[1].id }}(preload_query)
+            else
+              through_query.preload_{{ through[1].id }}(preload_query)
+            end
           end
           add_preload do |records|
             records.each do |record|
@@ -170,7 +187,7 @@ module Avram::Associations::HasMany
     end
   end
 
-  private macro define_has_many_lazy_loading(assoc_name, model, foreign_key, through, query_class)
+  private macro define_has_many_lazy_loading(assoc_name, model, foreign_key, through)
     @[DB::Field(ignore: true)]
     @_preloaded_{{ assoc_name }} : Array({{ model }})?
     @[DB::Field(ignore: true)]
@@ -197,10 +214,7 @@ module Avram::Associations::HasMany
           .map(&.{{ through[1].id }}_count)
           .sum
       {% else %}
-        {{ query_class }}
-          .new
-          .{{ foreign_key }}(id)
-          .select_count
+      {{ assoc_name.id }}_query.select_count
       {% end %}
     end
 
@@ -219,10 +233,7 @@ module Avram::Associations::HasMany
           assoc_results.is_a?(Array) ? assoc_results : [assoc_results]
         end.compact
       {% else %}
-        {{ query_class }}
-          .new
-          .{{ foreign_key }}(id)
-          .results
+        {{ assoc_name.id }}_query.results
       {% end %}
     end
   end

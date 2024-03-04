@@ -232,8 +232,19 @@ describe "Preloading has_many through associations" do
       FollowFactory.create(&.followee(user).follower(new_friend))
       FollowFactory.create(&.followee(user).follower(not_friend).soft_deleted_at(1.day.ago))
 
-      # TODO: Need to figure out how to override this join
-      u = UserQuery.new.preload_follows(Follow::BaseQuery.new).preload_followers.first
+      # Preloads work in a lot of different ways, so we need to account for
+      # all of the different method options
+      u = UserQuery.new.preload_followers(through: Follow::BaseQuery.new).id(user.id).first
+      ids = u.followers.map(&.id)
+      ids.should contain(new_friend.id)
+      ids.should contain(not_friend.id)
+
+      u = UserQuery.new.preload_followers(User::BaseQuery.new, through: Follow::BaseQuery.new).id(user.id).first
+      ids = u.followers.map(&.id)
+      ids.should contain(new_friend.id)
+      ids.should contain(not_friend.id)
+
+      u = UserQuery.new.preload_followers(through: Follow::BaseQuery.new, &.preload_follows).id(user.id).first
       ids = u.followers.map(&.id)
       ids.should contain(new_friend.id)
       ids.should contain(not_friend.id)
