@@ -572,6 +572,11 @@
       
     </li>
   
+  <li class=" " data-id="avram/Avram/Migrator/CreateSequenceStatement" data-name="avram::migrator::createsequencestatement">
+      <a href="../../../Avram/Migrator/CreateSequenceStatement.html">CreateSequenceStatement</a>
+      
+    </li>
+  
   <li class=" " data-id="avram/Avram/Migrator/CreateTableStatement" data-name="avram::migrator::createtablestatement">
       <a href="../../../Avram/Migrator/CreateTableStatement.html">CreateTableStatement</a>
       
@@ -599,6 +604,11 @@
   
   <li class=" " data-id="avram/Avram/Migrator/DropIndexStatement" data-name="avram::migrator::dropindexstatement">
       <a href="../../../Avram/Migrator/DropIndexStatement.html">DropIndexStatement</a>
+      
+    </li>
+  
+  <li class=" " data-id="avram/Avram/Migrator/DropSequenceStatement" data-name="avram::migrator::dropsequencestatement">
+      <a href="../../../Avram/Migrator/DropSequenceStatement.html">DropSequenceStatement</a>
       
     </li>
   
@@ -1728,7 +1738,7 @@
   </h2>
   
     
-      <a href="https://github.com/luckyframework/avram/blob/8f39cc47b0a9a201258f75a0c887743a8786edac/src/avram/migrator/migration.cr#L4" target="_blank">
+      <a href="https://github.com/luckyframework/avram/blob/0366d79e695aacac4a38d87d199093bd32331f9e/src/avram/migrator/migration.cr#L4" target="_blank">
         avram/migrator/migration.cr
       </a>
     
@@ -1825,6 +1835,11 @@
     create_index</a>, 
     
   
+    <a href="../../../Avram/Migrator/StatementHelpers.html#create_sequence%28table%3ATableName%2Ccolumn%3ASymbol%29-instance-method" class="tooltip">
+      <span>create_sequence(table : TableName, column : Symbol)</span>
+    create_sequence</a>, 
+    
+  
     <a href="../../../Avram/Migrator/StatementHelpers.html#create_trigger%28table_name%3ATableName%2Cname%3AString%2Cfunction_name%3AString%2Ccallback%3ASymbol%3D%3Abefore%2Con%3AArray%28Symbol%29%3D%5B%3Aupdate%5D%29-instance-method" class="tooltip">
       <span>create_trigger(table_name : TableName, name : String, function_name : String, callback : Symbol = <span class="n">:before</span>, on : Array(Symbol) = [<span class="n">:update</span>])</span>
     create_trigger</a>, 
@@ -1853,6 +1868,11 @@
     <a href="../../../Avram/Migrator/StatementHelpers.html#drop_index%28table_name%3ATableName%2Ccolumns%3AColumns%7CNil%3Dnil%2Cif_exists%3Dfalse%2Con_delete%3D%3Ado_nothing%2Cname%3AString%7CNil%7CSymbol%7CNil%3Dnil%29-instance-method" class="tooltip">
       <span>drop_index(table_name : TableName, columns : Columns | Nil = <span class="n">nil</span>, if_exists = <span class="n">false</span>, on_delete = <span class="n">:do_nothing</span>, name : String | Nil | Symbol | Nil = <span class="n">nil</span>)</span>
     drop_index</a>, 
+    
+  
+    <a href="../../../Avram/Migrator/StatementHelpers.html#drop_sequence%28table%3ATableName%2Ccolumn%3ASymbol%29-instance-method" class="tooltip">
+      <span>drop_sequence(table : TableName, column : Symbol)</span>
+    drop_sequence</a>, 
     
   
     <a href="../../../Avram/Migrator/StatementHelpers.html#drop_trigger%28table_name%3ATableName%2Cname%3AString%29-instance-method" class="tooltip">
@@ -2024,7 +2044,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/8f39cc47b0a9a201258f75a0c887743a8786edac/src/avram/migrator/migration.cr#L48" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/0366d79e695aacac4a38d87d199093bd32331f9e/src/avram/migrator/migration.cr#L48" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2040,7 +2060,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/8f39cc47b0a9a201258f75a0c887743a8786edac/src/avram/migrator/migration.cr#L21" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/0366d79e695aacac4a38d87d199093bd32331f9e/src/avram/migrator/migration.cr#L21" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2056,7 +2076,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/8f39cc47b0a9a201258f75a0c887743a8786edac/src/avram/migrator/migration.cr#L69" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/0366d79e695aacac4a38d87d199093bd32331f9e/src/avram/migrator/migration.cr#L69" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2072,7 +2092,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/8f39cc47b0a9a201258f75a0c887743a8786edac/src/avram/migrator/migration.cr#L65" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/0366d79e695aacac4a38d87d199093bd32331f9e/src/avram/migrator/migration.cr#L65" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2088,7 +2108,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/8f39cc47b0a9a201258f75a0c887743a8786edac/src/avram/migrator/migration.cr#L24" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/0366d79e695aacac4a38d87d199093bd32331f9e/src/avram/migrator/migration.cr#L24" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2104,7 +2124,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/8f39cc47b0a9a201258f75a0c887743a8786edac/src/avram/migrator/migration.cr#L110" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/0366d79e695aacac4a38d87d199093bd32331f9e/src/avram/migrator/migration.cr#L110" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2128,7 +2148,7 @@ transaction and tracked upon completion.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/8f39cc47b0a9a201258f75a0c887743a8786edac/src/avram/migrator/migration.cr#L30" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/0366d79e695aacac4a38d87d199093bd32331f9e/src/avram/migrator/migration.cr#L30" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2144,7 +2164,7 @@ transaction and tracked upon completion.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/8f39cc47b0a9a201258f75a0c887743a8786edac/src/avram/migrator/migration.cr#L22" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/0366d79e695aacac4a38d87d199093bd32331f9e/src/avram/migrator/migration.cr#L22" target="_blank">View source</a>]
         
       </div>
     </div>

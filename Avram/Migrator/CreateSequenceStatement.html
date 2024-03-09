@@ -14,7 +14,7 @@
 <script type="text/javascript" src="../../js/doc.js"></script>
 
   <meta name="repository-name" content="avram">
-  <title>Avram::Migrator::BuildReferenceFragment - avram main</title>
+  <title>Avram::Migrator::CreateSequenceStatement - avram main</title>
   <script type="text/javascript">
     CrystalDocs.base_path = "../../";
   </script>
@@ -412,7 +412,7 @@
       
     </li>
   
-  <li class=" current" data-id="avram/Avram/Migrator/BuildReferenceFragment" data-name="avram::migrator::buildreferencefragment">
+  <li class=" " data-id="avram/Avram/Migrator/BuildReferenceFragment" data-name="avram::migrator::buildreferencefragment">
       <a href="../../Avram/Migrator/BuildReferenceFragment.html">BuildReferenceFragment</a>
       
     </li>
@@ -572,7 +572,7 @@
       
     </li>
   
-  <li class=" " data-id="avram/Avram/Migrator/CreateSequenceStatement" data-name="avram::migrator::createsequencestatement">
+  <li class=" current" data-id="avram/Avram/Migrator/CreateSequenceStatement" data-name="avram::migrator::createsequencestatement">
       <a href="../../Avram/Migrator/CreateSequenceStatement.html">CreateSequenceStatement</a>
       
     </li>
@@ -1691,15 +1691,34 @@
 <div class="main-content">
 <h1 class="type-name">
 
-  <span class="kind">class</span> Avram::<wbr>Migrator::<wbr>BuildReferenceFragment
+  <span class="kind">class</span> Avram::<wbr>Migrator::<wbr>CreateSequenceStatement
 
 </h1>
 
 
-  <ul class="superclass-hierarchy"><li class="superclass"><a href="../../Avram/Migrator/BuildReferenceFragment.html">Avram::Migrator::BuildReferenceFragment</a></li><li class="superclass">Reference</li><li class="superclass"><a href="../../Object.html">Object</a></li></ul>
+  <ul class="superclass-hierarchy"><li class="superclass"><a href="../../Avram/Migrator/CreateSequenceStatement.html">Avram::Migrator::CreateSequenceStatement</a></li><li class="superclass">Reference</li><li class="superclass"><a href="../../Object.html">Object</a></li></ul>
 
 
 
+
+  <h2>
+    <a id="overview" class="anchor" href="#overview">
+  <svg class="octicon-link" aria-hidden="true">
+    <use href="#octicon-link"/>
+  </svg>
+</a>
+    Overview
+  </h2>
+
+  <p>Builds an SQL statement for creating a sequence using the given name appending &quot;_seq&quot;.
+Additional options may be provided for extra customization.</p>
+<h3><a id="usage" class="anchor" href="#usage">
+  <svg class="octicon-link" aria-hidden="true">
+    <use href="#octicon-link"/>
+  </svg>
+</a>Usage</h3>
+<pre><code class="language-crystal"><span class="t">CreateSequenceStatement</span>.new(<span class="n">:accounts_number</span>, if_not_exists: <span class="n">true</span>, owned_by: <span class="s">&quot;accounts.number&quot;</span>).build
+<span class="c"># =&gt; &quot;CREATE SEQUENCE accounts_number_seq;&quot;</span></code></pre>
 
 
 
@@ -1724,8 +1743,8 @@
   </h2>
   
     
-      <a href="https://github.com/luckyframework/avram/blob/0366d79e695aacac4a38d87d199093bd32331f9e/src/avram/migrator/build_reference_fragment.cr#L1" target="_blank">
-        avram/migrator/build_reference_fragment.cr
+      <a href="https://github.com/luckyframework/avram/blob/0366d79e695aacac4a38d87d199093bd32331f9e/src/avram/migrator/create_sequence_statement.cr#L10" target="_blank">
+        avram/migrator/create_sequence_statement.cr
       </a>
     
     <br/>
@@ -1746,7 +1765,7 @@
   <ul class="list-summary">
     
       <li class="entry-summary">
-        <a href="#new%28references%3AString%7CSymbol%7CNil%2Con_delete%3ASymbol%7CNil%29-class-method" class="signature"><strong>.new</strong>(references : String | Symbol | Nil, on_delete : Symbol | Nil)</a>
+        <a href="#new%28name%3AString%7CSymbol%2C%2A%2Cif_not_exists%3ABool%3Dfalse%2Cowned_by%3AString%3D%22NONE%22%29-class-method" class="signature"><strong>.new</strong>(name : String | Symbol, *, if_not_exists : Bool = <span class="n">false</span>, owned_by : String = <span class="s">&quot;NONE&quot;</span>)</a>
         
       </li>
     
@@ -1826,18 +1845,18 @@
     Constructor Detail
   </h2>
   
-    <div class="entry-detail" id="new(references:String|Symbol|Nil,on_delete:Symbol|Nil)-class-method">
+    <div class="entry-detail" id="new(name:String|Symbol,*,if_not_exists:Bool=false,owned_by:String=&quot;NONE&quot;)-class-method">
       <div class="signature">
         
-        def self.<strong>new</strong>(references : <a href="../../String.html">String</a> | Symbol | <a href="../../Nil.html">Nil</a>, on_delete : Symbol | <a href="../../Nil.html">Nil</a>)
+        def self.<strong>new</strong>(name : <a href="../../String.html">String</a> | Symbol, *, if_not_exists : <a href="../../Bool.html">Bool</a> = <span class="n">false</span>, owned_by : <a href="../../String.html">String</a> = <span class="s">&quot;NONE&quot;</span>)
 
-        <a class="method-permalink" href="#new%28references%3AString%7CSymbol%7CNil%2Con_delete%3ASymbol%7CNil%29-class-method">#</a>
+        <a class="method-permalink" href="#new%28name%3AString%7CSymbol%2C%2A%2Cif_not_exists%3ABool%3Dfalse%2Cowned_by%3AString%3D%22NONE%22%29-class-method">#</a>
       </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/0366d79e695aacac4a38d87d199093bd32331f9e/src/avram/migrator/build_reference_fragment.cr#L7" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/0366d79e695aacac4a38d87d199093bd32331f9e/src/avram/migrator/create_sequence_statement.cr#L13" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1869,7 +1888,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/0366d79e695aacac4a38d87d199093bd32331f9e/src/avram/migrator/build_reference_fragment.cr#L10" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/0366d79e695aacac4a38d87d199093bd32331f9e/src/avram/migrator/create_sequence_statement.cr#L16" target="_blank">View source</a>]
         
       </div>
     </div>
