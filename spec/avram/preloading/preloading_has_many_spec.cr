@@ -278,6 +278,8 @@ describe "Preloading has_many associations" do
       deleted_txn = TransactionFactory.create(&.user(user).soft_deleted_at(1.day.ago))
 
       u = UserQuery.new.preload_transactions.first
+      u.transactions_count.should eq(1)
+      u.transactions.size.should eq(1)
       ids = u.transactions.map(&.id)
       ids.should contain(good_txn.id)
       ids.should_not contain(deleted_txn.id)
@@ -289,6 +291,10 @@ describe "Preloading has_many associations" do
       deleted_txn = TransactionFactory.create(&.user(user).soft_deleted_at(1.day.ago))
 
       u = UserQuery.new.preload_transactions(Transaction::BaseQuery.new).first
+      # NOTE: This is an edge case. It uses the base_query_class defined on the association
+      # not what was preloaded.
+      u.transactions_count.should eq(1)
+      u.transactions.size.should eq(2)
       ids = u.transactions.map(&.id)
       ids.should contain(good_txn.id)
       ids.should contain(deleted_txn.id)
@@ -301,6 +307,8 @@ describe "Preloading has_many associations" do
       special_txn = TransactionFactory.create(&.user(user).type(Transaction::Type::Special))
 
       u = UserQuery.new.preload_transactions(&.special).first
+      u.transactions_count.should eq(2)
+      u.transactions.size.should eq(1)
       ids = u.transactions.map(&.id)
       ids.should_not contain(non_special_txn.id)
       ids.should_not contain(deleted_txn.id)
