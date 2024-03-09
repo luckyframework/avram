@@ -185,6 +185,16 @@ describe Avram::Migrator::AlterTableStatement do
         built.statements[2].should eq "UPDATE comments SET line_item_id = 'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11';"
       end
     end
+
+    it "skips creating the index" do
+      built = Avram::Migrator::AlterTableStatement.new(:challenges).build do
+        add_belongs_to host : User?, on_delete: :cascade, fill_existing_with: :nothing, index: false
+        add_belongs_to guest : User?, on_delete: :cascade, fill_existing_with: :nothing
+      end
+
+      built.statements[1].should eq "CREATE INDEX challenges_guest_id_index ON challenges USING btree (guest_id);"
+      built.statements.size.should eq(2)
+    end
   end
 
   context "IF EXISTS" do
