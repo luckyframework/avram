@@ -93,4 +93,15 @@ module Avram::Migrator::StatementHelpers
   def drop_trigger(table_name : TableName, name : String)
     prepared_statements << Avram::Migrator::DropTriggerStatement.new(table_name, name).build
   end
+
+  def create_sequence(table : TableName, column : Symbol)
+    sequence_name = "#{table}_#{column}"
+    owned_by = "#{table}.#{column}"
+    prepared_statements << Avram::Migrator::CreateSequenceStatement.new(sequence_name, if_not_exists: true, owned_by: owned_by).build
+  end
+
+  def drop_sequence(table : TableName, column : Symbol)
+    sequence_name = "#{table}_#{column}"
+    prepared_statements << Avram::Migrator::DropSequenceStatement.new(sequence_name).build
+  end
 end
