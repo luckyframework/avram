@@ -72,6 +72,7 @@ struct Float64
 
       define_function_criteria(abs, V)
       define_function_criteria(ceil, V)
+      define_function_criteria(floor, V)
     end
   end
 end

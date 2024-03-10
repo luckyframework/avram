@@ -20,6 +20,12 @@ describe Float64::Lucky::Criteria do
       amount.ceil.eq(40.0).to_sql.should eq ["SELECT #{QueryMe::COLUMN_SQL} FROM purchases WHERE CEIL(purchases.amount) = $1", "40.0"]
     end
   end
+
+  describe "floor" do
+    it "uses FLOOR" do
+      amount.floor.eq(39.0).to_sql.should eq ["SELECT #{QueryMe::COLUMN_SQL} FROM purchases WHERE FLOOR(purchases.amount) = $1", "39.0"]
+    end
+  end
 end
 
 private def amount
