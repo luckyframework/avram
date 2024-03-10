@@ -41,6 +41,7 @@ class String
       define_function_criteria(upper, V)
       define_function_criteria(lower, V)
       define_function_criteria(trim, String)
+      define_function_criteria(length, Int64)
     end
   end
 end

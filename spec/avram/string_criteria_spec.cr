@@ -52,6 +52,12 @@ describe String::Lucky::Criteria do
       end
     end
   end
+
+  describe "length" do
+    it "uses LENGTH" do
+      name.length.eq(4).to_sql.should eq ["SELECT #{QueryMe::COLUMN_SQL} FROM users WHERE LENGTH(users.name) = $1", "4"]
+    end
+  end
 end
 
 private def name
