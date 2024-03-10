@@ -7,5 +7,6 @@ class BucketFactory < BaseFactory
     names ["Mario", "Luigi"]
     floaty_numbers [0.0]
     oody_things [UUID.random]
+    enums [Bucket::Size::ExtraSmall, Bucket::Size::Medium]
   end
 end

@@ -1172,12 +1172,14 @@ describe Avram::Queryable do
   context "when querying arrays" do
     describe "simple where query" do
       it "returns 1 result" do
-        bucket = BucketFactory.new.names(["pumpkin", "zucchini"]).create
+        bucket = BucketFactory.new.names(["pumpkin", "zucchini"]).enums([Bucket::Size::Medium]).create
 
         query = BucketQuery.new.names(["pumpkin", "zucchini"])
         query.to_sql.should eq ["SELECT #{Bucket::COLUMN_SQL} FROM buckets WHERE buckets.names = $1", "{\"pumpkin\",\"zucchini\"}"]
         result = query.first
         result.should eq bucket
+
+        BucketQuery.new.enums.includes(Bucket::Size::Medium).select_count.should eq(1)
       end
     end
 

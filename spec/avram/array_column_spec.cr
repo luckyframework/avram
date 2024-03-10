@@ -38,4 +38,12 @@ describe "Array Columns" do
     bucket = SaveBucket.update!(bucket, numbers: nil)
     bucket.numbers.should be_nil
   end
+
+  it "handles Array(Enum)" do
+    BucketFactory.create &.enums([Bucket::Size::Large, Bucket::Size::Tub])
+    bucket = BucketQuery.new.last
+    bucket.enums.should eq([Bucket::Size::Large, Bucket::Size::Tub])
+    bucket = SaveBucket.update!(bucket, enums: [Bucket::Size::Small])
+    bucket.enums.should eq([Bucket::Size::Small])
+  end
 end
