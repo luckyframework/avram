@@ -69,6 +69,10 @@ struct Float64
       def select_sum! : Float64
         select_sum || 0_f64
       end
+
+      define_function_criteria(abs, V)
+      define_function_criteria(ceil, V)
+      define_function_criteria(floor, V)
     end
   end
 end

@@ -52,6 +52,18 @@ describe String::Lucky::Criteria do
       end
     end
   end
+
+  describe "length" do
+    it "uses LENGTH" do
+      name.length.eq(4).to_sql.should eq ["SELECT #{QueryMe::COLUMN_SQL} FROM users WHERE LENGTH(users.name) = $1", "4"]
+    end
+  end
+
+  describe "reverse" do
+    it "uses REVERSE" do
+      name.reverse.eq("revir").to_sql.should eq ["SELECT #{QueryMe::COLUMN_SQL} FROM users WHERE REVERSE(users.name) = $1", "revir"]
+    end
+  end
 end
 
 private def name

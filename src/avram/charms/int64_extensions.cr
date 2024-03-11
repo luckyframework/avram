@@ -57,6 +57,8 @@ struct Int64
       def select_sum! : Int64
         select_sum || 0_i64
       end
+
+      define_function_criteria(abs, V)
     end
   end
 end
