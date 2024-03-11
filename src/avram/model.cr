@@ -99,6 +99,39 @@ abstract class Avram::Model
       :{{ type_declaration.var.stringify }}
     end
 
+    {% if type_declaration.type.stringify == "String" %}
+      {% value_generator = type_declaration.value %}
+
+      {% if !value_generator || value_generator && !(value_generator.is_a?(ProcLiteral) || value_generator.is_a?(ProcPointer) || value_generator.is_a?(Call)) %}
+          {% raise <<-ERROR
+              When using a String primary_key, you must also specify a way to generate the value.
+              You can provide a class method, a proc or a proc pointer.
+              Your value generator must return a non-nullable String.
+
+              Example:
+                table do
+                  primary_key id : String = Random::Secure.hex
+                  ...
+                end
+
+              Or with a proc:
+                table do
+                  primary_key id : String = -> { Random::Secure.hex }
+                  ...
+                end
+              ERROR
+          %}
+      {% end %}
+
+      def self.primary_key_value_generator : String
+        {% if value_generator.is_a?(ProcLiteral) || value_generator.is_a?(ProcPointer) %}
+          {{value_generator}}.call
+        {% else %}
+          {{value_generator}}
+        {% end %}
+      end
+    {% end %}
+
     include Avram::PrimaryKeyMethods
 
     # If not using default 'id' primary key

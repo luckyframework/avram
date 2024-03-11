@@ -283,6 +283,10 @@ abstract class Avram::SaveOperation(T)
   def after_commit(_record : T); end
 
   private def insert : T
+    if (t = T).responds_to?(:primary_key_value_generator)
+      {{ T.constant(:PRIMARY_KEY_NAME).id }}.value = t.primary_key_value_generator
+    end
+
     self.created_at.value ||= Time.utc if responds_to?(:created_at)
     self.updated_at.value ||= Time.utc if responds_to?(:updated_at)
     sql = insert_sql
