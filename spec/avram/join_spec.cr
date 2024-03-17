@@ -36,4 +36,10 @@ describe Avram::Join do
       .to_sql
       .should eq "INNER JOIN managers USING (company_id, department_id)"
   end
+
+  it "allows aliasing the to table" do
+    Avram::Join::Inner.new(from: :purchases, to: :users, alias_to: :sellers, primary_key: :seller_id, foreign_key: :id)
+      .to_sql
+      .should eq "INNER JOIN users AS sellers ON purchases.seller_id = sellers.id"
+  end
 end
