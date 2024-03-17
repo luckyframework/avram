@@ -3,7 +3,6 @@ require "wordsmith"
 module Avram::Join
   abstract class SqlClause
     getter from : TableName
-    getter to : TableName
 
     def initialize(
       @from : TableName,
@@ -11,18 +10,30 @@ module Avram::Join
       @primary_key : Symbol? = nil,
       @foreign_key : Symbol? = nil,
       @comparison : String? = "=",
-      @using : Array(Symbol) = [] of Symbol
+      @using : Array(Symbol) = [] of Symbol,
+      @alias_to : TableName? = nil
     )
     end
 
     abstract def join_type : String
 
     def to_sql : String
-      if !@using.empty?
-        %(#{join_type} JOIN #{@to} USING (#{@using.join(", ")}))
-      else
-        "#{join_type} JOIN #{@to} ON #{from_column} #{@comparison} #{to_column}"
+      String.build do |io|
+        io << "#{join_type} JOIN "
+        @to.to_s(io)
+        if @alias_to
+          io << " AS #{@alias_to}"
+        end
+        if !@using.empty?
+          io << " USING (#{@using.join(", ")})"
+        else
+          io << " ON #{from_column} #{@comparison} #{to_column}"
+        end
       end
+    end
+
+    def to : TableName
+      @alias_to || @to
     end
 
     def from_column : String
@@ -30,7 +41,7 @@ module Avram::Join
     end
 
     def to_column : String
-      "#{@to}.#{@foreign_key || default_foreign_key}"
+      "#{to}.#{@foreign_key || default_foreign_key}"
     end
 
     def default_foreign_key : String
