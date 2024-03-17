@@ -176,4 +176,16 @@ describe "Query associations" do
 
     result.should eq(product)
   end
+
+  it "handles aliases", focus: true do
+    interviewer = UserFactory.create(&.available_for_hire(false).name("Interviewer"))
+    interviewee = UserFactory.create(&.available_for_hire(true).name("Interviewee"))
+    UserFactory.create(&.available_for_hire(false).name("Employed"))
+    InterviewFactory.create(&.interviewee(interviewee).interviewer(interviewer))
+
+    InterviewQuery.new
+      .where_interviewer(UserQuery.new.available_for_hire(false))
+      .where_interviewee(UserQuery.new.available_for_hire(true))
+      .to_prepared_sql.should eq("nothing")
+  end
 end
