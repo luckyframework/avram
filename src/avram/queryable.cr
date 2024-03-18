@@ -7,7 +7,7 @@ module Avram::Queryable(T)
       .select(schema_class.column_names)
   end
 
-  delegate :database, :table_name, :primary_key_name, to: T
+  delegate :database, :primary_key_name, to: T
 
   macro included
     def self.new_with_existing_query(query : Avram::QueryBuilder)
