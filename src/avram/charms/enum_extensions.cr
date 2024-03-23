@@ -41,15 +41,6 @@ abstract struct Enum
       end
     end
 
-    # def parse(values : Array(String))
-    #   results = values.map {|s| parse(s)}
-    #   if results.all?(SuccessfulCast)
-    #     parse(results.map(&.value.as(T)))
-    #   else
-    #     FailedCast.new
-    #   end
-    # end
-
     def parse(value : T)
       SuccessfulCast.new(value)
     end
