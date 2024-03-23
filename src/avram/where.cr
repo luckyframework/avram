@@ -245,23 +245,23 @@ module Avram::Where
     end
   end
 
-  class JSONHasKey < ValueHoldingSqlClause
+  class JsonbHasKey < ValueHoldingSqlClause
     def operator : String
       "?"
     end
 
-    def negated : NotJSONHasKey
-      NotJSONHasKey.new(column, value)
+    def negated : NotJsonbHasKey
+      NotJsonbHasKey.new(column, value)
     end
   end
 
-  class NotJSONHasKey < ValueHoldingSqlClause
+  class NotJsonbHasKey < ValueHoldingSqlClause
     def operator : String
       "?"
     end
 
-    def negated : JSONHasKey
-      JSONHasKey.new(column, value)
+    def negated : JsonbHasKey
+      JsonbHasKey.new(column, value)
     end
 
     def prepare(placeholder_supplier : Proc(String)) : String
@@ -269,23 +269,23 @@ module Avram::Where
     end
   end
 
-  class JSONHasAnyKeys < ValueHoldingSqlClause
+  class JsonbHasAnyKeys < ValueHoldingSqlClause
     def operator : String
       "?|"
     end
 
-    def negated : NotJSONHasAnyKeys
-      NotJSONHasAnyKeys.new(column, value)
+    def negated : NotJsonbHasAnyKeys
+      NotJsonbHasAnyKeys.new(column, value)
     end
   end
 
-  class NotJSONHasAnyKeys < ValueHoldingSqlClause
+  class NotJsonbHasAnyKeys < ValueHoldingSqlClause
     def operator : String
       "?|"
     end
 
-    def negated : JSONHasAnyKeys
-      JSONHasAnyKeys.new(column, value)
+    def negated : JsonbHasAnyKeys
+      JsonbHasAnyKeys.new(column, value)
     end
 
     def prepare(placeholder_supplier : Proc(String)) : String
@@ -293,23 +293,23 @@ module Avram::Where
     end
   end
 
-  class JSONHasAllKeys < ValueHoldingSqlClause
+  class JsonbHasAllKeys < ValueHoldingSqlClause
     def operator : String
       "?&"
     end
 
-    def negated : NotJSONHasAllKeys
-      NotJSONHasAllKeys.new(column, value)
+    def negated : NotJsonbHasAllKeys
+      NotJsonbHasAllKeys.new(column, value)
     end
   end
 
-  class NotJSONHasAllKeys < ValueHoldingSqlClause
+  class NotJsonbHasAllKeys < ValueHoldingSqlClause
     def operator : String
       "?&"
     end
 
-    def negated : JSONHasAllKeys
-      JSONHasAllKeys.new(column, value)
+    def negated : JsonbHasAllKeys
+      JsonbHasAllKeys.new(column, value)
     end
 
     def prepare(placeholder_supplier : Proc(String)) : String
