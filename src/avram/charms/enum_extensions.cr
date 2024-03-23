@@ -28,8 +28,26 @@ abstract struct Enum
       end
     end
 
+    def parse(value : Array(T))
+      SuccessfulCast(Array(T)).new value
+    end
+
+    def parse(values : Array(Int))
+      results = values.map { |i| parse(i) }
+      if results.all?(SuccessfulCast)
+        parse(results.map(&.value.as(T)))
+      else
+        FailedCast.new
+      end
+    end
+
     def parse(value : T)
       SuccessfulCast.new(value)
+    end
+
+    def to_db(values : Array(T))
+      encoded = values.map { |value| to_db(value) }.as(Array(String))
+      PQ::Param.encode_array(encoded)
     end
 
     def to_db(value : T) : String
