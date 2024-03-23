@@ -317,6 +317,54 @@ module Avram::Where
     end
   end
 
+  class JsonbIncludes < ValueHoldingSqlClause
+    def operator : String
+      "@>"
+    end
+
+    def negated : JsonbExcludes
+      JsonbExcludes.new(column, value)
+    end
+  end
+
+  class JsonbExcludes < ValueHoldingSqlClause
+    def operator : String
+      "@>"
+    end
+
+    def negated : JsonbIncludes
+      JsonbIncludes.new(column, value)
+    end
+
+    def prepare(placeholder_supplier : Proc(String)) : String
+      "NOT(#{column} #{operator} #{placeholder_supplier.call})"
+    end
+  end
+
+  class JsonbIn < ValueHoldingSqlClause
+    def operator : String
+      "<@"
+    end
+
+    def negated : JsonbNotIn
+      JsonbNotIn.new(column, value)
+    end
+  end
+
+  class JsonbNotIn < ValueHoldingSqlClause
+    def operator : String
+      "<@"
+    end
+
+    def negated : JsonbIn
+      JsonbIn.new(column, value)
+    end
+
+    def prepare(placeholder_supplier : Proc(String)) : String
+      "NOT(#{column} #{operator} #{placeholder_supplier.call})"
+    end
+  end
+
   class Raw < Condition
     @clause : String
 

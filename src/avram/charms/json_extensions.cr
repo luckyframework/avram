@@ -90,6 +90,15 @@ struct JSON::Any
       def has_all_keys(keys : Array(String)) : T
         add_clause(Avram::Where::JSONHasAllKeys.new(column, keys))
       end
+
+      # performs `WHERE jsonb @> other_json`
+      def includes(other_json : JSON::Any)
+        add_clause(Avram::Where::JsonbIncludes.new(column, other_json.to_json))
+      end
+
+      def in(other_json : JSON::Any)
+        add_clause(Avram::Where::JsonbIn.new(column, other_json.to_json))
+      end
     end
   end
 end
