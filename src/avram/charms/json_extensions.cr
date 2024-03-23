@@ -76,6 +76,20 @@ struct JSON::Any
     end
 
     class Criteria(T, V) < Avram::Criteria(T, V)
+      # performs `WHERE jsonb ? string`
+      def has_key(value : String) : T
+        add_clause(Avram::Where::JSONHasKey.new(column, value))
+      end
+
+      # performs `WHERE jsonb ?| array`
+      def has_any_keys(keys : Array(String)) : T
+        add_clause(Avram::Where::JSONHasAnyKeys.new(column, keys))
+      end
+
+      # performs `WHERE jsonb ?& array`
+      def has_all_keys(keys : Array(String)) : T
+        add_clause(Avram::Where::JSONHasAllKeys.new(column, keys))
+      end
     end
   end
 end
