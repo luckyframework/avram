@@ -245,6 +245,78 @@ module Avram::Where
     end
   end
 
+  class JSONHasKey < ValueHoldingSqlClause
+    def operator : String
+      "?"
+    end
+
+    def negated : NotJSONHasKey
+      NotJSONHasKey.new(column, value)
+    end
+  end
+
+  class NotJSONHasKey < ValueHoldingSqlClause
+    def operator : String
+      "?"
+    end
+
+    def negated : JSONHasKey
+      JSONHasKey.new(column, value)
+    end
+
+    def prepare(placeholder_supplier : Proc(String)) : String
+      "NOT(#{column} #{operator} #{placeholder_supplier.call})"
+    end
+  end
+
+  class JSONHasAnyKeys < ValueHoldingSqlClause
+    def operator : String
+      "?|"
+    end
+
+    def negated : NotJSONHasAnyKeys
+      NotJSONHasAnyKeys.new(column, value)
+    end
+  end
+
+  class NotJSONHasAnyKeys < ValueHoldingSqlClause
+    def operator : String
+      "?|"
+    end
+
+    def negated : JSONHasAnyKeys
+      JSONHasAnyKeys.new(column, value)
+    end
+
+    def prepare(placeholder_supplier : Proc(String)) : String
+      "NOT(#{column} #{operator} #{placeholder_supplier.call})"
+    end
+  end
+
+  class JSONHasAllKeys < ValueHoldingSqlClause
+    def operator : String
+      "?&"
+    end
+
+    def negated : NotJSONHasAllKeys
+      NotJSONHasAllKeys.new(column, value)
+    end
+  end
+
+  class NotJSONHasAllKeys < ValueHoldingSqlClause
+    def operator : String
+      "?&"
+    end
+
+    def negated : JSONHasAllKeys
+      JSONHasAllKeys.new(column, value)
+    end
+
+    def prepare(placeholder_supplier : Proc(String)) : String
+      "NOT(#{column} #{operator} #{placeholder_supplier.call})"
+    end
+  end
+
   class Raw < Condition
     @clause : String
 
