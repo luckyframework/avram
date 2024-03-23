@@ -11,6 +11,9 @@ class User < BaseModel
     column average_score : Float64?
     column available_for_hire : Bool?
     has_one sign_in_credential : SignInCredential?
+    has_many transactions : Transaction, base_query_class: TransactionQuery
+    has_many follows : Follow, foreign_key: :followee_id, base_query_class: FollowQuery
+    has_many followers : User, through: [:follows, :follower]
   end
 end
 

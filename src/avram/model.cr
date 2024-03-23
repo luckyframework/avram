@@ -212,7 +212,7 @@ abstract class Avram::Model
     {% for assoc in associations %}
       def {{ assoc[:assoc_name] }}_query
         {% if assoc[:relationship_type] == :has_many %}
-          {{ assoc[:type] }}::BaseQuery.new.{{ assoc[:foreign_key].id }}(id)
+          {{ assoc[:base_query_class] }}.new.{{ assoc[:foreign_key].id }}(id)
         {% elsif assoc[:relationship_type] == :belongs_to %}
           {{ assoc[:type] }}::BaseQuery.new.id({{ assoc[:foreign_key].id }})
         {% else %}
@@ -297,7 +297,7 @@ abstract class Avram::Model
     end
   end
 
-  macro association(assoc_name, type, relationship_type, foreign_key = nil, through = nil)
-    {% ASSOCIATIONS << {type: type, assoc_name: assoc_name.id, foreign_key: foreign_key, relationship_type: relationship_type, through: through} %}
+  macro association(assoc_name, type, relationship_type, foreign_key = nil, through = nil, base_query_class = nil)
+    {% ASSOCIATIONS << {type: type, assoc_name: assoc_name.id, foreign_key: foreign_key, relationship_type: relationship_type, through: through, base_query_class: base_query_class} %}
   end
 end

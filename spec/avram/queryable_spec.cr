@@ -1249,7 +1249,7 @@ describe Avram::Queryable do
       UserQuery.new.select_count.should eq 10
       # NOTE: we don't test rows_affected here because this isn't
       # available with a truncate statement
-      UserQuery.truncate
+      UserQuery.truncate(cascade: true)
       UserQuery.new.select_count.should eq 0
     end
 

@@ -1,5 +1,5 @@
 module Avram::Associations::HasMany
-  macro has_many(type_declaration, through = nil, foreign_key = nil)
+  macro has_many(type_declaration, through = nil, foreign_key = nil, base_query_class = nil)
     {% if !through.is_a?(NilLiteral) && (!through.is_a?(ArrayLiteral) || through.any? { |item| !item.is_a?(SymbolLiteral) }) %}
       {% through.raise <<-ERROR
       'through' on #{@type.name} must be given an Array(Symbol). Instead, got: #{through}
@@ -31,28 +31,29 @@ module Avram::Associations::HasMany
     {% end %}
 
     {% foreign_key = foreign_key.id %}
+    {% model = type_declaration.type %}
+    {% query_class = base_query_class || "#{model}::BaseQuery".id %}
 
     association \
       assoc_name: :{{ assoc_name }},
       type: {{ type_declaration.type }},
       foreign_key: :{{ foreign_key }},
       through: {{ through }},
-      relationship_type: :has_many
-
-    {% model = type_declaration.type %}
+      relationship_type: :has_many,
+      base_query_class: {{ query_class }}
 
     define_has_many_lazy_loading({{ assoc_name }}, {{ model }}, {{ foreign_key }}, {{ through }})
-    define_has_many_base_query({{ @type }}, {{ assoc_name }}, {{ model }}, {{ foreign_key }}, {{ through }})
+    define_has_many_base_query({{ @type }}, {{ assoc_name }}, {{ model }}, {{ foreign_key }}, {{ through }}, {{ query_class }})
   end
 
-  private macro define_has_many_base_query(class_type, assoc_name, model, foreign_key, through)
+  private macro define_has_many_base_query(class_type, assoc_name, model, foreign_key, through, query_class)
     class BaseQuery
       def self.preload_{{ assoc_name }}(record : {{ class_type }}, force : Bool = false) : {{ class_type }}
-        preload_{{ assoc_name }}(record: record, preload_query: {{ model }}::BaseQuery.new, force: force)
+        preload_{{ assoc_name }}(record: record, preload_query: {{ query_class }}.new, force: force)
       end
 
       def self.preload_{{ assoc_name }}(record : {{ class_type }}, force : Bool = false) : {{ class_type }}
-        modified_query = yield {{ model }}::BaseQuery.new
+        modified_query = yield {{ query_class }}.new
         preload_{{ assoc_name }}(record: record, preload_query: modified_query, force: force)
       end
 
@@ -73,11 +74,11 @@ module Avram::Associations::HasMany
       {% end %}
 
       def self.preload_{{ assoc_name }}(records : Enumerable({{ class_type }}), force : Bool = false) : Array({{ class_type }})
-        preload_{{ assoc_name }}(records: records, preload_query: {{ model }}::BaseQuery.new, force: force)
+        preload_{{ assoc_name }}(records: records, preload_query: {{ query_class }}.new, force: force)
       end
 
       def self.preload_{{ assoc_name }}(records : Enumerable({{ class_type }}), force : Bool = false) : Array({{ class_type }})
-        modified_query = yield {{ model }}::BaseQuery.new
+        modified_query = yield {{ query_class }}.new
         preload_{{ assoc_name }}(records: records, preload_query: modified_query, force: force)
       end
 
@@ -122,19 +123,36 @@ module Avram::Associations::HasMany
       end
       {% end %}
 
-      def preload_{{ assoc_name }} : self
-        preload_{{ assoc_name }}({{ model }}::BaseQuery.new)
+      {% if through %}
+      def preload_{{ assoc_name }}(*, through : Avram::Queryable? = nil) : self
+        preload_{{ assoc_name }}({{ query_class }}.new, through: through)
       end
-
+      {% else %}
       def preload_{{ assoc_name }} : self
-        modified_query = yield {{ model }}::BaseQuery.new
-        preload_{{ assoc_name }}(modified_query)
+        preload_{{ assoc_name }}({{ query_class }}.new)
       end
+      {% end %}
 
       {% if through %}
-        def preload_{{ assoc_name }}(preload_query : {{ model }}::BaseQuery) : self
+      def preload_{{ assoc_name }}(*, through : Avram::Queryable? = nil, &) : self
+        modified_query = yield {{ query_class }}.new
+        preload_{{ assoc_name }}(modified_query, through: through)
+      end
+      {% else %}
+      def preload_{{ assoc_name }}(&) : self
+        modified_query = yield {{ query_class }}.new
+        preload_{{ assoc_name }}(modified_query)
+      end
+      {% end %}
+
+      {% if through %}
+        def preload_{{ assoc_name }}(preload_query : {{ model }}::BaseQuery, *, through : Avram::Queryable? = nil) : self
           preload_{{ through.first.id }} do |through_query|
-            through_query.preload_{{ through[1].id }}(preload_query)
+            if base_q = through
+              base_q.preload_{{ through[1].id }}(preload_query)
+            else
+              through_query.preload_{{ through[1].id }}(preload_query)
+            end
           end
           add_preload do |records|
             records.each do |record|
@@ -196,10 +214,7 @@ module Avram::Associations::HasMany
           .map(&.{{ through[1].id }}_count)
           .sum
       {% else %}
-        {{ model }}::BaseQuery
-          .new
-          .{{ foreign_key }}(id)
-          .select_count
+      {{ assoc_name.id }}_query.select_count
       {% end %}
     end
 
@@ -218,10 +233,7 @@ module Avram::Associations::HasMany
           assoc_results.is_a?(Array) ? assoc_results : [assoc_results]
         end.compact
       {% else %}
-        {{ model }}::BaseQuery
-          .new
-          .{{ foreign_key }}(id)
-          .results
+        {{ assoc_name.id }}_query.results
       {% end %}
     end
   end
