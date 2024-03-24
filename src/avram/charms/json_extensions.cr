@@ -92,13 +92,13 @@ struct JSON::Any
       end
 
       # performs `WHERE jsonb @> other_json`
-      def includes(other_json : JSON::Any)
-        add_clause(Avram::Where::JsonbIncludes.new(column, other_json.to_json))
+      def includes(value) : T
+        add_clause(Avram::Where::JsonbIncludes.new(column, value.to_json))
       end
 
       # performs `WHERE jsonb <@ other_json`
-      def in(other_json : JSON::Any)
-        add_clause(Avram::Where::JsonbIn.new(column, other_json.to_json))
+      def in(value) : T
+        add_clause(Avram::Where::JsonbIn.new(column, value.to_json))
       end
     end
   end
