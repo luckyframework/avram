@@ -4,7 +4,7 @@ class <%= pluralized_name %>::IndexPage < MainLayout
 
   def content
     h1 "All <%= pluralized_name %>"
-    link "New <%= resource %>", to: <%= pluralized_name %>::New
+    link "New <%= resource %>", <%= pluralized_name %>::New
     render_<%= pluralized_name.underscore %>
   end
 
