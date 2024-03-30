@@ -38,11 +38,17 @@ class String
         add_clause(Avram::Where::Ilike.new(column, value))
       end
 
+      def match(value : String) : T
+        add_clause(Avram::Where::TsMatch.new(column, value))
+      end
+
       define_function_criteria(upper, V)
       define_function_criteria(lower, V)
       define_function_criteria(trim, String)
       define_function_criteria(length, Int64)
       define_function_criteria(reverse, String)
+      define_function_criteria(to_tsvector, String)
+      define_function_criteria(to_tsquery, String)
     end
   end
 end
