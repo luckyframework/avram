@@ -12,6 +12,7 @@ require "cadmium_transliterator"
 
 require "./ext/db/*"
 require "./ext/pg/*"
+require "./avram/nothing"
 require "./avram/object_extensions"
 require "./avram/criteria"
 require "./avram/type"

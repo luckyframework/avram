@@ -42,8 +42,8 @@ module Avram::NeedyInitializer
     #
     # attribute_method_args would look something like:
     #
-    #   name : String | Avram::Nothing = Avram::Nothing.new,
-    #   email : String | Nil | Avram::Nothing = Avram::Nothing.new
+    #   name : String | Avram::Nothing = Undefined,
+    #   email : String | Nil | Avram::Nothing = Undefined
     #
     # This can be passed to macros as a string, and then the macro can call .id
     # on it to output the string as code!
@@ -58,7 +58,7 @@ module Avram::NeedyInitializer
     {% attribute_params = "" %}
 
     {% for attribute in ATTRIBUTES %}
-      {% attribute_method_args = attribute_method_args + "#{attribute.var} : #{attribute.type} | Avram::Nothing = Avram::Nothing.new,\n" %}
+      {% attribute_method_args = attribute_method_args + "#{attribute.var} : #{attribute.type} | Avram::Nothing = Undefined,\n" %}
       {% attribute_params = attribute_params + "#{attribute.var}: #{attribute.var},\n" %}
     {% end %}
 
