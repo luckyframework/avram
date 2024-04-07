@@ -76,7 +76,7 @@ class Avram::Attribute(T)
     errors.empty?
   end
 
-  def changed?(from : T? | Nothing = Undefined, to : T? | Nothing = Undefined) : Bool
+  def changed?(from : T? | Nothing = IGNORE, to : T? | Nothing = IGNORE) : Bool
     from = from.is_a?(Nothing) ? true : from == original_value
     to = to.is_a?(Nothing) ? true : to == value
     value != original_value && from && to

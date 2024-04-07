@@ -46,8 +46,8 @@ module Avram::NeedyInitializerAndSaveMethods
     #
     # attribute_method_args would look something like:
     #
-    #   name : String | Avram::Nothing = Undefined,
-    #   email : String | Nil | Avram::Nothing = Undefined
+    #   name : String | Avram::Nothing = IGNORE,
+    #   email : String | Nil | Avram::Nothing = IGNORE
     #
     # This can be passed to macros as a string, and then the macro can call .id
     # on it to output the string as code!
@@ -65,14 +65,14 @@ module Avram::NeedyInitializerAndSaveMethods
       {% for attribute in COLUMN_ATTRIBUTES.uniq %}
         {% attribute_method_args = attribute_method_args + "#{attribute[:name]} : #{attribute[:type]} | Avram::Nothing" %}
         {% if attribute[:nilable] %}{% attribute_method_args = attribute_method_args + " | Nil" %}{% end %}
-        {% attribute_method_args = attribute_method_args + " = Undefined,\n" %}
+        {% attribute_method_args = attribute_method_args + " = IGNORE,\n" %}
 
         {% attribute_params = attribute_params + "#{attribute[:name]}: #{attribute[:name]},\n" %}
       {% end %}
     {% end %}
 
     {% for attribute in ATTRIBUTES.uniq %}
-      {% attribute_method_args = attribute_method_args + "#{attribute.var} : #{attribute.type} | Avram::Nothing = Undefined,\n" %}
+      {% attribute_method_args = attribute_method_args + "#{attribute.var} : #{attribute.type} | Avram::Nothing = IGNORE,\n" %}
       {% attribute_params = attribute_params + "#{attribute.var}: #{attribute.var},\n" %}
     {% end %}
 

@@ -6,10 +6,12 @@ class Avram::Nothing
 end
 
 # Use this value when you want to ignore updating a column
-# in a SaveOperation, for example.
+# in a SaveOperation instead of setting the column value to `nil`.
+#
 # ```
-# # Sets value to x.value or ignores it if x.value is nil
+# # Set value to x.value or ignore it if x.value is nil
 # SaveThing.create!(
-#   value: x.value || Undefined
+#   value: x.value || IGNORE
 # )
-Undefined = Avram::Nothing.new
+# ```
+IGNORE = Avram::Nothing.new
