@@ -22,7 +22,7 @@ class Avram::BaseQueryTemplate
 
       def update(
           {% for column in columns %}
-            {{ column[:name] }} : {{ column[:type] }} | Avram::Nothing{% if column[:nilable] %} | Nil{% end %} = Avram::Nothing.new,
+            {{ column[:name] }} : {{ column[:type] }} | Avram::Nothing{% if column[:nilable] %} | Nil{% end %} = IGNORE,
           {% end %}
         ) : Int64
 
