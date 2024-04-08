@@ -14,7 +14,7 @@
 <script type="text/javascript" src="js/doc.js"></script>
 
   <meta name="repository-name" content="avram">
-  <title>Bool - avram main</title>
+  <title>Top Level Namespace - avram main</title>
   <script type="text/javascript">
     CrystalDocs.base_path = "";
   </script>
@@ -57,7 +57,7 @@
   <div class="types-list">
     <ul>
   
-  <li class=" " data-id="avram/toplevel" data-name="top level namespace">
+  <li class=" current" data-id="avram/toplevel" data-name="top level namespace">
       <a href="toplevel.html">Top Level Namespace</a>
       
     </li>
@@ -1197,7 +1197,7 @@
       
     </li>
   
-  <li class="parent open current" data-id="avram/Bool" data-name="bool">
+  <li class="parent " data-id="avram/Bool" data-name="bool">
       <a href="Bool.html">Bool</a>
       
         <ul>
@@ -1751,47 +1751,17 @@
 <div class="main-content">
 <h1 class="type-name">
 
-  <span class="kind">struct</span> Bool
+  Top Level Namespace
 
 </h1>
 
 
-  <ul class="superclass-hierarchy"><li class="superclass"><a href="Bool.html">Bool</a></li><li class="superclass">Value</li><li class="superclass"><a href="Object.html">Object</a></li></ul>
-
-
-
-
-  <h2>
-    <a id="overview" class="anchor" href="#overview">
-  <svg class="octicon-link" aria-hidden="true">
-    <use href="#octicon-link"/>
-  </svg>
-</a>
-    Overview
-  </h2>
-
-  <p>Bool has only two possible values: <code>true</code> and <code>false</code>. They are constructed using these literals:</p>
-<pre><code class="language-crystal"><span class="n">true</span>  <span class="c"># A Bool that is true</span>
-<span class="n">false</span> <span class="c"># A Bool that is false</span></code></pre>
-<p>See <a href="https://crystal-lang.org/reference/syntax_and_semantics/literals/bool.html"><code>Bool</code> literals</a> in the language reference.</p>
 
 
 
 
 
-  <h2>
-    <a id="included-modules" class="anchor" href="#included-modules">
-  <svg class="octicon-link" aria-hidden="true">
-    <use href="#octicon-link"/>
-  </svg>
-</a>
-    Included Modules
-  </h2>
-  <ul class="other-types-list">
-    
-      <li class="other-type">Lucky::AllowedInTags</li>
-    
-  </ul>
+
 
 
 
@@ -1811,212 +1781,57 @@
     Defined in:
   </h2>
   
-    
-      <a href="https://github.com/luckyframework/avram/blob/87a1ef9fd296398698fbada53e93ac9b71172557/lib/lucky/src/charms/bool_extensions.cr#L3" target="_blank">
-        lib/lucky/src/charms/bool_extensions.cr
-      </a>
-    
-    <br/>
+
+
+
   
-    
-      <a href="https://github.com/luckyframework/avram/blob/87a1ef9fd296398698fbada53e93ac9b71172557/src/avram/blank_extensions.cr#L1" target="_blank">
-        avram/blank_extensions.cr
-      </a>
-    
-    <br/>
-  
-    
-      <a href="https://github.com/luckyframework/avram/blob/87a1ef9fd296398698fbada53e93ac9b71172557/src/avram/charms/bool_extensions.cr#L1" target="_blank">
-        avram/charms/bool_extensions.cr
-      </a>
-    
-    <br/>
-  
-    
-      <a href="https://github.com/luckyframework/avram/blob/87a1ef9fd296398698fbada53e93ac9b71172557/src/avram/object_extensions.cr#L26" target="_blank">
-        avram/object_extensions.cr
-      </a>
-    
-    <br/>
-  
-
-
-
-
-
-
-
-  <h2>
-    <a id="class-method-summary" class="anchor" href="#class-method-summary">
+    <h2>
+      <a id="constant-summary" class="anchor" href="#constant-summary">
   <svg class="octicon-link" aria-hidden="true">
     <use href="#octicon-link"/>
   </svg>
 </a>
-    Class Method Summary
-  </h2>
-  <ul class="list-summary">
+      Constant Summary
+    </h2>
+  
+  <dl>
     
-      <li class="entry-summary">
-        <a href="#adapter-class-method" class="signature"><strong>.adapter</strong></a>
-        
-      </li>
+      <dt class="entry-const" id="IGNORE">
+        <strong>IGNORE</strong> = <code><span class="t">Avram</span><span class="t">::</span><span class="t">Nothing</span>.new</code>
+      </dt>
+      
+      <dd class="entry-const-doc">
+        <p>Use this value when you want to ignore updating a column
+in a SaveOperation instead of setting the column value to <code>nil</code>.</p>
+<pre><code class="language-crystal"><span class="c"># Set value to x.value or ignore it if x.value is nil</span>
+<span class="t">SaveThing</span>.create!(
+  value: x.value <span class="o">||</span> <span class="t">IGNORE</span>
+)</code></pre>
+      </dd>
+      
     
-  </ul>
+  </dl>
 
 
 
 
 
-  <h2>
-    <a id="instance-method-summary" class="anchor" href="#instance-method-summary">
-  <svg class="octicon-link" aria-hidden="true">
-    <use href="#octicon-link"/>
-  </svg>
-</a>
-    Instance Method Summary
-  </h2>
-  <ul class="list-summary">
-    
-      <li class="entry-summary">
-        <a href="#blank%3F%3ABool-instance-method" class="signature"><strong>#blank?</strong> : Bool</a>
-        
-      </li>
-    
-      <li class="entry-summary">
-        <a href="#blank_for_validates_required%3F%3ABool-instance-method" class="signature"><strong>#blank_for_validates_required?</strong> : Bool</a>
-        
-      </li>
-    
-  </ul>
+
+
+
 
 
 
 <div class="methods-inherited">
-  
-    
-
-
-    
-
-
-    
-
-
-    
-
-
-  
-    
-
-
-    
-
-
-    
-
-
-    
-
-
-  
-    
-
-  <h3>Instance methods inherited from class <code><a href="Object.html">Object</a></code></h3>
-  
-  
-    <a href="Object.html#blank_for_validates_required%3F%3ABool-instance-method" class="tooltip">
-      <span>blank_for_validates_required? : Bool</span>
-    blank_for_validates_required?</a>
-    
-  
-
-
-    
-
-
-    
-
-
-    
-
-
   
 </div>
 
 
 
 
-  <h2>
-    <a id="class-method-detail" class="anchor" href="#class-method-detail">
-  <svg class="octicon-link" aria-hidden="true">
-    <use href="#octicon-link"/>
-  </svg>
-</a>
-    Class Method Detail
-  </h2>
-  
-    <div class="entry-detail" id="adapter-class-method">
-      <div class="signature">
-        
-        def self.<strong>adapter</strong>
-
-        <a class="method-permalink" href="#adapter-class-method">#</a>
-      </div>
-      
-      <br/>
-      <div>
-        
-          [<a href="https://github.com/luckyframework/avram/blob/87a1ef9fd296398698fbada53e93ac9b71172557/src/avram/charms/bool_extensions.cr#L2" target="_blank">View source</a>]
-        
-      </div>
-    </div>
-  
 
 
 
-
-
-  <h2>
-    <a id="instance-method-detail" class="anchor" href="#instance-method-detail">
-  <svg class="octicon-link" aria-hidden="true">
-    <use href="#octicon-link"/>
-  </svg>
-</a>
-    Instance Method Detail
-  </h2>
-  
-    <div class="entry-detail" id="blank?:Bool-instance-method">
-      <div class="signature">
-        
-        def <strong>blank?</strong> : <a href="Bool.html">Bool</a>
-
-        <a class="method-permalink" href="#blank%3F%3ABool-instance-method">#</a>
-      </div>
-      
-      <br/>
-      <div>
-        
-          [<a href="https://github.com/luckyframework/avram/blob/87a1ef9fd296398698fbada53e93ac9b71172557/src/avram/blank_extensions.cr#L2" target="_blank">View source</a>]
-        
-      </div>
-    </div>
-  
-    <div class="entry-detail" id="blank_for_validates_required?:Bool-instance-method">
-      <div class="signature">
-        
-        def <strong>blank_for_validates_required?</strong> : <a href="Bool.html">Bool</a>
-
-        <a class="method-permalink" href="#blank_for_validates_required%3F%3ABool-instance-method">#</a>
-      </div>
-      
-      <br/>
-      <div>
-        
-          [<a href="https://github.com/luckyframework/avram/blob/87a1ef9fd296398698fbada53e93ac9b71172557/src/avram/object_extensions.cr#L27" target="_blank">View source</a>]
-        
-      </div>
-    </div>
-  
 
 
 </div>
