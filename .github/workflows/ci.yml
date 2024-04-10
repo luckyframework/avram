@@ -17,7 +17,7 @@ jobs:
       - name: Install Crystal
         uses: crystal-lang/install-crystal@v1
         with:
-          crystal: 1.6.2
+          crystal: latest
       - name: Install shards
         run: shards install
       - name: Format
@@ -32,11 +32,11 @@ jobs:
         shard_file:
           - shard.yml
         postgres_version:
-          - 12
-          - 13
           - 14
+          - 15
+          - 16
         crystal_version:
-          - 1.6.2
+          - 1.10.0
           - latest
         experimental:
           - false
