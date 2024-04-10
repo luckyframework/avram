@@ -64,7 +64,10 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Install pg_client tools
-        run: sudo apt install postgresql-client-${{ matrix.postgres_version }} -y
+        run: |
+          sudo apt-get update
+          sudo apt install postgresql-client-${{ matrix.postgres_version }} -y
+
       - uses: crystal-lang/install-crystal@v1
         with:
           crystal: ${{matrix.crystal_version}}
