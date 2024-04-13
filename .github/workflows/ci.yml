@@ -17,7 +17,7 @@ jobs:
       - name: Install Crystal
         uses: crystal-lang/install-crystal@v1
         with:
-          crystal: 1.6.2
+          crystal: latest
       - name: Install shards
         run: shards install
       - name: Format
@@ -32,11 +32,11 @@ jobs:
         shard_file:
           - shard.yml
         postgres_version:
-          - 12
-          - 13
           - 14
+          - 15
+          - 16
         crystal_version:
-          - 1.6.2
+          - 1.10.0
           - latest
         experimental:
           - false
@@ -63,6 +63,11 @@ jobs:
         options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
     steps:
       - uses: actions/checkout@v4
+      - name: Setup PostgreSQL Client v${{ matrix.postgres_version }}
+        uses: tj-actions/install-postgresql@v3
+        with:
+          postgresql-version: ${{ matrix.postgres_version }}
+
       - uses: crystal-lang/install-crystal@v1
         with:
           crystal: ${{matrix.crystal_version}}
