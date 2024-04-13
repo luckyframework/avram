@@ -77,7 +77,7 @@ abstract class Avram::Migrator::Migration::V1
     end
   end
 
-  def skip_transaction (value : Bool)
+  def skip_transaction(value : Bool)
     @skip_transaction = value
   end
 
