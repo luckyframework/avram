@@ -1177,6 +1177,16 @@
       
     </li>
   
+  <li class=" " data-id="avram/Avram/Where/TsMatch" data-name="avram::where::tsmatch">
+      <a href="../../Avram/Where/TsMatch.html">TsMatch</a>
+      
+    </li>
+  
+  <li class=" " data-id="avram/Avram/Where/TsNotMatch" data-name="avram::where::tsnotmatch">
+      <a href="../../Avram/Where/TsNotMatch.html">TsNotMatch</a>
+      
+    </li>
+  
   <li class=" " data-id="avram/Avram/Where/ValueHoldingSqlClause" data-name="avram::where::valueholdingsqlclause">
       <a href="../../Avram/Where/ValueHoldingSqlClause.html">ValueHoldingSqlClause</a>
       
@@ -1798,7 +1808,7 @@
   </h2>
   
     
-      <a href="https://github.com/luckyframework/avram/blob/ce56ba6433bb6ffb19a06850ffe59725b2b78462/src/avram/charms/string_extensions.cr#L30" target="_blank">
+      <a href="https://github.com/luckyframework/avram/blob/db6ef660d18c378a076bba9d16974f2aa9f69bad/src/avram/charms/string_extensions.cr#L30" target="_blank">
         avram/charms/string_extensions.cr
       </a>
     
@@ -1870,7 +1880,22 @@
       </li>
     
       <li class="entry-summary">
+        <a href="#match%28value%3AString%29%3AT-instance-method" class="signature"><strong>#match</strong>(value : String) : T</a>
+        
+      </li>
+    
+      <li class="entry-summary">
         <a href="#reverse-instance-method" class="signature"><strong>#reverse</strong></a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#to_tsquery-instance-method" class="signature"><strong>#to_tsquery</strong></a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#to_tsvector-instance-method" class="signature"><strong>#to_tsvector</strong></a>
         
       </li>
     
@@ -2106,7 +2131,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/ce56ba6433bb6ffb19a06850ffe59725b2b78462/src/avram/criteria.cr#L6" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/db6ef660d18c378a076bba9d16974f2aa9f69bad/src/avram/criteria.cr#L6" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2138,7 +2163,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/ce56ba6433bb6ffb19a06850ffe59725b2b78462/src/avram/charms/string_extensions.cr#L37" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/db6ef660d18c378a076bba9d16974f2aa9f69bad/src/avram/charms/string_extensions.cr#L37" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2159,7 +2184,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/ce56ba6433bb6ffb19a06850ffe59725b2b78462/src/avram/charms/string_extensions.cr#L31" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/db6ef660d18c378a076bba9d16974f2aa9f69bad/src/avram/charms/string_extensions.cr#L31" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2175,7 +2200,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/ce56ba6433bb6ffb19a06850ffe59725b2b78462/src/avram/charms/string_extensions.cr#L44" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/db6ef660d18c378a076bba9d16974f2aa9f69bad/src/avram/charms/string_extensions.cr#L48" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2191,7 +2216,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/ce56ba6433bb6ffb19a06850ffe59725b2b78462/src/avram/charms/string_extensions.cr#L33" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/db6ef660d18c378a076bba9d16974f2aa9f69bad/src/avram/charms/string_extensions.cr#L33" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2207,7 +2232,23 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/ce56ba6433bb6ffb19a06850ffe59725b2b78462/src/avram/charms/string_extensions.cr#L42" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/db6ef660d18c378a076bba9d16974f2aa9f69bad/src/avram/charms/string_extensions.cr#L46" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="match(value:String):T-instance-method">
+      <div class="signature">
+        
+        def <strong>match</strong>(value : <a href="../../String.html">String</a>) : T
+
+        <a class="method-permalink" href="#match%28value%3AString%29%3AT-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/luckyframework/avram/blob/db6ef660d18c378a076bba9d16974f2aa9f69bad/src/avram/charms/string_extensions.cr#L41" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2223,7 +2264,39 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/ce56ba6433bb6ffb19a06850ffe59725b2b78462/src/avram/charms/string_extensions.cr#L45" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/db6ef660d18c378a076bba9d16974f2aa9f69bad/src/avram/charms/string_extensions.cr#L49" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="to_tsquery-instance-method">
+      <div class="signature">
+        
+        def <strong>to_tsquery</strong>
+
+        <a class="method-permalink" href="#to_tsquery-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/luckyframework/avram/blob/db6ef660d18c378a076bba9d16974f2aa9f69bad/src/avram/charms/string_extensions.cr#L51" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="to_tsvector-instance-method">
+      <div class="signature">
+        
+        def <strong>to_tsvector</strong>
+
+        <a class="method-permalink" href="#to_tsvector-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/luckyframework/avram/blob/db6ef660d18c378a076bba9d16974f2aa9f69bad/src/avram/charms/string_extensions.cr#L50" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2239,7 +2312,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/ce56ba6433bb6ffb19a06850ffe59725b2b78462/src/avram/charms/string_extensions.cr#L43" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/db6ef660d18c378a076bba9d16974f2aa9f69bad/src/avram/charms/string_extensions.cr#L47" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2255,7 +2328,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/ce56ba6433bb6ffb19a06850ffe59725b2b78462/src/avram/charms/string_extensions.cr#L41" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/db6ef660d18c378a076bba9d16974f2aa9f69bad/src/avram/charms/string_extensions.cr#L45" target="_blank">View source</a>]
         
       </div>
     </div>
