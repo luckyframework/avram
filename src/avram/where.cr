@@ -365,6 +365,34 @@ module Avram::Where
     end
   end
 
+  class TsMatch < ValueHoldingSqlClause
+    def operator : String
+      "@@"
+    end
+
+    def negated : TsNotMatch
+      TsNotMatch.new(column, value)
+    end
+
+    def prepare(placeholder_supplier : Proc(String)) : String
+      "#{column} #{operator} TO_TSQUERY(#{placeholder_supplier.call})"
+    end
+  end
+
+  class TsNotMatch < ValueHoldingSqlClause
+    def operator : String
+      "@@"
+    end
+
+    def negated : TsMatch
+      TsMatch.new(column, value)
+    end
+
+    def prepare(placeholder_supplier : Proc(String)) : String
+      "NOT(#{column} #{operator} TO_TSQUERY(#{placeholder_supplier.call}))"
+    end
+  end
+
   class Raw < Condition
     @clause : String
 

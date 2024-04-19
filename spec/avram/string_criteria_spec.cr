@@ -64,6 +64,12 @@ describe String::Lucky::Criteria do
       name.reverse.eq("revir").to_sql.should eq ["SELECT #{QueryMe::COLUMN_SQL} FROM users WHERE REVERSE(users.name) = $1", "revir"]
     end
   end
+
+  describe "match" do
+    it "uses @@" do
+      name.to_tsvector.match("jeb").to_sql.should eq ["SELECT #{QueryMe::COLUMN_SQL} FROM users WHERE TO_TSVECTOR(users.name) @@ TO_TSQUERY($1)", "jeb"]
+    end
+  end
 end
 
 private def name
