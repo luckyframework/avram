@@ -15,6 +15,8 @@ class Gen::Migration < LuckyTask::Task
 
   TEXT
 
+  positional_arg :migration_name, "The migration class name", format: /^[A-Z]/
+
   Habitat.create do
     setting io : IO = STDOUT
   end
@@ -25,14 +27,9 @@ class Gen::Migration < LuckyTask::Task
     end
   end
 
-  def call(name : String? = nil)
+  def call
     Avram::Migrator.run do
-      name = name || ARGV.first?
-      if name
-        Avram::Migrator::MigrationGenerator.new(name: name).generate
-      else
-        raise "Migration name is required. Example: lucky gen.migration CreateUsers".colorize(:red).to_s
-      end
+      Avram::Migrator::MigrationGenerator.new(name: migration_name, io: output).generate
     end
   end
 end

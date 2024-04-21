@@ -106,8 +106,9 @@ class Avram::Migrator::Runner
 
   def self.restore_db(restore_file : String, quiet : Bool = false)
     if File.exists?(restore_file)
+      output = quiet ? IO::Memory.new : STDOUT
       File.open(restore_file) do |f|
-        run("psql", ["-q", *cmd_args_array, "-v", "ON_ERROR_STOP=1"], input: f)
+        run("psql", ["-q", *cmd_args_array, "-v", "ON_ERROR_STOP=1"], input: f, output: output)
       end
       unless quiet
         puts "Done restoring #{db_name.colorize(:green)}"
