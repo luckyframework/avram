@@ -1,5 +1,6 @@
+require "ecr"
 require "lucky_task"
-require "teeplate"
+require "lucky_template"
 require "wordsmith"
 require "../../../../avram"
 require "../mixins/migration_with_columns"
@@ -9,7 +10,17 @@ class Gen::Resource::Browser < LuckyTask::Task
   include Gen::Mixins::MigrationWithColumns
 
   summary "Generate a resource (model, operation, query, actions, and pages)"
-  getter io : IO = STDOUT
+  help_message <<-TEXT
+  #{task_summary}
+
+  Requires the name of the resource and list of database columns. Columns
+  are passed as column_name:ColumnType. Where ColumnType are one of the
+  supported Avram datatypes.
+
+  Example:
+
+    lucky gen.resource.browser Project title:String description:String? completed:Bool priority:Int32
+  TEXT
 
   class InvalidOption < Exception
     def initialize(message : String)
@@ -17,37 +28,23 @@ class Gen::Resource::Browser < LuckyTask::Task
     end
   end
 
-  def help_message
-    <<-TEXT
-    #{summary}
-
-    Requires the name of the resource and list of database columns. Columns
-    are passed as column_name:ColumnType. Where ColumnType are one of the
-    supported Avram datatypes.
-
-    Example:
-
-      lucky gen.resource.browser Project title:String description:String? completed:Bool priority:Int32
-    TEXT
-  end
-
-  def call(@io : IO = STDOUT)
+  def call
     validate!
     generate_resource
-    io.puts "\nYou will need to run the #{"lucky db.migrate".colorize.green} task next"
+    output.puts "\nYou will need to run the #{"lucky db.migrate".colorize.green} task next"
     display_path_to_resource
   rescue e : InvalidOption
-    io.puts e.message.colorize.red
+    output.puts e.message.colorize.red
   end
 
   private def generate_resource
-    Lucky::ResourceTemplate.new(resource_name, columns).render("./src/")
+    Lucky::ResourceTemplate.new(resource_name, columns).render(Path["./src/"])
     create_migration
     display_success_messages
   end
 
   private def display_path_to_resource
-    io.puts "\nView list of #{pluralized_name} in your browser at: #{path_to_resource.colorize.green}"
+    output.puts "\nView list of #{pluralized_name} in your browser at: #{path_to_resource.colorize.green}"
   end
 
   private def path_to_resource
@@ -133,7 +130,7 @@ class Gen::Resource::Browser < LuckyTask::Task
   end
 
   private def success_message(class_name : String, filename : String) : Nil
-    io.puts "Generated #{class_name.colorize.bold} in #{filename.colorize.bold}"
+    output.puts "Generated #{class_name.colorize.bold} in #{filename.colorize.bold}"
   end
 
   private def resource_name : String
@@ -145,9 +142,7 @@ class Gen::Resource::Browser < LuckyTask::Task
   end
 end
 
-class Lucky::ResourceTemplate < Teeplate::FileTree
-  directory "#{__DIR__}/../templates/resource"
-
+class Lucky::ResourceTemplate
   getter resource, columns
   getter query_filename : String,
     underscored_resource : String,
@@ -157,6 +152,69 @@ class Lucky::ResourceTemplate < Teeplate::FileTree
     @query_filename = query_class.underscore
     @underscored_resource = @resource.underscore
     @folder_name = pluralized_name.underscore
+  end
+
+  def render(path : Path)
+    LuckyTemplate.write!(path, template_folder)
+  end
+
+  def template_folder
+    LuckyTemplate.create_folder do |root_dir|
+      root_dir.add_folder(Path["actions/#{folder_name}"]) do |actions_folder|
+        actions_folder.add_file(Path["create.cr"]) do |io|
+          ECR.embed("#{__DIR__}/../templates/resource/actions/create.cr.ecr", io)
+        end
+        actions_folder.add_file(Path["delete.cr"]) do |io|
+          ECR.embed("#{__DIR__}/../templates/resource/actions/delete.cr.ecr", io)
+        end
+        actions_folder.add_file(Path["edit.cr"]) do |io|
+          ECR.embed("#{__DIR__}/../templates/resource/actions/edit.cr.ecr", io)
+        end
+        actions_folder.add_file(Path["index.cr"]) do |io|
+          ECR.embed("#{__DIR__}/../templates/resource/actions/index.cr.ecr", io)
+        end
+        actions_folder.add_file(Path["new.cr"]) do |io|
+          ECR.embed("#{__DIR__}/../templates/resource/actions/new.cr.ecr", io)
+        end
+        actions_folder.add_file(Path["show.cr"]) do |io|
+          ECR.embed("#{__DIR__}/../templates/resource/actions/show.cr.ecr", io)
+        end
+        actions_folder.add_file(Path["update.cr"]) do |io|
+          ECR.embed("#{__DIR__}/../templates/resource/actions/update.cr.ecr", io)
+        end
+      end
+      root_dir.add_folder(Path["components/#{folder_name}"]) do |components_folder|
+        components_folder.add_file(Path["form_fields.cr"]) do |io|
+          ECR.embed("#{__DIR__}/../templates/resource/components/form_fields.cr.ecr", io)
+        end
+      end
+      root_dir.add_file(Path["models/#{underscored_resource}.cr"]) do |io|
+        ECR.embed("#{__DIR__}/../templates/resource/models/model.cr.ecr", io)
+      end
+      root_dir.add_file(Path["operations/delete_#{underscored_resource}.cr"]) do |io|
+        ECR.embed("#{__DIR__}/../templates/resource/operations/delete_operation.cr.ecr", io)
+      end
+      root_dir.add_file(Path["operations/save_#{underscored_resource}.cr"]) do |io|
+        ECR.embed("#{__DIR__}/../templates/resource/operations/save_operation.cr.ecr", io)
+      end
+      root_dir.add_folder(Path["pages/#{folder_name}"]) do |pages_folder|
+        pages_folder.add_file(Path["edit_page.cr"]) do |io|
+          ECR.embed("#{__DIR__}/../templates/resource/pages/edit_page.cr.ecr", io)
+        end
+        pages_folder.add_file(Path["index_page.cr"]) do |io|
+          ECR.embed("#{__DIR__}/../templates/resource/pages/index_page.cr.ecr", io)
+        end
+        pages_folder.add_file(Path["new_page.cr"]) do |io|
+          ECR.embed("#{__DIR__}/../templates/resource/pages/new_page.cr.ecr", io)
+        end
+        pages_folder.add_file(Path["show_page.cr"]) do |io|
+          ECR.embed("#{__DIR__}/../templates/resource/pages/show_page.cr.ecr", io)
+        end
+      end
+      root_dir.add_file(Path["queries/#{query_filename}.cr"]) do |io|
+        ECR.embed("#{__DIR__}/../templates/resource/queries/query.cr.ecr", io)
+      end
+    end
   end
 
   private def pluralized_name
