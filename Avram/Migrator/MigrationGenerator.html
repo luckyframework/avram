@@ -1808,7 +1808,7 @@
   </h2>
   
     
-      <a href="https://github.com/luckyframework/avram/blob/db6ef660d18c378a076bba9d16974f2aa9f69bad/src/avram/tasks/gen/migration_generator.cr#L4" target="_blank">
+      <a href="https://github.com/luckyframework/avram/blob/556ed3dd92af47046bf1a4fbacdcf5f38770d76e/src/avram/tasks/gen/migration_generator.cr#L4" target="_blank">
         avram/tasks/gen/migration_generator.cr
       </a>
     
@@ -1830,12 +1830,12 @@
   <ul class="list-summary">
     
       <li class="entry-summary">
-        <a href="#new%28name%3AString%2Cmigrate_contents%3AString%2Crollback_contents%3AString%29-class-method" class="signature"><strong>.new</strong>(name : String, migrate_contents : String, rollback_contents : String)</a>
+        <a href="#new%28name%3AString%2Cio%3AIO%2Cmigrate_contents%3AString%2Crollback_contents%3AString%29-class-method" class="signature"><strong>.new</strong>(name : String, io : IO, migrate_contents : String, rollback_contents : String)</a>
         
       </li>
     
       <li class="entry-summary">
-        <a href="#new%28name%3AString%29-class-method" class="signature"><strong>.new</strong>(name : String)</a>
+        <a href="#new%28name%3AString%2Cio%3AIO%29-class-method" class="signature"><strong>.new</strong>(name : String, io : IO)</a>
         
       </li>
     
@@ -1869,6 +1869,11 @@
     
       <li class="entry-summary">
         <a href="#generate%28_version%3ANil%7CString%3D%40_version%29-instance-method" class="signature"><strong>#generate</strong>(_version : Nil | String = @_version)</a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#io%3AIO-instance-method" class="signature"><strong>#io</strong> : IO</a>
         
       </li>
     
@@ -1950,34 +1955,34 @@
     Constructor Detail
   </h2>
   
-    <div class="entry-detail" id="new(name:String,migrate_contents:String,rollback_contents:String)-class-method">
+    <div class="entry-detail" id="new(name:String,io:IO,migrate_contents:String,rollback_contents:String)-class-method">
       <div class="signature">
         
-        def self.<strong>new</strong>(name : <a href="../../String.html">String</a>, migrate_contents : <a href="../../String.html">String</a>, rollback_contents : <a href="../../String.html">String</a>)
+        def self.<strong>new</strong>(name : <a href="../../String.html">String</a>, io : IO, migrate_contents : <a href="../../String.html">String</a>, rollback_contents : <a href="../../String.html">String</a>)
 
-        <a class="method-permalink" href="#new%28name%3AString%2Cmigrate_contents%3AString%2Crollback_contents%3AString%29-class-method">#</a>
+        <a class="method-permalink" href="#new%28name%3AString%2Cio%3AIO%2Cmigrate_contents%3AString%2Crollback_contents%3AString%29-class-method">#</a>
       </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/db6ef660d18c378a076bba9d16974f2aa9f69bad/src/avram/tasks/gen/migration_generator.cr#L17" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/556ed3dd92af47046bf1a4fbacdcf5f38770d76e/src/avram/tasks/gen/migration_generator.cr#L17" target="_blank">View source</a>]
         
       </div>
     </div>
   
-    <div class="entry-detail" id="new(name:String)-class-method">
+    <div class="entry-detail" id="new(name:String,io:IO)-class-method">
       <div class="signature">
         
-        def self.<strong>new</strong>(name : <a href="../../String.html">String</a>)
+        def self.<strong>new</strong>(name : <a href="../../String.html">String</a>, io : IO)
 
-        <a class="method-permalink" href="#new%28name%3AString%29-class-method">#</a>
+        <a class="method-permalink" href="#new%28name%3AString%2Cio%3AIO%29-class-method">#</a>
       </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/db6ef660d18c378a076bba9d16974f2aa9f69bad/src/avram/tasks/gen/migration_generator.cr#L14" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/556ed3dd92af47046bf1a4fbacdcf5f38770d76e/src/avram/tasks/gen/migration_generator.cr#L14" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2009,7 +2014,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/db6ef660d18c378a076bba9d16974f2aa9f69bad/src/avram/tasks/gen/migration_generator.cr#L32" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/556ed3dd92af47046bf1a4fbacdcf5f38770d76e/src/avram/tasks/gen/migration_generator.cr#L28" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2025,7 +2030,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/db6ef660d18c378a076bba9d16974f2aa9f69bad/src/avram/tasks/gen/migration_generator.cr#L38" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/556ed3dd92af47046bf1a4fbacdcf5f38770d76e/src/avram/tasks/gen/migration_generator.cr#L34" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2041,7 +2046,23 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/db6ef660d18c378a076bba9d16974f2aa9f69bad/src/avram/tasks/gen/migration_generator.cr#L20" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/556ed3dd92af47046bf1a4fbacdcf5f38770d76e/src/avram/tasks/gen/migration_generator.cr#L20" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="io:IO-instance-method">
+      <div class="signature">
+        
+        def <strong>io</strong> : IO
+
+        <a class="method-permalink" href="#io%3AIO-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/luckyframework/avram/blob/556ed3dd92af47046bf1a4fbacdcf5f38770d76e/src/avram/tasks/gen/migration_generator.cr#L7" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2057,7 +2078,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/db6ef660d18c378a076bba9d16974f2aa9f69bad/src/avram/tasks/gen/migration_generator.cr#L7" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/556ed3dd92af47046bf1a4fbacdcf5f38770d76e/src/avram/tasks/gen/migration_generator.cr#L7" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2089,7 +2110,7 @@ which includes its class name and its object address.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/db6ef660d18c378a076bba9d16974f2aa9f69bad/src/avram/tasks/gen/migration_generator.cr#L12" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/556ed3dd92af47046bf1a4fbacdcf5f38770d76e/src/avram/tasks/gen/migration_generator.cr#L12" target="_blank">View source</a>]
         
       </div>
     </div>

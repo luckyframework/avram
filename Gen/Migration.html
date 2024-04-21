@@ -1810,7 +1810,7 @@
   </h2>
   
     
-      <a href="https://github.com/luckyframework/avram/blob/db6ef660d18c378a076bba9d16974f2aa9f69bad/src/avram/tasks/gen/migration.cr#L3" target="_blank">
+      <a href="https://github.com/luckyframework/avram/blob/556ed3dd92af47046bf1a4fbacdcf5f38770d76e/src/avram/tasks/gen/migration.cr#L3" target="_blank">
         avram/tasks/gen/migration.cr
       </a>
     
@@ -1837,7 +1837,7 @@
       
     
       <dt class="entry-const" id="PARSER_OPTS">
-        <strong>PARSER_OPTS</strong> = <code><span class="o">[]</span> <span class="k">of</span> <span class="t">Symbol</span></code>
+        <strong>PARSER_OPTS</strong> = <code>[<span class="n">:migration_name</span>] <span class="k">of</span> <span class="t">Symbol</span></code>
       </dt>
       
     
@@ -1910,7 +1910,12 @@
   <ul class="list-summary">
     
       <li class="entry-summary">
-        <a href="#call%28name%3AString%7CNil%3Dnil%29-instance-method" class="signature"><strong>#call</strong>(name : String | Nil = <span class="n">nil</span>)</a>
+        <a href="#call-instance-method" class="signature"><strong>#call</strong></a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#migration_name%3AString-instance-method" class="signature"><strong>#migration_name</strong> : String</a>
         
       </li>
     
@@ -1936,6 +1941,11 @@
     
       <li class="entry-summary">
         <a href="#print_help_or_call%28args%3AArray%28String%29%29-instance-method" class="signature"><strong>#print_help_or_call</strong>(args : Array(String))</a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#set_opt_for_migration_name%28args%3AArray%28String%29%29-instance-method" class="signature"><strong>#set_opt_for_migration_name</strong>(args : Array(String))</a>
         
       </li>
     
@@ -2049,7 +2059,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/db6ef660d18c378a076bba9d16974f2aa9f69bad/src/avram/tasks/gen/migration.cr#L18" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/556ed3dd92af47046bf1a4fbacdcf5f38770d76e/src/avram/tasks/gen/migration.cr#L20" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2065,7 +2075,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/db6ef660d18c378a076bba9d16974f2aa9f69bad/src/avram/tasks/gen/migration.cr#L18" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/556ed3dd92af47046bf1a4fbacdcf5f38770d76e/src/avram/tasks/gen/migration.cr#L20" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2081,7 +2091,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/db6ef660d18c378a076bba9d16974f2aa9f69bad/src/avram/tasks/gen/migration.cr#L22" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/556ed3dd92af47046bf1a4fbacdcf5f38770d76e/src/avram/tasks/gen/migration.cr#L24" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2104,7 +2114,7 @@ Use the <code>help_message</code></p>
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/db6ef660d18c378a076bba9d16974f2aa9f69bad/src/avram/tasks/gen/migration.cr#L5" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/556ed3dd92af47046bf1a4fbacdcf5f38770d76e/src/avram/tasks/gen/migration.cr#L5" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2126,7 +2136,7 @@ Use the <code><a href="../Gen/Migration.html#task_name%3AString-class-method">.t
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/db6ef660d18c378a076bba9d16974f2aa9f69bad/src/avram/tasks/gen/migration.cr#L3" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/556ed3dd92af47046bf1a4fbacdcf5f38770d76e/src/avram/tasks/gen/migration.cr#L3" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2148,7 +2158,7 @@ Use the <code>summary</code> macro to define a custom summary</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/db6ef660d18c378a076bba9d16974f2aa9f69bad/src/avram/tasks/gen/migration.cr#L4" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/556ed3dd92af47046bf1a4fbacdcf5f38770d76e/src/avram/tasks/gen/migration.cr#L4" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2167,18 +2177,34 @@ Use the <code>summary</code> macro to define a custom summary</p>
     Instance Method Detail
   </h2>
   
-    <div class="entry-detail" id="call(name:String|Nil=nil)-instance-method">
+    <div class="entry-detail" id="call-instance-method">
       <div class="signature">
         
-        def <strong>call</strong>(name : <a href="../String.html">String</a> | <a href="../Nil.html">Nil</a> = <span class="n">nil</span>)
+        def <strong>call</strong>
 
-        <a class="method-permalink" href="#call%28name%3AString%7CNil%3Dnil%29-instance-method">#</a>
+        <a class="method-permalink" href="#call-instance-method">#</a>
       </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/db6ef660d18c378a076bba9d16974f2aa9f69bad/src/avram/tasks/gen/migration.cr#L28" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/556ed3dd92af47046bf1a4fbacdcf5f38770d76e/src/avram/tasks/gen/migration.cr#L30" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="migration_name:String-instance-method">
+      <div class="signature">
+        
+        def <strong>migration_name</strong> : <a href="../String.html">String</a>
+
+        <a class="method-permalink" href="#migration_name%3AString-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/luckyframework/avram/blob/556ed3dd92af47046bf1a4fbacdcf5f38770d76e/src/avram/tasks/gen/migration.cr#L18" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2250,7 +2276,23 @@ Use the <code>summary</code> macro to define a custom summary</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/db6ef660d18c378a076bba9d16974f2aa9f69bad/src/avram/tasks/gen/migration.cr#L3" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/556ed3dd92af47046bf1a4fbacdcf5f38770d76e/src/avram/tasks/gen/migration.cr#L3" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="set_opt_for_migration_name(args:Array(String))-instance-method">
+      <div class="signature">
+        
+        def <strong>set_opt_for_migration_name</strong>(args : <a href="../Array.html">Array</a>(<a href="../String.html">String</a>))
+
+        <a class="method-permalink" href="#set_opt_for_migration_name%28args%3AArray%28String%29%29-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/luckyframework/avram/blob/556ed3dd92af47046bf1a4fbacdcf5f38770d76e/src/avram/tasks/gen/migration.cr#L18" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2266,7 +2308,7 @@ Use the <code>summary</code> macro to define a custom summary</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/db6ef660d18c378a076bba9d16974f2aa9f69bad/src/avram/tasks/gen/migration.cr#L18" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/556ed3dd92af47046bf1a4fbacdcf5f38770d76e/src/avram/tasks/gen/migration.cr#L20" target="_blank">View source</a>]
         
       </div>
     </div>
