@@ -1,4 +1,4 @@
-class Lucky::ModelTemplate < Teeplate::FileTree
+class Lucky::ModelTemplate
   @name : String
   @namespace : String
   @columns : Array(Lucky::GeneratedColumn)
@@ -8,12 +8,31 @@ class Lucky::ModelTemplate < Teeplate::FileTree
   getter underscored_name
   getter underscored_namespace_path
 
-  directory "#{__DIR__}/model/"
-
   def initialize(full_name : String, @columns : Array(Lucky::GeneratedColumn))
     @namespace, _, @name = full_name.partition(/\b(?=\w+$)/)
     @underscored_name = @name.underscore
     @underscored_namespace_path = @namespace.underscore.gsub("::", "/")
+  end
+
+  def render(path : Path)
+    LuckyTemplate.write!(path, template_folder)
+  end
+
+  def template_folder
+    LuckyTemplate.create_folder do |root_dir|
+      root_dir.add_file(Path["models/#{underscored_namespace_path}#{underscored_name}.cr"]) do |io|
+        ECR.embed("#{__DIR__}/../templates/model/models/model.cr.ecr", io)
+      end
+      root_dir.add_file(Path["operations/#{underscored_namespace_path}delete_#{underscored_name}.cr"]) do |io|
+        ECR.embed("#{__DIR__}/../templates/model/operations/delete_operation.cr.ecr", io)
+      end
+      root_dir.add_file(Path["operations/#{underscored_namespace_path}save_#{underscored_name}.cr"]) do |io|
+        ECR.embed("#{__DIR__}/../templates/model/operations/save_operation.cr.ecr", io)
+      end
+      root_dir.add_file(Path["queries/#{underscored_namespace_path}#{underscored_name}_query.cr"]) do |io|
+        ECR.embed("#{__DIR__}/../templates/model/queries/query.cr.ecr", io)
+      end
+    end
   end
 
   def columns_list
