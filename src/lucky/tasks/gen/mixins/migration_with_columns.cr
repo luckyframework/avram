@@ -4,6 +4,7 @@ module Gen::Mixins::MigrationWithColumns
   def create_migration
     Avram::Migrator::MigrationGenerator.new(
       "Create#{pluralized_name}",
+      io: output,
       migrate_contents: migrate_contents,
       rollback_contents: rollback_contents
     ).generate

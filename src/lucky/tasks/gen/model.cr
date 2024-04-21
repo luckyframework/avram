@@ -1,5 +1,4 @@
 require "lucky_task"
-require "teeplate"
 require "../../../avram"
 require "./templates/model_template"
 require "wordsmith"
@@ -9,26 +8,22 @@ class Gen::Model < LuckyTask::Task
   include Gen::Mixins::MigrationWithColumns
 
   summary "Generate a model, query, and operations (save and delete)"
-  getter io : IO = STDOUT
+  help_message <<-TEXT
+  #{task_summary}
 
-  def call(@io : IO = STDOUT)
+  Example:
+
+    lucky gen.model Project title:String description:String? completed:Bool priority:Int32
+  TEXT
+
+  def call
     if valid?
-      template.render("./src/")
+      template.render(Path["./src/"])
       create_migration
       display_success_messages
     else
-      io.puts @error.colorize(:red)
+      output.puts @error.colorize(:red)
     end
-  end
-
-  def help_message
-    <<-TEXT
-    #{summary}
-
-    Example:
-
-      lucky gen.model Project title:String description:String? completed:Bool priority:Int32
-    TEXT
   end
 
   private def valid?
@@ -71,10 +66,10 @@ class Gen::Model < LuckyTask::Task
   end
 
   private def display_success_messages
-    io.puts success_message(resource_name, "./src/models/#{template.underscored_namespace_path}#{template.underscored_name}.cr")
-    io.puts success_message("Save#{resource_name}", "./src/operations/#{template.underscored_namespace_path}save_#{template.underscored_name}.cr")
-    io.puts success_message("Delete#{resource_name}", "./src/operations/#{template.underscored_namespace_path}delete_#{template.underscored_name}.cr")
-    io.puts success_message("#{resource_name}Query", "./src/queries/#{template.underscored_namespace_path}#{template.underscored_name}_query.cr")
+    output.puts success_message(resource_name, "./src/models/#{template.underscored_namespace_path}#{template.underscored_name}.cr")
+    output.puts success_message("Save#{resource_name}", "./src/operations/#{template.underscored_namespace_path}save_#{template.underscored_name}.cr")
+    output.puts success_message("Delete#{resource_name}", "./src/operations/#{template.underscored_namespace_path}delete_#{template.underscored_name}.cr")
+    output.puts success_message("#{resource_name}Query", "./src/queries/#{template.underscored_namespace_path}#{template.underscored_name}_query.cr")
   end
 
   private def success_message(class_name : String, filename : String)

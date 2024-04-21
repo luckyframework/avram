@@ -59,10 +59,8 @@ describe Gen::Resource::Browser do
         bad_text_column = "text_column:text"
         good_string_column = "good_column:String"
         good_optional_string_column = "good_optional_column:String?"
-        io = IO::Memory.new
-        ARGV.push("ModelName", bad_int_column, bad_text_column, good_string_column, good_optional_string_column)
 
-        Gen::Model.new.call(io)
+        io = generate(Gen::Model, "ModelName", bad_int_column, bad_text_column, good_string_column, good_optional_string_column)
 
         io.to_s.should contain("Unable to generate model ModelName")
         io.to_s.should contain("the following columns are using types not supported by the generator")
@@ -74,11 +72,7 @@ describe Gen::Resource::Browser do
     end
 
     it "displays an error when given a more complex type" do
-      io = IO::Memory.new
-      ARGV.push("Alphabet", "a:BigDecimal")
-
-      Gen::Model.new.call(io)
-
+      io = generate(Gen::Model, "Alphabet", "a:BigDecimal")
       io.to_s.should contain("For more complex types that can be added to your migrations manually")
     end
   end
@@ -126,9 +120,12 @@ describe Gen::Resource::Browser do
   end
 end
 
-private def generate(generator : Class, *options)
-  options.each { |option| ARGV.push(option) }
-  IO::Memory.new.tap do |io|
-    generator.new.call(io)
-  end
+private def generate(generator : Class, *options) : IO
+  task = generator.new
+  task.output = IO::Memory.new
+  # HACK: Some tasks are still using a legacy task format with ARGV
+  options.each { |opt| ARGV.push(opt) }
+  task.print_help_or_call(args: ARGV)
+  ARGV.clear
+  task.output
 end

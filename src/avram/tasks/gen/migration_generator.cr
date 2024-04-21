@@ -4,17 +4,17 @@ require "file_utils"
 class Avram::Migrator::MigrationGenerator
   include LuckyTask::TextHelpers
 
-  getter name : String
+  getter name : String, io : IO
   @_version : String?
   @migrate_contents : String?
   @rollback_contents : String?
 
   ECR.def_to_s "#{__DIR__}/migration.ecr"
 
-  def initialize(@name : String)
+  def initialize(@name : String, @io : IO)
   end
 
-  def initialize(@name : String, @migrate_contents : String, @rollback_contents : String)
+  def initialize(@name : String, @io : IO, @migrate_contents : String, @rollback_contents : String)
   end
 
   def generate(@_version = @_version)
@@ -23,10 +23,6 @@ class Avram::Migrator::MigrationGenerator
     ensure_unique
     File.write(file_path, contents)
     io.puts "Created #{migration_class_name.colorize(:green)} in .#{relative_file_path.colorize(:green)}"
-  end
-
-  private def io
-    Gen::Migration.settings.io
   end
 
   def formatted_migrate_contents : String?
