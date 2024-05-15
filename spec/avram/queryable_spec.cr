@@ -616,6 +616,22 @@ describe Avram::Queryable do
       min.should eq 1
     end
 
+    it "works with strings" do
+      UserFactory.create &.name("Third")
+      UserFactory.create &.name("Second")
+      UserFactory.create &.name("First")
+      min = UserQuery.new.name.select_min
+      min.should eq "First"
+    end
+
+    it "works with floats" do
+      UserFactory.create &.average_score(0.7)
+      UserFactory.create &.average_score(0.71)
+      UserFactory.create &.average_score(0.52)
+      min = UserQuery.new.average_score.select_min
+      min.should eq 0.52
+    end
+
     it "works with chained where clauses" do
       UserFactory.create &.age(2)
       UserFactory.create &.age(1)
@@ -646,6 +662,22 @@ describe Avram::Queryable do
       UserFactory.create &.age(3)
       max = UserQuery.new.age.select_max
       max.should eq 3
+    end
+
+    it "works with strings" do
+      UserFactory.create &.name("Third")
+      UserFactory.create &.name("Second")
+      UserFactory.create &.name("First")
+      max = UserQuery.new.name.select_max
+      max.should eq "Third"
+    end
+
+    it "works with floats" do
+      UserFactory.create &.average_score(0.7)
+      UserFactory.create &.average_score(0.71)
+      UserFactory.create &.average_score(0.52)
+      max = UserQuery.new.average_score.select_max
+      max.should eq 0.71
     end
 
     it "works with chained where clauses" do

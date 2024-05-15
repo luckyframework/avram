@@ -129,12 +129,12 @@ class Avram::Criteria(T, V)
     add_clause(Avram::Where::LessThanOrEqualTo.new(column, V.adapter.to_db!(value)))
   end
 
-  def select_min : V?
-    rows.exec_scalar(&.select_min(column)).as(V?)
+  def select_min
+    to_expected_type(rows.exec_scalar(&.select_min(column)))
   end
 
-  def select_max : V?
-    rows.exec_scalar(&.select_max(column)).as(V?)
+  def select_max
+    to_expected_type(rows.exec_scalar(&.select_max(column)))
   end
 
   def select_average : Float64?
@@ -185,6 +185,18 @@ class Avram::Criteria(T, V)
     else
       sql_clause
     end
+  end
+
+  # :nodoc:
+  # given the value in input it casts it to the expected output type (e.g: an PG::Int becomes a Int)
+  private def to_expected_type(value)
+    value.as(V?)
+  end
+
+  # :nodoc:
+  # special case: PG::Numeric cannot be cast to float, so we need to explicitly call to_f on it
+  private def to_expected_type(value : PG::Numeric?)
+    value.try &.to_f64
   end
 
   macro define_function_criteria(name, output_type = V, sql_name = nil)
