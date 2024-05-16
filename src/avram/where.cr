@@ -217,6 +217,34 @@ module Avram::Where
     end
   end
 
+  class Any < ValueHoldingSqlClause
+    def operator : String
+      "&&"
+    end
+
+    def negated : NotAny
+      NotAny.new(column, value)
+    end
+
+    def prepare(placeholder_supplier : Proc(String)) : String
+      "#{column} #{operator} (#{placeholder_supplier.call})"
+    end
+  end
+
+  class NotAny < ValueHoldingSqlClause
+    def operator : String
+      "&&"
+    end
+
+    def negated : Any
+      Any.new(column, value)
+    end
+
+    def prepare(placeholder_supplier : Proc(String)) : String
+      "NOT(#{column} #{operator} (#{placeholder_supplier.call}))"
+    end
+  end
+
   class Includes < ValueHoldingSqlClause
     def operator : String
       "= ANY"
