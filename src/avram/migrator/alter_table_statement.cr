@@ -11,6 +11,7 @@ class Avram::Migrator::AlterTableStatement
   getter fill_existing_with_statements = [] of String
   getter change_type_statements = [] of String
   getter change_default_statements = [] of String
+  getter change_nullability_statements = [] of String
   private getter? if_exists : Bool = false
 
   def initialize(@table_name : TableName, *, @if_exists : Bool = false)
@@ -80,12 +81,62 @@ class Avram::Migrator::AlterTableStatement
     add_change_default_statement %column
   end
 
+  # Change the column's nullability from whatever it is currently to true.
+  # ```
+  # alter table_for(User) do
+  #   allow_nulls_for :email
+  # end
+  # ```
+  macro allow_nulls_for(column_name)
+    change_nullability_statements << build_nullability_statement({{column_name.id.stringify}}, true)
+  end
+
+  # Change the column's nullability from whatever it is currently to false.
+  # ```
+  # alter table_for(User) do
+  #   forbid_nulls_for :email
+  # end
+  # ```
+  macro forbid_nulls_for(column_name)
+    change_nullability_statements  << build_nullability_statement({{column_name.id.stringify}}, false)
+  end
+
+  def build_nullability_statement(column_name, nullability)
+    "ALTER TABLE #{@table_name} ALTER COLUMN #{column_name} #{nullability ? "DROP" : "SET"} NOT NULL;"
+  end
+
+  macro change_nullability_of(type_declaration)
+    {%
+      if !type_declaration.is_a?(TypeDeclaration)
+        raise "Must pass a type declaration to 'change_nullability_of'. Example: change_nullability_of count : Int32?"
+      end
+    %}
+    {%
+      type = type_declaration.type.resolve
+      nilable = false
+      if type.nilable?
+        type = type.union_types.reject(&.==(Nil)).first
+        nilable = true
+      end
+    %}
+    %column = ::Avram::Migrator::Columns::{{ type }}Column({{ type }}).new(
+      name: {{ type_declaration.var.stringify }},
+      nilable: {{ nilable }},
+      default: nil
+    )
+    add_change_nullability_statement %column
+  end
+
   def add_change_type_statement(column : ::Avram::Migrator::Columns::Base)
     change_type_statements << column.build_change_type_statement(@table_name)
   end
 
   def add_change_default_statement(column : ::Avram::Migrator::Columns::Base)
     change_default_statements << column.build_change_default_statement(@table_name)
+  end
+
+  def add_change_nullability_statement(column : ::Avram::Migrator::Columns::Base)
+    change_nullability_statements << column.build_change_nullability_statement(@table_name)
   end
 
   # Accepts a block to alter a table using the `add` method. The generated sql
@@ -114,7 +165,7 @@ class Avram::Migrator::AlterTableStatement
   end
 
   def statements
-    alter_statements + change_default_statements + change_type_statements + index_statements + fill_existing_with_statements
+    alter_statements + change_default_statements + change_type_statements + change_nullability_statements + index_statements + fill_existing_with_statements
   end
 
   def if_exists_statement
