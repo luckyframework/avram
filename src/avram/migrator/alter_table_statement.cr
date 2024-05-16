@@ -113,6 +113,10 @@ class Avram::Migrator::AlterTableStatement
     change_default_statements << column.build_change_default_statement(@table_name)
   end
 
+  def add_change_nullability_statement(column : ::Avram::Migrator::Columns::Base)
+    change_nullability_statements << column.build_change_nullability_statement(@table_name)
+  end
+
   # Accepts a block to alter a table using the `add` method. The generated sql
   # statements are aggregated in the `statements` getter.
   #
