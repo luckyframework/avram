@@ -1810,7 +1810,7 @@
   </h2>
   
     
-      <a href="https://github.com/luckyframework/avram/blob/52e75216b00a4006dc00c664ee24d0dc74036ff5/src/avram/migrator/alter_table_statement.cr#L4" target="_blank">
+      <a href="https://github.com/luckyframework/avram/blob/1326a8ea7583b91169993194802bb0875172a9c3/src/avram/migrator/alter_table_statement.cr#L4" target="_blank">
         avram/migrator/alter_table_statement.cr
       </a>
     
@@ -1865,6 +1865,13 @@
       </li>
     
       <li class="entry-summary">
+        <a href="#allow_nulls_for%28column_name%29-macro" class="signature"><strong>allow_nulls_for</strong>(column_name)</a>
+        
+          <div class="summary"><p>Change the column's nullability from whatever it is currently to true.</p></div>
+        
+      </li>
+    
+      <li class="entry-summary">
         <a href="#change_default%28type_declaration%2Cdefault%29-macro" class="signature"><strong>change_default</strong>(type_declaration, default)</a>
         
           <div class="summary"><p>Change the columns' default value to <code>default</code> <code>alter table_for(Post) do   change_default published_at, default: :now end</code></p></div>
@@ -1875,6 +1882,13 @@
         <a href="#change_type%28type_declaration%2C%2A%2Atype_options%29-macro" class="signature"><strong>change_type</strong>(type_declaration, **type_options)</a>
         
           <div class="summary"><p>Change the column's type from whatever it is currently to <code>type_declaration.type</code>.</p></div>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#forbid_nulls_for%28column_name%29-macro" class="signature"><strong>forbid_nulls_for</strong>(column_name)</a>
+        
+          <div class="summary"><p>Change the column's nullability from whatever it is currently to false.</p></div>
         
       </li>
     
@@ -1945,7 +1959,17 @@
       </li>
     
       <li class="entry-summary">
+        <a href="#build_nullability_statement%28column_name%2Cnullability%29-instance-method" class="signature"><strong>#build_nullability_statement</strong>(column_name, nullability)</a>
+        
+      </li>
+    
+      <li class="entry-summary">
         <a href="#change_default_statements%3AArray%28String%29-instance-method" class="signature"><strong>#change_default_statements</strong> : Array(String)</a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#change_nullability_statements%3AArray%28String%29-instance-method" class="signature"><strong>#change_nullability_statements</strong> : Array(String)</a>
         
       </li>
     
@@ -2097,7 +2121,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/52e75216b00a4006dc00c664ee24d0dc74036ff5/src/avram/migrator/alter_table_statement.cr#L16" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/1326a8ea7583b91169993194802bb0875172a9c3/src/avram/migrator/alter_table_statement.cr#L17" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2127,7 +2151,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/52e75216b00a4006dc00c664ee24d0dc74036ff5/src/avram/migrator/alter_table_statement.cr#L190" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/1326a8ea7583b91169993194802bb0875172a9c3/src/avram/migrator/alter_table_statement.cr#L215" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2148,7 +2172,31 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/52e75216b00a4006dc00c664ee24d0dc74036ff5/src/avram/migrator/alter_table_statement.cr#L142" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/1326a8ea7583b91169993194802bb0875172a9c3/src/avram/migrator/alter_table_statement.cr#L167" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="allow_nulls_for(column_name)-macro">
+      <div class="signature">
+        
+        macro <strong>allow_nulls_for</strong>(column_name)
+
+        <a class="method-permalink" href="#allow_nulls_for%28column_name%29-macro">#</a>
+      </div>
+      
+        <div class="doc">
+          
+          <p>Change the column's nullability from whatever it is currently to true.</p>
+<pre><code class="language-crystal">alter table_for(<span class="t">User</span>) <span class="k">do</span>
+  allow_nulls_for <span class="n">:email</span>
+<span class="k">end</span></code></pre>
+        </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/luckyframework/avram/blob/1326a8ea7583b91169993194802bb0875172a9c3/src/avram/migrator/alter_table_statement.cr#L90" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2172,7 +2220,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/52e75216b00a4006dc00c664ee24d0dc74036ff5/src/avram/migrator/alter_table_statement.cr#L69" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/1326a8ea7583b91169993194802bb0875172a9c3/src/avram/migrator/alter_table_statement.cr#L70" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2199,7 +2247,31 @@ a <code><a href="../../Float64.html">Float64</a></code> column which requires se
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/52e75216b00a4006dc00c664ee24d0dc74036ff5/src/avram/migrator/alter_table_statement.cr#L28" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/1326a8ea7583b91169993194802bb0875172a9c3/src/avram/migrator/alter_table_statement.cr#L29" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="forbid_nulls_for(column_name)-macro">
+      <div class="signature">
+        
+        macro <strong>forbid_nulls_for</strong>(column_name)
+
+        <a class="method-permalink" href="#forbid_nulls_for%28column_name%29-macro">#</a>
+      </div>
+      
+        <div class="doc">
+          
+          <p>Change the column's nullability from whatever it is currently to false.</p>
+<pre><code class="language-crystal">alter table_for(<span class="t">User</span>) <span class="k">do</span>
+  forbid_nulls_for <span class="n">:email</span>
+<span class="k">end</span></code></pre>
+        </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/luckyframework/avram/blob/1326a8ea7583b91169993194802bb0875172a9c3/src/avram/migrator/alter_table_statement.cr#L100" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2215,7 +2287,7 @@ a <code><a href="../../Float64.html">Float64</a></code> column which requires se
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/52e75216b00a4006dc00c664ee24d0dc74036ff5/src/avram/migrator/alter_table_statement.cr#L303" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/1326a8ea7583b91169993194802bb0875172a9c3/src/avram/migrator/alter_table_statement.cr#L328" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2231,7 +2303,7 @@ a <code><a href="../../Float64.html">Float64</a></code> column which requires se
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/52e75216b00a4006dc00c664ee24d0dc74036ff5/src/avram/migrator/alter_table_statement.cr#L310" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/1326a8ea7583b91169993194802bb0875172a9c3/src/avram/migrator/alter_table_statement.cr#L335" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2247,7 +2319,7 @@ a <code><a href="../../Float64.html">Float64</a></code> column which requires se
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/52e75216b00a4006dc00c664ee24d0dc74036ff5/src/avram/migrator/alter_table_statement.cr#L285" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/1326a8ea7583b91169993194802bb0875172a9c3/src/avram/migrator/alter_table_statement.cr#L310" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2263,7 +2335,7 @@ a <code><a href="../../Float64.html">Float64</a></code> column which requires se
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/52e75216b00a4006dc00c664ee24d0dc74036ff5/src/avram/migrator/alter_table_statement.cr#L294" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/1326a8ea7583b91169993194802bb0875172a9c3/src/avram/migrator/alter_table_statement.cr#L319" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2279,7 +2351,7 @@ a <code><a href="../../Float64.html">Float64</a></code> column which requires se
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/52e75216b00a4006dc00c664ee24d0dc74036ff5/src/avram/migrator/alter_table_statement.cr#L264" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/1326a8ea7583b91169993194802bb0875172a9c3/src/avram/migrator/alter_table_statement.cr#L289" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2307,7 +2379,7 @@ a <code><a href="../../Float64.html">Float64</a></code> column which requires se
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/52e75216b00a4006dc00c664ee24d0dc74036ff5/src/avram/migrator/alter_table_statement.cr#L87" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/1326a8ea7583b91169993194802bb0875172a9c3/src/avram/migrator/alter_table_statement.cr#L112" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2323,7 +2395,7 @@ a <code><a href="../../Float64.html">Float64</a></code> column which requires se
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/52e75216b00a4006dc00c664ee24d0dc74036ff5/src/avram/migrator/alter_table_statement.cr#L83" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/1326a8ea7583b91169993194802bb0875172a9c3/src/avram/migrator/alter_table_statement.cr#L108" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2339,7 +2411,7 @@ a <code><a href="../../Float64.html">Float64</a></code> column which requires se
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/52e75216b00a4006dc00c664ee24d0dc74036ff5/src/avram/migrator/alter_table_statement.cr#L259" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/1326a8ea7583b91169993194802bb0875172a9c3/src/avram/migrator/alter_table_statement.cr#L284" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2355,7 +2427,7 @@ a <code><a href="../../Float64.html">Float64</a></code> column which requires se
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/52e75216b00a4006dc00c664ee24d0dc74036ff5/src/avram/migrator/alter_table_statement.cr#L126" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/1326a8ea7583b91169993194802bb0875172a9c3/src/avram/migrator/alter_table_statement.cr#L151" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2395,7 +2467,23 @@ built.statements
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/52e75216b00a4006dc00c664ee24d0dc74036ff5/src/avram/migrator/alter_table_statement.cr#L111" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/1326a8ea7583b91169993194802bb0875172a9c3/src/avram/migrator/alter_table_statement.cr#L136" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="build_nullability_statement(column_name,nullability)-instance-method">
+      <div class="signature">
+        
+        def <strong>build_nullability_statement</strong>(column_name, nullability)
+
+        <a class="method-permalink" href="#build_nullability_statement%28column_name%2Cnullability%29-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/luckyframework/avram/blob/1326a8ea7583b91169993194802bb0875172a9c3/src/avram/migrator/alter_table_statement.cr#L104" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2411,7 +2499,23 @@ built.statements
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/52e75216b00a4006dc00c664ee24d0dc74036ff5/src/avram/migrator/alter_table_statement.cr#L13" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/1326a8ea7583b91169993194802bb0875172a9c3/src/avram/migrator/alter_table_statement.cr#L13" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="change_nullability_statements:Array(String)-instance-method">
+      <div class="signature">
+        
+        def <strong>change_nullability_statements</strong> : <a href="../../Array.html">Array</a>(<a href="../../String.html">String</a>)
+
+        <a class="method-permalink" href="#change_nullability_statements%3AArray%28String%29-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/luckyframework/avram/blob/1326a8ea7583b91169993194802bb0875172a9c3/src/avram/migrator/alter_table_statement.cr#L14" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2427,7 +2531,7 @@ built.statements
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/52e75216b00a4006dc00c664ee24d0dc74036ff5/src/avram/migrator/alter_table_statement.cr#L12" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/1326a8ea7583b91169993194802bb0875172a9c3/src/avram/migrator/alter_table_statement.cr#L12" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2443,7 +2547,7 @@ built.statements
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/52e75216b00a4006dc00c664ee24d0dc74036ff5/src/avram/migrator/alter_table_statement.cr#L10" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/1326a8ea7583b91169993194802bb0875172a9c3/src/avram/migrator/alter_table_statement.cr#L10" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2459,7 +2563,7 @@ built.statements
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/52e75216b00a4006dc00c664ee24d0dc74036ff5/src/avram/migrator/alter_table_statement.cr#L11" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/1326a8ea7583b91169993194802bb0875172a9c3/src/avram/migrator/alter_table_statement.cr#L11" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2475,7 +2579,7 @@ built.statements
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/52e75216b00a4006dc00c664ee24d0dc74036ff5/src/avram/migrator/alter_table_statement.cr#L120" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/1326a8ea7583b91169993194802bb0875172a9c3/src/avram/migrator/alter_table_statement.cr#L145" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2491,7 +2595,7 @@ built.statements
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/52e75216b00a4006dc00c664ee24d0dc74036ff5/src/avram/migrator/alter_table_statement.cr#L9" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/1326a8ea7583b91169993194802bb0875172a9c3/src/avram/migrator/alter_table_statement.cr#L9" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2507,7 +2611,7 @@ built.statements
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/52e75216b00a4006dc00c664ee24d0dc74036ff5/src/avram/migrator/alter_table_statement.cr#L8" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/1326a8ea7583b91169993194802bb0875172a9c3/src/avram/migrator/alter_table_statement.cr#L8" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2523,7 +2627,7 @@ built.statements
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/52e75216b00a4006dc00c664ee24d0dc74036ff5/src/avram/migrator/alter_table_statement.cr#L116" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/1326a8ea7583b91169993194802bb0875172a9c3/src/avram/migrator/alter_table_statement.cr#L141" target="_blank">View source</a>]
         
       </div>
     </div>
