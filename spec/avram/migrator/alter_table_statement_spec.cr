@@ -89,6 +89,16 @@ describe Avram::Migrator::AlterTableStatement do
     built.statements[2].should eq "ALTER TABLE ONLY test_defaults ALTER COLUMN money SET DEFAULT '29.99';"
   end
 
+  it "changes defaults after changing the type" do
+    built = Avram::Migrator::AlterTableStatement.new(:users).build do
+      change_type id : Int64
+      change_default id : Int64, default: 54
+    end
+    built.statements.size.should eq 2
+    built.statements[0].should eq "ALTER TABLE users ALTER COLUMN id SET DATA TYPE bigint;"
+    built.statements[1].should eq "ALTER TABLE ONLY users ALTER COLUMN id SET DEFAULT '54';"
+  end
+
   it "can change column nullability" do
     built = Avram::Migrator::AlterTableStatement.new(:users).build do
       forbid_nulls_for :id
