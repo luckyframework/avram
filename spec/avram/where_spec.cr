@@ -28,5 +28,7 @@ describe Avram::Where do
     should_negate(Avram::Where::In, Avram::Where::NotIn)
     should_negate(Avram::Where::NotIn, Avram::Where::In)
     should_negate(Avram::Where::Null, Avram::Where::NotNull)
+    should_negate(Avram::Where::Any, Avram::Where::NotAny)
+    should_negate(Avram::Where::NotAny, Avram::Where::Any)
   end
 end

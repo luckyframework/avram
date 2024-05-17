@@ -154,6 +154,11 @@ class Avram::Criteria(T, V)
     add_clause(Avram::Where::In.new(column, values))
   end
 
+  def have_any(values) : T
+    values = values.map { |value| V.adapter.to_db!(value) }
+    add_clause(Avram::Where::Any.new(column, values))
+  end
+
   # :nodoc:
   def private_distinct_on : T
     rows.tap &.query.distinct_on(column)

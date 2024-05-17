@@ -46,4 +46,35 @@ describe "Array Columns" do
     bucket = SaveBucket.update!(bucket, enums: [Bucket::Size::Small])
     bucket.enums.should eq([Bucket::Size::Small])
   end
+
+  describe "the #have_any method" do
+    it "returns the records with have at least one element of the provided ones" do
+      BucketFactory.new.numbers([1, 2]).create
+      BucketFactory.new.numbers([1, 3]).create
+
+      bucket = BucketQuery.new.numbers.have_any([1, 2, 3]).select_count
+      bucket.should eq 2
+
+      bucket = BucketQuery.new.numbers.have_any([1, 3]).select_count
+      bucket.should eq 2
+
+      bucket = BucketQuery.new.numbers.have_any([3, 4]).select_count
+      bucket.should eq 1
+
+      bucket = BucketQuery.new.numbers.have_any([4]).select_count
+      bucket.should eq 0
+    end
+
+    it "returns nothing with an empty array" do
+      BucketFactory.new.numbers([1, 2]).create
+      bucket = BucketQuery.new.numbers.have_any([] of Int64).select_count
+      bucket.should eq 0
+    end
+
+    it "negates with not" do
+      BucketFactory.new.numbers([1, 2]).create
+      bucket = BucketQuery.new.numbers.not.have_any([3]).select_count
+      bucket.should eq 1
+    end
+  end
 end
