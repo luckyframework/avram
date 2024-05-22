@@ -108,9 +108,9 @@ describe Avram::QueryBuilder do
 
     it "escaping elements to prevent sql injections" do
       expected = <<-SQL
-      SELECT * FROM users WHERE name = 'aloha'';--' 
+      SELECT * FROM users WHERE name = 'aloha'';--'
       SQL
-      query = new_query.where(Avram::Where::Raw.new("name = ? ", "aloha';--"))
+      query = new_query.where(Avram::Where::Raw.new("name = ?", "aloha';--"))
       query.statement.should eq expected
     end
 
@@ -124,17 +124,17 @@ describe Avram::QueryBuilder do
 
     it "preventing sql injections with arrays (1)" do
       expected = <<-SQL
-      SELECT * FROM users WHERE tags && '{"ruby","crystal';--"}' 
+      SELECT * FROM users WHERE tags && '{"ruby","crystal';--"}'
       SQL
-      query = new_query.where(Avram::Where::Raw.new("tags && ? ", ["ruby", "crystal';--"]))
+      query = new_query.where(Avram::Where::Raw.new("tags && ?", ["ruby", "crystal';--"]))
       query.statement.should eq expected
     end
 
     it "preventing sql injections with arrays (2)" do
       expected = <<-SQL
-      SELECT * FROM users WHERE tags && '{"ruby","crystal\\"}';--"}' 
+      SELECT * FROM users WHERE tags && '{"ruby","crystal\\"}';--"}'
       SQL
-      query = new_query.where(Avram::Where::Raw.new("tags && ? ", ["ruby", "crystal\"}';--"]))
+      query = new_query.where(Avram::Where::Raw.new("tags && ?", ["ruby", "crystal\"}';--"]))
       query.statement.should eq expected
     end
   end
