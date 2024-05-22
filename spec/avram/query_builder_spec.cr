@@ -95,14 +95,48 @@ describe Avram::QueryBuilder do
     query.statement.should eq "SELECT * FROM users WHERE name = $1 AND age > $2"
   end
 
-  it "accepts raw where clauses" do
-    query = new_query
-      .where(Avram::Where::Raw.new("name = ?", "Mikias"))
-      .where(Avram::Where::Raw.new("age > ?", 26))
-      .where(Avram::Where::Raw.new("age < ?", args: [30]))
-      .limit(1)
-    query.statement.should eq "SELECT * FROM users WHERE name = 'Mikias' AND age > 26 AND age < 30 LIMIT 1"
-    query.args.empty?.should be_true
+  describe "accepts raw clauses" do
+    it "substituting binding parameters" do
+      query = new_query
+        .where(Avram::Where::Raw.new("name = ?", "Mikias"))
+        .where(Avram::Where::Raw.new("age > ?", 26))
+        .where(Avram::Where::Raw.new("age < ?", args: [30]))
+        .limit(1)
+      query.statement.should eq "SELECT * FROM users WHERE name = 'Mikias' AND age > 26 AND age < 30 LIMIT 1"
+      query.args.empty?.should be_true
+    end
+
+    it "escaping elements to prevent sql injections" do
+      expected = <<-SQL
+      SELECT * FROM users WHERE name = 'aloha'';--' 
+      SQL
+      query = new_query.where(Avram::Where::Raw.new("name = ? ", "aloha';--"))
+      query.statement.should eq expected
+    end
+
+    it "correctly managing input arrays" do
+      expected = <<-SQL
+      SELECT * FROM users WHERE tags && '{"ruby","crystal"}'
+      SQL
+      query = new_query.where(Avram::Where::Raw.new("tags && ?", ["ruby", "crystal"]))
+      query.statement.should eq expected
+    end
+
+    it "preventing sql injections with arrays (1)" do
+      expected = <<-SQL
+      SELECT * FROM users WHERE tags && '{"ruby","crystal';--"}' 
+      SQL
+      query = new_query.where(Avram::Where::Raw.new("tags && ? ", ["ruby", "crystal';--"]))
+      query.statement.should eq expected
+    end
+
+    it "preventing sql injections with arrays (2)" do
+      expected = <<-SQL
+      SELECT * FROM users WHERE tags && '{"ruby","crystal\\"}';--"}' 
+      SQL
+      query = new_query.where(Avram::Where::Raw.new("tags && ? ", ["ruby", "crystal\"}';--"]))
+      query.statement.should eq expected
+    end
   end
 
   it "can be ordered" do
