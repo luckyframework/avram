@@ -14,8 +14,8 @@ module Avram::Migrator::StatementHelpers
     end
   end
 
-  def drop(table_name)
-    prepared_statements << Avram::Migrator::DropTableStatement.new(table_name).build
+  def drop(table_name, *, if_exists = false)
+    prepared_statements << Avram::Migrator::DropTableStatement.new(table_name, if_exists).build
   end
 
   macro alter(table_name, *, if_exists = false)
