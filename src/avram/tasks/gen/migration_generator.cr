@@ -18,7 +18,7 @@ class Avram::Migrator::MigrationGenerator
   end
 
   def generate(@_version = @_version)
-    ensure_camelcase_name
+    @name = name.camelcase
     make_migrations_folder_if_missing
     ensure_unique
     File.write(file_path, contents)
@@ -49,16 +49,6 @@ class Avram::Migrator::MigrationGenerator
         string << "\n"
       end
     end.chomp
-  end
-
-  private def ensure_camelcase_name
-    if name.camelcase != name
-      raise <<-ERROR
-      Migration must be in camel case.
-
-        #{green_arrow} Try this instead: #{"lucky gen.migration #{name.camelcase}".colorize(:green)}
-      ERROR
-    end
   end
 
   private def ensure_unique
