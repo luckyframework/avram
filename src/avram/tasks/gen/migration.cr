@@ -3,19 +3,18 @@ require "./migration_generator"
 class Gen::Migration < LuckyTask::Task
   summary "Generate a new migration"
   help_message <<-TEXT
-  Generate a new migration using the passed in migration name.
+  Generate a new migration using the passed in migration file name.
 
-  The migration name must be CamelCase. No other options are available.
+  The migration file name can be underscore or CamelCase. No other options are available.
 
   Examples:
 
-    lucky gen.migration CreateUsers
+    lucky gen.migration create_users
     lucky gen.migration AddAgeToUsers
-    lucky gen.migration MakeUserNameOptional
 
   TEXT
 
-  positional_arg :migration_name, "The migration class name", format: /^[A-Z]/
+  positional_arg :migration_file_name, "The migration file name"
 
   Habitat.create do
     setting io : IO = STDOUT
@@ -29,7 +28,7 @@ class Gen::Migration < LuckyTask::Task
 
   def call
     Avram::Migrator.run do
-      Avram::Migrator::MigrationGenerator.new(name: migration_name, io: output).generate
+      Avram::Migrator::MigrationGenerator.new(name: migration_file_name, io: output).generate
     end
   end
 end
