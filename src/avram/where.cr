@@ -446,14 +446,26 @@ module Avram::Where
 
     private def build_clause(statement, bind_vars)
       bind_vars.each do |arg|
-        if arg.is_a?(String) || arg.is_a?(Slice(UInt8))
-          escaped = PG::EscapeHelper.escape_literal(arg)
-        else
-          escaped = arg
-        end
-        statement = statement.sub('?', escaped)
+        encoded_arg = prepare_for_execution(arg)
+        statement = statement.sub('?', encoded_arg)
       end
       statement
+    end
+
+    private def prepare_for_execution(value)
+      if value.is_a?(Array)
+        "'#{PQ::Param.encode_array(value)}'"
+      else
+        escape_if_needed(value)
+      end
+    end
+
+    private def escape_if_needed(value)
+      if value.is_a?(String) || value.is_a?(Slice(UInt8))
+        PG::EscapeHelper.escape_literal(value)
+      else
+        value
+      end
     end
   end
 end
