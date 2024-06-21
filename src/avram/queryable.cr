@@ -124,6 +124,10 @@ module Avram::Queryable(T)
     clone.tap &.query.join(join_clause)
   end
 
+  def join(join_string : String) : self
+    clone.tap &.query.join(join_string)
+  end
+
   def where(column : Symbol, value) : self
     clone.tap &.query.where(Avram::Where::Equal.new(column, value.to_s))
   end
