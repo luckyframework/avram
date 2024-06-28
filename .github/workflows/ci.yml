@@ -45,7 +45,7 @@ jobs:
             crystal_version: latest
             postgres_version: 14
             experimental: true
-          - shard_file: shard.yml
+          - shard_file: shard.override.yml
             crystal_version: nightly
             postgres_version: 14
             experimental: true
