@@ -94,6 +94,7 @@ module Avram
         message << "  ▸ Check connection settings in 'config/database.cr'\n"
         message << "  ▸ Be sure the database exists (lucky db.create)\n"
         message << "  ▸ Check that you have access to connect to #{connection_details.host} on port #{connection_details.port || DEFAULT_PG_PORT}\n"
+        message << "  ▸ If this is your first run, create a database named '#{connection_details.user}' that this same user will have access to\n"
         if connection_details.password.blank?
           message << "  ▸ You didn't supply a password, did you mean to?\n"
         end
