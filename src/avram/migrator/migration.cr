@@ -18,6 +18,9 @@ abstract class Avram::Migrator::Migration::V1
     end
   end
 
+  def initialize(@skip_transaction = false)
+  end
+
   abstract def migrate
   abstract def version : Int64
 
@@ -74,6 +77,10 @@ abstract class Avram::Migrator::Migration::V1
     end
   end
 
+  def skip_transaction(value : Bool)
+    @skip_transaction = value
+  end
+
   private def track_migration(db : Avram::Database.class)
     db.exec "INSERT INTO migrations(version) VALUES ($1)", version
   end
@@ -99,9 +106,14 @@ abstract class Avram::Migrator::Migration::V1
   # ```
   private def execute_in_transaction(statements : Array(String), &)
     database = Avram.settings.database_to_migrate
-    database.transaction do
+    if @skip_transaction
       statements.each { |s| database.exec s }
       yield database
+    else
+      database.transaction do
+        statements.each { |s| database.exec s }
+        yield database
+      end
     end
   rescue e : PQ::PQError
     raise FailedMigration.new(migration: self.class.name, statements: statements, cause: e)
