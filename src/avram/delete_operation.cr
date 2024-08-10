@@ -48,15 +48,19 @@ abstract class Avram::DeleteOperation(T)
       end
 
       if transaction_committed
-        publish_delete_success_event
         mark_as_deleted
+        after_commit(record)
+        publish_delete_success_event
+        true
       else
-        publish_delete_failed_event
         mark_as_failed
+        publish_delete_failed_event
+        false
       end
     else
-      publish_delete_failed_event
       mark_as_failed
+      publish_delete_failed_event
+      false
     end
   end
 
@@ -97,6 +101,8 @@ abstract class Avram::DeleteOperation(T)
   def before_delete; end
 
   def after_delete(_record : T); end
+
+  def after_commit(_record : T); end
 
   # :nodoc:
   def publish_delete_failed_event
