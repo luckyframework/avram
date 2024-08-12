@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="generator" content="Crystal Docs 1.11.2">
+<meta name="generator" content="Crystal Docs 1.12.2">
 <meta name="crystal_docs.project_version" content="main">
 <meta name="crystal_docs.project_name" content="avram">
 
@@ -1832,7 +1832,7 @@
   </h2>
   
     
-      <a href="https://github.com/luckyframework/avram/blob/bec90582181bed458e1c36d0497b8fce3353306f/src/avram/delete_operation.cr#L9" target="_blank">
+      <a href="https://github.com/luckyframework/avram/blob/a604962a50f630d58b85c88e1efd5e73fbdb09f8/src/avram/delete_operation.cr#L9" target="_blank">
         avram/delete_operation.cr
       </a>
     
@@ -1918,6 +1918,11 @@
   <ul class="list-summary">
     
       <li class="entry-summary">
+        <a href="#after_commit%28_record%3AT%29-instance-method" class="signature"><strong>#after_commit</strong>(_record : T)</a>
+        
+      </li>
+    
+      <li class="entry-summary">
         <a href="#after_delete%28_record%3AT%29-instance-method" class="signature"><strong>#after_delete</strong>(_record : T)</a>
         
       </li>
@@ -1929,6 +1934,16 @@
     
       <li class="entry-summary">
         <a href="#custom_errors%3AHash%28Symbol%2CArray%28String%29%29-instance-method" class="signature"><strong>#custom_errors</strong> : Hash(Symbol, Array(String))</a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#database%28%2Aargs%2C%2A%2Aoptions%29-instance-method" class="signature"><strong>#database</strong>(*args, **options)</a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#database%28%2Aargs%2C%2A%2Aoptions%2C%26%29-instance-method" class="signature"><strong>#database</strong>(*args, **options, &)</a>
         
       </li>
     
@@ -1956,6 +1971,26 @@
     
       <li class="entry-summary">
         <a href="#mark_as_failed%3ABool-instance-method" class="signature"><strong>#mark_as_failed</strong> : Bool</a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#primary_key_name%28%2Aargs%2C%2A%2Aoptions%29-instance-method" class="signature"><strong>#primary_key_name</strong>(*args, **options)</a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#primary_key_name%28%2Aargs%2C%2A%2Aoptions%2C%26%29-instance-method" class="signature"><strong>#primary_key_name</strong>(*args, **options, &)</a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#table_name%28%2Aargs%2C%2A%2Aoptions%29-instance-method" class="signature"><strong>#table_name</strong>(*args, **options)</a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#table_name%28%2Aargs%2C%2A%2Aoptions%2C%26%29-instance-method" class="signature"><strong>#table_name</strong>(*args, **options, &)</a>
         
       </li>
     
@@ -2342,7 +2377,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/bec90582181bed458e1c36d0497b8fce3353306f/src/avram/delete_operation.cr#L34" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/a604962a50f630d58b85c88e1efd5e73fbdb09f8/src/avram/delete_operation.cr#L34" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2385,6 +2420,22 @@
     Instance Method Detail
   </h2>
   
+    <div class="entry-detail" id="after_commit(_record:T)-instance-method">
+      <div class="signature">
+        
+        def <strong>after_commit</strong>(_record : T)
+
+        <a class="method-permalink" href="#after_commit%28_record%3AT%29-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/luckyframework/avram/blob/a604962a50f630d58b85c88e1efd5e73fbdb09f8/src/avram/delete_operation.cr#L105" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
     <div class="entry-detail" id="after_delete(_record:T)-instance-method">
       <div class="signature">
         
@@ -2396,7 +2447,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/bec90582181bed458e1c36d0497b8fce3353306f/src/avram/delete_operation.cr#L89" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/a604962a50f630d58b85c88e1efd5e73fbdb09f8/src/avram/delete_operation.cr#L103" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2412,7 +2463,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/bec90582181bed458e1c36d0497b8fce3353306f/src/avram/delete_operation.cr#L87" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/a604962a50f630d58b85c88e1efd5e73fbdb09f8/src/avram/delete_operation.cr#L101" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2431,6 +2482,38 @@
       </div>
     </div>
   
+    <div class="entry-detail" id="database(*args,**options)-instance-method">
+      <div class="signature">
+        
+        def <strong>database</strong>(*args, **options)
+
+        <a class="method-permalink" href="#database%28%2Aargs%2C%2A%2Aoptions%29-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/luckyframework/avram/blob/a604962a50f630d58b85c88e1efd5e73fbdb09f8/src/avram/delete_operation.cr#L38" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="database(*args,**options,&amp;)-instance-method">
+      <div class="signature">
+        
+        def <strong>database</strong>(*args, **options, &)
+
+        <a class="method-permalink" href="#database%28%2Aargs%2C%2A%2Aoptions%2C%26%29-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/luckyframework/avram/blob/a604962a50f630d58b85c88e1efd5e73fbdb09f8/src/avram/delete_operation.cr#L38" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
     <div class="entry-detail" id="delete:Bool-instance-method">
       <div class="signature">
         
@@ -2442,7 +2525,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/bec90582181bed458e1c36d0497b8fce3353306f/src/avram/delete_operation.cr#L38" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/a604962a50f630d58b85c88e1efd5e73fbdb09f8/src/avram/delete_operation.cr#L40" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2458,7 +2541,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/bec90582181bed458e1c36d0497b8fce3353306f/src/avram/delete_operation.cr#L53" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/a604962a50f630d58b85c88e1efd5e73fbdb09f8/src/avram/delete_operation.cr#L67" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2479,7 +2562,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/bec90582181bed458e1c36d0497b8fce3353306f/src/avram/delete_operation.cr#L78" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/a604962a50f630d58b85c88e1efd5e73fbdb09f8/src/avram/delete_operation.cr#L92" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2495,7 +2578,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/bec90582181bed458e1c36d0497b8fce3353306f/src/avram/delete_operation.cr#L72" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/a604962a50f630d58b85c88e1efd5e73fbdb09f8/src/avram/delete_operation.cr#L86" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2511,7 +2594,71 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/bec90582181bed458e1c36d0497b8fce3353306f/src/avram/delete_operation.cr#L82" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/a604962a50f630d58b85c88e1efd5e73fbdb09f8/src/avram/delete_operation.cr#L96" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="primary_key_name(*args,**options)-instance-method">
+      <div class="signature">
+        
+        def <strong>primary_key_name</strong>(*args, **options)
+
+        <a class="method-permalink" href="#primary_key_name%28%2Aargs%2C%2A%2Aoptions%29-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/luckyframework/avram/blob/a604962a50f630d58b85c88e1efd5e73fbdb09f8/src/avram/delete_operation.cr#L38" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="primary_key_name(*args,**options,&amp;)-instance-method">
+      <div class="signature">
+        
+        def <strong>primary_key_name</strong>(*args, **options, &)
+
+        <a class="method-permalink" href="#primary_key_name%28%2Aargs%2C%2A%2Aoptions%2C%26%29-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/luckyframework/avram/blob/a604962a50f630d58b85c88e1efd5e73fbdb09f8/src/avram/delete_operation.cr#L38" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="table_name(*args,**options)-instance-method">
+      <div class="signature">
+        
+        def <strong>table_name</strong>(*args, **options)
+
+        <a class="method-permalink" href="#table_name%28%2Aargs%2C%2A%2Aoptions%29-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/luckyframework/avram/blob/a604962a50f630d58b85c88e1efd5e73fbdb09f8/src/avram/delete_operation.cr#L38" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="table_name(*args,**options,&amp;)-instance-method">
+      <div class="signature">
+        
+        def <strong>table_name</strong>(*args, **options, &)
+
+        <a class="method-permalink" href="#table_name%28%2Aargs%2C%2A%2Aoptions%2C%26%29-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/luckyframework/avram/blob/a604962a50f630d58b85c88e1efd5e73fbdb09f8/src/avram/delete_operation.cr#L38" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2533,7 +2680,7 @@ and there's no custom errors</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/bec90582181bed458e1c36d0497b8fce3353306f/src/avram/delete_operation.cr#L67" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/a604962a50f630d58b85c88e1efd5e73fbdb09f8/src/avram/delete_operation.cr#L81" target="_blank">View source</a>]
         
       </div>
     </div>
