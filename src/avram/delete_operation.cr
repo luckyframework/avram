@@ -35,18 +35,32 @@ abstract class Avram::DeleteOperation(T)
     T.name.underscore
   end
 
+  delegate :database, :table_name, :primary_key_name, to: T
+
   def delete : Bool
     before_delete
 
     if valid?
-      result = delete_or_soft_delete(@record)
-      @record = result
-      after_delete(@record)
-      publish_delete_success_event
-      mark_as_deleted
+      transaction_committed = database.transaction do
+        @record = delete_or_soft_delete(record)
+        after_delete(record)
+        true
+      end
+
+      if transaction_committed
+        mark_as_deleted
+        after_commit(record)
+        publish_delete_success_event
+        true
+      else
+        mark_as_failed
+        publish_delete_failed_event
+        false
+      end
     else
-      publish_delete_failed_event
       mark_as_failed
+      publish_delete_failed_event
+      false
     end
   end
 
@@ -87,6 +101,8 @@ abstract class Avram::DeleteOperation(T)
   def before_delete; end
 
   def after_delete(_record : T); end
+
+  def after_commit(_record : T); end
 
   # :nodoc:
   def publish_delete_failed_event
