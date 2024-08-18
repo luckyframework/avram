@@ -87,6 +87,7 @@ class Avram::Migrator::AlterTableStatement
   #   allow_nulls_for :email
   # end
   # ```
+  @[Deprecated("Use make_optional instead")]
   macro allow_nulls_for(column_name)
     change_nullability_statements << build_nullability_statement({{column_name.id.stringify}}, true)
   end
@@ -97,6 +98,7 @@ class Avram::Migrator::AlterTableStatement
   #   forbid_nulls_for :email
   # end
   # ```
+  @[Deprecated("Use make_required instead")]
   macro forbid_nulls_for(column_name)
     change_nullability_statements  << build_nullability_statement({{column_name.id.stringify}}, false)
   end
