@@ -52,7 +52,7 @@ abstract class Avram::Migrator::Columns::Base
 
   private def build_add_statement : String
     String.build do |row|
-      row << name.to_s
+      row << %("#{name}")
       row << " "
       row << column_type + as_array_type
       row << null_fragment

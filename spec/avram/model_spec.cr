@@ -91,6 +91,19 @@ describe Avram::Model do
     user.email.to_s.should eq "foo@bar.com"
   end
 
+  it "allows columns named the same as reserved SQL names" do
+    NoteFactory.create(&.from("Me").text("hi").read(true))
+    note = NoteQuery.new.from("Me").first
+    note.from.should eq("Me")
+    note.text.should eq("hi")
+    note.read?.should eq(true)
+    Note::SaveOperation.update!(note, read: false)
+    note = note.reload
+    note.read?.should eq(false)
+    Note::DeleteOperation.delete!(note)
+    NoteQuery.new.select_count.should eq(0)
+  end
+
   describe "reload" do
     it "can reload a model" do
       user = UserFactory.create &.name("Original Name")

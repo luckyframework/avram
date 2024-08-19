@@ -12,7 +12,7 @@ class Avram::Insert
     if @column_names.empty?
       "*"
     else
-      @column_names.join(", ") { |column| "#{@table}.#{column}" }
+      @column_names.join(", ") { |column| %("#{@table}"."#{column}") }
     end
   end
 
@@ -21,7 +21,7 @@ class Avram::Insert
   end
 
   private def fields : String
-    @params.keys.join(", ")
+    @params.keys.join(", ") { |col| %("#{col}") }
   end
 
   private def values_placeholders : String
