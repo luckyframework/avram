@@ -1,7 +1,7 @@
 require "../spec_helper"
 
 private class QueryMe < BaseModel
-  COLUMN_SQL = "transactions.id, transactions.created_at, transactions.updated_at, transactions.small_amount, transactions.amount, transactions.big_amount"
+  COLUMN_SQL = %("transactions"."id", "transactions"."created_at", "transactions"."updated_at", "transactions"."small_amount", "transactions"."amount", "transactions"."big_amount")
 
   table transactions do
     column small_amount : Int16
@@ -14,9 +14,9 @@ end
 describe "Int::Lucky::Criteria" do
   describe "abs" do
     it "uses ABS" do
-      small_amount.abs.eq(4).to_sql.should eq ["SELECT #{QueryMe::COLUMN_SQL} FROM transactions WHERE ABS(transactions.small_amount) = $1", "4"]
-      amount.abs.eq(400).to_sql.should eq ["SELECT #{QueryMe::COLUMN_SQL} FROM transactions WHERE ABS(transactions.amount) = $1", "400"]
-      big_amount.abs.eq(40000).to_sql.should eq ["SELECT #{QueryMe::COLUMN_SQL} FROM transactions WHERE ABS(transactions.big_amount) = $1", "40000"]
+      small_amount.abs.eq(4).to_sql.should eq ["SELECT #{QueryMe::COLUMN_SQL} FROM transactions WHERE ABS(\"transactions\".\"small_amount\") = $1", "4"]
+      amount.abs.eq(400).to_sql.should eq ["SELECT #{QueryMe::COLUMN_SQL} FROM transactions WHERE ABS(\"transactions\".\"amount\") = $1", "400"]
+      big_amount.abs.eq(40000).to_sql.should eq ["SELECT #{QueryMe::COLUMN_SQL} FROM transactions WHERE ABS(\"transactions\".\"big_amount\") = $1", "40000"]
     end
   end
 end
