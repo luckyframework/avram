@@ -26,7 +26,7 @@ module Avram::Expectations
         return "Expected :#{@name} to not have the error '#{message.source}'"
       end
 
-      return <<-MSG
+      <<-MSG
         Expected :#{@name} to not have an error, got errors:
         #{HaveErrorExpectation.list(operation.custom_errors[@name])}
         MSG

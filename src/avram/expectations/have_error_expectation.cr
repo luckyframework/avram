@@ -64,8 +64,8 @@ module Avram::Expectations
     end
 
     protected def self.list(errors : Hash)
-      errors.join do |name, errors|
-        list errors.map { |error| "#{name}: #{error}" }
+      errors.join do |name, _errors|
+        list _errors.map { |error| "#{name}: #{error}" }
       end
     end
 
