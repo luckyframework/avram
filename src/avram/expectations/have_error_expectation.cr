@@ -15,7 +15,7 @@ module Avram::Expectations
       !attribute.errors.empty?
     end
 
-    def match(operation : OperationErrors)
+    def match(operation : OperationErrors) : Bool
       @message.try do |message|
         return operation.errors.flat_map { |_, errors| errors }.any? do |error|
           error =~ message

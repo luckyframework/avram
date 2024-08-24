@@ -7,7 +7,7 @@ module Avram::Expectations
       new(name, /#{message}/)
     end
 
-    def match(operation : OperationErrors)
+    def match(operation : OperationErrors) : Bool
       return false unless errors = operation.custom_errors[@name]?
       @message.try { |message| return errors.any?(&.=~ message) }
       !errors.empty?
