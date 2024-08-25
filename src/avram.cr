@@ -30,6 +30,9 @@ module Avram
     setting time_formats : Array(String) = [] of String
     setting i18n_backend : Avram::I18nBackend = Avram::I18n.new, example: "Avram::I18n.new"
     setting query_cache_enabled : Bool = false
+    # This setting is used to connect to postgres before you've setup your app's DB.
+    # If `postgres` isn't available, you can update to `template1` or some other default DB
+    setting setup_database_name : String = "postgres"
   end
 
   Log            = ::Log.for(Avram)
