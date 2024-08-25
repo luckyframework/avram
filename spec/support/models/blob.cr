@@ -17,6 +17,7 @@ class ServerMetadata
 end
 
 class Blob < BaseModel
+  COLUMN_SQL = %("blobs"."id", "blobs"."created_at", "blobs"."updated_at", "blobs"."doc", "blobs"."metadata", "blobs"."media", "blobs"."servers")
   table do
     column doc : JSON::Any?
     column metadata : BlobMetadata, serialize: true

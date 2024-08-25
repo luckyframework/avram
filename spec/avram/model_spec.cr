@@ -8,7 +8,7 @@ class NamedSpaced::Model < BaseModel
 end
 
 private class QueryMe < BaseModel
-  COLUMN_SQL = "users.id, users.created_at, users.updated_at, users.email, users.age"
+  COLUMN_SQL = %("users"."id", "users"."created_at", "users"."updated_at", "users"."email", "users"."age")
 
   table :users do
     column email : CustomEmail
@@ -22,7 +22,7 @@ private class EmptyModelCompilesOk < BaseModel
 end
 
 private class InferredTableNameModel < BaseModel
-  COLUMN_SQL = "inferred_table_name_models.id, inferred_table_name_models.created_at, inferred_table_name_models.updated_at"
+  COLUMN_SQL = %("inferred_table_name_models"."id", "inferred_table_name_models"."created_at", "inferred_table_name_models"."updated_at")
 
   table do
   end
@@ -92,7 +92,7 @@ describe Avram::Model do
   end
 
   it "allows columns named the same as reserved SQL names" do
-    NoteFactory.create(&.from("Me").text("hi").read(true))
+    NoteFactory.create(&.from("Me").text("hi").read(true).order(4))
     note = NoteQuery.new.from("Me").first
     note.from.should eq("Me")
     note.text.should eq("hi")
@@ -131,25 +131,25 @@ describe Avram::Model do
   it "sets up simple methods for equality" do
     query = QueryMe::BaseQuery.new.email("foo@bar.com").age(30)
 
-    query.to_sql.should eq ["SELECT #{QueryMe::COLUMN_SQL} FROM users WHERE users.email = $1 AND users.age = $2", "foo@bar.com", "30"]
+    query.to_sql.should eq [%(SELECT #{QueryMe::COLUMN_SQL} FROM users WHERE "users"."email" = $1 AND "users"."age" = $2), "foo@bar.com", "30"]
   end
 
   it "sets up advanced criteria methods" do
     query = QueryMe::BaseQuery.new.email.upper.eq("foo@bar.com").age.gt(30)
 
-    query.to_sql.should eq ["SELECT #{QueryMe::COLUMN_SQL} FROM users WHERE UPPER(users.email) = $1 AND users.age > $2", "foo@bar.com", "30"]
+    query.to_sql.should eq [%(SELECT #{QueryMe::COLUMN_SQL} FROM users WHERE UPPER("users"."email") = $1 AND "users"."age" > $2), "foo@bar.com", "30"]
   end
 
   it "parses values" do
     query = QueryMe::BaseQuery.new.email.upper.eq(" Foo@bar.com").age.gt(30)
 
-    query.to_sql.should eq ["SELECT #{QueryMe::COLUMN_SQL} FROM users WHERE UPPER(users.email) = $1 AND users.age > $2", "foo@bar.com", "30"]
+    query.to_sql.should eq [%(SELECT #{QueryMe::COLUMN_SQL} FROM users WHERE UPPER("users"."email") = $1 AND "users"."age" > $2), "foo@bar.com", "30"]
   end
 
   it "lets you order by columns" do
     query = QueryMe::BaseQuery.new.age.asc_order.email.desc_order
 
-    query.to_sql.should eq ["SELECT #{QueryMe::COLUMN_SQL} FROM users ORDER BY users.age ASC, users.email DESC"]
+    query.to_sql.should eq [%(SELECT #{QueryMe::COLUMN_SQL} FROM users ORDER BY "users"."age" ASC, "users"."email" DESC)]
   end
 
   it "can be deleted" do

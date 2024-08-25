@@ -1,5 +1,5 @@
 class Issue < BaseModel
-  COLUMN_SQL = "issues.id, issues.status, issues.role"
+  COLUMN_SQL = %("issues"."id", "issues"."status", "issues"."role")
 
   enum Status
     Opened

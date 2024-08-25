@@ -6,6 +6,7 @@ class CreateNotes::V20240818230651 < Avram::Migrator::Migration::V1
       add from : String
       add read : Bool, default: false
       add text : String
+      add order : Int32, index: true
     end
   end
 

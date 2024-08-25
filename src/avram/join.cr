@@ -37,11 +37,11 @@ module Avram::Join
     end
 
     def from_column : String
-      "#{@from}.#{@primary_key || "id"}"
+      %("#{@from}"."#{@primary_key || "id"}")
     end
 
     def to_column : String
-      "#{to}.#{@foreign_key || default_foreign_key}"
+      %("#{to}"."#{@foreign_key || default_foreign_key}")
     end
 
     def default_foreign_key : String

@@ -1,4 +1,5 @@
 class Comment < BaseModel
+  COLUMN_SQL = %("comments"."custom_id", "comments"."created_at", "comments"."updated_at", "comments"."body", "comments"."post_id")
   skip_default_columns
 
   table do

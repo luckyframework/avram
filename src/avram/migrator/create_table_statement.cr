@@ -80,7 +80,7 @@ class Avram::Migrator::CreateTableStatement
     {% if columns.size < 2 %}
     {% raise "composite_primary_key expected at least two primary keys, instead got #{columns.size}" %}
     {% end %}
-    constraints << "  PRIMARY KEY ({{columns.join(", ").id}})"
+    constraints << %(  PRIMARY KEY ({{columns.map {|col| %("#{col.id}")}.join(", ").id}}))
   end
 
   macro add_timestamps

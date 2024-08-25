@@ -9,7 +9,7 @@ describe Avram::QueryBuilder do
       .order_by(Avram::OrderBy.new(:my_column, :asc))
 
     query.joins.size.should eq(1)
-    query.statement.should eq "SELECT * FROM users INNER JOIN posts ON users.id = posts.user_id ORDER BY my_column ASC"
+    query.statement.should eq %(SELECT * FROM users INNER JOIN posts ON "users"."id" = "posts"."user_id" ORDER BY my_column ASC)
   end
 
   it "does not remove potentially duplicate where clauses" do
@@ -239,7 +239,7 @@ describe Avram::QueryBuilder do
     it "specifies columns to be selected" do
       query = new_query.select([:name, :age])
 
-      query.statement.should eq "SELECT users.name, users.age FROM users"
+      query.statement.should eq %(SELECT "users"."name", "users"."age" FROM users)
     end
   end
 
@@ -248,7 +248,7 @@ describe Avram::QueryBuilder do
       .join(Avram::Join::Inner.new(:users, :posts))
       .limit(1)
 
-    query.statement.should eq "SELECT * FROM users INNER JOIN posts ON users.id = posts.user_id LIMIT 1"
+    query.statement.should eq %(SELECT * FROM users INNER JOIN posts ON "users"."id" = "posts"."user_id" LIMIT 1)
   end
 
   describe "#reverse_order" do
@@ -310,9 +310,9 @@ describe Avram::QueryBuilder do
         .limit(10)
         .offset(5)
 
-      cloned_query.statement.should eq "SELECT users.name, users.age FROM users INNER JOIN posts ON users.id = posts.user_id WHERE name = $1 AND age > $2 ORDER BY id ASC LIMIT 10 OFFSET 5"
+      cloned_query.statement.should eq %(SELECT "users"."name", "users"."age" FROM users INNER JOIN posts ON "users"."id" = "posts"."user_id" WHERE name = $1 AND age > $2 ORDER BY id ASC LIMIT 10 OFFSET 5)
 
-      old_query.statement.should eq "SELECT users.name, users.age FROM users INNER JOIN posts ON users.id = posts.user_id WHERE name = $1 ORDER BY id ASC LIMIT 1 OFFSET 2"
+      old_query.statement.should eq %(SELECT "users"."name", "users"."age" FROM users INNER JOIN posts ON "users"."id" = "posts"."user_id" WHERE name = $1 ORDER BY id ASC LIMIT 1 OFFSET 2)
     end
   end
 

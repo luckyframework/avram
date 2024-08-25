@@ -43,7 +43,8 @@ class Avram::Migrator::CreateIndexStatement
 
   def build
     index_name = @name
-    index_name ||= "#{@table}_#{columns.join("_")}_index"
+    index_name ||= "#{@table}_#{columns.join('_')}_index"
+    mapped_columns = columns.join(", ") { |col| %("#{col}") }
 
     String.build do |index|
       index << "CREATE"
@@ -51,7 +52,7 @@ class Avram::Migrator::CreateIndexStatement
       index << " INDEX #{index_name}"
       index << " ON #{@table}"
       index << " USING #{@using.to_s.downcase}"
-      index << " (#{columns.join(", ")});"
+      index << " (#{mapped_columns});"
     end
   end
 

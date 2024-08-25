@@ -29,25 +29,25 @@ describe Avram::Migrator::AlterTableStatement do
 
     built.statements[2].should eq <<-SQL
     ALTER TABLE users
-      ADD name text,
-      ADD email text,
-      ADD nickname text NOT NULL,
-      ADD age int4 NOT NULL DEFAULT '1',
-      ADD num bigint NOT NULL DEFAULT '1',
-      ADD amount_paid decimal(10,5) NOT NULL DEFAULT '1.0',
-      ADD completed boolean NOT NULL DEFAULT 'false',
-      ADD meta jsonb NOT NULL DEFAULT '{"default":"value"}',
-      ADD joined_at timestamptz NOT NULL DEFAULT NOW(),
-      ADD updated_at timestamptz,
-      ADD future_time timestamptz NOT NULL DEFAULT '#{Time.local.to_utc}',
-      ADD new_id uuid NOT NULL DEFAULT '46d9b2f0-0718-4d4c-a5a1-5af81d5b11e0',
-      ADD numbers int4[],
+      ADD "name" text,
+      ADD "email" text,
+      ADD "nickname" text NOT NULL,
+      ADD "age" int4 NOT NULL DEFAULT '1',
+      ADD "num" bigint NOT NULL DEFAULT '1',
+      ADD "amount_paid" decimal(10,5) NOT NULL DEFAULT '1.0',
+      ADD "completed" boolean NOT NULL DEFAULT 'false',
+      ADD "meta" jsonb NOT NULL DEFAULT '{"default":"value"}',
+      ADD "joined_at" timestamptz NOT NULL DEFAULT NOW(),
+      ADD "updated_at" timestamptz,
+      ADD "future_time" timestamptz NOT NULL DEFAULT '#{Time.local.to_utc}',
+      ADD "new_id" uuid NOT NULL DEFAULT '46d9b2f0-0718-4d4c-a5a1-5af81d5b11e0',
+      ADD "numbers" int4[],
       DROP old_column,
       DROP employee_id;
     SQL
 
-    built.statements[3].should eq "CREATE UNIQUE INDEX users_age_index ON users USING btree (age);"
-    built.statements[4].should eq "CREATE INDEX users_num_index ON users USING btree (num);"
+    built.statements[3].should eq %(CREATE UNIQUE INDEX users_age_index ON users USING btree ("age");)
+    built.statements[4].should eq %(CREATE INDEX users_num_index ON users USING btree ("num");)
     built.statements[5].should eq "UPDATE users SET email = 'noreply@lucky.com';"
     built.statements[6].should eq "ALTER TABLE users ALTER COLUMN email SET NOT NULL;"
     built.statements[7].should eq "UPDATE users SET updated_at = NOW();"
@@ -117,7 +117,7 @@ describe Avram::Migrator::AlterTableStatement do
       end
 
       built.statements.size.should eq 3
-      built.statements[0].should eq "ALTER TABLE users\n  ADD confirmed_at timestamptz;"
+      built.statements[0].should eq %(ALTER TABLE users\n  ADD "confirmed_at" timestamptz;)
       built.statements[1].should eq "UPDATE users SET confirmed_at = NOW();"
       built.statements[2].should eq "ALTER TABLE users ALTER COLUMN confirmed_at SET NOT NULL;"
     end
@@ -128,7 +128,7 @@ describe Avram::Migrator::AlterTableStatement do
       end
 
       built.statements.size.should eq 2
-      built.statements[0].should eq "ALTER TABLE users\n  ADD confirmed_at timestamptz;"
+      built.statements[0].should eq %(ALTER TABLE users\n  ADD "confirmed_at" timestamptz;)
       built.statements[1].should eq "UPDATE users SET confirmed_at = NOW();"
     end
 
@@ -138,7 +138,7 @@ describe Avram::Migrator::AlterTableStatement do
       end
 
       built.statements.size.should eq 3
-      built.statements[0].should eq "ALTER TABLE users\n  ADD admin boolean;"
+      built.statements[0].should eq %(ALTER TABLE users\n  ADD "admin" boolean;)
       built.statements[1].should eq "UPDATE users SET admin = 'false';"
       built.statements[2].should eq "ALTER TABLE users ALTER COLUMN admin SET NOT NULL;"
     end
@@ -157,20 +157,20 @@ describe Avram::Migrator::AlterTableStatement do
 
       built.statements.first.should eq <<-SQL
       ALTER TABLE comments
-        ADD user_id bigint NOT NULL REFERENCES users ON DELETE CASCADE,
-        ADD post_id bigint REFERENCES posts ON DELETE RESTRICT,
-        ADD category_label_id bigint NOT NULL REFERENCES custom_table ON DELETE SET NULL,
-        ADD employee_id bigint NOT NULL REFERENCES users ON DELETE CASCADE,
-        ADD line_item_id uuid NOT NULL REFERENCES line_items ON DELETE CASCADE,
-        ADD subscription_item_id bigint NOT NULL REFERENCES subscription_items ON DELETE CASCADE;
+        ADD "user_id" bigint NOT NULL REFERENCES users ON DELETE CASCADE,
+        ADD "post_id" bigint REFERENCES posts ON DELETE RESTRICT,
+        ADD "category_label_id" bigint NOT NULL REFERENCES custom_table ON DELETE SET NULL,
+        ADD "employee_id" bigint NOT NULL REFERENCES users ON DELETE CASCADE,
+        ADD "line_item_id" uuid NOT NULL REFERENCES line_items ON DELETE CASCADE,
+        ADD "subscription_item_id" bigint NOT NULL REFERENCES subscription_items ON DELETE CASCADE;
       SQL
 
-      built.statements[1].should eq "CREATE UNIQUE INDEX comments_user_id_index ON comments USING btree (user_id);"
-      built.statements[2].should eq "CREATE INDEX comments_post_id_index ON comments USING btree (post_id);"
-      built.statements[3].should eq "CREATE INDEX comments_category_label_id_index ON comments USING btree (category_label_id);"
-      built.statements[4].should eq "CREATE INDEX comments_employee_id_index ON comments USING btree (employee_id);"
-      built.statements[5].should eq "CREATE INDEX comments_line_item_id_index ON comments USING btree (line_item_id);"
-      built.statements[6].should eq "CREATE INDEX comments_subscription_item_id_index ON comments USING btree (subscription_item_id);"
+      built.statements[1].should eq %(CREATE UNIQUE INDEX comments_user_id_index ON comments USING btree ("user_id");)
+      built.statements[2].should eq %(CREATE INDEX comments_post_id_index ON comments USING btree ("post_id");)
+      built.statements[3].should eq %(CREATE INDEX comments_category_label_id_index ON comments USING btree ("category_label_id");)
+      built.statements[4].should eq %(CREATE INDEX comments_employee_id_index ON comments USING btree ("employee_id");)
+      built.statements[5].should eq %(CREATE INDEX comments_line_item_id_index ON comments USING btree ("line_item_id");)
+      built.statements[6].should eq %(CREATE INDEX comments_subscription_item_id_index ON comments USING btree ("subscription_item_id");)
       built.statements[7].should eq "UPDATE comments SET line_item_id = 'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11';"
     end
 
@@ -189,8 +189,8 @@ describe Avram::Migrator::AlterTableStatement do
         end
 
         built.statements.size.should eq 4
-        built.statements[0].should eq "ALTER TABLE comments\n  ADD line_item_id uuid NOT NULL REFERENCES line_items ON DELETE CASCADE;"
-        built.statements[1].should eq "CREATE INDEX comments_line_item_id_index ON comments USING btree (line_item_id);"
+        built.statements[0].should eq %(ALTER TABLE comments\n  ADD "line_item_id" uuid NOT NULL REFERENCES line_items ON DELETE CASCADE;)
+        built.statements[1].should eq %(CREATE INDEX comments_line_item_id_index ON comments USING btree ("line_item_id");)
         built.statements[2].should eq "UPDATE comments SET line_item_id = 'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11';"
         built.statements[3].should eq "ALTER TABLE comments ALTER COLUMN line_item_id SET NOT NULL;"
       end
@@ -201,8 +201,8 @@ describe Avram::Migrator::AlterTableStatement do
         end
 
         built.statements.size.should eq 3
-        built.statements[0].should eq "ALTER TABLE comments\n  ADD line_item_id uuid REFERENCES line_items ON DELETE CASCADE;"
-        built.statements[1].should eq "CREATE INDEX comments_line_item_id_index ON comments USING btree (line_item_id);"
+        built.statements[0].should eq %(ALTER TABLE comments\n  ADD "line_item_id" uuid REFERENCES line_items ON DELETE CASCADE;)
+        built.statements[1].should eq %(CREATE INDEX comments_line_item_id_index ON comments USING btree ("line_item_id");)
         built.statements[2].should eq "UPDATE comments SET line_item_id = 'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11';"
       end
     end
@@ -213,7 +213,7 @@ describe Avram::Migrator::AlterTableStatement do
         add_belongs_to guest : User?, on_delete: :cascade, fill_existing_with: :nothing
       end
 
-      built.statements[1].should eq "CREATE INDEX challenges_guest_id_index ON challenges USING btree (guest_id);"
+      built.statements[1].should eq %(CREATE INDEX challenges_guest_id_index ON challenges USING btree ("guest_id");)
       built.statements.size.should eq(2)
     end
   end
@@ -233,7 +233,7 @@ describe Avram::Migrator::AlterTableStatement do
 
       built.statements[2].should eq <<-SQL
       ALTER TABLE IF EXISTS users
-        ADD name text;
+        ADD "name" text;
       SQL
     end
   end

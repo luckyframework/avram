@@ -1,5 +1,5 @@
 class Bucket < BaseModel
-  COLUMN_SQL = column_names.join(", ") { |col| "buckets.#{col}" }
+  COLUMN_SQL = column_names.join(", ") { |col| %("buckets"."#{col}") }
 
   enum Size
     ExtraSmall
