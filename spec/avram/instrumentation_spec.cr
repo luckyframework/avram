@@ -14,7 +14,7 @@ describe "Instrumentation" do
     UserQuery.new.name("Bob").first?
 
     event = Avram::Events::QueryEvent.logged_events.last
-    event.query.should contain("WHERE users.name = $1")
+    event.query.should contain(%(WHERE "users"."name" = $1))
     event.args.to_s.should contain("Bob")
     event.queryable.should eq("User")
   end
@@ -23,7 +23,7 @@ describe "Instrumentation" do
     UserQuery.new.name("Bob").select_count
 
     event = Avram::Events::QueryEvent.logged_events.last
-    event.query.should contain("WHERE users.name = $1")
+    event.query.should contain(%(WHERE "users"."name" = $1))
     event.args.to_s.should contain("Bob")
     event.queryable.should eq("User")
   end
