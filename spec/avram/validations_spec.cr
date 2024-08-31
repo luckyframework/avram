@@ -464,4 +464,30 @@ describe Avram::Validations do
       nil_attribute.valid?.should be_true
     end
   end
+
+  describe "validate_url_format" do
+    it "validates" do
+      valid_url_attribute = attribute("https://luckyframework.org")
+      result = Avram::Validations.validate_url_format(valid_url_attribute)
+      result.should eq(true)
+      valid_url_attribute.valid?.should be_true
+
+      invalid_url_attribute = attribute("http://luckyframework.org")
+      result = Avram::Validations.validate_url_format(invalid_url_attribute)
+      result.should eq(false)
+      invalid_url_attribute.valid?.should be_false
+      invalid_url_attribute.errors.should eq ["must be a valid URL beginning with https"]
+
+      valid_other_attribute = attribute("ftp://user:pass@host:1234/files")
+      result = Avram::Validations.validate_url_format(valid_other_attribute, scheme: "ftp")
+      result.should eq(true)
+      valid_other_attribute.valid?.should be_true
+
+      bad_attribute = attribute("  not a URL  ")
+      result = Avram::Validations.validate_url_format(bad_attribute)
+      result.should eq(false)
+      bad_attribute.valid?.should be_false
+      bad_attribute.errors.should eq ["must be a valid URL beginning with https"]
+    end
+  end
 end
