@@ -1,5 +1,5 @@
 class Article < BaseModel
-  COLUMN_SQL = "articles.id, articles.created_at, articles.updated_at, articles.title, articles.slug"
+  COLUMN_SQL = %("articles"."id", "articles"."created_at", "articles"."updated_at", "articles"."title", "articles"."slug")
 
   table do
     column title : String

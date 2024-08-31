@@ -53,13 +53,13 @@ describe Avram::Queryable do
   it "can set default queries" do
     query = QueryWithDefault.new.query
 
-    query.statement.should eq "SELECT #{User::COLUMN_SQL} FROM users WHERE users.age >= $1"
+    query.statement.should eq %(SELECT #{User::COLUMN_SQL} FROM users WHERE "users"."age" >= $1)
   end
 
   it "allows you to add on to a query with default" do
     query = QueryWithDefault.new.name("Santa").query
 
-    query.statement.should eq "SELECT #{User::COLUMN_SQL} FROM users WHERE users.age >= $1 AND users.name = $2"
+    query.statement.should eq %(SELECT #{User::COLUMN_SQL} FROM users WHERE "users"."age" >= $1 AND "users"."name" = $2)
   end
 
   it "releases connection if no open transaction", tags: Avram::SpecHelper::TRUNCATE do
@@ -108,7 +108,7 @@ describe Avram::Queryable do
     it "resets where on a specific column" do
       query = UserQuery.new.name("Purcell").age(35).reset_where(&.name).query
 
-      query.statement.should eq "SELECT #{User::COLUMN_SQL} FROM users WHERE users.age = $1"
+      query.statement.should eq %(SELECT #{User::COLUMN_SQL} FROM users WHERE "users"."age" = $1)
       query.args.should eq ["35"] of String
     end
 
@@ -131,7 +131,7 @@ describe Avram::Queryable do
       queryable = UserQuery.new.distinct_on(&.name).order_by(:name, :asc).order_by(:age, :asc)
       query = queryable.query
 
-      query.statement.should eq "SELECT DISTINCT ON (users.name) #{User::COLUMN_SQL} FROM users ORDER BY name ASC, age ASC"
+      query.statement.should eq %(SELECT DISTINCT ON ("users"."name") #{User::COLUMN_SQL} FROM users ORDER BY name ASC, age ASC)
       query.args.should eq [] of String
       results = queryable.results
       first = results.first
@@ -207,7 +207,7 @@ describe Avram::Queryable do
 
       user.should_not be_nil
       user.as(User).name.should eq "First"
-      user_query.should eq "SELECT #{User::COLUMN_SQL} FROM users ORDER BY users.id ASC LIMIT 1"
+      user_query.should eq %(SELECT #{User::COLUMN_SQL} FROM users ORDER BY "users"."id" ASC LIMIT 1)
     end
 
     it "returns nil if no record found" do
@@ -299,7 +299,7 @@ describe Avram::Queryable do
 
       user.should_not be_nil
       user.as(User).name.should eq "Last"
-      user_query.should eq "SELECT #{User::COLUMN_SQL} FROM users ORDER BY users.id DESC LIMIT 1"
+      user_query.should eq %(SELECT #{User::COLUMN_SQL} FROM users ORDER BY "users"."id" DESC LIMIT 1)
     end
 
     it "returns nil if last record is not found" do
@@ -462,14 +462,14 @@ describe Avram::Queryable do
     it "chains ors" do
       query = UserQuery.new.age(26).or(&.age(32)).or(&.age(59)).query
 
-      query.statement.should eq "SELECT #{User::COLUMN_SQL} FROM users WHERE users.age = $1 OR users.age = $2 OR users.age = $3"
+      query.statement.should eq %(SELECT #{User::COLUMN_SQL} FROM users WHERE "users"."age" = $1 OR "users"."age" = $2 OR "users"."age" = $3)
       query.args.should eq ["26", "32", "59"]
     end
 
     it "nests AND conjunctions inside of OR blocks" do
       query = UserQuery.new.age(26).or(&.age(32).name("Pat")).or(&.age(59)).query
 
-      query.statement.should eq "SELECT #{User::COLUMN_SQL} FROM users WHERE users.age = $1 OR users.age = $2 AND users.name = $3 OR users.age = $4"
+      query.statement.should eq %(SELECT #{User::COLUMN_SQL} FROM users WHERE "users"."age" = $1 OR "users"."age" = $2 AND "users"."name" = $3 OR "users"."age" = $4)
       query.args.should eq ["26", "32", "Pat", "59"]
     end
   end
@@ -478,7 +478,7 @@ describe Avram::Queryable do
     it "wraps a simple where clause with parenthesis" do
       query = UserQuery.new.where(&.age(30)).query
 
-      query.statement.should eq "SELECT #{User::COLUMN_SQL} FROM users WHERE ( users.age = $1 )"
+      query.statement.should eq %(SELECT #{User::COLUMN_SQL} FROM users WHERE ( "users"."age" = $1 ))
       query.args.should eq ["30"]
     end
 
@@ -493,7 +493,7 @@ describe Avram::Queryable do
         q.nickname("Strange")
       }.query
 
-      query.statement.should eq "SELECT #{User::COLUMN_SQL} FROM users WHERE ( ( users.age = $1 OR users.age = $2 ) AND ( users.name = $3 OR users.name = $4 ) ) OR users.nickname = $5"
+      query.statement.should eq %(SELECT #{User::COLUMN_SQL} FROM users WHERE ( ( "users"."age" = $1 OR "users"."age" = $2 ) AND ( "users"."name" = $3 OR "users"."name" = $4 ) ) OR "users"."nickname" = $5)
       query.args.should eq ["25", "26", "Billy", "Tommy", "Strange"]
     end
 
@@ -503,7 +503,7 @@ describe Avram::Queryable do
       new_query = orig_query.where(&.nickname("BusyCat")).limit(3)
 
       orig_query.query.statement.should eq "SELECT #{User::COLUMN_SQL} FROM users"
-      new_query.query.statement.should eq "SELECT #{User::COLUMN_SQL} FROM users WHERE ( users.nickname = $1 ) LIMIT 3"
+      new_query.query.statement.should eq %(SELECT #{User::COLUMN_SQL} FROM users WHERE ( "users"."nickname" = $1 ) LIMIT 3)
     end
 
     it "doesn't add parenthesis when query to wrap is provided" do
@@ -516,7 +516,7 @@ describe Avram::Queryable do
         end
       end.age(25).query
 
-      query.statement.should eq "SELECT #{User::COLUMN_SQL} FROM users WHERE users.name = $1 AND users.age = $2"
+      query.statement.should eq %(SELECT #{User::COLUMN_SQL} FROM users WHERE "users"."name" = $1 AND "users"."age" = $2)
       query.args.should eq ["Susan", "25"]
     end
   end
@@ -533,7 +533,7 @@ describe Avram::Queryable do
       UserFactory.create
       users = UserQuery.new.name.desc_order.limit(1)
 
-      users.query.statement.should eq "SELECT #{User::COLUMN_SQL} FROM users ORDER BY users.name DESC LIMIT 1"
+      users.query.statement.should eq %(SELECT #{User::COLUMN_SQL} FROM users ORDER BY "users"."name" DESC LIMIT 1)
 
       users.results.size.should eq(1)
     end
@@ -1061,7 +1061,7 @@ describe Avram::Queryable do
       CommentFactory.new.post_id(post.id).create
 
       query = Comment::BaseQuery.new.join_post
-      query.to_sql.should eq ["SELECT comments.custom_id, comments.created_at, comments.updated_at, comments.body, comments.post_id FROM comments INNER JOIN posts ON comments.post_id = posts.custom_id"]
+      query.to_sql.should eq [%(SELECT #{Comment::COLUMN_SQL} FROM comments INNER JOIN posts ON "comments"."post_id" = "posts"."custom_id")]
 
       result = query.first
       result.post.should eq post
@@ -1081,7 +1081,7 @@ describe Avram::Queryable do
       comment = CommentFactory.new.post_id(post.id).create
 
       query = Post::BaseQuery.new.join_comments
-      query.to_sql.should eq ["SELECT posts.custom_id, posts.created_at, posts.updated_at, posts.title, posts.published_at FROM posts INNER JOIN comments ON posts.custom_id = comments.post_id"]
+      query.to_sql.should eq [%(SELECT #{Post::COLUMN_SQL} FROM posts INNER JOIN comments ON "posts"."custom_id" = "comments"."post_id")]
 
       result = query.first
       result.comments.first.should eq comment
@@ -1102,7 +1102,7 @@ describe Avram::Queryable do
       TaggingFactory.new.post_id(post.id).tag_id(tag.id).create
 
       query = Post::BaseQuery.new.join_tags
-      query.to_sql.should eq ["SELECT posts.custom_id, posts.created_at, posts.updated_at, posts.title, posts.published_at FROM posts INNER JOIN taggings ON posts.custom_id = taggings.post_id INNER JOIN tags ON taggings.tag_id = tags.custom_id"]
+      query.to_sql.should eq [%(SELECT #{Post::COLUMN_SQL} FROM posts INNER JOIN taggings ON "posts"."custom_id" = "taggings"."post_id" INNER JOIN tags ON "taggings"."tag_id" = "tags"."custom_id")]
 
       result = query.first
       result.tags.first.should eq tag
@@ -1123,7 +1123,7 @@ describe Avram::Queryable do
       employee = EmployeeFactory.create
 
       query = Employee::BaseQuery.new.left_join_manager
-      query.to_sql.should eq ["SELECT employees.id, employees.created_at, employees.updated_at, employees.name, employees.manager_id FROM employees LEFT JOIN managers ON employees.manager_id = managers.id"]
+      query.to_sql.should eq [%(SELECT #{Employee::COLUMN_SQL} FROM employees LEFT JOIN managers ON "employees"."manager_id" = "managers"."id")]
 
       result = query.first
       result.should eq employee
@@ -1142,7 +1142,7 @@ describe Avram::Queryable do
       post = PostFactory.create
 
       query = Post::BaseQuery.new.left_join_comments
-      query.to_sql.should eq ["SELECT posts.custom_id, posts.created_at, posts.updated_at, posts.title, posts.published_at FROM posts LEFT JOIN comments ON posts.custom_id = comments.post_id"]
+      query.to_sql.should eq [%(SELECT #{Post::COLUMN_SQL} FROM posts LEFT JOIN comments ON "posts"."custom_id" = "comments"."post_id")]
 
       result = query.first
       result.should eq post
@@ -1161,7 +1161,7 @@ describe Avram::Queryable do
       post = PostFactory.create
 
       query = Post::BaseQuery.new.left_join_tags
-      query.to_sql.should eq ["SELECT posts.custom_id, posts.created_at, posts.updated_at, posts.title, posts.published_at FROM posts LEFT JOIN taggings ON posts.custom_id = taggings.post_id LEFT JOIN tags ON taggings.tag_id = tags.custom_id"]
+      query.to_sql.should eq [%(SELECT #{Post::COLUMN_SQL} FROM posts LEFT JOIN taggings ON "posts"."custom_id" = "taggings"."post_id" LEFT JOIN tags ON "taggings"."tag_id" = "tags"."custom_id")]
 
       result = query.first
       result.should eq post
@@ -1183,17 +1183,17 @@ describe Avram::Queryable do
         blob = BlobFactory.new.doc(JSON::Any.new({"foo" => JSON::Any.new("bar")})).create
 
         query = JSONQuery.new.static_foo
-        query.to_sql.should eq ["SELECT blobs.id, blobs.created_at, blobs.updated_at, blobs.doc, blobs.metadata, blobs.media, blobs.servers FROM blobs WHERE blobs.doc = $1", "{\"foo\":\"bar\"}"]
+        query.to_sql.should eq [%(SELECT #{Blob::COLUMN_SQL} FROM blobs WHERE "blobs"."doc" = $1), %({"foo":"bar"})]
         result = query.first
         result.should eq blob
 
         query2 = JSONQuery.new.foo_with_value("bar")
-        query2.to_sql.should eq ["SELECT blobs.id, blobs.created_at, blobs.updated_at, blobs.doc, blobs.metadata, blobs.media, blobs.servers FROM blobs WHERE blobs.doc = $1", "{\"foo\":\"bar\"}"]
+        query2.to_sql.should eq [%(SELECT #{Blob::COLUMN_SQL} FROM blobs WHERE "blobs"."doc" = $1), %({"foo":"bar"})]
         result = query2.first
         result.should eq blob
 
         query3 = JSONQuery.new.foo_with_value("baz")
-        query3.to_sql.should eq ["SELECT blobs.id, blobs.created_at, blobs.updated_at, blobs.doc, blobs.metadata, blobs.media, blobs.servers FROM blobs WHERE blobs.doc = $1", "{\"foo\":\"baz\"}"]
+        query3.to_sql.should eq [%(SELECT #{Blob::COLUMN_SQL} FROM blobs WHERE "blobs"."doc" = $1), %({"foo":"baz"})]
         expect_raises(Avram::RecordNotFoundError) do
           query3.first
         end
@@ -1207,7 +1207,7 @@ describe Avram::Queryable do
         bucket = BucketFactory.new.names(["pumpkin", "zucchini"]).enums([Bucket::Size::Medium]).create
 
         query = BucketQuery.new.names(["pumpkin", "zucchini"])
-        query.to_sql.should eq ["SELECT #{Bucket::COLUMN_SQL} FROM buckets WHERE buckets.names = $1", "{\"pumpkin\",\"zucchini\"}"]
+        query.to_sql.should eq [%(SELECT #{Bucket::COLUMN_SQL} FROM buckets WHERE "buckets"."names" = $1), %({"pumpkin","zucchini"})]
         result = query.first
         result.should eq bucket
 
@@ -1222,7 +1222,7 @@ describe Avram::Queryable do
 
         query = BucketQuery.new.numbers.includes(13)
 
-        query.to_sql.should eq ["SELECT #{Bucket::COLUMN_SQL} FROM buckets WHERE $1 = ANY (buckets.numbers)", "13"]
+        query.to_sql.should eq [%(SELECT #{Bucket::COLUMN_SQL} FROM buckets WHERE $1 = ANY ("buckets"."numbers")), "13"]
         query.select_count.should eq(1)
         query.first.id.should eq(bucket1.id)
       end
@@ -1233,7 +1233,7 @@ describe Avram::Queryable do
 
         query = BucketQuery.new.numbers.not.includes(13)
 
-        query.to_sql.should eq ["SELECT #{Bucket::COLUMN_SQL} FROM buckets WHERE $1 != ALL (buckets.numbers)", "13"]
+        query.to_sql.should eq [%(SELECT #{Bucket::COLUMN_SQL} FROM buckets WHERE $1 != ALL ("buckets"."numbers")), "13"]
         query.select_count.should eq(1)
         query.first.id.should eq(bucket2.id)
       end
@@ -1246,7 +1246,7 @@ describe Avram::Queryable do
         business = BusinessFactory.new.create
 
         query = BusinessQuery.new.name(business.name)
-        query.to_sql.should eq ["SELECT #{Business::COLUMN_SQL} FROM businesses WHERE businesses.name = $1", business.name]
+        query.to_sql.should eq [%(SELECT #{Business::COLUMN_SQL} FROM businesses WHERE "businesses"."name" = $1), business.name]
         result = query.first
         result.should eq business
       end
@@ -1401,19 +1401,19 @@ describe Avram::Queryable do
   describe "#asc_order" do
     it "orders by a joined table" do
       query = Post::BaseQuery.new.where_comments(Comment::BaseQuery.new.created_at.asc_order)
-      query.to_sql[0].should contain "ORDER BY comments.created_at ASC"
+      query.to_sql[0].should contain %(ORDER BY "comments"."created_at" ASC)
     end
 
     it "orders nulls first" do
       query = Post::BaseQuery.new.published_at.asc_order(:nulls_first)
 
-      query.to_sql[0].should contain "ORDER BY posts.published_at ASC NULLS FIRST"
+      query.to_sql[0].should contain %(ORDER BY "posts"."published_at" ASC NULLS FIRST)
     end
 
     it "orders nulls last" do
       query = Post::BaseQuery.new.published_at.asc_order(:nulls_last)
 
-      query.to_sql[0].should contain "ORDER BY posts.published_at ASC NULLS LAST"
+      query.to_sql[0].should contain %(ORDER BY "posts"."published_at" ASC NULLS LAST)
     end
 
     it "doesn't mutate the query" do
@@ -1428,7 +1428,7 @@ describe Avram::Queryable do
     it "resets random order clauses" do
       query = Post::BaseQuery.new.random_order.published_at.asc_order
 
-      query.to_sql[0].should contain "ORDER BY posts.published_at ASC"
+      query.to_sql[0].should contain %(ORDER BY "posts"."published_at" ASC)
       query.to_sql[0].should_not contain "RANDOM ()"
     end
   end
@@ -1443,7 +1443,7 @@ describe Avram::Queryable do
     it "resets previous order clauses" do
       query = Post::BaseQuery.new.published_at.desc_order.random_order
 
-      query.to_sql[0].should_not contain "posts.published_at DESC"
+      query.to_sql[0].should_not contain %("posts"."published_at" DESC)
       query.to_sql[0].should contain "ORDER BY RANDOM ()"
     end
   end
@@ -1455,7 +1455,7 @@ describe Avram::Queryable do
 
       original_query.to_sql.size.should eq 2
       new_query.to_sql.size.should eq 3
-      new_query.to_sql[0].should contain "ORDER BY users.joined_at"
+      new_query.to_sql[0].should contain %(ORDER BY "users"."joined_at")
       original_query.to_sql[0].should_not contain "ORDER BY"
     end
 
@@ -1524,7 +1524,7 @@ describe Avram::Queryable do
       post = PostFactory.create &.published_at(3.days.ago)
       posts = Post::BaseQuery.new.published_at.between(start_date, end_date)
 
-      posts.query.statement.should eq "SELECT posts.custom_id, posts.created_at, posts.updated_at, posts.title, posts.published_at FROM posts WHERE posts.published_at >= $1 AND posts.published_at <= $2"
+      posts.query.statement.should eq %(SELECT #{Post::COLUMN_SQL} FROM posts WHERE "posts"."published_at" >= $1 AND "posts"."published_at" <= $2)
       posts.query.args.should eq [start_date.to_s("%Y-%m-%d %H:%M:%S.%6N %z"), end_date.to_s("%Y-%m-%d %H:%M:%S.%6N %z")]
       posts.first.should eq post
     end
@@ -1533,7 +1533,7 @@ describe Avram::Queryable do
       company = CompanyFactory.create &.sales(50)
       companies = Company::BaseQuery.new.sales.between(1, 100)
 
-      companies.query.statement.should eq "SELECT companies.id, companies.created_at, companies.updated_at, companies.sales, companies.earnings FROM companies WHERE companies.sales >= $1 AND companies.sales <= $2"
+      companies.query.statement.should eq %(SELECT #{Company::COLUMN_SQL} FROM companies WHERE "companies"."sales" >= $1 AND "companies"."sales" <= $2)
       companies.query.args.should eq ["1", "100"]
       companies.first.should eq company
     end
@@ -1542,7 +1542,7 @@ describe Avram::Queryable do
       company = CompanyFactory.create &.earnings(300.45)
       companies = Company::BaseQuery.new.earnings.between(123.45, 678.901)
 
-      companies.query.statement.should eq "SELECT companies.id, companies.created_at, companies.updated_at, companies.sales, companies.earnings FROM companies WHERE companies.earnings >= $1 AND companies.earnings <= $2"
+      companies.query.statement.should eq %(SELECT #{Company::COLUMN_SQL} FROM companies WHERE "companies"."earnings" >= $1 AND "companies"."earnings" <= $2)
       companies.query.args.should eq ["123.45", "678.901"]
       companies.first.should eq company
     end
@@ -1564,7 +1564,7 @@ describe Avram::Queryable do
       UserFactory.create &.age(21).name("Jim")
 
       users = UserQuery.new.group(&.age).group(&.id)
-      users.query.statement.should eq "SELECT #{User::COLUMN_SQL} FROM users GROUP BY users.age, users.id"
+      users.query.statement.should eq %(SELECT #{User::COLUMN_SQL} FROM users GROUP BY "users"."age", "users"."id")
       users.map(&.name).sort!.should eq ["Dwight", "Jim", "Michael"]
     end
 
@@ -1611,16 +1611,16 @@ describe Avram::Queryable do
   describe "#to_prepared_sql" do
     it "returns the full SQL with args combined" do
       query = Post::BaseQuery.new.title("The Short Post")
-      query.to_prepared_sql.should eq(%{SELECT posts.custom_id, posts.created_at, posts.updated_at, posts.title, posts.published_at FROM posts WHERE posts.title = 'The Short Post'})
+      query.to_prepared_sql.should eq(%{SELECT #{Post::COLUMN_SQL} FROM posts WHERE "posts"."title" = 'The Short Post'})
 
       query = Bucket::BaseQuery.new.names(["Larry", "Moe", "Curly"]).numbers([1, 2, 3])
-      query.to_prepared_sql.should eq(%{SELECT #{Bucket::COLUMN_SQL} FROM buckets WHERE buckets.names = '{"Larry","Moe","Curly"}' AND buckets.numbers = '{1,2,3}'})
+      query.to_prepared_sql.should eq(%{SELECT #{Bucket::COLUMN_SQL} FROM buckets WHERE "buckets"."names" = '{"Larry","Moe","Curly"}' AND "buckets"."numbers" = '{1,2,3}'})
 
       query = Blob::BaseQuery.new.doc(JSON::Any.new({"properties" => JSON::Any.new("sold")}))
-      query.to_prepared_sql.should eq(%{SELECT blobs.id, blobs.created_at, blobs.updated_at, blobs.doc, blobs.metadata, blobs.media, blobs.servers FROM blobs WHERE blobs.doc = '{"properties":"sold"}'})
+      query.to_prepared_sql.should eq(%{SELECT #{Blob::COLUMN_SQL} FROM blobs WHERE "blobs"."doc" = '{"properties":"sold"}'})
 
       query = UserQuery.new.name.in(["Don", "Juan"]).age.gt(30)
-      query.to_prepared_sql.should eq(%{SELECT #{User::COLUMN_SQL} FROM users WHERE users.name = ANY ('{"Don","Juan"}') AND users.age > '30'})
+      query.to_prepared_sql.should eq(%{SELECT #{User::COLUMN_SQL} FROM users WHERE "users"."name" = ANY ('{"Don","Juan"}') AND "users"."age" > '30'})
     end
 
     it "returns the full SQL with a lot of args" do
@@ -1641,7 +1641,7 @@ describe Avram::Queryable do
         .available_for_hire(true)
         .created_at(a_day)
 
-      query.to_prepared_sql.should eq(%{SELECT users.id, users.created_at, users.updated_at, users.name, users.age, users.year_born, users.nickname, users.joined_at, users.total_score, users.average_score, users.available_for_hire FROM users WHERE users.name = 'Don' AND users.age > '21' AND users.age < '99' AND users.nickname ILIKE 'j%' AND users.nickname ILIKE '%y' AND users.joined_at > '#{a_week.to_s("%F %X.%6N %z")}' AND users.joined_at < '#{an_hour.to_s("%F %X.%6N %z")}' AND users.average_score > '1.2' AND users.average_score < '4.9' AND users.available_for_hire = 'true' AND users.created_at = '#{a_day.to_s("%F %X.%6N %z")}'})
+      query.to_prepared_sql.should eq(%{SELECT #{User::COLUMN_SQL} FROM users WHERE "users"."name" = 'Don' AND "users"."age" > '21' AND "users"."age" < '99' AND "users"."nickname" ILIKE 'j%' AND "users"."nickname" ILIKE '%y' AND "users"."joined_at" > '#{a_week.to_s("%F %X.%6N %z")}' AND "users"."joined_at" < '#{an_hour.to_s("%F %X.%6N %z")}' AND "users"."average_score" > '1.2' AND "users"."average_score" < '4.9' AND "users"."available_for_hire" = 'true' AND "users"."created_at" = '#{a_day.to_s("%F %X.%6N %z")}'})
     end
   end
 

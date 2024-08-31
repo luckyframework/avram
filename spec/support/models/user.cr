@@ -1,5 +1,5 @@
 class User < BaseModel
-  COLUMN_SQL = "users.id, users.created_at, users.updated_at, users.name, users.age, users.year_born, users.nickname, users.joined_at, users.total_score, users.average_score, users.available_for_hire"
+  COLUMN_SQL = %("users"."id", "users"."created_at", "users"."updated_at", "users"."name", "users"."age", "users"."year_born", "users"."nickname", "users"."joined_at", "users"."total_score", "users"."average_score", "users"."available_for_hire")
 
   table do
     column name : String

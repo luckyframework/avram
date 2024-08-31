@@ -10,7 +10,7 @@ class Avram::BaseQueryTemplate
 
       macro generate_criteria_method(name, type)
         def \{{ name }}
-          \{{ type }}.adapter.criteria(self, "#{table_name}.\{{ name }}")
+          \{{ type }}.adapter.criteria(self, %("#{table_name}"."\{{ name }}"))
         end
       end
 

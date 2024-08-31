@@ -1,4 +1,5 @@
 class Post < BaseModel
+  COLUMN_SQL = %("posts"."custom_id", "posts"."created_at", "posts"."updated_at", "posts"."title", "posts"."published_at")
   skip_default_columns
 
   table do

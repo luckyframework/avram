@@ -4,15 +4,18 @@ module Avram::Join
   abstract class SqlClause
     getter from : TableName
 
+    @using : String
+
     def initialize(
       @from : TableName,
       @to : TableName,
       @primary_key : Symbol? = nil,
       @foreign_key : Symbol? = nil,
       @comparison : String? = "=",
-      @using : Array(Symbol) = [] of Symbol,
+      using : Array(Symbol) = [] of Symbol,
       @alias_to : TableName? = nil
     )
+      @using = using.join(", ") { |col| %("#{col}") }
     end
 
     abstract def join_type : String
@@ -24,8 +27,8 @@ module Avram::Join
         if @alias_to
           io << " AS #{@alias_to}"
         end
-        if !@using.empty?
-          io << " USING (#{@using.join(", ")})"
+        if @using.presence
+          io << " USING (#{@using})"
         else
           io << " ON #{from_column} #{@comparison} #{to_column}"
         end
@@ -37,11 +40,11 @@ module Avram::Join
     end
 
     def from_column : String
-      "#{@from}.#{@primary_key || "id"}"
+      %("#{@from}"."#{@primary_key || "id"}")
     end
 
     def to_column : String
-      "#{to}.#{@foreign_key || default_foreign_key}"
+      %("#{to}"."#{@foreign_key || default_foreign_key}")
     end
 
     def default_foreign_key : String

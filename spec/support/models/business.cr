@@ -1,5 +1,5 @@
 class Business < BaseModel
-  COLUMN_SQL = "businesses.id, businesses.created_at, businesses.updated_at, businesses.name, businesses.latitude, businesses.longitude"
+  COLUMN_SQL = %("businesses"."id", "businesses"."created_at", "businesses"."updated_at", "businesses"."name", "businesses"."latitude", "businesses"."longitude")
 
   table do
     column name : String
