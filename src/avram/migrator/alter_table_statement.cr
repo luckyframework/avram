@@ -64,7 +64,7 @@ class Avram::Migrator::AlterTableStatement
   # Change the columns' default value to `default`
   # ```
   # alter table_for(Post) do
-  #   change_default published_at, default: :now
+  #   change_default published_at : Time, default: :now
   # end
   # ```
   macro change_default(type_declaration, default)
