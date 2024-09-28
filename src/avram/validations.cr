@@ -330,4 +330,20 @@ module Avram::Validations
 
     true
   end
+
+  def validate_url_format(
+    attribute : Avram::Attribute(String),
+    scheme : String = "https",
+    message : Avram::Attribute::ErrorMessage = Avram.settings.i18n_backend.get(:validate_url_format)
+  ) : Bool
+    if url = attribute.value.presence
+      uri = URI.parse(url)
+      if uri.scheme != scheme || uri.host.presence.nil?
+        attribute.add_error(message % scheme)
+        return false
+      end
+    end
+
+    true
+  end
 end

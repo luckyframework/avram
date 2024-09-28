@@ -19,6 +19,7 @@ struct Avram::I18n < Avram::I18nBackend
       validate_numeric_nil:        "must not be nil",
       validate_required:           "is required",
       validate_uniqueness_of:      "is already taken",
+      validate_url_format:         "must be a valid URL beginning with %s",
     }[key]
   end
 end
