@@ -33,7 +33,6 @@ jobs:
           - shard.yml
         postgres_version:
           - 14
-          - 15
           - 16
         crystal_version:
           - 1.10.0
@@ -49,7 +48,7 @@ jobs:
             crystal_version: nightly
             postgres_version: 14
             experimental: true
-    runs-on: ubuntu-latest
+    os: [ubuntu-latest, windows-latest]
     continue-on-error: ${{ matrix.experimental }}
     services:
       postgres:
