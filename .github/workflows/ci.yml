@@ -72,8 +72,14 @@ jobs:
           crystal: ${{matrix.crystal_version}}
       - name: Install shards
         run: SHARDS_OVERRIDE=${{ matrix.shard_file }} shards install
-      - name: Run integration test
+      - name: Run integration test (Linux)
         run: ./script/integration_test
+        if: matrix.os == 'ubuntu-latest'
+        env:
+          DATABASE_URL: postgres://lucky:developer@localhost:5432/avram_dev
+      - name: Run integration test (Windows)
+        run: .\script\integration_test.ps1
+        if: matrix.os == 'windows-latest'
         env:
           DATABASE_URL: postgres://lucky:developer@localhost:5432/avram_dev
       - name: Run tests
