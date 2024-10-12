@@ -48,7 +48,8 @@ jobs:
             crystal_version: nightly
             postgres_version: 14
             experimental: true
-    os: [ubuntu-latest, windows-latest]
+        os: [ubuntu-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
     continue-on-error: ${{ matrix.experimental }}
     services:
       postgres:
