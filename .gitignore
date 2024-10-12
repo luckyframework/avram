@@ -1,6 +1,5 @@
 /docs/
 /lib/
-/bin/*
 /.shards/
 /tmp
 /config/*.local.cr
