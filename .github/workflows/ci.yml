@@ -55,22 +55,30 @@ jobs:
             os: ubuntu-latest
     runs-on: ${{ matrix.os }}
     continue-on-error: ${{ matrix.experimental }}
-    services:
-      postgres:
-        image: postgres:${{ matrix.postgres_version }}-alpine
-        env:
-          POSTGRES_USER: lucky
-          POSTGRES_PASSWORD: developer
-        ports:
-          - 5432:5432
-        # needed because the postgres container does not provide a healthcheck
-        options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
+    # services:
+    #   postgres:
+    #     image: postgres:${{ matrix.postgres_version }}-alpine
+    #     env:
+    #       POSTGRES_USER: lucky
+    #       POSTGRES_PASSWORD: developer
+    #     ports:
+    #       - 5432:5432
+    #     # needed because the postgres container does not provide a healthcheck
+    #     options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
     steps:
       - uses: actions/checkout@v4
-      - name: Setup PostgreSQL Client v${{ matrix.postgres_version }}
-        uses: tj-actions/install-postgresql@v3
+      - name: Setup PostgreSQL v${{ matrix.postgres_version }}
+        uses: ikalnytskyi/action-setup-postgres@v6
         with:
-          postgresql-version: ${{ matrix.postgres_version }}
+          username: lucky
+          password: developer
+          port: 5432
+          postgres-version: ${{ matrix.postgres_version }}
+
+      # - name: Setup PostgreSQL Client v${{ matrix.postgres_version }}
+      #   uses: tj-actions/install-postgresql@v3
+      #   with:
+      #     postgresql-version: ${{ matrix.postgres_version }}
 
       - uses: crystal-lang/install-crystal@v1
         with:
