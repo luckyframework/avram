@@ -84,7 +84,7 @@ jobs:
         with:
           crystal: ${{matrix.crystal_version}}
       - name: Install shards
-        run: shards install
+        run: shards install --skip-postinstall --skip-executables
         env:
           SHARDS_OVERRIDE: ${{ matrix.shard_file }}
       - name: Run integration test (Linux)
