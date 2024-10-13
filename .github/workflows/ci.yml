@@ -84,7 +84,9 @@ jobs:
         with:
           crystal: ${{matrix.crystal_version}}
       - name: Install shards
-        run: SHARDS_OVERRIDE=${{ matrix.shard_file }} shards install
+        run: shards install
+        env:
+          SHARDS_OVERRIDE: ${{ matrix.shard_file }}
       - name: Run integration test (Linux)
         run: ./script/integration_test
         if: matrix.os == 'ubuntu-latest'
