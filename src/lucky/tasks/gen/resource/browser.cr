@@ -98,23 +98,23 @@ class Gen::Resource::Browser < LuckyTask::Task
   end
 
   private def display_success_messages
-    success_message(resource_name, "./src/models/#{underscored_resource}.cr")
-    success_message("Save" + resource_name, "./src/operations/save_#{underscored_resource}.cr")
-    success_message("Delete" + resource_name, "./src/operations/delete_#{underscored_resource}.cr")
-    success_message(resource_name + "Query", "./src/queries/#{underscored_resource}_query.cr")
+    success_message(resource_name, Path["./src/models/#{underscored_resource}.cr"].to_s)
+    success_message("Save" + resource_name, Path["./src/operations/save_#{underscored_resource}.cr"].to_s)
+    success_message("Delete" + resource_name, Path["./src/operations/delete_#{underscored_resource}.cr"].to_s)
+    success_message(resource_name + "Query", Path["./src/queries/#{underscored_resource}_query.cr"].to_s)
     %w(index show new create edit update delete).each do |action|
       success_message(
         pluralized_name + "::" + action.capitalize,
-        "./src/actions/#{folder_name}/#{action}.cr"
+        Path["./src/actions/#{folder_name}/#{action}.cr"].to_s
       )
     end
     %w(index show new edit).each do |action|
       success_message(
         pluralized_name + "::" + action.capitalize + "Page",
-        "./src/pages/#{folder_name}/#{action}_page.cr"
+        Path["./src/pages/#{folder_name}/#{action}_page.cr"].to_s
       )
     end
-    success_message("#{pluralized_name}::FormFields", "./src/components/#{folder_name}/form_fields.cr")
+    success_message("#{pluralized_name}::FormFields", Path["./src/components/#{folder_name}/form_fields.cr"].to_s)
   end
 
   private def underscored_resource

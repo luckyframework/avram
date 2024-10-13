@@ -1,6 +1,7 @@
 /docs/
 /lib/
-/bin/*
+/bin/ameba
+/bin/ameba.cr
 /.shards/
 /tmp
 /config/*.local.cr

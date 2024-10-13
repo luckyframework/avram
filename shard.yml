@@ -5,9 +5,8 @@ crystal: ">= 1.10.0"
 
 license: MIT
 
-targets:
-  lucky.gen.migration:
-    main: src/precompiled_tasks/gen/migration.cr
+executables:
+  - lucky.gen.migration.cr
 
 authors:
   - Paul Smith <paulcsmith0218@gmail.com>
@@ -51,6 +50,3 @@ development_dependencies:
   lucky:
     github: luckyframework/lucky
     version: ">= 1.0.0"
-
-scripts:
-  postinstall: BUILD_WITHOUT_DEVELOPMENT=true script/precompile_tasks

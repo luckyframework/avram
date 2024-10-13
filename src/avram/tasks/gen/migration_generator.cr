@@ -52,7 +52,7 @@ class Avram::Migrator::MigrationGenerator
   end
 
   private def ensure_unique
-    d = Dir.new(Dir.current + "/db/migrations")
+    d = Dir.new(Dir.current + Path["/db/migrations"].to_s)
     d.each_child { |x|
       if x.starts_with?(/[0-9]{14}_#{name.underscore}.cr/)
         raise <<-ERROR
@@ -69,7 +69,7 @@ class Avram::Migrator::MigrationGenerator
   end
 
   private def make_migrations_folder_if_missing
-    FileUtils.mkdir_p Dir.current + "/db/migrations"
+    FileUtils.mkdir_p Dir.current + Path["/db/migrations"].to_s
   end
 
   private def file_path
@@ -77,7 +77,7 @@ class Avram::Migrator::MigrationGenerator
   end
 
   private def relative_file_path
-    "/db/migrations/#{version}_#{name.underscore}.cr"
+    Path["/db/migrations/#{version}_#{name.underscore}.cr"].to_s
   end
 
   private def version
