@@ -17,7 +17,8 @@ dependencies:
     version: ~> 0.3.0
   pg:
     github: will/crystal-pg
-    version: ~> 0.28.0
+    branch: windowsusername
+    # version: ~> 0.28.0
   habitat:
     github: luckyframework/habitat
     version: ~> 0.4.9
