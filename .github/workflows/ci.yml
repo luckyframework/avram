@@ -87,7 +87,7 @@ jobs:
         env:
           DATABASE_URL: postgres://lucky:developer@localhost:5432/avram_dev
       - name: Run tests
-        run: crystal spec
+        run: crystal spec --error-trace
         env:
           BACKUP_DATABASE_URL: postgres://lucky:developer@localhost:5432/sample_backup
           DATABASE_URL: postgres://lucky:developer@localhost:5432/avram_dev
