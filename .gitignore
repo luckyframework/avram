@@ -2,6 +2,15 @@
 /lib/
 /bin/ameba
 /bin/ameba.cr
+/bin/lucky.exec.cr
+/bin/lucky.watch.cr
+/bin/lucky.gen.action.cr
+/bin/lucky.gen.action.browser.cr
+/bin/lucky.gen.action.api.cr
+/bin/lucky.gen.page.cr
+/bin/lucky.gen.component.cr
+/bin/lucky.gen.task.cr
+/bin/lucky.gen.secret_key.cr
 /.shards/
 /tmp
 /config/*.local.cr
