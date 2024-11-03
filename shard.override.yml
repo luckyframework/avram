@@ -1,6 +1,9 @@
-# dependencies:
+dependencies:
+  pg:
+    github: will/crystal-pg
+    branch: windowsusername
 
-# development_dependencies:
-#   lucky:
-#     github: luckyframework/lucky
-#     branch: main
+development_dependencies:
+  lucky:
+    github: luckyframework/lucky
+    branch: main

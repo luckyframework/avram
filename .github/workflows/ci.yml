@@ -42,7 +42,7 @@ jobs:
         experimental:
           - false
         include:
-          - shard_file: shard.yml
+          - shard_file: shard.override.yml
             crystal_version: latest
             postgres_version: 16
             experimental: true
