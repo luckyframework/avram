@@ -42,11 +42,11 @@ jobs:
         experimental:
           - false
         include:
-          - shard_file: shard.override.yml
+          - os: windows-latest
+            shard_file: shard.yml
             crystal_version: latest
             postgres_version: 16
             experimental: true
-            os: windows-latest
           - shard_file: shard.edge.yml
             crystal_version: latest
             postgres_version: 14
