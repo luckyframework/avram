@@ -1,4 +1,4 @@
-FROM crystallang/crystal:1.10.0
+FROM crystallang/crystal:1.14.0
 WORKDIR /data
 
 # install base dependencies
@@ -12,7 +12,7 @@ RUN apt-get update && \
   rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 # Lucky cli
-RUN git clone https://github.com/luckyframework/lucky_cli --branch v1.1.0 --depth 1 /usr/local/lucky_cli && \
+RUN git clone https://github.com/luckyframework/lucky_cli --branch v1.3.0 --depth 1 /usr/local/lucky_cli && \
   cd /usr/local/lucky_cli && \
   shards install && \
   crystal build src/lucky.cr -o /usr/local/bin/lucky
