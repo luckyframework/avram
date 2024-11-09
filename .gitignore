@@ -2,6 +2,7 @@
 /lib/
 /bin/ameba
 /bin/ameba.cr
+/bin/ameba.exe
 /bin/lucky.exec.cr
 /bin/lucky.watch.cr
 /bin/lucky.gen.action.cr
