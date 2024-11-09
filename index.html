@@ -1794,6 +1794,7 @@
   </svg>
 </a>Avram</h1>
 <p><a href="https://luckyframework.github.io/avram"><img src="https://img.shields.io/website?down_color=red&amp;down_message=Offline&amp;label=API%20Documentation&amp;up_message=Online&amp;url=https://luckyframework.github.io/avram/" alt="API Documentation Website" /></a></p>
+<p>Database ORM built for the <a href="https://luckyframework.org/">Lucky Framework</a> written in Crystal. Supporting PostgreSQL 12+ and based off principals of <a href="https://hexdocs.pm/ecto/Ecto.html">Elixir Ecto</a> and <a href="https://guides.rubyonrails.org/active_record_basics.html">Rails ActiveRecord</a>.</p>
 <h3><a id="why-avram" class="anchor" href="#why-avram">
   <svg class="octicon-link" aria-hidden="true">
     <use href="#octicon-link"/>
@@ -1817,7 +1818,51 @@
     <use href="#octicon-link"/>
   </svg>
 </a>Usage</h2>
-<pre><code class="language-crystal"><span class="k">require</span> <span class="s">&quot;avram&quot;</span></code></pre>
+<pre><code class="language-crystal"><span class="k">require</span> <span class="s">&quot;avram&quot;</span>
+
+<span class="c"># Define your database</span>
+<span class="k">class</span> <span class="t">AppDatabase</span> <span class="o">&lt;</span> <span class="t">Avram</span><span class="t">::</span><span class="t">Database</span>
+<span class="k">end</span>
+
+<span class="t">AppDatabase</span>.configure <span class="k">do</span> <span class="o">|</span>settings<span class="o">|</span>
+  settings.credentials <span class="o">=</span> <span class="t">Avram</span><span class="t">::</span><span class="t">Credentials</span>.new(
+    database: <span class="s">&quot;my_app_development&quot;</span>,
+    username: <span class="s">&quot;postgres&quot;</span>,
+    hostname: <span class="s">&quot;localhost&quot;</span>,
+    password: <span class="s">&quot;password&quot;</span>,
+    port: <span class="n">5432</span>,
+  )
+<span class="k">end</span>
+
+<span class="c"># Configure Avram to use your database</span>
+<span class="t">Avram</span>.configure <span class="k">do</span> <span class="o">|</span>settings<span class="o">|</span>
+  settings.database_to_migrate <span class="o">=</span> <span class="t">AppDatabase</span>
+
+  <span class="c"># When `true`, allow lazy loading (N+1).</span>
+  <span class="c"># If `false` raise an error if you forget to preload associations</span>
+  settings.lazy_load_enabled <span class="o">=</span> <span class="n">true</span>
+  settings.query_cache_enabled <span class="o">=</span> <span class="n">false</span>
+<span class="k">end</span>
+
+<span class="c"># Create your read-only model</span>
+<span class="k">class</span> <span class="t">Person</span> <span class="o">&lt;</span> <span class="t">Avram</span><span class="t">::</span><span class="t">Model</span>
+  <span class="k">def</span> <span class="m">self</span>.database : <span class="t">Avram</span><span class="t">::</span><span class="t">Database</span>.<span class="k">class</span>
+    <span class="t">AppDatabase</span>
+  <span class="k">end</span>
+
+  table <span class="n">:people</span> <span class="k">do</span>
+    column name : <span class="t">String</span>
+    column age : <span class="t">Int32</span>
+    column programmer : <span class="t">Bool</span> <span class="o">=</span> <span class="n">true</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+
+<span class="c"># Insert a new record</span>
+<span class="t">Person</span><span class="t">::</span><span class="t">SaveOperation</span>.create!(name: <span class="s">&quot;Henriette Davidson Avram&quot;</span>, age: <span class="n">86</span>)
+<span class="c"># Query for a record</span>
+person <span class="o">=</span> <span class="t">Person</span><span class="t">::</span><span class="t">BaseQuery</span>.new.name.ilike(<span class="s">&quot;%avram&quot;</span>)
+person.programmer? <span class="c">#=&gt; true</span></code></pre>
+<p>For more details, read the <a href="https://luckyframework.org/guides/database/intro-to-avram-and-orms">guides</a>.</p>
 <h2><a id="contributing" class="anchor" href="#contributing">
   <svg class="octicon-link" aria-hidden="true">
     <use href="#octicon-link"/>
@@ -1826,39 +1871,27 @@
 <ol>
 <li>Fork it ( https://github.com/luckyframework/avram/fork )</li>
 <li>Create your feature branch (git checkout -b my-new-feature)</li>
-<li>Install docker and docker-compose: https://docs.docker.com/compose/install/</li>
-<li>Run <code>script/setup</code></li>
 <li>Make your changes</li>
-<li>Run <code>script/test</code> to run the specs, build shards, and check formatting</li>
+<li>Run specs <code>crystal spec</code></li>
+<li>Check formatting <code>crystal tool format spec/ src/</code></li>
+<li>Check ameba <code>./bin/ameba</code></li>
 <li>Commit your changes (git commit -am 'Add some feature')</li>
 <li>Push to the branch (git push origin my-new-feature)</li>
 <li>Create a new Pull Request</li>
 </ol>
-<h2><a id="testing" class="anchor" href="#testing">
-  <svg class="octicon-link" aria-hidden="true">
-    <use href="#octicon-link"/>
-  </svg>
-</a>Testing</h2>
-<p>To run the tests:</p>
-<ol>
-<li>Install docker and docker-compose: https://docs.docker.com/compose/install/</li>
-<li>Run <code>script/setup</code> to set up the docker environment</li>
-<li>Run <code>script/test</code> to run the specs, build shards, and check formatting</li>
-</ol>
-<p>You can run individual tests like this: <code>docker-compose run --rm app crystal spec path/to/spec.cr</code></p>
 <blockquote>
-<p>Remember to run <code>docker-compose down</code> when you're done. This will stop the
-Crystal container.</p>
+<p>Docker is provided for quick setup and testing. You can run <code>./script/setup</code> and <code>./script/test</code> for ease.</p>
 </blockquote>
 <h2><a id="contributors" class="anchor" href="#contributors">
   <svg class="octicon-link" aria-hidden="true">
     <use href="#octicon-link"/>
   </svg>
 </a>Contributors</h2>
-<ul>
-<li><a href="https://github.com/paulcsmith">paulcsmith</a> Paul Smith - creator, maintainer</li>
-<li><a href="https://github.com/mikeeus">mikeeus</a> Mikias Abera - contributor</li>
-</ul>
+<p><a href="https://github.com/paulcsmith">paulcsmith</a> Paul Smith - Original Creator of Lucky</p>
+<a href="https://github.com/luckyframework/avram/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=luckyframework/avram" />
+</a>
+<p>Made with <a href="https://contrib.rocks">contrib.rocks</a>.</p>
 </div>
 </body>
 </html>
