@@ -42,13 +42,11 @@ jobs:
         experimental:
           - false
         include:
-          # NOTE: PG shard does not compile on Windows https://github.com/will/crystal-pg/issues/291
-          # Until that's resolved, this will always fail, so leaving this commented out for now
-          # - shard_file: shard.yml
-          #   crystal_version: latest
-          #   postgres_version: 16
-          #   experimental: true
-          #   os: windows-latest
+          - os: windows-latest
+            shard_file: shard.yml
+            crystal_version: latest
+            postgres_version: 16
+            experimental: true
           - shard_file: shard.edge.yml
             crystal_version: latest
             postgres_version: 14
@@ -89,7 +87,7 @@ jobs:
         env:
           DATABASE_URL: postgres://lucky:developer@localhost:5432/avram_dev
       - name: Run tests
-        run: crystal spec
+        run: crystal spec --error-trace
         env:
           BACKUP_DATABASE_URL: postgres://lucky:developer@localhost:5432/sample_backup
           DATABASE_URL: postgres://lucky:developer@localhost:5432/avram_dev
