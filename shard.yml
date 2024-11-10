@@ -1,7 +1,7 @@
 name: avram
 version: 1.3.0
 
-crystal: ">= 1.10.0"
+crystal: ">= 1.11.0"
 
 license: MIT
 
