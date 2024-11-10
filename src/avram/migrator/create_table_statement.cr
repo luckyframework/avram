@@ -56,9 +56,9 @@ class Avram::Migrator::CreateTableStatement
   private def table_statement
     String.build do |statement|
       initial_table_statement(statement)
-      statement << rows.join(",\n")
-      statement << ",\n" if !constraints.empty?
-      statement << constraints.join(", \n")
+      statement << rows.join(",#{EOL}")
+      statement << ",#{EOL}" if !constraints.empty?
+      statement << constraints.join(", #{EOL}")
       statement << ");"
     end
   end
@@ -67,7 +67,7 @@ class Avram::Migrator::CreateTableStatement
     io << "CREATE TABLE "
     io << "IF NOT EXISTS " if if_not_exists?
     io << @table_name
-    io << " (\n"
+    io << " (#{EOL}"
   end
 
   macro primary_key(type_declaration)

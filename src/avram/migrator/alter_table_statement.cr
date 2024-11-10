@@ -157,8 +157,8 @@ class Avram::Migrator::AlterTableStatement
     unless (rows + dropped_rows).empty?
       alterations << String.build do |statement|
         statement << "ALTER TABLE #{if_exists_statement}#{@table_name}"
-        statement << "\n"
-        statement << (rows + dropped_rows).join(",\n")
+        statement << EOL
+        statement << (rows + dropped_rows).join(",#{EOL}")
         statement << ';'
       end
     end

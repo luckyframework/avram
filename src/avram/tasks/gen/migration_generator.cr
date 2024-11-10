@@ -39,14 +39,14 @@ class Avram::Migrator::MigrationGenerator
 
   private def pad_contents(contents : String) : String
     String.build do |string|
-      contents.split("\n").each_with_index do |line, index|
+      contents.split(EOL).each_with_index do |line, index|
         if index.zero?
           string << line
         else
           string << "    "
           string << line
         end
-        string << "\n"
+        string << EOL
       end
     end.chomp
   end

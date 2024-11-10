@@ -7,7 +7,7 @@ describe Avram::Migrator::CreateTableStatement do
 
     built.statements.size.should eq 1
     built.statements.first.should eq <<-SQL
-    CREATE TABLE users (\n);
+    CREATE TABLE users (#{EOL});
     SQL
   end
 
@@ -254,7 +254,7 @@ describe Avram::Migrator::CreateTableStatement do
 
       built.statements.size.should eq 1
       built.statements.first.should eq <<-SQL
-      CREATE TABLE IF NOT EXISTS users (\n);
+      CREATE TABLE IF NOT EXISTS users (#{EOL});
       SQL
     end
   end
