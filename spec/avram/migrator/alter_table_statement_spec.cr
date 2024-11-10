@@ -106,7 +106,7 @@ describe Avram::Migrator::AlterTableStatement do
       end
 
       built.statements.size.should eq 3
-      built.statements[0].should eq %(ALTER TABLE users#{EOL}  ADD "confirmed_at" timestamptz;)
+      built.statements[0].should eq %(ALTER TABLE users\n  ADD "confirmed_at" timestamptz;)
       built.statements[1].should eq "UPDATE users SET confirmed_at = NOW();"
       built.statements[2].should eq "ALTER TABLE users ALTER COLUMN confirmed_at SET NOT NULL;"
     end
@@ -117,7 +117,7 @@ describe Avram::Migrator::AlterTableStatement do
       end
 
       built.statements.size.should eq 2
-      built.statements[0].should eq %(ALTER TABLE users#{EOL}  ADD "confirmed_at" timestamptz;)
+      built.statements[0].should eq %(ALTER TABLE users\n  ADD "confirmed_at" timestamptz;)
       built.statements[1].should eq "UPDATE users SET confirmed_at = NOW();"
     end
 
@@ -127,7 +127,7 @@ describe Avram::Migrator::AlterTableStatement do
       end
 
       built.statements.size.should eq 3
-      built.statements[0].should eq %(ALTER TABLE users#{EOL}  ADD "admin" boolean;)
+      built.statements[0].should eq %(ALTER TABLE users\n  ADD "admin" boolean;)
       built.statements[1].should eq "UPDATE users SET admin = 'false';"
       built.statements[2].should eq "ALTER TABLE users ALTER COLUMN admin SET NOT NULL;"
     end
@@ -178,7 +178,7 @@ describe Avram::Migrator::AlterTableStatement do
         end
 
         built.statements.size.should eq 4
-        built.statements[0].should eq %(ALTER TABLE comments#{EOL}  ADD "line_item_id" uuid NOT NULL REFERENCES line_items ON DELETE CASCADE;)
+        built.statements[0].should eq %(ALTER TABLE comments\n  ADD "line_item_id" uuid NOT NULL REFERENCES line_items ON DELETE CASCADE;)
         built.statements[1].should eq %(CREATE INDEX comments_line_item_id_index ON comments USING btree ("line_item_id");)
         built.statements[2].should eq "UPDATE comments SET line_item_id = 'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11';"
         built.statements[3].should eq "ALTER TABLE comments ALTER COLUMN line_item_id SET NOT NULL;"
@@ -190,7 +190,7 @@ describe Avram::Migrator::AlterTableStatement do
         end
 
         built.statements.size.should eq 3
-        built.statements[0].should eq %(ALTER TABLE comments#{EOL}  ADD "line_item_id" uuid REFERENCES line_items ON DELETE CASCADE;)
+        built.statements[0].should eq %(ALTER TABLE comments\n  ADD "line_item_id" uuid REFERENCES line_items ON DELETE CASCADE;)
         built.statements[1].should eq %(CREATE INDEX comments_line_item_id_index ON comments USING btree ("line_item_id");)
         built.statements[2].should eq "UPDATE comments SET line_item_id = 'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11';"
       end
