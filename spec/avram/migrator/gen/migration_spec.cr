@@ -32,6 +32,13 @@ describe "Generating migrations" do
       ).generate(_version: "123")
 
       created_migration_file = File.read("./db/migrations/123_create_users.cr")
+
+      {% if flag?(:windows) %}
+        # NOTE: Reading from the file on windows returns \r\n, but this spec's line endings are still \n
+        # due to the .gitattributes file. Also note that `EOL` didn't exist until Crystal 1.11.0
+        created_migration_file = created_migration_file.gsub(EOL, "\n")
+      {% end %}
+
       created_migration_file.should contain <<-MIGRATION
       class CreateUsers::V123 < Avram::Migrator::Migration::V1
         def migrate
@@ -39,10 +46,7 @@ describe "Generating migrations" do
             add name : String
           end
         end
-      MIGRATION
-      # HACK: This is broken up because on Windows everything is returning \r\n except for
-      # the empty line which is just returning \n
-      created_migration_file.should contain <<-MIGRATION
+
         def rollback
           drop :users
         end
