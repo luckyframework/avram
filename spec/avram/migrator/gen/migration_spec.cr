@@ -31,14 +31,18 @@ describe "Generating migrations" do
         rollback_contents: rollback_contents
       ).generate(_version: "123")
 
-      File.read("./db/migrations/123_create_users.cr").should contain <<-MIGRATION
+      created_migration_file = File.read("./db/migrations/123_create_users.cr")
+      created_migration_file.should contain <<-MIGRATION
       class CreateUsers::V123 < Avram::Migrator::Migration::V1
         def migrate
           create :users do
             add name : String
           end
         end
-
+      MIGRATION
+      # HACK: This is broken up because on Windows everything is returning \r\n except for
+      # the empty line which is just returning \n
+      created_migration_file.should contain <<-MIGRATION
         def rollback
           drop :users
         end
