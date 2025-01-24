@@ -22,11 +22,11 @@ module Avram::Uploadable
     end
 
     def parse(value : String?)
-      FailedCast.new
+      FailedCast.new("Cannot parse an uploadeable")
     end
 
     def parse(values : Array(String))
-      FailedCast.new
+      FailedCast.new("Cannot parse an array of uploadeable")
     end
   end
 end
