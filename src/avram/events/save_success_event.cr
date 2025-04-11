@@ -3,7 +3,7 @@ class Avram::Events::SaveSuccessEvent < Pulsar::Event
 
   def initialize(
     @operation_class : String,
-    @attributes : Array(Avram::GenericAttribute)
+    @attributes : Array(Avram::GenericAttribute),
   )
   end
 end

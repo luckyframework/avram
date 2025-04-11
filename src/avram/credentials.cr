@@ -7,7 +7,7 @@ class Avram::Credentials
     @username : String? = nil,
     @password : String? = nil,
     @port : Int32? = nil,
-    @query : String? = nil
+    @query : String? = nil,
   )
     @url = build_url
   end

@@ -3,7 +3,7 @@ class Avram::Events::DeleteFailedEvent < Pulsar::Event
 
   def initialize(
     @operation_class : String,
-    @errors : Hash(Symbol, Array(String))
+    @errors : Hash(Symbol, Array(String)),
   )
   end
 

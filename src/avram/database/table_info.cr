@@ -9,7 +9,7 @@ module Avram
       def initialize(
         @table_name,
         @table_type,
-        @table_schema
+        @table_schema,
       )
       end
 
