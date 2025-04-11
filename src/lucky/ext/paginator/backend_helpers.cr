@@ -28,7 +28,7 @@ module Lucky::Paginator::BackendHelpers
   # ```
   def paginate(
     query : Avram::Queryable(T),
-    per_page : Int32 = paginator_per_page
+    per_page : Int32 = paginator_per_page,
   ) : Tuple(Paginator, Avram::Queryable(T)) forall T
     pages = Paginator.new \
       page: paginator_page,

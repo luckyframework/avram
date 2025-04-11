@@ -18,7 +18,7 @@ class Avram::GenericAttribute
     @original_value : String?,
     @value : String?,
     @param_key : String,
-    @errors : Array(String)
+    @errors : Array(String),
   )
   end
 

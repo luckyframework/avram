@@ -90,7 +90,7 @@ module Lucky::InputHelpers
     field : Avram::PermittedAttribute(Array),
     checked_value : String,
     attrs : Array(Symbol) = [] of Symbol,
-    **html_options
+    **html_options,
   ) : Nil
     if field.value.try(&.includes?(checked_value))
       attrs = attrs | [:checked]

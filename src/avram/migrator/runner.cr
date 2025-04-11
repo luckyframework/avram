@@ -68,20 +68,20 @@ class Avram::Migrator::Runner
     args
   end
 
-  def self.drop_db(quiet? : Bool = false)
+  def self.drop_db(quiet : Bool = false)
     DB.connect("#{credentials.connection_string}/#{Avram.settings.setup_database_name}") do |db|
       db.exec "DROP DATABASE IF EXISTS #{db_name}"
     end
-    unless quiet?
+    unless quiet
       puts "Done dropping #{Avram::Migrator::Runner.db_name.colorize(:green)}"
     end
   end
 
-  def self.create_db(quiet? : Bool = false)
+  def self.create_db(quiet : Bool = false)
     DB.connect("#{credentials.connection_string}/#{Avram.settings.setup_database_name}") do |db|
       db.exec "CREATE DATABASE #{db_name}"
     end
-    unless quiet?
+    unless quiet
       puts "Done creating #{db_name.colorize(:green)}"
     end
   rescue e : DB::ConnectionRefused
@@ -94,7 +94,7 @@ class Avram::Migrator::Runner
   rescue e : Exception
     message = e.message.to_s
     if message.includes?(%("#{self.db_name}" already exists))
-      unless quiet?
+      unless quiet
         puts "Already created #{self.db_name.colorize(:green)}"
       end
     elsif message.includes?("Cannot establish connection")

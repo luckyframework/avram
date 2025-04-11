@@ -62,13 +62,13 @@ class Avram::QueryBuilder
     join_sql [@delete ? delete_sql : select_sql] + sql_condition_clauses
   end
 
-  def statement_for_update(params, return_columns returning? : Bool = true)
-    clone.statement_for_update!(params, returning?)
+  def statement_for_update(params, return_columns returning : Bool = true)
+    clone.statement_for_update!(params, returning)
   end
 
   # Creates the SQL for updating. If any joins are present, it
   # moves the WHERE clause to a subquery allowing for joins
-  def statement_for_update!(params, return_columns returning? : Bool = true)
+  def statement_for_update!(params, return_columns returning : Bool = true)
     sql = ["UPDATE #{table}", set_sql_clause(params)]
     if joins_sql.presence
       sql += ["WHERE EXISTS", "(", select_sql]
@@ -77,7 +77,7 @@ class Avram::QueryBuilder
     else
       sql += sql_condition_clauses
     end
-    sql += ["RETURNING #{@selections}"] if returning?
+    sql += ["RETURNING #{@selections}"] if returning
 
     join_sql sql
   end

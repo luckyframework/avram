@@ -30,13 +30,13 @@ end
 private def swap_database_with_cleanup(database_to_migrate, &)
   Avram.temp_config(database_to_migrate: database_to_migrate) do
     # Create this new DB
-    Avram::Migrator::Runner.create_db(quiet?: true)
+    Avram::Migrator::Runner.create_db(quiet: true)
 
     yield
 
     # Ensure all connections to this DB are closed
     SampleBackupDatabase.close_connections!
     # make sure this is dropped before another spec runs
-    Avram::Migrator::Runner.drop_db(quiet?: true)
+    Avram::Migrator::Runner.drop_db(quiet: true)
   end
 end

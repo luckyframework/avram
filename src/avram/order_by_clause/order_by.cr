@@ -24,7 +24,7 @@ module Avram
     def initialize(
       @column : String | Symbol,
       @direction : Direction,
-      @nulls : NullSorting = :default
+      @nulls : NullSorting = :default,
     )
     end
 
