@@ -13,7 +13,7 @@ module Avram::Join
       @foreign_key : Symbol? = nil,
       @comparison : String? = "=",
       using : Array(Symbol) = [] of Symbol,
-      @alias_to : TableName? = nil
+      @alias_to : TableName? = nil,
     )
       @using = using.join(", ") { |col| %("#{col}") }
     end

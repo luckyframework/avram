@@ -194,7 +194,7 @@ describe "Avram::SaveOperation with nested operation" do
       operation.save
 
       operation.valid?.should be_true
-      operations_saved?(operation, saved?: true)
+      operations_saved?(operation, saved: true)
       operation.save_tax_id.valid?.should be_true
       operation.save_email_address.valid?.should be_true
 
@@ -223,7 +223,7 @@ describe "Avram::SaveOperation with nested operation" do
 
       SaveBusiness.update(business, params) do |operation, updated_business|
         operation.valid?.should be_true
-        operations_saved?(operation, saved?: true)
+        operations_saved?(operation, saved: true)
         operation.save_tax_id.valid?.should be_true
         operation.save_email_address.valid?.should be_true
         updated_business.name.should eq new_name
@@ -242,7 +242,7 @@ describe "Avram::SaveOperation with nested operation" do
 
       SaveBusiness.update(business, params) do |operation, updated_business|
         operation.valid?.should be_true
-        operations_saved?(operation, saved?: true)
+        operations_saved?(operation, saved: true)
         operation.save_tax_id.valid?.should be_true
         operation.save_email_address.valid?.should be_true
         updated_business.name.should eq business.name
@@ -253,8 +253,8 @@ describe "Avram::SaveOperation with nested operation" do
   end
 end
 
-private def operations_saved?(operation, saved? : Bool)
-  operation.saved?.should eq(saved?)
-  operation.save_email_address.saved?.should eq(saved?)
-  operation.save_tax_id.saved?.should eq(saved?)
+private def operations_saved?(operation, saved : Bool)
+  operation.saved?.should eq(saved)
+  operation.save_email_address.saved?.should eq(saved)
+  operation.save_tax_id.saved?.should eq(saved)
 end
