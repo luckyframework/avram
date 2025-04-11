@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="generator" content="Crystal Docs 1.13.3">
+<meta name="generator" content="Crystal Docs 1.15.1">
 <meta name="crystal_docs.project_version" content="main">
 <meta name="crystal_docs.project_name" content="avram">
 
@@ -1791,12 +1791,16 @@
 <div class="main-content">
 <h1 class="type-name">
 
-  <span class="kind">class</span> Avram::<wbr>QueryBuilder
+  <span class="kind">
+    class
+  </span> Avram::<wbr>QueryBuilder
 
 </h1>
 
 
   <ul class="superclass-hierarchy"><li class="superclass"><a href="../Avram/QueryBuilder.html">Avram::QueryBuilder</a></li><li class="superclass">Reference</li><li class="superclass"><a href="../Object.html">Object</a></li></ul>
+
+
 
 
 
@@ -1824,7 +1828,7 @@
   </h2>
   
     
-      <a href="https://github.com/luckyframework/avram/blob/55556c9baabbfc5fb4d748062f1c066cb261c71a/src/avram/query_builder.cr#L1" target="_blank">
+      <a href="https://github.com/luckyframework/avram/blob/8c7e24a0a4285cd2a872421d488f4d3c7708a166/src/avram/query_builder.cr#L1" target="_blank">
         avram/query_builder.cr
       </a>
     
@@ -1835,6 +1839,7 @@
 
 
 
+  
   <h2>
     <a id="constructors" class="anchor" href="#constructors">
   <svg class="octicon-link" aria-hidden="true">
@@ -1853,11 +1858,11 @@
   </ul>
 
 
+  
 
+  
 
-
-
-
+  
   <h2>
     <a id="instance-method-summary" class="anchor" href="#instance-method-summary">
   <svg class="octicon-link" aria-hidden="true">
@@ -2092,12 +2097,12 @@
       </li>
     
       <li class="entry-summary">
-        <a href="#statement_for_update%28params%2Creturn_columnsreturning%3F%3ABool%3Dtrue%29-instance-method" class="signature"><strong>#statement_for_update</strong>(params, return_columns returning? : Bool = <span class="n">true</span>)</a>
+        <a href="#statement_for_update%28params%2Creturn_columnsreturning%3ABool%3Dtrue%29-instance-method" class="signature"><strong>#statement_for_update</strong>(params, return_columns returning : Bool = <span class="n">true</span>)</a>
         
       </li>
     
       <li class="entry-summary">
-        <a href="#statement_for_update%21%28params%2Creturn_columnsreturning%3F%3ABool%3Dtrue%29-instance-method" class="signature"><strong>#statement_for_update!</strong>(params, return_columns returning? : Bool = <span class="n">true</span>)</a>
+        <a href="#statement_for_update%21%28params%2Creturn_columnsreturning%3ABool%3Dtrue%29-instance-method" class="signature"><strong>#statement_for_update!</strong>(params, return_columns returning : Bool = <span class="n">true</span>)</a>
         
           <div class="summary"><p>Creates the SQL for updating.</p></div>
         
@@ -2134,22 +2139,22 @@
 
 
 
-<div class="methods-inherited">
-  
+  <div class="methods-inherited">
     
+      
+
+
+      
+
+
+      
+
+
+      
 
 
     
-
-
-    
-
-
-    
-
-
-  
-    
+      
 
   <h3>Instance methods inherited from class <code><a href="../Object.html">Object</a></code></h3>
   
@@ -2161,19 +2166,19 @@
   
 
 
-    
+      
+
+
+      
+
+
+      
 
 
     
-
-
-    
-
+  </div>
 
   
-</div>
-
-
   <h2>
     <a id="constructor-detail" class="anchor" href="#constructor-detail">
   <svg class="octicon-link" aria-hidden="true">
@@ -2194,18 +2199,18 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/55556c9baabbfc5fb4d748062f1c066cb261c71a/src/avram/query_builder.cr#L18" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/8c7e24a0a4285cd2a872421d488f4d3c7708a166/src/avram/query_builder.cr#L18" target="_blank">View source</a>]
         
       </div>
     </div>
   
 
 
+  
 
+  
 
-
-
-
+  
   <h2>
     <a id="instance-method-detail" class="anchor" href="#instance-method-detail">
   <svg class="octicon-link" aria-hidden="true">
@@ -2226,7 +2231,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/55556c9baabbfc5fb4d748062f1c066cb261c71a/src/avram/query_builder.cr#L114" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/8c7e24a0a4285cd2a872421d488f4d3c7708a166/src/avram/query_builder.cr#L114" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2242,7 +2247,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/55556c9baabbfc5fb4d748062f1c066cb261c71a/src/avram/query_builder.cr#L85" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/8c7e24a0a4285cd2a872421d488f4d3c7708a166/src/avram/query_builder.cr#L85" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2264,7 +2269,7 @@ e.g. users.age = $1 AND -&gt; users.age = $1</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/55556c9baabbfc5fb4d748062f1c066cb261c71a/src/avram/query_builder.cr#L342" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/8c7e24a0a4285cd2a872421d488f4d3c7708a166/src/avram/query_builder.cr#L342" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2285,7 +2290,7 @@ e.g. users.age = $1 AND -&gt; users.age = $1</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/55556c9baabbfc5fb4d748062f1c066cb261c71a/src/avram/query_builder.cr#L2" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/8c7e24a0a4285cd2a872421d488f4d3c7708a166/src/avram/query_builder.cr#L2" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2301,7 +2306,7 @@ e.g. users.age = $1 AND -&gt; users.age = $1</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/55556c9baabbfc5fb4d748062f1c066cb261c71a/src/avram/query_builder.cr#L122" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/8c7e24a0a4285cd2a872421d488f4d3c7708a166/src/avram/query_builder.cr#L122" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2317,7 +2322,7 @@ e.g. users.age = $1 AND -&gt; users.age = $1</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/55556c9baabbfc5fb4d748062f1c066cb261c71a/src/avram/query_builder.cr#L127" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/8c7e24a0a4285cd2a872421d488f4d3c7708a166/src/avram/query_builder.cr#L127" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2333,7 +2338,7 @@ e.g. users.age = $1 AND -&gt; users.age = $1</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/55556c9baabbfc5fb4d748062f1c066cb261c71a/src/avram/query_builder.cr#L137" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/8c7e24a0a4285cd2a872421d488f4d3c7708a166/src/avram/query_builder.cr#L137" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2349,7 +2354,7 @@ e.g. users.age = $1 AND -&gt; users.age = $1</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/55556c9baabbfc5fb4d748062f1c066cb261c71a/src/avram/query_builder.cr#L132" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/8c7e24a0a4285cd2a872421d488f4d3c7708a166/src/avram/query_builder.cr#L132" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2365,7 +2370,7 @@ e.g. users.age = $1 AND -&gt; users.age = $1</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/55556c9baabbfc5fb4d748062f1c066cb261c71a/src/avram/query_builder.cr#L6" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/8c7e24a0a4285cd2a872421d488f4d3c7708a166/src/avram/query_builder.cr#L6" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2381,7 +2386,7 @@ e.g. users.age = $1 AND -&gt; users.age = $1</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/55556c9baabbfc5fb4d748062f1c066cb261c71a/src/avram/query_builder.cr#L197" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/8c7e24a0a4285cd2a872421d488f4d3c7708a166/src/avram/query_builder.cr#L197" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2397,7 +2402,7 @@ e.g. users.age = $1 AND -&gt; users.age = $1</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/55556c9baabbfc5fb4d748062f1c066cb261c71a/src/avram/query_builder.cr#L202" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/8c7e24a0a4285cd2a872421d488f4d3c7708a166/src/avram/query_builder.cr#L202" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2413,7 +2418,7 @@ e.g. users.age = $1 AND -&gt; users.age = $1</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/55556c9baabbfc5fb4d748062f1c066cb261c71a/src/avram/query_builder.cr#L212" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/8c7e24a0a4285cd2a872421d488f4d3c7708a166/src/avram/query_builder.cr#L212" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2429,7 +2434,7 @@ e.g. users.age = $1 AND -&gt; users.age = $1</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/55556c9baabbfc5fb4d748062f1c066cb261c71a/src/avram/query_builder.cr#L208" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/8c7e24a0a4285cd2a872421d488f4d3c7708a166/src/avram/query_builder.cr#L208" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2445,7 +2450,7 @@ e.g. users.age = $1 AND -&gt; users.age = $1</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/55556c9baabbfc5fb4d748062f1c066cb261c71a/src/avram/query_builder.cr#L141" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/8c7e24a0a4285cd2a872421d488f4d3c7708a166/src/avram/query_builder.cr#L141" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2461,7 +2466,7 @@ e.g. users.age = $1 AND -&gt; users.age = $1</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/55556c9baabbfc5fb4d748062f1c066cb261c71a/src/avram/query_builder.cr#L310" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/8c7e24a0a4285cd2a872421d488f4d3c7708a166/src/avram/query_builder.cr#L310" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2477,7 +2482,7 @@ e.g. users.age = $1 AND -&gt; users.age = $1</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/55556c9baabbfc5fb4d748062f1c066cb261c71a/src/avram/query_builder.cr#L317" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/8c7e24a0a4285cd2a872421d488f4d3c7708a166/src/avram/query_builder.cr#L317" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2493,7 +2498,7 @@ e.g. users.age = $1 AND -&gt; users.age = $1</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/55556c9baabbfc5fb4d748062f1c066cb261c71a/src/avram/query_builder.cr#L149" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/8c7e24a0a4285cd2a872421d488f4d3c7708a166/src/avram/query_builder.cr#L149" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2509,7 +2514,7 @@ e.g. users.age = $1 AND -&gt; users.age = $1</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/55556c9baabbfc5fb4d748062f1c066cb261c71a/src/avram/query_builder.cr#L145" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/8c7e24a0a4285cd2a872421d488f4d3c7708a166/src/avram/query_builder.cr#L145" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2530,7 +2535,7 @@ e.g. users.age = $1 AND -&gt; users.age = $1</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/55556c9baabbfc5fb4d748062f1c066cb261c71a/src/avram/query_builder.cr#L39" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/8c7e24a0a4285cd2a872421d488f4d3c7708a166/src/avram/query_builder.cr#L39" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2546,7 +2551,7 @@ e.g. users.age = $1 AND -&gt; users.age = $1</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/55556c9baabbfc5fb4d748062f1c066cb261c71a/src/avram/query_builder.cr#L157" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/8c7e24a0a4285cd2a872421d488f4d3c7708a166/src/avram/query_builder.cr#L157" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2562,7 +2567,7 @@ e.g. users.age = $1 AND -&gt; users.age = $1</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/55556c9baabbfc5fb4d748062f1c066cb261c71a/src/avram/query_builder.cr#L153" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/8c7e24a0a4285cd2a872421d488f4d3c7708a166/src/avram/query_builder.cr#L153" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2578,7 +2583,7 @@ e.g. users.age = $1 AND -&gt; users.age = $1</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/55556c9baabbfc5fb4d748062f1c066cb261c71a/src/avram/query_builder.cr#L330" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/8c7e24a0a4285cd2a872421d488f4d3c7708a166/src/avram/query_builder.cr#L330" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2594,7 +2599,7 @@ e.g. users.age = $1 AND -&gt; users.age = $1</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/55556c9baabbfc5fb4d748062f1c066cb261c71a/src/avram/query_builder.cr#L161" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/8c7e24a0a4285cd2a872421d488f4d3c7708a166/src/avram/query_builder.cr#L161" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2610,7 +2615,7 @@ e.g. users.age = $1 AND -&gt; users.age = $1</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/55556c9baabbfc5fb4d748062f1c066cb261c71a/src/avram/query_builder.cr#L187" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/8c7e24a0a4285cd2a872421d488f4d3c7708a166/src/avram/query_builder.cr#L187" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2626,7 +2631,7 @@ e.g. users.age = $1 AND -&gt; users.age = $1</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/55556c9baabbfc5fb4d748062f1c066cb261c71a/src/avram/query_builder.cr#L279" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/8c7e24a0a4285cd2a872421d488f4d3c7708a166/src/avram/query_builder.cr#L279" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2642,7 +2647,7 @@ e.g. users.age = $1 AND -&gt; users.age = $1</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/55556c9baabbfc5fb4d748062f1c066cb261c71a/src/avram/query_builder.cr#L283" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/8c7e24a0a4285cd2a872421d488f4d3c7708a166/src/avram/query_builder.cr#L283" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2658,7 +2663,7 @@ e.g. users.age = $1 AND -&gt; users.age = $1</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/55556c9baabbfc5fb4d748062f1c066cb261c71a/src/avram/query_builder.cr#L193" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/8c7e24a0a4285cd2a872421d488f4d3c7708a166/src/avram/query_builder.cr#L193" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2674,7 +2679,7 @@ e.g. users.age = $1 AND -&gt; users.age = $1</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/55556c9baabbfc5fb4d748062f1c066cb261c71a/src/avram/query_builder.cr#L167" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/8c7e24a0a4285cd2a872421d488f4d3c7708a166/src/avram/query_builder.cr#L167" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2695,7 +2700,7 @@ e.g. users.age = $1 AND -&gt; users.age = $1</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/55556c9baabbfc5fb4d748062f1c066cb261c71a/src/avram/query_builder.cr#L347" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/8c7e24a0a4285cd2a872421d488f4d3c7708a166/src/avram/query_builder.cr#L347" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2711,7 +2716,7 @@ e.g. users.age = $1 AND -&gt; users.age = $1</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/55556c9baabbfc5fb4d748062f1c066cb261c71a/src/avram/query_builder.cr#L178" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/8c7e24a0a4285cd2a872421d488f4d3c7708a166/src/avram/query_builder.cr#L178" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2727,7 +2732,7 @@ e.g. users.age = $1 AND -&gt; users.age = $1</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/55556c9baabbfc5fb4d748062f1c066cb261c71a/src/avram/query_builder.cr#L173" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/8c7e24a0a4285cd2a872421d488f4d3c7708a166/src/avram/query_builder.cr#L173" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2743,7 +2748,7 @@ e.g. users.age = $1 AND -&gt; users.age = $1</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/55556c9baabbfc5fb4d748062f1c066cb261c71a/src/avram/query_builder.cr#L182" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/8c7e24a0a4285cd2a872421d488f4d3c7708a166/src/avram/query_builder.cr#L182" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2759,7 +2764,7 @@ e.g. users.age = $1 AND -&gt; users.age = $1</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/55556c9baabbfc5fb4d748062f1c066cb261c71a/src/avram/query_builder.cr#L270" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/8c7e24a0a4285cd2a872421d488f4d3c7708a166/src/avram/query_builder.cr#L270" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2775,7 +2780,7 @@ e.g. users.age = $1 AND -&gt; users.age = $1</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/55556c9baabbfc5fb4d748062f1c066cb261c71a/src/avram/query_builder.cr#L275" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/8c7e24a0a4285cd2a872421d488f4d3c7708a166/src/avram/query_builder.cr#L275" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2791,7 +2796,7 @@ e.g. users.age = $1 AND -&gt; users.age = $1</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/55556c9baabbfc5fb4d748062f1c066cb261c71a/src/avram/query_builder.cr#L228" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/8c7e24a0a4285cd2a872421d488f4d3c7708a166/src/avram/query_builder.cr#L228" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2807,7 +2812,7 @@ e.g. users.age = $1 AND -&gt; users.age = $1</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/55556c9baabbfc5fb4d748062f1c066cb261c71a/src/avram/query_builder.cr#L216" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/8c7e24a0a4285cd2a872421d488f4d3c7708a166/src/avram/query_builder.cr#L216" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2823,7 +2828,7 @@ e.g. users.age = $1 AND -&gt; users.age = $1</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/55556c9baabbfc5fb4d748062f1c066cb261c71a/src/avram/query_builder.cr#L265" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/8c7e24a0a4285cd2a872421d488f4d3c7708a166/src/avram/query_builder.cr#L265" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2839,7 +2844,7 @@ e.g. users.age = $1 AND -&gt; users.age = $1</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/55556c9baabbfc5fb4d748062f1c066cb261c71a/src/avram/query_builder.cr#L224" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/8c7e24a0a4285cd2a872421d488f4d3c7708a166/src/avram/query_builder.cr#L224" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2855,7 +2860,7 @@ e.g. users.age = $1 AND -&gt; users.age = $1</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/55556c9baabbfc5fb4d748062f1c066cb261c71a/src/avram/query_builder.cr#L220" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/8c7e24a0a4285cd2a872421d488f4d3c7708a166/src/avram/query_builder.cr#L220" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2871,7 +2876,7 @@ e.g. users.age = $1 AND -&gt; users.age = $1</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/55556c9baabbfc5fb4d748062f1c066cb261c71a/src/avram/query_builder.cr#L232" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/8c7e24a0a4285cd2a872421d488f4d3c7708a166/src/avram/query_builder.cr#L232" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2887,7 +2892,7 @@ e.g. users.age = $1 AND -&gt; users.age = $1</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/55556c9baabbfc5fb4d748062f1c066cb261c71a/src/avram/query_builder.cr#L259" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/8c7e24a0a4285cd2a872421d488f4d3c7708a166/src/avram/query_builder.cr#L259" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2903,7 +2908,7 @@ e.g. users.age = $1 AND -&gt; users.age = $1</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/55556c9baabbfc5fb4d748062f1c066cb261c71a/src/avram/query_builder.cr#L57" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/8c7e24a0a4285cd2a872421d488f4d3c7708a166/src/avram/query_builder.cr#L57" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2919,33 +2924,33 @@ e.g. users.age = $1 AND -&gt; users.age = $1</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/55556c9baabbfc5fb4d748062f1c066cb261c71a/src/avram/query_builder.cr#L61" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/8c7e24a0a4285cd2a872421d488f4d3c7708a166/src/avram/query_builder.cr#L61" target="_blank">View source</a>]
         
       </div>
     </div>
   
-    <div class="entry-detail" id="statement_for_update(params,return_columnsreturning?:Bool=true)-instance-method">
+    <div class="entry-detail" id="statement_for_update(params,return_columnsreturning:Bool=true)-instance-method">
       <div class="signature">
         
-        def <strong>statement_for_update</strong>(params, return_columns returning? : <a href="../Bool.html">Bool</a> = <span class="n">true</span>)
+        def <strong>statement_for_update</strong>(params, return_columns returning : <a href="../Bool.html">Bool</a> = <span class="n">true</span>)
 
-        <a class="method-permalink" href="#statement_for_update%28params%2Creturn_columnsreturning%3F%3ABool%3Dtrue%29-instance-method">#</a>
+        <a class="method-permalink" href="#statement_for_update%28params%2Creturn_columnsreturning%3ABool%3Dtrue%29-instance-method">#</a>
       </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/55556c9baabbfc5fb4d748062f1c066cb261c71a/src/avram/query_builder.cr#L65" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/8c7e24a0a4285cd2a872421d488f4d3c7708a166/src/avram/query_builder.cr#L65" target="_blank">View source</a>]
         
       </div>
     </div>
   
-    <div class="entry-detail" id="statement_for_update!(params,return_columnsreturning?:Bool=true)-instance-method">
+    <div class="entry-detail" id="statement_for_update!(params,return_columnsreturning:Bool=true)-instance-method">
       <div class="signature">
         
-        def <strong>statement_for_update!</strong>(params, return_columns returning? : <a href="../Bool.html">Bool</a> = <span class="n">true</span>)
+        def <strong>statement_for_update!</strong>(params, return_columns returning : <a href="../Bool.html">Bool</a> = <span class="n">true</span>)
 
-        <a class="method-permalink" href="#statement_for_update%21%28params%2Creturn_columnsreturning%3F%3ABool%3Dtrue%29-instance-method">#</a>
+        <a class="method-permalink" href="#statement_for_update%21%28params%2Creturn_columnsreturning%3ABool%3Dtrue%29-instance-method">#</a>
       </div>
       
         <div class="doc">
@@ -2957,7 +2962,7 @@ moves the WHERE clause to a subquery allowing for joins</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/55556c9baabbfc5fb4d748062f1c066cb261c71a/src/avram/query_builder.cr#L71" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/8c7e24a0a4285cd2a872421d488f4d3c7708a166/src/avram/query_builder.cr#L71" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2973,7 +2978,7 @@ moves the WHERE clause to a subquery allowing for joins</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/55556c9baabbfc5fb4d748062f1c066cb261c71a/src/avram/query_builder.cr#L5" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/8c7e24a0a4285cd2a872421d488f4d3c7708a166/src/avram/query_builder.cr#L5" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2995,7 +3000,7 @@ in to a single <code><a href="../String.html">String</a></code></p>
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/55556c9baabbfc5fb4d748062f1c066cb261c71a/src/avram/query_builder.cr#L27" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/8c7e24a0a4285cd2a872421d488f4d3c7708a166/src/avram/query_builder.cr#L27" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -3011,7 +3016,7 @@ in to a single <code><a href="../String.html">String</a></code></p>
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/55556c9baabbfc5fb4d748062f1c066cb261c71a/src/avram/query_builder.cr#L21" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/8c7e24a0a4285cd2a872421d488f4d3c7708a166/src/avram/query_builder.cr#L21" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -3027,7 +3032,7 @@ in to a single <code><a href="../String.html">String</a></code></p>
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/55556c9baabbfc5fb4d748062f1c066cb261c71a/src/avram/query_builder.cr#L325" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/8c7e24a0a4285cd2a872421d488f4d3c7708a166/src/avram/query_builder.cr#L325" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -3043,11 +3048,12 @@ in to a single <code><a href="../String.html">String</a></code></p>
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/55556c9baabbfc5fb4d748062f1c066cb261c71a/src/avram/query_builder.cr#L369" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/8c7e24a0a4285cd2a872421d488f4d3c7708a166/src/avram/query_builder.cr#L369" target="_blank">View source</a>]
         
       </div>
     </div>
   
+
 
 
 </div>
