@@ -586,6 +586,11 @@ describe Avram::Queryable do
 
       query.to_sql.should eq original_query_sql
     end
+
+    it "sorts nulls first" do
+      query = UserQuery.new.name("name").order_by(:name, :asc, :nulls_first).query
+      query.statement.should contain "ORDER BY name ASC NULLS FIRST"
+    end
   end
 
   describe "#none" do
