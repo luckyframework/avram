@@ -87,7 +87,7 @@ class Avram::Attribute(T)
   end
 
   private def extract(params, type : Array(T).class) forall T
-    nested_params = params.nested_arrays(param_key)
+    nested_params = params.nested_arrays?(param_key)
     param_val = nested_params[name.to_s]?
     @param = param_val.try(&.first?)
     return if param_val.nil?
