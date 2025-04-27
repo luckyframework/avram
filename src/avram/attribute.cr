@@ -102,7 +102,7 @@ class Avram::Attribute(T)
 
   private def extract(params, type : Avram::Uploadable.class)
     file = params.nested_file?(param_key)
-    @param = param_val = file.try(&.[]?(name.to_s))
+    @param = param_val = file[name.to_s]?
     return if param_val.nil?
 
     parse_result = Avram::Uploadable.adapter.parse(param_val)
