@@ -1,5 +1,5 @@
 require "./validations"
-require "./callbacks"
+require "./callbacks/delete_callbacks"
 require "./define_attribute"
 require "./operation_errors"
 require "./param_key_override"
@@ -12,7 +12,7 @@ abstract class Avram::DeleteOperation(T)
   include Avram::Validations
   include Avram::OperationErrors
   include Avram::ParamKeyOverride
-  include Avram::Callbacks
+  include Avram::DeleteCallbacks
   include Avram::InheritColumnAttributes
   include Avram::AddColumnAttributes
 
