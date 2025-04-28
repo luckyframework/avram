@@ -1,5 +1,5 @@
 require "./database_validations"
-require "./callbacks"
+require "./callbacks/save_callbacks"
 require "./nested_save_operation"
 require "./needy_initializer_and_save_methods"
 require "./define_attribute"
@@ -16,7 +16,7 @@ abstract class Avram::SaveOperation(T)
   include Avram::OperationErrors
   include Avram::ParamKeyOverride
   include Avram::NeedyInitializerAndSaveMethods
-  include Avram::Callbacks
+  include Avram::SaveCallbacks
   include Avram::DatabaseValidations(T)
   include Avram::NestedSaveOperation
   include Avram::MarkAsFailed
