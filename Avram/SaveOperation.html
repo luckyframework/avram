@@ -77,6 +77,11 @@
       
     </li>
   
+  <li class=" " data-id="avram/Avram/AfterCommitCallback" data-name="avram::aftercommitcallback">
+      <a href="../Avram/AfterCommitCallback.html">AfterCommitCallback</a>
+      
+    </li>
+  
   <li class="parent " data-id="avram/Avram/Associations" data-name="avram::associations">
       <a href="../Avram/Associations.html">Associations</a>
       
@@ -134,6 +139,11 @@
   
   <li class=" " data-id="avram/Avram/CallableErrorMessage" data-name="avram::callableerrormessage">
       <a href="../Avram/CallableErrorMessage.html">CallableErrorMessage</a>
+      
+    </li>
+  
+  <li class=" " data-id="avram/Avram/CallbackHelpers" data-name="avram::callbackhelpers">
+      <a href="../Avram/CallbackHelpers.html">CallbackHelpers</a>
       
     </li>
   
@@ -209,6 +219,11 @@
   
   <li class=" " data-id="avram/Avram/DefineAttribute" data-name="avram::defineattribute">
       <a href="../Avram/DefineAttribute.html">DefineAttribute</a>
+      
+    </li>
+  
+  <li class=" " data-id="avram/Avram/DeleteCallbacks" data-name="avram::deletecallbacks">
+      <a href="../Avram/DeleteCallbacks.html">DeleteCallbacks</a>
       
     </li>
   
@@ -879,6 +894,11 @@
   
   <li class=" " data-id="avram/Avram/Rollback" data-name="avram::rollback">
       <a href="../Avram/Rollback.html">Rollback</a>
+      
+    </li>
+  
+  <li class=" " data-id="avram/Avram/SaveCallbacks" data-name="avram::savecallbacks">
+      <a href="../Avram/SaveCallbacks.html">SaveCallbacks</a>
       
     </li>
   
@@ -1821,8 +1841,6 @@
     
       <li class="other-type"><a href="../Avram/AddColumnAttributes.html">Avram::AddColumnAttributes</a></li>
     
-      <li class="other-type"><a href="../Avram/Callbacks.html">Avram::Callbacks</a></li>
-    
       <li class="other-type"><a href="../Avram/DatabaseValidations.html">Avram::DatabaseValidations(T)</a></li>
     
       <li class="other-type"><a href="../Avram/DefineAttribute.html">Avram::DefineAttribute</a></li>
@@ -1838,6 +1856,8 @@
       <li class="other-type"><a href="../Avram/OperationErrors.html">Avram::OperationErrors</a></li>
     
       <li class="other-type"><a href="../Avram/ParamKeyOverride.html">Avram::ParamKeyOverride</a></li>
+    
+      <li class="other-type"><a href="../Avram/SaveCallbacks.html">Avram::SaveCallbacks</a></li>
     
       <li class="other-type"><a href="../Avram/Upsert.html">Avram::Upsert</a></li>
     
@@ -1864,7 +1884,7 @@
   </h2>
   
     
-      <a href="https://github.com/luckyframework/avram/blob/f366c8dd5ec9c0041d19cd93e85fac1ed0feaea5/src/avram/save_operation.cr#L13" target="_blank">
+      <a href="https://github.com/luckyframework/avram/blob/23aa237d499aac5c9ca1af317950d036eda42483/src/avram/save_operation.cr#L13" target="_blank">
         avram/save_operation.cr
       </a>
     
@@ -2293,45 +2313,59 @@
 
       
 
-  <h3>Macros inherited from module <code><a href="../Avram/Callbacks.html">Avram::Callbacks</a></code></h3>
+  <h3>Macros inherited from module <code><a href="../Avram/SaveCallbacks.html">Avram::SaveCallbacks</a></code></h3>
   
   
-    <a href="../Avram/Callbacks.html#after_commit%28method_name%2Cif_if%3Dnil%2Cunless_unless%3Dnil%29-macro" class="tooltip">
-      <span>after_commit(method_name, if _if = <span class="n">nil</span>, unless _unless = <span class="n">nil</span>)<br/>after_commit(if _if = <span class="n">nil</span>, unless _unless = <span class="n">nil</span>, &block)</span>
-    after_commit</a>, 
-    
-  
-    <a href="../Avram/Callbacks.html#after_delete%28method_name%2Cif_if%3Dnil%2Cunless_unless%3Dnil%29-macro" class="tooltip">
-      <span>after_delete(method_name, if _if = <span class="n">nil</span>, unless _unless = <span class="n">nil</span>)<br/>after_delete(if _if = <span class="n">nil</span>, unless _unless = <span class="n">nil</span>, &block)</span>
-    after_delete</a>, 
-    
-  
-    <a href="../Avram/Callbacks.html#after_run%28method_name%29-macro" class="tooltip">
-      <span>after_run(method_name)<br/>after_run(&block)</span>
-    after_run</a>, 
-    
-  
-    <a href="../Avram/Callbacks.html#after_save%28method_name%2Cif_if%3Dnil%2Cunless_unless%3Dnil%29-macro" class="tooltip">
+    <a href="../Avram/SaveCallbacks.html#after_save%28method_name%2Cif_if%3Dnil%2Cunless_unless%3Dnil%29-macro" class="tooltip">
       <span>after_save(method_name, if _if = <span class="n">nil</span>, unless _unless = <span class="n">nil</span>)<br/>after_save(if _if = <span class="n">nil</span>, unless _unless = <span class="n">nil</span>, &block)</span>
     after_save</a>, 
     
   
-    <a href="../Avram/Callbacks.html#before_delete%28method_name%2Cif_if%3Dnil%2Cunless_unless%3Dnil%29-macro" class="tooltip">
-      <span>before_delete(method_name, if _if = <span class="n">nil</span>, unless _unless = <span class="n">nil</span>)<br/>before_delete(if _if = <span class="n">nil</span>, unless _unless = <span class="n">nil</span>)</span>
-    before_delete</a>, 
-    
-  
-    <a href="../Avram/Callbacks.html#before_run%28method_name%29-macro" class="tooltip">
-      <span>before_run(method_name)<br/>before_run</span>
-    before_run</a>, 
-    
-  
-    <a href="../Avram/Callbacks.html#before_save%28method_name%2Cif_if%3Dnil%2Cunless_unless%3Dnil%29-macro" class="tooltip">
+    <a href="../Avram/SaveCallbacks.html#before_save%28method_name%2Cif_if%3Dnil%2Cunless_unless%3Dnil%29-macro" class="tooltip">
       <span>before_save(method_name, if _if = <span class="n">nil</span>, unless _unless = <span class="n">nil</span>)<br/>before_save(if _if = <span class="n">nil</span>, unless _unless = <span class="n">nil</span>)</span>
-    before_save</a>, 
+    before_save</a>
     
   
-    <a href="../Avram/Callbacks.html#conditional_error_for_block_callbacks%28callback%2Ccondition%29-macro" class="tooltip">
+
+
+    
+      
+
+
+      
+
+
+      
+
+
+      
+
+  <h3>Macros inherited from module <code><a href="../Avram/AfterCommitCallback.html">Avram::AfterCommitCallback</a></code></h3>
+  
+  
+    <a href="../Avram/AfterCommitCallback.html#after_commit%28method_name%2Cif_if%3Dnil%2Cunless_unless%3Dnil%29-macro" class="tooltip">
+      <span>after_commit(method_name, if _if = <span class="n">nil</span>, unless _unless = <span class="n">nil</span>)<br/>after_commit(if _if = <span class="n">nil</span>, unless _unless = <span class="n">nil</span>, &block)</span>
+    after_commit</a>
+    
+  
+
+
+    
+      
+
+
+      
+
+
+      
+
+
+      
+
+  <h3>Macros inherited from module <code><a href="../Avram/CallbackHelpers.html">Avram::CallbackHelpers</a></code></h3>
+  
+  
+    <a href="../Avram/CallbackHelpers.html#conditional_error_for_block_callbacks%28callback%2Ccondition%29-macro" class="tooltip">
       <span>conditional_error_for_block_callbacks(callback, condition)</span>
     conditional_error_for_block_callbacks</a>
     
@@ -2625,7 +2659,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/f366c8dd5ec9c0041d19cd93e85fac1ed0feaea5/src/avram/save_operation.cr#L48" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/23aa237d499aac5c9ca1af317950d036eda42483/src/avram/save_operation.cr#L48" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2641,7 +2675,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/f366c8dd5ec9c0041d19cd93e85fac1ed0feaea5/src/avram/save_operation.cr#L51" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/23aa237d499aac5c9ca1af317950d036eda42483/src/avram/save_operation.cr#L51" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2669,7 +2703,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/f366c8dd5ec9c0041d19cd93e85fac1ed0feaea5/src/avram/save_operation.cr#L44" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/23aa237d499aac5c9ca1af317950d036eda42483/src/avram/save_operation.cr#L44" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2691,7 +2725,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/f366c8dd5ec9c0041d19cd93e85fac1ed0feaea5/src/avram/save_operation.cr#L24" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/23aa237d499aac5c9ca1af317950d036eda42483/src/avram/save_operation.cr#L24" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2713,7 +2747,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/f366c8dd5ec9c0041d19cd93e85fac1ed0feaea5/src/avram/save_operation.cr#L24" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/23aa237d499aac5c9ca1af317950d036eda42483/src/avram/save_operation.cr#L24" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2741,7 +2775,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/f366c8dd5ec9c0041d19cd93e85fac1ed0feaea5/src/avram/save_operation.cr#L197" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/23aa237d499aac5c9ca1af317950d036eda42483/src/avram/save_operation.cr#L197" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2771,7 +2805,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/f366c8dd5ec9c0041d19cd93e85fac1ed0feaea5/src/avram/save_operation.cr#L146" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/23aa237d499aac5c9ca1af317950d036eda42483/src/avram/save_operation.cr#L146" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2794,7 +2828,7 @@ to allow storing an empty string value.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/f366c8dd5ec9c0041d19cd93e85fac1ed0feaea5/src/avram/save_operation.cr#L112" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/23aa237d499aac5c9ca1af317950d036eda42483/src/avram/save_operation.cr#L112" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2822,7 +2856,7 @@ to allow storing an empty string value.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/f366c8dd5ec9c0041d19cd93e85fac1ed0feaea5/src/avram/save_operation.cr#L283" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/23aa237d499aac5c9ca1af317950d036eda42483/src/avram/save_operation.cr#L283" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2838,7 +2872,7 @@ to allow storing an empty string value.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/f366c8dd5ec9c0041d19cd93e85fac1ed0feaea5/src/avram/save_operation.cr#L281" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/23aa237d499aac5c9ca1af317950d036eda42483/src/avram/save_operation.cr#L281" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2854,7 +2888,7 @@ to allow storing an empty string value.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/f366c8dd5ec9c0041d19cd93e85fac1ed0feaea5/src/avram/save_operation.cr#L42" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/23aa237d499aac5c9ca1af317950d036eda42483/src/avram/save_operation.cr#L42" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2870,7 +2904,7 @@ to allow storing an empty string value.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/f366c8dd5ec9c0041d19cd93e85fac1ed0feaea5/src/avram/save_operation.cr#L279" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/23aa237d499aac5c9ca1af317950d036eda42483/src/avram/save_operation.cr#L279" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2886,7 +2920,7 @@ to allow storing an empty string value.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/f366c8dd5ec9c0041d19cd93e85fac1ed0feaea5/src/avram/save_operation.cr#L193" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/23aa237d499aac5c9ca1af317950d036eda42483/src/avram/save_operation.cr#L193" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2902,7 +2936,7 @@ to allow storing an empty string value.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/f366c8dd5ec9c0041d19cd93e85fac1ed0feaea5/src/avram/save_operation.cr#L133" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/23aa237d499aac5c9ca1af317950d036eda42483/src/avram/save_operation.cr#L133" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2932,7 +2966,7 @@ to allow storing an empty string value.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/f366c8dd5ec9c0041d19cd93e85fac1ed0feaea5/src/avram/save_operation.cr#L55" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/23aa237d499aac5c9ca1af317950d036eda42483/src/avram/save_operation.cr#L55" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2948,7 +2982,7 @@ to allow storing an empty string value.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/f366c8dd5ec9c0041d19cd93e85fac1ed0feaea5/src/avram/save_operation.cr#L55" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/23aa237d499aac5c9ca1af317950d036eda42483/src/avram/save_operation.cr#L55" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2964,7 +2998,7 @@ to allow storing an empty string value.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/f366c8dd5ec9c0041d19cd93e85fac1ed0feaea5/src/avram/save_operation.cr#L64" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/23aa237d499aac5c9ca1af317950d036eda42483/src/avram/save_operation.cr#L64" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2988,7 +3022,7 @@ for an update, independent of the stage we are at in the operation.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/f366c8dd5ec9c0041d19cd93e85fac1ed0feaea5/src/avram/save_operation.cr#L263" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/23aa237d499aac5c9ca1af317950d036eda42483/src/avram/save_operation.cr#L263" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -3004,7 +3038,7 @@ for an update, independent of the stage we are at in the operation.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/f366c8dd5ec9c0041d19cd93e85fac1ed0feaea5/src/avram/save_operation.cr#L39" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/23aa237d499aac5c9ca1af317950d036eda42483/src/avram/save_operation.cr#L39" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -3020,7 +3054,7 @@ for an update, independent of the stage we are at in the operation.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/f366c8dd5ec9c0041d19cd93e85fac1ed0feaea5/src/avram/save_operation.cr#L254" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/23aa237d499aac5c9ca1af317950d036eda42483/src/avram/save_operation.cr#L254" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -3036,7 +3070,7 @@ for an update, independent of the stage we are at in the operation.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/f366c8dd5ec9c0041d19cd93e85fac1ed0feaea5/src/avram/save_operation.cr#L55" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/23aa237d499aac5c9ca1af317950d036eda42483/src/avram/save_operation.cr#L55" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -3052,7 +3086,7 @@ for an update, independent of the stage we are at in the operation.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/f366c8dd5ec9c0041d19cd93e85fac1ed0feaea5/src/avram/save_operation.cr#L55" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/23aa237d499aac5c9ca1af317950d036eda42483/src/avram/save_operation.cr#L55" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -3075,7 +3109,7 @@ e.g. polymorphic validations</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/f366c8dd5ec9c0041d19cd93e85fac1ed0feaea5/src/avram/save_operation.cr#L100" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/23aa237d499aac5c9ca1af317950d036eda42483/src/avram/save_operation.cr#L100" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -3091,7 +3125,7 @@ e.g. polymorphic validations</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/f366c8dd5ec9c0041d19cd93e85fac1ed0feaea5/src/avram/save_operation.cr#L212" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/23aa237d499aac5c9ca1af317950d036eda42483/src/avram/save_operation.cr#L212" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -3107,7 +3141,7 @@ e.g. polymorphic validations</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/f366c8dd5ec9c0041d19cd93e85fac1ed0feaea5/src/avram/save_operation.cr#L242" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/23aa237d499aac5c9ca1af317950d036eda42483/src/avram/save_operation.cr#L242" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -3128,7 +3162,7 @@ e.g. polymorphic validations</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/f366c8dd5ec9c0041d19cd93e85fac1ed0feaea5/src/avram/save_operation.cr#L142" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/23aa237d499aac5c9ca1af317950d036eda42483/src/avram/save_operation.cr#L142" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -3144,7 +3178,7 @@ e.g. polymorphic validations</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/f366c8dd5ec9c0041d19cd93e85fac1ed0feaea5/src/avram/save_operation.cr#L40" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/23aa237d499aac5c9ca1af317950d036eda42483/src/avram/save_operation.cr#L40" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -3160,7 +3194,7 @@ e.g. polymorphic validations</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/f366c8dd5ec9c0041d19cd93e85fac1ed0feaea5/src/avram/save_operation.cr#L40" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/23aa237d499aac5c9ca1af317950d036eda42483/src/avram/save_operation.cr#L40" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -3181,7 +3215,7 @@ e.g. polymorphic validations</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/f366c8dd5ec9c0041d19cd93e85fac1ed0feaea5/src/avram/save_operation.cr#L129" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/23aa237d499aac5c9ca1af317950d036eda42483/src/avram/save_operation.cr#L129" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -3197,7 +3231,7 @@ e.g. polymorphic validations</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/f366c8dd5ec9c0041d19cd93e85fac1ed0feaea5/src/avram/save_operation.cr#L55" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/23aa237d499aac5c9ca1af317950d036eda42483/src/avram/save_operation.cr#L55" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -3213,7 +3247,7 @@ e.g. polymorphic validations</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/f366c8dd5ec9c0041d19cd93e85fac1ed0feaea5/src/avram/save_operation.cr#L55" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/23aa237d499aac5c9ca1af317950d036eda42483/src/avram/save_operation.cr#L55" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -3229,7 +3263,7 @@ e.g. polymorphic validations</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/f366c8dd5ec9c0041d19cd93e85fac1ed0feaea5/src/avram/save_operation.cr#L250" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/23aa237d499aac5c9ca1af317950d036eda42483/src/avram/save_operation.cr#L250" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -3245,7 +3279,7 @@ e.g. polymorphic validations</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/f366c8dd5ec9c0041d19cd93e85fac1ed0feaea5/src/avram/save_operation.cr#L137" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/23aa237d499aac5c9ca1af317950d036eda42483/src/avram/save_operation.cr#L137" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -3268,7 +3302,7 @@ and there's no custom errors</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/f366c8dd5ec9c0041d19cd93e85fac1ed0feaea5/src/avram/save_operation.cr#L120" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/23aa237d499aac5c9ca1af317950d036eda42483/src/avram/save_operation.cr#L120" target="_blank">View source</a>]
         
       </div>
     </div>
