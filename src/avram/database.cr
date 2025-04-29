@@ -84,6 +84,21 @@ abstract class Avram::Database
     end
   end
 
+  # Creates a lock on the table in `mode`
+  # ```
+  # AppDatabase.with_lock_on(User, mode: :row_exclusive) do
+  #   user = UserQuery.new.id(1).for_update.first
+  #   SaveUser.update!(user, name: "New Name")
+  # end
+  # ```
+  def self.with_lock_on(model : Avram::Model.class, mode : Avram::TableLockMode, &)
+    exec("BEGIN")
+    exec("LOCK TABLE #{model.table_name} IN #{mode} MODE")
+    yield
+  ensure
+    exec("END")
+  end
+
   # Methods without a block
   {% for crystal_db_alias in [:exec, :scalar, :query, :query_all, :query_one, :query_one?] %}
     # Same as crystal-db's `DB::QueryMethods#{{ crystal_db_alias.id }}` but with instrumentation
