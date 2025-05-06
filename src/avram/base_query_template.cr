@@ -16,7 +16,7 @@ class Avram::BaseQueryTemplate
 
       {% if named_args[:materialized_view] %}
       def self.refresh_view(*, concurrent : Bool = false)
-        {{ type }}.database.exec("REFRESH MATERIALIZED VIEW #{concurrent ? "CONCURRENTLY" : ""} #{{{ type }}.table_name}")
+        {{ type }}.write_database.exec("REFRESH MATERIALIZED VIEW #{concurrent ? "CONCURRENTLY" : ""} #{{{ type }}.table_name}")
       end
       {% end %}
 
@@ -39,7 +39,7 @@ class Avram::BaseQueryTemplate
           end
         {% end %}
 
-        database.exec(
+        write_database.exec(
           query.statement_for_update(_changes, return_columns: false),
           args: query.args_for_update(_changes)
         ).rows_affected

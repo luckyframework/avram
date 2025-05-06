@@ -52,7 +52,7 @@ abstract class Avram::SaveOperation(T)
     @params = Avram::Params.new
   end
 
-  delegate :database, :table_name, :primary_key_name, to: T
+  delegate :write_database, :table_name, :primary_key_name, to: T
 
   private def publish_save_failed_event
     Avram::Events::SaveFailedEvent.publish(
@@ -213,7 +213,7 @@ abstract class Avram::SaveOperation(T)
     before_save
 
     if valid?
-      transaction_committed = database.transaction do
+      transaction_committed = write_database.transaction do
         insert_or_update if !changes.empty? || !persisted?
         after_save(record.as(T))
         true
@@ -290,7 +290,7 @@ abstract class Avram::SaveOperation(T)
     self.created_at.value ||= Time.utc if responds_to?(:created_at)
     self.updated_at.value ||= Time.utc if responds_to?(:updated_at)
     sql = insert_sql
-    @record = database.query sql.statement, args: sql.args do |rs|
+    @record = write_database.query sql.statement, args: sql.args do |rs|
       @record = T.from_rs(rs).first
     end
   end
@@ -298,7 +298,7 @@ abstract class Avram::SaveOperation(T)
   private def update(id) : T
     self.updated_at.value = Time.utc if responds_to?(:updated_at)
     query = update_query(id)
-    @record = database.query query.statement_for_update(changes), args: query.args_for_update(changes) do |rs|
+    @record = write_database.query query.statement_for_update(changes), args: query.args_for_update(changes) do |rs|
       @record = T.from_rs(rs).first
     end
   end
