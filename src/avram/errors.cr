@@ -154,6 +154,10 @@ module Avram
   class InvalidQueryError < AvramError
   end
 
+  # Used when there is a failed cast. E.g: overflowing, failed time parsing, etc...
+  class FailedCastError < AvramError
+  end
+
   # Used when `Avram::Operation` fails.
   class FailedOperation < AvramError
   end

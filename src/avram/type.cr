@@ -17,12 +17,15 @@ module Avram::Type
       values = casts.map { |c| c.as(SuccessfulCast).value }
       parse(values)
     else
-      FailedCast.new
+      failure_reasons = casts.select(FailedCast)
+        .map(&.reason)
+        .join("\n")
+      FailedCast.new(failure_reasons)
     end
   end
 
   def parse!(value)
-    parse(value).as(SuccessfulCast).value
+    parse(value).value
   end
 
   def to_db(value : Nil)
@@ -35,15 +38,22 @@ module Avram::Type
   end
 
   class SuccessfulCast(T)
-    getter :value
-
     def initialize(@value : T)
+    end
+
+    def value : T
+      @value
     end
   end
 
   class FailedCast
+    getter reason
+
+    def initialize(@reason : String?)
+    end
+
     def value
-      nil
+      raise FailedCastError.new(reason || "Failed to cast value")
     end
   end
 end
