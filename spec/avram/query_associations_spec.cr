@@ -50,11 +50,11 @@ describe "Query associations" do
       .create
 
     posts = Post::BaseQuery.new
-      .where_comments(CommentQuery.new.body_eq("matching"))
+      .join_comments(CommentQuery.new.body_eq("matching"))
     posts.results.should eq([post_with_matching_comment])
 
     posts = Post::BaseQuery.new
-      .where_comments(Comment::BaseQuery.new.body("matching"))
+      .join_comments(Comment::BaseQuery.new.body("matching"))
     posts.results.should eq([post_with_matching_comment])
   end
 
@@ -72,8 +72,7 @@ describe "Query associations" do
       .create
 
     posts = Post::BaseQuery.new
-      .inner_join_comments
-      .where_comments(Comment::BaseQuery.new.body.eq("matching"), auto_inner_join: false)
+      .inner_join_comments(Comment::BaseQuery.new.body.eq("matching"))
     posts.to_sql[0].should contain "INNER JOIN"
     posts.results.should eq([post_with_matching_comment])
   end
@@ -92,8 +91,7 @@ describe "Query associations" do
       .create
 
     posts = Post::BaseQuery.new
-      .left_join_comments
-      .where_comments(Comment::BaseQuery.new.body.eq("matching"), auto_inner_join: false)
+      .left_join_comments(Comment::BaseQuery.new.body.eq("matching"))
     posts.to_sql[0].should contain "LEFT JOIN"
     posts.results.should eq([post_with_matching_comment])
   end
@@ -112,8 +110,7 @@ describe "Query associations" do
       .create
 
     posts = Post::BaseQuery.new
-      .right_join_comments
-      .where_comments(Comment::BaseQuery.new.body.eq("matching"), auto_inner_join: false)
+      .right_join_comments(where_comments: Comment::BaseQuery.new.body.eq("matching"))
     posts.to_sql[0].should contain "RIGHT JOIN"
     posts.results.should eq([post_with_matching_comment])
   end
@@ -132,15 +129,14 @@ describe "Query associations" do
       .create
 
     posts = Post::BaseQuery.new
-      .full_join_comments
-      .where_comments(Comment::BaseQuery.new.body.eq("matching"), auto_inner_join: false)
+      .full_join_comments(Comment::BaseQuery.new.body.eq("matching"))
     posts.to_sql[0].should contain "FULL JOIN"
     posts.results.should eq([post_with_matching_comment])
   end
 
   it "can query associations on namespaced models" do
     orgs = NamedSpaced::Organization::BaseQuery.new
-      .where_locations(NamedSpaced::Location::BaseQuery.new.name("Home"))
+      .join_locations(NamedSpaced::Location::BaseQuery.new.name("Home"))
     orgs.to_sql[0].should contain "INNER JOIN"
 
     staff = NamedSpaced::Staff::BaseQuery.new
@@ -154,9 +150,9 @@ describe "Query associations" do
 
     line_item_query = LineItemQuery.new
       .id(item.id)
-      .where_associated_products(ProductQuery.new.id(product.id))
+      .join_associated_products(ProductQuery.new.id(product.id))
     result = LineItemProductQuery.new
-      .where_line_item(line_item_query)
+      .join_line_item(line_item_query)
       .find(line_item_product.id)
 
     result.should eq(line_item_product)
@@ -169,9 +165,9 @@ describe "Query associations" do
 
     line_item_query = LineItemQuery.new
       .id(item.id)
-      .where_line_items_products(LineItemProductQuery.new.id(line_item_product.id))
+      .join_line_items_products(LineItemProductQuery.new.id(line_item_product.id))
     result = ProductQuery.new
-      .where_line_items(line_item_query)
+      .join_line_items(line_item_query)
       .find(product.id)
 
     result.should eq(product)
