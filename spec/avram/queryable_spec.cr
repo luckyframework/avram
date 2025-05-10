@@ -1368,6 +1368,22 @@ describe Avram::Queryable do
       manager1.employees!.first?.should be_nil
       manager2.employees!.first.name.should eq("Spongebob Alderson")
     end
+
+    it "updates updated_at column" do
+      PostFactory.create &.title("Old title").updated_at(2.days.ago)
+      PostFactory.create &.title("Old title").updated_at(2.days.ago)
+
+      updated_count = PostQuery.new.update(title: "New title")
+
+      updated_count.should eq(2)
+      results = PostQuery.new.results
+      results.size.should eq(2)
+
+      results.each do |result|
+        result.title.should eq("New title")
+        result.updated_at.should be_close(Time.utc, 1.minute)
+      end
+    end
   end
 
   describe "#delete" do

@@ -39,6 +39,10 @@ class Avram::BaseQueryTemplate
           end
         {% end %}
 
+        {% if columns.map(&.[:name].stringify).includes?("updated_at") %}
+          _changes[:updated_at] = Time.adapter.to_db(Time.utc) if updated_at == IGNORE
+        {% end %}
+
         database.exec(
           query.statement_for_update(_changes, return_columns: false),
           args: query.args_for_update(_changes)
