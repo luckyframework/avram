@@ -1369,7 +1369,7 @@ describe Avram::Queryable do
       manager2.employees!.first.name.should eq("Spongebob Alderson")
     end
 
-    it "updates updated_at column" do
+    it "updates updated_at column if not passed in" do
       PostFactory.create &.title("Old title").updated_at(2.days.ago)
       PostFactory.create &.title("Old title").updated_at(2.days.ago)
 
@@ -1382,6 +1382,24 @@ describe Avram::Queryable do
       results.each do |result|
         result.title.should eq("New title")
         result.updated_at.should be_close(Time.utc, 1.minute)
+      end
+    end
+
+    it "updates updated_at column with value passed in" do
+      new_updated_at = 2.days.ago.at_beginning_of_second
+
+      PostFactory.create &.title("Old title").updated_at(Time.utc)
+      PostFactory.create &.title("Old title").updated_at(Time.utc)
+
+      updated_count = PostQuery.new.update(title: "New title", updated_at: new_updated_at)
+
+      updated_count.should eq(2)
+      results = PostQuery.new.results
+      results.size.should eq(2)
+
+      results.each do |result|
+        result.title.should eq("New title")
+        result.updated_at.should eq(new_updated_at)
       end
     end
   end
