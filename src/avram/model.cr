@@ -21,7 +21,7 @@ abstract class Avram::Model
 
   def self.database
     {% raise <<-ERROR
-        The class method `database` must be defined on the BaseModel,
+        The class method `database` must be defined on #{@type}, the BaseModel,
         or defined as separate `read_database` and `write_database` class methods.
 
         Example:
