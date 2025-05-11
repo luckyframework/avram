@@ -73,7 +73,7 @@ module Avram::PrimaryKeyMethods
   end
 
   def delete
-    self.class.database.exec "DELETE FROM #{@@table_name} WHERE #{primary_key_name} = #{escape_primary_key(id)}"
+    self.class.write_database.exec "DELETE FROM #{@@table_name} WHERE #{primary_key_name} = #{escape_primary_key(id)}"
   end
 
   private def escape_primary_key(id : Int64 | Int32 | Int16)

@@ -40,7 +40,8 @@ private class CallbacksSaveOperation < Post::SaveOperation
   end
 
   def run_after_save_again(post : Post)
-    database.rollback if @rollback
+    # TODO: `database` should be ok here, right?
+    write_database.rollback if @rollback
     mark_callback "after_save_again"
   end
 
