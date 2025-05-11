@@ -196,6 +196,10 @@ module Avram::Queryable(T)
     clone.tap &.query.offset(amount)
   end
 
+  def for_update : self
+    clone.tap &.query.for_update
+  end
+
   def first? : T?
     with_ordered_query
       .limit(1)
