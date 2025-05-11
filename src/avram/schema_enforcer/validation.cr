@@ -11,7 +11,7 @@ abstract class Avram::SchemaEnforcer::Validation
   end
 
   private def database_info : Avram::Database::DatabaseInfo
-    model_class.database.database_info
+    model_class.read_database.database_info
   end
 
   private def table_info : Avram::Database::TableInfo

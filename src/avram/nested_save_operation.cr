@@ -26,7 +26,7 @@ module Avram::NestedSaveOperation
       unless {{ name }}.save
         add_error(:{{ name }}, "failed")
         mark_nested_save_operations_as_failed
-        database.rollback
+        write_database.rollback
       end
     end
 
