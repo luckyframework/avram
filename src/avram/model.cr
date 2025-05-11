@@ -19,28 +19,27 @@ abstract class Avram::Model
     nil
   end
 
-  # TODO: Something is calling this when it shouldn't be... but no clue what
-  # def self.database
-  #   {% raise <<-ERROR
-  #       The class method `database` must be defined on #{@type}, the BaseModel,
-  #       or defined as separate `read_database` and `write_database` class methods.
+  # TODO: Ideally this should be a compile-time raise, but something is calling this when it shouldn't
+  def self.database
+    raise <<-ERROR
+    The class method `database` must be defined on #{self.name}, the BaseModel,
+    or defined as separate `read_database` and `write_database` class methods.
 
-  #       Example:
-  #         def self.database : Avram::Database.class
-  #           AppDatabase
-  #         end
+    Example:
+      def self.database : Avram::Database.class
+        AppDatabase
+      end
 
-  #       Or separated as:
-  #         def self.read_database : Avram::Database.class
-  #           ReadDatabase
-  #         end
+    Or separated as:
+      def self.read_database : Avram::Database.class
+        ReadDatabase
+      end
 
-  #         def self.write_database : Avram::Database.class
-  #           WriteDatabase
-  #         end
-  #       ERROR
-  #   %}
-  # end
+      def self.write_database : Avram::Database.class
+        WriteDatabase
+      end
+    ERROR
+  end
 
   def self.read_database : Avram::Database.class
     database

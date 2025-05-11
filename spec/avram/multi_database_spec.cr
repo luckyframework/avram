@@ -11,11 +11,19 @@ private class ModelWithBadDatabase < BaseModel
 end
 
 private class BaseModelWithSeparateReadWrite < Avram::Model
+  table :users do
+  end
+
+  class_getter read_count : Int32 = 0
+  class_getter write_count : Int32 = 0
+
   def self.read_database : Avram::Database.class
+    @@read_count += 1
     TestDatabase
   end
 
   def self.write_database : Avram::Database.class
+    @@write_count += 1
     TestDatabase
   end
 end
@@ -32,8 +40,15 @@ describe "Configuring and connecting to different databases" do
     end
   end
 
-  # context "when read and write are separate DBs" do
-  #   it "uses the read_database" do
-  #   end
-  # end
+  context "when read and write are separate DBs" do
+    it "uses the read_database" do
+      BaseModelWithSeparateReadWrite::BaseQuery.new.select_count
+      BaseModelWithSeparateReadWrite.read_count.should eq(1)
+    end
+
+    it "uses the write_database" do
+      BaseModelWithSeparateReadWrite::BaseQuery.new.delete
+      BaseModelWithSeparateReadWrite.write_count.should eq(1)
+    end
+  end
 end
