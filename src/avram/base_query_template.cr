@@ -4,6 +4,11 @@ class Avram::BaseQueryTemplate
       def_clone
       include Avram::Queryable({{ type }})
 
+      getter table_name : String = {{ type }}.table_name
+
+      def initialize(@table_name : String = {{ type }}.table_name)
+      end
+
       {% if type.resolve.has_constant?("PRIMARY_KEY_NAME") %}
         include Avram::PrimaryKeyQueryable({{ type }})
       {% end %}

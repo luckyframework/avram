@@ -172,4 +172,19 @@ describe "Query associations" do
 
     result.should eq(product)
   end
+
+  it "handles aliases" do
+    interviewer = UserFactory.create(&.available_for_hire(false).name("Interviewer"))
+    interviewee = UserFactory.create(&.available_for_hire(true).name("Interviewee"))
+    employed = UserFactory.create(&.available_for_hire(false).name("Employed"))
+    InterviewFactory.create(&.interviewee(interviewee).interviewer(interviewer))
+    InterviewFactory.create(&.interviewee(employed).interviewer(interviewer))
+
+    InterviewQuery.new
+      .join(Avram::Join::Inner.new(:interviews, :users, alias_to: :interviewers, primary_key: :interviewer_id, foreign_key: :id))
+      .join(Avram::Join::Inner.new(:interviews, :users, alias_to: :interviewees, primary_key: :interviewee_id, foreign_key: :id))
+      .where_interviewer(UserQuery.new("interviewers").available_for_hire(false), auto_inner_join: false)
+      .where_interviewee(UserQuery.new("interviewees").available_for_hire(true), auto_inner_join: false)
+      .select_count.should eq(1)
+  end
 end
