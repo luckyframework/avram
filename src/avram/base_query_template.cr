@@ -39,6 +39,10 @@ class Avram::BaseQueryTemplate
           end
         {% end %}
 
+        {% if columns.map(&.[:name].stringify).includes?("updated_at") %}
+          _changes[:updated_at] = Time.adapter.to_db(Time.utc) if updated_at.is_a?(Avram::Nothing)
+        {% end %}
+
         write_database.exec(
           query.statement_for_update(_changes, return_columns: false),
           args: query.args_for_update(_changes)
@@ -60,6 +64,10 @@ class Avram::BaseQueryTemplate
       {% for assoc in associations %}
         def join_{{ assoc[:assoc_name] }}
           inner_join_{{ assoc[:assoc_name] }}
+        end
+
+        def join_{{ assoc[:assoc_name] }}(where_{{ assoc[:assoc_name] }} : {{ assoc[:type] }}::BaseQuery)
+          inner_join_{{ assoc[:assoc_name] }}(where_{{ assoc[:assoc_name] }})
         end
 
         {% for join_type in ["Inner", "Left", "Right", "Full"] %}
@@ -98,9 +106,13 @@ class Avram::BaseQueryTemplate
               )
             {% end %}
           end
+
+          def {{ join_type.downcase.id }}_join_{{ assoc[:assoc_name] }}(where_{{ assoc[:assoc_name] }} : {{ assoc[:type] }}::BaseQuery)
+            {{ join_type.downcase.id }}_join_{{ assoc[:assoc_name] }}.merge_query(where_{{ assoc[:assoc_name] }}.query)
+          end
         {% end %}
 
-
+        @[Deprecated("Use any of the join methods with a where_{{ assoc[:assoc_name] }} argument instead")]
         def where_{{ assoc[:assoc_name] }}(assoc_query : {{ assoc[:type] }}::BaseQuery, auto_inner_join : Bool = true)
           if auto_inner_join
             join_{{ assoc[:assoc_name] }}.merge_query(assoc_query.query)

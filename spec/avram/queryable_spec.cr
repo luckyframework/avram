@@ -1364,9 +1364,43 @@ describe Avram::Queryable do
       manager1 = ManagerFactory.create(&.name("Mr. Krabs"))
       manager2 = ManagerFactory.create(&.name("Mr. Robot"))
       EmployeeFactory.create(&.name("Spongebob Alderson").manager_id(manager1.id))
-      Employee::BaseQuery.new.where_manager(Manager::BaseQuery.new.id(manager1.id)).update(manager_id: manager2.id)
+      Employee::BaseQuery.new.join_manager(Manager::BaseQuery.new.id(manager1.id)).update(manager_id: manager2.id)
       manager1.employees!.first?.should be_nil
       manager2.employees!.first.name.should eq("Spongebob Alderson")
+    end
+
+    it "updates updated_at column if not passed in" do
+      PostFactory.create &.title("Old title").updated_at(2.days.ago)
+      PostFactory.create &.title("Old title").updated_at(2.days.ago)
+
+      updated_count = PostQuery.new.update(title: "New title")
+
+      updated_count.should eq(2)
+      results = PostQuery.new.results
+      results.size.should eq(2)
+
+      results.each do |result|
+        result.title.should eq("New title")
+        result.updated_at.should be_close(Time.utc, 1.minute)
+      end
+    end
+
+    it "updates updated_at column with value passed in" do
+      new_updated_at = 2.days.ago.at_beginning_of_second
+
+      PostFactory.create &.title("Old title").updated_at(Time.utc)
+      PostFactory.create &.title("Old title").updated_at(Time.utc)
+
+      updated_count = PostQuery.new.update(title: "New title", updated_at: new_updated_at)
+
+      updated_count.should eq(2)
+      results = PostQuery.new.results
+      results.size.should eq(2)
+
+      results.each do |result|
+        result.title.should eq("New title")
+        result.updated_at.should eq(new_updated_at)
+      end
     end
   end
 
@@ -1405,7 +1439,7 @@ describe Avram::Queryable do
 
   describe "#asc_order" do
     it "orders by a joined table" do
-      query = Post::BaseQuery.new.where_comments(Comment::BaseQuery.new.created_at.asc_order)
+      query = Post::BaseQuery.new.join_comments(Comment::BaseQuery.new.created_at.asc_order)
       query.to_sql[0].should contain %(ORDER BY "comments"."created_at" ASC)
     end
 
@@ -1481,7 +1515,7 @@ describe Avram::Queryable do
       post = PostFactory.create
       CommentFactory.create &.post_id(post.id)
 
-      original_query = Post::BaseQuery.new.where_comments(Comment::BaseQuery.new.created_at.asc_order)
+      original_query = Post::BaseQuery.new.join_comments(Comment::BaseQuery.new.created_at.asc_order)
       new_query = original_query.clone.select_count
 
       original_query.first.should_not eq nil
@@ -1597,7 +1631,7 @@ describe Avram::Queryable do
         line_item = LineItemFactory.create &.name("Thing 1")
         price = PriceFactory.create &.in_cents(100).line_item_id(line_item.id)
 
-        query = PriceQuery.new.where_line_item(LineItemQuery.new.name("Thing 1"))
+        query = PriceQuery.new.inner_join_line_item(LineItemQuery.new.name("Thing 1"))
         query.first.should eq price
       end
     end
@@ -1607,7 +1641,7 @@ describe Avram::Queryable do
         line_item = LineItemFactory.create &.name("Thing 1")
         PriceFactory.create &.in_cents(100).line_item_id(line_item.id)
 
-        query = LineItemQuery.new.where_price(PriceQuery.new.in_cents(100))
+        query = LineItemQuery.new.inner_join_price(PriceQuery.new.in_cents(100))
         query.first.should eq line_item
       end
     end

@@ -118,8 +118,8 @@ describe Avram::Model do
         comment = CommentForCustomPost::SaveOperation.create!(body: "bar", post_id: post.id)
         comment.post_with_custom_table.should eq(post)
 
-        CommentForCustomPost::BaseQuery.new.where_post_with_custom_table(PostWithCustomTable::BaseQuery.new.id(post.id)).first.should eq(comment)
-        PostWithCustomTable::BaseQuery.new.where_comments_for_custom_post(CommentForCustomPost::BaseQuery.new.id(comment.id)).first.should eq(post)
+        CommentForCustomPost::BaseQuery.new.join_post_with_custom_table(PostWithCustomTable::BaseQuery.new.id(post.id)).first.should eq(comment)
+        PostWithCustomTable::BaseQuery.new.join_comments_for_custom_post(CommentForCustomPost::BaseQuery.new.id(comment.id)).first.should eq(post)
       end
     end
 
