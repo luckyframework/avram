@@ -14,6 +14,7 @@ class Avram::QueryBuilder
   @prepared_statement_placeholder = 0
   @distinct : Bool = false
   @delete : Bool = false
+  @for_update : Bool = false
 
   def initialize(@table)
   end
@@ -116,7 +117,7 @@ class Avram::QueryBuilder
   end
 
   private def sql_condition_clauses
-    [joins_sql, wheres_sql, group_sql, order_sql, limit_sql, offset_sql]
+    [joins_sql, wheres_sql, group_sql, order_sql, limit_sql, offset_sql, locking_sql]
   end
 
   def delete : self
@@ -155,6 +156,11 @@ class Avram::QueryBuilder
   end
 
   def offset(@offset : Int32?) : self
+    self
+  end
+
+  def for_update : self
+    @for_update = true
     self
   end
 
@@ -383,5 +389,11 @@ class Avram::QueryBuilder
 
   private def delete_sql : String
     "DELETE FROM #{table}"
+  end
+
+  private def locking_sql : String?
+    if @for_update
+      "FOR UPDATE"
+    end
   end
 end
