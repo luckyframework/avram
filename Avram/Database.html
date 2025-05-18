@@ -992,6 +992,11 @@
       
     </li>
   
+  <li class=" " data-id="avram/Avram/TableLockMode" data-name="avram::tablelockmode">
+      <a href="../Avram/TableLockMode.html">TableLockMode</a>
+      
+    </li>
+  
   <li class=" " data-id="avram/Avram/TableName" data-name="avram::tablename">
       <a href="../Avram/TableName.html">TableName</a>
       
@@ -1848,28 +1853,28 @@
   </h2>
   
     
-      <a href="https://github.com/luckyframework/avram/blob/1fd49039b7f8cff89986d7b6a69effdca1960d51/src/avram/database.cr#L1" target="_blank">
+      <a href="https://github.com/luckyframework/avram/blob/449fb1652ab4cd1cdb640dc64a5d84453808a039/src/avram/database.cr#L1" target="_blank">
         avram/database.cr
       </a>
     
     <br/>
   
     
-      <a href="https://github.com/luckyframework/avram/blob/1fd49039b7f8cff89986d7b6a69effdca1960d51/src/avram/database/column_info.cr#L2" target="_blank">
+      <a href="https://github.com/luckyframework/avram/blob/449fb1652ab4cd1cdb640dc64a5d84453808a039/src/avram/database/column_info.cr#L2" target="_blank">
         avram/database/column_info.cr
       </a>
     
     <br/>
   
     
-      <a href="https://github.com/luckyframework/avram/blob/1fd49039b7f8cff89986d7b6a69effdca1960d51/src/avram/database/database_info.cr#L2" target="_blank">
+      <a href="https://github.com/luckyframework/avram/blob/449fb1652ab4cd1cdb640dc64a5d84453808a039/src/avram/database/database_info.cr#L2" target="_blank">
         avram/database/database_info.cr
       </a>
     
     <br/>
   
     
-      <a href="https://github.com/luckyframework/avram/blob/1fd49039b7f8cff89986d7b6a69effdca1960d51/src/avram/database/table_info.cr#L2" target="_blank">
+      <a href="https://github.com/luckyframework/avram/blob/449fb1652ab4cd1cdb640dc64a5d84453808a039/src/avram/database/table_info.cr#L2" target="_blank">
         avram/database/table_info.cr
       </a>
     
@@ -2052,6 +2057,13 @@
         
       </li>
     
+      <li class="entry-summary">
+        <a href="#with_lock_on%28model%3AAvram%3A%3AModel.class%2Cmode%3AAvram%3A%3ATableLockMode%2C%26%29-class-method" class="signature"><strong>.with_lock_on</strong>(model : <span class="t">Avram</span><span class="t">::</span><span class="t">Model</span>.<span class="k">class</span>, mode : Avram::TableLockMode, &)</a>
+        
+          <div class="summary"><p>Creates a lock on the table in <code>mode</code> <code>AppDatabase.with_lock_on(User, mode: :row_exclusive) do   user = UserQuery.new.id(1).for_update.first   SaveUser.update!(user, name: &quot;New Name&quot;) end</code></p></div>
+        
+      </li>
+    
   </ul>
 
 
@@ -2221,7 +2233,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/1fd49039b7f8cff89986d7b6a69effdca1960d51/src/avram/database.cr#L162" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/449fb1652ab4cd1cdb640dc64a5d84453808a039/src/avram/database.cr#L177" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2237,7 +2249,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/1fd49039b7f8cff89986d7b6a69effdca1960d51/src/avram/database.cr#L6" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/449fb1652ab4cd1cdb640dc64a5d84453808a039/src/avram/database.cr#L6" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2253,7 +2265,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/1fd49039b7f8cff89986d7b6a69effdca1960d51/src/avram/database.cr#L140" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/449fb1652ab4cd1cdb640dc64a5d84453808a039/src/avram/database.cr#L155" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2269,7 +2281,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/1fd49039b7f8cff89986d7b6a69effdca1960d51/src/avram/database.cr#L69" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/449fb1652ab4cd1cdb640dc64a5d84453808a039/src/avram/database.cr#L69" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2290,7 +2302,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/1fd49039b7f8cff89986d7b6a69effdca1960d51/src/avram/database.cr#L49" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/449fb1652ab4cd1cdb640dc64a5d84453808a039/src/avram/database.cr#L49" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2311,7 +2323,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/1fd49039b7f8cff89986d7b6a69effdca1960d51/src/avram/database.cr#L88" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/449fb1652ab4cd1cdb640dc64a5d84453808a039/src/avram/database.cr#L103" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2338,7 +2350,7 @@ Yields a <code>PQ::Notification</code> object with <code>channel</code>, <code>p
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/1fd49039b7f8cff89986d7b6a69effdca1960d51/src/avram/database.cr#L63" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/449fb1652ab4cd1cdb640dc64a5d84453808a039/src/avram/database.cr#L63" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2354,7 +2366,7 @@ Yields a <code>PQ::Notification</code> object with <code>channel</code>, <code>p
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/1fd49039b7f8cff89986d7b6a69effdca1960d51/src/avram/database.cr#L7" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/449fb1652ab4cd1cdb640dc64a5d84453808a039/src/avram/database.cr#L7" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2370,7 +2382,7 @@ Yields a <code>PQ::Notification</code> object with <code>channel</code>, <code>p
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/1fd49039b7f8cff89986d7b6a69effdca1960d51/src/avram/database.cr#L7" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/449fb1652ab4cd1cdb640dc64a5d84453808a039/src/avram/database.cr#L7" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2391,7 +2403,7 @@ Yields a <code>PQ::Notification</code> object with <code>channel</code>, <code>p
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/1fd49039b7f8cff89986d7b6a69effdca1960d51/src/avram/database.cr#L88" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/449fb1652ab4cd1cdb640dc64a5d84453808a039/src/avram/database.cr#L103" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2412,7 +2424,7 @@ Yields a <code>PQ::Notification</code> object with <code>channel</code>, <code>p
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/1fd49039b7f8cff89986d7b6a69effdca1960d51/src/avram/database.cr#L105" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/449fb1652ab4cd1cdb640dc64a5d84453808a039/src/avram/database.cr#L120" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2433,7 +2445,7 @@ Yields a <code>PQ::Notification</code> object with <code>channel</code>, <code>p
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/1fd49039b7f8cff89986d7b6a69effdca1960d51/src/avram/database.cr#L88" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/449fb1652ab4cd1cdb640dc64a5d84453808a039/src/avram/database.cr#L103" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2454,7 +2466,7 @@ Yields a <code>PQ::Notification</code> object with <code>channel</code>, <code>p
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/1fd49039b7f8cff89986d7b6a69effdca1960d51/src/avram/database.cr#L105" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/449fb1652ab4cd1cdb640dc64a5d84453808a039/src/avram/database.cr#L120" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2475,7 +2487,7 @@ Yields a <code>PQ::Notification</code> object with <code>channel</code>, <code>p
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/1fd49039b7f8cff89986d7b6a69effdca1960d51/src/avram/database.cr#L105" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/449fb1652ab4cd1cdb640dc64a5d84453808a039/src/avram/database.cr#L120" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2496,7 +2508,7 @@ Yields a <code>PQ::Notification</code> object with <code>channel</code>, <code>p
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/1fd49039b7f8cff89986d7b6a69effdca1960d51/src/avram/database.cr#L88" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/449fb1652ab4cd1cdb640dc64a5d84453808a039/src/avram/database.cr#L103" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2517,7 +2529,7 @@ Yields a <code>PQ::Notification</code> object with <code>channel</code>, <code>p
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/1fd49039b7f8cff89986d7b6a69effdca1960d51/src/avram/database.cr#L105" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/449fb1652ab4cd1cdb640dc64a5d84453808a039/src/avram/database.cr#L120" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2538,7 +2550,7 @@ Yields a <code>PQ::Notification</code> object with <code>channel</code>, <code>p
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/1fd49039b7f8cff89986d7b6a69effdca1960d51/src/avram/database.cr#L88" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/449fb1652ab4cd1cdb640dc64a5d84453808a039/src/avram/database.cr#L103" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2559,7 +2571,7 @@ Yields a <code>PQ::Notification</code> object with <code>channel</code>, <code>p
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/1fd49039b7f8cff89986d7b6a69effdca1960d51/src/avram/database.cr#L105" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/449fb1652ab4cd1cdb640dc64a5d84453808a039/src/avram/database.cr#L120" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2580,7 +2592,7 @@ Yields a <code>PQ::Notification</code> object with <code>channel</code>, <code>p
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/1fd49039b7f8cff89986d7b6a69effdca1960d51/src/avram/database.cr#L39" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/449fb1652ab4cd1cdb640dc64a5d84453808a039/src/avram/database.cr#L39" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2596,7 +2608,7 @@ Yields a <code>PQ::Notification</code> object with <code>channel</code>, <code>p
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/1fd49039b7f8cff89986d7b6a69effdca1960d51/src/avram/database.cr#L148" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/449fb1652ab4cd1cdb640dc64a5d84453808a039/src/avram/database.cr#L163" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2617,7 +2629,7 @@ Yields a <code>PQ::Notification</code> object with <code>channel</code>, <code>p
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/1fd49039b7f8cff89986d7b6a69effdca1960d51/src/avram/database.cr#L88" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/449fb1652ab4cd1cdb640dc64a5d84453808a039/src/avram/database.cr#L103" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2633,7 +2645,7 @@ Yields a <code>PQ::Notification</code> object with <code>channel</code>, <code>p
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/1fd49039b7f8cff89986d7b6a69effdca1960d51/src/avram/database.cr#L28" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/449fb1652ab4cd1cdb640dc64a5d84453808a039/src/avram/database.cr#L28" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2658,7 +2670,7 @@ Yields a <code>PQ::Notification</code> object with <code>channel</code>, <code>p
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/1fd49039b7f8cff89986d7b6a69effdca1960d51/src/avram/database.cr#L81" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/449fb1652ab4cd1cdb640dc64a5d84453808a039/src/avram/database.cr#L81" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2679,7 +2691,7 @@ Yields a <code>PQ::Notification</code> object with <code>channel</code>, <code>p
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/1fd49039b7f8cff89986d7b6a69effdca1960d51/src/avram/database.cr#L44" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/449fb1652ab4cd1cdb640dc64a5d84453808a039/src/avram/database.cr#L44" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2695,7 +2707,32 @@ Yields a <code>PQ::Notification</code> object with <code>channel</code>, <code>p
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/1fd49039b7f8cff89986d7b6a69effdca1960d51/src/avram/database.cr#L34" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/449fb1652ab4cd1cdb640dc64a5d84453808a039/src/avram/database.cr#L34" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="with_lock_on(model:Avram::Model.class,mode:Avram::TableLockMode,&amp;)-class-method">
+      <div class="signature">
+        
+        def self.<strong>with_lock_on</strong>(model : <span class="t">Avram</span><span class="t">::</span><span class="t">Model</span>.<span class="k">class</span>, mode : <a href="../Avram/TableLockMode.html">Avram::TableLockMode</a>, &)
+
+        <a class="method-permalink" href="#with_lock_on%28model%3AAvram%3A%3AModel.class%2Cmode%3AAvram%3A%3ATableLockMode%2C%26%29-class-method">#</a>
+      </div>
+      
+        <div class="doc">
+          
+          <p>Creates a lock on the table in <code>mode</code></p>
+<pre><code class="language-crystal"><span class="t">AppDatabase</span>.with_lock_on(<span class="t">User</span>, mode: <span class="n">:row_exclusive</span>) <span class="k">do</span>
+  user <span class="o">=</span> <span class="t">UserQuery</span>.new.id(<span class="n">1</span>).for_update.first
+  <span class="t">SaveUser</span>.update!(user, name: <span class="s">&quot;New Name&quot;</span>)
+<span class="k">end</span></code></pre>
+        </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/luckyframework/avram/blob/449fb1652ab4cd1cdb640dc64a5d84453808a039/src/avram/database.cr#L94" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2730,7 +2767,7 @@ Yields a <code>PQ::Notification</code> object with <code>channel</code>, <code>p
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/1fd49039b7f8cff89986d7b6a69effdca1960d51/src/avram/database.cr#L88" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/449fb1652ab4cd1cdb640dc64a5d84453808a039/src/avram/database.cr#L103" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2746,7 +2783,7 @@ Yields a <code>PQ::Notification</code> object with <code>channel</code>, <code>p
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/1fd49039b7f8cff89986d7b6a69effdca1960d51/src/avram/database.cr#L125" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/449fb1652ab4cd1cdb640dc64a5d84453808a039/src/avram/database.cr#L140" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2767,7 +2804,7 @@ Yields a <code>PQ::Notification</code> object with <code>channel</code>, <code>p
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/1fd49039b7f8cff89986d7b6a69effdca1960d51/src/avram/database.cr#L88" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/449fb1652ab4cd1cdb640dc64a5d84453808a039/src/avram/database.cr#L103" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2788,7 +2825,7 @@ Yields a <code>PQ::Notification</code> object with <code>channel</code>, <code>p
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/1fd49039b7f8cff89986d7b6a69effdca1960d51/src/avram/database.cr#L105" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/449fb1652ab4cd1cdb640dc64a5d84453808a039/src/avram/database.cr#L120" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2809,7 +2846,7 @@ Yields a <code>PQ::Notification</code> object with <code>channel</code>, <code>p
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/1fd49039b7f8cff89986d7b6a69effdca1960d51/src/avram/database.cr#L88" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/449fb1652ab4cd1cdb640dc64a5d84453808a039/src/avram/database.cr#L103" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2830,7 +2867,7 @@ Yields a <code>PQ::Notification</code> object with <code>channel</code>, <code>p
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/1fd49039b7f8cff89986d7b6a69effdca1960d51/src/avram/database.cr#L105" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/449fb1652ab4cd1cdb640dc64a5d84453808a039/src/avram/database.cr#L120" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2851,7 +2888,7 @@ Yields a <code>PQ::Notification</code> object with <code>channel</code>, <code>p
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/1fd49039b7f8cff89986d7b6a69effdca1960d51/src/avram/database.cr#L105" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/449fb1652ab4cd1cdb640dc64a5d84453808a039/src/avram/database.cr#L120" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2872,7 +2909,7 @@ Yields a <code>PQ::Notification</code> object with <code>channel</code>, <code>p
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/1fd49039b7f8cff89986d7b6a69effdca1960d51/src/avram/database.cr#L88" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/449fb1652ab4cd1cdb640dc64a5d84453808a039/src/avram/database.cr#L103" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2893,7 +2930,7 @@ Yields a <code>PQ::Notification</code> object with <code>channel</code>, <code>p
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/1fd49039b7f8cff89986d7b6a69effdca1960d51/src/avram/database.cr#L105" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/449fb1652ab4cd1cdb640dc64a5d84453808a039/src/avram/database.cr#L120" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2914,7 +2951,7 @@ Yields a <code>PQ::Notification</code> object with <code>channel</code>, <code>p
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/1fd49039b7f8cff89986d7b6a69effdca1960d51/src/avram/database.cr#L88" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/449fb1652ab4cd1cdb640dc64a5d84453808a039/src/avram/database.cr#L103" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2935,7 +2972,7 @@ Yields a <code>PQ::Notification</code> object with <code>channel</code>, <code>p
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/1fd49039b7f8cff89986d7b6a69effdca1960d51/src/avram/database.cr#L105" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/449fb1652ab4cd1cdb640dc64a5d84453808a039/src/avram/database.cr#L120" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2956,7 +2993,7 @@ Yields a <code>PQ::Notification</code> object with <code>channel</code>, <code>p
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/1fd49039b7f8cff89986d7b6a69effdca1960d51/src/avram/database.cr#L88" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/449fb1652ab4cd1cdb640dc64a5d84453808a039/src/avram/database.cr#L103" target="_blank">View source</a>]
         
       </div>
     </div>
