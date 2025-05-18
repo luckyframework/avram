@@ -19,8 +19,38 @@ abstract class Avram::Model
     nil
   end
 
+  # TODO: Ideally this should be a compile-time raise, but something is calling this when it shouldn't
+  def self.database
+    raise <<-ERROR
+    The class method `database` must be defined on #{self.name}, the BaseModel,
+    or defined as separate `read_database` and `write_database` class methods.
+
+    Example:
+      def self.database : Avram::Database.class
+        AppDatabase
+      end
+
+    Or separated as:
+      def self.read_database : Avram::Database.class
+        ReadDatabase
+      end
+
+      def self.write_database : Avram::Database.class
+        WriteDatabase
+      end
+    ERROR
+  end
+
+  def self.read_database : Avram::Database.class
+    database
+  end
+
+  def self.write_database : Avram::Database.class
+    database
+  end
+
   def self.database_table_info : Avram::Database::TableInfo?
-    database.database_info.table(table_name.to_s)
+    read_database.database_info.table(table_name.to_s)
   end
 
   def model_name : String

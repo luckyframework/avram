@@ -7,7 +7,7 @@ module Avram::Queryable(T)
       .select(schema_class.column_names)
   end
 
-  delegate :database, :table_name, :primary_key_name, to: T
+  delegate :read_database, :write_database, :table_name, :primary_key_name, to: T
 
   macro included
     def self.new_with_existing_query(query : Avram::QueryBuilder)
@@ -59,7 +59,7 @@ module Avram::Queryable(T)
       restart_id_sql = restart_identity ? " RESTART IDENTITY" : ""
       sql = "TRUNCATE TABLE #{query.table_name}#{restart_id_sql}#{cascade_sql}"
 
-      query.database.exec(sql)
+      query.write_database.exec(sql)
     end
   end
 
@@ -107,7 +107,7 @@ module Avram::Queryable(T)
 
   protected def delete! : Int64
     new_query = query.clone.delete
-    database.exec(new_query.statement, args: new_query.args).rows_affected
+    write_database.exec(new_query.statement, args: new_query.args).rows_affected
   end
 
   # Update the records using the query's where clauses, or all records if no wheres are added.
@@ -224,7 +224,7 @@ module Avram::Queryable(T)
     cache_store.fetch(cache_key(:any?), as: Bool) do
       queryable = clone
       new_query = queryable.query.limit(1).select("1 AS one")
-      results = database.query_one?(new_query.statement, args: new_query.args, queryable: schema_class.name, as: (Int32 | Int64))
+      results = read_database.query_one?(new_query.statement, args: new_query.args, queryable: schema_class.name, as: (Int32 | Int64))
       !results.nil?
     end
   end
@@ -238,7 +238,7 @@ module Avram::Queryable(T)
       begin
         table = "(#{query.statement}) AS temp"
         new_query = Avram::QueryBuilder.new(table).select_count
-        result = database.scalar new_query.statement, args: query.args, queryable: schema_class.name
+        result = read_database.scalar new_query.statement, args: query.args, queryable: schema_class.name
         result.as(Int64)
       rescue e : DB::NoResultsError
         0_i64
@@ -250,7 +250,7 @@ module Avram::Queryable(T)
   alias PGValue = Bool | Float32 | Float64 | Int16 | Int32 | Int64 | PG::Numeric | String | Time | UUID | Nil
 
   def group_count : Hash(Array(PGValue), Int64)
-    database.query_all(
+    read_database.query_all(
       query.select_direct(query.groups + ["COUNT(*)"]).statement,
       args: query.args,
       queryable: schema_class.name,
@@ -295,14 +295,14 @@ module Avram::Queryable(T)
   end
 
   private def exec_query
-    database.query query.statement, args: query.args, queryable: schema_class.name do |rs|
+    read_database.query query.statement, args: query.args, queryable: schema_class.name do |rs|
       schema_class.from_rs(rs)
     end
   end
 
   def exec_scalar(&)
     new_query = yield query.clone
-    database.scalar new_query.statement, args: new_query.args, queryable: schema_class.name
+    read_database.scalar new_query.statement, args: new_query.args, queryable: schema_class.name
   end
 
   # This method is meant to be used in your query object `initialize`.
