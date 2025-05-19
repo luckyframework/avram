@@ -27,7 +27,7 @@ module Avram::DeleteCallbacks
       conditional_error_for_block_callbacks(:before_delete, :unless)
     {% end %}
 
-    def before_delete
+    def before_delete : Nil
       {% if @type.methods.map(&.name).includes?(:before_delete.id) %}
         previous_def
       {% else %}
@@ -82,7 +82,7 @@ module Avram::DeleteCallbacks
         ERR
       end
     %}
-    def after_delete(%object : T)
+    def after_delete(%object : T) : Nil
       {% if @type.methods.map(&.name).includes?(:after_delete.id) %}
         previous_def
       {% else %}

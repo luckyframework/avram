@@ -7,11 +7,11 @@ struct Slice(T)
     alias ColumnType = Bytes
     include Avram::Type
 
-    def self.criteria(query : T, column) forall T
+    def self.criteria(query : T, column : Symbol | String) forall T
       Criteria(T, Bytes).new(query, column)
     end
 
-    def from_db!(value : Bytes)
+    def from_db!(value : Bytes) : Bytes
       value
     end
 
@@ -19,7 +19,7 @@ struct Slice(T)
       parse(value.to_slice)
     end
 
-    def parse(value : Bytes)
+    def parse(value : Bytes) : SuccessfulCast(Bytes)
       SuccessfulCast(Bytes).new(value)
     end
 

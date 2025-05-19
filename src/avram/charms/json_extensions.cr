@@ -20,7 +20,7 @@ module JSON::Serializable
       SuccessfulCast(Array(T)).new value
     end
 
-    def parse(value : JSON::Serializable)
+    def parse(value : JSON::Serializable) : SuccessfulCast(JSON::Serializable)
       SuccessfulCast(JSON::Serializable).new value
     end
 
@@ -42,19 +42,19 @@ struct JSON::Any
     alias ColumnType = JSON::Any
     include Avram::Type
 
-    def self.criteria(query : T, column) forall T
+    def self.criteria(query : T, column : Symbol | String) forall T
       Criteria(T, JSON::Any).new(query, column)
     end
 
-    def from_db!(value : JSON::Any)
+    def from_db!(value : JSON::Any) : JSON::Any
       value
     end
 
-    def parse(value : JSON::Any)
+    def parse(value : JSON::Any) : SuccessfulCast(JSON::Any)
       SuccessfulCast(JSON::Any).new value
     end
 
-    def parse(value : String)
+    def parse(value : String) : SuccessfulCast(JSON::Any)
       value = begin
         JSON.parse(value)
       rescue JSON::ParseException
@@ -63,15 +63,15 @@ struct JSON::Any
       SuccessfulCast(JSON::Any).new value
     end
 
-    def parse(value : Nil)
+    def parse(value : Nil) : SuccessfulCast(Nil)
       SuccessfulCast(Nil).new nil
     end
 
-    def parse(value)
+    def parse(value) : SuccessfulCast(JSON::Any)
       SuccessfulCast(JSON::Any).new JSON.parse(value.to_json)
     end
 
-    def to_db(value)
+    def to_db(value) : String
       value.to_json
     end
 

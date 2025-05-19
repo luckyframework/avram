@@ -7,45 +7,45 @@ struct Float64
     alias ColumnType = ::PG::Numeric | Float64
     include Avram::Type
 
-    def self.criteria(query : T, column) forall T
+    def self.criteria(query : T, column : Symbol | String) forall T
       Criteria(T, Float64).new(query, column)
     end
 
-    def from_db!(value : Float64)
+    def from_db!(value : Float64) : Float64
       value
     end
 
-    def from_db!(value : PG::Numeric)
+    def from_db!(value : PG::Numeric) : Float64
       value.to_f
     end
 
-    def parse(value : Float64)
+    def parse(value : Float64) : SuccessfulCast(Float64)
       SuccessfulCast(Float64).new(value)
     end
 
-    def parse(values : Array(Float64))
+    def parse(values : Array(Float64)) : SuccessfulCast(Array(Float64))
       SuccessfulCast(Array(Float64)).new values
     end
 
-    def parse(value : PG::Numeric)
+    def parse(value : PG::Numeric) : SuccessfulCast(Float64)
       SuccessfulCast(Float64).new(value.to_f)
     end
 
-    def parse(values : Array(PG::Numeric))
+    def parse(values : Array(PG::Numeric)) : SuccessfulCast(Array(Float64))
       SuccessfulCast(Array(Float64)).new values.map(&.to_f)
     end
 
-    def parse(value : String)
+    def parse(value : String) : SuccessfulCast(Float64) | FailedCast
       SuccessfulCast(Float64).new value.to_f64
     rescue ArgumentError
       FailedCast.new
     end
 
-    def parse(value : Int32)
+    def parse(value : Int32) : SuccessfulCast(Float64)
       SuccessfulCast(Float64).new value.to_f64
     end
 
-    def parse(value : Int64)
+    def parse(value : Int64) : SuccessfulCast(Float64)
       SuccessfulCast(Float64).new value.to_f64
     end
 

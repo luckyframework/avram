@@ -11,11 +11,11 @@ class String
       Criteria(T, String).new(query, column)
     end
 
-    def parse(value : String)
+    def parse(value : String) : SuccessfulCast(String)
       SuccessfulCast(String).new(value)
     end
 
-    def parse(values : Array(String))
+    def parse(values : Array(String)) : SuccessfulCast(Array(String))
       SuccessfulCast(Array(String)).new(values)
     end
 

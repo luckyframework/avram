@@ -44,7 +44,7 @@ module Lucky::SelectHelpers
     option(label, value: "")
   end
 
-  private def input_id(field)
+  private def input_id(field : Avram::PermittedAttribute)
     "#{field.param_key}_#{field.name}"
   end
 
@@ -52,7 +52,7 @@ module Lucky::SelectHelpers
     "#{field.param_key}_#{field.name}_#{array_id_counter[field.name]}"
   end
 
-  private def input_name(field)
+  private def input_name(field : Avram::PermittedAttribute)
     "#{field.param_key}:#{field.name}"
   end
 

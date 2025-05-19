@@ -7,11 +7,11 @@ struct Int32
     alias ColumnType = Int32
     include Avram::Type
 
-    def self.criteria(query : T, column) forall T
+    def self.criteria(query : T, column : Symbol | String) forall T
       Criteria(T, Int32).new(query, column)
     end
 
-    def from_db!(value : Int32)
+    def from_db!(value : Int32) : Int32
       value
     end
 
@@ -21,7 +21,7 @@ struct Int32
       FailedCast.new
     end
 
-    def parse(value : Int32)
+    def parse(value : Int32) : SuccessfulCast(Int32)
       SuccessfulCast(Int32).new(value)
     end
 
@@ -31,7 +31,7 @@ struct Int32
       FailedCast.new
     end
 
-    def parse(values : Array(Int32))
+    def parse(values : Array(Int32)) : SuccessfulCast(Array(Int32))
       SuccessfulCast(Array(Int32)).new values
     end
 

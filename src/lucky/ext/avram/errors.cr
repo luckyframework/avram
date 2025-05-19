@@ -18,11 +18,11 @@ module Avram
       invalid_attribute[0].to_s
     end
 
-    private def validation_messages
+    private def validation_messages : Array(String)
       invalid_attribute[1]
     end
 
-    private def invalid_attribute
+    private def invalid_attribute : Tuple(Symbol, Array(String))
       errors.first
     end
   end

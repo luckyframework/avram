@@ -45,7 +45,7 @@ module Avram
   # This subscribes to several `Pulsar` events.
   # These events are triggered during query and
   # operation events
-  def self.initialize_logging
+  def self.initialize_logging : Nil
     Avram::Events::QueryEvent.subscribe do |event, duration|
       next if event.query.starts_with?("TRUNCATE")
 

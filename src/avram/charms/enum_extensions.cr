@@ -54,7 +54,7 @@ abstract struct Enum
       value.value.to_s
     end
 
-    def criteria(query : V, column) forall V
+    def criteria(query : V, column : Symbol | String) forall V
       Criteria(V, T).new(query, column)
     end
 
