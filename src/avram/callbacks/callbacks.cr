@@ -22,7 +22,7 @@ module Avram::Callbacks
   # end
   # ```
   macro before_run
-    def before_run
+    def before_run : Nil
       {% if @type.methods.map(&.name).includes?(:before_run.id) %}
         previous_def
       {% else %}
@@ -74,7 +74,7 @@ module Avram::Callbacks
         ERR
       end
     %}
-    def after_run(%object)
+    def after_run(%object : T) : Nil forall T
       {% if @type.methods.map(&.name).includes?(:after_run.id) %}
         previous_def
       {% else %}

@@ -7,19 +7,19 @@ struct Int16
     alias ColumnType = Int16
     include Avram::Type
 
-    def self.criteria(query : T, column) forall T
+    def self.criteria(query : T, column : Symbol | String) forall T
       Criteria(T, Int16).new(query, column)
     end
 
-    def from_db!(value : Int16)
+    def from_db!(value : Int16) : Int16
       value
     end
 
-    def parse(value : Int16)
+    def parse(value : Int16) : SuccessfulCast(Int16)
       SuccessfulCast(Int16).new(value)
     end
 
-    def parse(values : Array(Int16))
+    def parse(values : Array(Int16)) : SuccessfulCast(Array(Int16))
       SuccessfulCast(Array(Int16)).new values
     end
 
