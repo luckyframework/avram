@@ -49,10 +49,10 @@ class Avram::Migrator::CreateIndexStatement
     String.build do |index|
       index << "CREATE"
       index << " UNIQUE" if @unique
-      index << " INDEX #{index_name}"
-      index << " ON #{@table}"
-      index << " USING #{@using.to_s.downcase}"
-      index << " (#{mapped_columns});"
+      index << " INDEX " << index_name
+      index << " ON " << @table
+      index << " USING " << @using.to_s.downcase
+      index << " (" << mapped_columns << ");"
     end
   end
 

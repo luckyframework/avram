@@ -14,11 +14,11 @@ class Avram::Migrator::CreateForeignKeyStatement
     foreign_key = @column || Wordsmith::Inflector.singularize(@to.to_s) + "_id"
     String.build do |index|
       index << "ALTER TABLE"
-      index << " #{@from}"
-      index << " ADD CONSTRAINT #{@from}_#{foreign_key}_fk"
-      index << " FOREIGN KEY (#{foreign_key})"
+      index << ' ' << @from
+      index << " ADD CONSTRAINT " << @from << '_' << foreign_key << "_fk"
+      index << " FOREIGN KEY (" << foreign_key << ')'
       index << BuildReferenceFragment.new("#{@to} (#{@primary_key})", @on_delete).build
-      index << ";"
+      index << ';'
     end
   end
 end

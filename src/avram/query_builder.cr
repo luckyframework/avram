@@ -294,7 +294,7 @@ class Avram::QueryBuilder
     String.build do |sql|
       sql << "SELECT "
       sql << "DISTINCT " if distinct?
-      sql << "ON (#{@distinct_on}) " if has_distinct_on?
+      sql << "ON (" << @distinct_on << ") " if has_distinct_on?
       sql << @selections
       sql << " FROM "
       sql << table

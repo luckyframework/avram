@@ -39,10 +39,10 @@ class Avram::Migrator::Runner
 
   def self.cmd_args
     String.build do |args|
-      args << "-U #{self.db_user}" if self.db_user
-      args << " -h #{self.db_host}" if self.db_host
-      args << " -p #{self.db_port}" if self.db_port
-      args << " #{self.db_name}"
+      args << "-U " << self.db_user if self.db_user
+      args << " -h " << self.db_host if self.db_host
+      args << " -p " << self.db_port if self.db_port
+      args << ' ' << self.db_name
     end
   end
 

@@ -30,8 +30,8 @@ module Avram
 
     def prepare : String
       String.build do |str|
-        str << "#{column} #{direction}"
-        str << " #{nulls}" unless nulls.default?
+        str << column << ' ' << direction
+        str << ' ' << nulls unless nulls.default?
       end
     end
 

@@ -61,12 +61,15 @@ module Avram
 
     def initialize(operation)
       message = String.build do |string|
-        string << "Could not perform #{operation.class.name}.\n\n"
+        string << "Could not perform " << operation.class.name << ".\n\n"
 
         operation.errors.each do |attribute_name, errors|
-          string << "  ▸ #{attribute_name}: #{errors.join(", ")}\n"
+          string << "  ▸ " << attribute_name << ": "
+          errors.join(string, ", ")
+          string << "\n"
         end
       end
+
       @errors = operation.errors
       super message
     end
@@ -87,18 +90,24 @@ module Avram
 
     def initialize(@connection_details : URI, @database_class : Avram::Database.class)
       error = String.build do |message|
-        message << "#{database_class.name}: Failed to connect to database '#{connection_details.path.try(&.[1..-1])}' with username '#{connection_details.user}'.\n"
+        message << database_class.name << ": Failed to connect to database '"
+        message << connection_details.path.try(&.[1..-1]) << "' with username '"
+        message << connection_details.user << "'.\n"
         message << "Try this..."
         message << '\n'
         message << '\n'
         message << "  ▸ Check connection settings in 'config/database.cr'\n"
         message << "  ▸ Be sure the database exists (lucky db.create)\n"
-        message << "  ▸ Check that you have access to connect to #{connection_details.host} on port #{connection_details.port || DEFAULT_PG_PORT}\n"
-        message << "  ▸ If this is your first run, create a database named '#{connection_details.user}' that this same user will have access to\n"
+        message << "  ▸ Check that you have access to connect to " << connection_details.host
+        message << " on port " << (connection_details.port || DEFAULT_PG_PORT) << "\n"
+        message << "  ▸ If this is your first run, create a database named '"
+        message << connection_details.user << "' that this same user will have access to\n"
+
         if connection_details.password.blank?
           message << "  ▸ You didn't supply a password, did you mean to?\n"
         end
       end
+
       super error
     end
   end
