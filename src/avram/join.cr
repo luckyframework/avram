@@ -22,15 +22,15 @@ module Avram::Join
 
     def to_sql : String
       String.build do |io|
-        io << "#{join_type} JOIN "
+        io << join_type << " JOIN "
         @to.to_s(io)
         if @alias_to
-          io << " AS #{@alias_to}"
+          io << " AS " << @alias_to
         end
         if @using.presence
-          io << " USING (#{@using})"
+          io << " USING (" << @using << ')'
         else
-          io << " ON #{from_column} #{@comparison} #{to_column}"
+          io << " ON " << from_column << ' ' << @comparison << ' ' << to_column
         end
       end
     end

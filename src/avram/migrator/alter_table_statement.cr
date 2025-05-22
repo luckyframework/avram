@@ -154,14 +154,16 @@ class Avram::Migrator::AlterTableStatement
     alterations = renamed_rows.map do |statement|
       "ALTER TABLE #{if_exists_statement}#{@table_name} #{statement};"
     end
+
     unless (rows + dropped_rows).empty?
       alterations << String.build do |statement|
-        statement << "ALTER TABLE #{if_exists_statement}#{@table_name}"
+        statement << "ALTER TABLE " << if_exists_statement << @table_name
         statement << "\n"
-        statement << (rows + dropped_rows).join(",\n")
+        (rows + dropped_rows).join(statement, ",\n")
         statement << ';'
       end
     end
+
     alterations
   end
 

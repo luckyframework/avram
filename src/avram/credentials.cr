@@ -106,12 +106,12 @@ class Avram::Credentials
   end
 
   private def set_url_db(io : String::Builder) : Nil
-    io << "/#{database}"
+    io << '/' << database
   end
 
   private def set_url_port(io : String::Builder) : Nil
     port.try do |the_port|
-      io << ":#{the_port}"
+      io << ':' << the_port
     end
   end
 
@@ -124,16 +124,17 @@ class Avram::Credentials
   private def set_url_creds(io : String::Builder) : Nil
     set_at = false
     username.try do |user|
-      io << URI.encode_www_form(user)
+      URI.encode_www_form(user, io)
       set_at = true
     end
 
     password.try do |pass|
-      io << ":#{URI.encode_www_form(pass)}"
+      io << ':'
+      URI.encode_www_form(pass, io)
       set_at = true
     end
 
-    io << "@" if set_at
+    io << '@' if set_at
   end
 
   private def set_url_protocol(io : String::Builder) : Nil
@@ -142,7 +143,7 @@ class Avram::Credentials
 
   private def set_url_query(io : String::Builder) : Nil
     query.try do |q|
-      io << "?#{q}"
+      io << '?' << q
     end
   end
 end

@@ -18,9 +18,9 @@ class Avram::Migrator::ChangeNullStatement
     end
 
     String.build do |index|
-      index << "ALTER TABLE #{@table}"
-      index << " ALTER COLUMN #{@column}"
-      index << " #{change} NOT NULL;"
+      index << "ALTER TABLE " << @table
+      index << " ALTER COLUMN " << @column
+      index << ' ' << change << " NOT NULL;"
     end
   end
 end

@@ -20,7 +20,7 @@ class Avram::Migrator::CreateSequenceStatement
       io << "CREATE SEQUENCE "
       io << "IF NOT EXISTS " if if_not_exists?
       io << name
-      io << " OWNED BY #{@owned_by};"
+      io << " OWNED BY " << @owned_by << ';'
     end
   end
 end

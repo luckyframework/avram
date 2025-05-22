@@ -14,11 +14,11 @@ module Gen::Mixins::MigrationWithColumns
     String.build do |string|
       string << "# Learn about migrations at: https://luckyframework.org/guides/database/migrations"
       string << "\n"
-      string << "create table_for(#{resource_name}) do\n"
+      string << "create table_for(" << resource_name << ") do\n"
       string << "  primary_key id : Int64\n"
       string << "  add_timestamps\n"
       columns.each do |column|
-        string << "  add #{column.name} : #{column.type}\n"
+        string << "  add " << column.name << " : " << column.type << "\n"
       end
       string << "end"
     end

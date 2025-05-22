@@ -6,8 +6,8 @@ class CustomEmail
   def initialize(@email : String)
   end
 
-  def to_s
-    value
+  def to_s(io : IO)
+    io << value
   end
 
   private def value

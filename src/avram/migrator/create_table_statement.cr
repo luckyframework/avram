@@ -56,9 +56,9 @@ class Avram::Migrator::CreateTableStatement
   private def table_statement
     String.build do |statement|
       initial_table_statement(statement)
-      statement << rows.join(",\n")
+      rows.join(statement, ",\n")
       statement << ",\n" if !constraints.empty?
-      statement << constraints.join(", \n")
+      constraints.join(statement, ", \n")
       statement << ");"
     end
   end
