@@ -1879,7 +1879,7 @@
   </h2>
   
     
-      <a href="https://github.com/luckyframework/avram/blob/3d5a1efd29518def6c504f6ccacf0c4069809ff0/src/avram/charms/slice_extensions.cr#L6" target="_blank">
+      <a href="https://github.com/luckyframework/avram/blob/6d4a5401dcc05697315c2fde11ff353cf284c2d6/src/avram/charms/slice_extensions.cr#L6" target="_blank">
         avram/charms/slice_extensions.cr
       </a>
     
@@ -1904,7 +1904,7 @@
   <ul class="list-summary">
     
       <li class="entry-summary">
-        <a href="#criteria%28query%3AT%2Ccolumn%29forallT-class-method" class="signature"><strong>.criteria</strong>(query : T, column) forall T</a>
+        <a href="#criteria%28query%3AT%2Ccolumn%3ASymbol%7CString%29forallT-class-method" class="signature"><strong>.criteria</strong>(query : T, column : Symbol | String) forall T</a>
         
       </li>
     
@@ -1925,7 +1925,7 @@
   <ul class="list-summary">
     
       <li class="entry-summary">
-        <a href="#from_db%21%28value%3ABytes%29-instance-method" class="signature"><strong>#from_db!</strong>(value : Bytes)</a>
+        <a href="#from_db%21%28value%3ABytes%29%3ABytes-instance-method" class="signature"><strong>#from_db!</strong>(value : Bytes) : Bytes</a>
         
       </li>
     
@@ -1935,7 +1935,7 @@
       </li>
     
       <li class="entry-summary">
-        <a href="#parse%28value%3ABytes%29-instance-method" class="signature"><strong>#parse</strong>(value : Bytes)</a>
+        <a href="#parse%28value%3ABytes%29%3ASuccessfulCast%28Bytes%29-instance-method" class="signature"><strong>#parse</strong>(value : Bytes) : SuccessfulCast(Bytes)</a>
         
       </li>
     
@@ -2011,18 +2011,18 @@
     Class Method Detail
   </h2>
   
-    <div class="entry-detail" id="criteria(query:T,column)forallT-class-method">
+    <div class="entry-detail" id="criteria(query:T,column:Symbol|String)forallT-class-method">
       <div class="signature">
         
-        def self.<strong>criteria</strong>(query : T, column) forall T
+        def self.<strong>criteria</strong>(query : T, column : Symbol | <a href="../String.html">String</a>) forall T
 
-        <a class="method-permalink" href="#criteria%28query%3AT%2Ccolumn%29forallT-class-method">#</a>
+        <a class="method-permalink" href="#criteria%28query%3AT%2Ccolumn%3ASymbol%7CString%29forallT-class-method">#</a>
       </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/3d5a1efd29518def6c504f6ccacf0c4069809ff0/src/avram/charms/slice_extensions.cr#L10" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/6d4a5401dcc05697315c2fde11ff353cf284c2d6/src/avram/charms/slice_extensions.cr#L10" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2041,18 +2041,18 @@
     Instance Method Detail
   </h2>
   
-    <div class="entry-detail" id="from_db!(value:Bytes)-instance-method">
+    <div class="entry-detail" id="from_db!(value:Bytes):Bytes-instance-method">
       <div class="signature">
         
-        def <strong>from_db!</strong>(value : Bytes)
+        def <strong>from_db!</strong>(value : Bytes) : Bytes
 
-        <a class="method-permalink" href="#from_db%21%28value%3ABytes%29-instance-method">#</a>
+        <a class="method-permalink" href="#from_db%21%28value%3ABytes%29%3ABytes-instance-method">#</a>
       </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/3d5a1efd29518def6c504f6ccacf0c4069809ff0/src/avram/charms/slice_extensions.cr#L14" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/6d4a5401dcc05697315c2fde11ff353cf284c2d6/src/avram/charms/slice_extensions.cr#L14" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2068,23 +2068,23 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/3d5a1efd29518def6c504f6ccacf0c4069809ff0/src/avram/charms/slice_extensions.cr#L18" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/6d4a5401dcc05697315c2fde11ff353cf284c2d6/src/avram/charms/slice_extensions.cr#L18" target="_blank">View source</a>]
         
       </div>
     </div>
   
-    <div class="entry-detail" id="parse(value:Bytes)-instance-method">
+    <div class="entry-detail" id="parse(value:Bytes):SuccessfulCast(Bytes)-instance-method">
       <div class="signature">
         
-        def <strong>parse</strong>(value : Bytes)
+        def <strong>parse</strong>(value : Bytes) : <a href="../Avram/Type/SuccessfulCast.html">SuccessfulCast</a>(Bytes)
 
-        <a class="method-permalink" href="#parse%28value%3ABytes%29-instance-method">#</a>
+        <a class="method-permalink" href="#parse%28value%3ABytes%29%3ASuccessfulCast%28Bytes%29-instance-method">#</a>
       </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/3d5a1efd29518def6c504f6ccacf0c4069809ff0/src/avram/charms/slice_extensions.cr#L22" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/6d4a5401dcc05697315c2fde11ff353cf284c2d6/src/avram/charms/slice_extensions.cr#L22" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2100,7 +2100,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/3d5a1efd29518def6c504f6ccacf0c4069809ff0/src/avram/charms/slice_extensions.cr#L26" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/6d4a5401dcc05697315c2fde11ff353cf284c2d6/src/avram/charms/slice_extensions.cr#L26" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2116,7 +2116,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/3d5a1efd29518def6c504f6ccacf0c4069809ff0/src/avram/charms/slice_extensions.cr#L36" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/6d4a5401dcc05697315c2fde11ff353cf284c2d6/src/avram/charms/slice_extensions.cr#L36" target="_blank">View source</a>]
         
       </div>
     </div>

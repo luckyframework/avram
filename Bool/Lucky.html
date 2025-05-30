@@ -1879,7 +1879,7 @@
   </h2>
   
     
-      <a href="https://github.com/luckyframework/avram/blob/3d5a1efd29518def6c504f6ccacf0c4069809ff0/src/avram/charms/bool_extensions.cr#L6" target="_blank">
+      <a href="https://github.com/luckyframework/avram/blob/6d4a5401dcc05697315c2fde11ff353cf284c2d6/src/avram/charms/bool_extensions.cr#L6" target="_blank">
         avram/charms/bool_extensions.cr
       </a>
     
@@ -1904,7 +1904,7 @@
   <ul class="list-summary">
     
       <li class="entry-summary">
-        <a href="#criteria%28query%3AT%2Ccolumn%29forallT-class-method" class="signature"><strong>.criteria</strong>(query : T, column) forall T</a>
+        <a href="#criteria%28query%3AT%2Ccolumn%3ASymbol%7CString%29forallT-class-method" class="signature"><strong>.criteria</strong>(query : T, column : Symbol | String) forall T</a>
         
       </li>
     
@@ -1925,17 +1925,17 @@
   <ul class="list-summary">
     
       <li class="entry-summary">
-        <a href="#parse%28value%3AString%29-instance-method" class="signature"><strong>#parse</strong>(value : String)</a>
+        <a href="#parse%28value%3AString%29%3ASuccessfulCast%28Bool%29%7CFailedCast-instance-method" class="signature"><strong>#parse</strong>(value : String) : SuccessfulCast(Bool) | FailedCast</a>
         
       </li>
     
       <li class="entry-summary">
-        <a href="#parse%28value%3ABool%29-instance-method" class="signature"><strong>#parse</strong>(value : Bool)</a>
+        <a href="#parse%28value%3ABool%29%3ASuccessfulCast%28Bool%29-instance-method" class="signature"><strong>#parse</strong>(value : Bool) : SuccessfulCast(Bool)</a>
         
       </li>
     
       <li class="entry-summary">
-        <a href="#parse%28values%3AArray%28Bool%29%29-instance-method" class="signature"><strong>#parse</strong>(values : Array(Bool))</a>
+        <a href="#parse%28values%3AArray%28Bool%29%29%3ASuccessfulCast%28Array%28Bool%29%29-instance-method" class="signature"><strong>#parse</strong>(values : Array(Bool)) : SuccessfulCast(Array(Bool))</a>
         
       </li>
     
@@ -2011,18 +2011,18 @@
     Class Method Detail
   </h2>
   
-    <div class="entry-detail" id="criteria(query:T,column)forallT-class-method">
+    <div class="entry-detail" id="criteria(query:T,column:Symbol|String)forallT-class-method">
       <div class="signature">
         
-        def self.<strong>criteria</strong>(query : T, column) forall T
+        def self.<strong>criteria</strong>(query : T, column : Symbol | <a href="../String.html">String</a>) forall T
 
-        <a class="method-permalink" href="#criteria%28query%3AT%2Ccolumn%29forallT-class-method">#</a>
+        <a class="method-permalink" href="#criteria%28query%3AT%2Ccolumn%3ASymbol%7CString%29forallT-class-method">#</a>
       </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/3d5a1efd29518def6c504f6ccacf0c4069809ff0/src/avram/charms/bool_extensions.cr#L10" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/6d4a5401dcc05697315c2fde11ff353cf284c2d6/src/avram/charms/bool_extensions.cr#L10" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2041,50 +2041,50 @@
     Instance Method Detail
   </h2>
   
-    <div class="entry-detail" id="parse(value:String)-instance-method">
+    <div class="entry-detail" id="parse(value:String):SuccessfulCast(Bool)|FailedCast-instance-method">
       <div class="signature">
         
-        def <strong>parse</strong>(value : <a href="../String.html">String</a>)
+        def <strong>parse</strong>(value : <a href="../String.html">String</a>) : <a href="../Avram/Type/SuccessfulCast.html">SuccessfulCast</a>(<a href="../Bool.html">Bool</a>) | <a href="../Avram/Type/FailedCast.html">FailedCast</a>
 
-        <a class="method-permalink" href="#parse%28value%3AString%29-instance-method">#</a>
+        <a class="method-permalink" href="#parse%28value%3AString%29%3ASuccessfulCast%28Bool%29%7CFailedCast-instance-method">#</a>
       </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/3d5a1efd29518def6c504f6ccacf0c4069809ff0/src/avram/charms/bool_extensions.cr#L14" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/6d4a5401dcc05697315c2fde11ff353cf284c2d6/src/avram/charms/bool_extensions.cr#L14" target="_blank">View source</a>]
         
       </div>
     </div>
   
-    <div class="entry-detail" id="parse(value:Bool)-instance-method">
+    <div class="entry-detail" id="parse(value:Bool):SuccessfulCast(Bool)-instance-method">
       <div class="signature">
         
-        def <strong>parse</strong>(value : <a href="../Bool.html">Bool</a>)
+        def <strong>parse</strong>(value : <a href="../Bool.html">Bool</a>) : <a href="../Avram/Type/SuccessfulCast.html">SuccessfulCast</a>(<a href="../Bool.html">Bool</a>)
 
-        <a class="method-permalink" href="#parse%28value%3ABool%29-instance-method">#</a>
+        <a class="method-permalink" href="#parse%28value%3ABool%29%3ASuccessfulCast%28Bool%29-instance-method">#</a>
       </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/3d5a1efd29518def6c504f6ccacf0c4069809ff0/src/avram/charms/bool_extensions.cr#L24" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/6d4a5401dcc05697315c2fde11ff353cf284c2d6/src/avram/charms/bool_extensions.cr#L24" target="_blank">View source</a>]
         
       </div>
     </div>
   
-    <div class="entry-detail" id="parse(values:Array(Bool))-instance-method">
+    <div class="entry-detail" id="parse(values:Array(Bool)):SuccessfulCast(Array(Bool))-instance-method">
       <div class="signature">
         
-        def <strong>parse</strong>(values : <a href="../Array.html">Array</a>(<a href="../Bool.html">Bool</a>))
+        def <strong>parse</strong>(values : <a href="../Array.html">Array</a>(<a href="../Bool.html">Bool</a>)) : <a href="../Avram/Type/SuccessfulCast.html">SuccessfulCast</a>(<a href="../Array.html">Array</a>(<a href="../Bool.html">Bool</a>))
 
-        <a class="method-permalink" href="#parse%28values%3AArray%28Bool%29%29-instance-method">#</a>
+        <a class="method-permalink" href="#parse%28values%3AArray%28Bool%29%29%3ASuccessfulCast%28Array%28Bool%29%29-instance-method">#</a>
       </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/3d5a1efd29518def6c504f6ccacf0c4069809ff0/src/avram/charms/bool_extensions.cr#L28" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/6d4a5401dcc05697315c2fde11ff353cf284c2d6/src/avram/charms/bool_extensions.cr#L28" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2100,7 +2100,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/3d5a1efd29518def6c504f6ccacf0c4069809ff0/src/avram/charms/bool_extensions.cr#L32" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/6d4a5401dcc05697315c2fde11ff353cf284c2d6/src/avram/charms/bool_extensions.cr#L32" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2116,7 +2116,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/3d5a1efd29518def6c504f6ccacf0c4069809ff0/src/avram/charms/bool_extensions.cr#L36" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/6d4a5401dcc05697315c2fde11ff353cf284c2d6/src/avram/charms/bool_extensions.cr#L36" target="_blank">View source</a>]
         
       </div>
     </div>

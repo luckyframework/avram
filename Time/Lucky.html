@@ -1879,7 +1879,7 @@
   </h2>
   
     
-      <a href="https://github.com/luckyframework/avram/blob/3d5a1efd29518def6c504f6ccacf0c4069809ff0/src/avram/charms/time_extensions.cr#L6" target="_blank">
+      <a href="https://github.com/luckyframework/avram/blob/6d4a5401dcc05697315c2fde11ff353cf284c2d6/src/avram/charms/time_extensions.cr#L6" target="_blank">
         avram/charms/time_extensions.cr
       </a>
     
@@ -1923,7 +1923,7 @@
   <ul class="list-summary">
     
       <li class="entry-summary">
-        <a href="#criteria%28query%3AT%2Ccolumn%29forallT-class-method" class="signature"><strong>.criteria</strong>(query : T, column) forall T</a>
+        <a href="#criteria%28query%3AT%2Ccolumn%3ASymbol%7CString%29forallT-class-method" class="signature"><strong>.criteria</strong>(query : T, column : Symbol | String) forall T</a>
         
       </li>
     
@@ -1954,7 +1954,7 @@
   <ul class="list-summary">
     
       <li class="entry-summary">
-        <a href="#from_db%21%28value%3ATime%29-instance-method" class="signature"><strong>#from_db!</strong>(value : Time)</a>
+        <a href="#from_db%21%28value%3ATime%29%3ATime-instance-method" class="signature"><strong>#from_db!</strong>(value : Time) : Time</a>
         
       </li>
     
@@ -1964,12 +1964,12 @@
       </li>
     
       <li class="entry-summary">
-        <a href="#parse%28value%3ATime%29-instance-method" class="signature"><strong>#parse</strong>(value : Time)</a>
+        <a href="#parse%28value%3ATime%29%3ASuccessfulCast%28Time%29-instance-method" class="signature"><strong>#parse</strong>(value : Time) : SuccessfulCast(Time)</a>
         
       </li>
     
       <li class="entry-summary">
-        <a href="#parse%28values%3AArray%28Time%29%29-instance-method" class="signature"><strong>#parse</strong>(values : Array(Time))</a>
+        <a href="#parse%28values%3AArray%28Time%29%29%3ASuccessfulCast%28Array%28Time%29%29-instance-method" class="signature"><strong>#parse</strong>(values : Array(Time)) : SuccessfulCast(Array(Time))</a>
         
       </li>
     
@@ -2040,18 +2040,18 @@
     Class Method Detail
   </h2>
   
-    <div class="entry-detail" id="criteria(query:T,column)forallT-class-method">
+    <div class="entry-detail" id="criteria(query:T,column:Symbol|String)forallT-class-method">
       <div class="signature">
         
-        def self.<strong>criteria</strong>(query : <a href="../Time.html">T</a>, column) forall T
+        def self.<strong>criteria</strong>(query : <a href="../Time.html">T</a>, column : Symbol | <a href="../String.html">String</a>) forall T
 
-        <a class="method-permalink" href="#criteria%28query%3AT%2Ccolumn%29forallT-class-method">#</a>
+        <a class="method-permalink" href="#criteria%28query%3AT%2Ccolumn%3ASymbol%7CString%29forallT-class-method">#</a>
       </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/3d5a1efd29518def6c504f6ccacf0c4069809ff0/src/avram/charms/time_extensions.cr#L25" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/6d4a5401dcc05697315c2fde11ff353cf284c2d6/src/avram/charms/time_extensions.cr#L25" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2067,7 +2067,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/3d5a1efd29518def6c504f6ccacf0c4069809ff0/src/avram/charms/time_extensions.cr#L42" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/6d4a5401dcc05697315c2fde11ff353cf284c2d6/src/avram/charms/time_extensions.cr#L42" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2083,7 +2083,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/3d5a1efd29518def6c504f6ccacf0c4069809ff0/src/avram/charms/time_extensions.cr#L54" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/6d4a5401dcc05697315c2fde11ff353cf284c2d6/src/avram/charms/time_extensions.cr#L54" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2102,18 +2102,18 @@
     Instance Method Detail
   </h2>
   
-    <div class="entry-detail" id="from_db!(value:Time)-instance-method">
+    <div class="entry-detail" id="from_db!(value:Time):Time-instance-method">
       <div class="signature">
         
-        def <strong>from_db!</strong>(value : <a href="../Time.html">Time</a>)
+        def <strong>from_db!</strong>(value : <a href="../Time.html">Time</a>) : <a href="../Time.html">Time</a>
 
-        <a class="method-permalink" href="#from_db%21%28value%3ATime%29-instance-method">#</a>
+        <a class="method-permalink" href="#from_db%21%28value%3ATime%29%3ATime-instance-method">#</a>
       </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/3d5a1efd29518def6c504f6ccacf0c4069809ff0/src/avram/charms/time_extensions.cr#L29" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/6d4a5401dcc05697315c2fde11ff353cf284c2d6/src/avram/charms/time_extensions.cr#L29" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2129,39 +2129,39 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/3d5a1efd29518def6c504f6ccacf0c4069809ff0/src/avram/charms/time_extensions.cr#L33" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/6d4a5401dcc05697315c2fde11ff353cf284c2d6/src/avram/charms/time_extensions.cr#L33" target="_blank">View source</a>]
         
       </div>
     </div>
   
-    <div class="entry-detail" id="parse(value:Time)-instance-method">
+    <div class="entry-detail" id="parse(value:Time):SuccessfulCast(Time)-instance-method">
       <div class="signature">
         
-        def <strong>parse</strong>(value : <a href="../Time.html">Time</a>)
+        def <strong>parse</strong>(value : <a href="../Time.html">Time</a>) : <a href="../Avram/Type/SuccessfulCast.html">SuccessfulCast</a>(<a href="../Time.html">Time</a>)
 
-        <a class="method-permalink" href="#parse%28value%3ATime%29-instance-method">#</a>
+        <a class="method-permalink" href="#parse%28value%3ATime%29%3ASuccessfulCast%28Time%29-instance-method">#</a>
       </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/3d5a1efd29518def6c504f6ccacf0c4069809ff0/src/avram/charms/time_extensions.cr#L66" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/6d4a5401dcc05697315c2fde11ff353cf284c2d6/src/avram/charms/time_extensions.cr#L66" target="_blank">View source</a>]
         
       </div>
     </div>
   
-    <div class="entry-detail" id="parse(values:Array(Time))-instance-method">
+    <div class="entry-detail" id="parse(values:Array(Time)):SuccessfulCast(Array(Time))-instance-method">
       <div class="signature">
         
-        def <strong>parse</strong>(values : <a href="../Array.html">Array</a>(<a href="../Time.html">Time</a>))
+        def <strong>parse</strong>(values : <a href="../Array.html">Array</a>(<a href="../Time.html">Time</a>)) : <a href="../Avram/Type/SuccessfulCast.html">SuccessfulCast</a>(<a href="../Array.html">Array</a>(<a href="../Time.html">Time</a>))
 
-        <a class="method-permalink" href="#parse%28values%3AArray%28Time%29%29-instance-method">#</a>
+        <a class="method-permalink" href="#parse%28values%3AArray%28Time%29%29%3ASuccessfulCast%28Array%28Time%29%29-instance-method">#</a>
       </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/3d5a1efd29518def6c504f6ccacf0c4069809ff0/src/avram/charms/time_extensions.cr#L70" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/6d4a5401dcc05697315c2fde11ff353cf284c2d6/src/avram/charms/time_extensions.cr#L70" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2177,7 +2177,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/3d5a1efd29518def6c504f6ccacf0c4069809ff0/src/avram/charms/time_extensions.cr#L74" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/6d4a5401dcc05697315c2fde11ff353cf284c2d6/src/avram/charms/time_extensions.cr#L74" target="_blank">View source</a>]
         
       </div>
     </div>
