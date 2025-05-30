@@ -71,7 +71,7 @@ module Avram::SaveCallbacks
       conditional_error_for_block_callbacks(:before_save, :unless)
     {% end %}
 
-    def before_save
+    def before_save : Nil
       {% if @type.methods.map(&.name).includes?(:before_save.id) %}
         previous_def
       {% else %}
@@ -173,7 +173,7 @@ module Avram::SaveCallbacks
         ERR
       end
     %}
-    def after_save(%object : T)
+    def after_save(%object : T) : Nil
       {% if @type.methods.map(&.name).includes?(:after_save.id) %}
         previous_def
       {% else %}

@@ -7,19 +7,19 @@ struct Int64
     alias ColumnType = Int64
     include Avram::Type
 
-    def self.criteria(query : T, column) forall T
+    def self.criteria(query : T, column : Symbol | String) forall T
       Criteria(T, Int64).new(query, column)
     end
 
-    def from_db!(value : Int64)
+    def from_db!(value : Int64) : Int64
       value
     end
 
-    def parse(value : Int64)
+    def parse(value : Int64) : SuccessfulCast(Int64)
       SuccessfulCast(Int64).new(value)
     end
 
-    def parse(values : Array(Int64))
+    def parse(values : Array(Int64)) : SuccessfulCast(Array(Int64))
       SuccessfulCast(Array(Int64)).new values
     end
 
@@ -29,7 +29,7 @@ struct Int64
       FailedCast.new
     end
 
-    def parse(value : Int32)
+    def parse(value : Int32) : SuccessfulCast(Int64)
       SuccessfulCast(Int64).new value.to_i64
     end
 

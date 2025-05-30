@@ -7,11 +7,11 @@ struct Bool
     alias ColumnType = Bool
     include Avram::Type
 
-    def self.criteria(query : T, column) forall T
+    def self.criteria(query : T, column : Symbol | String) forall T
       Criteria(T, Bool).new(query, column)
     end
 
-    def parse(value : String)
+    def parse(value : String) : SuccessfulCast(Bool) | FailedCast
       if %w(true 1).includes? value
         SuccessfulCast(Bool).new true
       elsif %w(false 0).includes? value
@@ -21,11 +21,11 @@ struct Bool
       end
     end
 
-    def parse(value : Bool)
+    def parse(value : Bool) : SuccessfulCast(Bool)
       SuccessfulCast(Bool).new value
     end
 
-    def parse(values : Array(Bool))
+    def parse(values : Array(Bool)) : SuccessfulCast(Array(Bool))
       SuccessfulCast(Array(Bool)).new values
     end
 
