@@ -134,4 +134,16 @@ describe "Avram::DeleteOperation" do
       end
     end
   end
+
+  describe "#database" do
+    it "has access to the database via a helper method" do
+      post = PostFactory.create &.title("sandbox")
+
+      DeleteOperationWithAccessToModelValues.delete(post) do |operation, _deleted_post|
+        expect_raises(Avram::Rollback) do
+          operation.database.rollback
+        end
+      end
+    end
+  end
 end

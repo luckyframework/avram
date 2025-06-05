@@ -1015,6 +1015,17 @@ describe "Avram::SaveOperation" do
       end
     end
   end
+
+  describe "#database" do
+    it "has access to the database via a helper method" do
+      post = PostFactory.create
+      AllowBlankComment.create(post_id: post.id, body: "") do |op, _new_comment|
+        expect_raises(Avram::Rollback) do
+          op.database.rollback
+        end
+      end
+    end
+  end
 end
 
 private def now_as_string
