@@ -267,7 +267,7 @@ abstract class Avram::SaveOperation(T)
   # This method should always return `true` for a create or `false`
   # for an update, independent of the stage we are at in the operation.
   def new_record? : Bool
-    {{ T.constant(:PRIMARY_KEY_NAME).id }}.value.nil?
+    {{ T.constant(:PRIMARY_KEY_NAME).id }}.original_value.nil?
   end
 
   private def insert_or_update
