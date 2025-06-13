@@ -913,6 +913,14 @@ describe "Avram::SaveOperation" do
         operation.save.should be_true
         operation.new_record?.should be_true
       end
+
+      it "returns 'true' even if primary key is set" do
+        operation = SaveUser.new(id: 123, name: "Dan", age: 34, joined_at: Time.utc)
+
+        operation.new_record?.should be_true
+        operation.save.should be_true
+        operation.new_record?.should be_true
+      end
     end
 
     context "when updating" do
