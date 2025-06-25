@@ -37,7 +37,65 @@ private class OperationWithCallbacks < Avram::Operation
   end
 end
 
-describe "Avram::Operation callbacks" do
+class OperationWithIf < Avram::Operation
+  include TestableOperation
+  attribute number : Int32 = 1
+
+  before_run :update_number, if: :should_run_callback?
+
+  def run
+    number.value
+  end
+
+  private def update_number
+    mark_callback("before_run_update_number")
+    number.value = 10
+  end
+
+  private def should_run_callback?
+    true
+  end
+end
+
+class OperationWithUnless < Avram::Operation
+  include TestableOperation
+  attribute number : Int32 = 1
+
+  before_run :update_number, unless: :skip_callback?
+
+  def run
+    number.value
+  end
+
+  private def update_number
+    mark_callback("before_run_update_number")
+    number.value = 20
+  end
+
+  private def skip_callback?
+    true
+  end
+end
+
+class OperationWithBlockUnless < Avram::Operation
+  include TestableOperation
+  attribute number : Int32 = 1
+
+  before_run(unless: :skip_callback?) do
+    mark_callback("before_run_block")
+    number.value = 30
+  end
+
+  def run
+    number.value
+  end
+
+  private def skip_callback?
+    false
+  end
+end
+
+describe "Avram::Operation callbacks", focus: true do
   it "runs before_run and after_run callbacks" do
     OperationWithCallbacks.run do |operation, value|
       operation.callbacks_that_ran.should contain "before_run_update_number"
@@ -47,6 +105,27 @@ describe "Avram::Operation callbacks" do
       operation.number.original_value.should eq 1
       operation.callbacks_that_ran.should contain "after_run_notify_complete is 4"
       operation.callbacks_that_ran.should contain "after_run_in_a_block with 4"
+    end
+  end
+
+  it "runs before_run with if condition" do
+    OperationWithIf.run do |operation, value|
+      operation.callbacks_that_ran.should contain "before_run_update_number"
+      value.should eq 10
+    end
+  end
+
+  it "does not run before_run with unless condition" do
+    OperationWithUnless.run do |operation, value|
+      operation.callbacks_that_ran.should_not contain "before_run_update_number"
+      value.should eq 1
+    end
+  end
+
+  it "runs before_run block with unless condition" do
+    OperationWithBlockUnless.run do |operation, value|
+      operation.callbacks_that_ran.should contain "before_run_block"
+      value.should eq 30
     end
   end
 end

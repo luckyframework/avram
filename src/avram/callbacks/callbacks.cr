@@ -1,27 +1,58 @@
 module Avram::Callbacks
   # Run the given method before `run` is called on an `Operation`.
   #
-  # ```
-  # before_run :validate_inputs
+  # Examples:
+  #
+  #   before_run :validate_inputs
+  #
+  #   before_run :validate_inputs, if: :should_validate?
+  #   before_run :validate_inputs, unless: :skip_validation?
   #
   # private def validate_inputs
   #   validate_required data
   # end
-  # ```
-  macro before_run(method_name)
-    before_run do
+  macro before_run(method_name, if _if = nil, unless _unless = nil)
+    pp "rUNNING THIS THING" * 100
+    {% unless _if.is_a?(SymbolLiteral) || _if.is_a?(NilLiteral) %}
+      conditional_error_for_inline_callbacks(:before_run, {{ method_name }}, :if)
+    {% end %}
+    {% unless _unless.is_a?(SymbolLiteral) || _unless.is_a?(NilLiteral) %}
+      conditional_error_for_inline_callbacks(:before_run, {{ method_name }}, :unless)
+    {% end %}
+    before_run(if: {{ _if }}, unless: {{ _unless }}) do
       {{ method_name.id }}
     end
   end
 
   # Run the given block before `run` is called on an `Operation`.
   #
+  # This runs before `run` is invoked on the operation.
+  # You can set defaults, validate, or perform any other setup necessary before running the operation.
+  #
+  # Optionally you can pass an `if` or `unless` argument which allows you to
+  # run this conditionally. The symbol should reference a method you've defined
+  # that returns a truthy/falsey value.
+  #
   # ```
-  # before_run do
+  # before_run(unless: :skip_callback?) do
   #   validate_required data
   # end
+  #
+  # private def skip_callback?
+  #   false
+  # end
   # ```
-  macro before_run
+  macro before_run(if _if = nil, unless _unless = nil)
+    {% if _if != nil && _unless != nil %}
+      {% raise "Your before_run callbacks should only specify `if` or `unless`, but not both." %}
+    {% end %}
+    {% unless _if.is_a?(SymbolLiteral) || _if.is_a?(NilLiteral) %}
+      conditional_error_for_block_callbacks(:before_run, :if)
+    {% end %}
+    {% unless _unless.is_a?(SymbolLiteral) || _unless.is_a?(NilLiteral) %}
+      conditional_error_for_block_callbacks(:before_run, :unless)
+    {% end %}
+
     def before_run : Nil
       {% if @type.methods.map(&.name).includes?(:before_run.id) %}
         previous_def
@@ -29,7 +60,17 @@ module Avram::Callbacks
         super
       {% end %}
 
-      {{ yield }}
+      {% if _if %}
+      if {{ _if.id }}
+        {{ yield }}
+      end
+      {% elsif _unless %}
+      unless {{ _unless.id }}
+        {{ yield }}
+      end
+      {% else %}
+        {{ yield }}
+      {% end %}
     end
   end
 
