@@ -12,7 +12,6 @@ module Avram::Callbacks
   #   validate_required data
   # end
   macro before_run(method_name, if _if = nil, unless _unless = nil)
-    pp "rUNNING THIS THING" * 100
     {% unless _if.is_a?(SymbolLiteral) || _if.is_a?(NilLiteral) %}
       conditional_error_for_inline_callbacks(:before_run, {{ method_name }}, :if)
     {% end %}
