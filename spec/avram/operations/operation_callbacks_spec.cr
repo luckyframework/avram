@@ -95,7 +95,7 @@ class OperationWithBlockUnless < Avram::Operation
   end
 end
 
-describe "Avram::Operation callbacks", focus: true do
+describe "Avram::Operation callbacks" do
   it "runs before_run and after_run callbacks" do
     OperationWithCallbacks.run do |operation, value|
       operation.callbacks_that_ran.should contain "before_run_update_number"
