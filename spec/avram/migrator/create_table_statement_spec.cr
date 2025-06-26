@@ -258,4 +258,20 @@ describe Avram::Migrator::CreateTableStatement do
       SQL
     end
   end
+
+  context "table partitioning" do
+    it "can create tables with range partitioning" do
+      built = Avram::Migrator::CreateTableStatement.new(:events).build do
+        add id : Int64
+        add type : Int32
+        add message : String
+        add_timestamps
+
+        composite_primary_key :id, :created_at
+        partition_by :created_at, type: :range
+      end
+
+      built.statements.last.split("\n").last.should eq "PARTITION BY range (created_at);"
+    end
+  end
 end
