@@ -1865,7 +1865,7 @@
   </h2>
   
     
-      <a href="https://github.com/luckyframework/avram/blob/d26a52157f01e9df024518e8e968feae9cd65974/src/avram/callbacks/callbacks.cr#L1" target="_blank">
+      <a href="https://github.com/luckyframework/avram/blob/be6acb2d4254a95f9ce0d952dd65633448a97724/src/avram/callbacks/callbacks.cr#L1" target="_blank">
         avram/callbacks/callbacks.cr
       </a>
     
@@ -1906,14 +1906,14 @@
       </li>
     
       <li class="entry-summary">
-        <a href="#before_run%28method_name%29-macro" class="signature"><strong>before_run</strong>(method_name)</a>
+        <a href="#before_run%28method_name%2Cif_if%3Dnil%2Cunless_unless%3Dnil%29-macro" class="signature"><strong>before_run</strong>(method_name, if _if = <span class="n">nil</span>, unless _unless = <span class="n">nil</span>)</a>
         
           <div class="summary"><p>Run the given method before <code>run</code> is called on an <code><a href="../Avram/Operation.html">Operation</a></code>.</p></div>
         
       </li>
     
       <li class="entry-summary">
-        <a href="#before_run-macro" class="signature"><strong>before_run</strong></a>
+        <a href="#before_run%28if_if%3Dnil%2Cunless_unless%3Dnil%29-macro" class="signature"><strong>before_run</strong>(if _if = <span class="n">nil</span>, unless _unless = <span class="n">nil</span>)</a>
         
           <div class="summary"><p>Run the given block before <code>run</code> is called on an <code><a href="../Avram/Operation.html">Operation</a></code>.</p></div>
         
@@ -1965,7 +1965,7 @@ The return value of the <code>run</code> method is passed to <code>method_name</
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/d26a52157f01e9df024518e8e968feae9cd65974/src/avram/callbacks/callbacks.cr#L46" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/be6acb2d4254a95f9ce0d952dd65633448a97724/src/avram/callbacks/callbacks.cr#L86" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1996,57 +1996,68 @@ The return value of the <code>run</code> method is passed to <code>method_name</
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/d26a52157f01e9df024518e8e968feae9cd65974/src/avram/callbacks/callbacks.cr#L67" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/be6acb2d4254a95f9ce0d952dd65633448a97724/src/avram/callbacks/callbacks.cr#L107" target="_blank">View source</a>]
         
       </div>
     </div>
   
-    <div class="entry-detail" id="before_run(method_name)-macro">
+    <div class="entry-detail" id="before_run(method_name,if_if=nil,unless_unless=nil)-macro">
       <div class="signature">
         
-        macro <strong>before_run</strong>(method_name)
+        macro <strong>before_run</strong>(method_name, if _if = <span class="n">nil</span>, unless _unless = <span class="n">nil</span>)
 
-        <a class="method-permalink" href="#before_run%28method_name%29-macro">#</a>
+        <a class="method-permalink" href="#before_run%28method_name%2Cif_if%3Dnil%2Cunless_unless%3Dnil%29-macro">#</a>
       </div>
       
         <div class="doc">
           
           <p>Run the given method before <code>run</code> is called on an <code><a href="../Avram/Operation.html">Operation</a></code>.</p>
-<pre><code class="language-crystal">before_run <span class="n">:validate_inputs</span>
-
-<span class="k">private</span> <span class="k">def</span> <span class="m">validate_inputs</span>
-  validate_required data
-<span class="k">end</span></code></pre>
+<p>Examples:</p>
+<p>before_run :validate_inputs</p>
+<p>before_run :validate_inputs, if: :should_validate?
+before_run :validate_inputs, unless: :skip_validation?</p>
+<p>private def validate_inputs
+validate_required data
+end</p>
         </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/d26a52157f01e9df024518e8e968feae9cd65974/src/avram/callbacks/callbacks.cr#L11" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/be6acb2d4254a95f9ce0d952dd65633448a97724/src/avram/callbacks/callbacks.cr#L14" target="_blank">View source</a>]
         
       </div>
     </div>
   
-    <div class="entry-detail" id="before_run-macro">
+    <div class="entry-detail" id="before_run(if_if=nil,unless_unless=nil)-macro">
       <div class="signature">
         
-        macro <strong>before_run</strong>
+        macro <strong>before_run</strong>(if _if = <span class="n">nil</span>, unless _unless = <span class="n">nil</span>)
 
-        <a class="method-permalink" href="#before_run-macro">#</a>
+        <a class="method-permalink" href="#before_run%28if_if%3Dnil%2Cunless_unless%3Dnil%29-macro">#</a>
       </div>
       
         <div class="doc">
           
           <p>Run the given block before <code>run</code> is called on an <code><a href="../Avram/Operation.html">Operation</a></code>.</p>
-<pre><code class="language-crystal">before_run <span class="k">do</span>
+<p>This runs before <code>run</code> is invoked on the operation.
+You can set defaults, validate, or perform any other setup necessary before running the operation.</p>
+<p>Optionally you can pass an <code>if</code> or <code>unless</code> argument which allows you to
+run this conditionally. The symbol should reference a method you've defined
+that returns a truthy/falsey value.</p>
+<pre><code class="language-crystal">before_run(<span class="k">unless</span>: <span class="n">:skip_callback?</span>) <span class="k">do</span>
   validate_required data
+<span class="k">end</span>
+
+<span class="k">private</span> <span class="k">def</span> <span class="m">skip_callback?</span>
+  <span class="n">false</span>
 <span class="k">end</span></code></pre>
         </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/d26a52157f01e9df024518e8e968feae9cd65974/src/avram/callbacks/callbacks.cr#L24" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/be6acb2d4254a95f9ce0d952dd65633448a97724/src/avram/callbacks/callbacks.cr#L44" target="_blank">View source</a>]
         
       </div>
     </div>
