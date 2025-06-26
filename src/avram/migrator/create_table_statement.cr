@@ -9,6 +9,8 @@ class Avram::Migrator::CreateTableStatement
   private getter constraints = [] of String
   private getter? if_not_exists : Bool = false
 
+  property partition : String? = nil
+
   def initialize(@table_name : TableName, *, @if_not_exists : Bool = false)
   end
 
@@ -44,6 +46,19 @@ class Avram::Migrator::CreateTableStatement
   #   add :email : String, unique: true
   # end
   # ```
+  #
+  # Partitioning can be specified by passing a `partition_by` option to the block.
+  #
+  # ```
+  # built = Avram::Migrator::CreateTableStatement.new(:events).build do
+  #   add id : Int64
+  #   add type : Int32
+  #   add :message : String
+  #   add_timestamps
+  #
+  #   composite_primary_key :id, :created_at
+  #   partition_by :created_at, type: :range
+  # end
   def build(&) : CreateTableStatement
     with self yield
     self
@@ -59,7 +74,9 @@ class Avram::Migrator::CreateTableStatement
       rows.join(statement, ",\n")
       statement << ",\n" if !constraints.empty?
       constraints.join(statement, ", \n")
-      statement << ");"
+      statement << ")"
+      statement << partition.as(String) unless partition.nil?
+      statement << ";"
     end
   end
 
@@ -131,6 +148,14 @@ class Avram::Migrator::CreateTableStatement
     {% if index || unique %}
       add_index :{{ type_declaration.var }}, using: {{ using }}, unique: {{ unique }}
     {% end %}
+  end
+
+  macro partition_by(column, type)
+    {% unless [:range, :list, :hash].includes?(type) %}
+      {% type.raise "partition_by expected one of :range, :list, :hash instead got: #{type}" %}
+    {% end %}
+
+    itself.partition = %(\nPARTITION BY {{type.id}} ({{column.id}}))
   end
 
   # Adds a references column and index given a model class and references option.
