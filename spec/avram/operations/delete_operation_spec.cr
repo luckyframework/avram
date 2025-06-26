@@ -31,7 +31,7 @@ describe "Avram::DeleteOperation" do
       BasicDeleteUser.delete(user) do |operation, deleted_user|
         operation.valid?.should be_true
         operation.delete_status.should eq BasicDeleteUser::OperationStatus::Deleted
-        deleted_user.not_nil!.name.should eq user.name
+        deleted_user.as(User).name.should eq user.name
         UserQuery.new.select_count.should eq 0
       end
     end
@@ -42,7 +42,7 @@ describe "Avram::DeleteOperation" do
       FailedToDeleteUser.delete(user) do |operation, deleted_user|
         operation.valid?.should be_false
         operation.delete_status.should eq FailedToDeleteUser::OperationStatus::DeleteFailed
-        deleted_user.should eq nil
+        deleted_user.should be_truthy
         operation.errors[:nope].should contain "not today"
         UserQuery.new.select_count.should eq 1
       end
@@ -131,6 +131,18 @@ describe "Avram::DeleteOperation" do
       DeleteOperationWithAccessToModelValues.delete(post) do |operation, _deleted_post|
         operation.deleted?.should be_false
         operation.errors[:title].should contain("You can't delete your sandbox")
+      end
+    end
+  end
+
+  describe "#database" do
+    it "has access to the database via a helper method" do
+      post = PostFactory.create &.title("sandbox")
+
+      DeleteOperationWithAccessToModelValues.delete(post) do |operation, _deleted_post|
+        expect_raises(Avram::Rollback) do
+          operation.database.rollback
+        end
       end
     end
   end

@@ -9,7 +9,7 @@ describe Avram::QueryBuilder do
       .order_by(Avram::OrderBy.new(:my_column, :asc))
 
     query.joins.size.should eq(1)
-    query.statement.should eq "SELECT * FROM users INNER JOIN posts ON users.id = posts.user_id ORDER BY my_column ASC"
+    query.statement.should eq %(SELECT * FROM users INNER JOIN posts ON "users"."id" = "posts"."user_id" ORDER BY my_column ASC)
   end
 
   it "does not remove potentially duplicate where clauses" do
@@ -95,14 +95,48 @@ describe Avram::QueryBuilder do
     query.statement.should eq "SELECT * FROM users WHERE name = $1 AND age > $2"
   end
 
-  it "accepts raw where clauses" do
-    query = new_query
-      .where(Avram::Where::Raw.new("name = ?", "Mikias"))
-      .where(Avram::Where::Raw.new("age > ?", 26))
-      .where(Avram::Where::Raw.new("age < ?", args: [30]))
-      .limit(1)
-    query.statement.should eq "SELECT * FROM users WHERE name = 'Mikias' AND age > 26 AND age < 30 LIMIT 1"
-    query.args.empty?.should be_true
+  describe "accepts raw clauses" do
+    it "substituting binding parameters" do
+      query = new_query
+        .where(Avram::Where::Raw.new("name = ?", "Mikias"))
+        .where(Avram::Where::Raw.new("age > ?", 26))
+        .where(Avram::Where::Raw.new("age < ?", args: [30]))
+        .limit(1)
+      query.statement.should eq "SELECT * FROM users WHERE name = 'Mikias' AND age > 26 AND age < 30 LIMIT 1"
+      query.args.empty?.should be_true
+    end
+
+    it "escaping elements to prevent sql injections" do
+      expected = <<-SQL
+      SELECT * FROM users WHERE name = 'aloha'';--'
+      SQL
+      query = new_query.where(Avram::Where::Raw.new("name = ?", "aloha';--"))
+      query.statement.should eq expected
+    end
+
+    it "correctly managing input arrays" do
+      expected = <<-SQL
+      SELECT * FROM users WHERE tags && '{"ruby","crystal"}'
+      SQL
+      query = new_query.where(Avram::Where::Raw.new("tags && ?", ["ruby", "crystal"]))
+      query.statement.should eq expected
+    end
+
+    it "preventing sql injections with arrays (1)" do
+      expected = <<-SQL
+      SELECT * FROM users WHERE tags && '{"ruby","crystal';--"}'
+      SQL
+      query = new_query.where(Avram::Where::Raw.new("tags && ?", ["ruby", "crystal';--"]))
+      query.statement.should eq expected
+    end
+
+    it "preventing sql injections with arrays (2)" do
+      expected = <<-SQL
+      SELECT * FROM users WHERE tags && '{"ruby","crystal\\"}';--"}'
+      SQL
+      query = new_query.where(Avram::Where::Raw.new("tags && ?", ["ruby", "crystal\"}';--"]))
+      query.statement.should eq expected
+    end
   end
 
   it "can be ordered" do
@@ -205,7 +239,7 @@ describe Avram::QueryBuilder do
     it "specifies columns to be selected" do
       query = new_query.select([:name, :age])
 
-      query.statement.should eq "SELECT users.name, users.age FROM users"
+      query.statement.should eq %(SELECT "users"."name", "users"."age" FROM users)
     end
   end
 
@@ -214,7 +248,7 @@ describe Avram::QueryBuilder do
       .join(Avram::Join::Inner.new(:users, :posts))
       .limit(1)
 
-    query.statement.should eq "SELECT * FROM users INNER JOIN posts ON users.id = posts.user_id LIMIT 1"
+    query.statement.should eq %(SELECT * FROM users INNER JOIN posts ON "users"."id" = "posts"."user_id" LIMIT 1)
   end
 
   describe "#reverse_order" do
@@ -276,9 +310,9 @@ describe Avram::QueryBuilder do
         .limit(10)
         .offset(5)
 
-      cloned_query.statement.should eq "SELECT users.name, users.age FROM users INNER JOIN posts ON users.id = posts.user_id WHERE name = $1 AND age > $2 ORDER BY id ASC LIMIT 10 OFFSET 5"
+      cloned_query.statement.should eq %(SELECT "users"."name", "users"."age" FROM users INNER JOIN posts ON "users"."id" = "posts"."user_id" WHERE name = $1 AND age > $2 ORDER BY id ASC LIMIT 10 OFFSET 5)
 
-      old_query.statement.should eq "SELECT users.name, users.age FROM users INNER JOIN posts ON users.id = posts.user_id WHERE name = $1 ORDER BY id ASC LIMIT 1 OFFSET 2"
+      old_query.statement.should eq %(SELECT "users"."name", "users"."age" FROM users INNER JOIN posts ON "users"."id" = "posts"."user_id" WHERE name = $1 ORDER BY id ASC LIMIT 1 OFFSET 2)
     end
   end
 
@@ -345,7 +379,7 @@ private def new_query
   Avram::QueryBuilder.new(table: :users)
 end
 
-private def raises_unsupported_query
+private def raises_unsupported_query(&)
   expect_raises Avram::UnsupportedQueryError do
     yield Avram::QueryBuilder.new(table: :users)
   end

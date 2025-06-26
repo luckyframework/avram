@@ -1,5 +1,5 @@
 require "./validations"
-require "./callbacks"
+require "./callbacks/delete_callbacks"
 require "./define_attribute"
 require "./operation_errors"
 require "./param_key_override"
@@ -12,8 +12,9 @@ abstract class Avram::DeleteOperation(T)
   include Avram::Validations
   include Avram::OperationErrors
   include Avram::ParamKeyOverride
-  include Avram::Callbacks
+  include Avram::DeleteCallbacks
   include Avram::InheritColumnAttributes
+  include Avram::AddColumnAttributes
 
   enum OperationStatus
     Deleted
@@ -30,22 +31,42 @@ abstract class Avram::DeleteOperation(T)
     property delete_status : OperationStatus = OperationStatus::Unperformed
   end
 
-  def self.param_key
+  def self.param_key : String
     T.name.underscore
+  end
+
+  delegate :write_database, :table_name, :primary_key_name, to: T
+
+  # A helper method to backfill accesing the database
+  # before they were split in to read/write methods
+  def database : Avram::Database.class
+    write_database
   end
 
   def delete : Bool
     before_delete
 
     if valid?
-      result = delete_or_soft_delete(@record)
-      @record = result
-      after_delete(@record)
-      publish_delete_success_event
-      mark_as_deleted
+      transaction_committed = write_database.transaction do
+        @record = delete_or_soft_delete(record)
+        after_delete(record)
+        true
+      end
+
+      if transaction_committed
+        mark_as_deleted
+        after_commit(record)
+        publish_delete_success_event
+        true
+      else
+        mark_as_failed
+        publish_delete_failed_event
+        false
+      end
     else
-      publish_delete_failed_event
       mark_as_failed
+      publish_delete_failed_event
+      false
     end
   end
 
@@ -58,26 +79,27 @@ abstract class Avram::DeleteOperation(T)
   end
 
   # :nodoc:
-  def default_validations; end
+  def default_validations : Nil
+  end
 
   # Returns `true` if all attributes are valid,
   # and there's no custom errors
-  def valid?
+  def valid? : Bool
     default_validations
     custom_errors.empty? && attributes.all?(&.valid?)
   end
 
-  def mark_as_deleted
+  def mark_as_deleted : Bool
     self.delete_status = OperationStatus::Deleted
     true
   end
 
   # Returns true if the operation has run and saved the record successfully
-  def deleted?
+  def deleted? : Bool
     delete_status == OperationStatus::Deleted
   end
 
-  def mark_as_failed
+  def mark_as_failed : Bool
     self.delete_status = OperationStatus::DeleteFailed
     false
   end
@@ -85,6 +107,8 @@ abstract class Avram::DeleteOperation(T)
   def before_delete; end
 
   def after_delete(_record : T); end
+
+  def after_commit(_record : T); end
 
   # :nodoc:
   def publish_delete_failed_event
@@ -102,111 +126,11 @@ abstract class Avram::DeleteOperation(T)
   end
 
   private def delete_or_soft_delete(record : T) : T
-    result = if record.is_a?(Avram::SoftDelete::Model)
-               record.soft_delete
-             else
-               record.delete
-               record
-             end
-  end
-
-  # :nodoc:
-  macro add_column_attributes(attributes)
-    {% for attribute in attributes %}
-      {% COLUMN_ATTRIBUTES << attribute %}
-    {% end %}
-
-    private def extract_changes_from_params
-      permitted_params.each do |key, value|
-        {% for attribute in attributes %}
-          set_{{ attribute[:name] }}_from_param value if key == {{ attribute[:name].stringify }}
-        {% end %}
-      end
-    end
-
-    {% for attribute in attributes %}
-      @_{{ attribute[:name] }} : Avram::Attribute({{ attribute[:type] }})?
-
-      def {{ attribute[:name] }}
-        _{{ attribute[:name] }}
-      end
-
-      def {{ attribute[:name] }}=(_value)
-        \{% raise <<-ERROR
-          Can't set an attribute value with '{{attribute[:name]}} = '
-
-          Try this...
-
-            ▸ Use '.value' to set the value: '{{attribute[:name]}}.value = '
-
-          ERROR
-          %}
-      end
-
-      private def _{{ attribute[:name] }}
-        record_value = @record.try(&.{{ attribute[:name] }})
-        value = record_value.nil? ? default_value_for_{{ attribute[:name] }} : record_value
-
-        @_{{ attribute[:name] }} ||= Avram::Attribute({{ attribute[:type] }}).new(
-          name: :{{ attribute[:name].id }},
-          param: permitted_params["{{ attribute[:name] }}"]?,
-          value: value,
-          param_key: self.class.param_key)
-      end
-
-      private def default_value_for_{{ attribute[:name] }}
-        {% if attribute[:value] || attribute[:value] == false %}
-          parse_result = {{ attribute[:type] }}.adapter.parse({{ attribute[:value] }})
-          if parse_result.is_a? Avram::Type::SuccessfulCast
-            parse_result.value.as({{ attribute[:type] }})
-          else
-            nil
-          end
-        {% else %}
-          nil
-        {% end %}
-      end
-
-      def permitted_params
-        new_params = {} of String => String
-        @params.nested(self.class.param_key).each do |key, value|
-          new_params[key] = value
-        end
-        new_params.select(@@permitted_param_keys)
-      end
-
-      def set_{{ attribute[:name] }}_from_param(_value)
-        # In nilable types, `nil` is ok, and non-nilable types we will get the
-        # "is required" error.
-        if _value.blank?
-          {{ attribute[:name] }}.value = nil
-          return
-        end
-        {% if attribute[:type].is_a?(Generic) %}
-          # Pass `_value` in as an Array. Currently only single values are supported.
-          # TODO: Update this once Lucky params support Arrays natively
-          parse_result = {{ attribute[:type] }}.adapter.parse([_value])
-        {% else %}
-          parse_result = {{ attribute[:type] }}.adapter.parse(_value)
-        {% end %}
-        if parse_result.is_a? Avram::Type::SuccessfulCast
-          {{ attribute[:name] }}.value = parse_result.value.as({{ attribute[:type] }})
-        else
-          {{ attribute[:name] }}.add_error "is invalid"
-        end
-      end
-    {% end %}
-
-    def attributes
-      column_attributes + super
-    end
-
-    private def column_attributes
-      [
-        {% for attribute in attributes %}
-          {{ attribute[:name] }},
-        {% end %}
-      ]
+    if record.is_a?(Avram::SoftDelete::Model)
+      record.soft_delete
+    else
+      record.delete
+      record
     end
   end
 end

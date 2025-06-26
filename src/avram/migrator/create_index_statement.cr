@@ -28,23 +28,31 @@ require "./index_statement_helpers"
 class Avram::Migrator::CreateIndexStatement
   include Avram::Migrator::IndexStatementHelpers
 
-  ALLOWED_INDEX_TYPES = %w[btree]
+  enum IndexTypes
+    Btree
+    Hash
+    Gist
+    Gin
+    Brin
+  end
 
-  def initialize(@table : TableName, @columns : Columns, @using : Symbol = :btree, @unique = false, @name : String? | Symbol? = nil)
-    raise "index type '#{using}' not supported" unless ALLOWED_INDEX_TYPES.includes?(using.to_s)
+  def initialize(@table : TableName, @columns : Columns, using : Symbol = :btree, @unique = false, @name : String? | Symbol? = nil)
+    @using = IndexTypes.parse?(using.to_s)
+    raise "index type '#{using}' not supported" if @using.nil?
   end
 
   def build
     index_name = @name
-    index_name ||= "#{@table}_#{columns.join("_")}_index"
+    index_name ||= "#{@table}_#{columns.join('_')}_index"
+    mapped_columns = columns.join(", ") { |col| %("#{col}") }
 
     String.build do |index|
       index << "CREATE"
       index << " UNIQUE" if @unique
-      index << " INDEX #{index_name}"
-      index << " ON #{@table}"
-      index << " USING #{@using}"
-      index << " (#{columns.join(", ")});"
+      index << " INDEX " << index_name
+      index << " ON " << @table
+      index << " USING " << @using.to_s.downcase
+      index << " (" << mapped_columns << ");"
     end
   end
 

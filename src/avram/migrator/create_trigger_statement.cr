@@ -4,7 +4,7 @@ class Avram::Migrator::CreateTriggerStatement
     @trigger_name : String,
     @function : String,
     callback @trigger_when : Symbol = :before,
-    on @trigger_operation : Array(Symbol) = [:update]
+    on @trigger_operation : Array(Symbol) = [:update],
   )
   end
 

@@ -1,7 +1,6 @@
 module Avram::OperationErrors
   macro included
-    @custom_errors : Hash(Symbol, Array(String)) = {} of Symbol => Array(String)
-    getter :custom_errors
+    getter custom_errors : Hash(Symbol, Array(String)) = {} of Symbol => Array(String)
   end
 
   def errors : Hash(Symbol, Array(String))

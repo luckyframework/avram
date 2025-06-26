@@ -5,7 +5,12 @@
 # used by `Avram::Events::SaveFailedEvent` so that subscribers can
 # get information about attributes that failed to save.
 class Avram::GenericAttribute
-  getter :name, :param, :original_value, :value, :param_key, :errors
+  getter name : Symbol
+  getter param : String?
+  getter original_value : String?
+  getter value : String?
+  getter param_key : String
+  getter errors : Array(String)
 
   def initialize(
     @name : Symbol,
@@ -13,11 +18,11 @@ class Avram::GenericAttribute
     @original_value : String?,
     @value : String?,
     @param_key : String,
-    @errors : Array(String)
+    @errors : Array(String),
   )
   end
 
-  def valid?
+  def valid? : Bool
     errors.empty?
   end
 end

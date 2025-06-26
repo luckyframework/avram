@@ -7,15 +7,15 @@ struct UUID
     alias ColumnType = UUID
     include Avram::Type
 
-    def self.criteria(query : T, column) forall T
+    def self.criteria(query : T, column : Symbol | String) forall T
       Criteria(T, UUID).new(query, column)
     end
 
-    def parse(value : UUID)
+    def parse(value : UUID) : SuccessfulCast(UUID)
       SuccessfulCast(UUID).new(value)
     end
 
-    def parse(values : Array(UUID))
+    def parse(values : Array(UUID)) : SuccessfulCast(Array(UUID))
       SuccessfulCast(Array(UUID)).new values
     end
 
@@ -25,7 +25,7 @@ struct UUID
       FailedCast.new
     end
 
-    def to_db(value : UUID)
+    def to_db(value : UUID) : String
       value.to_s
     end
 

@@ -1,10 +1,11 @@
 class Comment < BaseModel
+  COLUMN_SQL = %("comments"."custom_id", "comments"."created_at", "comments"."updated_at", "comments"."body", "comments"."post_id")
   skip_default_columns
 
   table do
     primary_key custom_id : Int64
     timestamps
-    column body : String
+    column body : String, allow_blank: true
     belongs_to post : Post
   end
 end

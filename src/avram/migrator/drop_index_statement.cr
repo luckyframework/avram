@@ -36,7 +36,7 @@ class Avram::Migrator::DropIndexStatement
     String.build do |index|
       index << "DROP INDEX"
       index << " IF EXISTS" if @if_exists
-      index << " #{index_name}"
+      index << ' ' << index_name
       index << on_delete_strategy(@on_delete)
     end
   end

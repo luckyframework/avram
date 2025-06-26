@@ -6,6 +6,6 @@ abstract class Avram::Migrator::Columns::PrimaryKeys::Base
   abstract def column_type
 
   def build : String
-    %(  #{name} #{column_type} PRIMARY KEY)
+    %(  "#{name}" #{column_type} PRIMARY KEY)
   end
 end

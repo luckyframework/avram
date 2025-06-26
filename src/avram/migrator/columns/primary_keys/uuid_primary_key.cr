@@ -10,7 +10,7 @@ module Avram::Migrator::Columns::PrimaryKeys
     end
 
     def build : String
-      %(  #{name} #{column_type} PRIMARY KEY DEFAULT gen_random_uuid())
+      %(  "#{name}" #{column_type} PRIMARY KEY DEFAULT gen_random_uuid())
     end
   end
 end

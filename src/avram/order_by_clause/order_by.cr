@@ -24,14 +24,14 @@ module Avram
     def initialize(
       @column : String | Symbol,
       @direction : Direction,
-      @nulls : NullSorting = :default
+      @nulls : NullSorting = :default,
     )
     end
 
     def prepare : String
       String.build do |str|
-        str << "#{column} #{direction}"
-        str << " #{nulls}" unless nulls.default?
+        str << column << ' ' << direction
+        str << ' ' << nulls unless nulls.default?
       end
     end
 

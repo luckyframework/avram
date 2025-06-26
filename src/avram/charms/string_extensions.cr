@@ -11,15 +11,15 @@ class String
       Criteria(T, String).new(query, column)
     end
 
-    def parse(value : String)
+    def parse(value : String) : SuccessfulCast(String)
       SuccessfulCast(String).new(value)
     end
 
-    def parse(values : Array(String))
+    def parse(values : Array(String)) : SuccessfulCast(Array(String))
       SuccessfulCast(Array(String)).new(values)
     end
 
-    def to_db(value : String)
+    def to_db(value : String) : String
       value
     end
 
@@ -29,8 +29,6 @@ class String
 
     class Criteria(T, V) < Avram::Criteria(T, V)
       include Avram::IncludesCriteria(T, V)
-      @upper = false
-      @lower = false
 
       def like(value : String) : T
         add_clause(Avram::Where::Like.new(column, value))
@@ -40,25 +38,17 @@ class String
         add_clause(Avram::Where::Ilike.new(column, value))
       end
 
-      def upper
-        @upper = true
-        self
+      def match(value : String) : T
+        add_clause(Avram::Where::TsMatch.new(column, value))
       end
 
-      def lower
-        @lower = true
-        self
-      end
-
-      def column
-        if @upper
-          "UPPER(#{@column})"
-        elsif @lower
-          "LOWER(#{@column})"
-        else
-          @column
-        end
-      end
+      define_function_criteria(upper, V)
+      define_function_criteria(lower, V)
+      define_function_criteria(trim, String)
+      define_function_criteria(length, Int64)
+      define_function_criteria(reverse, String)
+      define_function_criteria(to_tsvector, String)
+      define_function_criteria(to_tsquery, String)
     end
   end
 end

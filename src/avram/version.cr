@@ -1,3 +1,7 @@
 module Avram
-  VERSION = "0.22.0"
+  macro set_version
+    VERSION = {{ `shards version "#{__DIR__}"`.chomp.stringify.downcase }}
+  end
+
+  set_version
 end

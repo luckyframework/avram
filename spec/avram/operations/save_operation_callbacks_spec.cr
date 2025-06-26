@@ -40,7 +40,8 @@ private class CallbacksSaveOperation < Post::SaveOperation
   end
 
   def run_after_save_again(post : Post)
-    database.rollback if @rollback
+    # TODO: `database` should be ok here, right?
+    write_database.rollback if @rollback
     mark_callback "after_save_again"
   end
 
@@ -63,7 +64,7 @@ end
 
 private class SaveLineItemBase < LineItem::SaveOperation
   permit_columns :name
-  getter locked : Bool = false
+  getter? locked : Bool = false
 
   before_save lock
 
@@ -74,7 +75,7 @@ end
 
 private class SaveLineItemSub < SaveLineItemBase
   permit_columns :name
-  getter loaded : Bool = false
+  getter? loaded : Bool = false
 
   before_save load
 
@@ -229,10 +230,9 @@ describe "Avram::SaveOperation callbacks" do
   end
 
   it "runs before_save in parent class and before_save in child class" do
-    params = Avram::Params.new({"name" => "A fancy hat"})
-    SaveLineItemSub.create params do |operation, record|
-      operation.locked.should be_true
-      operation.loaded.should be_true
+    SaveLineItemSub.create name: "A fancy hat" do |operation, record|
+      operation.locked?.should be_true
+      operation.loaded?.should be_true
       operation.saved?.should be_true
       record.should be_a(LineItem)
     end
@@ -240,11 +240,10 @@ describe "Avram::SaveOperation callbacks" do
 
   it "skips running specified callbacks" do
     post = PostFactory.create &.title("Existing Post")
-    params = Avram::Params.new({"title" => "A fancy post"})
 
-    UpdateOperationWithSkipCallbacks.update(post, params) do |operation, updated_post|
+    UpdateOperationWithSkipCallbacks.update(post, title: "A fancy post") do |operation, updated_post|
       updated_post.should_not eq nil
-      updated_post.not_nil!.title.should eq "A fancy post"
+      updated_post.as(Post).title.should eq "A fancy post"
 
       operation.callbacks_that_ran.should eq([
         "before_save_in_a_block",

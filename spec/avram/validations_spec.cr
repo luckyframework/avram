@@ -133,7 +133,7 @@ describe Avram::Validations do
       existing_user = UserFactory.new.name("Sally").nickname("Sal").create
       operation = UniquenessSaveOperation.new
       operation.name.value = existing_user.name
-      operation.nickname.value = existing_user.nickname.not_nil!.downcase
+      operation.nickname.value = existing_user.nickname.to_s.downcase
       operation.age.value = existing_user.age
 
       operation.save
@@ -148,7 +148,7 @@ describe Avram::Validations do
       existing_user = UserFactory.new.name("Sally").nickname("Sal").create
       operation = UniquenessSaveOperation.new(existing_user)
       operation.name.value = existing_user.name
-      operation.nickname.value = existing_user.nickname.not_nil!.downcase
+      operation.nickname.value = existing_user.nickname.to_s.downcase
       operation.age.value = existing_user.age
 
       operation.save
@@ -203,7 +203,7 @@ describe Avram::Validations do
     it "validates custom message for validate_numeric" do
       too_small_attribute = attribute(1)
 
-      result = Avram::Validations.validate_numeric too_small_attribute, greater_than: 2, message: "number is too small"
+      result = Avram::Validations.validate_numeric too_small_attribute, at_least: 2, message: "number is too small"
       result.should eq(false)
       too_small_attribute.errors.should eq(["number is too small"])
     end
@@ -260,6 +260,11 @@ describe Avram::Validations do
       result.should eq(true)
       allowed_name.valid?.should be_true
 
+      allowed_number = attribute(4)
+      result = Avram::Validations.validate_inclusion_of(allowed_number, in: 0..5)
+      result.should eq(true)
+      allowed_number.valid?.should eq(true)
+
       forbidden_name = attribute("123123123")
       result = Avram::Validations.validate_inclusion_of(forbidden_name, in: ["Jamie"])
       result.should eq(false)
@@ -304,6 +309,16 @@ describe Avram::Validations do
       result = Avram::Validations.validate_size_of(just_right_attribute, is: 10)
       result.should eq(true)
       just_right_attribute.valid?.should be_true
+
+      range_array_attribute = attribute(["one", "two"])
+      result = Avram::Validations.validate_size_of(range_array_attribute, min: 1, max: 3)
+      result.should eq(true)
+      range_array_attribute.valid?.should be_true
+
+      exact_array_attribute = attribute(["one", "two"])
+      result = Avram::Validations.validate_size_of(range_array_attribute, is: 2)
+      result.should eq(true)
+      exact_array_attribute.valid?.should be_true
     end
 
     it "raises an error for an impossible condition" do
@@ -338,54 +353,73 @@ describe Avram::Validations do
   describe "validate_numeric" do
     it "validates" do
       too_small_attribute = attribute(1)
-      result = Avram::Validations.validate_numeric(too_small_attribute, greater_than: 2)
+      result = Avram::Validations.validate_numeric(too_small_attribute, at_least: 2)
       result.should eq(false)
-      too_small_attribute.errors.should eq(["must be greater than 2"])
+      too_small_attribute.errors.should eq(["must be at least 2"])
 
       too_large_attribute = attribute(38)
-      result = Avram::Validations.validate_numeric(too_large_attribute, less_than: 32)
+      result = Avram::Validations.validate_numeric(too_large_attribute, no_more_than: 32)
       result.should eq(false)
-      too_large_attribute.errors.should eq(["must be less than 32"])
+      too_large_attribute.errors.should eq(["must be no more than 32"])
 
       just_right_attribute = attribute(10)
-      result = Avram::Validations.validate_numeric(just_right_attribute, greater_than: 9, less_than: 11)
+      result = Avram::Validations.validate_numeric(just_right_attribute, at_least: 9, no_more_than: 11)
       result.should eq(true)
       just_right_attribute.valid?.should be_true
+
+      exactly = attribute(4)
+      result = Avram::Validations.validate_numeric(exactly, at_least: 4)
+      result.should eq(true)
+      exactly.valid?.should be_true
     end
 
     it "raises an error for an impossible condition" do
       expect_raises(Avram::ImpossibleValidation) do
-        Avram::Validations.validate_numeric attribute(100), greater_than: 4, less_than: 1
+        Avram::Validations.validate_numeric attribute(100), at_least: 4, no_more_than: 1
       end
     end
 
     it "can allow nil" do
       just_nil = nil_attribute(Int32)
-      result = Avram::Validations.validate_numeric(just_nil, greater_than: 1, less_than: 2, allow_nil: true)
+      result = Avram::Validations.validate_numeric(just_nil, at_least: 1, no_more_than: 2, allow_nil: true)
       result.should eq(true)
       just_nil.valid?.should be_true
 
       just_nil = nil_attribute(Int32)
-      result = Avram::Validations.validate_numeric(just_nil, greater_than: 1, less_than: 2)
+      result = Avram::Validations.validate_numeric(just_nil, at_least: 1, no_more_than: 2)
       result.should eq(false)
       just_nil.valid?.should be_false
     end
 
     it "handles different types of numbers" do
       attribute = attribute(10.9)
-      result = Avram::Validations.validate_numeric(attribute, greater_than: 9, less_than: 11)
+      result = Avram::Validations.validate_numeric(attribute, at_least: 9, no_more_than: 11)
       result.should eq(true)
       attribute.valid?.should be_true
 
       attribute = attribute(10)
-      result = Avram::Validations.validate_numeric(attribute, greater_than: 9.8, less_than: 10.9)
+      result = Avram::Validations.validate_numeric(attribute, at_least: 9.8, no_more_than: 10.9)
       result.should eq(true)
       attribute.valid?.should be_true
 
       attribute = attribute(10_i64)
-      result = Avram::Validations.validate_numeric(attribute, greater_than: 9, less_than: 11)
+      result = Avram::Validations.validate_numeric(attribute, at_least: 9, no_more_than: 11)
       result.should eq(true)
       attribute.valid?.should be_true
+    end
+
+    it "properly displays errors for float" do
+      invalid_attribute = attribute(5.5)
+      result = Avram::Validations.validate_numeric(invalid_attribute, at_least: 9.8)
+      result.should eq(false)
+      invalid_attribute.valid?.should be_false
+      invalid_attribute.errors.should eq(["must be at least 9.8"])
+
+      invalid_attribute = attribute(34.6)
+      result = Avram::Validations.validate_numeric(invalid_attribute, no_more_than: 10.9)
+      result.should eq(false)
+      invalid_attribute.valid?.should be_false
+      invalid_attribute.errors.should eq(["must be no more than 10.9"])
     end
   end
 
@@ -428,6 +462,32 @@ describe Avram::Validations do
       )
       result.should eq(true)
       nil_attribute.valid?.should be_true
+    end
+  end
+
+  describe "validate_url_format" do
+    it "validates" do
+      valid_url_attribute = attribute("https://luckyframework.org")
+      result = Avram::Validations.validate_url_format(valid_url_attribute)
+      result.should eq(true)
+      valid_url_attribute.valid?.should be_true
+
+      invalid_url_attribute = attribute("http://luckyframework.org")
+      result = Avram::Validations.validate_url_format(invalid_url_attribute)
+      result.should eq(false)
+      invalid_url_attribute.valid?.should be_false
+      invalid_url_attribute.errors.should eq ["must be a valid URL beginning with https"]
+
+      valid_other_attribute = attribute("ftp://user:pass@host:1234/files")
+      result = Avram::Validations.validate_url_format(valid_other_attribute, scheme: "ftp")
+      result.should eq(true)
+      valid_other_attribute.valid?.should be_true
+
+      bad_attribute = attribute("  not a URL  ")
+      result = Avram::Validations.validate_url_format(bad_attribute)
+      result.should eq(false)
+      bad_attribute.valid?.should be_false
+      bad_attribute.errors.should eq ["must be a valid URL beginning with https"]
     end
   end
 end

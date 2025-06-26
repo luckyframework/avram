@@ -7,7 +7,7 @@ class Avram::Credentials
     @username : String? = nil,
     @password : String? = nil,
     @port : Int32? = nil,
-    @query : String? = nil
+    @query : String? = nil,
   )
     @url = build_url
   end
@@ -80,61 +80,70 @@ class Avram::Credentials
     @query.try(&.strip).presence
   end
 
+  # This is the full connection string used
+  # to connect to the PostgreSQL server.
+  def connection_string : String
+    String.build do |io|
+      set_url_protocol(io)
+      set_url_creds(io)
+      set_url_host(io)
+      set_url_port(io)
+    end
+  end
+
   # Returns the postgres connection string without
   # any query params.
   def url_without_query_params : String
     url.sub("?#{@query}", "")
   end
 
-  private def build_url
+  private def build_url : String
     String.build do |io|
-      set_url_protocol(io)
-      set_url_creds(io)
-      set_url_host(io)
-      set_url_port(io)
+      io << connection_string
       set_url_db(io)
       set_url_query(io)
     end
   end
 
-  private def set_url_db(io)
-    io << "/#{database}"
+  private def set_url_db(io : String::Builder) : Nil
+    io << '/' << database
   end
 
-  private def set_url_port(io)
+  private def set_url_port(io : String::Builder) : Nil
     port.try do |the_port|
-      io << ":#{the_port}"
+      io << ':' << the_port
     end
   end
 
-  private def set_url_host(io)
+  private def set_url_host(io : String::Builder) : Nil
     hostname.try do |host|
       io << host
     end
   end
 
-  private def set_url_creds(io)
+  private def set_url_creds(io : String::Builder) : Nil
     set_at = false
     username.try do |user|
-      io << URI.encode_www_form(user)
+      URI.encode_www_form(user, io)
       set_at = true
     end
 
     password.try do |pass|
-      io << ":#{URI.encode_www_form(pass)}"
+      io << ':'
+      URI.encode_www_form(pass, io)
       set_at = true
     end
 
-    io << "@" if set_at
+    io << '@' if set_at
   end
 
-  private def set_url_protocol(io)
+  private def set_url_protocol(io : String::Builder) : Nil
     io << "postgres://"
   end
 
-  private def set_url_query(io)
+  private def set_url_query(io : String::Builder) : Nil
     query.try do |q|
-      io << "?#{q}"
+      io << '?' << q
     end
   end
 end

@@ -4,8 +4,8 @@ module Avram::Migrator::StatementHelpers
   include Avram::Migrator::IndexStatementHelpers
   include Avram::TableFor
 
-  macro create(table_name)
-    statements = Avram::Migrator::CreateTableStatement.new({{ table_name }}).build do
+  macro create(table_name, *, if_not_exists = false)
+    statements = Avram::Migrator::CreateTableStatement.new({{ table_name }}, if_not_exists: {{ if_not_exists }}).build do
       {{ yield }}
     end.statements
 
@@ -14,12 +14,12 @@ module Avram::Migrator::StatementHelpers
     end
   end
 
-  def drop(table_name)
-    prepared_statements << Avram::Migrator::DropTableStatement.new(table_name).build
+  def drop(table_name, *, if_exists = false)
+    prepared_statements << Avram::Migrator::DropTableStatement.new(table_name, if_exists).build
   end
 
-  macro alter(table_name)
-    statements = Avram::Migrator::AlterTableStatement.new({{ table_name }}).build do
+  macro alter(table_name, *, if_exists = false)
+    statements = Avram::Migrator::AlterTableStatement.new({{ table_name }}, if_exists: {{ if_exists }}).build do
       {{ yield }}
     end.statements
 
@@ -92,5 +92,16 @@ module Avram::Migrator::StatementHelpers
   # Drop the tigger `name` for the table `table_name`
   def drop_trigger(table_name : TableName, name : String)
     prepared_statements << Avram::Migrator::DropTriggerStatement.new(table_name, name).build
+  end
+
+  def create_sequence(table : TableName, column : Symbol)
+    sequence_name = "#{table}_#{column}"
+    owned_by = "#{table}.#{column}"
+    prepared_statements << Avram::Migrator::CreateSequenceStatement.new(sequence_name, if_not_exists: true, owned_by: owned_by).build
+  end
+
+  def drop_sequence(table : TableName, column : Symbol)
+    sequence_name = "#{table}_#{column}"
+    prepared_statements << Avram::Migrator::DropSequenceStatement.new(sequence_name).build
   end
 end

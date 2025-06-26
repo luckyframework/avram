@@ -17,6 +17,7 @@ describe "Preloading has_many associations" do
 
       posts.results.first.comments.should eq([comment])
       Comment::BaseQuery.times_called.should eq 1
+      posts.results.first.comments_preloaded?.should eq(true)
     end
   end
 
@@ -33,6 +34,7 @@ describe "Preloading has_many associations" do
       results = posts.results
       results.size.should eq(1)
       results.first.comments.should eq([comment])
+      results.first.comments_preloaded?.should eq(true)
     end
   end
 
@@ -44,6 +46,17 @@ describe "Preloading has_many associations" do
       posts = Post::BaseQuery.new.preload_comments(
         Comment::BaseQuery.new.id.not.eq(comment.id)
       )
+
+      posts.results.first.comments.should eq([] of Comment)
+    end
+  end
+
+  it "works with blocks" do
+    with_lazy_load(enabled: false) do
+      post = PostFactory.create
+      comment = CommentFactory.create &.post_id(post.id)
+
+      posts = Post::BaseQuery.new.preload_comments(&.id.not.eq(comment.id))
 
       posts.results.first.comments.should eq([] of Comment)
     end
@@ -76,6 +89,7 @@ describe "Preloading has_many associations" do
   it "raises error if accessing association without preloading first" do
     with_lazy_load(enabled: false) do
       post = PostFactory.create
+      post.comments_preloaded?.should eq(false)
 
       expect_raises Avram::LazyLoadError do
         post.comments
@@ -90,6 +104,7 @@ describe "Preloading has_many associations" do
       posts = Post::BaseQuery.new.preload_comments
 
       posts.results.first.comments.should eq([] of Comment)
+      posts.results.first.comments_preloaded?.should eq(true)
     end
   end
 
@@ -99,6 +114,7 @@ describe "Preloading has_many associations" do
     posts = Post::BaseQuery.new.preload_comments
 
     2.times { posts.results }
+    posts.results.first.comments_preloaded?.should eq(true)
   end
 
   it "does not fail when getting results multiple times with custom query" do
@@ -192,6 +208,111 @@ describe "Preloading has_many associations" do
           original_post.comments
         end
       end
+    end
+
+    it "does not refetch association from database if already loaded (even if association has changed)" do
+      with_lazy_load(enabled: false) do
+        post = PostFactory.create
+        comment = CommentFactory.create &.post_id(post.id)
+        post = Post::BaseQuery.preload_comments(post)
+        Comment::SaveOperation.update!(comment, body: "THIS IS CHANGED")
+
+        post = Post::BaseQuery.preload_comments(post)
+
+        post.comments.first.body.should_not eq("THIS IS CHANGED")
+      end
+    end
+
+    it "refetches unfetched in multiple" do
+      with_lazy_load(enabled: false) do
+        post1 = PostFactory.create
+        post2 = PostFactory.create
+        comment1 = CommentFactory.create &.post_id(post1.id)
+        post1 = Post::BaseQuery.preload_comments(post1)
+        Comment::SaveOperation.update!(comment1, body: "THIS IS CHANGED")
+        comment2 = CommentFactory.create &.post_id(post2.id)
+        Comment::SaveOperation.update!(comment2, body: "THIS IS CHANGED")
+
+        posts = Post::BaseQuery.preload_comments([post1, post2])
+
+        posts[0].comments.first.body.should_not eq("THIS IS CHANGED")
+        posts[1].comments.first.body.should eq("THIS IS CHANGED")
+      end
+    end
+
+    it "allows forcing refetch if already loaded" do
+      with_lazy_load(enabled: false) do
+        post = PostFactory.create
+        comment = CommentFactory.create &.post_id(post.id)
+        post = Post::BaseQuery.preload_comments(post)
+        Comment::SaveOperation.update!(comment, body: "THIS IS CHANGED")
+
+        post = Post::BaseQuery.preload_comments(post, force: true)
+
+        post.comments.first.body.should eq("THIS IS CHANGED")
+      end
+    end
+
+    it "allows forcing refetch if already loaded with multiple" do
+      with_lazy_load(enabled: false) do
+        post1 = PostFactory.create
+        post2 = PostFactory.create
+        comment1 = CommentFactory.create &.post_id(post1.id)
+        post1 = Post::BaseQuery.preload_comments(post1)
+        Comment::SaveOperation.update!(comment1, body: "THIS IS CHANGED")
+        comment2 = CommentFactory.create &.post_id(post2.id)
+        Comment::SaveOperation.update!(comment2, body: "THIS IS CHANGED")
+
+        posts = Post::BaseQuery.preload_comments([post1, post2], force: true)
+
+        posts[0].comments.first.body.should eq("THIS IS CHANGED")
+        posts[1].comments.first.body.should eq("THIS IS CHANGED")
+      end
+    end
+  end
+
+  describe "override base_query_class" do
+    it "uses the custom query class to ignore soft_deleted records" do
+      user = UserFactory.create
+      good_txn = TransactionFactory.create(&.user(user))
+      deleted_txn = TransactionFactory.create(&.user(user).soft_deleted_at(1.day.ago))
+
+      u = UserQuery.new.preload_transactions.first
+      u.transactions_count.should eq(1)
+      u.transactions.size.should eq(1)
+      ids = u.transactions.map(&.id)
+      ids.should contain(good_txn.id)
+      ids.should_not contain(deleted_txn.id)
+    end
+
+    it "has an escape hatch" do
+      user = UserFactory.create
+      good_txn = TransactionFactory.create(&.user(user))
+      deleted_txn = TransactionFactory.create(&.user(user).soft_deleted_at(1.day.ago))
+
+      u = UserQuery.new.preload_transactions(Transaction::BaseQuery.new).first
+      # NOTE: This is an edge case. It uses the base_query_class defined on the association
+      # not what was preloaded.
+      u.transactions_count.should eq(1)
+      u.transactions.size.should eq(2)
+      ids = u.transactions.map(&.id)
+      ids.should contain(good_txn.id)
+      ids.should contain(deleted_txn.id)
+    end
+
+    it "extends the custom base query class" do
+      user = UserFactory.create
+      non_special_txn = TransactionFactory.create(&.user(user))
+      deleted_txn = TransactionFactory.create(&.user(user).soft_deleted_at(1.day.ago))
+      special_txn = TransactionFactory.create(&.user(user).type(Transaction::Type::Special))
+
+      u = UserQuery.new.preload_transactions(&.special).first
+      u.transactions_count.should eq(2)
+      u.transactions.size.should eq(1)
+      ids = u.transactions.map(&.id)
+      ids.should_not contain(non_special_txn.id)
+      ids.should_not contain(deleted_txn.id)
+      ids.should contain(special_txn.id)
     end
   end
 end

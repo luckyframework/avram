@@ -14,26 +14,34 @@ describe "Preloading belongs_to associations" do
       CommentFactory.create &.post_id(post.id)
 
       comments = Comment::BaseQuery.new.preload_post
+      comment = comments.first.as(Comment)
 
-      comments.first.post.should eq(post)
+      comment.post.should eq(post)
+      comment.post_preloaded?.should eq(true)
       Post::BaseQuery.times_called.should eq 1
     end
   end
 
   it "works with optional association" do
     with_lazy_load(enabled: false) do
-      employee = EmployeeFactory.create
+      EmployeeFactory.create
       manager = ManagerFactory.create
 
       employees = Employee::BaseQuery.new.preload_manager
-      employees.first.manager.should be_nil
+      employee = employees.first.as(Employee)
+      employee.manager.should be_nil
+      # This is a strange edge case when the object went through
+      # preloading, but no association exists
+      employee.manager_preloaded?.should eq(true)
 
       Employee::SaveOperation.new(employee).tap do |operation|
         operation.manager_id.value = manager.id
         operation.update!
       end
       employees = Employee::BaseQuery.new.preload_manager
-      employees.first.manager.should eq(manager)
+      employee = employees.first.as(Employee)
+      employee.manager.should eq(manager)
+      employee.manager_preloaded?.should eq(true)
     end
   end
 
@@ -43,6 +51,7 @@ describe "Preloading belongs_to associations" do
       comment = CommentFactory.create &.post_id(post.id)
 
       comment = Comment::BaseQuery.find(comment.id)
+      comment.post_preloaded?.should eq(false)
 
       expect_raises Avram::LazyLoadError do
         comment.post
@@ -59,6 +68,8 @@ describe "Preloading belongs_to associations" do
       comment = Comment::BaseQuery.new.preload_post(Post::BaseQuery.new.preload_comments).find(comment.id)
 
       comment.post.comments.should eq([comment, comment2])
+      comment.post_preloaded?.should eq(true)
+      comment.post.comments_preloaded?.should eq(true)
     end
   end
 
@@ -69,6 +80,8 @@ describe "Preloading belongs_to associations" do
     query = Comment::BaseQuery.new.preload_post
 
     2.times { query.results }
+    comment = query.results.first.as(Comment)
+    comment.post_preloaded?.should eq(true)
   end
 
   it "works with uuid foreign keys" do
@@ -151,6 +164,72 @@ describe "Preloading belongs_to associations" do
         expect_raises Avram::LazyLoadError do
           original_comment.post
         end
+      end
+    end
+
+    it "does not refetch association from database if already loaded (even if association has changed)" do
+      with_lazy_load(enabled: false) do
+        post = PostFactory.create
+        comment = CommentFactory.create &.post_id(post.id)
+        comment = Comment::BaseQuery.preload_post(comment)
+        Post::SaveOperation.update!(post, title: "THIS IS CHANGED")
+
+        comment = Comment::BaseQuery.preload_post(comment)
+
+        comment.post.title.should_not eq("THIS IS CHANGED")
+      end
+    end
+
+    it "refetches unfetched in multiple" do
+      with_lazy_load(enabled: false) do
+        post = PostFactory.create
+        comment1 = CommentFactory.create &.post_id(post.id)
+        comment2 = CommentFactory.create &.post_id(post.id)
+        comment1 = Comment::BaseQuery.preload_post(comment1)
+        Post::SaveOperation.update!(post, title: "THIS IS CHANGED")
+
+        comments = Comment::BaseQuery.preload_post([comment1, comment2])
+
+        comments[0].post.title.should_not eq("THIS IS CHANGED")
+        comments[1].post.title.should eq("THIS IS CHANGED")
+      end
+    end
+
+    it "allows forcing refetch if already loaded" do
+      with_lazy_load(enabled: false) do
+        post = PostFactory.create
+        comment = CommentFactory.create &.post_id(post.id)
+        comment = Comment::BaseQuery.preload_post(comment)
+        Post::SaveOperation.update!(post, title: "THIS IS CHANGED")
+
+        comment = Comment::BaseQuery.preload_post(comment, force: true)
+
+        comment.post.title.should eq("THIS IS CHANGED")
+      end
+    end
+
+    it "allows forcing refetch if already loaded with multiple" do
+      with_lazy_load(enabled: false) do
+        post = PostFactory.create
+        comment1 = CommentFactory.create &.post_id(post.id)
+        comment2 = CommentFactory.create &.post_id(post.id)
+        comment1 = Comment::BaseQuery.preload_post(comment1)
+        Post::SaveOperation.update!(post, title: "THIS IS CHANGED")
+
+        comments = Comment::BaseQuery.preload_post([comment1, comment2], force: true)
+
+        comments[0].post.title.should eq("THIS IS CHANGED")
+        comments[1].post.title.should eq("THIS IS CHANGED")
+      end
+    end
+
+    it "works for optional associations" do
+      with_lazy_load(enabled: false) do
+        business = BusinessFactory.new.create
+        email_address = EmailAddressFactory.create &.business_id(business.id)
+        email_address = EmailAddressQuery.preload_business(email_address)
+
+        email_address.business.try(&.id).should eq(business.id)
       end
     end
   end

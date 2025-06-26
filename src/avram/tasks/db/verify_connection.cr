@@ -1,28 +1,29 @@
 class Db::VerifyConnection < BaseTask
   summary "Verify connection to postgres"
+  help_message <<-TEXT
+  #{task_summary}
+
+  The connection settings are typically defined in config/database.cr
+
+  Examples:
+
+    lucky db.verify_connection
+    LUCKY_ENV=test lucky db.verify_connection # Verify test db connection
+
+  TEXT
+
   getter? quiet
 
   def initialize(@quiet : Bool = false)
   end
 
-  def help_message
-    <<-TEXT
-    #{summary}
-
-    The connection settings are typically defined in config/database.cr
-
-    Examples:
-
-      lucky db.verify_connection
-      LUCKY_ENV=test lucky db.verify_connection # Verify test db connection
-
-    TEXT
-  end
-
   def run_task
-    Avram.settings.database_to_migrate.verify_connection
-    puts "✔ Connection verified" unless quiet?
-  rescue Avram::ConnectionError
+    # Using this block method instead of the previous `Database.verify_connection`
+    # due to some random race conditions that cause this task to fail for some people
+    DB.open(Avram.settings.database_to_migrate.settings.credentials.url) do |_db|
+      output.puts "✔ Connection verified" unless quiet?
+    end
+  rescue Avram::ConnectionError | DB::ConnectionRefused
     raise <<-ERROR
     Unable to connect to Postgres for database '#{Avram.settings.database_to_migrate}'.
 

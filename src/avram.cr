@@ -1,14 +1,18 @@
+require "colorize"
 require "dexter"
 require "wordsmith"
 require "habitat"
 require "pulsar"
 require "lucky_cache"
+require "lucky_task"
 require "db"
 require "pg"
 require "uuid"
 require "cadmium_transliterator"
 
 require "./ext/db/*"
+require "./ext/pg/*"
+require "./avram/nothing"
 require "./avram/object_extensions"
 require "./avram/criteria"
 require "./avram/type"
@@ -26,6 +30,9 @@ module Avram
     setting time_formats : Array(String) = [] of String
     setting i18n_backend : Avram::I18nBackend = Avram::I18n.new, example: "Avram::I18n.new"
     setting query_cache_enabled : Bool = false
+    # This setting is used to connect to postgres before you've setup your app's DB.
+    # If `postgres` isn't available, you can update to `template1` or some other default DB
+    setting setup_database_name : String = "postgres"
   end
 
   Log            = ::Log.for(Avram)
@@ -35,7 +42,10 @@ module Avram
 
   alias TableName = String | Symbol
 
-  def self.initialize_logging
+  # This subscribes to several `Pulsar` events.
+  # These events are triggered during query and
+  # operation events
+  def self.initialize_logging : Nil
     Avram::Events::QueryEvent.subscribe do |event, duration|
       next if event.query.starts_with?("TRUNCATE")
 
@@ -82,5 +92,3 @@ module Avram
     end
   end
 end
-
-Avram.initialize_logging

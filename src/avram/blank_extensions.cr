@@ -1,59 +1,65 @@
 struct Bool
-  def blank?
+  def blank? : Bool
     false
   end
 end
 
 struct Time
-  def blank?
+  def blank? : Bool
     nil?
   end
 end
 
 struct Int16
-  def blank?
+  def blank? : Bool
     nil?
   end
 end
 
 struct Int32
-  def blank?
+  def blank? : Bool
     nil?
   end
 end
 
 struct Int64
-  def blank?
+  def blank? : Bool
     nil?
   end
 end
 
 struct Float64
-  def blank?
+  def blank? : Bool
     nil?
   end
 end
 
 struct Nil
-  def blank?
+  def blank? : Bool
     nil?
   end
 end
 
 struct JSON::Any
-  def blank?
+  def blank? : Bool
     nil?
   end
 end
 
 struct UUID
-  def blank?
+  def blank? : Bool
     false
   end
 end
 
 class Array(T)
-  def blank?
+  def blank? : Bool
+    empty?
+  end
+end
+
+struct Slice(T)
+  def blank? : Bool
     empty?
   end
 end

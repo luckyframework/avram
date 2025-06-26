@@ -13,7 +13,7 @@ jobs:
     runs-on: ubuntu-latest
     continue-on-error: false
     steps:
-      - uses: actions/checkout@v2.4.0
+      - uses: actions/checkout@v4
       - name: Install Crystal
         uses: crystal-lang/install-crystal@v1
         with:
@@ -29,50 +29,65 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
+        os:
+          - ubuntu-latest
         shard_file:
           - shard.yml
         postgres_version:
-          - 12
-          - 13
+          - 14
+          - 16
         crystal_version:
-          - 1.0.0
+          - 1.10.0
           - latest
         experimental:
           - false
         include:
+          - os: windows-latest
+            shard_file: shard.yml
+            crystal_version: latest
+            postgres_version: 16
+            experimental: true
           - shard_file: shard.edge.yml
             crystal_version: latest
-            postgres_version: 13
+            postgres_version: 14
             experimental: true
-          - shard_file: shard.yml
+            os: ubuntu-latest
+          - shard_file: shard.override.yml
             crystal_version: nightly
-            postgres_version: 13
+            postgres_version: 14
             experimental: true
-    runs-on: ubuntu-latest
+            os: ubuntu-latest
+    runs-on: ${{ matrix.os }}
     continue-on-error: ${{ matrix.experimental }}
-    services:
-      postgres:
-        image: postgres:${{ matrix.postgres_version }}-alpine
-        env:
-          POSTGRES_USER: lucky
-          POSTGRES_PASSWORD: developer
-        ports:
-          - 5432:5432
-        # needed because the postgres container does not provide a healthcheck
-        options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
+      - name: Setup PostgreSQL v${{ matrix.postgres_version }}
+        uses: ikalnytskyi/action-setup-postgres@v6
+        with:
+          username: lucky
+          password: developer
+          port: 5432
+          postgres-version: ${{ matrix.postgres_version }}
+
       - uses: crystal-lang/install-crystal@v1
         with:
           crystal: ${{matrix.crystal_version}}
       - name: Install shards
-        run: SHARDS_OVERRIDE=${{ matrix.shard_file }} shards install
-      - name: Run integration test
+        run: shards install --skip-postinstall --skip-executables
+        env:
+          SHARDS_OVERRIDE: ${{ matrix.shard_file }}
+      - name: Run integration test (Linux)
         run: ./script/integration_test
+        if: matrix.os == 'ubuntu-latest'
+        env:
+          DATABASE_URL: postgres://lucky:developer@localhost:5432/avram_dev
+      - name: Run integration test (Windows)
+        run: .\script\integration_test.ps1
+        if: matrix.os == 'windows-latest'
         env:
           DATABASE_URL: postgres://lucky:developer@localhost:5432/avram_dev
       - name: Run tests
-        run: crystal spec
+        run: crystal spec --error-trace
         env:
           BACKUP_DATABASE_URL: postgres://lucky:developer@localhost:5432/sample_backup
           DATABASE_URL: postgres://lucky:developer@localhost:5432/avram_dev

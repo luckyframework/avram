@@ -1,20 +1,17 @@
 class Db::Schema::Restore < BaseTask
   summary "Restore database from a sql dump file"
+  help_message <<-TEXT
+  #{task_summary}
+
+  You must specify the path to the sql that you want Avram to restore from.
+
+  Example:
+
+    lucky db.schema.restore structure.sql
+
+  TEXT
 
   def initialize(@import_file_path : String? = nil, @quiet : Bool = false)
-  end
-
-  def help_message
-    <<-TEXT
-    #{summary}
-
-    You must specify the path to the sql that you want Avram to restore from.
-
-    Example:
-
-      lucky db.schema.restore structure.sql
-
-    TEXT
   end
 
   def run_task

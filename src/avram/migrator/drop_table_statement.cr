@@ -1,8 +1,8 @@
 class Avram::Migrator::DropTableStatement
-  def initialize(@table_name : TableName)
+  def initialize(@table_name : TableName, @if_exists : Bool = false)
   end
 
   def build
-    "DROP TABLE #{@table_name}"
+    "DROP TABLE #{@if_exists ? "IF EXISTS " : ""}#{@table_name};"
   end
 end

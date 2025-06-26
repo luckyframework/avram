@@ -6,7 +6,7 @@ module Avram::Migrator::Columns::PrimaryKeys
     end
 
     def column_type : String
-      "serial"
+      "serial4"
     end
   end
 end

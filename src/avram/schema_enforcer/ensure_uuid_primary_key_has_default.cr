@@ -13,28 +13,29 @@ class Avram::SchemaEnforcer::EnsureUUIDPrimaryKeyHasDefault < Avram::SchemaEnfor
 
       ▸ Enable a Postgres extension to generate uuids if one is not already available in the migration:
 
-          enable_extension "uuid-ossp" # https://www.postgresql.org/docs/current/uuid-ossp.html
+          enable_extension "pgcrypto" # https://www.postgresql.org/docs/current/pgcrypto.html
 
       ▸ Update the primary key column to have a default value in the migration:
 
-          execute("ALTER TABLE #{table_name.colorize.bold} ALTER COLUMN #{primary_key_info.column_name.colorize.bold} SET DEFAULT uuid_generate_v4();")
+          execute("ALTER TABLE #{table_name.colorize.bold} ALTER COLUMN #{primary_key_info.column_name.colorize.bold} SET DEFAULT gen_random_uuid();")
     TEXT
     raise Avram::SchemaMismatchError.new(message)
   end
 
-  def has_primary_key?
+  def has_primary_key? : Bool
     !model_class.primary_key_name.nil?
   end
 
-  def uuid_primary_key?
+  def uuid_primary_key? : Bool
     primary_key_info.data_type == "uuid"
   end
 
-  def missing_column_default?
+  def missing_column_default? : Bool
     primary_key_info.column_default.nil?
   end
 
-  def primary_key_info
-    table_info.column(model_class.primary_key_name.to_s).not_nil!
+  def primary_key_info : Avram::Database::ColumnInfo
+    pkey_name = model_class.primary_key_name.to_s
+    table_info.column(pkey_name).as(Avram::Database::ColumnInfo)
   end
 end

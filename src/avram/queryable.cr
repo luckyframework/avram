@@ -7,7 +7,7 @@ module Avram::Queryable(T)
       .select(schema_class.column_names)
   end
 
-  delegate :database, :table_name, :primary_key_name, to: T
+  delegate :read_database, :write_database, :table_name, :primary_key_name, to: T
 
   macro included
     def self.new_with_existing_query(query : Avram::QueryBuilder)
@@ -53,10 +53,13 @@ module Avram::Queryable(T)
     #
     # To delete all data referenced by foreign keys as well, set *cascade*
     # to true.
-    def self.truncate(*, cascade : Bool = false)
+    def self.truncate(*, cascade : Bool = false, restart_identity : Bool = false)
       query = self.new
-      cascade_str = cascade ? " CASCADE" : ""
-      query.database.exec "TRUNCATE TABLE #{query.table_name}#{cascade_str}"
+      cascade_sql = cascade ? " CASCADE" : ""
+      restart_id_sql = restart_identity ? " RESTART IDENTITY" : ""
+      sql = "TRUNCATE TABLE #{query.table_name}#{restart_id_sql}#{cascade_sql}"
+
+      query.write_database.exec(sql)
     end
   end
 
@@ -80,12 +83,12 @@ module Avram::Queryable(T)
     clone.tap &.query.offset(nil)
   end
 
-  def distinct_on(&block) : self
+  def distinct_on(&) : self
     criteria = yield clone
     criteria.private_distinct_on
   end
 
-  def reset_where(&block) : self
+  def reset_where(&) : self
     criteria = yield clone
     criteria.private_reset_where
   end
@@ -104,7 +107,7 @@ module Avram::Queryable(T)
 
   protected def delete! : Int64
     new_query = query.clone.delete
-    database.exec(new_query.statement, args: new_query.args).rows_affected
+    write_database.exec(new_query.statement, args: new_query.args).rows_affected
   end
 
   # Update the records using the query's where clauses, or all records if no wheres are added.
@@ -137,7 +140,7 @@ module Avram::Queryable(T)
     clone.tap &.query.where(sql_clause)
   end
 
-  def where : self
+  def where(&) : self
     cloned = clone.tap &.query.where(Avram::Where::PrecedenceStart.new)
     result = yield cloned
 
@@ -156,14 +159,14 @@ module Avram::Queryable(T)
 
   # Run the `or` block first to grab the last WHERE clause and set its
   # conjunction to OR. Then call yield to set the next set of ORs
-  def or(&block) : self
+  def or(&) : self
     query.or &.itself
     yield self
   end
 
-  def order_by(column, direction) : self
+  def order_by(column, direction, null_sorting : Avram::OrderBy::NullSorting = :default) : self
     direction = Avram::OrderBy::Direction.parse(direction.to_s)
-    order_by(Avram::OrderBy.new(column, direction))
+    order_by(Avram::OrderBy.new(column, direction, null_sorting))
   rescue e : ArgumentError
     raise "#{e.message}. Accepted values are: :asc, :desc"
   end
@@ -176,7 +179,7 @@ module Avram::Queryable(T)
     clone.tap &.query.random_order
   end
 
-  def group(&block) : self
+  def group(&) : self
     criteria = yield clone
     criteria.private_group
   end
@@ -193,18 +196,22 @@ module Avram::Queryable(T)
     clone.tap &.query.offset(amount)
   end
 
-  def first?
+  def for_update : self
+    clone.tap &.query.for_update
+  end
+
+  def first? : T?
     with_ordered_query
       .limit(1)
       .results
       .first?
   end
 
-  def first
+  def first : T
     first? || raise RecordNotFoundError.new(model: table_name, query: :first)
   end
 
-  def last?
+  def last? : T?
     with_ordered_query
       .clone
       .tap(&.query.reverse_order)
@@ -213,7 +220,7 @@ module Avram::Queryable(T)
       .first?
   end
 
-  def last
+  def last : T
     last? || raise RecordNotFoundError.new(model: table_name, query: :last)
   end
 
@@ -221,7 +228,7 @@ module Avram::Queryable(T)
     cache_store.fetch(cache_key(:any?), as: Bool) do
       queryable = clone
       new_query = queryable.query.limit(1).select("1 AS one")
-      results = database.query_one?(new_query.statement, args: new_query.args, queryable: schema_class.name, as: Int32)
+      results = read_database.query_one?(new_query.statement, args: new_query.args, queryable: schema_class.name, as: (Int32 | Int64))
       !results.nil?
     end
   end
@@ -235,7 +242,7 @@ module Avram::Queryable(T)
       begin
         table = "(#{query.statement}) AS temp"
         new_query = Avram::QueryBuilder.new(table).select_count
-        result = database.scalar new_query.statement, args: query.args, queryable: schema_class.name
+        result = read_database.scalar new_query.statement, args: query.args, queryable: schema_class.name
         result.as(Int64)
       rescue e : DB::NoResultsError
         0_i64
@@ -247,7 +254,7 @@ module Avram::Queryable(T)
   alias PGValue = Bool | Float32 | Float64 | Int16 | Int32 | Int64 | PG::Numeric | String | Time | UUID | Nil
 
   def group_count : Hash(Array(PGValue), Int64)
-    database.query_all(
+    read_database.query_all(
       query.select_direct(query.groups + ["COUNT(*)"]).statement,
       args: query.args,
       queryable: schema_class.name,
@@ -259,7 +266,7 @@ module Avram::Queryable(T)
     end.to_h
   end
 
-  def each
+  def each(&)
     results.each do |result|
       yield result
     end
@@ -292,14 +299,14 @@ module Avram::Queryable(T)
   end
 
   private def exec_query
-    database.query query.statement, args: query.args, queryable: schema_class.name do |rs|
+    read_database.query query.statement, args: query.args, queryable: schema_class.name do |rs|
       schema_class.from_rs(rs)
     end
   end
 
-  def exec_scalar(&block)
+  def exec_scalar(&)
     new_query = yield query.clone
-    database.scalar new_query.statement, args: new_query.args, queryable: schema_class.name
+    read_database.scalar new_query.statement, args: new_query.args, queryable: schema_class.name
   end
 
   # This method is meant to be used in your query object `initialize`.
@@ -312,7 +319,7 @@ module Avram::Queryable(T)
   #   end
   # end
   # ```
-  private def defaults : Nil
+  private def defaults(&) : Nil
     default = yield self
 
     self.query = default.query

@@ -34,6 +34,10 @@ abstract class Avram::Migrator::Columns::Base
     "ALTER TABLE #{table_name} ALTER COLUMN #{name} SET DATA TYPE #{column_type};"
   end
 
+  def build_change_default_statement(table_name : TableName) : String
+    "ALTER TABLE ONLY #{table_name} ALTER COLUMN #{name} SET#{default_fragment};"
+  end
+
   def build_add_statement_for_alter : String
     "  ADD " + build_add_statement
   end
@@ -48,8 +52,8 @@ abstract class Avram::Migrator::Columns::Base
 
   private def build_add_statement : String
     String.build do |row|
-      row << name.to_s
-      row << " "
+      row << '"' << name << '"'
+      row << ' '
       row << column_type + as_array_type
       row << null_fragment
       row << default_fragment unless default.nil?

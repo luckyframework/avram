@@ -1,5 +1,7 @@
 require "../spec_helper"
 
+include ParamHelper
+
 private class PostTransactionSaveOperation < Post::SaveOperation
   permit_columns title
   needs rollback_after_save : Bool
@@ -35,7 +37,7 @@ describe "Avram::SaveOperation" do
 
   describe "updating" do
     it "runs in a transaction" do
-      params = Avram::Params.new({"title" => "New Title"})
+      params = build_params("post:title=New Title")
       post = PostFactory.new.title("Old Title").create
       Post::BaseQuery.new.first.title.should eq "Old Title"
 
@@ -53,7 +55,7 @@ describe "Avram::SaveOperation" do
 
   describe "creating" do
     it "runs in a transaction" do
-      params = Avram::Params.new({"title" => "New Title"})
+      params = build_params("post:title=New Title")
       PostTransactionSaveOperation.create(params, rollback_after_save: true) do |operation, post|
         Post::BaseQuery.new.select_count.to_i.should eq(0)
         post.should be_nil
@@ -75,7 +77,7 @@ describe "Avram::SaveOperation" do
 
   describe "raising an error" do
     it "rolls back the transaction and re-raises the error" do
-      params = Avram::Params.new({"title" => "New Title"})
+      params = build_params("post:title=New Title")
       expect_raises Exception, "Sad face" do
         BadSaveOperation.create(params) do |_operation, _post|
           raise "This should not be executed"

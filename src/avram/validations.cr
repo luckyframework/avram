@@ -38,7 +38,7 @@ module Avram::Validations
   # field invalid.
   def validate_at_most_one_filled(
     *attributes,
-    message : Avram::Attribute::ErrorMessage = Avram.settings.i18n_backend.get(:validate_at_most_one_filled)
+    message : Avram::Attribute::ErrorMessage = Avram.settings.i18n_backend.get(:validate_at_most_one_filled),
   ) : Bool
     no_errors = true
     present_attributes = attributes.reject(&.value.blank?)
@@ -64,7 +64,7 @@ module Avram::Validations
   # If no field is filled, the first field will be marked as invalid.
   def validate_exactly_one_filled(
     *attributes,
-    message : Avram::Attribute::ErrorMessage = Avram.settings.i18n_backend.get(:validate_exactly_one_filled)
+    message : Avram::Attribute::ErrorMessage = Avram.settings.i18n_backend.get(:validate_exactly_one_filled),
   ) : Bool
     no_errors = validate_at_most_one_filled(*attributes)
     present_attributes = attributes.reject(&.value.blank?)
@@ -89,11 +89,11 @@ module Avram::Validations
   # ```
   def validate_required(
     *attributes,
-    message : Avram::Attribute::ErrorMessage = Avram.settings.i18n_backend.get(:validate_required)
+    message : Avram::Attribute::ErrorMessage = Avram.settings.i18n_backend.get(:validate_required),
   ) : Bool
     no_errors = true
     attributes.each do |attribute|
-      if attribute.value.blank_for_validates_required?
+      if attribute.value.blank_for_validates_required? && !attribute.allow_blank?
         attribute.add_error(message)
         no_errors = false
       end
@@ -108,7 +108,7 @@ module Avram::Validations
   # as invalid for any value other than `true`.
   def validate_acceptance_of(
     attribute : Avram::Attribute(Bool),
-    message : Avram::Attribute::ErrorMessage = Avram.settings.i18n_backend.get(:validate_acceptance_of)
+    message : Avram::Attribute::ErrorMessage = Avram.settings.i18n_backend.get(:validate_acceptance_of),
   ) : Bool
     no_errors = true
     if attribute.value != true
@@ -134,7 +134,7 @@ module Avram::Validations
   def validate_confirmation_of(
     attribute : Avram::Attribute(T),
     with confirmation_attribute : Avram::Attribute(T),
-    message : Avram::Attribute::ErrorMessage = Avram.settings.i18n_backend.get(:validate_confirmation_of)
+    message : Avram::Attribute::ErrorMessage = Avram.settings.i18n_backend.get(:validate_confirmation_of),
   ) : Bool forall T
     no_errors = true
     if attribute.value != confirmation_attribute.value
@@ -156,11 +156,16 @@ module Avram::Validations
     attribute : Avram::Attribute(T),
     in allowed_values : Enumerable(T),
     message : Avram::Attribute::ErrorMessage = Avram.settings.i18n_backend.get(:validate_inclusion_of),
-    allow_nil : Bool = false
+    allow_nil : Bool = false,
   ) : Bool forall T
     no_errors = true
-    if !allowed_values.includes?(attribute.value)
-      if !(allow_nil && attribute.value.nil?)
+    if value = attribute.value
+      if !allowed_values.includes?(value)
+        attribute.add_error(message)
+        no_errors = false
+      end
+    else
+      if !allow_nil
         attribute.add_error(message)
         no_errors = false
       end
@@ -169,20 +174,22 @@ module Avram::Validations
     no_errors
   end
 
-  # Validate the size of a `String` is exactly a certain size
+  # Validate the size of a `String` or `Array` is exactly a certain size
   #
   # ```
   # validate_size_of api_key, is: 32
+  # validate_size_of theme_colors, is: 4
   # ```
   def validate_size_of(
-    attribute : Avram::Attribute(String),
+    attribute : Avram::Attribute(String) | Avram::Attribute(Array(T)),
     *,
-    is exact_size,
+    is exact_size : Number,
     message : Avram::Attribute::ErrorMessage = Avram.settings.i18n_backend.get(:validate_exact_size_of),
-    allow_nil : Bool = false
-  ) : Bool
+    allow_nil : Bool = false,
+  ) : Bool forall T
     no_errors = true
-    if attribute.value.to_s.size != exact_size
+    size = attribute.value.try(&.size) || 0
+    if size != exact_size
       if !(allow_nil && attribute.value.nil?)
         attribute.add_error(message % exact_size)
         no_errors = false
@@ -192,20 +199,21 @@ module Avram::Validations
     no_errors
   end
 
-  # Validate the size of a `String` is within a `min` and/or `max`
+  # Validate the size of a `String` or `Array` is within a `min` and/or `max`
   #
   # ```
   # validate_size_of feedback, min: 18, max: 100
   # validate_size_of password, min: 12
+  # validate_size_of options, max: 10
   # ```
   # ameba:disable Metrics/CyclomaticComplexity
   def validate_size_of(
-    attribute : Avram::Attribute(String),
-    min = nil,
-    max = nil,
+    attribute : Avram::Attribute(String) | Avram::Attribute(Array(T)),
+    min : Number? = nil,
+    max : Number? = nil,
     message : Avram::Attribute::ErrorMessage? = nil,
-    allow_nil : Bool = false
-  ) : Bool
+    allow_nil : Bool = false,
+  ) : Bool forall T
     no_errors = true
     if !min.nil? && !max.nil? && min > max
       raise ImpossibleValidation.new(
@@ -214,7 +222,7 @@ module Avram::Validations
     end
 
     unless allow_nil && attribute.value.nil?
-      size = attribute.value.to_s.size
+      size = attribute.value.try(&.size) || 0
 
       if !min.nil? && size < min
         attribute.add_error(
@@ -234,25 +242,37 @@ module Avram::Validations
     no_errors
   end
 
-  # Validate a number is `greater_than` and/or `less_than`
-  #
-  # ```
-  # validate_numeric age, greater_than: 18
-  # validate_numeric count, greater_than: 0, less_than: 1200
-  # ```
-  # ameba:disable Metrics/CyclomaticComplexity
+  @[Deprecated("Use validate_numeric with at_least/no_more_than instead of greater_than/less_than")]
   def validate_numeric(
     attribute : Avram::Attribute(Number),
     greater_than = nil,
     less_than = nil,
     message = nil,
-    allow_nil : Bool = false
+    allow_nil : Bool = false,
+  ) : Bool
+    validate_numeric(attribute, at_least: greater_than, no_more_than: less_than, message: message, allow_nil: allow_nil)
+  end
+
+  # Validate a number is `at_least` and/or `no_more_than`
+  #
+  # ```
+  # validate_numeric age, at_least: 18
+  # validate_numeric count, at_least: 0, no_more_than: 1200
+  # ```
+  # ameba:disable Metrics/CyclomaticComplexity
+  def validate_numeric(
+    attribute : Avram::Attribute(Number),
+    *,
+    at_least = nil,
+    no_more_than = nil,
+    message = nil,
+    allow_nil : Bool = false,
   ) : Bool
     no_errors = true
-    if greater_than && less_than && greater_than > less_than
+    if at_least && no_more_than && at_least > no_more_than
       raise ImpossibleValidation.new(
         attribute: attribute.name,
-        message: "number greater than #{greater_than} but less than #{less_than}")
+        message: "number at least #{at_least} but no more than #{no_more_than}")
     end
 
     number = attribute.value
@@ -267,16 +287,16 @@ module Avram::Validations
       return no_errors
     end
 
-    if greater_than && number < greater_than
+    if at_least && number < at_least
       attribute.add_error(
-        (message || Avram.settings.i18n_backend.get(:validate_numeric_min)) % greater_than
+        (message || Avram.settings.i18n_backend.get(:validate_numeric_min)) % at_least
       )
       no_errors = false
     end
 
-    if less_than && number > less_than
+    if no_more_than && number > no_more_than
       attribute.add_error(
-        (message || Avram.settings.i18n_backend.get(:validate_numeric_max)) % less_than
+        (message || Avram.settings.i18n_backend.get(:validate_numeric_max)) % no_more_than
       )
       no_errors = false
     end
@@ -296,14 +316,30 @@ module Avram::Validations
     attribute : Avram::Attribute(String),
     with regex : Regex,
     match : Bool = true,
-    message : Avram::Attribute::ErrorMessage = "is invalid",
-    allow_nil : Bool = false
+    message : Avram::Attribute::ErrorMessage = Avram.settings.i18n_backend.get(:validate_format_of),
+    allow_nil : Bool = false,
   ) : Bool
     unless allow_nil && attribute.value.nil?
       matching = attribute.value.to_s.match(regex)
 
       if (match && !matching) || (!match && matching)
         attribute.add_error(message)
+        return false
+      end
+    end
+
+    true
+  end
+
+  def validate_url_format(
+    attribute : Avram::Attribute(String),
+    scheme : String = "https",
+    message : Avram::Attribute::ErrorMessage = Avram.settings.i18n_backend.get(:validate_url_format),
+  ) : Bool
+    if url = attribute.value.presence
+      uri = URI.parse(url)
+      if uri.scheme != scheme || uri.host.presence.nil?
+        attribute.add_error(message % scheme)
         return false
       end
     end

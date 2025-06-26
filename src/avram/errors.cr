@@ -1,6 +1,6 @@
 module Avram
   # Generic Avram exception class.
-  class AvramError < Exception
+  class AvramError < ::Exception
   end
 
   # Raise to rollback a transaction.
@@ -14,31 +14,43 @@ module Avram
   # Raised when trying to access a record that was not preloaded and lazy load
   # is disabled.
   class LazyLoadError < AvramError
-    def initialize(model : String, association : String)
+    getter model : String
+    getter association : String
+
+    def initialize(@model : String, @association : String)
       super "#{association} for #{model} must be preloaded with 'preload_#{association}'"
     end
   end
 
   # Raised when Avram cannot find a record by given id
   class RecordNotFoundError < AvramError
-    def initialize(model : TableName, id : String)
+    getter model : TableName
+    getter id : String? = nil
+    getter query : Symbol? = nil
+
+    def initialize(@model : TableName, @id : String)
       super "Could not find #{model} with id of #{id}"
     end
 
-    def initialize(model : TableName, query : Symbol)
+    def initialize(@model : TableName, @query : Symbol)
       super "Could not find #{query} record in #{model}"
     end
   end
 
   class MissingRequiredAssociationError < AvramError
-    def initialize(model : Avram::Model.class, association : Avram::Model.class)
+    getter model : Avram::Model.class
+    getter association : Avram::Model.class
+
+    def initialize(@model : Avram::Model.class, @association : Avram::Model.class)
       super "Expected #{model} to have an association with #{association} but one was not found."
     end
   end
 
   # Raised when a validation is expecting an impossible constraint
   class ImpossibleValidation < AvramError
-    def initialize(attribute : Symbol, message = "an impossible validation")
+    getter attribute : Symbol
+
+    def initialize(@attribute : Symbol, message : String = "an impossible validation")
       super "Validation for #{attribute} can never satisfy #{message}"
     end
   end
@@ -49,13 +61,15 @@ module Avram
 
     def initialize(operation)
       message = String.build do |string|
-        string << "Could not perform #{operation.class.name}."
-        string << "\n"
-        string << "\n"
+        string << "Could not perform " << operation.class.name << ".\n\n"
+
         operation.errors.each do |attribute_name, errors|
-          string << "  ▸ #{attribute_name}: #{errors.join(", ")}\n"
+          string << "  ▸ " << attribute_name << ": "
+          errors.join(string, ", ")
+          string << "\n"
         end
       end
+
       @errors = operation.errors
       super message
     end
@@ -71,19 +85,29 @@ module Avram
   class ConnectionError < AvramError
     DEFAULT_PG_PORT = 5432
 
-    def initialize(connection_details : URI, database_class : Avram::Database.class)
+    getter connection_details : URI
+    getter database_class : Avram::Database.class
+
+    def initialize(@connection_details : URI, @database_class : Avram::Database.class)
       error = String.build do |message|
-        message << "#{database_class.name}: Failed to connect to database '#{connection_details.path.try(&.[1..-1])}' with username '#{connection_details.user}'.\n"
+        message << database_class.name << ": Failed to connect to database '"
+        message << connection_details.path.try(&.[1..-1]) << "' with username '"
+        message << connection_details.user << "'.\n"
         message << "Try this..."
         message << '\n'
         message << '\n'
         message << "  ▸ Check connection settings in 'config/database.cr'\n"
         message << "  ▸ Be sure the database exists (lucky db.create)\n"
-        message << "  ▸ Check that you have access to connect to #{connection_details.host} on port #{connection_details.port || DEFAULT_PG_PORT}\n"
+        message << "  ▸ Check that you have access to connect to " << connection_details.host
+        message << " on port " << (connection_details.port || DEFAULT_PG_PORT) << "\n"
+        message << "  ▸ If this is your first run, create a database named '"
+        message << connection_details.user << "' that this same user will have access to\n"
+
         if connection_details.password.blank?
           message << "  ▸ You didn't supply a password, did you mean to?\n"
         end
       end
+
       super error
     end
   end
@@ -144,7 +168,10 @@ module Avram
   end
 
   class FailedMigration < AvramError
-    def initialize(@migration : String, statements : Array(String), cause : Exception)
+    getter migration : String
+    getter statements : Array(String)
+
+    def initialize(@migration : String, @statements : Array(String), cause : Exception)
       super(message(statements), cause)
     end
 

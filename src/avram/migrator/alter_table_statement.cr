@@ -10,25 +10,109 @@ class Avram::Migrator::AlterTableStatement
   getter dropped_rows = [] of String
   getter fill_existing_with_statements = [] of String
   getter change_type_statements = [] of String
+  getter change_default_statements = [] of String
+  getter change_nullability_statements = [] of String
+  private getter? if_exists : Bool = false
 
-  def initialize(@table_name : TableName)
+  def initialize(@table_name : TableName, *, @if_exists : Bool = false)
   end
 
+  # Change the column's type from whatever it is currently to
+  # `type_declaration.type`. The only exceptions are when changing
+  # from `text` to `citext` with `String` using `case_sensitive`, or changing to
+  # a `Float64` column which requires setting the `precision`, and `scale`.
+  # ```
+  # alter table_for(User) do
+  #   change_type email : String, case_sensitive: false
+  # end
+  # ```
   macro change_type(type_declaration, **type_options)
-    {% if !type_declaration.is_a?(TypeDeclaration) %}
-      {% type_declaration.raise "Must pass a type declaration to 'change_type'. Example: change_type age : Int32" %}
-    {% end %}
-    %column = ::Avram::Migrator::Columns::{{ type_declaration.type }}Column({{ type_declaration.type }}).new(
+    {%
+      if !type_declaration.is_a?(TypeDeclaration)
+        raise "Must pass a type declaration to 'change_type'. Example: change_type age : Int32"
+      elsif type_options.keys.includes?("default".id)
+        raise "Cannot change the default value from `change_type`. Use `change_default` instead."
+      end
+    %}
+    {%
+      type = type_declaration.type.resolve
+      nilable = false
+      bytes = false
+    %}
+    {%
+      if type.nilable?
+        type = type.union_types.reject(&.==(Nil)).first
+        nilable = true
+      end
+    %}
+    {%
+      if type < Slice
+        type = "Bytes".id
+        bytes = true
+      end
+    %}
+
+    %column = ::Avram::Migrator::Columns::{{ type }}Column({{ type }}).new(
       name: {{ type_declaration.var.stringify }},
-      nilable: false,
+      nilable: {{ nilable }},
       default: nil,
-      {{ **type_options }}
+      {{ type_options.double_splat }}
     )
     add_change_type_statement %column
   end
 
+  # Change the columns' default value to `default`
+  # ```
+  # alter table_for(Post) do
+  #   change_default published_at : Time, default: :now
+  # end
+  # ```
+  macro change_default(type_declaration, default)
+    {%
+      if !type_declaration.is_a?(TypeDeclaration)
+        raise "Must pass a type declaration to 'change_default'. Example: change_default count : Int32, default: 1"
+      end
+    %}
+    %column = ::Avram::Migrator::Columns::{{ type_declaration.type }}Column({{ type_declaration.type }}).new(
+      name: {{ type_declaration.var.stringify }},
+      nilable: false,
+      default: {{ default }}
+    )
+    add_change_default_statement %column
+  end
+
+  # Change the column's nullability from whatever it is currently to true.
+  # ```
+  # alter table_for(User) do
+  #   allow_nulls_for :email
+  # end
+  # ```
+  @[Deprecated("Use make_optional instead")]
+  macro allow_nulls_for(column_name)
+    change_nullability_statements << build_nullability_statement({{column_name.id.stringify}}, true)
+  end
+
+  # Change the column's nullability from whatever it is currently to false.
+  # ```
+  # alter table_for(User) do
+  #   forbid_nulls_for :email
+  # end
+  # ```
+  @[Deprecated("Use make_required instead")]
+  macro forbid_nulls_for(column_name)
+    change_nullability_statements  << build_nullability_statement({{column_name.id.stringify}}, false)
+  end
+
+  def build_nullability_statement(column_name, nullability)
+    "ALTER TABLE #{@table_name} ALTER COLUMN #{column_name} #{nullability ? "DROP" : "SET"} NOT NULL;"
+  end
+
   def add_change_type_statement(column : ::Avram::Migrator::Columns::Base)
     change_type_statements << column.build_change_type_statement(@table_name)
+  end
+
+  def add_change_default_statement(column : ::Avram::Migrator::Columns::Base)
+    change_default_statements << column.build_change_default_statement(@table_name)
   end
 
   # Accepts a block to alter a table using the `add` method. The generated sql
@@ -51,32 +135,40 @@ class Avram::Migrator::AlterTableStatement
   #   DROP old_field"
   # ]
   # ```
-  def build
+  def build(&)
     with self yield
     self
   end
 
   def statements
-    alter_statements + change_type_statements + index_statements + fill_existing_with_statements
+    alter_statements + change_type_statements + change_default_statements + change_nullability_statements + index_statements + fill_existing_with_statements
+  end
+
+  def if_exists_statement
+    if if_exists?
+      "IF EXISTS "
+    end
   end
 
   def alter_statements : Array(String)
     alterations = renamed_rows.map do |statement|
-      "ALTER TABLE #{@table_name} #{statement};"
+      "ALTER TABLE #{if_exists_statement}#{@table_name} #{statement};"
     end
+
     unless (rows + dropped_rows).empty?
       alterations << String.build do |statement|
-        statement << "ALTER TABLE #{@table_name}"
+        statement << "ALTER TABLE " << if_exists_statement << @table_name
         statement << "\n"
-        statement << (rows + dropped_rows).join(",\n")
+        (rows + dropped_rows).join(statement, ",\n")
         statement << ';'
       end
     end
+
     alterations
   end
 
   # Adds a references column and index given a model class and references option.
-  macro add_belongs_to(type_declaration, on_delete, references = nil, foreign_key_type = Int64, fill_existing_with = nil, unique = false)
+  macro add_belongs_to(type_declaration, on_delete, references = nil, foreign_key_type = Int64, fill_existing_with = nil, unique = false, index = true)
     {% unless type_declaration.is_a?(TypeDeclaration) %}
       {% raise "add_belongs_to expected a type declaration like 'user : User', instead got: '#{type_declaration}'" %}
     {% end %}
@@ -119,7 +211,9 @@ class Avram::Migrator::AlterTableStatement
       )
     {% end %}
 
+    {% if index %}
     add_index :{{ foreign_key_name }}, unique: {{ unique }}
+    {% end %}
   end
 
   macro add(type_declaration, index = false, using = :btree, unique = false, default = nil, fill_existing_with = nil, **type_options)
@@ -151,8 +245,17 @@ class Avram::Migrator::AlterTableStatement
       %}
     {% end %}
 
-    {% if default && fill_existing_with %}
-      {% type_declaration.raise "Cannot use both 'default' and 'fill_existing_with' arguments" %}
+    {% if (default != nil) && (fill_existing_with != nil) %}
+      {% type_declaration.raise <<-ERROR
+
+        Cannot use both 'default' and 'fill_existing_with' arguments for add(#{type_declaration}).
+
+        Try this...
+
+          ▸ Use `default` to set the default value, and backfill existing columns
+          ▸ Use `fill_existing_with` to backfill existing columns without a default value
+        ERROR
+      %}
     {% end %}
 
     rows << Avram::Migrator::Columns::{{ type }}Column(
@@ -161,7 +264,7 @@ class Avram::Migrator::AlterTableStatement
       name: {{ type_declaration.var.stringify }},
       nilable: {{ nilable || should_fill_existing }},
       default: {{ default }},
-      {{ **type_options }}
+      {{ type_options.double_splat }}
     )
     {% if array %}
     .array!
@@ -184,7 +287,7 @@ class Avram::Migrator::AlterTableStatement
 
   def add_fill_existing_with_statements(column : Symbol | String, type, value, nilable)
     @fill_existing_with_statements << "UPDATE #{@table_name} SET #{column} = #{value};"
-    @fill_existing_with_statements << "ALTER TABLE #{@table_name} ALTER COLUMN #{column} SET NOT NULL;" unless nilable
+    @fill_existing_with_statements << "ALTER TABLE #{if_exists_statement}#{@table_name} ALTER COLUMN #{column} SET NOT NULL;" unless nilable
   end
 
   macro symbol_expected_error(action, name)

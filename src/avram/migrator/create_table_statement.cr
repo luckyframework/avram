@@ -7,8 +7,9 @@ class Avram::Migrator::CreateTableStatement
 
   private getter rows = [] of String
   private getter constraints = [] of String
+  private getter? if_not_exists : Bool = false
 
-  def initialize(@table_name : TableName)
+  def initialize(@table_name : TableName, *, @if_not_exists : Bool = false)
   end
 
   # Accepts a block to build a table and indices using `add` and `add_index` methods.
@@ -43,7 +44,7 @@ class Avram::Migrator::CreateTableStatement
   #   add :email : String, unique: true
   # end
   # ```
-  def build : CreateTableStatement
+  def build(&) : CreateTableStatement
     with self yield
     self
   end
@@ -54,18 +55,19 @@ class Avram::Migrator::CreateTableStatement
 
   private def table_statement
     String.build do |statement|
-      statement << initial_table_statement
-      statement << rows.join(",\n")
+      initial_table_statement(statement)
+      rows.join(statement, ",\n")
       statement << ",\n" if !constraints.empty?
-      statement << constraints.join(", \n")
+      constraints.join(statement, ", \n")
       statement << ");"
     end
   end
 
-  private def initial_table_statement
-    <<-SQL
-    CREATE TABLE #{@table_name} (\n
-    SQL
+  private def initial_table_statement(io)
+    io << "CREATE TABLE "
+    io << "IF NOT EXISTS " if if_not_exists?
+    io << @table_name
+    io << " (\n"
   end
 
   macro primary_key(type_declaration)
@@ -78,26 +80,40 @@ class Avram::Migrator::CreateTableStatement
     {% if columns.size < 2 %}
     {% raise "composite_primary_key expected at least two primary keys, instead got #{columns.size}" %}
     {% end %}
-    constraints << "  PRIMARY KEY ({{columns.join(", ").id}})"
+    constraints << %(  PRIMARY KEY ({{columns.map { |col| %("#{col.id}") }.join(", ").id}}))
   end
 
   macro add_timestamps
-    add created_at : Time
-    add updated_at : Time
+    add created_at : Time, default: :now
+    add updated_at : Time, default: :now
   end
 
   macro add(type_declaration, default = nil, index = false, unique = false, using = :btree, **type_options)
-    {% type = type_declaration.type.resolve %}
-    {% nilable = false %}
-    {% array = false %}
-    {% if type.nilable? %}
-      {% type = type.union_types.reject(&.==(Nil)).first %}
-      {% nilable = true %}
-    {% end %}
-    {% if type < Array %}
-      {% type = type.type_vars.first %}
-      {% array = true %}
-    {% end %}
+    {%
+      type = type_declaration.type.resolve
+      nilable = false
+      array = false
+      bytes = false
+    %}
+    {%
+      if type.nilable?
+        type = type.union_types.reject(&.==(Nil)).first
+        nilable = true
+      end
+    %}
+    {%
+      if type < Array
+        type = type.type_vars.first
+        array = true
+      end
+    %}
+    {%
+      if type < Slice
+        type = "Bytes".id
+        bytes = true
+      end
+    %}
+
 
     rows << Avram::Migrator::Columns::{{ type }}Column(
     {% if array %}Array({{ type }}){% else %}{{ type }}{% end %}
@@ -105,7 +121,7 @@ class Avram::Migrator::CreateTableStatement
       name: {{ type_declaration.var.stringify }},
       nilable: {{ nilable }},
       default: {{ default }},
-      {{ **type_options }}
+      {{ type_options.double_splat }}
     )
     {% if array %}
     .array!
@@ -118,7 +134,7 @@ class Avram::Migrator::CreateTableStatement
   end
 
   # Adds a references column and index given a model class and references option.
-  macro add_belongs_to(type_declaration, on_delete, references = nil, foreign_key_type = Int64, unique = false)
+  macro add_belongs_to(type_declaration, on_delete, references = nil, foreign_key_type = Int64, unique = false, index = true)
     {% unless type_declaration.is_a?(TypeDeclaration) %}
       {% raise "add_belongs_to expected a type declaration like 'user : User', instead got: '#{type_declaration}'" %}
     {% end %}
@@ -152,7 +168,9 @@ class Avram::Migrator::CreateTableStatement
     .set_references(references: %table_name.to_s, on_delete: {{ on_delete }})
     .build_add_statement_for_create
 
+    {% if index %}
     add_index :{{ foreign_key_name }}, unique: {{ unique }}
+    {% end %}
   end
 
   macro belongs_to(type_declaration, *args, **named_args)

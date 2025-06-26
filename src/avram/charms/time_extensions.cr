@@ -22,11 +22,11 @@ struct Time
       Time::Format::ISO_8601_TIME,
     ]
 
-    def self.criteria(query : T, column) forall T
+    def self.criteria(query : T, column : Symbol | String) forall T
       Criteria(T, Time).new(query, column)
     end
 
-    def from_db!(value : Time)
+    def from_db!(value : Time) : Time
       value
     end
 
@@ -63,20 +63,23 @@ struct Time
       end
     end
 
-    def parse(value : Time)
+    def parse(value : Time) : SuccessfulCast(Time)
       SuccessfulCast(Time).new value
     end
 
-    def parse(values : Array(Time))
+    def parse(values : Array(Time)) : SuccessfulCast(Array(Time))
       SuccessfulCast(Array(Time)).new values
     end
 
-    def to_db(value : Time)
-      value.to_s
+    def to_db(value : Time) : String
+      value.to_s("%F %X.%6N %z")
     end
 
     class Criteria(T, V) < Avram::Criteria(T, V)
       include Avram::BetweenCriteria(T, V)
+      include Avram::ExtractCriteria
+
+      define_function_criteria(as_date, String, "DATE")
     end
   end
 end

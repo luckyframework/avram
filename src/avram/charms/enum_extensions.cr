@@ -7,7 +7,7 @@ abstract struct Enum
 
   module Lucky(T)
     include Avram::Type
-    alias ColumnType = Int32
+    alias ColumnType = Int32 | Int64
 
     def parse(value : String)
       is_int = value.to_i?
@@ -20,9 +20,22 @@ abstract struct Enum
       end
     end
 
-    def parse(value : Int32)
+    def parse(value : Int)
       if result = T.from_value?(value)
         SuccessfulCast.new(result)
+      else
+        FailedCast.new
+      end
+    end
+
+    def parse(value : Array(T))
+      SuccessfulCast(Array(T)).new value
+    end
+
+    def parse(values : Array(Int))
+      results = values.map { |i| parse(i) }
+      if results.all?(SuccessfulCast)
+        parse(results.map(&.value.as(T)))
       else
         FailedCast.new
       end
@@ -32,11 +45,16 @@ abstract struct Enum
       SuccessfulCast.new(value)
     end
 
-    def to_db(value : T)
+    def to_db(values : Array(T))
+      encoded = values.map { |value| to_db(value) }.as(Array(String))
+      PQ::Param.encode_array(encoded)
+    end
+
+    def to_db(value : T) : String
       value.value.to_s
     end
 
-    def criteria(query : V, column) forall V
+    def criteria(query : V, column : Symbol | String) forall V
       Criteria(V, T).new(query, column)
     end
 

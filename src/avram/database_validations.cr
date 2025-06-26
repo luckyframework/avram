@@ -26,7 +26,7 @@ module Avram::DatabaseValidations(T)
   private def validate_uniqueness_of(
     attribute : Avram::Attribute,
     query : Avram::Criteria(T::BaseQuery, _),
-    message : String = "is already taken"
+    message : Avram::Attribute::ErrorMessage = Avram.settings.i18n_backend.get(:validate_uniqueness_of),
   ) : Bool
     no_errors = true
     attribute.value.try do |value|
@@ -65,7 +65,7 @@ module Avram::DatabaseValidations(T)
   private def validate_uniqueness_of(
     attribute : Avram::Attribute,
     query : T::BaseQuery,
-    message : String = "is already taken"
+    message : Avram::Attribute::ErrorMessage = Avram.settings.i18n_backend.get(:validate_uniqueness_of),
   ) : Bool
     no_errors = true
     attribute.value.try do |value|
@@ -98,7 +98,7 @@ module Avram::DatabaseValidations(T)
   # pass and Avram tries to save the record.
   private def validate_uniqueness_of(
     attribute : Avram::Attribute,
-    message : Avram::Attribute::ErrorMessage = "is already taken"
+    message : Avram::Attribute::ErrorMessage = Avram.settings.i18n_backend.get(:validate_uniqueness_of),
   ) : Bool
     validate_uniqueness_of(attribute: attribute, query: T::BaseQuery.new, message: message)
   end

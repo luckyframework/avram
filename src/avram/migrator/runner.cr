@@ -11,7 +11,6 @@ class Avram::Migrator::Runner
   class_getter migrations = [] of Avram::Migrator::Migration::V1.class
 
   def initialize(@quiet : Bool = false)
-    Avram::Log.dexter.configure(:none)
   end
 
   def self.db_name
@@ -40,41 +39,65 @@ class Avram::Migrator::Runner
 
   def self.cmd_args
     String.build do |args|
-      args << "-U #{self.db_user}" if self.db_user
-      args << " -h #{self.db_host}" if self.db_host
-      args << " -p #{self.db_port}" if self.db_port
-      args << " #{self.db_name}"
+      args << "-U " << self.db_user if self.db_user
+      args << " -h " << self.db_host if self.db_host
+      args << " -p " << self.db_port if self.db_port
+      args << ' ' << self.db_name
     end
   end
 
-  def self.drop_db(quiet? : Bool = false)
-    run "dropdb #{cmd_args}"
-    unless quiet?
+  # Returns the DB connection args used
+  # for postgres in an array so you can pass
+  # them to `Process.run`
+  def self.cmd_args_array : Array(String)
+    args = [] of String
+    if user = self.db_user
+      args << "-U"
+      args << user
+    end
+    if host = self.db_host
+      args << "-h"
+      args << host
+    end
+    if port = self.db_port
+      args << "-p"
+      args << port.to_s
+    end
+
+    args << self.db_name
+    args
+  end
+
+  def self.drop_db(quiet : Bool = false)
+    DB.connect("#{credentials.connection_string}/#{Avram.settings.setup_database_name}") do |db|
+      db.exec "DROP DATABASE IF EXISTS #{db_name}"
+    end
+    unless quiet
       puts "Done dropping #{Avram::Migrator::Runner.db_name.colorize(:green)}"
     end
-  rescue e : Exception
-    if (message = e.message) && message.includes?(%("#{self.db_name}" does not exist))
-      unless quiet?
-        puts "Already dropped #{self.db_name.colorize(:green)}"
-      end
+  end
+
+  def self.create_db(quiet : Bool = false)
+    DB.connect("#{credentials.connection_string}/#{Avram.settings.setup_database_name}") do |db|
+      db.exec "CREATE DATABASE #{db_name}"
+    end
+    unless quiet
+      puts "Done creating #{db_name.colorize(:green)}"
+    end
+  rescue e : DB::ConnectionRefused
+    message = e.message.to_s
+    if message.blank?
+      raise ConnectionError.new(URI.parse(credentials.url_without_query_params), Avram.settings.database_to_migrate)
     else
       raise e
     end
-  end
-
-  def self.create_db(quiet? : Bool = false)
-    run "createdb #{cmd_args}"
-    unless quiet?
-      puts "Done creating #{Avram::Migrator::Runner.db_name.colorize(:green)}"
-    end
   rescue e : Exception
-    if (message = e.message) && message.includes?(%("#{self.db_name}" already exists))
-      unless quiet?
+    message = e.message.to_s
+    if message.includes?(%("#{self.db_name}" already exists))
+      unless quiet
         puts "Already created #{self.db_name.colorize(:green)}"
       end
-    elsif (message = e.message) && (message.includes?("createdb: not found") || message.includes?("No command 'createdb' found"))
-      raise PGClientNotInstalledError.new(message)
-    elsif (message = e.message) && message.includes?("could not connect to database template")
+    elsif message.includes?("Cannot establish connection")
       raise PGNotRunningError.new(message)
     else
       raise e
@@ -83,7 +106,10 @@ class Avram::Migrator::Runner
 
   def self.restore_db(restore_file : String, quiet : Bool = false)
     if File.exists?(restore_file)
-      run "psql -q #{cmd_args} -v ON_ERROR_STOP=1 < #{restore_file}"
+      output = quiet ? IO::Memory.new : STDOUT
+      File.open(restore_file) do |f|
+        run("psql", ["-q", *cmd_args_array, "-v", "ON_ERROR_STOP=1"], input: f, output: output)
+      end
       unless quiet
         puts "Done restoring #{db_name.colorize(:green)}"
       end
@@ -96,14 +122,21 @@ class Avram::Migrator::Runner
   # and includes the migtation data.
   def self.dump_db(dump_to : String = "db/structure.sql", quiet : Bool = false)
     Db::VerifyConnection.new(quiet: true).run_task
-    run "pg_dump -s #{cmd_args} > #{dump_to}; pg_dump -t migrations --data-only #{cmd_args} >> #{dump_to}"
+    File.open(dump_to, "w+") do |f|
+      run("pg_dump", ["-s", *cmd_args_array], output: f)
+      run("pg_dump", ["-t", "migrations", "--data-only", *cmd_args_array], output: f)
+    end
     unless quiet
       puts "Done dumping #{db_name.colorize(:green)}"
     end
   end
 
   def self.setup_migration_tracking_tables
-    Avram.settings.database_to_migrate.exec create_table_for_tracking_migrations
+    suppress_logging do
+      db = Avram.settings.database_to_migrate
+      db.exec create_table_for_tracking_migrations
+      db.exec create_unique_index_for_migrations
+    end
   end
 
   private def self.create_table_for_tracking_migrations
@@ -115,16 +148,38 @@ class Avram::Migrator::Runner
     SQL
   end
 
-  def self.run(command : String, output : IO = STDOUT)
+  private def self.create_unique_index_for_migrations
+    <<-SQL
+    CREATE UNIQUE INDEX IF NOT EXISTS migrations_version_index
+    ON #{MIGRATIONS_TABLE_NAME} (version)
+    SQL
+  end
+
+  @[Deprecated("Calling run with a single string is deprecated. Pass the args as a separate Array")]
+  def self.run(command : String, output : IO = STDOUT, input : Process::Stdio = Process::Redirect::Close)
+    program, *args = command.split(' ')
+    self.run(program, args, output, input)
+  end
+
+  def self.run(command : String, args : Array(String), output : IO = STDOUT, input : Process::Stdio = Process::Redirect::Close)
     error_messages = IO::Memory.new
     ENV["PGPASSWORD"] = self.db_password if self.db_password
-    result = Process.run command,
-      shell: true,
+    result = Process.run(
+      command: command,
+      args: args,
+      input: input,
       output: output,
       error: error_messages
+    )
     ENV.delete("PGPASSWORD") if self.db_password
     unless result.success?
       raise error_messages.to_s
+    end
+  end
+
+  private def self.suppress_logging(&)
+    Avram::QueryLog.dexter.temp_config(level: :none) do
+      return yield
     end
   end
 
@@ -199,7 +254,7 @@ class Avram::Migrator::Runner
     self.class.migrations.sort_by(&.new.version.as(Int64))
   end
 
-  private def prepare_for_migration
+  private def prepare_for_migration(&)
     self.class.setup_migration_tracking_tables
     if pending_migrations.empty?
       unless @quiet

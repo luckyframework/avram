@@ -1,21 +1,16 @@
-require "colorize"
-
 class Db::Migrate < BaseTask
   summary "Run any pending migrations"
+  help_message <<-TEXT
+  #{task_summary}
+
+  Examples:
+
+    lucky db.migrate
+    LUCKY_ENV=test lucky db.migrate # Runs migrations on the test database
+
+  TEXT
 
   def initialize(@quiet : Bool = false)
-  end
-
-  def help_message
-    <<-TEXT
-    #{summary}
-
-    Examples:
-
-      lucky db.migrate
-      LUCKY_ENV=test lucky db.migrate # Runs migrations on the test database
-
-    TEXT
   end
 
   def run_task

@@ -1,5 +1,5 @@
 class Admin < BaseModel
-  COLUMN_SQL = "admins.id, admins.created_at, admins.updated_at, admins.name"
+  COLUMN_SQL = %("admins"."id", "admins"."created_at", "admins"."updated_at", "admins"."name")
 
   table do
     column name : String

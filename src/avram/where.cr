@@ -217,6 +217,34 @@ module Avram::Where
     end
   end
 
+  class Any < ValueHoldingSqlClause
+    def operator : String
+      "&&"
+    end
+
+    def negated : NotAny
+      NotAny.new(column, value)
+    end
+
+    def prepare(placeholder_supplier : Proc(String)) : String
+      "#{column} #{operator} (#{placeholder_supplier.call})"
+    end
+  end
+
+  class NotAny < ValueHoldingSqlClause
+    def operator : String
+      "&&"
+    end
+
+    def negated : Any
+      Any.new(column, value)
+    end
+
+    def prepare(placeholder_supplier : Proc(String)) : String
+      "NOT(#{column} #{operator} (#{placeholder_supplier.call}))"
+    end
+  end
+
   class Includes < ValueHoldingSqlClause
     def operator : String
       "= ANY"
@@ -245,6 +273,154 @@ module Avram::Where
     end
   end
 
+  class JsonbHasKey < ValueHoldingSqlClause
+    def operator : String
+      "?"
+    end
+
+    def negated : NotJsonbHasKey
+      NotJsonbHasKey.new(column, value)
+    end
+  end
+
+  class NotJsonbHasKey < ValueHoldingSqlClause
+    def operator : String
+      "?"
+    end
+
+    def negated : JsonbHasKey
+      JsonbHasKey.new(column, value)
+    end
+
+    def prepare(placeholder_supplier : Proc(String)) : String
+      "NOT(#{column} #{operator} #{placeholder_supplier.call})"
+    end
+  end
+
+  class JsonbHasAnyKeys < ValueHoldingSqlClause
+    def operator : String
+      "?|"
+    end
+
+    def negated : NotJsonbHasAnyKeys
+      NotJsonbHasAnyKeys.new(column, value)
+    end
+  end
+
+  class NotJsonbHasAnyKeys < ValueHoldingSqlClause
+    def operator : String
+      "?|"
+    end
+
+    def negated : JsonbHasAnyKeys
+      JsonbHasAnyKeys.new(column, value)
+    end
+
+    def prepare(placeholder_supplier : Proc(String)) : String
+      "NOT(#{column} #{operator} #{placeholder_supplier.call})"
+    end
+  end
+
+  class JsonbHasAllKeys < ValueHoldingSqlClause
+    def operator : String
+      "?&"
+    end
+
+    def negated : NotJsonbHasAllKeys
+      NotJsonbHasAllKeys.new(column, value)
+    end
+  end
+
+  class NotJsonbHasAllKeys < ValueHoldingSqlClause
+    def operator : String
+      "?&"
+    end
+
+    def negated : JsonbHasAllKeys
+      JsonbHasAllKeys.new(column, value)
+    end
+
+    def prepare(placeholder_supplier : Proc(String)) : String
+      "NOT(#{column} #{operator} #{placeholder_supplier.call})"
+    end
+  end
+
+  class JsonbIncludes < ValueHoldingSqlClause
+    def operator : String
+      "@>"
+    end
+
+    def negated : JsonbExcludes
+      JsonbExcludes.new(column, value)
+    end
+  end
+
+  class JsonbExcludes < ValueHoldingSqlClause
+    def operator : String
+      "@>"
+    end
+
+    def negated : JsonbIncludes
+      JsonbIncludes.new(column, value)
+    end
+
+    def prepare(placeholder_supplier : Proc(String)) : String
+      "NOT(#{column} #{operator} #{placeholder_supplier.call})"
+    end
+  end
+
+  class JsonbIn < ValueHoldingSqlClause
+    def operator : String
+      "<@"
+    end
+
+    def negated : JsonbNotIn
+      JsonbNotIn.new(column, value)
+    end
+  end
+
+  class JsonbNotIn < ValueHoldingSqlClause
+    def operator : String
+      "<@"
+    end
+
+    def negated : JsonbIn
+      JsonbIn.new(column, value)
+    end
+
+    def prepare(placeholder_supplier : Proc(String)) : String
+      "NOT(#{column} #{operator} #{placeholder_supplier.call})"
+    end
+  end
+
+  class TsMatch < ValueHoldingSqlClause
+    def operator : String
+      "@@"
+    end
+
+    def negated : TsNotMatch
+      TsNotMatch.new(column, value)
+    end
+
+    def prepare(placeholder_supplier : Proc(String)) : String
+      "#{column} #{operator} TO_TSQUERY(#{placeholder_supplier.call})"
+    end
+  end
+
+  class TsNotMatch < ValueHoldingSqlClause
+    def operator : String
+      "@@"
+    end
+
+    def negated : TsMatch
+      TsMatch.new(column, value)
+    end
+
+    def prepare(placeholder_supplier : Proc(String)) : String
+      "NOT(#{column} #{operator} TO_TSQUERY(#{placeholder_supplier.call}))"
+    end
+  end
+
   class Raw < Condition
     @clause : String
 
@@ -257,7 +433,7 @@ module Avram::Where
       @clause = build_clause(statement, bind_vars)
     end
 
-    def prepare(_placeholder_supplier : Proc(String)) : String
+    def prepare(placeholder_supplier : Proc(String)) : String
       @clause
     end
 
@@ -270,14 +446,26 @@ module Avram::Where
 
     private def build_clause(statement, bind_vars)
       bind_vars.each do |arg|
-        if arg.is_a?(String) || arg.is_a?(Slice(UInt8))
-          escaped = PG::EscapeHelper.escape_literal(arg)
-        else
-          escaped = arg
-        end
-        statement = statement.sub('?', escaped)
+        encoded_arg = prepare_for_execution(arg)
+        statement = statement.sub('?', encoded_arg)
       end
       statement
+    end
+
+    private def prepare_for_execution(value)
+      if value.is_a?(Array)
+        "'#{PQ::Param.encode_array(value)}'"
+      else
+        escape_if_needed(value)
+      end
+    end
+
+    private def escape_if_needed(value)
+      if value.is_a?(String) || value.is_a?(Slice(UInt8))
+        PG::EscapeHelper.escape_literal(value)
+      else
+        value
+      end
     end
   end
 end

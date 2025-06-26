@@ -1,5 +1,6 @@
 class Avram::Criteria(T, V)
-  property :rows, :column
+  property rows : T
+  property column : Symbol | String
   @negate_next_criteria : Bool
 
   def initialize(@rows : T, @column : Symbol | String)
@@ -128,12 +129,12 @@ class Avram::Criteria(T, V)
     add_clause(Avram::Where::LessThanOrEqualTo.new(column, V.adapter.to_db!(value)))
   end
 
-  def select_min : V?
-    rows.exec_scalar(&.select_min(column)).as(V?)
+  def select_min
+    to_expected_type(rows.exec_scalar(&.select_min(column)))
   end
 
-  def select_max : V?
-    rows.exec_scalar(&.select_max(column)).as(V?)
+  def select_max
+    to_expected_type(rows.exec_scalar(&.select_max(column)))
   end
 
   def select_average : Float64?
@@ -151,6 +152,11 @@ class Avram::Criteria(T, V)
   def in(values) : T
     values = values.map { |value| V.adapter.to_db!(value) }
     add_clause(Avram::Where::In.new(column, values))
+  end
+
+  def have_any(values) : T
+    values = values.map { |value| V.adapter.to_db!(value) }
+    add_clause(Avram::Where::Any.new(column, values))
   end
 
   # :nodoc:
@@ -184,5 +190,24 @@ class Avram::Criteria(T, V)
     else
       sql_clause
     end
+  end
+
+  # :nodoc:
+  # given the value in input it casts it to the expected output type (e.g: an PG::Int becomes a Int)
+  private def to_expected_type(value)
+    value.as(V?)
+  end
+
+  # :nodoc:
+  # special case: PG::Numeric cannot be cast to float, so we need to explicitly call to_f on it
+  private def to_expected_type(value : PG::Numeric?)
+    value.try &.to_f64
+  end
+
+  macro define_function_criteria(name, output_type = V, sql_name = nil)
+    {% sql_name = sql_name ? sql_name.id : name.id.upcase %}
+      def {{name}}
+        Criteria(T,{{output_type}}).new(rows, "{{sql_name}}(#{column})")
+      end
   end
 end

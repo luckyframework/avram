@@ -6,6 +6,7 @@ class LineItem < BaseModel
     timestamps
     column name : String
     has_one price : Price?
+    has_one discount : Discount?
     has_many scans : Scan
     has_many line_items_products : LineItemProduct
     has_many associated_products : Product, through: [:line_items_products, :product]

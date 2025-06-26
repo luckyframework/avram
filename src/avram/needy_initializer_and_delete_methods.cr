@@ -44,8 +44,8 @@ module Avram::NeedyInitializerAndDeleteMethods
     #
     # attribute_method_args would look something like:
     #
-    #   name : String | Avram::Nothing = Avram::Nothing.new,
-    #   email : String | Nil | Avram::Nothing = Avram::Nothing.new
+    #   name : String | Avram::Nothing = IGNORE,
+    #   email : String | Nil | Avram::Nothing = IGNORE
     #
     # This can be passed to macros as a string, and then the macro can call .id
     # on it to output the string as code!
@@ -63,14 +63,14 @@ module Avram::NeedyInitializerAndDeleteMethods
       {% for attribute in COLUMN_ATTRIBUTES.uniq %}
         {% attribute_method_args = attribute_method_args + "#{attribute[:name]} : #{attribute[:type]} | Avram::Nothing" %}
         {% if attribute[:nilable] %}{% attribute_method_args = attribute_method_args + " | Nil" %}{% end %}
-        {% attribute_method_args = attribute_method_args + " = Avram::Nothing.new,\n" %}
+        {% attribute_method_args = attribute_method_args + " = IGNORE,\n" %}
 
         {% attribute_params = attribute_params + "#{attribute[:name]}: #{attribute[:name]},\n" %}
       {% end %}
     {% end %}
 
     {% for attribute in ATTRIBUTES %}
-      {% attribute_method_args = attribute_method_args + "#{attribute.var} : #{attribute.type} | Avram::Nothing = Avram::Nothing.new,\n" %}
+      {% attribute_method_args = attribute_method_args + "#{attribute.var} : #{attribute.type} | Avram::Nothing = IGNORE,\n" %}
       {% attribute_params = attribute_params + "#{attribute.var}: #{attribute.var},\n" %}
     {% end %}
 
@@ -124,11 +124,8 @@ module Avram::NeedyInitializerAndDeleteMethods
       {% if with_bang %}
         operation.delete!
       {% else %}
-        if operation.delete
-          yield operation, operation.record.not_nil!
-        else
-          yield operation, nil
-        end
+        operation.delete
+        yield operation, operation.record
       {% end %}
     end
   end
@@ -165,6 +162,7 @@ module Avram::NeedyInitializerAndDeleteMethods
     end
 
     def set_attributes({{ attribute_method_args.id }})
+      extract_changes_from_params
       {% if @type.constant :COLUMN_ATTRIBUTES %}
         {% for attribute in COLUMN_ATTRIBUTES.uniq %}
           unless {{ attribute[:name] }}.is_a? Avram::Nothing
@@ -178,7 +176,6 @@ module Avram::NeedyInitializerAndDeleteMethods
           self.{{ attribute.var }}.value = {{ attribute.var }}
         end
       {% end %}
-      extract_changes_from_params
     end
   end
 end

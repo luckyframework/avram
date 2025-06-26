@@ -1,5 +1,5 @@
 module Avram::Migrator
-  def self.run
+  def self.run(&)
     yield
   rescue e
     puts e.inspect_with_backtrace

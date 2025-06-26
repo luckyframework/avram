@@ -17,10 +17,11 @@ describe "Preloading has_many through associations" do
         TaggingFactory.create &.tag_id(tag.id).post_id(post.id)
         TaggingFactory.create &.tag_id(tag.id).post_id(other_post.id)
 
-        post_tags = Post::BaseQuery.new.preload_tags.results.first.tags
+        post = Post::BaseQuery.new.preload_tags.results.first
+        post.tags_preloaded?.should eq(true)
 
-        post_tags.size.should eq(1)
-        post_tags.should eq([tag])
+        post.tags.size.should eq(1)
+        post.tags.should eq([tag])
       end
     end
 
@@ -46,6 +47,7 @@ describe "Preloading has_many through associations" do
       posts = Post::BaseQuery.new.preload_tags
 
       2.times { posts.results }
+      posts.results.first.tags_preloaded?.should eq(true)
     end
   end
 
@@ -129,6 +131,7 @@ describe "Preloading has_many through associations" do
         tag = TagFactory.create
         original_post = PostFactory.create
         TaggingFactory.create &.tag_id(tag.id).post_id(original_post.id)
+        original_post.tags_preloaded?.should eq(false)
 
         Post::BaseQuery.preload_tags(original_post)
 
@@ -136,6 +139,115 @@ describe "Preloading has_many through associations" do
           original_post.tags
         end
       end
+    end
+
+    it "does not refetch association from database if already loaded (even if association has changed)" do
+      with_lazy_load(enabled: false) do
+        tag = TagFactory.create
+        post = PostFactory.create
+        TaggingFactory.create &.tag_id(tag.id).post_id(post.id)
+        post = Post::BaseQuery.preload_tags(post)
+        Tag::SaveOperation.update!(tag, name: "THIS IS CHANGED")
+
+        post = Post::BaseQuery.preload_tags(post)
+
+        post.tags.first.name.should_not eq("THIS IS CHANGED")
+      end
+    end
+
+    # TODO
+    # it "refetches unfetched in multiple" do
+    #   with_lazy_load(enabled: false) do
+    #     tag1 = TagFactory.create
+    #     post1 = PostFactory.create
+    #     TaggingFactory.create &.tag_id(tag1.id).post_id(post1.id)
+    #     post1 = Post::BaseQuery.preload_tags(post1)
+    #     Tag::SaveOperation.update!(tag1, name: "THIS IS CHANGED")
+
+    #     tag2 = TagFactory.create
+    #     post2 = PostFactory.create
+    #     TaggingFactory.create &.tag_id(tag2.id).post_id(post2.id)
+    #     Tag::SaveOperation.update!(tag1, name: "THIS IS CHANGED")
+
+    #     posts = Post::BaseQuery.preload_tags([post1, post2])
+
+    #     posts[0].tags.first.name.should_not eq("THIS IS CHANGED")
+    #     posts[1].tags.first.name.should eq("THIS IS CHANGED")
+    #   end
+    # end
+
+    it "allows forcing refetch if already loaded" do
+      with_lazy_load(enabled: false) do
+        tag = TagFactory.create
+        post = PostFactory.create
+        TaggingFactory.create &.tag_id(tag.id).post_id(post.id)
+        post = Post::BaseQuery.preload_tags(post)
+        Tag::SaveOperation.update!(tag, name: "THIS IS CHANGED")
+
+        post = Post::BaseQuery.preload_tags(post, force: true)
+
+        post.tags.first.name.should eq("THIS IS CHANGED")
+      end
+    end
+
+    it "allows forcing refetch if already loaded with multiple" do
+      with_lazy_load(enabled: false) do
+        tag1 = TagFactory.create
+        post1 = PostFactory.create
+        TaggingFactory.create &.tag_id(tag1.id).post_id(post1.id)
+        post1 = Post::BaseQuery.preload_tags(post1)
+        Tag::SaveOperation.update!(tag1, name: "THIS IS CHANGED")
+
+        tag2 = TagFactory.create
+        post2 = PostFactory.create
+        TaggingFactory.create &.tag_id(tag2.id).post_id(post2.id)
+        Tag::SaveOperation.update!(tag2, name: "THIS IS CHANGED")
+
+        posts = Post::BaseQuery.preload_tags([post1, post2], force: true)
+
+        posts[0].tags.first.name.should eq("THIS IS CHANGED")
+        posts[1].tags.first.name.should eq("THIS IS CHANGED")
+      end
+    end
+  end
+
+  describe "override base_query_class" do
+    it "uses the custom query class to ignore soft_deleted records" do
+      user = UserFactory.create
+      new_friend = UserFactory.create
+      not_friend = UserFactory.create
+      FollowFactory.create(&.followee(user).follower(new_friend))
+      FollowFactory.create(&.followee(user).follower(not_friend).soft_deleted_at(1.day.ago))
+
+      u = UserQuery.new.preload_followers.first
+      ids = u.followers.map(&.id)
+      ids.should contain(new_friend.id)
+      ids.should_not contain(not_friend.id)
+    end
+
+    it "has an escape hatch" do
+      user = UserFactory.create
+      new_friend = UserFactory.create
+      not_friend = UserFactory.create
+      FollowFactory.create(&.followee(user).follower(new_friend))
+      FollowFactory.create(&.followee(user).follower(not_friend).soft_deleted_at(1.day.ago))
+
+      # Preloads work in a lot of different ways, so we need to account for
+      # all of the different method options
+      u = UserQuery.new.preload_followers(through: Follow::BaseQuery.new).id(user.id).first
+      ids = u.followers.map(&.id)
+      ids.should contain(new_friend.id)
+      ids.should contain(not_friend.id)
+
+      u = UserQuery.new.preload_followers(User::BaseQuery.new, through: Follow::BaseQuery.new).id(user.id).first
+      ids = u.followers.map(&.id)
+      ids.should contain(new_friend.id)
+      ids.should contain(not_friend.id)
+
+      u = UserQuery.new.preload_followers(through: Follow::BaseQuery.new, &.preload_follows).id(user.id).first
+      ids = u.followers.map(&.id)
+      ids.should contain(new_friend.id)
+      ids.should contain(not_friend.id)
     end
   end
 end

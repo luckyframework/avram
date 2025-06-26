@@ -7,11 +7,11 @@ struct Int32
     alias ColumnType = Int32
     include Avram::Type
 
-    def self.criteria(query : T, column) forall T
+    def self.criteria(query : T, column : Symbol | String) forall T
       Criteria(T, Int32).new(query, column)
     end
 
-    def from_db!(value : Int32)
+    def from_db!(value : Int32) : Int32
       value
     end
 
@@ -21,7 +21,7 @@ struct Int32
       FailedCast.new
     end
 
-    def parse(value : Int32)
+    def parse(value : Int32) : SuccessfulCast(Int32)
       SuccessfulCast(Int32).new(value)
     end
 
@@ -31,11 +31,11 @@ struct Int32
       FailedCast.new
     end
 
-    def parse(values : Array(Int32))
+    def parse(values : Array(Int32)) : SuccessfulCast(Array(Int32))
       SuccessfulCast(Array(Int32)).new values
     end
 
-    def to_db(value : Int32)
+    def to_db(value : Int32) : String
       value.to_s
     end
 
@@ -48,12 +48,19 @@ struct Int32
       include Avram::IncludesCriteria(T, V)
 
       def select_sum : Int64?
-        super.as(Int64?)
+        case sum = super
+        when PG::Numeric
+          sum.to_f.to_i64
+        when Int
+          sum.to_i64
+        end
       end
 
       def select_sum! : Int64
         select_sum || 0_i64
       end
+
+      define_function_criteria(abs, V)
     end
   end
 end

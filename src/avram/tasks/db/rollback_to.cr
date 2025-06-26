@@ -1,20 +1,15 @@
-require "colorize"
-
 class Db::RollbackTo < BaseTask
   summary "Rollback to a specific migration"
+  help_message <<-TEXT
+  #{task_summary}
 
-  def help_message
-    <<-TEXT
-    #{summary}
+  You can get the migration version from the filename or by running 'lucky db.migrations.status'
 
-    You can get the migration version from the filename or by running 'lucky db.migrations.status'
+  Example:
 
-    Example:
+    lucky db.rollback_to 20180802180356
 
-      lucky db.rollback_to 20180802180356
-
-    TEXT
-  end
+  TEXT
 
   def run_task
     version = ARGV.first?

@@ -4,7 +4,8 @@ class Avram::SchemaEnforcer::EnsureExistingTable < Avram::SchemaEnforcer::Valida
       best_match = Levenshtein::Finder.find table_name, database_info.table_names, tolerance: 2
 
       message = String.build do |string|
-        string << "#{model_class.name.colorize.bold} wants to use the '#{table_name.colorize.bold}' table but it is missing.\n"
+        string << model_class.name.colorize.bold << " wants to use the '"
+        string << table_name.colorize.bold << "' table but it is missing.\n"
 
         if best_match
           string << <<-TEXT
@@ -51,7 +52,7 @@ class Avram::SchemaEnforcer::EnsureExistingTable < Avram::SchemaEnforcer::Valida
     end
   end
 
-  private def table_missing?
+  private def table_missing? : Bool
     !model_class.database_table_info
   end
 end

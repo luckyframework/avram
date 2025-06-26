@@ -61,7 +61,7 @@ module Avram::PrimaryKeyMethods
   # user = SaveUser.create!(name: "Helen")
   # UserQuery.new.some_custom_preload_method.find(user.id)
   # ```
-  def reload : self
+  def reload(&) : self
     query = yield base_query_class.new
     query.find(id)
   end
@@ -73,14 +73,14 @@ module Avram::PrimaryKeyMethods
   end
 
   def delete
-    self.class.database.exec "DELETE FROM #{@@table_name} WHERE #{primary_key_name} = #{escape_primary_key(id)}"
+    self.class.write_database.exec "DELETE FROM #{@@table_name} WHERE #{primary_key_name} = #{escape_primary_key(id)}"
   end
 
   private def escape_primary_key(id : Int64 | Int32 | Int16)
     id
   end
 
-  private def escape_primary_key(id : UUID)
+  private def escape_primary_key(id : UUID | String)
     PG::EscapeHelper.escape_literal(id.to_s)
   end
 end

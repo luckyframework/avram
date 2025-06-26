@@ -18,17 +18,20 @@ end
 private class SaveUser < User::SaveOperation
 end
 
-private class NestedParams < Avram::FakeParams
-  @data : Hash(String, String) = {} of String => String
-
-  def initialize(@data)
-  end
-
+private class NestedParams < Avram::Params
   def nested?(key : String) : Hash(String, String)
-    if @data.keys.map(&.split(':').first).includes?(key)
-      @data
+    if @hash.keys.map(&.split(':').first).includes?(key)
+      super
     else
       {} of String => String
+    end
+  end
+
+  def nested_arrays?(key : String) : Hash(String, Array(String))
+    if @hash.keys.map(&.split(':').first).includes?(key)
+      super
+    else
+      {} of String => Array(String)
     end
   end
 end
@@ -69,6 +72,57 @@ describe Avram::Paramable do
       params = NestedParams.new({"author:name" => "Test"})
 
       params.has_key_for?(SaveUser).should be_false
+    end
+  end
+end
+
+private class SaveToken < Token::SaveOperation
+  permit_columns :name, :scopes
+end
+
+describe Avram::Params do
+  it "accepts hashes with all string values" do
+    name = "Auth token"
+    params = Avram::Params.new({"name" => name})
+
+    SaveToken.create(params) do |_, token|
+      token.should be_a(Token)
+
+      token.try do |_token|
+        _token.name.should eq(name)
+      end
+    end
+  end
+
+  it "accepts hashes with all array values" do
+    scopes = ["profile", "openid"]
+    params = Avram::Params.new({"scopes" => scopes})
+
+    SaveToken.create(params) do |_, token|
+      token.should be_a(Token)
+
+      token.try do |_token|
+        _token.scopes.should eq(scopes)
+      end
+    end
+  end
+
+  it "accepts hashes with a mixture of array and string values" do
+    name = "Auth token"
+    scopes = ["profile", "openid"]
+
+    params = Avram::Params.new({
+      "name"   => name,
+      "scopes" => scopes,
+    })
+
+    SaveToken.create(params) do |_, token|
+      token.should be_a(Token)
+
+      token.try do |_token|
+        _token.name.should eq(name)
+        _token.scopes.should eq(scopes)
+      end
     end
   end
 end

@@ -4,7 +4,7 @@ class Avram::Attribute(T)
   setter value : T?
   getter param_key : String
   @errors = [] of String
-  @param : Avram::Uploadable | String | Nil
+  @param : Avram::Uploadable | Array(String) | String | Nil
 
   # This can be used as an escape hatch when you
   # may have a blank string that's allowed to be saved.
@@ -19,6 +19,7 @@ class Avram::Attribute(T)
   def permitted
     @_permitted ||= begin
       Avram::PermittedAttribute(T).new(name: @name, param: @param, value: @value, param_key: @param_key).tap do |attribute|
+        attribute.allow_blank = allow_blank?
         errors.each do |error|
           attribute.add_error error
         end
@@ -26,7 +27,7 @@ class Avram::Attribute(T)
     end
   end
 
-  def param : Avram::Uploadable | String
+  def param : Avram::Uploadable | Array(String) | String
     @param || value.to_s
   end
 
@@ -75,7 +76,7 @@ class Avram::Attribute(T)
     errors.empty?
   end
 
-  def changed?(from : T? | Nothing = Nothing.new, to : T? | Nothing = Nothing.new) : Bool
+  def changed?(from : T? | Nothing = IGNORE, to : T? | Nothing = IGNORE) : Bool
     from = from.is_a?(Nothing) ? true : from == original_value
     to = to.is_a?(Nothing) ? true : to == value
     value != original_value && from && to
@@ -85,9 +86,23 @@ class Avram::Attribute(T)
     extract(params, type: T)
   end
 
+  private def extract(params, type : Array(T).class) forall T
+    nested_params = params.nested_arrays?(param_key)
+    param_val = nested_params[name.to_s]?
+    @param = param_val.try(&.first?)
+    return if param_val.nil?
+
+    parse_result = T.adapter.parse(param_val)
+    if parse_result.is_a? Avram::Type::SuccessfulCast
+      self.value = parse_result.value
+    else
+      add_error("is invalid")
+    end
+  end
+
   private def extract(params, type : Avram::Uploadable.class)
     file = params.nested_file?(param_key)
-    @param = param_val = file.try(&.[]?(name.to_s))
+    @param = param_val = file[name.to_s]?
     return if param_val.nil?
 
     parse_result = Avram::Uploadable.adapter.parse(param_val)

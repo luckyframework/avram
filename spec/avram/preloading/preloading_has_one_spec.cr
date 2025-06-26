@@ -14,6 +14,7 @@ describe "Preloading has_one associations" do
 
       admin = Admin::BaseQuery.new.preload_sign_in_credential
 
+      admin.first.sign_in_credential_preloaded?.should eq(true)
       admin.first.sign_in_credential.should eq sign_in_credential
     end
   end
@@ -28,8 +29,20 @@ describe "Preloading has_one associations" do
         SignInCredential::BaseQuery.new.preload_user
       ).first
 
-      user.sign_in_credential.not_nil!.user.should eq user
+      user.sign_in_credential.as(SignInCredential).user.should eq user
       SignInCredential::BaseQuery.times_called.should eq 1
+    end
+  end
+
+  it "works with a block" do
+    with_lazy_load(enabled: false) do
+      admin = AdminFactory.create
+      sign_in_credential = SignInCredentialFactory.create &.user_id(admin.id)
+
+      admin = Admin::BaseQuery.new.preload_sign_in_credential(&.user_id(admin.id))
+
+      admin.first.sign_in_credential_preloaded?.should eq(true)
+      admin.first.sign_in_credential.should eq sign_in_credential
     end
   end
 
@@ -49,6 +62,7 @@ describe "Preloading has_one associations" do
     with_lazy_load(enabled: false) do
       admin = AdminFactory.create
       SignInCredentialFactory.create &.user_id(admin.id)
+      admin.sign_in_credential_preloaded?.should eq(false)
 
       expect_raises Avram::LazyLoadError do
         admin.sign_in_credential
@@ -95,6 +109,7 @@ describe "Preloading has_one associations" do
         admin = Admin::BaseQuery.preload_sign_in_credential(admin)
 
         admin.sign_in_credential.should eq sign_in_credential
+        admin.sign_in_credential_preloaded?.should eq(true)
       end
     end
 
@@ -133,6 +148,68 @@ describe "Preloading has_one associations" do
         expect_raises Avram::LazyLoadError do
           admin.sign_in_credential
         end
+      end
+    end
+
+    it "does not refetch association from database if already loaded (even if association has changed)" do
+      with_lazy_load(enabled: false) do
+        admin = AdminFactory.create
+        sign_in_credential = SignInCredentialFactory.create &.user_id(admin.id)
+        admin = Admin::BaseQuery.preload_sign_in_credential(admin)
+        SignInCredential::SaveOperation.update!(sign_in_credential, value: "THIS IS CHANGED")
+
+        admin = Admin::BaseQuery.preload_sign_in_credential(admin)
+
+        admin.sign_in_credential.value.should_not eq("THIS IS CHANGED")
+      end
+    end
+
+    it "refetches unfetched in multiple" do
+      with_lazy_load(enabled: false) do
+        admin1 = AdminFactory.create
+        sign_in_credential1 = SignInCredentialFactory.create &.user_id(admin1.id)
+        admin1 = Admin::BaseQuery.preload_sign_in_credential(admin1)
+        SignInCredential::SaveOperation.update!(sign_in_credential1, value: "THIS IS CHANGED")
+
+        admin2 = AdminFactory.create
+        sign_in_credential2 = SignInCredentialFactory.create &.user_id(admin2.id)
+        SignInCredential::SaveOperation.update!(sign_in_credential2, value: "THIS IS CHANGED")
+
+        admins = Admin::BaseQuery.preload_sign_in_credential([admin1, admin2])
+
+        admins[0].sign_in_credential.value.should_not eq("THIS IS CHANGED")
+        admins[1].sign_in_credential.value.should eq("THIS IS CHANGED")
+      end
+    end
+
+    it "allows forcing refetch if already loaded" do
+      with_lazy_load(enabled: false) do
+        admin = AdminFactory.create
+        sign_in_credential = SignInCredentialFactory.create &.user_id(admin.id)
+        admin = Admin::BaseQuery.preload_sign_in_credential(admin)
+        SignInCredential::SaveOperation.update!(sign_in_credential, value: "THIS IS CHANGED")
+
+        admin = Admin::BaseQuery.preload_sign_in_credential(admin, force: true)
+
+        admin.sign_in_credential.value.should eq("THIS IS CHANGED")
+      end
+    end
+
+    it "allows forcing refetch if already loaded with multiple" do
+      with_lazy_load(enabled: false) do
+        admin1 = AdminFactory.create
+        sign_in_credential1 = SignInCredentialFactory.create &.user_id(admin1.id)
+        admin1 = Admin::BaseQuery.preload_sign_in_credential(admin1)
+        SignInCredential::SaveOperation.update!(sign_in_credential1, value: "THIS IS CHANGED")
+
+        admin2 = AdminFactory.create
+        sign_in_credential2 = SignInCredentialFactory.create &.user_id(admin2.id)
+        SignInCredential::SaveOperation.update!(sign_in_credential2, value: "THIS IS CHANGED")
+
+        admins = Admin::BaseQuery.preload_sign_in_credential([admin1, admin2], force: true)
+
+        admins[0].sign_in_credential.value.should eq("THIS IS CHANGED")
+        admins[1].sign_in_credential.value.should eq("THIS IS CHANGED")
       end
     end
   end

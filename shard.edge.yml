@@ -23,3 +23,7 @@ dependencies:
   lucky_cache:
     github: luckyframework/lucky_cache
     branch: main
+development_dependencies:
+  lucky:
+    github: luckyframework/lucky
+    branch: main

@@ -2,7 +2,9 @@ require "wordsmith"
 
 module Avram::Join
   abstract class SqlClause
-    getter :from, :to, :from_column, :to_column
+    getter from : TableName
+
+    @using : String
 
     def initialize(
       @from : TableName,
@@ -10,33 +12,46 @@ module Avram::Join
       @primary_key : Symbol? = nil,
       @foreign_key : Symbol? = nil,
       @comparison : String? = "=",
-      @using : Array(Symbol) = [] of Symbol
+      using : Array(Symbol) = [] of Symbol,
+      @alias_to : TableName? = nil,
     )
+      @using = using.join(", ") { |col| %("#{col}") }
     end
 
     abstract def join_type : String
 
-    def to_sql
-      if !@using.empty?
-        %(#{join_type} JOIN #{@to} USING (#{@using.join(", ")}))
-      else
-        "#{join_type} JOIN #{@to} ON #{from_column} #{@comparison} #{to_column}"
+    def to_sql : String
+      String.build do |io|
+        io << join_type << " JOIN "
+        @to.to_s(io)
+        if @alias_to
+          io << " AS " << @alias_to
+        end
+        if @using.presence
+          io << " USING (" << @using << ')'
+        else
+          io << " ON " << from_column << ' ' << @comparison << ' ' << to_column
+        end
       end
     end
 
-    def from_column
-      "#{@from}.#{@primary_key || "id"}"
+    def to : TableName
+      @alias_to || @to
     end
 
-    def to_column
-      "#{@to}.#{@foreign_key || default_foreign_key}"
+    def from_column : String
+      %("#{@from}"."#{@primary_key || "id"}")
     end
 
-    def default_foreign_key
-      Wordsmith::Inflector.singularize(@from) + "_id"
+    def to_column : String
+      %("#{to}"."#{@foreign_key || default_foreign_key}")
     end
 
-    def clone
+    def default_foreign_key : String
+      Wordsmith::Inflector.singularize(@from.to_s) + "_id"
+    end
+
+    def clone : self
       self
     end
   end
