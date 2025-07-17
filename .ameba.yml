@@ -24,3 +24,7 @@ Naming/BlockParameterName:
   ForbiddenNames: []
   Enabled: true
   Severity: Convention
+
+Documentation/DocumentationAdmonition:
+  Description: Disallows leaving TODO comments
+  Enabled: false
