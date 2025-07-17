@@ -111,7 +111,7 @@ abstract class Avram::Factory
   # end
   # ```
   def self.create_pair(&)
-    2.times do
+    [1, 2].map do |_|
       self.create { |factory| yield(factory) }
     end
   end

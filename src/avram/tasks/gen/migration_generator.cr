@@ -54,7 +54,7 @@ class Avram::Migrator::MigrationGenerator
   private def ensure_unique
     directory = Dir.new(Dir.current + Path["/db/migrations"].to_s)
     directory.each_child { |child|
-      if x.starts_with?(/[0-9]{14}_#{name.underscore}.cr/)
+      if child.starts_with?(/[0-9]{14}_#{name.underscore}.cr/)
         raise <<-ERROR
           Migration name must be unique
 
