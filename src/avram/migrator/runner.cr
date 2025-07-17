@@ -107,8 +107,8 @@ class Avram::Migrator::Runner
   def self.restore_db(restore_file : String, quiet : Bool = false)
     if File.exists?(restore_file)
       output = quiet ? IO::Memory.new : STDOUT
-      File.open(restore_file) do |f|
-        run("psql", ["-q", *cmd_args_array, "-v", "ON_ERROR_STOP=1"], input: f, output: output)
+      File.open(restore_file) do |file|
+        run("psql", ["-q", *cmd_args_array, "-v", "ON_ERROR_STOP=1"], input: file, output: output)
       end
       unless quiet
         puts "Done restoring #{db_name.colorize(:green)}"
@@ -122,9 +122,9 @@ class Avram::Migrator::Runner
   # and includes the migtation data.
   def self.dump_db(dump_to : String = "db/structure.sql", quiet : Bool = false)
     Db::VerifyConnection.new(quiet: true).run_task
-    File.open(dump_to, "w+") do |f|
-      run("pg_dump", ["-s", *cmd_args_array], output: f)
-      run("pg_dump", ["-t", "migrations", "--data-only", *cmd_args_array], output: f)
+    File.open(dump_to, "w+") do |file|
+      run("pg_dump", ["-s", *cmd_args_array], output: file)
+      run("pg_dump", ["-t", "migrations", "--data-only", *cmd_args_array], output: file)
     end
     unless quiet
       puts "Done dumping #{db_name.colorize(:green)}"
@@ -211,8 +211,8 @@ class Avram::Migrator::Runner
 
   def rollback_to(last_version : Int64)
     self.class.setup_migration_tracking_tables
-    subset = migrated_migrations.select do |mm|
-      mm.new.version > last_version
+    subset = migrated_migrations.select do |migrated|
+      migrated.new.version > last_version
     end
     subset.reverse.each &.new.down
     puts "Done rolling back to #{last_version}".colorize(:green)

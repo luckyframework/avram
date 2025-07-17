@@ -9,7 +9,7 @@
 # property colors : Array(Colors)
 # ```
 module PG::EnumArrayConverter(T)
-  def self.from_rs(rs : DB::ResultSet)
-    rs.read(Array(typeof(T.values.first.value))).map { |i| T.from_value(i) }
+  def self.from_rs(result_set : DB::ResultSet)
+    result_set.read(Array(typeof(T.values.first.value))).map { |value| T.from_value(value) }
   end
 end

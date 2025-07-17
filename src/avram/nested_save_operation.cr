@@ -3,8 +3,8 @@ module Avram::NestedSaveOperation
     {% name = type_declaration.var %}
     {% type = type_declaration.type.resolve %}
 
-    {% model_type = type.ancestors.find do |t|
-         t.stringify.starts_with?("Avram::SaveOperation(")
+    {% model_type = type.ancestors.find do |ancestor|
+         ancestor.stringify.starts_with?("Avram::SaveOperation(")
        end.type_vars.first %}
 
     {% assoc = T.constant(:ASSOCIATIONS).find do |assoc|

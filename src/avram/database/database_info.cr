@@ -19,11 +19,11 @@ module Avram
       SQL
 
       def self.load(database : Avram::Database.class) : DatabaseInfo
-        column_infos = database.query(SQL_QUERY) { |rs| ColumnInfo.from_rs(rs) }
+        column_infos = database.query(SQL_QUERY) { |result_set| ColumnInfo.from_rs(result_set) }
 
         grouped = column_infos.group_by(&.table)
         grouped.each do |table, columns|
-          columns.each { |c| table.columns << c }
+          columns.each { |column| table.columns << column }
         end
         table_infos = grouped.keys
         new(table_infos)

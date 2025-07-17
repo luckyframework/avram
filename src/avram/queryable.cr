@@ -258,10 +258,10 @@ module Avram::Queryable(T)
       query.select_direct(query.groups + ["COUNT(*)"]).statement,
       args: query.args,
       queryable: schema_class.name,
-    ) do |rs|
+    ) do |result_set|
       {
-        query.groups.map { rs.read PGValue },
-        rs.read Int64,
+        query.groups.map { result_set.read PGValue },
+        result_set.read Int64,
       }
     end.to_h
   end
@@ -299,8 +299,8 @@ module Avram::Queryable(T)
   end
 
   private def exec_query
-    read_database.query query.statement, args: query.args, queryable: schema_class.name do |rs|
-      schema_class.from_rs(rs)
+    read_database.query query.statement, args: query.args, queryable: schema_class.name do |result_set|
+      schema_class.from_rs(result_set)
     end
   end
 

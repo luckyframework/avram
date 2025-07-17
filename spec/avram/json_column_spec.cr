@@ -49,10 +49,10 @@ describe "JSON Columns" do
     form1 = SaveBlob.new
     form1.set_doc_from_param(%w[a b c])
     form1.set_metadata_from_param(BlobMetadata.from_json("{}"))
-    form1.doc.value.should eq %w[a b c].map { |v| JSON::Any.new(v) }
+    form1.doc.value.should eq %w[a b c].map { |value| JSON::Any.new(value) }
     form1.save!
     blob1 = BlobQuery.new.last
-    blob1.doc.should eq %w[a b c].map { |v| JSON::Any.new(v) }
+    blob1.doc.should eq %w[a b c].map { |value| JSON::Any.new(value) }
 
     form2 = SaveBlob.new
     form2.set_doc_from_param({"foo" => {"bar" => "baz"}})
