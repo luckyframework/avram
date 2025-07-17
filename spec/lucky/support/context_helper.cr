@@ -1,3 +1,4 @@
+# ameba:disable Lint/SpecFilename
 module ContextHelper
   extend self
 

@@ -228,7 +228,7 @@ module Lucky::InputHelpers
   end
 
   private property array_id_counter : Hash(Symbol, Int32) do
-    Hash(Symbol, Int32).new { |h, k| h[k] = 0 }
+    Hash(Symbol, Int32).new { |hash, key| hash[key] = 0 }
   end
 
   private def update_array_id_counter!(field) : Nil

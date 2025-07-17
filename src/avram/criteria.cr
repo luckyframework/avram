@@ -99,10 +99,12 @@ class Avram::Criteria(T, V)
     end
   end
 
+  # ameba:disable Naming/PredicateName
   def is_nil : T
     add_clause(Avram::Where::Null.new(column))
   end
 
+  # ameba:disable Naming/PredicateName
   def is_not_nil : T
     not()
     is_nil
@@ -179,8 +181,8 @@ class Avram::Criteria(T, V)
   end
 
   private def add_clauses(sql_clauses : Array(Avram::Where::SqlClause)) : T
-    sql_clauses.reduce(rows) do |r, sql_clause|
-      r.where(build_sql_clause(sql_clause))
+    sql_clauses.reduce(rows) do |row, sql_clause|
+      row.where(build_sql_clause(sql_clause))
     end
   end
 

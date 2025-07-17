@@ -175,8 +175,8 @@ describe "attribute in operations" do
       operation.terms_of_service.value.should be_nil
       post.should_not be_nil
 
-      SaveOperationWithAttributes.update(post.as(Post), best_kind_of_bear: "koala bear") do |op, _post|
-        op.best_kind_of_bear.value.should eq("koala bear")
+      SaveOperationWithAttributes.update(post.as(Post), best_kind_of_bear: "koala bear") do |inner_operation, _post|
+        inner_operation.best_kind_of_bear.value.should eq("koala bear")
       end
     end
   end

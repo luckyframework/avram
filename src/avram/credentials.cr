@@ -142,8 +142,8 @@ class Avram::Credentials
   end
 
   private def set_url_query(io : String::Builder) : Nil
-    query.try do |q|
-      io << '?' << q
+    query.try do |query_string|
+      io << '?' << query_string
     end
   end
 end

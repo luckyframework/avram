@@ -1,3 +1,4 @@
+# ameba:disable Lint/SpecFilename
 module GeneratorHelper
   private def should_create_files_with_contents(io : IO, **files_and_contents)
     files_and_contents.each do |file_location, file_contents|

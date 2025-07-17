@@ -34,8 +34,8 @@ abstract class Avram::Migrator::Migration::V1
       else
         reset_prepared_statements
         migrate
-        execute_in_transaction @prepared_statements do |tx|
-          track_migration(tx)
+        execute_in_transaction @prepared_statements do |txn|
+          track_migration(txn)
           unless quiet
             puts "Migrated #{self.class.name.colorize(:green)}"
           end
@@ -52,8 +52,8 @@ abstract class Avram::Migrator::Migration::V1
       else
         reset_prepared_statements
         rollback
-        execute_in_transaction @prepared_statements do |tx|
-          untrack_migration(tx)
+        execute_in_transaction @prepared_statements do |txn|
+          untrack_migration(txn)
           unless quiet
             puts "Rolled back #{self.class.name.colorize(:green)}"
           end
@@ -100,7 +100,7 @@ abstract class Avram::Migrator::Migration::V1
   private def execute_in_transaction(statements : Array(String), &)
     database = Avram.settings.database_to_migrate
     database.transaction do
-      statements.each { |s| database.exec s }
+      statements.each { |sql| database.exec sql }
       yield database
     end
   rescue e : PQ::PQError

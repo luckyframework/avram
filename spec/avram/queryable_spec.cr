@@ -484,13 +484,13 @@ describe Avram::Queryable do
 
     it "wraps complex queries" do
       query = UserQuery.new.where { |user_q|
-        user_q.where { |q|
-          q.age(25).or(&.age(26))
-        }.where { |q|
-          q.name("Billy").or(&.name("Tommy"))
+        user_q.where { |scope|
+          scope.age(25).or(&.age(26))
+        }.where { |scope|
+          scope.name("Billy").or(&.name("Tommy"))
         }
-      }.or { |q|
-        q.nickname("Strange")
+      }.or { |scope|
+        scope.nickname("Strange")
       }.query
 
       query.statement.should eq %(SELECT #{User::COLUMN_SQL} FROM users WHERE ( ( "users"."age" = $1 OR "users"."age" = $2 ) AND ( "users"."name" = $3 OR "users"."name" = $4 ) ) OR "users"."nickname" = $5)
@@ -507,12 +507,12 @@ describe Avram::Queryable do
     end
 
     it "doesn't add parenthesis when query to wrap is provided" do
-      query = UserQuery.new.name("Susan").where do |q|
+      query = UserQuery.new.name("Susan").where do |scope|
         some_condition = false
         if some_condition
-          q.name("john")
+          scope.name("john")
         else
-          q
+          scope
         end
       end.age(25).query
 

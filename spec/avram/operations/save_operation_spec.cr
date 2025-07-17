@@ -117,10 +117,10 @@ end
 
 describe "Avram::SaveOperation" do
   it "calls the default validations after the before_save" do
-    UserWithDefaultValidations.create(name: "TestName", nickname: "TestNickname", joined_at: Time.utc, age: 400) do |op, u|
-      op.starts_nil.should eq("not nil!")
-      u.should_not be_nil
-      u.as(User).nickname.should eq("TestNickname")
+    UserWithDefaultValidations.create(name: "TestName", nickname: "TestNickname", joined_at: Time.utc, age: 400) do |operation, user|
+      operation.starts_nil.should eq("not nil!")
+      user.should_not be_nil
+      user.as(User).nickname.should eq("TestNickname")
     end
   end
 
@@ -241,8 +241,8 @@ describe "Avram::SaveOperation" do
       it "updates the record using the same default value" do
         TokenFactory.create(&.name("special").scopes(["name"]).next_id(4))
 
-        UpsertToken.upsert(next_id: 4, name: "Secret", scopes: ["red", "blue"]) do |op, token|
-          op.valid?.should eq(true)
+        UpsertToken.upsert(next_id: 4, name: "Secret", scopes: ["red", "blue"]) do |operation, token|
+          operation.valid?.should eq(true)
           token.should_not eq(nil)
           token.as(Token).name.should eq("Secret")
           token.as(Token).scopes.should eq(["red", "blue"])
@@ -542,9 +542,9 @@ describe "Avram::SaveOperation" do
     it "has inherited attributes" do
       user = UserFactory.create &.nickname("taco shop")
 
-      RenameUser.update(user, should_not_override_permitted_columns: "yo") do |op, u|
-        u.nickname.should eq("The 'taco shop'")
-        op.should_not_override_permitted_columns.value.should eq("yo")
+      RenameUser.update(user, should_not_override_permitted_columns: "yo") do |operation, updated_user|
+        updated_user.nickname.should eq("The 'taco shop'")
+        operation.should_not_override_permitted_columns.value.should eq("yo")
       end
     end
   end
@@ -684,8 +684,8 @@ describe "Avram::SaveOperation" do
 
     context "with bytes" do
       it "saves the byte column" do
-        Beat::SaveOperation.create(hash: "boots and pants".to_slice) do |op, beat|
-          op.saved?.should eq(true)
+        Beat::SaveOperation.create(hash: "boots and pants".to_slice) do |operation, beat|
+          operation.saved?.should eq(true)
           beat.should_not be_nil
           beat.as(Beat).hash.blank?.should eq(false)
           beat.as(Beat).hash.should eq(Bytes[98, 111, 111, 116, 115, 32, 97, 110, 100, 32, 112, 97, 110, 116, 115])
@@ -698,8 +698,8 @@ describe "Avram::SaveOperation" do
       it "creates the JSON value from params" do
         params = build_params(%({"blob": {"doc": {"sort": "desc"}, "metadata": {"name": "filter", "code": 4}}}), content_type: "application/json")
 
-        ReturnOfTheBlob.create(params) do |op, blob|
-          op.valid?.should eq(true)
+        ReturnOfTheBlob.create(params) do |operation, blob|
+          operation.valid?.should eq(true)
           blob.should_not eq(nil)
           blob.as(Blob).doc.as(JSON::Any)["sort"].as_s.should eq("desc")
           blob.as(Blob).metadata.name.should eq("filter")
@@ -853,8 +853,8 @@ describe "Avram::SaveOperation" do
         slime = BlobFactory.new.doc(JSON::Any.new({"sort" => JSON::Any.new("desc")})).create
         params = build_params(%({"blob": {"doc": {"sort": "asc"}}}), content_type: "application/json")
 
-        ReturnOfTheBlob.update(slime, params) do |op, blob|
-          op.valid?.should eq(true)
+        ReturnOfTheBlob.update(slime, params) do |operation, blob|
+          operation.valid?.should eq(true)
           blob.should_not eq(nil)
           blob.as(Blob).doc.as(JSON::Any)["sort"].as_s.should eq("asc")
         end
@@ -984,8 +984,8 @@ describe "Avram::SaveOperation" do
   describe "skip_default_validations" do
     it "allows blank strings to be saved" do
       post = PostFactory.create
-      AllowBlankComment.create(post_id: post.id, body: "") do |op, new_comment|
-        op.valid?.should be_true
+      AllowBlankComment.create(post_id: post.id, body: "") do |operation, new_comment|
+        operation.valid?.should be_true
         comment = new_comment.as(Comment)
         comment.body.should eq("")
       end
@@ -993,16 +993,16 @@ describe "Avram::SaveOperation" do
     it "allows blank strings from params" do
       post = PostFactory.create
       params = build_params({comment: {post_id: post.id, body: ""}}.to_json, content_type: "application/json")
-      AllowBlankComment.create(params) do |op, new_comment|
-        op.valid?.should be_true
+      AllowBlankComment.create(params) do |operation, new_comment|
+        operation.valid?.should be_true
         comment = new_comment.as(Comment)
         comment.body.should eq("")
       end
     end
     it "still allows normal data to be saved" do
       post = PostFactory.create
-      AllowBlankComment.create(post_id: post.id, body: "not blank") do |op, new_comment|
-        op.valid?.should be_true
+      AllowBlankComment.create(post_id: post.id, body: "not blank") do |operation, new_comment|
+        operation.valid?.should be_true
         comment = new_comment.as(Comment)
         comment.body.should eq("not blank")
       end
@@ -1027,9 +1027,9 @@ describe "Avram::SaveOperation" do
   describe "#database" do
     it "has access to the database via a helper method" do
       post = PostFactory.create
-      AllowBlankComment.create(post_id: post.id, body: "") do |op, _new_comment|
+      AllowBlankComment.create(post_id: post.id, body: "") do |operation, _new_comment|
         expect_raises(Avram::Rollback) do
-          op.database.rollback
+          operation.database.rollback
         end
       end
     end

@@ -33,7 +33,7 @@ abstract struct Enum
     end
 
     def parse(values : Array(Int))
-      results = values.map { |i| parse(i) }
+      results = values.map { |value| parse(value) }
       if results.all?(SuccessfulCast)
         parse(results.map(&.value.as(T)))
       else
