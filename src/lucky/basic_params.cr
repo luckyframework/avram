@@ -2,8 +2,8 @@ class Lucky::BasicParams
   include Lucky::Paramable
 
   @hash : Hash(String, Array(String) | String) |
-    Hash(String, Array(String)) |
-    Hash(String, String)
+          Hash(String, Array(String)) |
+          Hash(String, String)
 
   def initialize
     @hash = {} of String => String

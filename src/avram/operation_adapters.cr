@@ -12,7 +12,7 @@ module Avram::NeedyInitializer
   # This module is now provided by Lucky::BaseOperation
 end
 
-module Avram::DefineAttribute  
+module Avram::DefineAttribute
   # This module is now provided by Lucky::BaseOperation
 end
 
