@@ -10,9 +10,10 @@ This document summarizes the extraction of a base operation class from Avram to 
 
 1. **Created Lucky::BaseOperation** - A lightweight abstract base class that provides:
    - The core operation pattern (run/run! methods)
-   - Before/after hooks (before_run, after_run)
+   - Basic before/after hooks (before_run, after_run methods)
    - Basic parameter handling via Lucky::Paramable interface
    - Abstract methods for validation and attributes
+   - Note: Does NOT include the full callback system with macros
 
 2. **Created Lucky::Paramable** - A generic interface for parameter handling that both Lucky and Avram can implement
 
@@ -40,12 +41,22 @@ This document summarizes the extraction of a base operation class from Avram to 
 3. **Backward compatibility** - Existing Avram operations continue to work unchanged
 4. **Clean architecture** - The base operation is minimal and focused on the core pattern
 
+## What was NOT extracted
+
+The following Avram features remain in Avram and were not moved to Lucky:
+- **Full callback system** - The macro-based callback system with conditions (`before_run :method, if: :condition`)
+- **Attribute system** - The complete attribute definition and management system
+- **Validation system** - The validation methods and infrastructure
+- **Error handling** - The operation errors module
+- **Needy initializer** - The needs macro and initialization system
+
 ## Key Design Decisions
 
 1. **Minimal base class** - Lucky::BaseOperation only provides the core operation pattern without prescribing implementation details
 2. **Interface-based params** - Uses Lucky::Paramable interface to allow different param implementations
 3. **Abstract methods** - Subclasses must implement `valid?`, `attributes`, and `custom_errors`
 4. **Compatibility layer** - Avram modules remain as empty shells to prevent breaking changes
+5. **Basic hooks only** - Only simple before_run/after_run methods, not the full callback system
 
 ## Usage in Lucky (without Avram)
 
