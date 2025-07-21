@@ -1,11 +1,9 @@
-require "./validations"
-require "./callbacks"
-require "./define_attribute"
-require "./operation_errors"
-require "./param_key_override"
-require "./needy_initializer"
+require "../lucky/base_operation"
+require "./operation_adapters"
 
-abstract class Avram::Operation
+# Now Avram::Operation inherits from Lucky::BaseOperation
+# but maintains backward compatibility through adapter modules
+abstract class Avram::Operation < Lucky::BaseOperation
   include Avram::NeedyInitializer
   include Avram::DefineAttribute
   include Avram::Validations
@@ -13,16 +11,6 @@ abstract class Avram::Operation
   include Avram::ParamKeyOverride
   include Avram::Callbacks
 
-  getter params : Avram::Paramable
-
-  # Yields the instance of the operation, and the return value from
-  # the `run` instance method.
-  #
-  # ```
-  # MyOperation.run do |operation, value|
-  #   # operation is complete
-  # end
-  # ```
   def self.run(*args, **named_args, &)
     params = Avram::Params.new
     run(params, *args, **named_args) do |operation, value|
@@ -30,25 +18,11 @@ abstract class Avram::Operation
     end
   end
 
-  # Returns the value from the `run` instance method.
-  # or raise `Avram::FailedOperation` if the operation fails.
-  #
-  # ```
-  # value = MyOperation.run!
-  # ```
   def self.run!(*args, **named_args)
     params = Avram::Params.new
     run!(params, *args, **named_args)
   end
 
-  # Yields the instance of the operation, and the return value from
-  # the `run` instance method.
-  #
-  # ```
-  # MyOperation.run(params) do |operation, value|
-  #   # operation is complete
-  # end
-  # ```
   def self.run(params : Avram::Paramable, *args, **named_args, &)
     operation = self.new(params, *args, **named_args)
     value = nil
@@ -63,12 +37,6 @@ abstract class Avram::Operation
     yield operation, value
   end
 
-  # Returns the value from the `run` instance method.
-  # or raise `Avram::FailedOperation` if the operation fails.
-  #
-  # ```
-  # value = MyOperation.run!(params)
-  # ```
   def self.run!(params : Avram::Paramable, *args, **named_args)
     run(params, *args, **named_args) do |_operation, value|
       raise Avram::FailedOperation.new("The operation failed to return a value") unless value
@@ -76,15 +44,12 @@ abstract class Avram::Operation
     end
   end
 
-  def before_run
+  # Cast params to Avram::Paramable
+  def params : Avram::Paramable
+    @params.as(Avram::Paramable)
   end
 
-  abstract def run
-
-  def after_run(_value)
-  end
-
-  def initialize(@params)
+  def initialize(@params : Avram::Paramable)
   end
 
   def initialize
@@ -99,9 +64,5 @@ abstract class Avram::Operation
   def valid? : Bool
     default_validations
     custom_errors.empty? && attributes.all?(&.valid?)
-  end
-
-  def self.param_key : String
-    name.underscore
   end
 end
