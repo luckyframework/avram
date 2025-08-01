@@ -85,6 +85,37 @@ abstract class Avram::Factory
     run_after_save_callbacks(record)
   end
 
+  # Returns an array with `number` instances of the model from the Factory.
+  #
+  # Usage:
+  #
+  # ```
+  # tags = TagFactory.create_many(2)
+  # typeof(tags) # => Array(Tag)
+  # tags.size    # => 2
+  # ```
+  def self.create_many(number : Int32)
+    create_many(number) { |factory| factory }
+  end
+
+  # Similar to `create_many(n)`, but accepts a block which yields the factory instance.
+  #
+  # All factories receive the same argument values.
+  #
+  # Usage:
+  #
+  # ```
+  # TagFactory.create_many(2) do |factory|
+  #   # set both factories name to "test"
+  #   factory.name("test")
+  # end
+  # ```
+  def self.create_many(number : Int32, &)
+    (1..number).to_a.map do |_|
+      self.create { |factory| yield(factory) }
+    end
+  end
+
   # Returns an array with 2 instances of the model from the Factory.
   #
   # Usage:
@@ -95,7 +126,7 @@ abstract class Avram::Factory
   # tags.size    # => 2
   # ```
   def self.create_pair
-    create_pair { |factory| factory }
+    create_many(2)
   end
 
   # Similar to `create_pair`, but accepts a block which yields the factory instance.
@@ -111,8 +142,8 @@ abstract class Avram::Factory
   # end
   # ```
   def self.create_pair(&)
-    [1, 2].map do |_|
-      self.create { |factory| yield(factory) }
+    create_many(2) do |factory|
+      yield factory
     end
   end
 
