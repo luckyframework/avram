@@ -60,6 +60,22 @@ describe Avram::Factory do
     end
   end
 
+  describe "create_many" do
+    it "creates N factories" do
+      tags = TagFactory.create_many(4)
+      tags.size.should eq(4)
+      tags.should be_a(Array(Tag))
+    end
+
+    it "takes a block to customize the factories" do
+      tags = TagFactory.create_many(4) do |factory|
+        factory.name(factory.sequence("tag-me"))
+      end
+      tags.size.should eq(4)
+      tags.map(&.name).should eq(["tag-me-1", "tag-me-2", "tag-me-3", "tag-me-4"])
+    end
+  end
+
   describe "before_save" do
     it "sets the association before saving" do
       factory = ScanFactory.new
