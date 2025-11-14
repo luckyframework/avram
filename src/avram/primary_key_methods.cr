@@ -66,6 +66,45 @@ module Avram::PrimaryKeyMethods
     query.find(id)
   end
 
+  # Reload the model with the latest information from the database, if it still
+  # exists.
+  #
+  # This method will return a new model instance with the latest data from the
+  # database, or `Nil` if the record has been deleted in the meantime.
+  #
+  # Example:
+  #
+  # ```
+  # user = SaveUser.create!(name: "Original")
+  #
+  # # ... record is deleted
+  #
+  # user.reload?
+  # # => Nil
+  # ```
+  def reload? : self | Nil
+    base_query_class.new.id(id).first?
+  end
+
+  # Same as `reload` but allows passing a block to customize the query.
+  #
+  # This is almost always used to preload additional relationships.
+  #
+  # Example:
+  #
+  # ```
+  # user = SaveUser.create(params)
+  #
+  # # ... record is deleted
+  #
+  # user = user.reload?(&.preload_comments(CommentQuery.new.preload_article))
+  # # => Nil
+  # ```
+  def reload?(&) : self | Nil
+    query = yield base_query_class.new
+    query.id(id).first?
+  end
+
   # For integration with Lucky
   # This allows an `Avram::Model` to be passed into a Lucky::Action to create a url/path
   def to_param : String
