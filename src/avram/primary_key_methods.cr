@@ -86,7 +86,7 @@ module Avram::PrimaryKeyMethods
     base_query_class.new.id(id).first?
   end
 
-  # Same as `reload` but allows passing a block to customize the query.
+  # Same as `reload?` but allows passing a block to customize the query.
   #
   # This is almost always used to preload additional relationships.
   #

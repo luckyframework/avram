@@ -142,7 +142,7 @@ describe Avram::Model do
       user.reload?.should be_nil
     end
 
-    it "can reload a model with a yielded query" do
+    it "can safely reload a model with a yielded query" do
       with_lazy_load(enabled: false) do
         post = PostFactory.create
 
