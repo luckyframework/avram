@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="generator" content="Crystal Docs 1.16.3">
+<meta name="generator" content="Crystal Docs 1.17.1">
 <meta name="crystal_docs.project_version" content="main">
 <meta name="crystal_docs.project_name" content="avram">
 
@@ -1851,7 +1851,7 @@
   </h2>
   
     
-      <a href="https://github.com/luckyframework/avram/blob/a0679823d7f6f4ae206afc83d79841f2da28adbe/src/avram/primary_key_methods.cr#L1" target="_blank">
+      <a href="https://github.com/luckyframework/avram/blob/e525dc9eb8b9165a41f0640721680d4c8d77a74c/src/avram/primary_key_methods.cr#L1" target="_blank">
         avram/primary_key_methods.cr
       </a>
     
@@ -1909,6 +1909,20 @@
       </li>
     
       <li class="entry-summary">
+        <a href="#reload%3F%3Aself%7CNil-instance-method" class="signature"><strong>#reload?</strong> : <span class="k">self</span> | Nil</a>
+        
+          <div class="summary"><p>Reload the model with the latest information from the database, if it still exists.</p></div>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#reload%3F%28%26%29%3Aself%7CNil-instance-method" class="signature"><strong>#reload?</strong>(&) : <span class="k">self</span> | Nil</a>
+        
+          <div class="summary"><p>Same as <code><a href="../Avram/PrimaryKeyMethods.html#reload%3F%3Aself%7CNil-instance-method">#reload?</a></code> but allows passing a block to customize the query.</p></div>
+        
+      </li>
+    
+      <li class="entry-summary">
         <a href="#to_param%3AString-instance-method" class="signature"><strong>#to_param</strong> : String</a>
         
           <div class="summary"><p>For integration with Lucky This allows an <code><a href="../Avram/Model.html">Avram::Model</a></code> to be passed into a Lucky::Action to create a url/path</p></div>
@@ -1950,7 +1964,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/a0679823d7f6f4ae206afc83d79841f2da28adbe/src/avram/primary_key_methods.cr#L2" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/e525dc9eb8b9165a41f0640721680d4c8d77a74c/src/avram/primary_key_methods.cr#L2" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1966,7 +1980,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/a0679823d7f6f4ae206afc83d79841f2da28adbe/src/avram/primary_key_methods.cr#L75" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/e525dc9eb8b9165a41f0640721680d4c8d77a74c/src/avram/primary_key_methods.cr#L114" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1982,7 +1996,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/a0679823d7f6f4ae206afc83d79841f2da28adbe/src/avram/primary_key_methods.cr#L4" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/e525dc9eb8b9165a41f0640721680d4c8d77a74c/src/avram/primary_key_methods.cr#L4" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2022,7 +2036,7 @@ user.name</code></pre>
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/a0679823d7f6f4ae206afc83d79841f2da28adbe/src/avram/primary_key_methods.cr#L33" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/e525dc9eb8b9165a41f0640721680d4c8d77a74c/src/avram/primary_key_methods.cr#L33" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2059,7 +2073,67 @@ typically reload only uses preloads.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/a0679823d7f6f4ae206afc83d79841f2da28adbe/src/avram/primary_key_methods.cr#L64" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/e525dc9eb8b9165a41f0640721680d4c8d77a74c/src/avram/primary_key_methods.cr#L64" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="reload?:self|Nil-instance-method">
+      <div class="signature">
+        
+        def <strong>reload?</strong> : <span class="k">self</span> | <a href="../Nil.html">Nil</a>
+
+        <a class="method-permalink" href="#reload%3F%3Aself%7CNil-instance-method">#</a>
+      </div>
+      
+        <div class="doc">
+          
+          <p>Reload the model with the latest information from the database, if it still
+exists.</p>
+<p>This method will return a new model instance with the latest data from the
+database, or <code><a href="../Nil.html">Nil</a></code> if the record has been deleted in the meantime.</p>
+<p>Example:</p>
+<pre><code class="language-crystal">user <span class="o">=</span> <span class="t">SaveUser</span>.create!(name: <span class="s">&quot;Original&quot;</span>)
+
+<span class="c"># ... record is deleted</span>
+
+user.reload?
+<span class="c"># =&gt; Nil</span></code></pre>
+        </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/luckyframework/avram/blob/e525dc9eb8b9165a41f0640721680d4c8d77a74c/src/avram/primary_key_methods.cr#L85" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="reload?(&amp;):self|Nil-instance-method">
+      <div class="signature">
+        
+        def <strong>reload?</strong>(&) : <span class="k">self</span> | <a href="../Nil.html">Nil</a>
+
+        <a class="method-permalink" href="#reload%3F%28%26%29%3Aself%7CNil-instance-method">#</a>
+      </div>
+      
+        <div class="doc">
+          
+          <p>Same as <code><a href="../Avram/PrimaryKeyMethods.html#reload%3F%3Aself%7CNil-instance-method">#reload?</a></code> but allows passing a block to customize the query.</p>
+<p>This is almost always used to preload additional relationships.</p>
+<p>Example:</p>
+<pre><code class="language-crystal">user <span class="o">=</span> <span class="t">SaveUser</span>.create(params)
+
+<span class="c"># ... record is deleted</span>
+
+user <span class="o">=</span> user.reload?(<span class="o">&amp;</span>.preload_comments(<span class="t">CommentQuery</span>.new.preload_article))
+<span class="c"># =&gt; Nil</span></code></pre>
+        </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/luckyframework/avram/blob/e525dc9eb8b9165a41f0640721680d4c8d77a74c/src/avram/primary_key_methods.cr#L103" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2081,7 +2155,7 @@ This allows an <code><a href="../Avram/Model.html">Avram::Model</a></code> to be
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/a0679823d7f6f4ae206afc83d79841f2da28adbe/src/avram/primary_key_methods.cr#L71" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/e525dc9eb8b9165a41f0640721680d4c8d77a74c/src/avram/primary_key_methods.cr#L110" target="_blank">View source</a>]
         
       </div>
     </div>

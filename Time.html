@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="generator" content="Crystal Docs 1.16.3">
+<meta name="generator" content="Crystal Docs 1.17.1">
 <meta name="crystal_docs.project_version" content="main">
 <meta name="crystal_docs.project_name" content="avram">
 
@@ -1841,10 +1841,10 @@
 <a href="https://www.w3.org/International/articles/definitions-time/#incremental_time">incremental time</a>
 observed in a specific time zone.</p>
 <p>The calendaric calculations are based on the rules of the proleptic Gregorian
-calendar as specified in <a href="http://xml.coverpages.org/ISO-FDIS-8601.pdf">ISO 8601</a>.
+calendar as specified in <a href="https://web.archive.org/web/20250306154328/http://xml.coverpages.org/ISO-FDIS-8601.pdf">ISO 8601</a>.
 Leap seconds are ignored.</p>
 <p>Internally, the time is stored as an <code><a href="Int64.html">Int64</a></code> representing seconds from epoch
-(<code>0001-01-01 00:00:00.0 UTC</code>) and an <code><a href="Int32.html">Int32</a></code> representing
+(<code>0001-01-01 00:00:00Z</code>) and an <code><a href="Int32.html">Int32</a></code> representing
 nanosecond-of-second with value range <code>0..999_999_999</code>.</p>
 <p>The supported date range is <code>0001-01-01 00:00:00.0</code> to
 <code>9999-12-31 23:59:59.999_999_999</code> in any local time zone.</p>
@@ -1910,27 +1910,27 @@ time.sunday? <span class="c"># =&gt; false</span></code></pre>
 (i.e. the instant represented by this <code><a href="Time.html">Time</a></code>).
 <code>#offset</code> returns the offset of the current zone in seconds.</p>
 <pre><code class="language-crystal">time <span class="o">=</span> <span class="t">Time</span>.local(<span class="n">2018</span>, <span class="n">3</span>, <span class="n">8</span>, <span class="n">22</span>, <span class="n">5</span>, <span class="n">13</span>, location: <span class="t">Time</span><span class="t">::</span><span class="t">Location</span>.load(<span class="s">&quot;Europe/Berlin&quot;</span>))
-time          <span class="c"># =&gt; 2018-03-08 22:05:13 +01:00 Europe/Berlin</span>
+time          <span class="c"># =&gt; 2018-03-08 22:05:13+01:00[Europe/Berlin]</span>
 time.location <span class="c"># =&gt; #&lt;Time::Location Europe/Berlin&gt;</span>
 time.zone     <span class="c"># =&gt; #&lt;Time::Location::Zone CET +01:00 (3600s) STD&gt;</span>
 time.offset   <span class="c"># =&gt; 3600</span></code></pre>
 <p>Using <code>.utc</code>, the location is <code>Time::Location::UTC</code>:</p>
 <pre><code class="language-crystal">time <span class="o">=</span> <span class="t">Time</span>.utc(<span class="n">2018</span>, <span class="n">3</span>, <span class="n">8</span>, <span class="n">22</span>, <span class="n">5</span>, <span class="n">13</span>)
-time          <span class="c"># =&gt; 2018-03-08 22:05:13.0 UTC</span>
+time          <span class="c"># =&gt; 2018-03-08 22:05:13Z</span>
 time.location <span class="c"># =&gt; #&lt;Time::Location UTC&gt;</span>
 time.zone     <span class="c"># =&gt; #&lt;Time::Location::Zone UTC +00:00 (0s) STD&gt;</span>
 time.offset   <span class="c"># =&gt; 0</span></code></pre>
 <p>A <code><a href="Time.html">Time</a></code> instance can be transformed to a different time zone while retaining
 the same instant using <code>#in</code>:</p>
 <pre><code class="language-crystal">time_de <span class="o">=</span> <span class="t">Time</span>.local(<span class="n">2018</span>, <span class="n">3</span>, <span class="n">8</span>, <span class="n">22</span>, <span class="n">5</span>, <span class="n">13</span>, location: <span class="t">Time</span><span class="t">::</span><span class="t">Location</span>.load(<span class="s">&quot;Europe/Berlin&quot;</span>))
-time_ar <span class="o">=</span> time_de.<span class="k">in</span> <span class="t">Time</span><span class="t">::</span><span class="t">Location</span>.load(<span class="s">&quot;America/Buenos_Aires&quot;</span>)
-time_de <span class="c"># =&gt; 2018-03-08 22:05:13 +01:00 Europe/Berlin</span>
-time_ar <span class="c"># =&gt; 2018-03-08 18:05:13 -03:00 America/Buenos_Aires</span></code></pre>
+time_ar <span class="o">=</span> time_de.<span class="k">in</span> <span class="t">Time</span><span class="t">::</span><span class="t">Location</span>.load(<span class="s">&quot;America/Argentina/Buenos_Aires&quot;</span>)
+time_de <span class="c"># =&gt; 2018-03-08 22:05:13+01:00[Europe/Berlin]</span>
+time_ar <span class="c"># =&gt; 2018-03-08 18:05:13-03:00[America/Argentina/Buenos_Aires]</span></code></pre>
 <p>Both <code><a href="Time.html">Time</a></code> instances show a different local date-time, but they represent
 the same date-time in the instant time-line, therefore they are considered
 equal:</p>
-<pre><code class="language-crystal">time_de.to_utc     <span class="c"># =&gt; 2018-03-08 21:05:13 UTC</span>
-time_ar.to_utc     <span class="c"># =&gt; 2018-03-08 21:05:13 UTC</span>
+<pre><code class="language-crystal">time_de.to_utc     <span class="c"># =&gt; 2018-03-08 21:05:13Z</span>
+time_ar.to_utc     <span class="c"># =&gt; 2018-03-08 21:05:13Z</span>
 time_de <span class="o">==</span> time_ar <span class="c"># =&gt; true</span></code></pre>
 <p>There are also two special methods for converting to UTC and local time zone:</p>
 <pre><code class="language-crystal">time.to_utc   <span class="c"># equals time.in(Location::UTC)</span>
@@ -2041,14 +2041,14 @@ elapsed_time <span class="c"># =&gt; 20.milliseconds (approximately)</span></cod
   </h2>
   
     
-      <a href="https://github.com/luckyframework/avram/blob/a0679823d7f6f4ae206afc83d79841f2da28adbe/src/avram/blank_extensions.cr#L7" target="_blank">
+      <a href="https://github.com/luckyframework/avram/blob/e525dc9eb8b9165a41f0640721680d4c8d77a74c/src/avram/blank_extensions.cr#L7" target="_blank">
         avram/blank_extensions.cr
       </a>
     
     <br/>
   
     
-      <a href="https://github.com/luckyframework/avram/blob/a0679823d7f6f4ae206afc83d79841f2da28adbe/src/avram/charms/time_extensions.cr#L1" target="_blank">
+      <a href="https://github.com/luckyframework/avram/blob/e525dc9eb8b9165a41f0640721680d4c8d77a74c/src/avram/charms/time_extensions.cr#L1" target="_blank">
         avram/charms/time_extensions.cr
       </a>
     
@@ -2203,7 +2203,7 @@ elapsed_time <span class="c"># =&gt; 20.milliseconds (approximately)</span></cod
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/a0679823d7f6f4ae206afc83d79841f2da28adbe/src/avram/charms/time_extensions.cr#L2" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/e525dc9eb8b9165a41f0640721680d4c8d77a74c/src/avram/charms/time_extensions.cr#L2" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2233,7 +2233,7 @@ elapsed_time <span class="c"># =&gt; 20.milliseconds (approximately)</span></cod
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/a0679823d7f6f4ae206afc83d79841f2da28adbe/src/avram/blank_extensions.cr#L8" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/e525dc9eb8b9165a41f0640721680d4c8d77a74c/src/avram/blank_extensions.cr#L8" target="_blank">View source</a>]
         
       </div>
     </div>
