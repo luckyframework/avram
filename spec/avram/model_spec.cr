@@ -128,6 +128,33 @@ describe Avram::Model do
     end
   end
 
+  describe "reload?" do
+    it "can safely reload a model" do
+      user = UserFactory.create &.name("Original Name")
+      newly_updated_user = User::SaveOperation.update!(user, name: "Updated Name")
+      newly_updated_user.name.should eq("Updated Name")
+      user.name.should eq("Original Name")
+
+      user.reload?.as(User).name.should eq("Updated Name")
+
+      User::DeleteOperation.delete!(user)
+
+      user.reload?.should be_nil
+    end
+
+    it "can safely reload a model with a yielded query" do
+      with_lazy_load(enabled: false) do
+        post = PostFactory.create
+
+        post.reload?(&.preload_tags).as(Post).tags.should be_empty
+
+        Post::DeleteOperation.delete!(post)
+
+        post.reload?(&.preload_tags).should be_nil
+      end
+    end
+  end
+
   it "sets up simple methods for equality" do
     query = QueryMe::BaseQuery.new.email("foo@bar.com").age(30)
 
