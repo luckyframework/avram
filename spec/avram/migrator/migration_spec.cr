@@ -88,6 +88,16 @@ class MigrationCreateAndDropSequences::V994 < Avram::Migrator::Migration::V1
   end
 end
 
+class MigrationCreateAndDropIndexes::V993 < Avram::Migrator::Migration::V1
+  def migrate
+    create_index(:accounts, [:user_id, :number], unique: true, concurrently: true, name: "idx_account_user_id_number")
+  end
+
+  def rollback
+    drop_index(:accounts, [:user_id, :number], if_exists: true)
+  end
+end
+
 describe Avram::Migrator::Migration::V1 do
   it "executes statements in a transaction" do
     expect_raises Avram::FailedMigration do
@@ -135,6 +145,18 @@ describe Avram::Migrator::Migration::V1 do
       sql.should contain "CREATE OR REPLACE FUNCTION touch_updated_at"
       sql.should contain "DROP TRIGGER IF EXISTS trigger_touch_updated_at"
       sql.should contain "CREATE TRIGGER trigger_touch_updated_at"
+    end
+
+    it "generates proper SQL for indexes" do
+      migration = MigrationCreateAndDropIndexes::V993.new
+      migration.migrate
+      sql = migration.prepared_statements.join("\n")
+
+      sql.should contain %(CREATE UNIQUE INDEX CONCURRENTLY idx_account_user_id_number ON accounts USING btree ("user_id", "number"))
+
+      migration.rollback
+      sql = migration.prepared_statements.join("\n")
+      sql.should contain %(DROP INDEX IF EXISTS accounts_user_id_number_index)
     end
   end
 
