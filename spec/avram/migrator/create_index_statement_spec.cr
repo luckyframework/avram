@@ -7,6 +7,9 @@ describe Avram::Migrator::CreateIndexStatement do
 
     statement = Avram::Migrator::CreateIndexStatement.new(:users, columns: :email, using: :btree, unique: true).build
     statement.should eq %(CREATE UNIQUE INDEX users_email_index ON users USING btree ("email");)
+
+    statement = Avram::Migrator::CreateIndexStatement.new(:users, columns: :email, using: :btree, concurrently: true).build
+    statement.should eq %(CREATE INDEX CONCURRENTLY users_email_index ON users USING btree ("email");)
   end
 
   it "supports other index types" do
