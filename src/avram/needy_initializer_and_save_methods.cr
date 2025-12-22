@@ -8,7 +8,11 @@ module Avram::NeedyInitializerAndSaveMethods
   end
 
   macro needs(type_declaration)
-    {% OPERATION_NEEDS << type_declaration %}
+    {% if type_declaration.value.is_a?(Nop) %}
+      {% OPERATION_NEEDS.unshift(type_declaration) %}
+    {% else %}
+      {% OPERATION_NEEDS.push(type_declaration) %}
+    {% end %}
     @{{ type_declaration.var }} : {{ type_declaration.type }}
     property {{ type_declaration.var }}
   end

@@ -30,6 +30,7 @@ end
 
 private class NeedsSaveOperation < Needs::SaveOperation
   needs created_by : String
+  needs optional_not_last : String = "foo"
   needs nilable_value : String?
   needs optional : String = "bar"
   attribute not_db_related : Int32
@@ -38,9 +39,23 @@ end
 
 private class NeedyDeleteOperation < Post::DeleteOperation
   needs user : User
+  needs optional_not_last : String = "foo"
   needs notification_message : String?
   needs no_number : Int32 = 4
   attribute confirm_delete : String
+end
+
+private class NeedsDefaultNotLastOperation < Avram::Operation
+  needs tags : Array(String)
+  needs optional : String = "bar"
+  needs id : Int32
+  attribute published : Bool = false
+  attribute title : String
+  file_attribute :image
+
+  def run
+    tags.join(", ")
+  end
 end
 
 describe "Avram::Operation needs" do
@@ -68,6 +83,15 @@ describe "Avram::Operation needs" do
     uploaded_file = Avram::UploadedFile.new("thumb.png")
     OperationWithNeeds.run(tags: ["one", "two"], id: 3, image: uploaded_file) do |operation, _value|
       operation.image.value.should be_a Avram::Uploadable
+    end
+  end
+
+  it "handles attribute with default not last" do
+    NeedsDefaultNotLastOperation.run(tags: ["one", "two"], id: 3) do |operation, value|
+      value.should eq "one, two"
+      operation.tags.should eq ["one", "two"]
+      operation.id.should eq 3
+      operation.optional.should eq "bar"
     end
   end
 end
