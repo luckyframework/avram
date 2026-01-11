@@ -104,7 +104,7 @@ describe "Preloading has_one associations" do
     with_lazy_load(enabled: false) do
       manager = ManagerFactory.create
       employee = EmployeeFactory.new.manager_id(manager.id).create
-      customer = CustomerFactory.new.employee_id(employee.id).create
+      CustomerFactory.new.employee_id(employee.id).create
 
       customers = Customer::BaseQuery.new.preload_manager
 
@@ -116,7 +116,7 @@ describe "Preloading has_one associations" do
   it "works with through association when intermediate is nil" do
     with_lazy_load(enabled: false) do
       employee = EmployeeFactory.create
-      customer = CustomerFactory.new.employee_id(employee.id).create
+      CustomerFactory.new.employee_id(employee.id).create
 
       customers = Customer::BaseQuery.new.preload_manager
 
