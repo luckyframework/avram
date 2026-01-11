@@ -97,6 +97,23 @@ describe Avram::Model do
     end
   end
 
+  describe "has_one through" do
+    it "gets the related record" do
+      manager = ManagerFactory.create
+      employee = EmployeeFactory.new.manager_id(manager.id).create
+      customer = CustomerFactory.new.employee_id(employee.id).create
+
+      customer.manager.should eq manager
+    end
+
+    it "returns nil when the through association is nil" do
+      employee = EmployeeFactory.create
+      customer = CustomerFactory.new.employee_id(employee.id).create
+
+      customer.manager.should be_nil
+    end
+  end
+
   context "uuid backed models" do
     describe "has_one" do
       it "returns associated model" do
