@@ -1,5 +1,5 @@
 module Avram::Associations::HasOne
-  macro has_one(type_declaration, through = nil, foreign_key = nil)
+  macro has_one(type_declaration, foreign_key = nil, through = nil)
     {% if !through.is_a?(NilLiteral) && (!through.is_a?(ArrayLiteral) || through.any? { |item| !item.is_a?(SymbolLiteral) }) %}
       {% through.raise <<-ERROR
       'through' on #{@type.name} must be given an Array(Symbol). Instead, got: #{through}
