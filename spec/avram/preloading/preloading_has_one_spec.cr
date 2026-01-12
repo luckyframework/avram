@@ -125,6 +125,19 @@ describe "Preloading has_one associations" do
     end
   end
 
+  it "works with through has_one association" do
+    with_lazy_load(enabled: false) do
+      business = BusinessFactory.create
+      email_address = EmailAddressFactory.new.business_id(business.id).create
+      TaxIdFactory.new.business_id(business.id).create
+
+      tax_ids = TaxId::BaseQuery.new.preload_email_address
+
+      tax_ids.first.email_address_preloaded?.should eq(true)
+      tax_ids.first.email_address.should eq email_address
+    end
+  end
+
   context "with existing record" do
     it "works" do
       with_lazy_load(enabled: false) do
