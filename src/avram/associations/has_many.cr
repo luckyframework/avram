@@ -12,9 +12,9 @@ module Avram::Associations::HasMany
       ERROR
       %}
     {% end %}
-    {% if !through.is_a?(NilLiteral) && through.size < 2 %}
+    {% if !through.is_a?(NilLiteral) && through.size != 2 %}
       {% through.raise <<-ERROR
-      'through' on #{@type.name} must be given at least two items. Instead, got: #{through}
+      'through' on #{@type.name} must be given exactly two items. Instead, got: #{through}
 
       Example...
          has_many comments : Comment
