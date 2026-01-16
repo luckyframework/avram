@@ -100,6 +100,44 @@ describe "Preloading has_one associations" do
     expect_raises(Avram::MissingRequiredAssociationError) { Admin::BaseQuery.new.preload_sign_in_credential.results }
   end
 
+  it "works with through association" do
+    with_lazy_load(enabled: false) do
+      manager = ManagerFactory.create
+      employee = EmployeeFactory.new.manager_id(manager.id).create
+      CustomerFactory.new.employee_id(employee.id).create
+
+      customers = Customer::BaseQuery.new.preload_manager
+
+      customers.first.manager_preloaded?.should eq(true)
+      customers.first.manager.should eq manager
+    end
+  end
+
+  it "works with through association when intermediate is nil" do
+    with_lazy_load(enabled: false) do
+      employee = EmployeeFactory.create
+      CustomerFactory.new.employee_id(employee.id).create
+
+      customers = Customer::BaseQuery.new.preload_manager
+
+      customers.first.manager_preloaded?.should eq(true)
+      customers.first.manager.should be_nil
+    end
+  end
+
+  it "works with through has_one association" do
+    with_lazy_load(enabled: false) do
+      business = BusinessFactory.create
+      email_address = EmailAddressFactory.new.business_id(business.id).create
+      TaxIdFactory.new.business_id(business.id).create
+
+      tax_ids = TaxId::BaseQuery.new.preload_email_address
+
+      tax_ids.first.email_address_preloaded?.should eq(true)
+      tax_ids.first.email_address.should eq email_address
+    end
+  end
+
   context "with existing record" do
     it "works" do
       with_lazy_load(enabled: false) do

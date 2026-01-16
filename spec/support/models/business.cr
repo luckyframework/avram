@@ -14,6 +14,7 @@ class TaxId < BaseModel
   table do
     column number : Int32
     belongs_to business : Business
+    has_one email_address : EmailAddress, through: [:business, :email_address]
   end
 end
 

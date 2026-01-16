@@ -97,6 +97,31 @@ describe Avram::Model do
     end
   end
 
+  describe "has_one through" do
+    it "gets the related record through belongs_to -> belongs_to chain" do
+      manager = ManagerFactory.create
+      employee = EmployeeFactory.new.manager_id(manager.id).create
+      customer = CustomerFactory.new.employee_id(employee.id).create
+
+      customer.manager.should eq manager
+    end
+
+    it "returns nil when the through association is nil" do
+      employee = EmployeeFactory.create
+      customer = CustomerFactory.new.employee_id(employee.id).create
+
+      customer.manager.should be_nil
+    end
+
+    it "gets the related record through belongs_to -> has_one chain" do
+      business = BusinessFactory.create
+      email_address = EmailAddressFactory.new.business_id(business.id).create
+      tax_id = TaxIdFactory.new.business_id(business.id).create
+
+      tax_id.email_address.should eq email_address
+    end
+  end
+
   context "uuid backed models" do
     describe "has_one" do
       it "returns associated model" do
