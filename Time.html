@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="generator" content="Crystal Docs 1.17.1">
+<meta name="generator" content="Crystal Docs 1.18.2">
 <meta name="crystal_docs.project_version" content="main">
 <meta name="crystal_docs.project_name" content="avram">
 
@@ -1989,11 +1989,11 @@ computer's wall clock has changed between both calls.</p>
 Its time-line has no specified starting point but is strictly linearly
 increasing.</p>
 <p>This monotonic clock should always be used for measuring elapsed time.</p>
-<p>A reading from this clock can be taken using <code>.monotonic</code>:</p>
-<pre><code class="language-crystal">t1 <span class="o">=</span> <span class="t">Time</span>.monotonic
+<p>A reading from this clock can be taken using <code>.instant</code>:</p>
+<pre><code class="language-crystal">t1 <span class="o">=</span> <span class="t">Time</span>.instant
 <span class="c"># operation that takes 1 minute</span>
-t2 <span class="o">=</span> <span class="t">Time</span>.monotonic
-t2 <span class="o">-</span> t1 <span class="c"># =&gt; 1.minute (approximately)</span></code></pre>
+t2 <span class="o">=</span> <span class="t">Time</span>.instant
+t2.duration_since(t1) <span class="c"># =&gt; 1.minute (approximately)</span></code></pre>
 <p>The execution time of a block can be measured using <code>.measure</code>:</p>
 <pre><code class="language-crystal">elapsed_time <span class="o">=</span> <span class="t">Time</span>.measure <span class="k">do</span>
   <span class="c"># operation that takes 20 milliseconds</span>
@@ -2041,14 +2041,14 @@ elapsed_time <span class="c"># =&gt; 20.milliseconds (approximately)</span></cod
   </h2>
   
     
-      <a href="https://github.com/luckyframework/avram/blob/1e02bc7a9e9050274a7505a0d2302e8b859ef5ef/src/avram/blank_extensions.cr#L7" target="_blank">
+      <a href="https://github.com/luckyframework/avram/blob/468fee5822625c875344ba9b3458d35c91011bb2/src/avram/blank_extensions.cr#L7" target="_blank">
         avram/blank_extensions.cr
       </a>
     
     <br/>
   
     
-      <a href="https://github.com/luckyframework/avram/blob/1e02bc7a9e9050274a7505a0d2302e8b859ef5ef/src/avram/charms/time_extensions.cr#L1" target="_blank">
+      <a href="https://github.com/luckyframework/avram/blob/468fee5822625c875344ba9b3458d35c91011bb2/src/avram/charms/time_extensions.cr#L1" target="_blank">
         avram/charms/time_extensions.cr
       </a>
     
@@ -2203,7 +2203,7 @@ elapsed_time <span class="c"># =&gt; 20.milliseconds (approximately)</span></cod
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/1e02bc7a9e9050274a7505a0d2302e8b859ef5ef/src/avram/charms/time_extensions.cr#L2" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/468fee5822625c875344ba9b3458d35c91011bb2/src/avram/charms/time_extensions.cr#L2" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2233,7 +2233,7 @@ elapsed_time <span class="c"># =&gt; 20.milliseconds (approximately)</span></cod
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/1e02bc7a9e9050274a7505a0d2302e8b859ef5ef/src/avram/blank_extensions.cr#L8" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/468fee5822625c875344ba9b3458d35c91011bb2/src/avram/blank_extensions.cr#L8" target="_blank">View source</a>]
         
       </div>
     </div>

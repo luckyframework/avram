@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="generator" content="Crystal Docs 1.17.1">
+<meta name="generator" content="Crystal Docs 1.18.2">
 <meta name="crystal_docs.project_version" content="main">
 <meta name="crystal_docs.project_name" content="avram">
 
@@ -1851,21 +1851,21 @@
   </h2>
   
     
-      <a href="https://github.com/luckyframework/avram/blob/1e02bc7a9e9050274a7505a0d2302e8b859ef5ef/src/avram/expectations.cr#L1" target="_blank">
+      <a href="https://github.com/luckyframework/avram/blob/468fee5822625c875344ba9b3458d35c91011bb2/src/avram/expectations.cr#L1" target="_blank">
         avram/expectations.cr
       </a>
     
     <br/>
   
     
-      <a href="https://github.com/luckyframework/avram/blob/1e02bc7a9e9050274a7505a0d2302e8b859ef5ef/src/avram/expectations/have_custom_error_expectation.cr#L1" target="_blank">
+      <a href="https://github.com/luckyframework/avram/blob/468fee5822625c875344ba9b3458d35c91011bb2/src/avram/expectations/have_custom_error_expectation.cr#L1" target="_blank">
         avram/expectations/have_custom_error_expectation.cr
       </a>
     
     <br/>
   
     
-      <a href="https://github.com/luckyframework/avram/blob/1e02bc7a9e9050274a7505a0d2302e8b859ef5ef/src/avram/expectations/have_error_expectation.cr#L1" target="_blank">
+      <a href="https://github.com/luckyframework/avram/blob/468fee5822625c875344ba9b3458d35c91011bb2/src/avram/expectations/have_error_expectation.cr#L1" target="_blank">
         avram/expectations/have_error_expectation.cr
       </a>
     
@@ -1954,7 +1954,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/1e02bc7a9e9050274a7505a0d2302e8b859ef5ef/src/avram/expectations.cr#L32" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/468fee5822625c875344ba9b3458d35c91011bb2/src/avram/expectations.cr#L32" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1970,23 +1970,23 @@
         <div class="doc">
           
           <p>Tests that an operation or attribute has an error</p>
-<pre><code class="language-crystal">CreateReceipt.create(params) do |operation, receipt|
+<pre><code class="language-crystal"><span class="t">CreateReceipt</span>.create(params) <span class="k">do</span> <span class="o">|</span>operation, receipt<span class="o">|</span>
   receipt.should be_nil
 
   operation.should have_error
-  operation.should have_error(&quot;is required&quot;)
-  operation.should have_error(/\srequired/)
+  operation.should have_error(<span class="s">&quot;is required&quot;</span>)
+  operation.should have_error(<span class="s">/\srequired/</span>)
 
   operation.user_id.should have_error
-  operation.user_id.should have_error(&quot;is required&quot;)
-  operation.user_id.should have_error(/\srequired/)
-end</code></pre>
+  operation.user_id.should have_error(<span class="s">&quot;is required&quot;</span>)
+  operation.user_id.should have_error(<span class="s">/\srequired/</span>)
+<span class="k">end</span></code></pre>
         </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/1e02bc7a9e9050274a7505a0d2302e8b859ef5ef/src/avram/expectations.cr#L17" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/468fee5822625c875344ba9b3458d35c91011bb2/src/avram/expectations.cr#L17" target="_blank">View source</a>]
         
       </div>
     </div>
