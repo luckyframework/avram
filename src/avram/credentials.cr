@@ -12,11 +12,13 @@ class Avram::Credentials
     port : Int32? = nil,
     query : String? = nil,
   )
+    # NOTE: We need the empty string on `host` to support Unix socket style connection.
+    # without that (and the front slash on `path`), URI returns "postgres:test_db"
     @uri = URI.new(
       scheme: scheme.strip,
-      host: hostname.try(&.strip).presence,
+      host: hostname.try(&.strip).presence || "",
       port: port,
-      path: database.strip,
+      path: database.starts_with?('/') ? database.strip : "/#{database.strip}",
       query: query.try(&.strip).presence,
       user: username.try(&.strip).presence,
       password: password.try(&.strip).presence
@@ -52,7 +54,9 @@ class Avram::Credentials
   # ```
   def self.parse(connection_url : String) : Credentials
     uri = URI.parse(connection_url)
-    new(uri)
+    instance = new(uri)
+    instance.database
+    instance
   end
 
   # This is the full URL including the database, querystring, etc...
