@@ -8,6 +8,7 @@ class Avram::QueryBuilder
   @offset : Int32?
   @wheres = [] of Avram::Where::Condition
   @joins = [] of Avram::Join::SqlClause
+  @raw_joins = [] of Avram::Join::Raw
   @orders = [] of Avram::OrderByClause
   @groups = [] of ColumnName
   @selections : String = "*"
@@ -322,6 +323,15 @@ class Avram::QueryBuilder
 
   def joins : Array(Avram::Join::SqlClause)
     @joins.uniq(&.to_sql)
+  end
+
+  def join(raw_join_clause : Avram::Join::Raw) : self
+    @raw_joins << raw_join_clause
+    self
+  end
+
+  def joins : Array(Avram::Join::Raw)
+    @raw_joins.uniq(&.to_sql)
   end
 
   private def joins_sql : String
