@@ -14,4 +14,20 @@ describe Avram::Database do
       done.receive
     end
   end
+
+  describe "vacuum", tags: Avram::SpecHelper::TRUNCATE do
+    it "runs a VACUUM" do
+      TestDatabase.vacuum
+
+      query_event = Avram::Events::QueryEvent.logged_events.first
+      query_event.query.should eq("VACUUM")
+    end
+
+    it "runs a VACUUM on a specific table" do
+      TestDatabase.vacuum(Bucket)
+
+      query_event = Avram::Events::QueryEvent.logged_events.first
+      query_event.query.should eq("VACUUM buckets")
+    end
+  end
 end
