@@ -8,6 +8,7 @@ abstract class Avram::Database
 
   macro inherited
     Habitat.create do
+      setting engine : Avram::Engine = Avram::Engine::Postgresql
       setting credentials : Avram::Credentials, example: %(Avram::Credentials.new(database: "my_database", username: "postgres") or Avram::Credentials.parse(ENV["DB_URL"]))
     end
   end
@@ -162,11 +163,11 @@ abstract class Avram::Database
     raise e
   end
 
-  def self.credentials
+  def self.credentials : Avram::Credentials
     settings.credentials
   end
 
-  protected def url
+  protected def url : String
     settings.credentials.url
   end
 
@@ -195,7 +196,7 @@ abstract class Avram::Database
   end
 
   protected def connection : Avram::Connection
-    Avram::Connection.new(url, database_class: self.class)
+    Avram::Connection.new(self.class.credentials, database_class: self.class)
   end
 
   protected def db : DB::Database

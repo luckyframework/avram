@@ -1,8 +1,13 @@
 # Handles the connection to the DB.
 class Avram::Connection
   private getter db : DB::Database? = nil
+  private getter credentials : Avram::Credentials
 
-  def initialize(@connection_string : String, @database_class : Avram::Database.class)
+  def initialize(@credentials : Avram::Credentials, @database_class : Avram::Database.class)
+  end
+
+  def initialize(connection_string : String, @database_class : Avram::Database.class)
+    @credentials = Avram::Credentials.parse(connection_string)
   end
 
   def open : DB::Database
@@ -15,18 +20,14 @@ class Avram::Connection
   end
 
   def connect_listen(*channels : String, &block : PQ::Notification ->) : Nil
-    PG.connect_listen(@connection_string, *channels, &block)
+    PG.connect_listen(credentials.url, *channels, &block)
   rescue DB::ConnectionRefused
-    raise ConnectionError.new(connection_uri, database_class: @database_class)
+    raise ConnectionError.new(credentials.uri, database_class: @database_class)
   end
 
   def try_connection! : DB::Database
-    DB.open(@connection_string)
+    DB.open(credentials.url)
   rescue DB::ConnectionRefused
-    raise ConnectionError.new(connection_uri, database_class: @database_class)
-  end
-
-  private def connection_uri : URI
-    URI.parse(@connection_string)
+    raise ConnectionError.new(credentials.uri, database_class: @database_class)
   end
 end
