@@ -99,6 +99,16 @@ abstract class Avram::Database
     exec("END")
   end
 
+  # Runs a SQL VACUUM command. Optionally specify a model to run the vacuum against that table.
+  # ```
+  # AppDatabase.vacuum
+  # AppDatabase.vacuum(User)
+  # ```
+  def self.vacuum(model : Avram::Model.class | Nil = nil) : Nil
+    sql = ["VACUUM", model.try(&.table_name)].compact!.join(" ")
+    exec(sql)
+  end
+
   # Methods without a block
   {% for crystal_db_alias in [:exec, :scalar, :query, :query_all, :query_one, :query_one?] %}
     # Same as crystal-db's `DB::QueryMethods#{{ crystal_db_alias.id }}` but with instrumentation
