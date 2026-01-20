@@ -25,4 +25,22 @@ describe Avram::Migrator::CreateFunctionStatement do
     full_statement.should contain "RETURNS integer"
     full_statement.should contain "RETURN i + 1;"
   end
+
+  it "allows specifying alternate languages" do
+    sql = <<-SQL
+    SELECT true
+    SQL
+
+    statement = Avram::Migrator::CreateFunctionStatement.new("always_true", sql, returns: "boolean", language: "sql", behavior: :immutable)
+    full_statement = statement.build
+    full_statement.should eq <<-SQL
+    CREATE OR REPLACE FUNCTION always_true()
+      RETURNS boolean
+    AS $$
+      SELECT true
+    $$
+    LANGUAGE sql
+    IMMUTABLE;
+    SQL
+  end
 end

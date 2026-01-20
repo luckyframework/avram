@@ -64,8 +64,8 @@ module Avram::Migrator::StatementHelpers
     prepared_statements << Avram::Migrator::AlterExtensionStatement.new(name, to: to).build
   end
 
-  def create_function(name : String, body : String, returns : String = "trigger")
-    prepared_statements << Avram::Migrator::CreateFunctionStatement.new(name, body: body, returns: returns).build
+  def create_function(name : String, body : String, returns : String = "trigger", language : String = "plpgsql", behavior : Avram::Migrator::CreateFunctionStatement::Behavior = Avram::Migrator::CreateFunctionStatement::Behavior::VOLATILE)
+    prepared_statements << Avram::Migrator::CreateFunctionStatement.new(name, body: body, returns: returns, language: language, behavior: behavior).build
   end
 
   def drop_function(name : String)
