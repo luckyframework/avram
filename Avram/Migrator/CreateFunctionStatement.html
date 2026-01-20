@@ -602,8 +602,18 @@
       
     </li>
   
-  <li class=" current" data-id="avram/Avram/Migrator/CreateFunctionStatement" data-name="avram::migrator::createfunctionstatement">
+  <li class="parent open current" data-id="avram/Avram/Migrator/CreateFunctionStatement" data-name="avram::migrator::createfunctionstatement">
       <a href="../../Avram/Migrator/CreateFunctionStatement.html">CreateFunctionStatement</a>
+      
+        <ul>
+  
+  <li class=" " data-id="avram/Avram/Migrator/CreateFunctionStatement/Behavior" data-name="avram::migrator::createfunctionstatement::behavior">
+      <a href="../../Avram/Migrator/CreateFunctionStatement/Behavior.html">Behavior</a>
+      
+    </li>
+  
+</ul>
+
       
     </li>
   
@@ -1858,7 +1868,7 @@
   </h2>
   
     
-      <a href="https://github.com/luckyframework/avram/blob/25cf0ac3ac2ff3068bca03dfaea4d73f2a2eba1c/src/avram/migrator/create_function_statement.cr#L1" target="_blank">
+      <a href="https://github.com/luckyframework/avram/blob/f533f87eaa44778ff8915efeb6645c69d712a9f9/src/avram/migrator/create_function_statement.cr#L1" target="_blank">
         avram/migrator/create_function_statement.cr
       </a>
     
@@ -1881,7 +1891,7 @@
   <ul class="list-summary">
     
       <li class="entry-summary">
-        <a href="#new%28name%3AString%2Cbody%3AString%2Creturns%3AString%3D%22trigger%22%29-class-method" class="signature"><strong>.new</strong>(name : String, body : String, returns : String = <span class="s">&quot;trigger&quot;</span>)</a>
+        <a href="#new%28name%3AString%2Cbody%3AString%2Creturns%3AString%3D%22trigger%22%2Clanguage%3AString%3D%22plpgsql%22%2Cbehavior%3ABehavior%3DBehavior%3A%3AVOLATILE%29-class-method" class="signature"><strong>.new</strong>(name : String, body : String, returns : String = <span class="s">&quot;trigger&quot;</span>, language : String = <span class="s">&quot;plpgsql&quot;</span>, behavior : Behavior = <span class="t">Behavior</span><span class="t">::</span><span class="t">VOLATILE</span>)</a>
         
       </li>
     
@@ -1966,18 +1976,18 @@
     Constructor Detail
   </h2>
   
-    <div class="entry-detail" id="new(name:String,body:String,returns:String=&quot;trigger&quot;)-class-method">
+    <div class="entry-detail" id="new(name:String,body:String,returns:String=&quot;trigger&quot;,language:String=&quot;plpgsql&quot;,behavior:Behavior=Behavior::VOLATILE)-class-method">
       <div class="signature">
         
-        def self.<strong>new</strong>(name : <a href="../../String.html">String</a>, body : <a href="../../String.html">String</a>, returns : <a href="../../String.html">String</a> = <span class="s">&quot;trigger&quot;</span>)
+        def self.<strong>new</strong>(name : <a href="../../String.html">String</a>, body : <a href="../../String.html">String</a>, returns : <a href="../../String.html">String</a> = <span class="s">&quot;trigger&quot;</span>, language : <a href="../../String.html">String</a> = <span class="s">&quot;plpgsql&quot;</span>, behavior : <a href="../../Avram/Migrator/CreateFunctionStatement/Behavior.html">Behavior</a> = <span class="t">Behavior</span><span class="t">::</span><span class="t">VOLATILE</span>)
 
-        <a class="method-permalink" href="#new%28name%3AString%2Cbody%3AString%2Creturns%3AString%3D%22trigger%22%29-class-method">#</a>
+        <a class="method-permalink" href="#new%28name%3AString%2Cbody%3AString%2Creturns%3AString%3D%22trigger%22%2Clanguage%3AString%3D%22plpgsql%22%2Cbehavior%3ABehavior%3DBehavior%3A%3AVOLATILE%29-class-method">#</a>
       </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/25cf0ac3ac2ff3068bca03dfaea4d73f2a2eba1c/src/avram/migrator/create_function_statement.cr#L2" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/f533f87eaa44778ff8915efeb6645c69d712a9f9/src/avram/migrator/create_function_statement.cr#L8" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2009,7 +2019,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/25cf0ac3ac2ff3068bca03dfaea4d73f2a2eba1c/src/avram/migrator/create_function_statement.cr#L13" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/f533f87eaa44778ff8915efeb6645c69d712a9f9/src/avram/migrator/create_function_statement.cr#L19" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2025,7 +2035,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/25cf0ac3ac2ff3068bca03dfaea4d73f2a2eba1c/src/avram/migrator/create_function_statement.cr#L5" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/f533f87eaa44778ff8915efeb6645c69d712a9f9/src/avram/migrator/create_function_statement.cr#L11" target="_blank">View source</a>]
         
       </div>
     </div>

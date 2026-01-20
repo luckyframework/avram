@@ -602,8 +602,18 @@
       
     </li>
   
-  <li class=" " data-id="avram/Avram/Migrator/CreateFunctionStatement" data-name="avram::migrator::createfunctionstatement">
+  <li class="parent " data-id="avram/Avram/Migrator/CreateFunctionStatement" data-name="avram::migrator::createfunctionstatement">
       <a href="../../Avram/Migrator/CreateFunctionStatement.html">CreateFunctionStatement</a>
+      
+        <ul>
+  
+  <li class=" " data-id="avram/Avram/Migrator/CreateFunctionStatement/Behavior" data-name="avram::migrator::createfunctionstatement::behavior">
+      <a href="../../Avram/Migrator/CreateFunctionStatement/Behavior.html">Behavior</a>
+      
+    </li>
+  
+</ul>
+
       
     </li>
   
@@ -1886,7 +1896,7 @@
   </h2>
   
     
-      <a href="https://github.com/luckyframework/avram/blob/25cf0ac3ac2ff3068bca03dfaea4d73f2a2eba1c/src/avram/migrator/statement_helpers.cr#L3" target="_blank">
+      <a href="https://github.com/luckyframework/avram/blob/f533f87eaa44778ff8915efeb6645c69d712a9f9/src/avram/migrator/statement_helpers.cr#L3" target="_blank">
         avram/migrator/statement_helpers.cr
       </a>
     
@@ -1942,7 +1952,7 @@
       </li>
     
       <li class="entry-summary">
-        <a href="#create_function%28name%3AString%2Cbody%3AString%2Creturns%3AString%3D%22trigger%22%29-instance-method" class="signature"><strong>#create_function</strong>(name : String, body : String, returns : String = <span class="s">&quot;trigger&quot;</span>)</a>
+        <a href="#create_function%28name%3AString%2Cbody%3AString%2Creturns%3AString%3D%22trigger%22%2Clanguage%3AString%3D%22plpgsql%22%2Cbehavior%3AAvram%3A%3AMigrator%3A%3ACreateFunctionStatement%3A%3ABehavior%3DAvram%3A%3AMigrator%3A%3ACreateFunctionStatement%3A%3ABehavior%3A%3AVOLATILE%29-instance-method" class="signature"><strong>#create_function</strong>(name : String, body : String, returns : String = <span class="s">&quot;trigger&quot;</span>, language : String = <span class="s">&quot;plpgsql&quot;</span>, behavior : Avram::Migrator::CreateFunctionStatement::Behavior = <span class="t">Avram</span><span class="t">::</span><span class="t">Migrator</span><span class="t">::</span><span class="t">CreateFunctionStatement</span><span class="t">::</span><span class="t">Behavior</span><span class="t">::</span><span class="t">VOLATILE</span>)</a>
         
       </li>
     
@@ -2102,7 +2112,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/25cf0ac3ac2ff3068bca03dfaea4d73f2a2eba1c/src/avram/migrator/statement_helpers.cr#L21" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/f533f87eaa44778ff8915efeb6645c69d712a9f9/src/avram/migrator/statement_helpers.cr#L21" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2118,7 +2128,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/25cf0ac3ac2ff3068bca03dfaea4d73f2a2eba1c/src/avram/migrator/statement_helpers.cr#L7" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/f533f87eaa44778ff8915efeb6645c69d712a9f9/src/avram/migrator/statement_helpers.cr#L7" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2146,23 +2156,23 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/25cf0ac3ac2ff3068bca03dfaea4d73f2a2eba1c/src/avram/migrator/statement_helpers.cr#L31" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/f533f87eaa44778ff8915efeb6645c69d712a9f9/src/avram/migrator/statement_helpers.cr#L31" target="_blank">View source</a>]
         
       </div>
     </div>
   
-    <div class="entry-detail" id="create_function(name:String,body:String,returns:String=&quot;trigger&quot;)-instance-method">
+    <div class="entry-detail" id="create_function(name:String,body:String,returns:String=&quot;trigger&quot;,language:String=&quot;plpgsql&quot;,behavior:Avram::Migrator::CreateFunctionStatement::Behavior=Avram::Migrator::CreateFunctionStatement::Behavior::VOLATILE)-instance-method">
       <div class="signature">
         
-        def <strong>create_function</strong>(name : <a href="../../String.html">String</a>, body : <a href="../../String.html">String</a>, returns : <a href="../../String.html">String</a> = <span class="s">&quot;trigger&quot;</span>)
+        def <strong>create_function</strong>(name : <a href="../../String.html">String</a>, body : <a href="../../String.html">String</a>, returns : <a href="../../String.html">String</a> = <span class="s">&quot;trigger&quot;</span>, language : <a href="../../String.html">String</a> = <span class="s">&quot;plpgsql&quot;</span>, behavior : <a href="../../Avram/Migrator/CreateFunctionStatement/Behavior.html">Avram::Migrator::CreateFunctionStatement::Behavior</a> = <span class="t">Avram</span><span class="t">::</span><span class="t">Migrator</span><span class="t">::</span><span class="t">CreateFunctionStatement</span><span class="t">::</span><span class="t">Behavior</span><span class="t">::</span><span class="t">VOLATILE</span>)
 
-        <a class="method-permalink" href="#create_function%28name%3AString%2Cbody%3AString%2Creturns%3AString%3D%22trigger%22%29-instance-method">#</a>
+        <a class="method-permalink" href="#create_function%28name%3AString%2Cbody%3AString%2Creturns%3AString%3D%22trigger%22%2Clanguage%3AString%3D%22plpgsql%22%2Cbehavior%3AAvram%3A%3AMigrator%3A%3ACreateFunctionStatement%3A%3ABehavior%3DAvram%3A%3AMigrator%3A%3ACreateFunctionStatement%3A%3ABehavior%3A%3AVOLATILE%29-instance-method">#</a>
       </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/25cf0ac3ac2ff3068bca03dfaea4d73f2a2eba1c/src/avram/migrator/statement_helpers.cr#L67" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/f533f87eaa44778ff8915efeb6645c69d712a9f9/src/avram/migrator/statement_helpers.cr#L67" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2178,7 +2188,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/25cf0ac3ac2ff3068bca03dfaea4d73f2a2eba1c/src/avram/migrator/statement_helpers.cr#L39" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/f533f87eaa44778ff8915efeb6645c69d712a9f9/src/avram/migrator/statement_helpers.cr#L39" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2194,7 +2204,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/25cf0ac3ac2ff3068bca03dfaea4d73f2a2eba1c/src/avram/migrator/statement_helpers.cr#L97" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/f533f87eaa44778ff8915efeb6645c69d712a9f9/src/avram/migrator/statement_helpers.cr#L97" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2222,7 +2232,7 @@ Postgres does not support updating or replacing a trigger as of version 12</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/25cf0ac3ac2ff3068bca03dfaea4d73f2a2eba1c/src/avram/migrator/statement_helpers.cr#L87" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/f533f87eaa44778ff8915efeb6645c69d712a9f9/src/avram/migrator/statement_helpers.cr#L87" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2238,7 +2248,7 @@ Postgres does not support updating or replacing a trigger as of version 12</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/25cf0ac3ac2ff3068bca03dfaea4d73f2a2eba1c/src/avram/migrator/statement_helpers.cr#L59" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/f533f87eaa44778ff8915efeb6645c69d712a9f9/src/avram/migrator/statement_helpers.cr#L59" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2254,7 +2264,7 @@ Postgres does not support updating or replacing a trigger as of version 12</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/25cf0ac3ac2ff3068bca03dfaea4d73f2a2eba1c/src/avram/migrator/statement_helpers.cr#L17" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/f533f87eaa44778ff8915efeb6645c69d712a9f9/src/avram/migrator/statement_helpers.cr#L17" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2270,7 +2280,7 @@ Postgres does not support updating or replacing a trigger as of version 12</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/25cf0ac3ac2ff3068bca03dfaea4d73f2a2eba1c/src/avram/migrator/statement_helpers.cr#L35" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/f533f87eaa44778ff8915efeb6645c69d712a9f9/src/avram/migrator/statement_helpers.cr#L35" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2286,7 +2296,7 @@ Postgres does not support updating or replacing a trigger as of version 12</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/25cf0ac3ac2ff3068bca03dfaea4d73f2a2eba1c/src/avram/migrator/statement_helpers.cr#L71" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/f533f87eaa44778ff8915efeb6645c69d712a9f9/src/avram/migrator/statement_helpers.cr#L71" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2302,7 +2312,7 @@ Postgres does not support updating or replacing a trigger as of version 12</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/25cf0ac3ac2ff3068bca03dfaea4d73f2a2eba1c/src/avram/migrator/statement_helpers.cr#L43" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/f533f87eaa44778ff8915efeb6645c69d712a9f9/src/avram/migrator/statement_helpers.cr#L43" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2318,7 +2328,7 @@ Postgres does not support updating or replacing a trigger as of version 12</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/25cf0ac3ac2ff3068bca03dfaea4d73f2a2eba1c/src/avram/migrator/statement_helpers.cr#L103" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/f533f87eaa44778ff8915efeb6645c69d712a9f9/src/avram/migrator/statement_helpers.cr#L103" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2339,7 +2349,7 @@ Postgres does not support updating or replacing a trigger as of version 12</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/25cf0ac3ac2ff3068bca03dfaea4d73f2a2eba1c/src/avram/migrator/statement_helpers.cr#L93" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/f533f87eaa44778ff8915efeb6645c69d712a9f9/src/avram/migrator/statement_helpers.cr#L93" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2355,7 +2365,7 @@ Postgres does not support updating or replacing a trigger as of version 12</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/25cf0ac3ac2ff3068bca03dfaea4d73f2a2eba1c/src/avram/migrator/statement_helpers.cr#L55" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/f533f87eaa44778ff8915efeb6645c69d712a9f9/src/avram/migrator/statement_helpers.cr#L55" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2371,7 +2381,7 @@ Postgres does not support updating or replacing a trigger as of version 12</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/25cf0ac3ac2ff3068bca03dfaea4d73f2a2eba1c/src/avram/migrator/statement_helpers.cr#L51" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/f533f87eaa44778ff8915efeb6645c69d712a9f9/src/avram/migrator/statement_helpers.cr#L51" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2387,7 +2397,7 @@ Postgres does not support updating or replacing a trigger as of version 12</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/25cf0ac3ac2ff3068bca03dfaea4d73f2a2eba1c/src/avram/migrator/statement_helpers.cr#L47" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/f533f87eaa44778ff8915efeb6645c69d712a9f9/src/avram/migrator/statement_helpers.cr#L47" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2403,7 +2413,7 @@ Postgres does not support updating or replacing a trigger as of version 12</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/25cf0ac3ac2ff3068bca03dfaea4d73f2a2eba1c/src/avram/migrator/statement_helpers.cr#L63" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/f533f87eaa44778ff8915efeb6645c69d712a9f9/src/avram/migrator/statement_helpers.cr#L63" target="_blank">View source</a>]
         
       </div>
     </div>

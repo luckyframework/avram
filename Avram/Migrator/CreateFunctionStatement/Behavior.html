@@ -14,7 +14,7 @@
 <script type="text/javascript" src="../../../js/doc.js"></script>
 
   <meta name="repository-name" content="avram">
-  <title>Avram::Migrator::Columns::PrimaryKeys - avram main</title>
+  <title>Avram::Migrator::CreateFunctionStatement::Behavior - avram main</title>
   <script type="text/javascript">
     CrystalDocs.base_path = "../../../";
   </script>
@@ -467,7 +467,7 @@
       
     </li>
   
-  <li class="parent open current" data-id="avram/Avram/Migrator/Columns" data-name="avram::migrator::columns">
+  <li class="parent " data-id="avram/Avram/Migrator/Columns" data-name="avram::migrator::columns">
       <a href="../../../Avram/Migrator/Columns.html">Columns</a>
       
         <ul>
@@ -532,7 +532,7 @@
       
     </li>
   
-  <li class="parent open current" data-id="avram/Avram/Migrator/Columns/PrimaryKeys" data-name="avram::migrator::columns::primarykeys">
+  <li class="parent " data-id="avram/Avram/Migrator/Columns/PrimaryKeys" data-name="avram::migrator::columns::primarykeys">
       <a href="../../../Avram/Migrator/Columns/PrimaryKeys.html">PrimaryKeys</a>
       
         <ul>
@@ -602,12 +602,12 @@
       
     </li>
   
-  <li class="parent " data-id="avram/Avram/Migrator/CreateFunctionStatement" data-name="avram::migrator::createfunctionstatement">
+  <li class="parent open current" data-id="avram/Avram/Migrator/CreateFunctionStatement" data-name="avram::migrator::createfunctionstatement">
       <a href="../../../Avram/Migrator/CreateFunctionStatement.html">CreateFunctionStatement</a>
       
         <ul>
   
-  <li class=" " data-id="avram/Avram/Migrator/CreateFunctionStatement/Behavior" data-name="avram::migrator::createfunctionstatement::behavior">
+  <li class=" current" data-id="avram/Avram/Migrator/CreateFunctionStatement/Behavior" data-name="avram::migrator::createfunctionstatement::behavior">
       <a href="../../../Avram/Migrator/CreateFunctionStatement/Behavior.html">Behavior</a>
       
     </li>
@@ -1832,8 +1832,8 @@
 <h1 class="type-name">
 
   <span class="kind">
-    module
-  </span> Avram::<wbr>Migrator::<wbr>Columns::<wbr>PrimaryKeys
+    enum
+  </span> Avram::<wbr>Migrator::<wbr>CreateFunctionStatement::<wbr>Behavior
 
 </h1>
 
@@ -1866,43 +1866,8 @@
   </h2>
   
     
-      <a href="https://github.com/luckyframework/avram/blob/f533f87eaa44778ff8915efeb6645c69d712a9f9/src/avram/migrator/columns/primary_keys/base.cr#L1" target="_blank">
-        avram/migrator/columns/primary_keys/base.cr
-      </a>
-    
-    <br/>
-  
-    
-      <a href="https://github.com/luckyframework/avram/blob/f533f87eaa44778ff8915efeb6645c69d712a9f9/src/avram/migrator/columns/primary_keys/int16_primary_key.cr#L3" target="_blank">
-        avram/migrator/columns/primary_keys/int16_primary_key.cr
-      </a>
-    
-    <br/>
-  
-    
-      <a href="https://github.com/luckyframework/avram/blob/f533f87eaa44778ff8915efeb6645c69d712a9f9/src/avram/migrator/columns/primary_keys/int32_primary_key.cr#L3" target="_blank">
-        avram/migrator/columns/primary_keys/int32_primary_key.cr
-      </a>
-    
-    <br/>
-  
-    
-      <a href="https://github.com/luckyframework/avram/blob/f533f87eaa44778ff8915efeb6645c69d712a9f9/src/avram/migrator/columns/primary_keys/int64_primary_key.cr#L3" target="_blank">
-        avram/migrator/columns/primary_keys/int64_primary_key.cr
-      </a>
-    
-    <br/>
-  
-    
-      <a href="https://github.com/luckyframework/avram/blob/f533f87eaa44778ff8915efeb6645c69d712a9f9/src/avram/migrator/columns/primary_keys/string_primary_key.cr#L3" target="_blank">
-        avram/migrator/columns/primary_keys/string_primary_key.cr
-      </a>
-    
-    <br/>
-  
-    
-      <a href="https://github.com/luckyframework/avram/blob/f533f87eaa44778ff8915efeb6645c69d712a9f9/src/avram/migrator/columns/primary_keys/uuid_primary_key.cr#L3" target="_blank">
-        avram/migrator/columns/primary_keys/uuid_primary_key.cr
+      <a href="https://github.com/luckyframework/avram/blob/f533f87eaa44778ff8915efeb6645c69d712a9f9/src/avram/migrator/create_function_statement.cr#L2" target="_blank">
+        avram/migrator/create_function_statement.cr
       </a>
     
     <br/>
@@ -1910,6 +1875,35 @@
 
 
 
+  
+    <h2>
+      <a id="enum-members" class="anchor" href="#enum-members">
+  <svg class="octicon-link" aria-hidden="true">
+    <use href="#octicon-link"/>
+  </svg>
+</a>
+      Enum Members
+    </h2>
+  
+  <dl>
+    
+      <dt class="entry-const" id="IMMUTABLE">
+        <strong>IMMUTABLE</strong> = <code><span class="n">0</span></code>
+      </dt>
+      
+    
+      <dt class="entry-const" id="STABLE">
+        <strong>STABLE</strong> = <code><span class="n">1</span></code>
+      </dt>
+      
+    
+      <dt class="entry-const" id="VOLATILE">
+        <strong>VOLATILE</strong> = <code><span class="n">2</span></code>
+      </dt>
+      
+    
+  </dl>
+
 
 
   
@@ -1919,9 +1913,112 @@
   
 
   
+  <h2>
+    <a id="instance-method-summary" class="anchor" href="#instance-method-summary">
+  <svg class="octicon-link" aria-hidden="true">
+    <use href="#octicon-link"/>
+  </svg>
+</a>
+    Instance Method Summary
+  </h2>
+  <ul class="list-summary">
+    
+      <li class="entry-summary">
+        <a href="#immutable%3F-instance-method" class="signature"><strong>#immutable?</strong></a>
+        
+          <div class="summary"><p>Returns <code>true</code> if this enum value equals <code><a href="../../../Avram/Migrator/CreateFunctionStatement/Behavior.html#IMMUTABLE">IMMUTABLE</a></code></p></div>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#stable%3F-instance-method" class="signature"><strong>#stable?</strong></a>
+        
+          <div class="summary"><p>Returns <code>true</code> if this enum value equals <code><a href="../../../Avram/Migrator/CreateFunctionStatement/Behavior.html#STABLE">STABLE</a></code></p></div>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#volatile%3F-instance-method" class="signature"><strong>#volatile?</strong></a>
+        
+          <div class="summary"><p>Returns <code>true</code> if this enum value equals <code><a href="../../../Avram/Migrator/CreateFunctionStatement/Behavior.html#VOLATILE">VOLATILE</a></code></p></div>
+        
+      </li>
+    
+  </ul>
+
 
 
   <div class="methods-inherited">
+    
+      
+
+
+      
+
+
+      
+
+  <h3>Class methods inherited from struct <code><a href="../../../Enum.html">Enum</a></code></h3>
+  
+  
+    <a href="../../../Enum.html#adapter-class-method" class="tooltip">
+      <span>adapter</span>
+    adapter</a>
+    
+  
+
+
+      
+
+
+    
+      
+
+
+      
+
+
+      
+
+
+      
+
+
+    
+      
+
+
+      
+
+
+      
+
+
+      
+
+
+    
+      
+
+  <h3>Instance methods inherited from class <code><a href="../../../Object.html">Object</a></code></h3>
+  
+  
+    <a href="../../../Object.html#blank_for_validates_required%3F%3ABool-instance-method" class="tooltip">
+      <span>blank_for_validates_required? : Bool</span>
+    blank_for_validates_required?</a>
+    
+  
+
+
+      
+
+
+      
+
+
+      
+
+
     
   </div>
 
@@ -1932,6 +2029,79 @@
   
 
   
+  <h2>
+    <a id="instance-method-detail" class="anchor" href="#instance-method-detail">
+  <svg class="octicon-link" aria-hidden="true">
+    <use href="#octicon-link"/>
+  </svg>
+</a>
+    Instance Method Detail
+  </h2>
+  
+    <div class="entry-detail" id="immutable?-instance-method">
+      <div class="signature">
+        
+        def <strong>immutable?</strong>
+
+        <a class="method-permalink" href="#immutable%3F-instance-method">#</a>
+      </div>
+      
+        <div class="doc">
+          
+          <p>Returns <code>true</code> if this enum value equals <code><a href="../../../Avram/Migrator/CreateFunctionStatement/Behavior.html#IMMUTABLE">IMMUTABLE</a></code></p>
+        </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/luckyframework/avram/blob/f533f87eaa44778ff8915efeb6645c69d712a9f9/src/avram/migrator/create_function_statement.cr#L3" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="stable?-instance-method">
+      <div class="signature">
+        
+        def <strong>stable?</strong>
+
+        <a class="method-permalink" href="#stable%3F-instance-method">#</a>
+      </div>
+      
+        <div class="doc">
+          
+          <p>Returns <code>true</code> if this enum value equals <code><a href="../../../Avram/Migrator/CreateFunctionStatement/Behavior.html#STABLE">STABLE</a></code></p>
+        </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/luckyframework/avram/blob/f533f87eaa44778ff8915efeb6645c69d712a9f9/src/avram/migrator/create_function_statement.cr#L4" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="volatile?-instance-method">
+      <div class="signature">
+        
+        def <strong>volatile?</strong>
+
+        <a class="method-permalink" href="#volatile%3F-instance-method">#</a>
+      </div>
+      
+        <div class="doc">
+          
+          <p>Returns <code>true</code> if this enum value equals <code><a href="../../../Avram/Migrator/CreateFunctionStatement/Behavior.html#VOLATILE">VOLATILE</a></code></p>
+        </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/luckyframework/avram/blob/f533f87eaa44778ff8915efeb6645c69d712a9f9/src/avram/migrator/create_function_statement.cr#L5" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+
 
 
 </div>
