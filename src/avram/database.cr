@@ -285,7 +285,7 @@ abstract class Avram::Database
         .database_info
         .table_infos
         .select(&.table?)
-        .reject(&.migrations_table?)
+        .reject!(&.migrations_table?)
         .map(&.table_name)
     end
 

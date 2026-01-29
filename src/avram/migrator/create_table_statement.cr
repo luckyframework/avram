@@ -65,7 +65,7 @@ class Avram::Migrator::CreateTableStatement
   end
 
   def statements
-    [table_statement] + index_statements
+    [table_statement].concat(index_statements)
   end
 
   private def table_statement

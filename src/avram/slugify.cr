@@ -84,7 +84,7 @@ module Avram::Slugify
   private def format_candidates(slug_candidates : Array(String | Avram::Attribute(String) | Array(Avram::Attribute(String)))) : Array(String)
     slug_candidates.map do |candidate|
       parameterize(candidate)
-    end.reject(&.blank?)
+    end.reject!(&.blank?)
   end
 
   private def parameterize(value : String) : String

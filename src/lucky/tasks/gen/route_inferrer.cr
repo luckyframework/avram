@@ -25,11 +25,14 @@ class Lucky::RouteInferrer
   end
 
   private def path
-    "/" + all_pieces.join("/")
+    String.build do |io|
+      io << '/'
+      all_pieces.join(io, '/')
+    end
   end
 
   private def all_pieces
-    (namespace_pieces + parent_resource_pieces + resource_pieces).reject(&.empty?)
+    namespace_pieces.concat(parent_resource_pieces).concat(resource_pieces).reject!(&.empty?)
   end
 
   private def resource
@@ -42,8 +45,9 @@ class Lucky::RouteInferrer
 
   private def namespace_pieces
     _namespace_pieces = action_pieces.reject { |piece| piece == action_name || piece == resource }
+
     if nested_route?
-      _namespace_pieces.reject { |piece| piece == parent_resource_name }
+      _namespace_pieces.reject! { |piece| piece == parent_resource_name }
     else
       _namespace_pieces
     end

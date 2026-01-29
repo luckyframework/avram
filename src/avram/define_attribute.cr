@@ -69,7 +69,7 @@ module Avram::DefineAttribute
     ensure_base_attributes_method_is_present
 
     def attributes
-      ([{{ name }}] + previous_def + super).uniq
+      ([{{ name }}] + previous_def + super).uniq!
     end
 
     def {{ name }}

@@ -11,7 +11,7 @@ class Avram::Migrator::BuildReferenceFragment
     if on_delete == :do_nothing
       " REFERENCES #{references}"
     else
-      " REFERENCES #{references}" + " ON DELETE " + on_delete_sql
+      " REFERENCES #{references} ON DELETE #{on_delete_sql}"
     end
   end
 

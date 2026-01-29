@@ -438,7 +438,7 @@ module Avram::Where
     end
 
     private def ensure_enough_bind_variables_for!(statement, bind_vars)
-      bindings = statement.chars.select(&.== '?')
+      bindings = statement.chars.select!(&.== '?')
       if bindings.size != bind_vars.size
         raise "wrong number of bind variables (#{bind_vars.size} for #{bindings.size}) in #{statement}"
       end

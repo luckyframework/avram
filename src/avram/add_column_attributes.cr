@@ -23,7 +23,7 @@ module Avram::AddColumnAttributes
     def permitted_params : Hash(String, Array(String) | String)
       return {} of String => Array(String) | String if @@permitted_param_keys.empty?
 
-      single_values = @params.nested(self.class.param_key).reject {|k,v| k.ends_with?("[]")}
+      single_values = @params.nested(self.class.param_key).reject! {|k,v| k.ends_with?("[]")}
       array_values = @params.nested_arrays?(self.class.param_key)
       new_params = single_values.merge(array_values)
       new_params.select(@@permitted_param_keys)

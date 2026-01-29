@@ -126,7 +126,7 @@ module Lucky::InputHelpers
     if field.value == checked_value
       attrs = attrs | [:checked]
     end
-    overrides = {"id" => input_id(field) + "_#{checked_value}", "value" => checked_value}
+    overrides = {"id" => "#{input_id(field)}_#{checked_value}", "value" => checked_value}
     html_options = merge_options(html_options, overrides)
     generate_input(field, "radio", html_options, attrs: attrs)
   end

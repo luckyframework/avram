@@ -70,15 +70,19 @@ class Avram::QueryBuilder
   # Creates the SQL for updating. If any joins are present, it
   # moves the WHERE clause to a subquery allowing for joins
   def statement_for_update!(params, return_columns returning : Bool = true)
-    sql = ["UPDATE #{table}", set_sql_clause(params)]
+    sql = Array(String?).new(14)
+
+    sql << "UPDATE #{table}" << set_sql_clause(params)
+
     if joins_sql.presence
-      sql += ["WHERE EXISTS", "(", select_sql]
-      sql += sql_condition_clauses
-      sql += [")"]
+      sql << "WHERE EXISTS" << "(" << select_sql
+      sql.concat(sql_condition_clauses)
+      sql << ")"
     else
-      sql += sql_condition_clauses
+      sql.concat(sql_condition_clauses)
     end
-    sql += ["RETURNING #{@selections}"] if returning
+
+    sql << "RETURNING #{@selections}" if returning
 
     join_sql sql
   end
