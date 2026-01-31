@@ -8,10 +8,18 @@ class Avram::Migrator::BuildReferenceFragment
   end
 
   def build
+    String.build { |io| build(io) }
+  end
+
+  def build(io : IO)
     if on_delete == :do_nothing
-      " REFERENCES #{references}"
+      io << " REFERENCES "
+      io << references
     else
-      " REFERENCES #{references} ON DELETE #{on_delete_sql}"
+      io << " REFERENCES "
+      io << references
+      io << " ON DELETE "
+      io << on_delete_sql
     end
   end
 

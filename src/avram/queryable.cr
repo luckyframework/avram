@@ -283,11 +283,11 @@ module Avram::Queryable(T)
   end
 
   def cache_key : String
-    {query.statement, query.args}.join(':')
+    "#{query.statement}:#{query.args}"
   end
 
   def cache_key(operation : Symbol) : String
-    {cache_key, operation}.join(':')
+    "#{cache_key}:#{operation}"
   end
 
   def results : Array(T)

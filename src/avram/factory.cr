@@ -111,8 +111,8 @@ abstract class Avram::Factory
   # end
   # ```
   def self.create_many(number : Int32, &)
-    (1..number).to_a.map do |_|
-      self.create { |factory| yield(factory) }
+    Array.new(number) do
+      self.create { |factory| yield factory }
     end
   end
 

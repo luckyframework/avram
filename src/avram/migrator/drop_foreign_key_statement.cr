@@ -11,12 +11,21 @@ class Avram::Migrator::DropForeignKeyStatement
   end
 
   def build
-    foreign_key = @column || Wordsmith::Inflector.singularize(@references.to_s) + "_id"
     String.build do |index|
       index << "ALTER TABLE"
       index << ' ' << @from
-      index << " DROP CONSTRAINT " << @from << '_' << foreign_key << "_fk"
-      index << ';'
+      index << " DROP CONSTRAINT " << @from << '_'
+      foreign_key(index)
+      index << "_fk" << ';'
+    end
+  end
+
+  private def foreign_key(io)
+    if @column
+      io << @column
+    else
+      Wordsmith::Inflector.singularize(io, @references.to_s)
+      io << "_id"
     end
   end
 end

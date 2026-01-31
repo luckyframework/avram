@@ -48,7 +48,7 @@ module Avram::Join
     end
 
     def default_foreign_key : String
-      Wordsmith::Inflector.singularize(@from.to_s) + "_id"
+      "#{Wordsmith::Inflector.singularize(@from.to_s)}_id"
     end
 
     def clone : self

@@ -25,8 +25,7 @@ module Avram::AddColumnAttributes
 
       single_values = @params.nested(self.class.param_key).reject! {|k,v| k.ends_with?("[]")}
       array_values = @params.nested_arrays?(self.class.param_key)
-      new_params = single_values.merge(array_values)
-      new_params.select(@@permitted_param_keys)
+      single_values.merge(array_values).select!(@@permitted_param_keys)
     end
 
     {% for attribute in attributes %}

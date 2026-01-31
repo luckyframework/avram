@@ -17,7 +17,8 @@ class Avram::SchemaEnforcer::EnsureMatchingColumns < Avram::SchemaEnforcer::Vali
     end
 
     if matching_error?
-      message = @missing_columns + @optional_attribute_errors + @required_attribute_errors
+      message = @missing_columns + @optional_attribute_errors
+      message.concat(@required_attribute_errors)
 
       raise Avram::SchemaMismatchError.new(message.join("\n\n"))
     end

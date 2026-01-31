@@ -39,11 +39,11 @@ abstract class Avram::Migrator::Columns::Base
   end
 
   def build_add_statement_for_alter : String
-    "  ADD " + build_add_statement
+    "  ADD #{build_add_statement}"
   end
 
   def build_add_statement_for_create : String
-    "  " + build_add_statement
+    "  #{build_add_statement}"
   end
 
   def as_array_type : String
@@ -54,7 +54,8 @@ abstract class Avram::Migrator::Columns::Base
     String.build do |row|
       row << '"' << name << '"'
       row << ' '
-      row << column_type + as_array_type
+      row << column_type
+      row << as_array_type
       row << null_fragment
       row << default_fragment unless default.nil?
       row << references_fragment unless references.nil?

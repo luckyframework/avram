@@ -101,7 +101,7 @@ class Avram::QueryBuilder
       else
         value.to_s
       end
-    end.to_a
+    end
   end
 
   private def set_sql_clause(params) : String
@@ -181,12 +181,15 @@ class Avram::QueryBuilder
   end
 
   def reset_where(column : ColumnName) : self
-    @wheres.reject! { |clause| clause.is_a?(Avram::Where::SqlClause) && clause.column.to_s == column.to_s }
+    @wheres = @wheres.reject do |clause|
+      clause.is_a?(Avram::Where::SqlClause) && clause.column.to_s == column.to_s
+    end
+
     self
   end
 
   def reset_order : Array(Avram::OrderByClause)
-    @orders.clear
+    @orders = Array(Avram::OrderByClause).new
   end
 
   def reverse_order : self
@@ -196,7 +199,7 @@ class Avram::QueryBuilder
 
   def order_sql : String?
     if ordered?
-      "ORDER BY " + orders.join(", ", &.prepare)
+      "ORDER BY #{orders.join(", ", &.prepare)}"
     end
   end
 
@@ -211,7 +214,7 @@ class Avram::QueryBuilder
 
   def group_sql : String?
     if grouped?
-      "GROUP BY " + groups.join(", ")
+      "GROUP BY #{groups.join(", ")}"
     end
   end
 
@@ -372,7 +375,7 @@ class Avram::QueryBuilder
       # Remove the last floating conjunction
       statements.pop
 
-      "WHERE " + statements.join(" ")
+      "WHERE #{statements.join(" ")}"
     end
   end
 

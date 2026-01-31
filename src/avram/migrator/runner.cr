@@ -197,7 +197,7 @@ class Avram::Migrator::Runner
 
   def rollback_all
     self.class.setup_migration_tracking_tables
-    migrated_migrations.reverse.each &.new.down
+    migrated_migrations.reverse_each &.new.down
   end
 
   def rollback_one
@@ -214,7 +214,7 @@ class Avram::Migrator::Runner
     subset = migrated_migrations.select do |migrated|
       migrated.new.version > last_version
     end
-    subset.reverse.each &.new.down
+    subset.reverse_each &.new.down
     puts "Done rolling back to #{last_version}".colorize(:green)
   end
 
@@ -243,11 +243,11 @@ class Avram::Migrator::Runner
   end
 
   private def migrated_migrations
-    sorted_migrations.select &.new.migrated?
+    sorted_migrations.select! &.new.migrated?
   end
 
   private def pending_migrations
-    sorted_migrations.select &.new.pending?
+    sorted_migrations.select! &.new.pending?
   end
 
   private def sorted_migrations

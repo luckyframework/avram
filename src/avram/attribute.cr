@@ -45,7 +45,7 @@ class Avram::Attribute(T)
   end
 
   def errors : Array(String)
-    @errors.uniq
+    @errors.uniq!
   end
 
   def value : T?

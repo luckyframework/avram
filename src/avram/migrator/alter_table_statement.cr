@@ -141,7 +141,11 @@ class Avram::Migrator::AlterTableStatement
   end
 
   def statements
-    alter_statements + change_type_statements + change_default_statements + change_nullability_statements + index_statements + fill_existing_with_statements
+    alter_statements.concat(change_type_statements)
+      .concat(change_default_statements)
+      .concat(change_nullability_statements)
+      .concat(index_statements)
+      .concat(fill_existing_with_statements)
   end
 
   def if_exists_statement
@@ -155,11 +159,13 @@ class Avram::Migrator::AlterTableStatement
       "ALTER TABLE #{if_exists_statement}#{@table_name} #{statement};"
     end
 
-    unless (rows + dropped_rows).empty?
+    all_rows = rows + dropped_rows
+
+    unless all_rows.empty?
       alterations << String.build do |statement|
         statement << "ALTER TABLE " << if_exists_statement << @table_name
         statement << "\n"
-        (rows + dropped_rows).join(statement, ",\n")
+        all_rows.join(statement, ",\n")
         statement << ';'
       end
     end
