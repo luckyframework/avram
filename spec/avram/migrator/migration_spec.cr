@@ -98,6 +98,21 @@ class MigrationCreateAndDropIndexes::V993 < Avram::Migrator::Migration::V1
   end
 end
 
+class MigrationWithUnsafeSQL::V992 < Avram::Migrator::Migration::V1
+  unsafe_migration
+
+  def migrate
+    execute "CREATE TABLE execution_order (x integer NOT NULL);"
+    # Postgres doesn't like running concurrent index creation inside of a transaction
+    execute "CREATE INDEX CONCURRENTLY fast_index ON execution_order (x)"
+  end
+
+  def rollback
+    execute "DROP INDEX CONCURRENTLY IF EXISTS fast_index"
+    drop :execution_order
+  end
+end
+
 describe Avram::Migrator::Migration::V1 do
   it "executes statements in a transaction" do
     expect_raises Avram::FailedMigration do
@@ -183,6 +198,20 @@ describe Avram::Migrator::Migration::V1 do
       migration.rollback
       sql = migration.prepared_statements.join("\n")
       sql.should contain "DROP SEQUENCE IF EXISTS accounts_number_seq"
+    end
+  end
+
+  # NOTE: This spec is run with truncation to ensure we're not wrapping it in a transaction
+  describe "outside of a transaction", tags: Avram::SpecHelper::TRUNCATE do
+    it "allows running unsafe SQL outside of a transaction" do
+      migration = MigrationWithUnsafeSQL::V992.new
+      migration.up(quiet: true)
+      sql = migration.prepared_statements.join("\n")
+      sql.should contain "CREATE INDEX CONCURRENTLY fast_index ON execution_order (x)"
+
+      migration.down(quiet: true)
+      sql = migration.prepared_statements.join("\n")
+      sql.should contain "DROP INDEX CONCURRENTLY IF EXISTS fast_index"
     end
   end
 end
