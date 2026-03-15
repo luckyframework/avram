@@ -10,7 +10,7 @@ describe Avram::Attachment::Model do
   it "deletes the file from storage when the record is deleted" do
     image_file = TestUploadedFile.new("photo.png")
     item = AttachableItem::SaveOperation.create!(image_file: image_file).reload
-    stored = item.image.not_nil!
+    stored = item.image.as(TestImageUploader::StoredFile)
 
     TestImageUploader::StoredFile.reset_deleted_ids
     AttachableItem::DeleteOperation.delete!(item)
@@ -25,10 +25,12 @@ describe Avram::Attachment::SaveOperation do
     item = AttachableItem::SaveOperation.create!(image_file: image_file).reload
 
     item.image.should_not be_nil
-    item.image.not_nil!.storage_key.should eq("store")
-    item.image.not_nil!.id.should contain("attachable_item")
-    item.image.not_nil!.id.should contain("image")
-    item.image.not_nil!.id.should contain("photo.png")
+    if image = item.image
+      image.storage_key.should eq("store")
+      image.id.should contain("attachable_item")
+      image.id.should contain("image")
+      image.id.should contain("photo.png")
+    end
   end
 
   it "deletes the old attachment when uploading a new one" do
@@ -38,7 +40,8 @@ describe Avram::Attachment::SaveOperation do
     image_file = TestUploadedFile.new("new_photo.png")
     AttachableItem::SaveOperation.update!(item, image_file: image_file)
 
-    item.reload.image.not_nil!.id.should contain("new_photo.png")
+    item.reload.image.as(TestImageUploader::StoredFile).id
+      .should contain("new_photo.png")
   end
 
   it "deletes the attachment when delete_image is true" do
