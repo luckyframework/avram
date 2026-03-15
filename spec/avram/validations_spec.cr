@@ -25,6 +25,37 @@ struct TestI18nBackend < Avram::I18nBackend
   end
 end
 
+class TestStoredFile
+  alias MetadataValue = String | Int64 | Int32 | Float64 | Bool | Nil
+  alias MetadataHash = Hash(String, MetadataValue)
+
+  property size : Int64?
+  property mime_type : String?
+
+  def initialize(@size : Int64? = nil, @mime_type : String? = nil)
+  end
+
+  def size? : Int64?
+    @size
+  end
+
+  def mime_type? : String?
+    @mime_type
+  end
+end
+
+private def file_attribute(file : T) : Avram::Attribute(T) forall T
+  Avram::Attribute.new(value: file, param: nil, param_key: "fake", name: :fake)
+end
+
+private def nil_file_attribute : Avram::Attribute(TestStoredFile?)
+  Avram::Attribute(TestStoredFile?).new(value: nil, param: nil, param_key: "fake", name: :fake)
+end
+
+private def stored_file(size : Int64? = nil, mime_type : String? = nil) : TestStoredFile
+  TestStoredFile.new(size: size, mime_type: mime_type)
+end
+
 private def attribute(value : T) : Avram::Attribute(T) forall T
   Avram::Attribute.new(value: value, param: nil, param_key: "fake", name: :fake)
 end
@@ -488,6 +519,141 @@ describe Avram::Validations do
       result.should eq(false)
       bad_attribute.valid?.should be_false
       bad_attribute.errors.should eq ["must be a valid URL beginning with https"]
+    end
+  end
+
+  describe "validate_file_size_of" do
+    it "returns true when the attribute has no file" do
+      result = Avram::Validations.validate_file_size_of(nil_file_attribute, max: 5_000_000_i64)
+      result.should eq(true)
+    end
+
+    it "validates the file is not too small" do
+      small_file = file_attribute(stored_file(size: 500_i64))
+      result = Avram::Validations.validate_file_size_of(small_file, min: 1_000_i64)
+      result.should eq(false)
+      small_file.errors.should eq(["must be at least 1000 bytes"])
+    end
+
+    it "validates the file is not too large" do
+      large_file = file_attribute(stored_file(size: 10_000_000_i64))
+      result = Avram::Validations.validate_file_size_of(large_file, max: 5_000_000_i64)
+      result.should eq(false)
+      large_file.errors.should eq(["must not be larger than 5000000 bytes"])
+    end
+
+    it "validates within a min and max range" do
+      valid_file = file_attribute(stored_file(size: 2_000_i64))
+      result = Avram::Validations.validate_file_size_of(valid_file, min: 1_000_i64, max: 5_000_000_i64)
+      result.should eq(true)
+      valid_file.valid?.should be_true
+    end
+
+    it "fails when size is nil and allow_blank is false" do
+      no_size_file = file_attribute(stored_file)
+      result = Avram::Validations.validate_file_size_of(no_size_file, min: 1_000_i64)
+      result.should eq(false)
+      no_size_file.errors.should eq(["must be at least 1000 bytes"])
+    end
+
+    it "passes when size is nil and allow_blank is true" do
+      no_size_file = file_attribute(stored_file)
+      result = Avram::Validations.validate_file_size_of(no_size_file, min: 1_000_i64, allow_blank: true)
+      result.should eq(true)
+      no_size_file.valid?.should be_true
+    end
+
+    it "supports a custom message" do
+      large_file = file_attribute(stored_file(size: 10_000_000_i64))
+      result = Avram::Validations.validate_file_size_of(large_file, max: 5_000_000_i64, message: "is way too big")
+      result.should eq(false)
+      large_file.errors.should eq(["is way too big"])
+    end
+  end
+
+  describe "validate_file_mime_type_of" do
+    describe "with an allowed list" do
+      it "returns true when the attribute has no file" do
+        result = Avram::Validations.validate_file_mime_type_of(nil_file_attribute, in: ["image/png"])
+        result.should eq(true)
+      end
+
+      it "passes when the MIME type is in the allowed list" do
+        png_file = file_attribute(stored_file(mime_type: "image/png"))
+        result = Avram::Validations.validate_file_mime_type_of(png_file, in: ["image/png", "image/jpeg"])
+        result.should eq(true)
+        png_file.valid?.should be_true
+      end
+
+      it "fails when the MIME type is not in the allowed list" do
+        gif_file = file_attribute(stored_file(mime_type: "image/gif"))
+        result = Avram::Validations.validate_file_mime_type_of(gif_file, in: ["image/png", "image/jpeg"])
+        result.should eq(false)
+        gif_file.errors.should eq(["is not an accepted file type"])
+      end
+
+      it "fails when the MIME type is nil and allow_blank is false" do
+        no_mime_file = file_attribute(stored_file)
+        result = Avram::Validations.validate_file_mime_type_of(no_mime_file, in: ["image/png"])
+        result.should eq(false)
+        no_mime_file.errors.should eq(["is not an accepted file type"])
+      end
+
+      it "passes when the MIME type is nil and allow_blank is true" do
+        no_mime_file = file_attribute(stored_file)
+        result = Avram::Validations.validate_file_mime_type_of(no_mime_file, in: ["image/png"], allow_blank: true)
+        result.should eq(true)
+        no_mime_file.valid?.should be_true
+      end
+
+      it "supports a custom message" do
+        gif_file = file_attribute(stored_file(mime_type: "image/gif"))
+        result = Avram::Validations.validate_file_mime_type_of(gif_file, in: ["image/png"], message: "wrong file type")
+        result.should eq(false)
+        gif_file.errors.should eq(["wrong file type"])
+      end
+    end
+
+    describe "with a pattern" do
+      it "returns true when the attribute has no file" do
+        result = Avram::Validations.validate_file_mime_type_of(nil_file_attribute, with: /image\/.*/)
+        result.should eq(true)
+      end
+
+      it "passes when the MIME type matches the pattern" do
+        png_file = file_attribute(stored_file(mime_type: "image/png"))
+        result = Avram::Validations.validate_file_mime_type_of(png_file, with: /image\/.*/)
+        result.should eq(true)
+        png_file.valid?.should be_true
+      end
+
+      it "fails when the MIME type does not match the pattern" do
+        video_file = file_attribute(stored_file(mime_type: "video/mp4"))
+        result = Avram::Validations.validate_file_mime_type_of(video_file, with: /image\/.*/)
+        result.should eq(false)
+        video_file.errors.should eq(["is not an accepted file type"])
+      end
+
+      it "fails when the MIME type is nil and allow_blank is false" do
+        no_mime_file = file_attribute(stored_file)
+        result = Avram::Validations.validate_file_mime_type_of(no_mime_file, with: /image\/.*/)
+        result.should eq(false)
+        no_mime_file.errors.should eq(["is not an accepted file type"])
+      end
+
+      it "passes when the MIME type is nil and allow_blank is true" do
+        no_mime_file = file_attribute(stored_file)
+        result = Avram::Validations.validate_file_mime_type_of(no_mime_file, with: /image\/.*/, allow_blank: true)
+        result.should eq(true)
+        no_mime_file.valid?.should be_true
+      end
+
+      it "supports a custom message" do
+        video_file = file_attribute(stored_file(mime_type: "video/mp4"))
+        result = Avram::Validations.validate_file_mime_type_of(video_file, with: /image\/.*/, message: "images only")
+        result.should eq(false)
+        video_file.errors.should eq(["images only"])
+      end
     end
   end
 end

@@ -331,6 +331,18 @@ module Avram::Validations
     true
   end
 
+  # Validates that the attribute value is a valid URL with the given scheme
+  #
+  # By default only `https` URLs are considered valid. Pass a `scheme` argument
+  # to allow a different scheme.
+  #
+  # ```
+  # validate_url_format website
+  # validate_url_format repository, scheme: "http"
+  # ```
+  #
+  # Note that blank values are considered valid. Use `validate_required` in
+  # addition if the field is required.
   def validate_url_format(
     attribute : Avram::Attribute(String),
     scheme : String = "https",
@@ -342,6 +354,87 @@ module Avram::Validations
         attribute.add_error(message % scheme)
         return false
       end
+    end
+
+    true
+  end
+
+  # Validate the size of a file attachment
+  #
+  # ```
+  # validate_file_size_of avatar, max: 5_000_000
+  # validate_file_size_of avatar, min: 1_000, max: 5_000_000
+  # ```
+  def validate_file_size_of(
+    attribute : Avram::Attribute(T),
+    min : Int64 = 0_i64,
+    max : Int64? = nil,
+    message : Avram::Attribute::ErrorMessage? = nil,
+    allow_blank : Bool = false,
+  ) : Bool forall T
+    return true unless file = attribute.value
+    size = file.size?
+    return true if allow_blank && !size
+
+    if (size || 0_i64) < min
+      attribute.add_error(
+        (message || Avram.settings.i18n_backend.get(:validate_min_file_size_of)) % min
+      )
+      return false
+    end
+
+    if (max_size = max) && (size || 0_i64) > max_size
+      attribute.add_error(
+        (message || Avram.settings.i18n_backend.get(:validate_max_file_size_of)) % max_size
+      )
+      return false
+    end
+
+    true
+  end
+
+  # Validates that the file attachment has one of the allowed MIME types
+  #
+  # ```
+  # validate_file_mime_type_of avatar, in: %w[image/png image/jpeg]
+  # ```
+  def validate_file_mime_type_of(
+    attribute : Avram::Attribute(T),
+    in allowed : Enumerable(String),
+    message : Avram::Attribute::ErrorMessage = Avram.settings.i18n_backend.get(:validate_file_mime_type_of),
+    allow_blank : Bool = false,
+  ) : Bool forall T
+    return true unless file = attribute.value
+    mime_type = file.mime_type?
+    return true if allow_blank && !mime_type
+
+    unless allowed.includes?(mime_type)
+      attribute.add_error(message)
+      return false
+    end
+
+    true
+  end
+
+  # Validates that the file attachment MIME type matches the given pattern
+  #
+  # ```
+  # validate_file_mime_type_of avatar, with: /image\/.*/
+  # validate_file_mime_type_of attachment, with: /video\/.*/
+  # ```
+  def validate_file_mime_type_of(
+    attribute : Avram::Attribute(T),
+    with pattern : Regex,
+    message : Avram::Attribute::ErrorMessage = Avram.settings.i18n_backend.get(:validate_file_mime_type_of),
+    allow_blank : Bool = false,
+  ) : Bool forall T
+    return true unless file = attribute.value
+    mime_type = file.mime_type?
+    return true if allow_blank && !mime_type
+
+    unless mime_type.to_s.match(pattern)
+      attribute.add_error(message)
+      return false
     end
 
     true

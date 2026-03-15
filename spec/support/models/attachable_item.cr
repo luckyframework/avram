@@ -21,24 +21,6 @@ abstract class Lucky::Attachment::StoredFile
 end
 
 struct TestImageUploader < Lucky::Attachment::Uploader
-  def self.path_prefix : String
-    ":model/:id/:attachment"
-  end
-
-  def self.cache(io : IO, path_prefix : String, filename : String?) : StoredFile
-    StoredFile.new(
-      id: File.join(path_prefix, filename || "test.png"),
-      storage_key: "cache"
-    )
-  end
-
-  def self.promote(file : StoredFile, location : String) : StoredFile
-    StoredFile.new(
-      id: location,
-      storage_key: "store"
-    )
-  end
-
   class StoredFile < ::Lucky::Attachment::StoredFile
     def self.adapter
       Lucky(self)
@@ -60,6 +42,24 @@ struct TestImageUploader < Lucky::Attachment::Uploader
     def delete : Nil
       @@deleted_ids << @id
     end
+  end
+
+  def self.path_prefix : String
+    ":model/:id/:attachment"
+  end
+
+  def self.cache(io : IO, path_prefix : String, filename : String?) : TestImageUploader::StoredFile
+    StoredFile.new(
+      id: File.join(path_prefix, filename || "test.png"),
+      storage_key: "cache"
+    )
+  end
+
+  def self.promote(file : StoredFile, location : String) : TestImageUploader::StoredFile
+    StoredFile.new(
+      id: location,
+      storage_key: "store"
+    )
   end
 end
 

@@ -20,6 +20,9 @@ struct Avram::I18n < Avram::I18nBackend
       validate_required:           "is required",
       validate_uniqueness_of:      "is already taken",
       validate_url_format:         "must be a valid URL beginning with %s",
+      validate_min_file_size_of:   "must be at least %d bytes",
+      validate_max_file_size_of:   "must not be larger than %d bytes",
+      validate_file_mime_type_of:  "is not an accepted file type",
     }[key]
   end
 end
