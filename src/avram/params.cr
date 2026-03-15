@@ -2,8 +2,7 @@ class Avram::Params
   include Avram::Paramable
 
   @hash : Hash(String, Array(String) | String) |  \
-    Hash(String, Array(String)) |  \
-    Hash(String, String)
+    Hash(String, Array(String)) | Hash(String, String)
 
   def initialize
     @hash = {} of String => String
