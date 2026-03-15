@@ -21,12 +21,6 @@ module Avram::Attachment::Model
     class ::{{ @type }}::SaveOperation < Avram::SaveOperation({{ @type }})
       include Avram::Attachment::SaveOperation
     end
-
-    macro finished
-      class ::{{ @type }}::DeleteOperation < Avram::DeleteOperation({{ @type }})
-        include Avram::Attachment::DeleteOperation
-      end
-    end
   end
 
   # Registers a serializable column for an attachment and takes and uploader
@@ -88,6 +82,10 @@ module Avram::Attachment::Model
     ATTACHMENT_UPLOADERS[:{{ name }}] = {{ uploader }}
 
     column {{ name }} : ::{{ stored_file }}{% if nilable %}?{% end %}, serialize: true
+
+    class ::{{ @type }}::DeleteOperation < Avram::DeleteOperation({{ @type }})
+      after_delete { |record| record.{{ name }}.try(&.delete) }
+    end
   end
 end
 
@@ -132,10 +130,13 @@ module Avram::Attachment::SaveOperation
 
       return unless upload = {{ field_name }}.value
 
-      record_id = {{ T.constant(:PRIMARY_KEY_NAME).id }}.value
+      record_id = new_record? ?
+        UUID.random.to_s :
+        {{ T.constant(:PRIMARY_KEY_NAME).id }}.value
+      prefix = T::ATTACHMENT_PREFIXES[:{{ name }}].gsub(/:id/, record_id)
       {{ name }}.value = T::ATTACHMENT_UPLOADERS[:{{ name }}].cache(
         upload.tempfile,
-        path_prefix: T::ATTACHMENT_PREFIXES[:{{ name }}].gsub(/:id/, record_id),
+        path_prefix: prefix,
         filename:  upload.filename.presence
       )
     end
@@ -150,21 +151,17 @@ module Avram::Attachment::SaveOperation
 
       return unless {{ field_name }}.value && (cached = {{ name }}.value)
 
-      stored = T::ATTACHMENT_UPLOADERS[:{{ name }}].promote(cached)
-      T::SaveOperation.update!(record, {{ name }}: stored)
-    end
-  end
-end
+      if old_file = {{ name }}.original_value
+        old_file.delete
+      end
 
-module Avram::Attachment::DeleteOperation
-  # Cleans up the files of any attachments this records still has.
-  macro included
-    after_delete do |_|
-      {% for name in T.constant(:ATTACHMENT_UPLOADERS) %}
-        if attachment = {{ name }}.value
-          attachment.delete
-        end
-      {% end %}
+      record_id = record.{{ T.constant(:PRIMARY_KEY_NAME).id }}.to_s
+      prefix = T::ATTACHMENT_PREFIXES[:{{ name }}].gsub(/:id/, record_id)
+      stored = T::ATTACHMENT_UPLOADERS[:{{ name }}].promote(
+        cached,
+        location: File.join(prefix, File.basename(cached.id))
+      )
+      T::SaveOperation.update!(record, {{ name }}: stored)
     end
   end
 end
