@@ -1,3 +1,21 @@
+# Add methods for uploading files using `Lucky::Attachment`.
+#
+# Include this module in your model to be able to use the `attach` macro
+# required by Lucky's upload implementation.
+#
+# ```
+# class User < BaseModel
+#   include Avram::Attachment::Model
+#
+#   table do
+#     attach avatar : ImageUploader::StoredFile?
+#   end
+# end
+# ```
+#
+# By including this module, the model's operation classes will also receive the
+# required macros and methods to seamlessly integrate with Lucky's upload.
+#
 module Avram::Attachment::Model
   macro included
     class ::{{ @type }}::SaveOperation < Avram::SaveOperation({{ @type }})
@@ -66,6 +84,7 @@ module Avram::Attachment::Model
     {% if !@type.constant(:ATTACHMENT_UPLOADERS) %}
       ATTACHMENT_UPLOADERS = {} of Symbol => ::Lucky::Attachment::Uploader.class
     {% end %}
+
     ATTACHMENT_UPLOADERS[:{{ name }}] = {{ uploader }}
 
     column {{ name }} : ::{{ stored_file }}{% if nilable %}?{% end %}, serialize: true
