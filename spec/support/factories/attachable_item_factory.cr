@@ -1,0 +1,2 @@
+class AttachableItemFactory < BaseFactory
+end
