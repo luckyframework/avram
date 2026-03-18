@@ -48,14 +48,21 @@ struct TestImageUploader < Lucky::Attachment::Uploader
     ":model/:id/:attachment"
   end
 
-  def self.cache(io : IO, path_prefix : String, filename : String?) : TestImageUploader::StoredFile
+  def self.cache(
+    upoaded_file : Avram::Uploadable,
+    path_prefix : String,
+    filename : String?,
+  ) : TestImageUploader::StoredFile
     StoredFile.new(
       id: File.join(path_prefix, filename || "test.png"),
       storage_key: "cache"
     )
   end
 
-  def self.promote(file : StoredFile, location : String) : TestImageUploader::StoredFile
+  def self.promote(
+    file : StoredFile,
+    location : String,
+  ) : TestImageUploader::StoredFile
     StoredFile.new(
       id: location,
       storage_key: "store"

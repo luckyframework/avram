@@ -135,7 +135,7 @@ module Avram::Attachment::SaveOperation
         {{ T.constant(:PRIMARY_KEY_NAME).id }}.value
       prefix = T::ATTACHMENT_PREFIXES[:{{ name }}].gsub(/:id/, record_id)
       {{ name }}.value = T::ATTACHMENT_UPLOADERS[:{{ name }}].cache(
-        upload.tempfile,
+        upload,
         path_prefix: prefix,
         filename:  upload.filename.presence
       )
