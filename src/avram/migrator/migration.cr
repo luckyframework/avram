@@ -18,6 +18,19 @@ abstract class Avram::Migrator::Migration::V1
     end
   end
 
+  # This macro will tell the migration to run all prepared statements
+  # outside of a transaction. This is considered "unsafe" as improper
+  # SQL could pose risk to data integrity if not handled correctly
+  macro unsafe_migration
+    def run_in_transaction : Bool
+      false
+    end
+  end
+
+  def run_in_transaction : Bool
+    true
+  end
+
   abstract def migrate
   abstract def version : Int64
 
@@ -34,7 +47,7 @@ abstract class Avram::Migrator::Migration::V1
       else
         reset_prepared_statements
         migrate
-        execute_in_transaction @prepared_statements do |txn|
+        run_prepared_statements @prepared_statements do |txn|
           track_migration(txn)
           unless quiet
             puts "Migrated #{self.class.name.colorize(:green)}"
@@ -52,7 +65,7 @@ abstract class Avram::Migrator::Migration::V1
       else
         reset_prepared_statements
         rollback
-        execute_in_transaction @prepared_statements do |txn|
+        run_prepared_statements @prepared_statements do |txn|
           untrack_migration(txn)
           unless quiet
             puts "Rolled back #{self.class.name.colorize(:green)}"
@@ -93,13 +106,18 @@ abstract class Avram::Migrator::Migration::V1
   # # Usage
   #
   # ```
-  # execute_in_transaction ["DROP TABLE comments;"] do |db|
+  # run_prepared_statements ["DROP TABLE comments;"] do |db|
   #   db.exec "DROP TABLE users;"
   # end
   # ```
-  private def execute_in_transaction(statements : Array(String), &)
+  private def run_prepared_statements(statements : Array(String), &)
     database = Avram.settings.database_to_migrate
-    database.transaction do
+    if run_in_transaction
+      database.transaction do
+        statements.each { |sql| database.exec sql }
+        yield database
+      end
+    else
       statements.each { |sql| database.exec sql }
       yield database
     end
