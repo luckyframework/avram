@@ -1882,7 +1882,7 @@
   </h2>
   
     
-      <a href="https://github.com/luckyframework/avram/blob/9247b792d26f283495990d863a83da4b859a6970/src/avram/migrator/migration.cr#L4" target="_blank">
+      <a href="https://github.com/luckyframework/avram/blob/6046279aa3697923adefb8a46630bb87b2502e81/src/avram/migrator/migration.cr#L4" target="_blank">
         avram/migrator/migration.cr
       </a>
     
@@ -1898,6 +1898,25 @@
   
 
   
+  <h2>
+    <a id="macro-summary" class="anchor" href="#macro-summary">
+  <svg class="octicon-link" aria-hidden="true">
+    <use href="#octicon-link"/>
+  </svg>
+</a>
+    Macro Summary
+  </h2>
+  <ul class="list-summary">
+    
+      <li class="entry-summary">
+        <a href="#unsafe_migration-macro" class="signature"><strong>unsafe_migration</strong></a>
+        
+          <div class="summary"><p>This macro will tell the migration to run all prepared statements outside of a transaction.</p></div>
+        
+      </li>
+    
+  </ul>
+
 
   
   <h2>
@@ -1939,6 +1958,11 @@
     
       <li class="entry-summary">
         <a href="#reset_prepared_statements-instance-method" class="signature"><strong>#reset_prepared_statements</strong></a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#run_in_transaction%3ABool-instance-method" class="signature"><strong>#run_in_transaction</strong> : Bool</a>
         
       </li>
     
@@ -2162,6 +2186,39 @@
   
 
   
+  <h2>
+    <a id="macro-detail" class="anchor" href="#macro-detail">
+  <svg class="octicon-link" aria-hidden="true">
+    <use href="#octicon-link"/>
+  </svg>
+</a>
+    Macro Detail
+  </h2>
+  
+    <div class="entry-detail" id="unsafe_migration-macro">
+      <div class="signature">
+        
+        macro <strong>unsafe_migration</strong>
+
+        <a class="method-permalink" href="#unsafe_migration-macro">#</a>
+      </div>
+      
+        <div class="doc">
+          
+          <p>This macro will tell the migration to run all prepared statements
+outside of a transaction. This is considered &quot;unsafe&quot; as improper
+SQL could pose risk to data integrity if not handled correctly</p>
+        </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/luckyframework/avram/blob/6046279aa3697923adefb8a46630bb87b2502e81/src/avram/migrator/migration.cr#L24" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+
 
   
   <h2>
@@ -2189,7 +2246,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/9247b792d26f283495990d863a83da4b859a6970/src/avram/migrator/migration.cr#L48" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/6046279aa3697923adefb8a46630bb87b2502e81/src/avram/migrator/migration.cr#L61" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2205,7 +2262,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/9247b792d26f283495990d863a83da4b859a6970/src/avram/migrator/migration.cr#L21" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/6046279aa3697923adefb8a46630bb87b2502e81/src/avram/migrator/migration.cr#L34" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2221,7 +2278,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/9247b792d26f283495990d863a83da4b859a6970/src/avram/migrator/migration.cr#L69" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/6046279aa3697923adefb8a46630bb87b2502e81/src/avram/migrator/migration.cr#L82" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2237,7 +2294,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/9247b792d26f283495990d863a83da4b859a6970/src/avram/migrator/migration.cr#L65" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/6046279aa3697923adefb8a46630bb87b2502e81/src/avram/migrator/migration.cr#L78" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2253,7 +2310,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/9247b792d26f283495990d863a83da4b859a6970/src/avram/migrator/migration.cr#L24" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/6046279aa3697923adefb8a46630bb87b2502e81/src/avram/migrator/migration.cr#L37" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2269,7 +2326,23 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/9247b792d26f283495990d863a83da4b859a6970/src/avram/migrator/migration.cr#L110" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/6046279aa3697923adefb8a46630bb87b2502e81/src/avram/migrator/migration.cr#L128" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="run_in_transaction:Bool-instance-method">
+      <div class="signature">
+        
+        def <strong>run_in_transaction</strong> : <a href="../../../Bool.html">Bool</a>
+
+        <a class="method-permalink" href="#run_in_transaction%3ABool-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/luckyframework/avram/blob/6046279aa3697923adefb8a46630bb87b2502e81/src/avram/migrator/migration.cr#L30" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2293,7 +2366,7 @@ transaction and tracked upon completion.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/9247b792d26f283495990d863a83da4b859a6970/src/avram/migrator/migration.cr#L30" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/6046279aa3697923adefb8a46630bb87b2502e81/src/avram/migrator/migration.cr#L43" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2309,7 +2382,7 @@ transaction and tracked upon completion.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/9247b792d26f283495990d863a83da4b859a6970/src/avram/migrator/migration.cr#L22" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/6046279aa3697923adefb8a46630bb87b2502e81/src/avram/migrator/migration.cr#L35" target="_blank">View source</a>]
         
       </div>
     </div>
