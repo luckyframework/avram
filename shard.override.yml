@@ -1,4 +1,7 @@
-# dependencies:
+dependencies:
+  lucky_cache:
+    github: luckyframework/lucky_cache
+    version: ~> 0.2.0
 #   wordsmith:
 #     github: luckyframework/wordsmith
 #     version: ~> 0.5.0

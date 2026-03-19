@@ -1,6 +1,6 @@
 # A generic version of `Avram::Attribute` that is used for reporting and metrics.
 #
-# This is a data only version of an `Avram::Atribute`. It is purely for
+# This is a data only version of an `Avram::Attribute`. It is purely for
 # retrieving and reporting on data. For example, `Avram::GenericAttribute` is
 # used by `Avram::Events::SaveFailedEvent` so that subscribers can
 # get information about attributes that failed to save.

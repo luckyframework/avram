@@ -6,7 +6,7 @@ describe "Float64" do
     result.value.should eq(10.0)
   end
 
-  it "parses Array(Float64) from Arrray(Float64)" do
+  it "parses Array(Float64) from Array(Float64)" do
     result = Float64.adapter.parse([10.0, 20.0])
     result.value.should eq([10.0, 20.0])
   end

@@ -54,7 +54,7 @@ abstract class Avram::SaveOperation(T)
 
   delegate :write_database, :table_name, :primary_key_name, to: T
 
-  # A helper method to backfill accesing the database
+  # A helper method to backfill accessing the database
   # before they were split in to read/write methods
   def database : Avram::Database.class
     write_database
