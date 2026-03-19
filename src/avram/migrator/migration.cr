@@ -32,6 +32,7 @@ abstract class Avram::Migrator::Migration::V1
   end
 
   abstract def migrate
+  abstract def rollback
   abstract def version : Int64
 
   getter prepared_statements = [] of String
