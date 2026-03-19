@@ -35,7 +35,7 @@ dependencies:
     version: ~> 0.2.3
   lucky_cache:
     github: luckyframework/lucky_cache
-    version: ~> 0.1.1
+    version: ~> 0.2.0
   cadmium_transliterator:
     github: cadmiumcr/transliterator
     branch: master

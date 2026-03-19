@@ -137,7 +137,7 @@ describe Avram::Migrator::Migration::V1 do
   end
 
   describe "helper statements" do
-    it "appends function and trigger statments to prepared statements" do
+    it "appends function and trigger statements to prepared statements" do
       migration = MigrationWithFunctionAndTrigger::V996.new
       migration.migrate
       sql = migration.prepared_statements.join("\n")

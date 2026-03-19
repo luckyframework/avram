@@ -34,7 +34,7 @@ module Avram::NeedyInitializerAndSaveMethods
 
     macro finished
       # @type is not correct in this method, but is in the macro we call below
-      # That is why this extrac macro was extracted. We need @type to get the
+      # That is why this macro was extracted. We need @type to get the
       # attributes for this SaveOperation
       generate_initializer_and_save_methods
     end

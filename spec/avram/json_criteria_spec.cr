@@ -42,28 +42,28 @@ describe JSON::Any::Lucky::Criteria do
   describe "includes" do
     it "@>" do
       json = JSON::Any.new({"theme" => JSON::Any.new("dark")})
-      critera = preferences.includes(json)
-      critera.to_sql.should eq [%(SELECT #{QueryMe::COLUMN_SQL} FROM users WHERE "users"."preferences" @> $1), %({"theme":"dark"})]
+      criteria = preferences.includes(json)
+      criteria.to_sql.should eq [%(SELECT #{QueryMe::COLUMN_SQL} FROM users WHERE "users"."preferences" @> $1), %({"theme":"dark"})]
     end
 
     it "negates with NOT()" do
       json = JSON::Any.new({"theme" => JSON::Any.new("dark")})
-      critera = preferences.not.includes(json)
-      critera.to_sql.should eq [%(SELECT #{QueryMe::COLUMN_SQL} FROM users WHERE NOT("users"."preferences" @> $1)), %({"theme":"dark"})]
+      criteria = preferences.not.includes(json)
+      criteria.to_sql.should eq [%(SELECT #{QueryMe::COLUMN_SQL} FROM users WHERE NOT("users"."preferences" @> $1)), %({"theme":"dark"})]
     end
   end
 
   describe "in" do
     it "<@" do
       json = JSON::Any.new({"theme" => JSON::Any.new("dark"), "style" => JSON::Any.new("cyberpunk"), "version" => JSON::Any.new(2i64)})
-      critera = preferences.in(json)
-      critera.to_sql.should eq [%(SELECT #{QueryMe::COLUMN_SQL} FROM users WHERE "users"."preferences" <@ $1), %({"theme":"dark","style":"cyberpunk","version":2})]
+      criteria = preferences.in(json)
+      criteria.to_sql.should eq [%(SELECT #{QueryMe::COLUMN_SQL} FROM users WHERE "users"."preferences" <@ $1), %({"theme":"dark","style":"cyberpunk","version":2})]
     end
 
     it "negates with NOT()" do
       json = JSON::Any.new({"theme" => JSON::Any.new("dark"), "style" => JSON::Any.new("cyberpunk"), "version" => JSON::Any.new(2i64)})
-      critera = preferences.not.in(json)
-      critera.to_sql.should eq [%(SELECT #{QueryMe::COLUMN_SQL} FROM users WHERE NOT("users"."preferences" <@ $1)), %({"theme":"dark","style":"cyberpunk","version":2})]
+      criteria = preferences.not.in(json)
+      criteria.to_sql.should eq [%(SELECT #{QueryMe::COLUMN_SQL} FROM users WHERE NOT("users"."preferences" <@ $1)), %({"theme":"dark","style":"cyberpunk","version":2})]
     end
   end
 end
