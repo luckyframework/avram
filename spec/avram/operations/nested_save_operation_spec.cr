@@ -185,7 +185,7 @@ describe "Avram::SaveOperation with nested operation" do
   context "when all forms are valid" do
     it "sets the relationship and creates both" do
       params = FakeNestedParams.new business: {"name" => "Fubar", "latitude" => "46.383488", "longitude" => "22.774896"},
-        email_address: {"address" => "foo@bar.com"},
+        email_address: {"address" => "foo@bar.com", "default" => "false"},
         tax_id: {"number" => "123"}
 
       operation = SaveBusiness.new(params)
@@ -201,6 +201,7 @@ describe "Avram::SaveOperation with nested operation" do
       business = operation.record.as(Business)
       business.name.should eq "Fubar"
       business.email_address!.address.should eq "foo@bar.com"
+      business.email_address!.default.should eq false
       business.tax_id!.number.should eq 123
     end
 
