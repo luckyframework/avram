@@ -2,7 +2,7 @@ require "../../spec_helper"
 
 private class SaveBusiness < Business::SaveOperation
   class SaveEmailAddress < EmailAddress::SaveOperation
-    permit_columns address
+    permit_columns address, default
   end
 
   class SaveTaxId < TaxId::SaveOperation
