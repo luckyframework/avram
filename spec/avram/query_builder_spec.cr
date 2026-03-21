@@ -171,7 +171,7 @@ describe Avram::QueryBuilder do
         .where(Avram::Where::Equal.new(:id, "1"))
         .limit(1)
 
-      query.statement_for_update(params).should eq "UPDATE users SET first_name = $1, last_name = $2 WHERE id = $3 LIMIT 1 RETURNING *"
+      query.statement_for_update(params).should eq %(UPDATE users SET "first_name" = $1, "last_name" = $2 WHERE id = $3 LIMIT 1 RETURNING *)
       query.args_for_update(params).should eq ["Paul", nil, "1"]
     end
 
@@ -181,8 +181,18 @@ describe Avram::QueryBuilder do
         .where(Avram::Where::Equal.new(:id, "1"))
         .limit(1)
 
-      query.statement_for_update(params).should eq "UPDATE users SET first_name = $1, last_name = $2 WHERE id = $3 LIMIT 1 RETURNING *"
-      query.statement_for_update(params).should eq "UPDATE users SET first_name = $1, last_name = $2 WHERE id = $3 LIMIT 1 RETURNING *"
+      query.statement_for_update(params).should eq %(UPDATE users SET "first_name" = $1, "last_name" = $2 WHERE id = $3 LIMIT 1 RETURNING *)
+      query.statement_for_update(params).should eq %(UPDATE users SET "first_name" = $1, "last_name" = $2 WHERE id = $3 LIMIT 1 RETURNING *)
+    end
+
+    it "quotes the columns to ensure reserved keywords can be used" do
+      params = {:select => "foobar"}
+      query = new_query
+        .where(Avram::Where::Equal.new(:id, "1"))
+        .limit(1)
+
+      query.statement_for_update(params).should eq %(UPDATE users SET "select" = $1 WHERE id = $2 LIMIT 1 RETURNING *)
+      query.args_for_update(params).should eq ["foobar", "1"]
     end
   end
 

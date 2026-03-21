@@ -18,6 +18,7 @@ class CreateBusinesses::V20180612221318 < Avram::Migrator::Migration::V1
     create :email_addresses do
       primary_key id : Int64
       add_timestamps
+      add default : Bool, default: true
       add address : String, case_sensitive: false
       add_belongs_to business : Business?, on_delete: :cascade
     end
