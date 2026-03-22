@@ -90,6 +90,29 @@ module Avram::Upsert
     end
   end
 
+  macro upsert_unique_on(*attribute_names)
+    def self.upsert(upserts : Array(X)) forall X
+      \{%
+        if X > NamedTuple
+          raise("All array elements for #{@type}.upsert must be NamedTuples. You provided: #{X}")
+        elsif X.union?
+          keys = X.union_types.map(&.keys).join(", ")
+          raise("All tuples for #{@type}.upsert must have the same keys. Given: " + keys)
+        end
+      %}
+
+      upsert = Avram::BulkUpsert(self).new(
+        records: upserts.map { |upsert_args| new(**upsert_args) },
+        conflicts: {{ attribute_names }}.to_a,
+        permitted_fields: upserts.first.keys.to_a
+      )
+
+      new.database.query upsert.statement, args: upsert.args do |rs|
+        T.from_rs(rs)
+      end
+    end
+  end
+
   # :nodoc:
   macro included
     {% for method in ["upsert", "upsert!"] %}
@@ -100,5 +123,9 @@ module Avram::Upsert
         \{% raise "Please use the 'upsert_lookup_columns' macro in #{@type} before using '{{ method.id }}'" %}
       end
     {% end %}
+
+    def self.upsert(_upserts : Array)
+      \{% raise "Please use the 'upsert_unique_on' macro in #{@type} before using '.upsert'" %}
+    end
   end
 end
