@@ -197,7 +197,8 @@ module Avram::NeedyInitializerAndSaveMethods
         @params : Avram::Paramable,
         {{ needs_method_args.id }}
         {{ attribute_method_args.id }}
-      )
+    )
+      @__type = Type::Update
       set_attributes({{ attribute_params.id }})
     end
 
@@ -206,7 +207,7 @@ module Avram::NeedyInitializerAndSaveMethods
         {{ needs_method_args.id }}
         {{ attribute_method_args.id }}
     )
-      @record = nil
+      @__type = Type::Create
       set_attributes({{ attribute_params.id }})
     end
 
@@ -215,7 +216,9 @@ module Avram::NeedyInitializerAndSaveMethods
         {{ needs_method_args.id }}
         {{ attribute_method_args.id }}
     )
+      @__type = Type::Update
       @params = Avram::Params.new
+
       set_attributes({{ attribute_params.id }})
     end
 
@@ -223,16 +226,23 @@ module Avram::NeedyInitializerAndSaveMethods
         {{ needs_method_args.id }}
         {{ attribute_method_args.id }}
     )
-      @record = nil
+      @__type = Type::Create
       @params = Avram::Params.new
+
       set_attributes({{ attribute_params.id }})
     end
 
+    # Keeps track of params that were actually passed to the operation
+    # This is used in the `ON CONFLICT DO UPDATE SET` part of the SQL clause
+    @upsert_params = [] of Symbol
+
     def set_attributes({{ attribute_method_args.id }})
       extract_changes_from_params
+
       {% if @type.constant :COLUMN_ATTRIBUTES %}
         {% for attribute in COLUMN_ATTRIBUTES.uniq %}
           unless {{ attribute[:name] }}.is_a? Avram::Nothing
+            @upsert_params << {{ attribute[:name].symbolize }}
             self.{{ attribute[:name] }}.value = {{ attribute[:name] }}
           end
         {% end %}

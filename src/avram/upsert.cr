@@ -58,35 +58,53 @@ module Avram::Upsert
   # end
   # ````
   macro upsert_lookup_columns(*attribute_names)
+    def upsert : Bool
+      @__type = Type::Upsert if type.create?
+      save
+    end
+
+    def upsert! : T
+      if upsert
+        record.as(T)
+      else
+        raise Avram::InvalidOperationError.new(operation: self)
+      end
+    end
+
     def self.upsert!(*args, **named_args) : T
       operation = new(*args, **named_args)
-      existing_record = find_existing_unique_record(operation)
-
-      if existing_record
-        operation = new(existing_record, *args, **named_args)
-      end
-
-      operation.save!
+      operation.upsert!
     end
 
     def self.upsert(*args, **named_args)
       operation = new(*args, **named_args)
-      existing_record = find_existing_unique_record(operation)
 
-      if existing_record
-        operation = new(existing_record, *args, **named_args)
+      if operation.upsert
+        yield operation, operation.record
+      else
+        yield operation, nil
       end
-
-      operation.save
-      yield operation, operation.record
     end
 
-    def self.find_existing_unique_record(operation) : T?
-      T::BaseQuery.new
+    private def insert_sql
+      return super unless type.upsert?
+
+      conflict_keys = Array(Symbol).new.tap do |columns|
         {% for attribute in attribute_names %}
-          .{{ attribute.id }}.nilable_eq(operation.{{ attribute.id }}.value)
+          columns << {{ attribute.id.symbolize }}
         {% end %}
-        .first?
+      end
+
+      upsert_values = attributes_to_hash(column_attributes).compact!
+
+      Avram::Insert.new(
+        table_name,
+        upsert_values,
+        T.column_names,
+        :update,
+        conflict_keys,
+        @upsert_params
+      )
     end
   end
 
