@@ -107,7 +107,7 @@ module Avram::Callbacks
   macro after_run(&block)
     {%
       if block.args.size != 1
-        raise <<-ERR
+        block.raise <<-ERR
         The 'after_run' callback requires exactly 1 block arg to be passed.
         Example:
           after_run { |value| some_method(value) }

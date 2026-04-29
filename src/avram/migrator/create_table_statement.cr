@@ -161,10 +161,10 @@ class Avram::Migrator::CreateTableStatement
   # Adds a references column and index given a model class and references option.
   macro add_belongs_to(type_declaration, on_delete, references = nil, foreign_key_type = Int64, unique = false, index = true)
     {% unless type_declaration.is_a?(TypeDeclaration) %}
-      {% raise "add_belongs_to expected a type declaration like 'user : User', instead got: '#{type_declaration}'" %}
+      {% type_declaration.raise "add_belongs_to expected a type declaration like 'user : User', instead got: '#{type_declaration}'" %}
     {% end %}
     {% if type_declaration.type.stringify =~ /\w::\w/ && references.nil? %}
-      {% raise <<-ERROR
+      {% type_declaration.raise <<-ERROR
       Namespaced models must include the `references` option with the name of the table.
 
       Try this...

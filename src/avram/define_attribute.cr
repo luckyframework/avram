@@ -40,7 +40,8 @@ module Avram::DefineAttribute
       {% else %}
         {% default_value = "= #{type_declaration.value}" %}
       {% end %}
-      {% raise <<-ERROR
+
+      {% type_declaration.type.raise <<-ERROR
         `attribute` in #{@type} must not be called with a type union or nilable type but was called with #{type_declaration.type}
         If you were attempting to create a nilable attribute, all attributes are considered nilable by default.
 
@@ -89,7 +90,7 @@ module Avram::DefineAttribute
 
   macro file_attribute(key)
     {% unless key.is_a?(SymbolLiteral) %}
-      {% raise "file_attribute must be declared with a Symbol" %}
+      {% key.raise "file_attribute must be declared with a Symbol" %}
     {% end %}
 
     attribute {{ key.id }} : Avram::Uploadable

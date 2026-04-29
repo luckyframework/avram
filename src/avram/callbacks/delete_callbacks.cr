@@ -73,7 +73,7 @@ module Avram::DeleteCallbacks
     {% end %}
     {%
       if block.args.size != 1
-        raise <<-ERR
+        block.raise <<-ERR
         The 'after_delete' callback requires exactly 1 block arg to be passed.
         Example:
           after_delete do |deleted_user|
