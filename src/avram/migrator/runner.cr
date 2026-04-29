@@ -87,7 +87,7 @@ class Avram::Migrator::Runner
   rescue e : DB::ConnectionRefused
     message = e.message.to_s
     if message.blank?
-      raise ConnectionError.new(URI.parse(credentials.url_without_query_params), Avram.settings.database_to_migrate)
+      raise ConnectionError.new(URI.parse(credentials.url_without_query_params), Avram.settings.database_to_migrate, cause: e)
     else
       raise e
     end
@@ -98,7 +98,7 @@ class Avram::Migrator::Runner
         puts "Already created #{self.db_name.colorize(:green)}"
       end
     elsif message.includes?("Cannot establish connection")
-      raise PGNotRunningError.new(message)
+      raise PGNotRunningError.new(message, cause: e)
     else
       raise e
     end
@@ -264,6 +264,7 @@ class Avram::Migrator::Runner
       yield
     end
   rescue e : DB::ConnectionRefused
-    raise "Unable to connect to the database. Please check your configuration.".colorize(:red).to_s
+    message = "Unable to connect to the database. Please check your configuration.".colorize(:red).to_s
+    raise Exception.new(message, cause: e)
   end
 end

@@ -21,13 +21,13 @@ class Avram::Connection
 
   def connect_listen(*channels : String, &block : PQ::Notification ->) : Nil
     PG.connect_listen(credentials.url, *channels, &block)
-  rescue DB::ConnectionRefused
-    raise ConnectionError.new(credentials.uri, database_class: @database_class)
+  rescue e : DB::ConnectionRefused
+    raise ConnectionError.new(credentials.uri, database_class: @database_class, cause: e)
   end
 
   def try_connection! : DB::Database
     DB.open(credentials.url)
-  rescue DB::ConnectionRefused
-    raise ConnectionError.new(credentials.uri, database_class: @database_class)
+  rescue e : DB::ConnectionRefused
+    raise ConnectionError.new(credentials.uri, database_class: @database_class, cause: e)
   end
 end
