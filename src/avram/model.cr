@@ -133,7 +133,7 @@ abstract class Avram::Model
       {% value_generator = type_declaration.value %}
 
       {% if !value_generator || value_generator && !(value_generator.is_a?(ProcLiteral) || value_generator.is_a?(ProcPointer) || value_generator.is_a?(Call)) %}
-          {% raise <<-ERROR
+          {% type_declaration.type.raise <<-ERROR
               When using a String primary_key, you must also specify a way to generate the value.
               You can provide a class method, a proc or a proc pointer.
               Your value generator must return a non-nullable String.

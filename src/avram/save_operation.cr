@@ -152,7 +152,7 @@ abstract class Avram::SaveOperation(T)
   macro permit_columns(*attribute_names)
     {% for attribute_name in attribute_names %}
       {% if attribute_name.is_a?(TypeDeclaration) %}
-        {% raise <<-ERROR
+        {% attribute_name.raise <<-ERROR
           Must use a Symbol or a bare word in 'permit_columns'. Instead, got: #{attribute_name}
 
           Try this...
@@ -163,7 +163,7 @@ abstract class Avram::SaveOperation(T)
         %}
       {% end %}
       {% unless attribute_name.is_a?(SymbolLiteral) || attribute_name.is_a?(Call) %}
-        {% raise <<-ERROR
+        {% attribute_name.raise <<-ERROR
           Must use a Symbol or a bare word in 'permit_columns'. Instead, got: #{attribute_name}
 
           Try this...
@@ -181,7 +181,7 @@ abstract class Avram::SaveOperation(T)
 
         @@permitted_param_keys << "{{ attribute_name.id }}"
       {% else %}
-        {% raise <<-ERROR
+        {% attribute_name.raise <<-ERROR
           Can't permit '#{attribute_name}' because the column has not been defined on the model for #{@type}.
 
           Try this...

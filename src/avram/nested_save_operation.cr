@@ -13,7 +13,7 @@ module Avram::NestedSaveOperation
        end %}
 
     {% unless assoc %}
-      {% raise "#{T} must have a has_one association with #{model_type}" %}
+      {% type_declaration.raise "#{T} must have a has_one association with #{model_type}" %}
     {% end %}
 
     @_{{ name }} : {{ type }} | Nil

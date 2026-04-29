@@ -164,7 +164,7 @@ module Avram::SaveCallbacks
     {% end %}
     {%
       if block.args.size != 1
-        raise <<-ERR
+        block.raise <<-ERR
         The 'after_save' callback requires exactly 1 block arg to be passed.
         Example:
           after_save do |saved_user|

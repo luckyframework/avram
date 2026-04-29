@@ -29,7 +29,7 @@ class Avram::Migrator::AlterTableStatement
   macro change_type(type_declaration, **type_options)
     {%
       if !type_declaration.is_a?(TypeDeclaration)
-        raise "Must pass a type declaration to 'change_type'. Example: change_type age : Int32"
+        type_declaration.raise "Must pass a type declaration to 'change_type'. Example: change_type age : Int32"
       elsif type_options.keys.includes?("default".id)
         raise "Cannot change the default value from `change_type`. Use `change_default` instead."
       end
@@ -70,7 +70,7 @@ class Avram::Migrator::AlterTableStatement
   macro change_default(type_declaration, default)
     {%
       if !type_declaration.is_a?(TypeDeclaration)
-        raise "Must pass a type declaration to 'change_default'. Example: change_default count : Int32, default: 1"
+        type_declaration.raise "Must pass a type declaration to 'change_default'. Example: change_default count : Int32, default: 1"
       end
     %}
     %column = ::Avram::Migrator::Columns::{{ type_declaration.type }}Column({{ type_declaration.type }}).new(
@@ -176,10 +176,10 @@ class Avram::Migrator::AlterTableStatement
   # Adds a references column and index given a model class and references option.
   macro add_belongs_to(type_declaration, on_delete, references = nil, foreign_key_type = Int64, fill_existing_with = nil, unique = false, index = true)
     {% unless type_declaration.is_a?(TypeDeclaration) %}
-      {% raise "add_belongs_to expected a type declaration like 'user : User', instead got: '#{type_declaration}'" %}
+      {% type_declaration.raise "add_belongs_to expected a type declaration like 'user : User', instead got: '#{type_declaration}'" %}
     {% end %}
     {% if type_declaration.type.stringify =~ /\w::\w/ && references.nil? %}
-      {% raise <<-ERROR
+      {% type_declaration.raise <<-ERROR
       Namespaced models must include the `references` option with the name of the table.
 
       Try this...
@@ -297,14 +297,13 @@ class Avram::Migrator::AlterTableStatement
   end
 
   macro symbol_expected_error(action, name)
-
     {% if name.is_a?(TypeDeclaration) %}
       {% example = name.var %}
     {% else %}
       {% example = name.id %}
     {% end %}
 
-    {% raise <<-ERROR
+    {% name.raise <<-ERROR
 
     #{action} expected a symbol like :#{example}, instead got: #{name}.
 
