@@ -96,6 +96,7 @@ module Avram::Upsert
       end
 
       upsert_values = attributes_to_hash(column_attributes).compact!
+      conflict_params = upsert_values.map(&.[0]).concat(@upsert_params).uniq!
 
       Avram::Insert.new(
         table_name,
@@ -103,7 +104,7 @@ module Avram::Upsert
         T.column_names,
         :update,
         conflict_keys,
-        @upsert_params
+        conflict_params
       )
     end
   end
