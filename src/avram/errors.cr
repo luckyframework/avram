@@ -88,7 +88,7 @@ module Avram
     getter connection_details : URI
     getter database_class : Avram::Database.class
 
-    def initialize(@connection_details : URI, @database_class : Avram::Database.class)
+    def initialize(@connection_details : URI, @database_class : Avram::Database.class, cause = nil)
       error = String.build do |message|
         message << database_class.name << ": Failed to connect to database '"
         message << connection_details.path.try(&.[1..-1]) << "' with username '"
@@ -108,7 +108,7 @@ module Avram
         end
       end
 
-      super error
+      super error, cause
     end
   end
 
@@ -139,8 +139,8 @@ module Avram
   end
 
   class PGNotRunningError < AvramError
-    def initialize(original_message : String)
-      super <<-ERROR
+    def initialize(original_message : String, cause = nil)
+      super <<-ERROR, cause
       It looks like Postgres is not running.
 
       Message from Postgres:

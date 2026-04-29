@@ -23,8 +23,8 @@ class Db::VerifyConnection < BaseTask
     DB.open(Avram.settings.database_to_migrate.settings.credentials.url) do |_db|
       output.puts "✔ Connection verified" unless quiet?
     end
-  rescue Avram::ConnectionError | DB::ConnectionRefused
-    raise <<-ERROR
+  rescue e : Avram::ConnectionError | DB::ConnectionRefused
+    raise Exception.new <<-ERROR, cause: e
     Unable to connect to Postgres for database '#{Avram.settings.database_to_migrate}'.
 
     This is what we tried to connect to:
