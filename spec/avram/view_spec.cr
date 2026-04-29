@@ -12,9 +12,9 @@ describe "views" do
   end
 
   it "works without a primary key" do
-    UserFactory.new.nickname("Johnny").create
-    UserFactory.new.nickname("Johnny").create
-    UserFactory.new.nickname("Johnny").create
+    UserFactory.new.name("Walker").nickname("Johnny").create
+    UserFactory.new.name("Wilson").nickname("Johnny").create
+    UserFactory.new.name("Wonker").nickname("Johnny").create
     nickname_info = NicknameInfo::BaseQuery.first
 
     nickname_info.nickname.should eq "Johnny"

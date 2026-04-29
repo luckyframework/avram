@@ -30,6 +30,14 @@ abstract class Avram::SaveOperation(T)
     Unperformed
   end
 
+  enum Type
+    Create
+    Update
+    Upsert
+  end
+
+  @__type : Type
+
   macro inherited
     @@permitted_param_keys = [] of String
   end
@@ -46,13 +54,18 @@ abstract class Avram::SaveOperation(T)
   end
 
   def initialize(@params)
+    @__type = Type::Create
   end
 
-  def initialize
-    @params = Avram::Params.new
+  def self.new
+    new(Avram::Params.new)
   end
 
   delegate :write_database, :table_name, :primary_key_name, to: T
+
+  def type : Type
+    @__type
+  end
 
   # A helper method to backfill accessing the database
   # before they were split in to read/write methods
@@ -137,11 +150,15 @@ abstract class Avram::SaveOperation(T)
   end
 
   def created? : Bool
-    saved? && new_record?
+    type.create? && saved?
   end
 
   def updated? : Bool
-    saved? && !new_record?
+    type.update? && saved?
+  end
+
+  def upserted? : Bool
+    type.upsert? && saved?
   end
 
   # Return true if the operation has run and the record failed to save
@@ -267,7 +284,7 @@ abstract class Avram::SaveOperation(T)
   # This method should always return `true` for a create or `false`
   # for an update, independent of the stage we are at in the operation.
   def new_record? : Bool
-    {{ T.constant(:PRIMARY_KEY_NAME).id }}.original_value.nil?
+    type.create? || type.upsert?
   end
 
   private def insert_or_update

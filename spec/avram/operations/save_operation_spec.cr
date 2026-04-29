@@ -71,11 +71,23 @@ private class ParamKeySaveOperation < ValueColumnModel::SaveOperation
 end
 
 private class UpsertUserOperation < User::SaveOperation
+  getter? after_commit_called = false
+
   upsert_lookup_columns :name, :nickname
+
+  after_commit do |_user|
+    @after_commit_called = true
+  end
 end
 
 private class UpsertToken < Token::SaveOperation
+  getter? after_save_called = false
+
   upsert_lookup_columns :next_id
+
+  after_save do |_user|
+    @after_save_called = true
+  end
 end
 
 private class OverrideDefaults < ModelWithDefaultValues::SaveOperation
@@ -217,22 +229,23 @@ describe "Avram::SaveOperation" do
   describe "upsert upsert_lookup_columns" do
     describe ".upsert" do
       it "updates the existing record if one exists" do
-        existing_user = UserFactory.create &.name("Rich").nickname(nil).age(20)
+        existing_user = UserFactory.create &.name("Rich").nickname("Dolly").age(20)
         joined_at = Time.utc.at_beginning_of_second
 
         UpsertUserOperation.upsert(
           name: "Rich",
-          nickname: nil,
+          nickname: "Dolly",
           age: 30,
           joined_at: joined_at
         ) do |operation, user|
-          operation.created?.should be_false
-          operation.updated?.should be_true
+          operation.upserted?.should be_true
+          operation.saved?.should be_true
+          operation.after_commit_called?.should be_true
           UserQuery.new.select_count.should eq(1)
           user = user.as(User)
           user.id.should eq(existing_user.id)
           user.name.should eq("Rich")
-          user.nickname.should be_nil
+          user.nickname.should eq("Dolly")
           user.age.should eq(30)
           user.joined_at.should eq(joined_at)
         end
@@ -243,15 +256,15 @@ describe "Avram::SaveOperation" do
 
         UpsertToken.upsert(next_id: 4, name: "Secret", scopes: ["red", "blue"]) do |operation, token|
           operation.valid?.should eq(true)
+          operation.after_save_called?.should be_true
           token.should_not eq(nil)
           token.as(Token).name.should eq("Secret")
           token.as(Token).scopes.should eq(["red", "blue"])
         end
       end
 
-      it "creates a new record if match one doesn't exist" do
-        user_with_different_nickname =
-          UserFactory.create &.name("Rich").nickname(nil).age(20)
+      it "creates a new record if one doesn't exist" do
+        existing_user = UserFactory.create &.name("Rich").nickname("Dolly").age(20)
         joined_at = Time.utc.at_beginning_of_second
 
         UpsertUserOperation.upsert(
@@ -260,15 +273,16 @@ describe "Avram::SaveOperation" do
           age: 30,
           joined_at: joined_at
         ) do |operation, user|
-          operation.created?.should be_true
-          operation.updated?.should be_false
+          operation.upserted?.should be_true
+          operation.saved?.should be_true
+          operation.after_commit_called?.should be_true
           UserQuery.new.select_count.should eq(2)
           # Keep existing user the same
-          user_with_different_nickname.age.should eq(20)
-          user_with_different_nickname.nickname.should eq(nil)
+          existing_user.age.should eq(20)
+          existing_user.nickname.should eq("Dolly")
 
           user = user.as(User)
-          user.id.should_not eq(user_with_different_nickname.id)
+          user.id.should_not eq(existing_user.id)
           user.name.should eq("Rich")
           user.nickname.should eq("R.")
           user.age.should eq(30)
@@ -277,25 +291,35 @@ describe "Avram::SaveOperation" do
       end
 
       it "allows updating nilable fields to nil" do
-        UserFactory.create(&.name("test").total_score(100))
-        UpsertUserOperation.upsert(name: "test", total_score: nil) do |operation, updated_user|
-          operation.updated?.should eq(true)
-          updated_user.should_not eq(nil)
-          user = updated_user.as(User)
-          user.name.should eq("test")
-          user.total_score.should eq(nil)
+        user = UserFactory.create &.name("test").nickname("sample").total_score(100)
+
+        UpsertUserOperation.upsert(
+          name: user.name,
+          nickname: user.nickname,
+          total_score: nil,
+          age: user.age,
+          joined_at: user.joined_at
+        ) do |operation, saved_user|
+          operation.upserted?.should be_true
+          operation.saved?.should be_true
+          saved_user.should_not be_nil
+
+          saved_user.try do |_user|
+            _user.name.should eq("test")
+            _user.total_score.should be_nil
+          end
         end
       end
     end
 
     describe ".upsert!" do
       it "updates the existing record if one exists" do
-        existing_user = UserFactory.create &.name("Rich").nickname(nil).age(20)
+        existing_user = UserFactory.create &.name("Rich").nickname("Dolly").age(20)
         joined_at = Time.utc.at_beginning_of_second
 
         user = UpsertUserOperation.upsert!(
           name: "Rich",
-          nickname: nil,
+          nickname: "Dolly",
           age: 30,
           joined_at: joined_at
         )
@@ -304,13 +328,13 @@ describe "Avram::SaveOperation" do
         user = user.as(User)
         user.id.should eq(existing_user.id)
         user.name.should eq("Rich")
-        user.nickname.should be_nil
+        user.nickname.should eq("Dolly")
         user.age.should eq(30)
         user.joined_at.should eq(joined_at)
       end
 
       it "creates a new record if one doesn't exist" do
-        user_with_different_nickname = UserFactory.create &.name("Rich").nickname(nil).age(20)
+        existing_user = UserFactory.create &.name("Rich").nickname(nil).age(20)
         joined_at = Time.utc.at_beginning_of_second
 
         user = UpsertUserOperation.upsert!(
@@ -322,11 +346,11 @@ describe "Avram::SaveOperation" do
 
         UserQuery.new.select_count.should eq(2)
         # Keep existing user the same
-        user_with_different_nickname.age.should eq(20)
-        user_with_different_nickname.nickname.should eq(nil)
+        existing_user.age.should eq(20)
+        existing_user.nickname.should eq(nil)
 
         user = user.as(User)
-        user.id.should_not eq(user_with_different_nickname.id)
+        user.id.should_not eq(existing_user.id)
         user.name.should eq("Rich")
         user.nickname.should eq("R.")
         user.age.should eq(30)
@@ -334,10 +358,18 @@ describe "Avram::SaveOperation" do
       end
 
       it "allows updating nilable fields to nil" do
-        UserFactory.create(&.name("test").total_score(100))
-        user = UpsertUserOperation.upsert!(name: "test", total_score: nil)
-        user.name.should eq("test")
-        user.total_score.should eq(nil)
+        user = UserFactory.create &.name("test").nickname("sample").total_score(100)
+
+        saved_user = UpsertUserOperation.upsert!(
+          name: user.name,
+          nickname: user.nickname,
+          total_score: nil,
+          age: user.age,
+          joined_at: user.joined_at
+        )
+
+        saved_user.name.should eq("test")
+        saved_user.total_score.should be_nil
       end
 
       it "raises if the record is invalid" do
