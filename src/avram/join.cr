@@ -79,4 +79,60 @@ module Avram::Join
       "FULL"
     end
   end
+
+  class Raw
+    @clause : String
+
+    def self.new(statement : String, *bind_vars)
+      new(statement, args: bind_vars.to_a)
+    end
+
+    def initialize(statement : String, *, args bind_vars : Array)
+      ensure_enough_bind_variables_for!(statement, bind_vars)
+      @clause = build_clause(statement, bind_vars)
+    end
+
+    def prepare(placeholder_supplier : Proc(String)) : String
+      @clause
+    end
+
+    def to_sql : String
+      @clause
+    end
+
+    def clone : self
+      self
+    end
+
+    private def ensure_enough_bind_variables_for!(statement, bind_vars)
+      bindings = statement.chars.select(&.== '?')
+      if bindings.size != bind_vars.size
+        raise "wrong number of bind variables (#{bind_vars.size} for #{bindings.size}) in #{statement}"
+      end
+    end
+
+    private def build_clause(statement, bind_vars)
+      bind_vars.each do |arg|
+        encoded_arg = prepare_for_execution(arg)
+        statement = statement.sub('?', encoded_arg)
+      end
+      statement
+    end
+
+    private def prepare_for_execution(value)
+      if value.is_a?(Array)
+        "'#{PQ::Param.encode_array(value)}'"
+      else
+        escape_if_needed(value)
+      end
+    end
+
+    private def escape_if_needed(value)
+      if value.is_a?(String) || value.is_a?(Slice(UInt8))
+        PG::EscapeHelper.escape_literal(value)
+      else
+        value
+      end
+    end
+  end
 end
