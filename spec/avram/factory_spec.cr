@@ -1,5 +1,24 @@
 require "../spec_helper"
 
+class TempComment < BaseModel
+  skip_default_columns
+  table :comments do
+    primary_key custom_id : Int64
+    timestamps
+    column body : String
+    belongs_to post : Post
+  end
+end
+
+class TempCommentFactory < Avram::Factory
+  belongs_to post : PostFactory
+
+  def initialize
+    body("Test Comment")
+    create_post(&.title("Test Post"))
+  end
+end
+
 describe Avram::Factory do
   it "can create a model without additional columns" do
     PlainModelFactory.create.id.should_not be_nil
@@ -112,6 +131,23 @@ describe Avram::Factory do
 
       line_item = LineItemFactory.create &.with_scan
       line_item.scans_count.should eq 1
+    end
+  end
+
+  describe "belongs_to" do
+    it "creates an associated record" do
+      factory = TempCommentFactory.new
+      factory.body("a comment")
+      comment = factory.create
+      comment.body.should eq("a comment")
+      comment.post.title.should eq("Test Post")
+    end
+    it "allows overriding the association" do
+      post = PostFactory.create &.title("some title")
+      comment = TempCommentFactory.create &.post(post).body("some body")
+      comment.body.should eq("some body")
+      comment.post_id.should eq(post.id)
+      comment.post.title.should eq("some title")
     end
   end
 end
