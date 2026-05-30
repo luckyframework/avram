@@ -383,6 +383,27 @@ describe Avram::QueryBuilder do
       end
     end
   end
+
+  describe "#to_prepared_where_sql" do
+    it "returns the inlined predicate without the leading WHERE" do
+      query = new_query
+        .where(Avram::Where::Equal.new(:name, "Paul"))
+        .where(Avram::Where::GreaterThan.new(:age, "18"))
+      query.to_prepared_where_sql.should eq "name = 'Paul' AND age > '18'"
+    end
+
+    it "raises when there are no where conditions" do
+      expect_raises(Avram::InvalidQueryError) do
+        new_query.to_prepared_where_sql
+      end
+    end
+
+    it "does not mutate the query's placeholder numbering" do
+      query = new_query.where(Avram::Where::Equal.new(:name, "Paul"))
+      query.to_prepared_where_sql
+      query.statement.should eq "SELECT * FROM users WHERE name = $1"
+    end
+  end
 end
 
 private def new_query

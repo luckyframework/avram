@@ -26,14 +26,20 @@ class Avram::QueryBuilder
   # Prepares the SQL statement by combining the `args` and `statement`
   # in to a single `String`
   def to_prepared_sql : String
+    inline_prepared_args(statement)
+  end
+
+  # Bare WHERE predicate (no "WHERE " prefix), values inlined as literals since
+  # DDL index predicates can't use bind params. Raises if there are no conditions.
+  def to_prepared_where_sql : String
+    predicate = clone.where_predicate_sql!
+    raise Avram::InvalidQueryError.new("Cannot build a partial index predicate: the query has no `where` conditions") unless predicate
+    inline_prepared_args(predicate)
+  end
+
+  private def inline_prepared_args(sql : String) : String
     params = args.map { |arg| "'#{String.new(PQ::Param.encode(arg).slice)}'" }
-    i = 0
-    sql = statement
-    sql.scan(/\$\d+/) do |match|
-      sql = sql.sub(match[0], params[i])
-      i += 1
-    end
-    sql
+    sql.gsub(/\$\d+/) { |placeholder| params[placeholder.lchop('$').to_i - 1] }
   end
 
   # Merges the wheres, joins, and orders from the passed in query
@@ -362,21 +368,26 @@ class Avram::QueryBuilder
   end
 
   private def wheres_sql : String?
-    if !wheres.empty?
-      statements = wheres.flat_map do |sql_clause|
-        clause = sql_clause.prepare(->next_prepared_statement_placeholder)
+    predicate = where_predicate_sql!
+    "WHERE #{predicate}" if predicate
+  end
 
-        [clause, sql_clause.conjunction.to_s]
-      end
+  # Mutates the placeholder counter (like `statement!`) — call it on a clone.
+  protected def where_predicate_sql! : String?
+    return if wheres.empty?
 
-      # Remove blank conjunctions
-      statements.reject!(&.blank?)
+    statements = wheres.flat_map do |sql_clause|
+      clause = sql_clause.prepare(->next_prepared_statement_placeholder)
 
-      # Remove the last floating conjunction
-      statements.pop
-
-      "WHERE #{statements.join(" ")}"
+      [clause, sql_clause.conjunction.to_s]
     end
+
+    statements.reject!(&.blank?)
+
+    # Last element is a dangling conjunction the flat_map appends after each clause
+    statements.pop
+
+    statements.join(" ")
   end
 
   def wheres : Array(Avram::Where::Condition)

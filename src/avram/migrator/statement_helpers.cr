@@ -36,8 +36,8 @@ module Avram::Migrator::StatementHelpers
     prepared_statements << DropForeignKeyStatement.new(from, references, column).build
   end
 
-  def create_index(table_name : TableName, columns : Columns, unique = false, concurrently = false, using = :btree, name : String? | Symbol? = nil)
-    prepared_statements << CreateIndexStatement.new(table_name, columns, using, unique, concurrently, name).build
+  def create_index(table_name : TableName, columns : Columns, unique = false, concurrently = false, using = :btree, name : String? | Symbol? = nil, where : Avram::Queryable? = nil, where_raw : String? = nil)
+    prepared_statements << CreateIndexStatement.new(table_name, columns, using, unique, concurrently, name, where: index_where_predicate(where, where_raw)).build
   end
 
   def drop_index(table_name : TableName, columns : Columns? = nil, if_exists = false, on_delete = :do_nothing, name : String? | Symbol? = nil)
