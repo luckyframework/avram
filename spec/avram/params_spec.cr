@@ -144,6 +144,18 @@ describe Avram::Params do
 
       params.nested("reaction").should eq({"body" => "Hello", "reaction" => "not json"})
     end
+
+    it "extracts values from keys prefixed with 'key:', as submitted by a URL-encoded/multipart HTML form" do
+      params = Avram::Params.new({"body" => "Hello", "reaction:emoji" => "👍"})
+
+      params.nested("reaction").should eq({"emoji" => "👍"})
+    end
+
+    it "prefers a JSON object string value over form-encoded 'key:' keys" do
+      params = Avram::Params.new({"reaction" => %({"emoji":"👍"}), "reaction:emoji" => "😂"})
+
+      params.nested("reaction").should eq({"emoji" => "👍"})
+    end
   end
 
   describe "#many_nested" do
@@ -169,6 +181,40 @@ describe Avram::Params do
       params = Avram::Params.new({"name" => "Customer One", "customers" => %(["not an object"])})
 
       params.many_nested("customers").should eq([{"name" => "Customer One", "customers" => %(["not an object"])}])
+    end
+
+    it "groups keys matching 'key[index]:rest', as submitted by a URL-encoded/multipart HTML form" do
+      params = Avram::Params.new({
+        "name"              => "Employee One",
+        "customers[0]:name" => "Customer One",
+        "customers[0]:id"   => "1",
+        "customers[1]:name" => "Customer Two",
+      })
+
+      params.many_nested("customers").should eq([
+        {"name" => "Customer One", "id" => "1"},
+        {"name" => "Customer Two"},
+      ])
+    end
+
+    it "keeps further nested form-encoded keys intact within each grouped item" do
+      params = Avram::Params.new({
+        "customers[0]:name"          => "Customer One",
+        "customers[0]:orders[0]:sku" => "ABC",
+      })
+
+      params.many_nested("customers").should eq([
+        {"name" => "Customer One", "orders[0]:sku" => "ABC"},
+      ])
+    end
+
+    it "prefers a JSON array string value over form-encoded 'key[index]:' keys" do
+      params = Avram::Params.new({
+        "customers"         => [{"name" => "Customer One"}].to_json,
+        "customers[0]:name" => "Customer Two",
+      })
+
+      params.many_nested("customers").should eq([{"name" => "Customer One"}])
     end
   end
 end

@@ -31,10 +31,13 @@ module Avram::NestedSaveOperation
   # `has_many` (and `has_one`) can be nested arbitrarily deep: a
   # `SaveOperation` declared as a `has_many` child may itself declare its
   # own `has_one`/`has_many` associations. Any nested value in each item's
-  # hash is JSON-encoded as a plain `String` (mirroring how a real params
-  # implementation, e.g. `Lucky::Params`, stringifies non-scalar JSON
-  # values), and `Avram::Params` transparently decodes it again when the
-  # grandchild operation reads its own params.
+  # hash is represented under its own key -- either JSON-encoded as a
+  # plain `String` (for a JSON request) or as a set of keys prefixed with
+  # `"{key}:"`/`"{key}[index]:"` (for a URL-encoded/multipart HTML form)
+  # -- mirroring how a real params implementation, e.g. `Lucky::Params`,
+  # represents nested values in each case, and `Avram::Params`
+  # transparently decodes it again when the grandchild operation reads
+  # its own params.
   macro has_many(type_declaration, allow_destroy = false)
     {% name = type_declaration.var %}
     {% type = type_declaration.type.resolve %}

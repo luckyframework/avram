@@ -6,9 +6,11 @@
 # `Avram::NestedSaveOperation`).
 #
 # Values passed to `many_nested_data` may themselves include a key whose
-# value is a JSON-encoded object/array `String`, mirroring how a real
-# params implementation (e.g. `Lucky::Params`) stringifies nested values
-# -- this lets a nested `has_many` `SaveOperation` declare its own further
+# value is either a JSON-encoded object/array `String`, or a set of keys
+# prefixed with `"{key}:"`/`"{key}[index]:"`, mirroring how a real params
+# implementation (e.g. `Lucky::Params`) represents nested values for a
+# JSON request or a URL-encoded/multipart HTML form, respectively -- this
+# lets a nested `has_many` `SaveOperation` declare its own further
 # `has_one`/`has_many` nesting (see `Avram::Params#nested`/`#many_nested`).
 class FakeDeeplyNestedParams
   include Avram::Paramable
