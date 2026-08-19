@@ -100,7 +100,7 @@ describe "rendering nested SaveOperations" do
   context "has_many" do
     it "renders each submitted item under its own indexed key" do
       params = Avram::Params.new({
-        "title"             => "My Post",
+        "title"            => "My Post",
         "comments[0]:body" => "First",
         "comments[1]:body" => "Second",
       })
@@ -207,12 +207,12 @@ describe "rendering nested SaveOperations" do
   context "has_many nested inside has_many" do
     it "renders each grandchild item under a fully combined indexed key" do
       params = Avram::Params.new({
-        "name"                            => "The Manager",
-        "employees[0]:name"               => "Employee One",
-        "employees[0]:customers[0]:name"  => "Customer One",
-        "employees[0]:customers[1]:name"  => "Customer Two",
-        "employees[1]:name"               => "Employee Two",
-        "employees[1]:customers[0]:name"  => "Customer Three",
+        "name"                           => "The Manager",
+        "employees[0]:name"              => "Employee One",
+        "employees[0]:customers[0]:name" => "Customer One",
+        "employees[0]:customers[1]:name" => "Customer Two",
+        "employees[1]:name"              => "Employee Two",
+        "employees[1]:customers[0]:name" => "Customer Three",
       })
       operation = SaveManagerWithCustomers.new(params)
       employees = operation.employees
