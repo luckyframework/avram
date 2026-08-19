@@ -27,6 +27,14 @@ module Avram::NestedSaveOperation
   # the same database transaction as the parent. If any nested operation
   # fails, the entire transaction -- parent included -- is rolled back and
   # an error is added to the parent under `:{name}`.
+  #
+  # `has_many` (and `has_one`) can be nested arbitrarily deep: a
+  # `SaveOperation` declared as a `has_many` child may itself declare its
+  # own `has_one`/`has_many` associations. Any nested value in each item's
+  # hash is JSON-encoded as a plain `String` (mirroring how a real params
+  # implementation, e.g. `Lucky::Params`, stringifies non-scalar JSON
+  # values), and `Avram::Params` transparently decodes it again when the
+  # grandchild operation reads its own params.
   macro has_many(type_declaration, allow_destroy = false)
     {% name = type_declaration.var %}
     {% type = type_declaration.type.resolve %}
@@ -125,6 +133,36 @@ module Avram::NestedSaveOperation
     end
   end
 
+  # Declares a nested `SaveOperation` for a `has_one` association.
+  #
+  # This lets you save/update an entire tree of records (e.g. a `Business`
+  # along with its `EmailAddress`) through a single parent `SaveOperation`
+  # in a type-safe way.
+  #
+  # ```
+  # class SaveBusiness < Business::SaveOperation
+  #   class SaveEmailAddress < EmailAddress::SaveOperation
+  #     permit_columns address
+  #   end
+  #
+  #   permit_columns name
+  #   has_one email_address : SaveEmailAddress
+  # end
+  # ```
+  #
+  # The child operation is instantiated with the *same* params object given
+  # to the parent, and reads its own attributes by its own param key (the
+  # underlying model's name), so it doesn't matter what `{name}` is used
+  # for the `has_one` declaration itself.
+  #
+  # The nested operation is always validated and saved inside the same
+  # database transaction as the parent. If it fails, the entire
+  # transaction -- parent included -- is rolled back and an error is added
+  # to the parent under `:{name}`.
+  #
+  # `has_one` (and `has_many`) can be nested arbitrarily deep: a
+  # `SaveOperation` declared as a `has_one` child may itself declare its
+  # own `has_one`/`has_many` associations.
   macro has_one(type_declaration)
     {% name = type_declaration.var %}
     {% type = type_declaration.type.resolve %}
