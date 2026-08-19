@@ -40,8 +40,16 @@ class Avram::Params
     many_nested(key)
   end
 
+  # `Avram::Params` stores a single, flat record, so there's no real
+  # concept of "many" nested records here. To avoid building a phantom,
+  # empty nested record when no params were given at all (e.g. the
+  # default `Avram::Params.new`), this returns an empty `Array` unless
+  # there is actual data present, in which case it's returned as a single
+  # item for convenience (e.g. when manually testing a `has_many` nested
+  # `SaveOperation` with a single record's worth of params).
   def many_nested(key : String) : Array(Hash(String, String))
-    [nested(key)]
+    data = nested(key)
+    data.empty? ? [] of Hash(String, String) : [data]
   end
 
   def get?(key : String)
