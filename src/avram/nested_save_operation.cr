@@ -470,7 +470,7 @@ module Avram::NestedSaveOperation
   # :nodoc:
   #
   # Computes the fully-qualified key a `has_many` nested child operation
-  # (at position `index` within its own array) own attributes should be
+  # (at position `index` within its own array)'s own attributes should be
   # rendered/extracted under (see `Avram::ParamKeyOverride#param_key`),
   # along with the prefix any of the child's own nested (`has_one`/
   # `has_many`) operations should build their own key on top of. Must be
