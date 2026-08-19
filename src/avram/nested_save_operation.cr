@@ -38,6 +38,33 @@ module Avram::NestedSaveOperation
   # represents nested values in each case, and `Avram::Params`
   # transparently decodes it again when the grandchild operation reads
   # its own params.
+  #
+  # ## Rendering
+  #
+  # Each item returned by `{name}` (e.g. `op.comments`) has its
+  # `Avram::ParamKeyOverride#param_key` set to `"{name}[{index}]"` (nested
+  # under whatever prefix, if any, the parent operation itself was given),
+  # so the Lucky form helpers (`text_input`, etc.) render the exact
+  # `name=`/`id=` that `Avram::Params`/`Lucky::Params` already knows how to
+  # decode back into item `{index}`'s own hash on submission -- so this
+  # "just works":
+  #
+  # ```
+  # op.comments.each do |comment|
+  #   nested_id_input(comment) # keeps updates on resubmission from creating duplicates
+  #   text_input(comment.body)
+  # end
+  # ```
+  #
+  # If there are no submitted (or re-displayed) params for `{name}` *and*
+  # the parent operation already has a persisted record (e.g. rendering a
+  # fresh edit form), `{name}` returns one nested operation per already-
+  # associated record, pre-filled from it -- mirroring what `has_one`
+  # already does for its single child. This means `{name}` (e.g.
+  # `op.comments`) on a persisted operation with no submitted params
+  # returns the parent's existing associated records wrapped in their own
+  # operations, **not** an empty `Array` as it did before this rendering
+  # support existed.
   macro has_many(type_declaration, allow_destroy = false)
     {% name = type_declaration.var %}
     {% type = type_declaration.type.resolve %}
@@ -86,18 +113,34 @@ module Avram::NestedSaveOperation
     end
 
     def {{ name }} : Array({{ type }})
-      @_{{ name }} ||= params.many_nested?({{ name.stringify }}).compact_map do |nested_params|
-        {% if allow_destroy %}
-          next nil if nested_marked_for_destroy?(nested_params)
-        {% end %}
+      @_{{ name }} ||= begin
+        nested_items = params.many_nested?({{ name.stringify }})
 
-        existing = {{ name }}_existing_record_for(nested_params)
-
-        if existing
-          {{ type }}.new(existing, Avram::Params.new(nested_params))
+        nested_operations = if nested_items.empty? && !new_record?
+          {{ name }}_existing_records.map do |existing_record|
+            {{ type }}.new(existing_record)
+          end
         else
-          {{ type }}.new(Avram::Params.new(nested_params))
+          nested_items.compact_map do |nested_params|
+            {% if allow_destroy %}
+              next nil if nested_marked_for_destroy?(nested_params)
+            {% end %}
+
+            existing = {{ name }}_existing_record_for(nested_params)
+
+            if existing
+              {{ type }}.new(existing, Avram::Params.new(nested_params))
+            else
+              {{ type }}.new(Avram::Params.new(nested_params))
+            end
+          end
         end
+
+        nested_operations.each_with_index do |nested_operation, index|
+          assign_has_many_nested_param_key(nested_operation, {{ name.stringify }}, index)
+        end
+
+        nested_operations
       end
     end
 
@@ -166,6 +209,18 @@ module Avram::NestedSaveOperation
   # `has_one` (and `has_many`) can be nested arbitrarily deep: a
   # `SaveOperation` declared as a `has_one` child may itself declare its
   # own `has_one`/`has_many` associations.
+  #
+  # ## Rendering
+  #
+  # `{name}` (e.g. `op.email_address`) has its
+  # `Avram::ParamKeyOverride#param_key` set so the Lucky form helpers
+  # (`text_input`, etc.) render the exact `name=`/`id=` that
+  # `Avram::Params`/`Lucky::Params` already knows how to decode back on
+  # submission, at any nesting depth -- so this "just works":
+  #
+  # ```
+  # text_input(op.email_address.address)
+  # ```
   macro has_one(type_declaration)
     {% name = type_declaration.var %}
     {% type = type_declaration.type.resolve %}
@@ -202,6 +257,8 @@ module Avram::NestedSaveOperation
         {{ type }}.new(params)
       else
         {{ type }}.new(record.not_nil!.{{ assoc[:assoc_name].id }}!, params)
+      end.tap do |nested_operation|
+        assign_has_one_nested_param_key(nested_operation, {{ type }}.param_key)
       end
     end
 
@@ -232,5 +289,46 @@ module Avram::NestedSaveOperation
   private def nested_marked_for_destroy?(nested_params : Hash(String, String)) : Bool
     value = nested_params["_destroy"]?
     !value.nil? && %w[true 1].includes?(value)
+  end
+
+  # :nodoc:
+  #
+  # Computes and assigns the fully-qualified key a `has_one` nested child
+  # operation's own attributes should be rendered/extracted under (see
+  # `Avram::ParamKeyOverride#param_key`), along with the prefix any of the
+  # child's own nested (`has_one`/`has_many`) operations should build
+  # their own key on top of.
+  #
+  # Passing through a `has_one` boundary carries the inherited prefix
+  # through *unchanged*, only combining it with the child's own
+  # (model-derived) `child_param_key` to build the child's own key when a
+  # prefix is actually present -- this mirrors how `has_one` already
+  # shares the exact same `Avram::Paramable` with its child (see
+  # `#has_one` above), rather than wrapping it under its own key.
+  private def assign_has_one_nested_param_key(nested_operation, child_param_key : String) : Nil
+    prefix = nested_param_key_prefix
+    nested_operation.param_key = prefix.presence ? "#{prefix}:#{child_param_key}" : child_param_key
+    nested_operation.nested_param_key_prefix = prefix
+  end
+
+  # :nodoc:
+  #
+  # Computes and assigns the fully-qualified key a `has_many` nested child
+  # operation (at position `index` within its own array) own attributes
+  # should be rendered/extracted under (see
+  # `Avram::ParamKeyOverride#param_key`), along with the prefix any of the
+  # child's own nested (`has_one`/`has_many`) operations should build
+  # their own key on top of.
+  #
+  # Passing through a `has_many` boundary appends `"{association
+  # name}[{index}]"` to whatever prefix was inherited, and that combined
+  # value becomes both the child's own key and the prefix its own nested
+  # operations build on -- this mirrors the `"{key}[index]:"` convention
+  # `Avram::Params#many_nested` already parses (see `#has_many` above).
+  private def assign_has_many_nested_param_key(nested_operation, association_name : String, index : Int32) : Nil
+    prefix = nested_param_key_prefix
+    key = prefix.presence ? "#{prefix}:#{association_name}[#{index}]" : "#{association_name}[#{index}]"
+    nested_operation.param_key = key
+    nested_operation.nested_param_key_prefix = key
   end
 end
