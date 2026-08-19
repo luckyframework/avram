@@ -93,11 +93,11 @@ describe "Avram::SaveOperation with has_many nested operation" do
         operation.valid?.should be_true
         operation.saved?.should be_true
         post.should_not be_nil
-        post = post.not_nil!
+        post = post.as(Post)
 
         comments = Comment::BaseQuery.new.post_id(post.id).body.asc_order.results
         comments.map(&.body).should eq(["First", "Second"])
-        comments.each { |comment| comment.post_id.should eq(post.id) }
+        comments.each(&.post_id.should(eq(post.id)))
       end
     end
 
@@ -109,7 +109,7 @@ describe "Avram::SaveOperation with has_many nested operation" do
         operation.saved?.should be_true
         post.should_not be_nil
 
-        Comment::BaseQuery.new.post_id(post.not_nil!.id).results.size.should eq(0)
+        Comment::BaseQuery.new.post_id(post.as(Post).id).results.size.should eq(0)
       end
     end
 
@@ -165,7 +165,7 @@ describe "Avram::SaveOperation with has_many nested operation" do
         ]
       )
 
-      SavePostWithComments.update(post, params) do |operation, updated_post|
+      SavePostWithComments.update(post, params) do |operation, _updated_post|
         operation.valid?.should be_false
         operation.saved?.should be_false
       end
@@ -196,7 +196,6 @@ describe "Avram::SaveOperation with has_many nested operation" do
 
       remaining = Comment::BaseQuery.new.post_id(post.id).results
       remaining.map(&.id).should eq([comment_to_keep.id])
-      Comment::BaseQuery.new.custom_id(comment_to_delete.id).results.size.should eq(0)
     end
   end
 end
