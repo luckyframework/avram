@@ -65,6 +65,84 @@ module Avram::NestedSaveOperation
   # returns the parent's existing associated records wrapped in their own
   # operations, **not** an empty `Array` as it did before this rendering
   # support existed.
+  #
+  # ## Validations
+  #
+  # Each nested operation validates itself using its own normal rules
+  # (`permit_columns`, `default_validations`, `before_save`, etc.) --
+  # nesting it under a `has_many` doesn't change how it validates on its
+  # own:
+  #
+  # ```
+  # class SavePost < Post::SaveOperation
+  #   class SaveComment < Comment::SaveOperation
+  #     permit_columns body
+  #
+  #     default_validations do
+  #       validate_required body
+  #     end
+  #   end
+  #
+  #   permit_columns title
+  #   has_many comments : SaveComment
+  # end
+  # ```
+  #
+  # If *any* comment fails validation (e.g. a blank `body`), the parent
+  # `operation.valid?` is `false` and *nothing* is saved -- not the post,
+  # and not any of the other comments, even ones that are individually
+  # valid. An error is added to the parent under `:comments`, while each
+  # comment's own errors remain available for re-rendering the form:
+  #
+  # ```
+  # operation.valid?                    # => false
+  # operation.errors[:comments]         # => ["failed"]
+  # operation.comments.last.body.errors # => ["is required"]
+  # ```
+  #
+  # ## JSON requests
+  #
+  # `params.many_nested?` also understands a JSON array of hashes
+  # submitted under the `comments` key, so a JSON API client can send the
+  # same data an HTML form would, without any special encoding:
+  #
+  # ```json
+  # {
+  #   "title": "My Post",
+  #   "comments": [
+  #     { "body": "First" },
+  #     { "id": "42", "body": "Updated existing comment" }
+  #   ]
+  # }
+  # ```
+  #
+  # This is equivalent to submitting `"comments[0]:body"` and
+  # `"comments[1]:id"`/`"comments[1]:body"` as separate form fields (see
+  # Rendering, above) -- both are decoded into the same nested params.
+  #
+  # ## Create vs. update
+  #
+  # Whether an item in `{name}` creates a brand-new record or updates an
+  # existing one is decided *per item*, based on whether its hash includes
+  # an `id` that matches one of the parent's already-associated records --
+  # not by whether `create` or `update` is called on the *parent*
+  # operation:
+  #
+  # ```
+  # # Creates the post and every comment in `comments` as new records.
+  # SavePost.create(params) do |operation, post|
+  #   # ...
+  # end
+  #
+  # # Updates `existing_post`. Any comment hash whose `id` matches one of
+  # # `existing_post`'s current comments updates that comment in place;
+  # # any comment hash with no `id` (or an `id` that doesn't match) creates
+  # # a new comment instead. With `allow_destroy: true`, a comment hash
+  # # with a truthy `_destroy` is deleted instead of saved.
+  # SavePost.update(existing_post, params) do |operation, post|
+  #   # ...
+  # end
+  # ```
   macro has_many(type_declaration, allow_destroy = false)
     {% name = type_declaration.var %}
     {% type = type_declaration.type.resolve %}
@@ -222,6 +300,77 @@ module Avram::NestedSaveOperation
   #
   # ```
   # text_input(op.email_address.address)
+  # ```
+  #
+  # ## Validations
+  #
+  # The nested operation validates itself using its own normal rules
+  # (`permit_columns`, `default_validations`, `before_save`, etc.) --
+  # nesting it under a `has_one` doesn't change how it validates on its
+  # own:
+  #
+  # ```
+  # class SaveBusiness < Business::SaveOperation
+  #   class SaveEmailAddress < EmailAddress::SaveOperation
+  #     permit_columns address
+  #
+  #     default_validations do
+  #       validate_required address
+  #     end
+  #   end
+  #
+  #   permit_columns name
+  #   has_one email_address : SaveEmailAddress
+  # end
+  # ```
+  #
+  # If `email_address` fails validation (e.g. a blank `address`), the
+  # parent `operation.valid?` is `false` and *nothing* is saved -- not the
+  # business, and not the email address. An error is added to the parent
+  # under `:email_address`, while the child's own errors remain available
+  # for re-rendering the form:
+  #
+  # ```
+  # operation.valid?                       # => false
+  # operation.errors[:email_address]       # => ["failed"]
+  # operation.email_address.address.errors # => ["is required"]
+  # ```
+  #
+  # ## JSON requests
+  #
+  # Because the child operation reads from the *same* params object as
+  # the parent, a JSON API client simply includes the child's own keys
+  # (its param key, by default the underlying model's name) alongside the
+  # parent's:
+  #
+  # ```json
+  # {
+  #   "name": "Acme, Inc.",
+  #   "email_address": { "address": "hello@acme.example" }
+  # }
+  # ```
+  #
+  # This is equivalent to submitting `"email_address:address"` as a
+  # separate form field (see Rendering, above) -- both are decoded into
+  # the same nested params.
+  #
+  # ## Create vs. update
+  #
+  # Unlike `has_many`, there's no `id` to match against: `has_one` always
+  # operates on the single, already-associated record (if any).
+  #
+  # ```
+  # # Creates the business and its email address as new records.
+  # SaveBusiness.create(params) do |operation, business|
+  #   # ...
+  # end
+  #
+  # # Updates `existing_business` and, if it already has an associated
+  # # email address, updates that record in place; otherwise a new email
+  # # address is created and associated with it.
+  # SaveBusiness.update(existing_business, params) do |operation, business|
+  #   # ...
+  # end
   # ```
   macro has_one(type_declaration)
     {% name = type_declaration.var %}
