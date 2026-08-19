@@ -148,4 +148,34 @@ describe "Avram::SaveOperation with has_many nested operation" do
       remaining.map(&.id).should eq([comment_to_keep.id])
     end
   end
+
+  context "with a client-side added row (a comments_template clone, per Avram::NestedSaveOperation)" do
+    it "creates a new record once the template's placeholder token is substituted with a fresh, non-sequential index" do
+      post = PostFactory.create &.title("Original")
+      existing_comment = CommentFactory.create &.post_id(post.id).body("Existing")
+
+      # Simulates cloning `operation.comments_template` client-side and
+      # substituting its placeholder token (`__NEW_COMMENTS__` by
+      # default) for a fresh index -- `Avram::Params#many_nested` only
+      # sorts indexes numerically, it doesn't require them to be
+      # sequential, contiguous, or start at `0`, so an arbitrary index
+      # like `42` (never used by an existing row) works just as well as
+      # `1` would.
+      params = Avram::Params.new({
+        "title"             => "Updated",
+        "comments[0]:id"    => existing_comment.id.to_s,
+        "comments[0]:body"  => "Existing",
+        "comments[42]:body" => "Brand new from a client-side add-row",
+      })
+
+      SavePostWithComments.update(post, params) do |operation, _updated_post|
+        operation.valid?.should be_true
+        operation.saved?.should be_true
+      end
+
+      comments = Comment::BaseQuery.new.post_id(post.id).body.asc_order.results
+      comments.map(&.body).should eq(["Brand new from a client-side add-row", "Existing"])
+      comments.map(&.id).should contain(existing_comment.id)
+    end
+  end
 end

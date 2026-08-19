@@ -165,6 +165,62 @@ describe "rendering nested SaveOperations" do
     end
   end
 
+  context "has_many template (client-side add-row support)" do
+    it "renders a blank item keyed under a placeholder token by default" do
+      operation = SavePostWithComments.new(Avram::Params.new)
+
+      html = view(&.text_input(operation.comments_template.body))
+      html.should contain %(name="comments[__NEW_COMMENTS__]:body")
+      html.should contain %(id="comments___NEW_COMMENTS_body")
+      html.should contain %(value="")
+    end
+
+    it "accepts a custom token" do
+      operation = SavePostWithComments.new(Avram::Params.new)
+
+      html = view(&.text_input(operation.comments_template("NEW_TOKEN").body))
+      html.should contain %(name="comments[NEW_TOKEN]:body")
+      html.should contain %(id="comments_NEW_TOKEN_body")
+      html.should contain %(value="")
+    end
+
+    it "renders a blank hidden nested_id_input, same as any other brand-new item" do
+      operation = SavePostWithComments.new(Avram::Params.new)
+
+      html = view(&.nested_id_input(operation.comments_template))
+      html.should contain %(type="hidden")
+      html.should contain %(name="comments[__NEW_COMMENTS__]:id")
+      html.should contain %(value="")
+    end
+
+    it "is always blank and independent of submitted/pre-filled comments" do
+      post = PostFactory.create &.title("Original")
+      CommentFactory.create &.post_id(post.id).body("Existing")
+
+      operation = SavePostWithComments.new(post)
+      operation.comments.size.should eq(1) # pre-filled from the existing record
+
+      html = view(&.text_input(operation.comments_template.body))
+      html.should contain %(name="comments[__NEW_COMMENTS__]:body")
+      html.should contain %(value="")
+    end
+
+    it "returns a brand-new instance (not memoized) on every call" do
+      operation = SavePostWithComments.new(Avram::Params.new)
+
+      operation.comments_template.should_not be(operation.comments_template)
+    end
+
+    it "combines the token with a nested has_one's own key, same as a real item" do
+      operation = SavePostWithReactedComments.new(Avram::Params.new)
+
+      html = view(&.text_input(operation.comments_template.reaction.emoji))
+      html.should contain %(name="comments[__NEW_COMMENTS__]:comment_reaction:emoji")
+      html.should contain %(id="comments___NEW_COMMENTS___comment_reaction_emoji")
+      html.should contain %(value="")
+    end
+  end
+
   context "has_one nested inside has_many" do
     it "renders each item's own nested field under a combined key" do
       params = Avram::Params.new({
