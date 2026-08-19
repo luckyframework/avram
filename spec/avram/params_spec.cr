@@ -197,6 +197,20 @@ describe Avram::Params do
       ])
     end
 
+    it "orders grouped items numerically by index regardless of submission order" do
+      params = Avram::Params.new({
+        "customers[10]:name" => "Customer Eleven",
+        "customers[2]:name"  => "Customer Three",
+        "customers[1]:name"  => "Customer Two",
+      })
+
+      params.many_nested("customers").should eq([
+        {"name" => "Customer Two"},
+        {"name" => "Customer Three"},
+        {"name" => "Customer Eleven"},
+      ])
+    end
+
     it "keeps further nested form-encoded keys intact within each grouped item" do
       params = Avram::Params.new({
         "customers[0]:name"          => "Customer One",

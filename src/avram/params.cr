@@ -163,21 +163,24 @@ class Avram::Params
   # Returns the `Array(Hash(String, String))` built from any keys in
   # `@hash` matching `"#{key}[<index>]:<rest>"` (e.g. given `key` of
   # `"customers"`, a key of `"customers[0]:name"` contributes `"name"` to
-  # the `Hash` for item `0`), grouped by `<index>`. This is the naming
+  # the `Hash` for item `0`), grouped by `<index>` and sorted numerically
+  # (so submission order doesn't affect the result). This is the naming
   # convention a URL-encoded/multipart HTML form (or `Lucky::Params`, see
   # `#many_nested_hash_params`) uses to submit a `has_many` nested
   # attribute value. Returns `nil` if no key matches.
   private def many_nested_array_from_form_keys(key : String) : Array(Hash(String, String))?
     matcher = /^#{Regex.escape(key)}\[(?<index>\d+)\]:(?<rest>.+)$/
-    grouped = Hash(String, Hash(String, String)).new { |hash, index| hash[index] = Hash(String, String).new }
+    grouped = Hash(Int32, Hash(String, String)).new { |hash, index| hash[index] = Hash(String, String).new }
 
     flat_string_params.each do |hash_key, value|
       hash_key.match(matcher).try do |match|
-        grouped[match["index"]][match["rest"]] = value
+        grouped[match["index"].to_i][match["rest"]] = value
       end
     end
 
-    grouped.values unless grouped.empty?
+    return if grouped.empty?
+
+    grouped.keys.sort!.map { |index| grouped[index] }
   end
 
   private def json_any_at(key : String) : JSON::Any?
