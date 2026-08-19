@@ -14,6 +14,8 @@ class Avram::Params
     Hash(String, Array(String)) |  \
     Hash(String, String)
 
+  @many_nested_form_key_matchers : Hash(String, Regex)?
+
   def initialize
     @hash = {} of String => String
   end
@@ -176,7 +178,7 @@ class Avram::Params
   # `#many_nested_hash_params`) uses to submit a `has_many` nested
   # attribute value. Returns `nil` if no key matches.
   private def many_nested_array_from_form_keys(key : String) : Array(Hash(String, String))?
-    matcher = /^#{Regex.escape(key)}\[(?<index>\d+)\]:(?<rest>.+)$/
+    matcher = many_nested_form_key_matcher(key)
     grouped = Hash(Int32, Hash(String, String)).new { |hash, index| hash[index] = Hash(String, String).new }
 
     flat_string_params.each do |hash_key, value|
@@ -188,6 +190,18 @@ class Avram::Params
     return if grouped.empty?
 
     grouped.keys.sort!.map { |index| grouped[index] }
+  end
+
+  # Memoizes the compiled `Regex` matcher for a given `has_many` `key`
+  # (see `#many_nested_array_from_form_keys`), since `key` is only known
+  # at runtime and re-compiling the same pattern on every nested item
+  # lookup for the same association would otherwise be wasteful.
+  private def many_nested_form_key_matcher(key : String) : Regex
+    many_nested_form_key_matchers[key] ||= /^#{Regex.escape(key)}\[(?<index>\d+)\]:(?<rest>.+)$/
+  end
+
+  private def many_nested_form_key_matchers : Hash(String, Regex)
+    @many_nested_form_key_matchers ||= {} of String => Regex
   end
 
   private def json_any_at(key : String) : JSON::Any?
