@@ -125,4 +125,50 @@ describe Avram::Params do
       end
     end
   end
+
+  describe "#nested" do
+    it "decodes a JSON object string value for the given key" do
+      params = Avram::Params.new({"reaction" => %({"emoji":"👍"})})
+
+      params.nested("reaction").should eq({"emoji" => "👍"})
+    end
+
+    it "falls back to returning all flat string values when the key is missing" do
+      params = Avram::Params.new({"body" => "Hello"})
+
+      params.nested("reaction").should eq({"body" => "Hello"})
+    end
+
+    it "falls back to returning all flat string values when the value isn't JSON" do
+      params = Avram::Params.new({"body" => "Hello", "reaction" => "not json"})
+
+      params.nested("reaction").should eq({"body" => "Hello", "reaction" => "not json"})
+    end
+  end
+
+  describe "#many_nested" do
+    it "decodes a JSON array of objects string value for the given key" do
+      params = Avram::Params.new({"customers" => [{"name" => "Customer One"}, {"name" => "Customer Two"}].to_json})
+
+      params.many_nested("customers").should eq([{"name" => "Customer One"}, {"name" => "Customer Two"}])
+    end
+
+    it "decodes a JSON empty array string value into an empty Array" do
+      params = Avram::Params.new({"customers" => "[]"})
+
+      params.many_nested("customers").should eq([] of Hash(String, String))
+    end
+
+    it "falls back to wrapping all flat string values in a single item when the key is missing" do
+      params = Avram::Params.new({"name" => "Customer One"})
+
+      params.many_nested("customers").should eq([{"name" => "Customer One"}])
+    end
+
+    it "falls back to wrapping all flat string values in a single item when the array contains a non-object element" do
+      params = Avram::Params.new({"name" => "Customer One", "customers" => %(["not an object"])})
+
+      params.many_nested("customers").should eq([{"name" => "Customer One", "customers" => %(["not an object"])}])
+    end
+  end
 end

@@ -24,67 +24,17 @@ private class SavePostWithDestroyableComments < Post::SaveOperation
   has_many comments : SaveComment, allow_destroy: true
 end
 
-private class FakeManyNestedParams
-  include Avram::Paramable
-  @post : Hash(String, String)
-  @comments : Array(Hash(String, String))
-
-  def initialize(@post = {} of String => String, @comments = [] of Hash(String, String))
-  end
-
-  def nested(key : String) : Hash(String, String)
-    nested?(key)
-  end
-
-  def nested?(key : String) : Hash(String, String)
-    key == "post" ? @post : ({} of String => String)
-  end
-
-  def nested_arrays(key : String) : Hash(String, Array(String))
-    nested_arrays?(key)
-  end
-
-  def nested_arrays?(key : String) : Hash(String, Array(String))
-    {} of String => Array(String)
-  end
-
-  def nested_file(key : String) : Hash(String, String)
-    nested(key)
-  end
-
-  def nested_file?(key : String) : Hash(String, String)
-    nested?(key)
-  end
-
-  def many_nested(key : String) : Array(Hash(String, String))
-    many_nested?(key)
-  end
-
-  def many_nested?(key : String) : Array(Hash(String, String))
-    key == "comments" ? @comments : ([] of Hash(String, String))
-  end
-
-  def get(key : String)
-    get?(key)
-  end
-
-  def get?(key : String)
-    nil
-  end
-
-  def get_all(key : String)
-    get_all?(key)
-  end
-
-  def get_all?(key : String)
-    nil
-  end
+private def fake_many_nested_params(post : Hash(String, String) = {} of String => String, comments : Array(Hash(String, String)) = [] of Hash(String, String)) : FakeDeeplyNestedParams
+  FakeDeeplyNestedParams.new(
+    nested_data: {"post" => post},
+    many_nested_data: {"comments" => comments}
+  )
 end
 
 describe "Avram::SaveOperation with has_many nested operation" do
   context "when creating" do
     it "saves the parent and all of the nested children" do
-      params = FakeManyNestedParams.new(
+      params = fake_many_nested_params(
         post: {"title" => "My Post"},
         comments: [{"body" => "First"}, {"body" => "Second"}]
       )
@@ -102,7 +52,7 @@ describe "Avram::SaveOperation with has_many nested operation" do
     end
 
     it "creates zero children when none are given" do
-      params = FakeManyNestedParams.new(post: {"title" => "No Comments"})
+      params = fake_many_nested_params(post: {"title" => "No Comments"})
 
       SavePostWithComments.create(params) do |operation, post|
         operation.valid?.should be_true
@@ -114,7 +64,7 @@ describe "Avram::SaveOperation with has_many nested operation" do
     end
 
     it "rolls back everything when a nested child is invalid" do
-      params = FakeManyNestedParams.new(
+      params = fake_many_nested_params(
         post: {"title" => "My Post"},
         comments: [{"body" => "First"}, {"body" => ""}]
       )
@@ -135,7 +85,7 @@ describe "Avram::SaveOperation with has_many nested operation" do
       post = PostFactory.create &.title("Original")
       existing_comment = CommentFactory.create &.post_id(post.id).body("Existing")
 
-      params = FakeManyNestedParams.new(
+      params = fake_many_nested_params(
         post: {"title" => "Updated"},
         comments: [
           {"id" => existing_comment.id.to_s, "body" => "Updated Existing"},
@@ -158,7 +108,7 @@ describe "Avram::SaveOperation with has_many nested operation" do
       post = PostFactory.create &.title("Original")
       existing_comment = CommentFactory.create &.post_id(post.id).body("Existing")
 
-      params = FakeManyNestedParams.new(
+      params = fake_many_nested_params(
         post: {"title" => "Updated"},
         comments: [
           {"id" => existing_comment.id.to_s, "body" => ""},
@@ -181,7 +131,7 @@ describe "Avram::SaveOperation with has_many nested operation" do
       comment_to_keep = CommentFactory.create &.post_id(post.id).body("Keep me")
       comment_to_delete = CommentFactory.create &.post_id(post.id).body("Delete me")
 
-      params = FakeManyNestedParams.new(
+      params = fake_many_nested_params(
         post: {"title" => "Original"},
         comments: [
           {"id" => comment_to_keep.id.to_s, "body" => "Keep me"},

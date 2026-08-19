@@ -114,11 +114,13 @@ class Avram::Params
 
   # Returns the `Array(Hash(String, String))` decoded from `@hash[key]`
   # if it's a `String` holding a JSON array of objects (e.g.
-  # `[{"body":"Hi"}]`), or `nil` if there's no value for `key`, or it
-  # isn't JSON-array-of-objects shaped.
+  # `[{"body":"Hi"}]`), or `nil` if there's no value for `key`, it isn't a
+  # JSON array, or any element of the array isn't a JSON object.
   private def many_nested_array_from_json(key : String) : Array(Hash(String, String))?
     json_any_at(key).try(&.as_a?).try do |json_array|
-      json_array.compact_map(&.as_h?).map { |json_hash| stringify_json_hash(json_hash) }
+      return nil unless json_array.all?(&.as_h?)
+
+      json_array.map { |json_item| stringify_json_hash(json_item.as_h) }
     end
   end
 
