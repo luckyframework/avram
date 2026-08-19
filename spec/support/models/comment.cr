@@ -7,6 +7,7 @@ class Comment < BaseModel
     timestamps
     column body : String, allow_blank: true
     belongs_to post : Post
+    has_one reaction : CommentReaction
   end
 end
 

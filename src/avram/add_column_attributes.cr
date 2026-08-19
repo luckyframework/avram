@@ -55,7 +55,8 @@ module Avram::AddColumnAttributes
           name: :{{ attribute[:name].id }},
           param: permitted_params["{{ attribute[:name] }}"]?,
           value: value,
-          param_key: self.class.param_key).tap do |attr|
+          param_key: self.class.param_key,
+          render_param_key: param_key).tap do |attr|
             attr.allow_blank = {{ attribute[:allow_blank] }}
         end
       end
