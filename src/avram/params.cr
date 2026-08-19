@@ -1,5 +1,12 @@
 require "json"
 
+# See `Avram::ParamKeyOverride#param_key` for how the *rendering* side
+# (Lucky's form helpers, e.g. `text_input`) computes the exact same
+# `"key"`, `"key:field"`, and `"key[index]:field"` conventions that
+# `#nested`/`#many_nested` below already know how to decode -- so a
+# nested (`has_one`/`has_many`) `SaveOperation`'s fields can be rendered
+# with `text_input`/etc. and parsed back out, at any nesting depth,
+# without any changes needed to the decoding logic here.
 class Avram::Params
   include Avram::Paramable
 

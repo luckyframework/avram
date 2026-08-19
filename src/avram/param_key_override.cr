@@ -22,8 +22,8 @@ module Avram::ParamKeyOverride
   #
   # This is an empty `String` by default (the root of a params tree has no
   # prefix). It's only ever set by `Avram::NestedSaveOperation`'s
-  # `has_one`/`has_many` macros, right after building a nested child
-  # operation, to whatever key was computed for that child -- see
+  # `has_one`/`has_many` macros, at construction time, to whatever key was
+  # computed for that nested child operation -- see
   # `Avram::NestedSaveOperation` for the exact propagation rules.
   #
   # :nodoc:
@@ -31,12 +31,20 @@ module Avram::ParamKeyOverride
 
   # :nodoc:
   #
-  # Overrides this instance's own `#param_key`. Only ever set by
-  # `Avram::NestedSaveOperation`'s `has_one`/`has_many` macros on a
-  # freshly-built nested child operation -- never set directly by
-  # application code.
-  def param_key=(key : String) : Nil
-    @_param_key = key
+  # Overrides this instance's own `#param_key`/`#nested_param_key_prefix`.
+  # Must run *before* any of this instance's attributes are built (see
+  # `Avram::Attribute#permitted`/`#render_param_key`), since each
+  # attribute's render key is computed and memoized the first time it's
+  # touched -- that's why `Avram::NeedyInitializerAndSaveMethods`'
+  # generated `initialize` methods call this before `set_attributes`.
+  #
+  # Only ever called by `Avram::NestedSaveOperation`'s `has_one`/
+  # `has_many` macros, via the `_nested_param_key`/
+  # `_nested_param_key_prefix` constructor arguments -- never set directly
+  # by application code.
+  def apply_nested_param_key_override(_nested_param_key : String?, _nested_param_key_prefix : String?) : Nil
+    @_param_key = _nested_param_key
+    self.nested_param_key_prefix = _nested_param_key_prefix unless _nested_param_key_prefix.nil?
   end
 
   # The key this operation instance's own attributes should be rendered

@@ -116,31 +116,33 @@ module Avram::NestedSaveOperation
       @_{{ name }} ||= begin
         nested_items = params.many_nested?({{ name.stringify }})
 
-        nested_operations = if nested_items.empty? && !new_record?
-          {{ name }}_existing_records.map do |existing_record|
-            {{ type }}.new(existing_record)
+        if nested_items.empty? && !new_record?
+          {{ name }}_existing_records.map_with_index do |existing_record, index|
+            nested_param_key, prefix = has_many_nested_param_key({{ name.stringify }}, index)
+            {{ type }}.new(existing_record, _nested_param_key: nested_param_key, _nested_param_key_prefix: prefix)
           end
         else
-          nested_items.compact_map do |nested_params|
+          results = [] of {{ type }}
+
+          nested_items.each_with_index do |nested_params, index|
             {% if allow_destroy %}
-              next nil if nested_marked_for_destroy?(nested_params)
+              next if nested_marked_for_destroy?(nested_params)
             {% end %}
 
+            nested_param_key, prefix = has_many_nested_param_key({{ name.stringify }}, index)
             existing = {{ name }}_existing_record_for(nested_params)
 
-            if existing
-              {{ type }}.new(existing, Avram::Params.new(nested_params))
+            nested_operation = if existing
+              {{ type }}.new(existing, Avram::Params.new(nested_params), _nested_param_key: nested_param_key, _nested_param_key_prefix: prefix)
             else
-              {{ type }}.new(Avram::Params.new(nested_params))
+              {{ type }}.new(Avram::Params.new(nested_params), _nested_param_key: nested_param_key, _nested_param_key_prefix: prefix)
             end
+
+            results << nested_operation
           end
-        end
 
-        nested_operations.each_with_index do |nested_operation, index|
-          assign_has_many_nested_param_key(nested_operation, {{ name.stringify }}, index)
+          results
         end
-
-        nested_operations
       end
     end
 
@@ -253,12 +255,14 @@ module Avram::NestedSaveOperation
     end
 
     def {{ name }}
-      @_{{ name }} ||= if new_record?
-        {{ type }}.new(params)
-      else
-        {{ type }}.new(record.not_nil!.{{ assoc[:assoc_name].id }}!, params)
-      end.tap do |nested_operation|
-        assign_has_one_nested_param_key(nested_operation, {{ type }}.param_key)
+      @_{{ name }} ||= begin
+        nested_param_key, prefix = has_one_nested_param_key({{ type }}.param_key)
+
+        if new_record?
+          {{ type }}.new(params, _nested_param_key: nested_param_key, _nested_param_key_prefix: prefix)
+        else
+          {{ type }}.new(record.not_nil!.{{ assoc[:assoc_name].id }}!, params, _nested_param_key: nested_param_key, _nested_param_key_prefix: prefix)
+        end
       end
     end
 
@@ -293,11 +297,14 @@ module Avram::NestedSaveOperation
 
   # :nodoc:
   #
-  # Computes and assigns the fully-qualified key a `has_one` nested child
-  # operation's own attributes should be rendered/extracted under (see
+  # Computes the fully-qualified key a `has_one` nested child operation's
+  # own attributes should be rendered/extracted under (see
   # `Avram::ParamKeyOverride#param_key`), along with the prefix any of the
   # child's own nested (`has_one`/`has_many`) operations should build
-  # their own key on top of.
+  # their own key on top of. Must be computed *before* the child operation
+  # is constructed (see `Avram::ParamKeyOverride#apply_nested_param_key_override`)
+  # and passed in via the `_nested_param_key`/`_nested_param_key_prefix`
+  # constructor arguments.
   #
   # Passing through a `has_one` boundary carries the inherited prefix
   # through *unchanged*, only combining it with the child's own
@@ -305,30 +312,32 @@ module Avram::NestedSaveOperation
   # prefix is actually present -- this mirrors how `has_one` already
   # shares the exact same `Avram::Paramable` with its child (see
   # `#has_one` above), rather than wrapping it under its own key.
-  private def assign_has_one_nested_param_key(nested_operation, child_param_key : String) : Nil
+  private def has_one_nested_param_key(child_param_key : String) : Tuple(String, String)
     prefix = nested_param_key_prefix
-    nested_operation.param_key = prefix.presence ? "#{prefix}:#{child_param_key}" : child_param_key
-    nested_operation.nested_param_key_prefix = prefix
+    key = prefix.presence ? "#{prefix}:#{child_param_key}" : child_param_key
+    {key, prefix}
   end
 
   # :nodoc:
   #
-  # Computes and assigns the fully-qualified key a `has_many` nested child
-  # operation (at position `index` within its own array) own attributes
-  # should be rendered/extracted under (see
-  # `Avram::ParamKeyOverride#param_key`), along with the prefix any of the
-  # child's own nested (`has_one`/`has_many`) operations should build
-  # their own key on top of.
+  # Computes the fully-qualified key a `has_many` nested child operation
+  # (at position `index` within its own array) own attributes should be
+  # rendered/extracted under (see `Avram::ParamKeyOverride#param_key`),
+  # along with the prefix any of the child's own nested (`has_one`/
+  # `has_many`) operations should build their own key on top of. Must be
+  # computed *before* the child operation is constructed (see
+  # `Avram::ParamKeyOverride#apply_nested_param_key_override`) and passed
+  # in via the `_nested_param_key`/`_nested_param_key_prefix` constructor
+  # arguments.
   #
   # Passing through a `has_many` boundary appends `"{association
   # name}[{index}]"` to whatever prefix was inherited, and that combined
   # value becomes both the child's own key and the prefix its own nested
   # operations build on -- this mirrors the `"{key}[index]:"` convention
   # `Avram::Params#many_nested` already parses (see `#has_many` above).
-  private def assign_has_many_nested_param_key(nested_operation, association_name : String, index : Int32) : Nil
+  private def has_many_nested_param_key(association_name : String, index : Int32) : Tuple(String, String)
     prefix = nested_param_key_prefix
     key = prefix.presence ? "#{prefix}:#{association_name}[#{index}]" : "#{association_name}[#{index}]"
-    nested_operation.param_key = key
-    nested_operation.nested_param_key_prefix = key
+    {key, key}
   end
 end

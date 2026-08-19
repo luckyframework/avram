@@ -197,7 +197,10 @@ module Avram::NeedyInitializerAndSaveMethods
         @params : Avram::Paramable,
         {{ needs_method_args.id }}
         {{ attribute_method_args.id }}
+        _nested_param_key : String? = nil,
+        _nested_param_key_prefix : String? = nil,
       )
+      apply_nested_param_key_override(_nested_param_key, _nested_param_key_prefix)
       set_attributes({{ attribute_params.id }})
     end
 
@@ -205,8 +208,11 @@ module Avram::NeedyInitializerAndSaveMethods
         @params : Avram::Paramable,
         {{ needs_method_args.id }}
         {{ attribute_method_args.id }}
+        _nested_param_key : String? = nil,
+        _nested_param_key_prefix : String? = nil,
     )
       @record = nil
+      apply_nested_param_key_override(_nested_param_key, _nested_param_key_prefix)
       set_attributes({{ attribute_params.id }})
     end
 
@@ -214,17 +220,23 @@ module Avram::NeedyInitializerAndSaveMethods
         @record : T,
         {{ needs_method_args.id }}
         {{ attribute_method_args.id }}
+        _nested_param_key : String? = nil,
+        _nested_param_key_prefix : String? = nil,
     )
       @params = Avram::Params.new
+      apply_nested_param_key_override(_nested_param_key, _nested_param_key_prefix)
       set_attributes({{ attribute_params.id }})
     end
 
     def initialize(
         {{ needs_method_args.id }}
         {{ attribute_method_args.id }}
+        _nested_param_key : String? = nil,
+        _nested_param_key_prefix : String? = nil,
     )
       @record = nil
       @params = Avram::Params.new
+      apply_nested_param_key_override(_nested_param_key, _nested_param_key_prefix)
       set_attributes({{ attribute_params.id }})
     end
 
