@@ -66,6 +66,40 @@ module Avram::NestedSaveOperation
   # operations, **not** an empty `Array` as it did before this rendering
   # support existed.
   #
+  # ## Adding rows client-side
+  #
+  # `{name}_template` (e.g. `op.comments_template`) returns one more
+  # brand-new, always-blank nested operation, keyed the same way as a real
+  # item in `{name}` except with a placeholder token standing in for its
+  # index (`"comments[__NEW_COMMENTS__]"` by default -- pass your own
+  # `token` if you need something else, e.g. to avoid a clash with a real
+  # column value). Render it once into a hidden HTML `<template>` (using
+  # the exact same helpers as real rows), and a small amount of
+  # client-side JavaScript can clone that template and substitute a fresh
+  # value for the token to add an "add another" row for a brand-new item,
+  # entirely client-side:
+  #
+  # ```
+  # op.comments.each do |comment|
+  #   nested_id_input(comment)
+  #   text_input(comment.body)
+  # end
+  # ```
+  #
+  # ```
+  # <template data-nested-fields-template="comments">
+  #   <% text_input(op.comments_template.body) %>
+  # </template>
+  # ```
+  #
+  # Because `Avram::Params#many_nested` only sorts items by index -- it
+  # doesn't require indexes to be sequential, contiguous, or start at `0`
+  # -- any never-before-used token (e.g. from a simple incrementing
+  # counter) works as a new item's index once substituted in, and nothing
+  # needs to be renumbered. A cloned row has no `id` field, so it's always
+  # treated as a new record (see Create vs. update, below) unless one is
+  # filled in.
+  #
   # ## Validations
   #
   # Each nested operation validates itself using its own normal rules
@@ -222,6 +256,16 @@ module Avram::NestedSaveOperation
           results
         end
       end
+    end
+
+    # Returns a brand-new, always-blank `{{ type }}` -- not one of the
+    # `{{ name }}` array's real (submitted or pre-filled) items -- keyed
+    # under *token* instead of a real array index, e.g.
+    # `"{{ name.id }}[__NEW_{{ name.stringify.upcase.id }}__]"` by default.
+    # See "Adding rows client-side" above for how this is meant to be used.
+    def {{ name }}_template(token : String = {{ "__NEW_" + name.stringify.upcase + "__" }}) : {{ type }}
+      nested_param_key, prefix = has_many_nested_param_key({{ name.stringify }}, token)
+      {{ type }}.new(Avram::Params.new, _nested_param_key: nested_param_key, _nested_param_key_prefix: prefix)
     end
 
     {% if allow_destroy %}
@@ -484,7 +528,13 @@ module Avram::NestedSaveOperation
   # value becomes both the child's own key and the prefix its own nested
   # operations build on -- this mirrors the `"{key}[index]:"` convention
   # `Avram::Params#many_nested` already parses (see `#has_many` above).
-  private def has_many_nested_param_key(association_name : String, index : Int32) : Tuple(String, String)
+  #
+  # *index* is normally an `Int32` (a real item's position), but also
+  # accepts a `String` so `{name}_template` (see `#has_many` above) can
+  # pass a placeholder token in its place -- `Avram::Params#many_nested`
+  # only cares that each item's index is unique, not that it's numeric,
+  # sequential, or contiguous.
+  private def has_many_nested_param_key(association_name : String, index : Int32 | String) : Tuple(String, String)
     prefix = nested_param_key_prefix
     key = prefix.presence ? "#{prefix}:#{association_name}[#{index}]" : "#{association_name}[#{index}]"
     {key, key}
