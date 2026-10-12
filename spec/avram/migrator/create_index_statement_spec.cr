@@ -37,4 +37,21 @@ describe Avram::Migrator::CreateIndexStatement do
       statement.should eq %(CREATE INDEX custom_index_name ON users USING btree ("email");)
     end
   end
+
+  context "partial index with a WHERE clause" do
+    it "appends the predicate after the column list" do
+      statement = Avram::Migrator::CreateIndexStatement.new(:users, :email, where: "email IS NOT NULL").build
+      statement.should eq %(CREATE INDEX users_email_index ON users USING btree ("email") WHERE email IS NOT NULL;)
+    end
+
+    it "generates a conditional UNIQUE partial index" do
+      statement = Avram::Migrator::CreateIndexStatement.new(:servers, columns: [:col_a, :col_b, :col_c], unique: true, where: "col_d >= 5").build
+      statement.should eq %(CREATE UNIQUE INDEX servers_col_a_col_b_col_c_index ON servers USING btree ("col_a", "col_b", "col_c") WHERE col_d >= 5;)
+    end
+
+    it "composes with CONCURRENTLY" do
+      statement = Avram::Migrator::CreateIndexStatement.new(:users, :email, concurrently: true, where: "email IS NOT NULL").build
+      statement.should eq %(CREATE INDEX CONCURRENTLY users_email_index ON users USING btree ("email") WHERE email IS NOT NULL;)
+    end
+  end
 end

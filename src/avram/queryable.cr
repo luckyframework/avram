@@ -344,4 +344,8 @@ module Avram::Queryable(T)
   def to_prepared_sql
     query.to_prepared_sql
   end
+
+  def to_prepared_where_sql
+    query.to_prepared_where_sql
+  end
 end

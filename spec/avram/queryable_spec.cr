@@ -1684,6 +1684,19 @@ describe Avram::Queryable do
     end
   end
 
+  describe "#to_prepared_where_sql" do
+    it "delegates to the query builder and inlines values as table-qualified literals" do
+      query = UserQuery.new.name("Don").age.gt(30)
+      query.to_prepared_where_sql.should eq %("users"."name" = 'Don' AND "users"."age" > '30')
+    end
+
+    it "raises when the query has no where conditions" do
+      expect_raises(Avram::InvalidQueryError) do
+        UserQuery.new.to_prepared_where_sql
+      end
+    end
+  end
+
   describe "#reset_limit" do
     it "resets the limit to nil" do
       users = UserQuery.new.limit(10)

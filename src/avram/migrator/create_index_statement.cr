@@ -36,7 +36,7 @@ class Avram::Migrator::CreateIndexStatement
     Brin
   end
 
-  def initialize(@table : TableName, @columns : Columns, using : Symbol = :btree, @unique : Bool = false, @concurrently : Bool = false, @name : String? | Symbol? = nil)
+  def initialize(@table : TableName, @columns : Columns, using : Symbol = :btree, @unique : Bool = false, @concurrently : Bool = false, @name : String? | Symbol? = nil, @where : String? = nil)
     @using = IndexTypes.parse?(using.to_s)
     raise "index type '#{using}' not supported" if @using.nil?
   end
@@ -54,7 +54,11 @@ class Avram::Migrator::CreateIndexStatement
       index << index_name
       index << " ON " << @table
       index << " USING " << @using.to_s.downcase
-      index << " (" << mapped_columns << ");"
+      index << " (" << mapped_columns << ")"
+      if where = @where
+        index << " WHERE " << where
+      end
+      index << ";"
     end
   end
 
