@@ -11,3 +11,6 @@ Version: "1.7.0"
 
 Performance/AnyInsteadOfPresent:
   Enabled: false
+
+Style/HeredocIndent:
+  Enabled: false
