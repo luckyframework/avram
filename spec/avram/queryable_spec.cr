@@ -442,6 +442,14 @@ describe Avram::Queryable do
       users.results.should eq [user]
     end
 
+    it "accepts raw sql with a UUID binding" do
+      line_item = LineItemFactory.create
+      line_items = LineItemQuery.new.where("line_items.id = ?", line_item.id)
+
+      line_items.query.statement.should end_with "FROM line_items WHERE line_items.id = '#{line_item.id}'"
+      line_items.results.should eq [line_item]
+    end
+
     it "raises when number of bind variables don't match bindings" do
       expect_raises Exception, "wrong number of bind variables (2 for 1)" do
         UserQuery.new.where("name = ?", "bound", "extra")
