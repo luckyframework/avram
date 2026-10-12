@@ -134,27 +134,27 @@ module Lucky::InputHelpers
   generate_helpful_error_for radio
 
   {% for input_type in ["text", "email", "file", "color", "hidden", "number", "url", "search", "range"] %}
-    generate_helpful_error_for {{input_type.id}}_input
+    generate_helpful_error_for {{ input_type.id }}_input
 
     # Returns a {{ input_type.id }} input field.
     #
     # ```
-    # {{input_type.id}}_input(attribute)
-    # # => <input type="{{input_type.id}}" id="param_key_attribute_name" name="param_key:attribute_name" value="" />
+    # {{ input_type.id }}_input(attribute)
+    # # => <input type="{{ input_type.id }}" id="param_key_attribute_name" name="param_key:attribute_name" value="" />
     # ```
-    def {{input_type.id}}_input(field : Avram::PermittedAttribute, **html_options) : Nil
-      {{input_type.id}}_input field, EMPTY_BOOLEAN_ATTRIBUTES, **html_options
+    def {{ input_type.id }}_input(field : Avram::PermittedAttribute, **html_options) : Nil
+      {{ input_type.id }}_input field, EMPTY_BOOLEAN_ATTRIBUTES, **html_options
     end
 
-    # Similar to {{input_type.id}}_input; this allows for Boolean attributes
+    # Similar to {{ input_type.id }}_input; this allows for Boolean attributes
     # through `attrs`.
     #
     # ```
-    # {{input_type.id}}_input(attribute, attrs: [:required])
-    # # => <input type="{{input_type.id}}" id="param_key_attribute_name" name="param_key:attribute_name" value="" required />
+    # {{ input_type.id }}_input(attribute, attrs: [:required])
+    # # => <input type="{{ input_type.id }}" id="param_key_attribute_name" name="param_key:attribute_name" value="" required />
     # ```
-    def {{input_type.id}}_input(field : Avram::PermittedAttribute, attrs : Array(Symbol), **html_options) : Nil
-      generate_input(field, {{input_type}}, html_options, attrs: attrs)
+    def {{ input_type.id }}_input(field : Avram::PermittedAttribute, attrs : Array(Symbol), **html_options) : Nil
+      generate_input(field, {{ input_type }}, html_options, attrs: attrs)
     end
   {% end %}
 
