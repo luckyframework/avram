@@ -461,8 +461,11 @@ module Avram::Where
     end
 
     private def escape_if_needed(value)
-      if value.is_a?(String) || value.is_a?(Slice(UInt8))
+      case value
+      when String, Slice(UInt8)
         PG::EscapeHelper.escape_literal(value)
+      when UUID
+        PG::EscapeHelper.escape_literal(value.to_s)
       else
         value
       end
