@@ -13,17 +13,15 @@ jobs:
     runs-on: ubuntu-latest
     continue-on-error: false
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
       - name: Install Crystal
         uses: crystal-lang/install-crystal@v1
         with:
           crystal: latest
-      - name: Install shards
-        run: shards install
       - name: Format
         run: crystal tool format --check
-      - name: Lint
-        run: ./bin/ameba
+      - name: Run Ameba Linter
+        uses: crystal-ameba/github-action@master
 
   specs:
     strategy:
@@ -57,7 +55,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     continue-on-error: ${{ matrix.experimental }}
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
       - name: Setup PostgreSQL v${{ matrix.postgres_version }}
         uses: ikalnytskyi/action-setup-postgres@v8
         with:
