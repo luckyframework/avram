@@ -53,7 +53,7 @@ class Avram::Migrator::MigrationGenerator
 
   private def ensure_unique
     directory = Dir.new(full_migrations_path)
-    directory.each_child { |child|
+    directory.each_child do |child|
       if child.starts_with?(/[0-9]{14}_#{name.underscore}.cr/)
         raise <<-ERROR
           Migration name must be unique
@@ -61,7 +61,7 @@ class Avram::Migrator::MigrationGenerator
           Migration name: #{name.underscore}.cr already exists as: #{child}.
         ERROR
       end
-    }
+    end
   end
 
   private def migration_class_name

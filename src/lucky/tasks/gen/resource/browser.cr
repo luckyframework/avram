@@ -103,14 +103,14 @@ class Gen::Resource::Browser < LuckyTask::Task
     success_message("Delete#{resource_name}", Path["./src/operations/delete_#{underscored_resource}.cr"].to_s)
     success_message("#{resource_name}Query", Path["./src/queries/#{underscored_resource}_query.cr"].to_s)
 
-    %w(index show new create edit update delete).each do |action|
+    %w[index show new create edit update delete].each do |action|
       success_message(
         "#{pluralized_name}::#{action.capitalize}",
         Path["./src/actions/#{folder_name}/#{action}.cr"].to_s
       )
     end
 
-    %w(index show new edit).each do |action|
+    %w[index show new edit].each do |action|
       success_message(
         "#{pluralized_name}::#{action.capitalize}Page",
         Path["./src/pages/#{folder_name}/#{action}_page.cr"].to_s
