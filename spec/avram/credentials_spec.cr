@@ -15,7 +15,7 @@ describe Avram::Credentials do
 
   describe "parse?" do
     it "returns nil when there's nothing to parse" do
-      Avram::Credentials.parse?(nil).should eq nil
+      Avram::Credentials.parse?(nil).should be_nil
     end
 
     it "returns a proper url when provided a connection string" do

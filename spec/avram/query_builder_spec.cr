@@ -295,13 +295,13 @@ describe Avram::QueryBuilder do
       query = new_query
         .order_by(Avram::OrderBy.new(:id, :asc))
 
-      query.ordered?.should eq true
+      query.ordered?.should be_true
     end
 
     it "returns false if the query is not ordered" do
       query = new_query
 
-      query.ordered?.should eq false
+      query.ordered?.should be_false
     end
   end
 
@@ -330,13 +330,13 @@ describe Avram::QueryBuilder do
     it "returns true when there's a grouping" do
       query = new_query.group_by(:id)
 
-      query.grouped?.should eq true
+      query.grouped?.should be_true
     end
 
     it "returns false when there's no groups" do
       query = new_query
 
-      query.grouped?.should eq false
+      query.grouped?.should be_false
     end
   end
 

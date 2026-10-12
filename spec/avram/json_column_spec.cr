@@ -21,7 +21,7 @@ describe "JSON Columns" do
     blob = BlobFactory.create
     SaveBlob.update!(blob, doc: nil)
     blob = BlobQuery.new.first
-    blob.doc.should eq nil
+    blob.doc.should be_nil
     blob.doc.class.should eq Nil
   end
 

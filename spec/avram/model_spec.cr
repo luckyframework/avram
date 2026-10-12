@@ -96,10 +96,10 @@ describe Avram::Model do
     note = NoteQuery.new.from("Me").first
     note.from.should eq("Me")
     note.text.should eq("hi")
-    note.read?.should eq(true)
+    note.read?.should be_true
     Note::SaveOperation.update!(note, read: false)
     note = note.reload
-    note.read?.should eq(false)
+    note.read?.should be_false
     Note::DeleteOperation.delete!(note)
     NoteQuery.new.select_count.should eq(0)
   end

@@ -48,12 +48,12 @@ describe "Avram::Database connection reuse within a fiber" do
 
   it "keeps an advisory lock and its unlock on the same, unshared connection" do
     outer = SingleConnectionDatabase.run do |db|
-      db.scalar("SELECT pg_try_advisory_lock(42)").should eq(true)
+      db.scalar("SELECT pg_try_advisory_lock(42)").should be_true
       begin
         SingleConnectionDatabase.query_all("SELECT generate_series(1, 3)", as: Int32).size.should eq(3)
         other_fiber_gets?(db).should be_false
       ensure
-        db.scalar("SELECT pg_advisory_unlock(42)").should eq(true)
+        db.scalar("SELECT pg_advisory_unlock(42)").should be_true
       end
       db
     end
