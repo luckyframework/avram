@@ -75,7 +75,7 @@ describe "Avram::Operation needs" do
       operation.tags.should eq ["one", "two"]
       operation.id.should eq 3
       operation.title.value.should eq "test"
-      operation.published.value.should eq true
+      operation.published.value.should be_true
     end
   end
 

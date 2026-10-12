@@ -225,7 +225,7 @@ describe "Avram::SaveOperation callbacks" do
 
     operation.save
 
-    operation.valid?.should eq false
+    operation.valid?.should be_false
     operation.callbacks_that_ran.should eq(["before_save", "before_save_again"])
   end
 
@@ -242,7 +242,7 @@ describe "Avram::SaveOperation callbacks" do
     post = PostFactory.create &.title("Existing Post")
 
     UpdateOperationWithSkipCallbacks.update(post, title: "A fancy post") do |operation, updated_post|
-      updated_post.should_not eq nil
+      updated_post.should_not be_nil
       updated_post.as(Post).title.should eq "A fancy post"
 
       operation.callbacks_that_ran.should eq([

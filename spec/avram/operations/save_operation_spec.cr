@@ -149,7 +149,7 @@ describe "Avram::SaveOperation" do
     params = build_params("post:title=Test&post:published_at=")
     post = SavePost.create!(params)
 
-    post.published_at.should eq nil
+    post.published_at.should be_nil
     post.title.should eq "Test"
   end
 
@@ -242,8 +242,8 @@ describe "Avram::SaveOperation" do
         TokenFactory.create(&.name("special").scopes(["name"]).next_id(4))
 
         UpsertToken.upsert(next_id: 4, name: "Secret", scopes: ["red", "blue"]) do |operation, token|
-          operation.valid?.should eq(true)
-          token.should_not eq(nil)
+          operation.valid?.should be_true
+          token.should_not be_nil
           token.as(Token).name.should eq("Secret")
           token.as(Token).scopes.should eq(["red", "blue"])
         end
@@ -265,7 +265,7 @@ describe "Avram::SaveOperation" do
           UserQuery.new.select_count.should eq(2)
           # Keep existing user the same
           user_with_different_nickname.age.should eq(20)
-          user_with_different_nickname.nickname.should eq(nil)
+          user_with_different_nickname.nickname.should be_nil
 
           user = user.as(User)
           user.id.should_not eq(user_with_different_nickname.id)
@@ -279,11 +279,11 @@ describe "Avram::SaveOperation" do
       it "allows updating nilable fields to nil" do
         UserFactory.create(&.name("test").total_score(100))
         UpsertUserOperation.upsert(name: "test", total_score: nil) do |operation, updated_user|
-          operation.updated?.should eq(true)
-          updated_user.should_not eq(nil)
+          operation.updated?.should be_true
+          updated_user.should_not be_nil
           user = updated_user.as(User)
           user.name.should eq("test")
-          user.total_score.should eq(nil)
+          user.total_score.should be_nil
         end
       end
     end
@@ -323,7 +323,7 @@ describe "Avram::SaveOperation" do
         UserQuery.new.select_count.should eq(2)
         # Keep existing user the same
         user_with_different_nickname.age.should eq(20)
-        user_with_different_nickname.nickname.should eq(nil)
+        user_with_different_nickname.nickname.should be_nil
 
         user = user.as(User)
         user.id.should_not eq(user_with_different_nickname.id)
@@ -337,7 +337,7 @@ describe "Avram::SaveOperation" do
         UserFactory.create(&.name("test").total_score(100))
         user = UpsertUserOperation.upsert!(name: "test", total_score: nil)
         user.name.should eq("test")
-        user.total_score.should eq(nil)
+        user.total_score.should be_nil
       end
 
       it "raises if the record is invalid" do
@@ -454,7 +454,7 @@ describe "Avram::SaveOperation" do
 
       operation.name.value.should eq "Paul"
       operation.nickname.value.should eq "Pablito"
-      operation.age.value.should eq nil
+      operation.age.value.should be_nil
     end
 
     it "returns the value from params for updates" do
@@ -607,10 +607,10 @@ describe "Avram::SaveOperation" do
     context "when there's default values in the table" do
       it "saves with all of the default values" do
         ModelWithDefaultValues::SaveOperation.create do |_operation, record|
-          record.should_not eq nil
+          record.should_not be_nil
           r = record.as(ModelWithDefaultValues)
           r.greeting.should eq "Hello there!"
-          r.admin.should eq false
+          r.admin.should be_false
           r.age.should eq 30
           r.money.should eq 3.5
           r.published_at.should be_a Time
@@ -620,10 +620,10 @@ describe "Avram::SaveOperation" do
 
       it "allows you to override the default values" do
         ModelWithDefaultValues::SaveOperation.create(greeting: "A fancy hat") do |_operation, record|
-          record.should_not eq nil
+          record.should_not be_nil
           r = record.as(ModelWithDefaultValues)
           r.greeting.should eq "A fancy hat"
-          r.admin.should eq false
+          r.admin.should be_false
           r.age.should eq 30
           r.money.should eq 3.5
           r.published_at.should be_a Time
@@ -644,10 +644,10 @@ describe "Avram::SaveOperation" do
         drafted_at = 1.week.ago.to_utc.at_beginning_of_day
         params = build_params("model_with_default_values:greeting=Hi&model_with_default_values:admin=true&model_with_default_values:age=4&model_with_default_values:money=100.23&model_with_default_values:published_at=#{published_at}&model_with_default_values:drafted_at=#{drafted_at}")
         OverrideDefaults.create(params) do |_operation, record|
-          record.should_not eq nil
+          record.should_not be_nil
           r = record.as(ModelWithDefaultValues)
           r.greeting.should eq "Hi"
-          r.admin.should eq true
+          r.admin.should be_true
           r.age.should eq 4
           r.money.should eq 100.23
           r.published_at.should eq published_at
@@ -659,13 +659,13 @@ describe "Avram::SaveOperation" do
         model = ModelWithDefaultValues::SaveOperation.create!
         record = OverrideDefaults.update!(model, greeting: "Hi")
         record.greeting.should eq "Hi"
-        record.admin.should eq false
+        record.admin.should be_false
       end
 
       it "lets named args take precedence over param values" do
         params = build_params("model_with_default_values:greeting=Hi")
         OverrideDefaults.create(params, greeting: "sup") do |_operation, record|
-          record.should_not eq nil
+          record.should_not be_nil
           r = record.as(ModelWithDefaultValues)
           r.greeting.should eq "sup"
         end
@@ -675,7 +675,7 @@ describe "Avram::SaveOperation" do
 
         params = build_params("model_with_default_values:greeting=Hi")
         OverrideDefaults.update(model, params, greeting: "General Kenobi") do |_operation, record|
-          record.should_not eq nil
+          record.should_not be_nil
           r = record.as(ModelWithDefaultValues)
           r.greeting.should eq "General Kenobi"
         end
@@ -685,9 +685,9 @@ describe "Avram::SaveOperation" do
     context "with bytes" do
       it "saves the byte column" do
         Beat::SaveOperation.create(hash: "boots and pants".to_slice) do |operation, beat|
-          operation.saved?.should eq(true)
+          operation.saved?.should be_true
           beat.should_not be_nil
-          beat.as(Beat).hash.blank?.should eq(false)
+          beat.as(Beat).hash.blank?.should be_false
           beat.as(Beat).hash.should eq(Bytes[98, 111, 111, 116, 115, 32, 97, 110, 100, 32, 112, 97, 110, 116, 115])
           String.new(beat.as(Beat).hash).should eq("boots and pants")
         end
@@ -699,8 +699,8 @@ describe "Avram::SaveOperation" do
         params = build_params(%({"blob": {"doc": {"sort": "desc"}, "metadata": {"name": "filter", "code": 4}}}), content_type: "application/json")
 
         ReturnOfTheBlob.create(params) do |operation, blob|
-          operation.valid?.should eq(true)
-          blob.should_not eq(nil)
+          operation.valid?.should be_true
+          blob.should_not be_nil
           blob.as(Blob).doc.as(JSON::Any)["sort"].as_s.should eq("desc")
           blob.as(Blob).metadata.name.should eq("filter")
           blob.as(Blob).metadata.code.should eq(4)
@@ -839,11 +839,11 @@ describe "Avram::SaveOperation" do
         user = UserFactory.create &.nickname("oopsie").available_for_hire(false)
         params = build_params("false_val:nickname=falsey mcfalserson")
         SaveUserWithFalseValueValidations.update(user, params) do |operation, record|
-          record.should_not eq nil
+          record.should_not be_nil
           r = record.as(User)
           operation.valid?.should be_true
           r.nickname.should eq "falsey mcfalserson"
-          r.available_for_hire.should eq false
+          r.available_for_hire.should be_false
         end
       end
     end
@@ -854,8 +854,8 @@ describe "Avram::SaveOperation" do
         params = build_params(%({"blob": {"doc": {"sort": "asc"}}}), content_type: "application/json")
 
         ReturnOfTheBlob.update(slime, params) do |operation, blob|
-          operation.valid?.should eq(true)
-          blob.should_not eq(nil)
+          operation.valid?.should be_true
+          blob.should_not be_nil
           blob.as(Blob).doc.as(JSON::Any)["sort"].as_s.should eq("asc")
         end
       end
@@ -875,7 +875,7 @@ describe "Avram::SaveOperation" do
 
       updated_task = SaveTask.update!(task, params)
       updated_task.body.should eq("To the jungle")
-      updated_task.completed_at.should eq(nil)
+      updated_task.completed_at.should be_nil
     end
 
     context "on success" do

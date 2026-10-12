@@ -30,14 +30,14 @@ describe Avram::OperationErrors do
   it "sets a custom error for Operation" do
     operation = FailedOperation.new(failure: true)
     operation.add_error(:fail, "Not valid")
-    operation.valid?.should eq false
+    operation.valid?.should be_false
     operation.errors[:fail].should eq ["Not valid"]
   end
 
   it "returns a nil value when there's a custom error on Operation" do
     FailedOperation.run(failure: true) do |operation, value|
-      value.should eq nil
-      operation.valid?.should eq false
+      value.should be_nil
+      operation.valid?.should be_false
       operation.errors[:oops].should eq ["this didn't work"]
       operation.errors[:failure].should eq ["move right along"]
     end
@@ -46,14 +46,14 @@ describe Avram::OperationErrors do
   it "sets a custom error for SaveOperation" do
     operation = SaveUserButNotReally.new(failure: true)
     operation.add_error(:fail, "User did not save")
-    operation.valid?.should eq false
+    operation.valid?.should be_false
     operation.errors[:fail].should eq ["User did not save"]
   end
 
   it "returns a failed save status for SaveOperation" do
     SaveUserButNotReally.create(failure: true) do |operation, value|
-      value.should eq nil
-      operation.valid?.should eq false
+      value.should be_nil
+      operation.valid?.should be_false
       operation.errors[:failure].should eq ["This failed quick", "Like, really quick"]
       operation.save_status.should eq SaveUserButNotReally::OperationStatus::SaveFailed
     end

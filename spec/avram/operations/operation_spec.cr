@@ -131,7 +131,7 @@ describe Avram::Operation do
   describe "valid?" do
     it "returns true when there's nothing to validate" do
       TestOperation.run do |operation, _value|
-        operation.valid?.should eq true
+        operation.valid?.should be_true
       end
     end
   end
