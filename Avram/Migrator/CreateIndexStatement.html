@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="generator" content="Crystal Docs 1.19.1">
+<meta name="generator" content="Crystal Docs 1.21.0">
 <meta name="crystal_docs.project_version" content="main">
 <meta name="crystal_docs.project_name" content="avram">
 
@@ -1908,7 +1908,7 @@ name(s), index type and unique flag.</p>
   </h2>
   
     
-      <a href="https://github.com/luckyframework/avram/blob/a620faeaa75347bd3b1fbc52674082501badec73/src/avram/migrator/create_index_statement.cr#L28" target="_blank">
+      <a href="https://github.com/luckyframework/avram/blob/60ff85995eef3ac5191823112b771d2322407a7b/src/avram/migrator/create_index_statement.cr#L28" target="_blank">
         avram/migrator/create_index_statement.cr
       </a>
     
@@ -1931,7 +1931,7 @@ name(s), index type and unique flag.</p>
   <ul class="list-summary">
     
       <li class="entry-summary">
-        <a href="#new%28table%3ATableName%2Ccolumns%3AColumns%2Cusing%3ASymbol%3D%3Abtree%2Cunique%3ABool%3Dfalse%2Cconcurrently%3ABool%3Dfalse%2Cname%3AString%7CNil%7CSymbol%7CNil%3Dnil%29-class-method" class="signature"><strong>.new</strong>(table : TableName, columns : Columns, using : Symbol = <span class="n">:btree</span>, unique : Bool = <span class="n">false</span>, concurrently : Bool = <span class="n">false</span>, name : String | Nil | Symbol | Nil = <span class="n">nil</span>)</a>
+        <a href="#new%28table%3ATableName%2Ccolumns%3AColumns%2Cusing%3ASymbol%3D%3Abtree%2Cunique%3ABool%3Dfalse%2Cconcurrently%3ABool%3Dfalse%2Cname%3AString%7CNil%7CSymbol%7CNil%3Dnil%2Cwhere%3AString%7CNil%3Dnil%29-class-method" class="signature"><strong>.new</strong>(table : TableName, columns : Columns, using : Symbol = <span class="n">:btree</span>, unique : Bool = <span class="n">false</span>, concurrently : Bool = <span class="n">false</span>, name : String | Nil | Symbol | Nil = <span class="n">nil</span>, where : String | Nil = <span class="n">nil</span>)</a>
         
       </li>
     
@@ -1969,8 +1969,8 @@ name(s), index type and unique flag.</p>
   <h3>Instance methods inherited from module <code><a href="../../Avram/Migrator/IndexStatementHelpers.html">Avram::Migrator::IndexStatementHelpers</a></code></h3>
   
   
-    <a href="../../Avram/Migrator/IndexStatementHelpers.html#add_index%28column%3ASymbol%2Cunique%3Dfalse%2Cusing%3ASymbol%3D%3Abtree%29-instance-method" class="tooltip">
-      <span>add_index(column : Symbol, unique = <span class="n">false</span>, using : Symbol = <span class="n">:btree</span>)</span>
+    <a href="../../Avram/Migrator/IndexStatementHelpers.html#add_index%28column%3ASymbol%2Cunique%3Dfalse%2Cusing%3ASymbol%3D%3Abtree%2Cwhere%3AAvram%3A%3AQueryable%7CNil%3Dnil%2Cwhere_raw%3AString%7CNil%3Dnil%29-instance-method" class="tooltip">
+      <span>add_index(column : Symbol, unique = <span class="n">false</span>, using : Symbol = <span class="n">:btree</span>, where : Avram::Queryable | Nil = <span class="n">nil</span>, where_raw : String | Nil = <span class="n">nil</span>)</span>
     add_index</a>, 
     
   
@@ -2038,18 +2038,18 @@ name(s), index type and unique flag.</p>
     Constructor Detail
   </h2>
   
-    <div class="entry-detail" id="new(table:TableName,columns:Columns,using:Symbol=:btree,unique:Bool=false,concurrently:Bool=false,name:String|Nil|Symbol|Nil=nil)-class-method">
+    <div class="entry-detail" id="new(table:TableName,columns:Columns,using:Symbol=:btree,unique:Bool=false,concurrently:Bool=false,name:String|Nil|Symbol|Nil=nil,where:String|Nil=nil)-class-method">
       <div class="signature">
         
-        def self.<strong>new</strong>(table : <a href="../../Avram/TableName.html">TableName</a>, columns : <a href="../../Avram/Migrator/IndexStatementHelpers/Columns.html">Columns</a>, using : Symbol = <span class="n">:btree</span>, unique : <a href="../../Bool.html">Bool</a> = <span class="n">false</span>, concurrently : <a href="../../Bool.html">Bool</a> = <span class="n">false</span>, name : <a href="../../String.html">String</a> | <a href="../../Nil.html">Nil</a> | Symbol | <a href="../../Nil.html">Nil</a> = <span class="n">nil</span>)
+        def self.<strong>new</strong>(table : <a href="../../Avram/TableName.html">TableName</a>, columns : <a href="../../Avram/Migrator/IndexStatementHelpers/Columns.html">Columns</a>, using : Symbol = <span class="n">:btree</span>, unique : <a href="../../Bool.html">Bool</a> = <span class="n">false</span>, concurrently : <a href="../../Bool.html">Bool</a> = <span class="n">false</span>, name : <a href="../../String.html">String</a> | <a href="../../Nil.html">Nil</a> | Symbol | <a href="../../Nil.html">Nil</a> = <span class="n">nil</span>, where : <a href="../../String.html">String</a> | <a href="../../Nil.html">Nil</a> = <span class="n">nil</span>)
 
-        <a class="method-permalink" href="#new%28table%3ATableName%2Ccolumns%3AColumns%2Cusing%3ASymbol%3D%3Abtree%2Cunique%3ABool%3Dfalse%2Cconcurrently%3ABool%3Dfalse%2Cname%3AString%7CNil%7CSymbol%7CNil%3Dnil%29-class-method">#</a>
+        <a class="method-permalink" href="#new%28table%3ATableName%2Ccolumns%3AColumns%2Cusing%3ASymbol%3D%3Abtree%2Cunique%3ABool%3Dfalse%2Cconcurrently%3ABool%3Dfalse%2Cname%3AString%7CNil%7CSymbol%7CNil%3Dnil%2Cwhere%3AString%7CNil%3Dnil%29-class-method">#</a>
       </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/a620faeaa75347bd3b1fbc52674082501badec73/src/avram/migrator/create_index_statement.cr#L39" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/60ff85995eef3ac5191823112b771d2322407a7b/src/avram/migrator/create_index_statement.cr#L39" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2081,7 +2081,7 @@ name(s), index type and unique flag.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/a620faeaa75347bd3b1fbc52674082501badec73/src/avram/migrator/create_index_statement.cr#L44" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/60ff85995eef3ac5191823112b771d2322407a7b/src/avram/migrator/create_index_statement.cr#L44" target="_blank">View source</a>]
         
       </div>
     </div>

@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="generator" content="Crystal Docs 1.19.1">
+<meta name="generator" content="Crystal Docs 1.21.0">
 <meta name="crystal_docs.project_version" content="main">
 <meta name="crystal_docs.project_name" content="avram">
 
@@ -1896,7 +1896,7 @@
   </h2>
   
     
-      <a href="https://github.com/luckyframework/avram/blob/a620faeaa75347bd3b1fbc52674082501badec73/src/avram/migrator/statement_helpers.cr#L3" target="_blank">
+      <a href="https://github.com/luckyframework/avram/blob/60ff85995eef3ac5191823112b771d2322407a7b/src/avram/migrator/statement_helpers.cr#L3" target="_blank">
         avram/migrator/statement_helpers.cr
       </a>
     
@@ -1957,7 +1957,7 @@
       </li>
     
       <li class="entry-summary">
-        <a href="#create_index%28table_name%3ATableName%2Ccolumns%3AColumns%2Cunique%3Dfalse%2Cconcurrently%3Dfalse%2Cusing%3D%3Abtree%2Cname%3AString%7CNil%7CSymbol%7CNil%3Dnil%29-instance-method" class="signature"><strong>#create_index</strong>(table_name : TableName, columns : Columns, unique = <span class="n">false</span>, concurrently = <span class="n">false</span>, using = <span class="n">:btree</span>, name : String | Nil | Symbol | Nil = <span class="n">nil</span>)</a>
+        <a href="#create_index%28table_name%3ATableName%2Ccolumns%3AColumns%2Cunique%3Dfalse%2Cconcurrently%3Dfalse%2Cusing%3D%3Abtree%2Cname%3AString%7CNil%7CSymbol%7CNil%3Dnil%2Cwhere%3AAvram%3A%3AQueryable%7CNil%3Dnil%2Cwhere_raw%3AString%7CNil%3Dnil%29-instance-method" class="signature"><strong>#create_index</strong>(table_name : TableName, columns : Columns, unique = <span class="n">false</span>, concurrently = <span class="n">false</span>, using = <span class="n">:btree</span>, name : String | Nil | Symbol | Nil = <span class="n">nil</span>, where : Avram::Queryable | Nil = <span class="n">nil</span>, where_raw : String | Nil = <span class="n">nil</span>)</a>
         
       </li>
     
@@ -2063,8 +2063,8 @@
   <h3>Instance methods inherited from module <code><a href="../../Avram/Migrator/IndexStatementHelpers.html">Avram::Migrator::IndexStatementHelpers</a></code></h3>
   
   
-    <a href="../../Avram/Migrator/IndexStatementHelpers.html#add_index%28column%3ASymbol%2Cunique%3Dfalse%2Cusing%3ASymbol%3D%3Abtree%29-instance-method" class="tooltip">
-      <span>add_index(column : Symbol, unique = <span class="n">false</span>, using : Symbol = <span class="n">:btree</span>)</span>
+    <a href="../../Avram/Migrator/IndexStatementHelpers.html#add_index%28column%3ASymbol%2Cunique%3Dfalse%2Cusing%3ASymbol%3D%3Abtree%2Cwhere%3AAvram%3A%3AQueryable%7CNil%3Dnil%2Cwhere_raw%3AString%7CNil%3Dnil%29-instance-method" class="tooltip">
+      <span>add_index(column : Symbol, unique = <span class="n">false</span>, using : Symbol = <span class="n">:btree</span>, where : Avram::Queryable | Nil = <span class="n">nil</span>, where_raw : String | Nil = <span class="n">nil</span>)</span>
     add_index</a>, 
     
   
@@ -2112,7 +2112,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/a620faeaa75347bd3b1fbc52674082501badec73/src/avram/migrator/statement_helpers.cr#L21" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/60ff85995eef3ac5191823112b771d2322407a7b/src/avram/migrator/statement_helpers.cr#L21" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2128,7 +2128,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/a620faeaa75347bd3b1fbc52674082501badec73/src/avram/migrator/statement_helpers.cr#L7" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/60ff85995eef3ac5191823112b771d2322407a7b/src/avram/migrator/statement_helpers.cr#L7" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2156,7 +2156,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/a620faeaa75347bd3b1fbc52674082501badec73/src/avram/migrator/statement_helpers.cr#L31" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/60ff85995eef3ac5191823112b771d2322407a7b/src/avram/migrator/statement_helpers.cr#L31" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2172,23 +2172,23 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/a620faeaa75347bd3b1fbc52674082501badec73/src/avram/migrator/statement_helpers.cr#L67" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/60ff85995eef3ac5191823112b771d2322407a7b/src/avram/migrator/statement_helpers.cr#L67" target="_blank">View source</a>]
         
       </div>
     </div>
   
-    <div class="entry-detail" id="create_index(table_name:TableName,columns:Columns,unique=false,concurrently=false,using=:btree,name:String|Nil|Symbol|Nil=nil)-instance-method">
+    <div class="entry-detail" id="create_index(table_name:TableName,columns:Columns,unique=false,concurrently=false,using=:btree,name:String|Nil|Symbol|Nil=nil,where:Avram::Queryable|Nil=nil,where_raw:String|Nil=nil)-instance-method">
       <div class="signature">
         
-        def <strong>create_index</strong>(table_name : <a href="../../Avram/TableName.html">TableName</a>, columns : <a href="../../Avram/Migrator/IndexStatementHelpers/Columns.html">Columns</a>, unique = <span class="n">false</span>, concurrently = <span class="n">false</span>, using = <span class="n">:btree</span>, name : <a href="../../String.html">String</a> | <a href="../../Nil.html">Nil</a> | Symbol | <a href="../../Nil.html">Nil</a> = <span class="n">nil</span>)
+        def <strong>create_index</strong>(table_name : <a href="../../Avram/TableName.html">TableName</a>, columns : <a href="../../Avram/Migrator/IndexStatementHelpers/Columns.html">Columns</a>, unique = <span class="n">false</span>, concurrently = <span class="n">false</span>, using = <span class="n">:btree</span>, name : <a href="../../String.html">String</a> | <a href="../../Nil.html">Nil</a> | Symbol | <a href="../../Nil.html">Nil</a> = <span class="n">nil</span>, where : <a href="../../Avram/Queryable.html">Avram::Queryable</a> | <a href="../../Nil.html">Nil</a> = <span class="n">nil</span>, where_raw : <a href="../../String.html">String</a> | <a href="../../Nil.html">Nil</a> = <span class="n">nil</span>)
 
-        <a class="method-permalink" href="#create_index%28table_name%3ATableName%2Ccolumns%3AColumns%2Cunique%3Dfalse%2Cconcurrently%3Dfalse%2Cusing%3D%3Abtree%2Cname%3AString%7CNil%7CSymbol%7CNil%3Dnil%29-instance-method">#</a>
+        <a class="method-permalink" href="#create_index%28table_name%3ATableName%2Ccolumns%3AColumns%2Cunique%3Dfalse%2Cconcurrently%3Dfalse%2Cusing%3D%3Abtree%2Cname%3AString%7CNil%7CSymbol%7CNil%3Dnil%2Cwhere%3AAvram%3A%3AQueryable%7CNil%3Dnil%2Cwhere_raw%3AString%7CNil%3Dnil%29-instance-method">#</a>
       </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/a620faeaa75347bd3b1fbc52674082501badec73/src/avram/migrator/statement_helpers.cr#L39" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/60ff85995eef3ac5191823112b771d2322407a7b/src/avram/migrator/statement_helpers.cr#L39" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2204,7 +2204,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/a620faeaa75347bd3b1fbc52674082501badec73/src/avram/migrator/statement_helpers.cr#L97" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/60ff85995eef3ac5191823112b771d2322407a7b/src/avram/migrator/statement_helpers.cr#L97" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2232,7 +2232,7 @@ Postgres does not support updating or replacing a trigger as of version 12</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/a620faeaa75347bd3b1fbc52674082501badec73/src/avram/migrator/statement_helpers.cr#L87" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/60ff85995eef3ac5191823112b771d2322407a7b/src/avram/migrator/statement_helpers.cr#L87" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2248,7 +2248,7 @@ Postgres does not support updating or replacing a trigger as of version 12</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/a620faeaa75347bd3b1fbc52674082501badec73/src/avram/migrator/statement_helpers.cr#L59" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/60ff85995eef3ac5191823112b771d2322407a7b/src/avram/migrator/statement_helpers.cr#L59" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2264,7 +2264,7 @@ Postgres does not support updating or replacing a trigger as of version 12</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/a620faeaa75347bd3b1fbc52674082501badec73/src/avram/migrator/statement_helpers.cr#L17" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/60ff85995eef3ac5191823112b771d2322407a7b/src/avram/migrator/statement_helpers.cr#L17" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2280,7 +2280,7 @@ Postgres does not support updating or replacing a trigger as of version 12</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/a620faeaa75347bd3b1fbc52674082501badec73/src/avram/migrator/statement_helpers.cr#L35" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/60ff85995eef3ac5191823112b771d2322407a7b/src/avram/migrator/statement_helpers.cr#L35" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2296,7 +2296,7 @@ Postgres does not support updating or replacing a trigger as of version 12</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/a620faeaa75347bd3b1fbc52674082501badec73/src/avram/migrator/statement_helpers.cr#L71" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/60ff85995eef3ac5191823112b771d2322407a7b/src/avram/migrator/statement_helpers.cr#L71" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2312,7 +2312,7 @@ Postgres does not support updating or replacing a trigger as of version 12</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/a620faeaa75347bd3b1fbc52674082501badec73/src/avram/migrator/statement_helpers.cr#L43" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/60ff85995eef3ac5191823112b771d2322407a7b/src/avram/migrator/statement_helpers.cr#L43" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2328,7 +2328,7 @@ Postgres does not support updating or replacing a trigger as of version 12</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/a620faeaa75347bd3b1fbc52674082501badec73/src/avram/migrator/statement_helpers.cr#L103" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/60ff85995eef3ac5191823112b771d2322407a7b/src/avram/migrator/statement_helpers.cr#L103" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2349,7 +2349,7 @@ Postgres does not support updating or replacing a trigger as of version 12</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/a620faeaa75347bd3b1fbc52674082501badec73/src/avram/migrator/statement_helpers.cr#L93" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/60ff85995eef3ac5191823112b771d2322407a7b/src/avram/migrator/statement_helpers.cr#L93" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2365,7 +2365,7 @@ Postgres does not support updating or replacing a trigger as of version 12</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/a620faeaa75347bd3b1fbc52674082501badec73/src/avram/migrator/statement_helpers.cr#L55" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/60ff85995eef3ac5191823112b771d2322407a7b/src/avram/migrator/statement_helpers.cr#L55" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2381,7 +2381,7 @@ Postgres does not support updating or replacing a trigger as of version 12</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/a620faeaa75347bd3b1fbc52674082501badec73/src/avram/migrator/statement_helpers.cr#L51" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/60ff85995eef3ac5191823112b771d2322407a7b/src/avram/migrator/statement_helpers.cr#L51" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2397,7 +2397,7 @@ Postgres does not support updating or replacing a trigger as of version 12</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/a620faeaa75347bd3b1fbc52674082501badec73/src/avram/migrator/statement_helpers.cr#L47" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/60ff85995eef3ac5191823112b771d2322407a7b/src/avram/migrator/statement_helpers.cr#L47" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -2413,7 +2413,7 @@ Postgres does not support updating or replacing a trigger as of version 12</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/a620faeaa75347bd3b1fbc52674082501badec73/src/avram/migrator/statement_helpers.cr#L63" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/60ff85995eef3ac5191823112b771d2322407a7b/src/avram/migrator/statement_helpers.cr#L63" target="_blank">View source</a>]
         
       </div>
     </div>

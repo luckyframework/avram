@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="generator" content="Crystal Docs 1.19.1">
+<meta name="generator" content="Crystal Docs 1.21.0">
 <meta name="crystal_docs.project_version" content="main">
 <meta name="crystal_docs.project_name" content="avram">
 
@@ -1865,6 +1865,8 @@
 <p>Override <code>#build_prepared_statement</code> method in order to return a prepared <code>Statement</code> to allow querying.
 Override <code>#build_unprepared_statement</code> method in order to return a unprepared <code>Statement</code> to allow querying.
 See also <code>Statement</code> to define how the statements are executed.</p>
+<p>Override <code>#driver_name</code> to return the name the driver is registered with.
+Override <code>#server_name</code> and <code>#server_version</code> to expose what the server reports about itself.</p>
 <p>If at any give moment the connection is lost a DB::ConnectionLost should be raised. This will
 allow the connection pool to try to reconnect or use another connection if available.</p>
 
@@ -1911,21 +1913,21 @@ allow the connection pool to try to reconnect or use another connection if avail
   </h2>
   
     
-      <a href="https://github.com/luckyframework/avram/blob/a620faeaa75347bd3b1fbc52674082501badec73/lib/db/src/db/connection.cr#L21" target="_blank">
+      <a href="https://github.com/luckyframework/avram/blob/60ff85995eef3ac5191823112b771d2322407a7b/lib/db/src/db/connection.cr#L24" target="_blank">
         lib/db/src/db/connection.cr
       </a>
     
     <br/>
   
     
-      <a href="https://github.com/luckyframework/avram/blob/a620faeaa75347bd3b1fbc52674082501badec73/lib/db/src/db/error.cr#L2" target="_blank">
+      <a href="https://github.com/luckyframework/avram/blob/60ff85995eef3ac5191823112b771d2322407a7b/lib/db/src/db/error.cr#L2" target="_blank">
         lib/db/src/db/error.cr
       </a>
     
     <br/>
   
     
-      <a href="https://github.com/luckyframework/avram/blob/a620faeaa75347bd3b1fbc52674082501badec73/src/ext/db/connection.cr#L2" target="_blank">
+      <a href="https://github.com/luckyframework/avram/blob/60ff85995eef3ac5191823112b771d2322407a7b/src/ext/db/connection.cr#L2" target="_blank">
         ext/db/connection.cr
       </a>
     

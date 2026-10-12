@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="generator" content="Crystal Docs 1.19.1">
+<meta name="generator" content="Crystal Docs 1.21.0">
 <meta name="crystal_docs.project_version" content="main">
 <meta name="crystal_docs.project_name" content="avram">
 
@@ -1888,7 +1888,7 @@
   </h2>
   
     
-      <a href="https://github.com/luckyframework/avram/blob/a620faeaa75347bd3b1fbc52674082501badec73/src/avram/migrator/index_statement_helpers.cr#L1" target="_blank">
+      <a href="https://github.com/luckyframework/avram/blob/60ff85995eef3ac5191823112b771d2322407a7b/src/avram/migrator/index_statement_helpers.cr#L1" target="_blank">
         avram/migrator/index_statement_helpers.cr
       </a>
     
@@ -1917,9 +1917,7 @@
   <ul class="list-summary">
     
       <li class="entry-summary">
-        <a href="#add_index%28column%3ASymbol%2Cunique%3Dfalse%2Cusing%3ASymbol%3D%3Abtree%29-instance-method" class="signature"><strong>#add_index</strong>(column : Symbol, unique = <span class="n">false</span>, using : Symbol = <span class="n">:btree</span>)</a>
-        
-          <div class="summary"><p>Generates raw sql for adding an index to a table column.</p></div>
+        <a href="#add_index%28column%3ASymbol%2Cunique%3Dfalse%2Cusing%3ASymbol%3D%3Abtree%2Cwhere%3AAvram%3A%3AQueryable%7CNil%3Dnil%2Cwhere_raw%3AString%7CNil%3Dnil%29-instance-method" class="signature"><strong>#add_index</strong>(column : Symbol, unique = <span class="n">false</span>, using : Symbol = <span class="n">:btree</span>, where : Avram::Queryable | Nil = <span class="n">nil</span>, where_raw : String | Nil = <span class="n">nil</span>)</a>
         
       </li>
     
@@ -1954,23 +1952,18 @@
     Instance Method Detail
   </h2>
   
-    <div class="entry-detail" id="add_index(column:Symbol,unique=false,using:Symbol=:btree)-instance-method">
+    <div class="entry-detail" id="add_index(column:Symbol,unique=false,using:Symbol=:btree,where:Avram::Queryable|Nil=nil,where_raw:String|Nil=nil)-instance-method">
       <div class="signature">
         
-        def <strong>add_index</strong>(column : Symbol, unique = <span class="n">false</span>, using : Symbol = <span class="n">:btree</span>)
+        def <strong>add_index</strong>(column : Symbol, unique = <span class="n">false</span>, using : Symbol = <span class="n">:btree</span>, where : <a href="../../Avram/Queryable.html">Avram::Queryable</a> | <a href="../../Nil.html">Nil</a> = <span class="n">nil</span>, where_raw : <a href="../../String.html">String</a> | <a href="../../Nil.html">Nil</a> = <span class="n">nil</span>)
 
-        <a class="method-permalink" href="#add_index%28column%3ASymbol%2Cunique%3Dfalse%2Cusing%3ASymbol%3D%3Abtree%29-instance-method">#</a>
+        <a class="method-permalink" href="#add_index%28column%3ASymbol%2Cunique%3Dfalse%2Cusing%3ASymbol%3D%3Abtree%2Cwhere%3AAvram%3A%3AQueryable%7CNil%3Dnil%2Cwhere_raw%3AString%7CNil%3Dnil%29-instance-method">#</a>
       </div>
-      
-        <div class="doc">
-          
-          <p>Generates raw sql for adding an index to a table column. Accepts 'unique' and 'using' options.</p>
-        </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/a620faeaa75347bd3b1fbc52674082501badec73/src/avram/migrator/index_statement_helpers.cr#L7" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/60ff85995eef3ac5191823112b771d2322407a7b/src/avram/migrator/index_statement_helpers.cr#L6" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1991,7 +1984,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/luckyframework/avram/blob/a620faeaa75347bd3b1fbc52674082501badec73/src/avram/migrator/index_statement_helpers.cr#L13" target="_blank">View source</a>]
+          [<a href="https://github.com/luckyframework/avram/blob/60ff85995eef3ac5191823112b771d2322407a7b/src/avram/migrator/index_statement_helpers.cr#L18" target="_blank">View source</a>]
         
       </div>
     </div>
