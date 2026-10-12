@@ -1,4 +1,8 @@
+require "./field_key_helpers"
+
 module Lucky::SelectHelpers
+  include Lucky::FieldKeyHelpers
+
   def select_input(field : Avram::PermittedAttribute, attrs : Array(Symbol) = [] of Symbol, **html_options, &) : Nil
     select_tag attrs, merge_options(html_options, {"id" => input_id(field), "name" => input_name(field)}) do
       yield
@@ -42,21 +46,5 @@ module Lucky::SelectHelpers
   # The text is set to `label`.
   def select_prompt(label : String) : Nil
     option(label, value: "")
-  end
-
-  private def input_id(field : Avram::PermittedAttribute)
-    "#{field.param_key}_#{field.name}"
-  end
-
-  private def input_id(field : Avram::PermittedAttribute(Array))
-    "#{field.param_key}_#{field.name}_#{array_id_counter[field.name]}"
-  end
-
-  private def input_name(field : Avram::PermittedAttribute)
-    "#{field.param_key}:#{field.name}"
-  end
-
-  private def input_name(field : Avram::PermittedAttribute(Array))
-    "#{field.param_key}:#{field.name}[]"
   end
 end

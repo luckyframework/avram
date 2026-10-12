@@ -3,6 +3,17 @@ class Avram::Attribute(T)
   getter name : Symbol
   setter value : T?
   getter param_key : String
+
+  # The key used to render this attribute's `name=`/`id=` once it's
+  # exposed as an `Avram::PermittedAttribute` (see `#permitted`).
+  #
+  # This defaults to `param_key` (the key params are actually *extracted*
+  # from, via `#extract`), so nothing changes for a non-nested operation.
+  # A nested `has_one`/`has_many` child operation (see
+  # `Avram::NestedSaveOperation`) may give this a different,
+  # fully-qualified value, without changing where its own params are
+  # extracted from.
+  getter render_param_key : String
   @errors = [] of String
   @param : Avram::Uploadable | Array(String) | String | Nil
 
@@ -10,15 +21,16 @@ class Avram::Attribute(T)
   # may have a blank string that's allowed to be saved.
   property? allow_blank : Bool = false
 
-  def initialize(@name, @value : T?, @param_key, @param = nil)
+  def initialize(@name, @value : T?, @param_key, @param = nil, render_param_key : String? = nil)
     @original_value = @value
+    @render_param_key = render_param_key || @param_key
   end
 
   @_permitted : Avram::PermittedAttribute(T)?
 
   def permitted
     @_permitted ||= begin
-      Avram::PermittedAttribute(T).new(name: @name, param: @param, value: @value, param_key: @param_key).tap do |attribute|
+      Avram::PermittedAttribute(T).new(name: @name, param: @param, value: @value, param_key: @render_param_key).tap do |attribute|
         attribute.allow_blank = allow_blank?
         errors.each do |error|
           attribute.add_error error
