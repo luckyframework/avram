@@ -4,7 +4,7 @@ class Avram::Migrator::DropFunctionStatement
 
   def build
     <<-SQL
-      DROP FUNCTION IF EXISTS "#{@name}" CASCADE;
-      SQL
+    DROP FUNCTION IF EXISTS "#{@name}" CASCADE;
+    SQL
   end
 end

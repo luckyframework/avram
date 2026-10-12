@@ -60,28 +60,28 @@ end
 describe Lucky::LabelHelpers do
   it "renders a label tag" do
     view(&.label_without_html_options).should contain <<-HTML
-      <label for="user_first_name">First name</label>
-      HTML
+    <label for="user_first_name">First name</label>
+    HTML
 
     view(&.label_with_html_options).should contain <<-HTML
-      <label for="user_first_name" class="best-label">First name</label>
-      HTML
+    <label for="user_first_name" class="best-label">First name</label>
+    HTML
 
     view(&.label_with_nil_text).should contain <<-HTML
-      <label for="user_first_name">First name</label>
-      HTML
+    <label for="user_first_name">First name</label>
+    HTML
 
     view(&.label_with_custom_text).should contain <<-HTML
-      <label for="user_first_name">My Label</label>
-      HTML
+    <label for="user_first_name">My Label</label>
+    HTML
 
     view(&.label_with_custom_text_and_options).should contain <<-HTML
-      <label for="user_first_name" class="best-label">My Label</label>
-      HTML
+    <label for="user_first_name" class="best-label">My Label</label>
+    HTML
 
     view(&.label_with_block).should contain <<-HTML
-      <label for="user_first_name"><strong>Have a thought?</strong>Post here for others to see:</label>
-      HTML
+    <label for="user_first_name"><strong>Have a thought?</strong>Post here for others to see:</label>
+    HTML
   end
 end
 

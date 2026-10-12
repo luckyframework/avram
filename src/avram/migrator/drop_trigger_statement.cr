@@ -4,7 +4,7 @@ class Avram::Migrator::DropTriggerStatement
 
   def build
     <<-SQL
-      DROP TRIGGER IF EXISTS #{@trigger_name} ON #{@table_name};
-      SQL
+    DROP TRIGGER IF EXISTS #{@trigger_name} ON #{@table_name};
+    SQL
   end
 end

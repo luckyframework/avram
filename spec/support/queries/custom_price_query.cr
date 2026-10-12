@@ -8,9 +8,9 @@ class CustomPriceQuery
 
   def self.total : Float64
     query = <<-SQL
-      SELECT SUM(in_cents) / 100.0 AS total
-      FROM prices
-      SQL
+    SELECT SUM(in_cents) / 100.0 AS total
+    FROM prices
+    SQL
 
     # Using `query_all` instead of scalar in order to map to
     # the `CustomPriceQuery::Result` object instead of straight to Float64

@@ -18,13 +18,13 @@ class Avram::Migrator::CreateFunctionStatement
 
   def build
     <<-SQL
-      CREATE OR REPLACE FUNCTION #{function_name}
-        RETURNS #{@returns}
-      AS $$
-        #{@body}
-      $$
-      LANGUAGE #{@language}
-      #{@behavior};
-      SQL
+    CREATE OR REPLACE FUNCTION #{function_name}
+      RETURNS #{@returns}
+    AS $$
+      #{@body}
+    $$
+    LANGUAGE #{@language}
+    #{@behavior};
+    SQL
   end
 end

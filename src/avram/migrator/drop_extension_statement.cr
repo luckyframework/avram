@@ -4,7 +4,7 @@ class Avram::Migrator::DropExtensionStatement
 
   def build
     <<-SQL
-      DROP EXTENSION IF EXISTS "#{@name}" CASCADE;
-      SQL
+    DROP EXTENSION IF EXISTS "#{@name}" CASCADE;
+    SQL
   end
 end
