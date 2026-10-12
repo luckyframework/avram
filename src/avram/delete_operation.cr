@@ -129,8 +129,16 @@ abstract class Avram::DeleteOperation(T)
     if record.is_a?(Avram::SoftDelete::Model)
       record.soft_delete
     else
-      record.delete
+      query = delete_query(record.id)
+      write_database.exec query.statement, args: query.args
       record
     end
+  end
+
+  private def delete_query(id)
+    Avram::QueryBuilder
+      .new(table_name)
+      .where(Avram::Where::Equal.new(primary_key_name, id.to_s))
+      .delete
   end
 end

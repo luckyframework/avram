@@ -181,10 +181,7 @@ describe Avram::Model do
 
   it "can be deleted" do
     UserFactory.create
-    user = UserQuery.new.first
-
-    user.delete
-
+    UserQuery.new.delete
     User::BaseQuery.all.size.should eq 0
   end
 
@@ -209,10 +206,7 @@ describe Avram::Model do
 
     it "can be deleted" do
       LineItemFactory.create
-
-      item = LineItemQuery.new.first
-      item.delete
-
+      LineItemQuery.new.delete
       LineItem::BaseQuery.all.size.should eq 0
     end
   end
@@ -230,8 +224,7 @@ describe Avram::Model do
       item = LineItemFactory.create
       DiscountFactory.create &.line_item_id(item.id)
 
-      discount = DiscountQuery.new.first
-      discount.delete
+      DiscountQuery.new.delete
 
       Discount::BaseQuery.all.size.should eq 0
     end

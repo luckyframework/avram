@@ -111,6 +111,7 @@ module Avram::PrimaryKeyMethods
     id.to_s
   end
 
+  @[Deprecated("Use a DeleteOperation instead")]
   def delete
     self.class.write_database.exec "DELETE FROM #{@@table_name} WHERE #{primary_key_name} = #{escape_primary_key(id)}"
   end

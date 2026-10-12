@@ -6,7 +6,7 @@ describe "Models with different default columns" do
       model = ModelWithDifferentDefaultColumns::SaveOperation.create!(name: "Karen")
       ModelWithDifferentDefaultColumns::BaseQuery.find(model.custom_id).should eq(model)
 
-      model.delete
+      ModelWithDifferentDefaultColumns::BaseQuery.new.delete
       ModelWithDifferentDefaultColumns::BaseQuery.new.select_count.should eq(0)
     end
 
