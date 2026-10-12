@@ -4,7 +4,7 @@ class Avram::Migrator::CreateExtensionStatement
 
   def build
     <<-SQL
-    CREATE EXTENSION IF NOT EXISTS "#{@name}";
-    SQL
+      CREATE EXTENSION IF NOT EXISTS "#{@name}";
+      SQL
   end
 end

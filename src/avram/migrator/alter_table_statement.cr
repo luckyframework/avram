@@ -89,7 +89,7 @@ class Avram::Migrator::AlterTableStatement
   # ```
   @[Deprecated("Use make_optional instead")]
   macro allow_nulls_for(column_name)
-    change_nullability_statements << build_nullability_statement({{column_name.id.stringify}}, true)
+    change_nullability_statements << build_nullability_statement({{ column_name.id.stringify }}, true)
   end
 
   # Change the column's nullability from whatever it is currently to false.
@@ -100,7 +100,7 @@ class Avram::Migrator::AlterTableStatement
   # ```
   @[Deprecated("Use make_required instead")]
   macro forbid_nulls_for(column_name)
-    change_nullability_statements  << build_nullability_statement({{column_name.id.stringify}}, false)
+    change_nullability_statements  << build_nullability_statement({{ column_name.id.stringify }}, false)
   end
 
   def build_nullability_statement(column_name, nullability)
@@ -180,12 +180,12 @@ class Avram::Migrator::AlterTableStatement
     {% end %}
     {% if type_declaration.type.stringify =~ /\w::\w/ && references.nil? %}
       {% type_declaration.raise <<-ERROR
-      Namespaced models must include the `references` option with the name of the table.
+        Namespaced models must include the `references` option with the name of the table.
 
-      Try this...
+        Try this...
 
-        ▸ add_belongs_to(#{type_declaration}, on_delete: #{on_delete}, references: :the_table_name)
-      ERROR
+          ▸ add_belongs_to(#{type_declaration}, on_delete: #{on_delete}, references: :the_table_name)
+        ERROR
       %}
     {% end %}
     {% optional = type_declaration.type.is_a?(Union) %}
@@ -305,14 +305,14 @@ class Avram::Migrator::AlterTableStatement
 
     {% name.raise <<-ERROR
 
-    #{action} expected a symbol like :#{example}, instead got: #{name}.
+      #{action} expected a symbol like :#{example}, instead got: #{name}.
 
-    in: #{name.filename}:#{name.line_number}:#{name.column_number}
+      in: #{name.filename}:#{name.line_number}:#{name.column_number}
 
-    Try replacing...
+      Try replacing...
 
-      ▸ #{name} with :#{example}
-    ERROR
+        ▸ #{name} with :#{example}
+      ERROR
     %}
   end
 
@@ -322,7 +322,7 @@ class Avram::Migrator::AlterTableStatement
         symbol_expected_error("rename", {{ name }})
       {% end %}
     {% end %}
-    renamed_rows << "RENAME COLUMN #{{{old_name}}} TO #{{{new_name}}}"
+    renamed_rows << "RENAME COLUMN #{{{ old_name }}} TO #{{{ new_name }}}"
   end
 
   macro rename_belongs_to(old_association_name, new_association_name)
@@ -331,14 +331,14 @@ class Avram::Migrator::AlterTableStatement
         symbol_expected_error("rename_belongs_to", {{ name }})
       {% end %}
     {% end %}
-    rename {{old_association_name}}_id, {{new_association_name}}_id
+    rename {{ old_association_name }}_id, {{ new_association_name }}_id
   end
 
   macro remove(name)
     {% unless name.is_a?(SymbolLiteral) %}
       symbol_expected_error("remove", {{ name }})
     {% end %}
-    dropped_rows << "  DROP #{{{name}}}"
+    dropped_rows << "  DROP #{{{ name }}}"
   end
 
   macro remove_belongs_to(association_name)

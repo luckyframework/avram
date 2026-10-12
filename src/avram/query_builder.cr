@@ -3,7 +3,7 @@ class Avram::QueryBuilder
 
   alias ColumnName = Symbol | String
   getter table : TableName
-  getter distinct_on : ColumnName | Nil = nil
+  getter distinct_on : ColumnName? = nil
   @limit : Int32?
   @offset : Int32?
   @wheres = [] of Avram::Where::Condition

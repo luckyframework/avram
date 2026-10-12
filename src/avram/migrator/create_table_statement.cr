@@ -97,7 +97,7 @@ class Avram::Migrator::CreateTableStatement
     {% if columns.size < 2 %}
     {% raise "composite_primary_key expected at least two primary keys, instead got #{columns.size}" %}
     {% end %}
-    constraints << %(  PRIMARY KEY ({{columns.map { |col| %("#{col.id}") }.join(", ").id}}))
+    constraints << %(  PRIMARY KEY ({{ columns.map { |col| %("#{col.id}") }.join(", ").id }}))
   end
 
   macro add_timestamps
@@ -155,7 +155,7 @@ class Avram::Migrator::CreateTableStatement
       {% type.raise "partition_by expected one of :range, :list, :hash instead got: #{type}" %}
     {% end %}
 
-    itself.partition = %(\nPARTITION BY {{type.id}} ({{column.id}}))
+    itself.partition = %(\nPARTITION BY {{ type.id }} ({{ column.id }}))
   end
 
   # Adds a references column and index given a model class and references option.
@@ -165,12 +165,12 @@ class Avram::Migrator::CreateTableStatement
     {% end %}
     {% if type_declaration.type.stringify =~ /\w::\w/ && references.nil? %}
       {% type_declaration.raise <<-ERROR
-      Namespaced models must include the `references` option with the name of the table.
+        Namespaced models must include the `references` option with the name of the table.
 
-      Try this...
+        Try this...
 
-        ▸ add_belongs_to(#{type_declaration}, on_delete: #{on_delete}, references: :the_table_name)
-      ERROR
+          ▸ add_belongs_to(#{type_declaration}, on_delete: #{on_delete}, references: :the_table_name)
+        ERROR
       %}
     {% end %}
     {% optional = type_declaration.type.is_a?(Union) %}

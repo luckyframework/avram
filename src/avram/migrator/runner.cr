@@ -39,10 +39,10 @@ class Avram::Migrator::Runner
 
   def self.cmd_args
     String.build do |args|
-      args << "-U " << self.db_user if self.db_user
-      args << " -h " << self.db_host if self.db_host
-      args << " -p " << self.db_port if self.db_port
-      args << ' ' << self.db_name
+      args << "-U " << db_user if db_user
+      args << " -h " << db_host if db_host
+      args << " -p " << db_port if db_port
+      args << ' ' << db_name
     end
   end
 
@@ -51,20 +51,20 @@ class Avram::Migrator::Runner
   # them to `Process.run`
   def self.cmd_args_array : Array(String)
     args = [] of String
-    if user = self.db_user
+    if user = db_user
       args << "-U"
       args << user
     end
-    if host = self.db_host
+    if host = db_host
       args << "-h"
       args << host
     end
-    if port = self.db_port
+    if port = db_port
       args << "-p"
       args << port.to_s
     end
 
-    args << self.db_name
+    args << db_name
     args
   end
 
@@ -93,9 +93,9 @@ class Avram::Migrator::Runner
     end
   rescue e : Exception
     message = e.message.to_s
-    if message.includes?(%("#{self.db_name}" already exists))
+    if message.includes?(%("#{db_name}" already exists))
       unless quiet
-        puts "Already created #{self.db_name.colorize(:green)}"
+        puts "Already created #{db_name.colorize(:green)}"
       end
     elsif message.includes?("Cannot establish connection")
       raise PGNotRunningError.new(message, cause: e)
@@ -141,29 +141,29 @@ class Avram::Migrator::Runner
 
   private def self.create_table_for_tracking_migrations
     <<-SQL
-    CREATE TABLE IF NOT EXISTS #{MIGRATIONS_TABLE_NAME} (
-      id bigserial PRIMARY KEY,
-      version bigint NOT NULL
-    )
-    SQL
+      CREATE TABLE IF NOT EXISTS #{MIGRATIONS_TABLE_NAME} (
+        id bigserial PRIMARY KEY,
+        version bigint NOT NULL
+      )
+      SQL
   end
 
   private def self.create_unique_index_for_migrations
     <<-SQL
-    CREATE UNIQUE INDEX IF NOT EXISTS migrations_version_index
-    ON #{MIGRATIONS_TABLE_NAME} (version)
-    SQL
+      CREATE UNIQUE INDEX IF NOT EXISTS migrations_version_index
+      ON #{MIGRATIONS_TABLE_NAME} (version)
+      SQL
   end
 
   @[Deprecated("Calling run with a single string is deprecated. Pass the args as a separate Array")]
   def self.run(command : String, output : IO = STDOUT, input : Process::Stdio = Process::Redirect::Close)
     program, *args = command.split(' ')
-    self.run(program, args, output, input)
+    run(program, args, output, input)
   end
 
   def self.run(command : String, args : Array(String), output : IO = STDOUT, input : Process::Stdio = Process::Redirect::Close)
     error_messages = IO::Memory.new
-    ENV["PGPASSWORD"] = self.db_password if self.db_password
+    ENV["PGPASSWORD"] = db_password if db_password
     result = Process.run(
       command: command,
       args: args,
@@ -171,7 +171,7 @@ class Avram::Migrator::Runner
       output: output,
       error: error_messages
     )
-    ENV.delete("PGPASSWORD") if self.db_password
+    ENV.delete("PGPASSWORD") if db_password
     unless result.success?
       raise error_messages.to_s
     end

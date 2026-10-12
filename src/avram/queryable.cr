@@ -239,19 +239,17 @@ module Avram::Queryable(T)
 
   def select_count : Int64
     cache_store.fetch(cache_key(:select_count), as: Int64) do
-      begin
-        table = "(#{query.statement}) AS temp"
-        new_query = Avram::QueryBuilder.new(table).select_count
-        result = read_database.scalar new_query.statement, args: query.args, queryable: schema_class.name
-        result.as(Int64)
-      rescue e : DB::NoResultsError
-        0_i64
-      end
+      table = "(#{query.statement}) AS temp"
+      new_query = Avram::QueryBuilder.new(table).select_count
+      result = read_database.scalar new_query.statement, args: query.args, queryable: schema_class.name
+      result.as(Int64)
+    rescue DB::NoResultsError
+      0_i64
     end
   end
 
   # Remove when PG::PGValue matches rs.read possibilities
-  alias PGValue = Bool | Float32 | Float64 | Int16 | Int32 | Int64 | PG::Numeric | String | Time | UUID | Nil
+  alias PGValue = Bool | Float32 | Float64 | Int16 | Int32 | Int64 | PG::Numeric | String | Time | UUID?
 
   def group_count : Hash(Array(PGValue), Int64)
     read_database.query_all(

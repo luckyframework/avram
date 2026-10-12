@@ -259,7 +259,6 @@ module Avram::Validations
   # validate_numeric age, at_least: 18
   # validate_numeric count, at_least: 0, no_more_than: 1200
   # ```
-  # ameba:disable Metrics/CyclomaticComplexity
   def validate_numeric(
     attribute : Avram::Attribute(Number),
     *,

@@ -58,9 +58,9 @@ module Avram::Expectations
       end
 
       <<-MSG
-        Expected operation to not have an error, got errors:
-        #{self.class.list(operation.errors)}
-        MSG
+      Expected operation to not have an error, got errors:
+      #{self.class.list(operation.errors)}
+      MSG
     end
 
     protected def self.list(errors : Hash)

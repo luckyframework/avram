@@ -4,7 +4,7 @@ class Avram::Migrator::AlterExtensionStatement
 
   def build
     String.build do |sql|
-      sql << %{ALTER EXTENSION "} << @name << %{" UPDATE}
+      sql << %(ALTER EXTENSION ") << @name << %(" UPDATE)
       sql << to_version if @to
       sql << ';'
     end

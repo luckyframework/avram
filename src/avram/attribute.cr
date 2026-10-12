@@ -4,7 +4,7 @@ class Avram::Attribute(T)
   setter value : T?
   getter param_key : String
   @errors = [] of String
-  @param : Avram::Uploadable | Array(String) | String | Nil
+  @param : Avram::Uploadable | Array(String) | String | Nil # ameba:disable Style/VerboseNilType
 
   # This can be used as an escape hatch when you
   # may have a blank string that's allowed to be saved.

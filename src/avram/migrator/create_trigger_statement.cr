@@ -10,11 +10,11 @@ class Avram::Migrator::CreateTriggerStatement
 
   def build
     <<-SQL
-    CREATE TRIGGER #{@trigger_name}
-    #{@trigger_when.to_s.upcase} #{operation_statement} ON #{@table_name}
-    FOR EACH ROW
-    EXECUTE PROCEDURE #{@function}();
-    SQL
+      CREATE TRIGGER #{@trigger_name}
+      #{@trigger_when.to_s.upcase} #{operation_statement} ON #{@table_name}
+      FOR EACH ROW
+      EXECUTE PROCEDURE #{@function}();
+      SQL
   end
 
   private def operation_statement
