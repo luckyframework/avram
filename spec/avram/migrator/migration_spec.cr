@@ -127,27 +127,23 @@ describe Avram::Migrator::Migration::V1 do
 
   describe "statement execution order" do
     it "runs execute statements in the order they were called" do
-      begin
-        MigrationWithOrderDependentExecute::V998.new.up(quiet: true)
-        columns = get_column_names("execution_order")
-        columns.includes?({"new_col", true}).should be_true
-        columns.includes?({"bar", true}).should be_true
-      ensure
-        MigrationWithOrderDependentExecute::V998.new.down(quiet: true)
-      end
+      MigrationWithOrderDependentExecute::V998.new.up(quiet: true)
+      columns = get_column_names("execution_order")
+      columns.includes?({"new_col", true}).should be_true
+      columns.includes?({"bar", true}).should be_true
+    ensure
+      MigrationWithOrderDependentExecute::V998.new.down(quiet: true)
     end
   end
 
   describe "altering a table with records" do
     it "adds the new column without raising an exception" do
-      begin
-        MigrationWithAlterAndFillExisting::V997.new.up(quiet: true)
-        columns = get_column_names("execution_order")
-        columns.includes?({"x", false}).should be_true
-        columns.includes?({"y", false}).should be_true
-      ensure
-        MigrationWithAlterAndFillExisting::V997.new.down(quiet: true)
-      end
+      MigrationWithAlterAndFillExisting::V997.new.up(quiet: true)
+      columns = get_column_names("execution_order")
+      columns.includes?({"x", false}).should be_true
+      columns.includes?({"y", false}).should be_true
+    ensure
+      MigrationWithAlterAndFillExisting::V997.new.down(quiet: true)
     end
   end
 
