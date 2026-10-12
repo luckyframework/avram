@@ -4,7 +4,7 @@ module Avram::Migrator::Columns
   abstract class FloatColumn(T) < Base
     private getter precision, scale
 
-    @default : T | Float32 | Nil = nil
+    @default : T | Float32? = nil
     @precision : Int32?
     @scale : Int32?
 

@@ -2,7 +2,7 @@ require "./base"
 
 module Avram::Migrator::Columns
   class BytesColumn(T) < Base
-    @default : T | Bytes | Nil = nil
+    @default : T | Bytes? = nil
 
     def initialize(@name, @nilable, @default)
     end
