@@ -77,43 +77,43 @@ describe Lucky::InputHelpers do
     it "works for non-booleans" do
       checked_field = form.eula("yes")
       view(&.checkbox(checked_field, checked_value: "yes", unchecked_value: "no")).should contain <<-HTML
-      <input type="checkbox" id="user_eula" name="user:eula" value="yes" checked>
-      HTML
+        <input type="checkbox" id="user_eula" name="user:eula" value="yes" checked>
+        HTML
       view(&.checkbox(checked_field, checked_value: "yes", unchecked_value: "no")).should contain <<-HTML
-      <input type="hidden" id="" name="user:eula" value="no">
-      HTML
+        <input type="hidden" id="" name="user:eula" value="no">
+        HTML
 
       checked_field = form.eula("no")
       view(&.checkbox(checked_field, checked_value: "yes", unchecked_value: "no")).should contain <<-HTML
-      <input type="checkbox" id="user_eula" name="user:eula" value="yes">
-      HTML
+        <input type="checkbox" id="user_eula" name="user:eula" value="yes">
+        HTML
       view(&.checkbox(checked_field, checked_value: "yes", unchecked_value: "no")).should contain <<-HTML
-      <input type="hidden" id="" name="user:eula" value="no">
-      HTML
+        <input type="hidden" id="" name="user:eula" value="no">
+        HTML
     end
 
     it "sets checked and unchecked values for booleans automatically" do
       false_field = form.admin(false)
       view(&.checkbox(false_field)).should contain <<-HTML
-      <input type="checkbox" id="user_admin" name="user:admin" value="true">
-      HTML
+        <input type="checkbox" id="user_admin" name="user:admin" value="true">
+        HTML
       view(&.checkbox(false_field)).should contain <<-HTML
-      <input type="hidden" id="" name="user:admin" value="false">
-      HTML
+        <input type="hidden" id="" name="user:admin" value="false">
+        HTML
       view(&.checkbox(false_field, attrs: [:checked])).should contain <<-HTML
-      <input type="checkbox" id="user_admin" name="user:admin" value="true" checked>
-      HTML
+        <input type="checkbox" id="user_admin" name="user:admin" value="true" checked>
+        HTML
 
       true_field = form.admin(true)
       view(&.checkbox(true_field)).should contain <<-HTML
-      <input type="checkbox" id="user_admin" name="user:admin" value="true" checked>
-      HTML
+        <input type="checkbox" id="user_admin" name="user:admin" value="true" checked>
+        HTML
       view(&.checkbox(true_field)).should contain <<-HTML
-      <input type="hidden" id="" name="user:admin" value="false">
-      HTML
+        <input type="hidden" id="" name="user:admin" value="false">
+        HTML
       view(&.checkbox(true_field, attrs: [:required])).should contain <<-HTML
-      <input type="checkbox" id="user_admin" name="user:admin" value="true" required checked>
-      HTML
+        <input type="checkbox" id="user_admin" name="user:admin" value="true" required checked>
+        HTML
     end
   end
 
@@ -121,14 +121,14 @@ describe Lucky::InputHelpers do
     it "renders the grouped checkboxes" do
       array_field = complex_form.names(["Green", "Sky Blue", "Gold"])
       view(&.grouped_checkbox(array_field, "WiggleBrown")).should contain <<-HTML
-      <input type="checkbox" id="bucket_names_0" name="bucket:names[]" value="WiggleBrown">
-      HTML
+        <input type="checkbox" id="bucket_names_0" name="bucket:names[]" value="WiggleBrown">
+        HTML
       view(&.grouped_checkbox(array_field, "Sky Blue")).should contain <<-HTML
-      <input type="checkbox" id="bucket_names_0" name="bucket:names[]" value="Sky Blue" checked>
-      HTML
+        <input type="checkbox" id="bucket_names_0" name="bucket:names[]" value="Sky Blue" checked>
+        HTML
       view(&.grouped_checkbox(array_field, "Sky Blue", attrs: [:required], class: "inline")).should contain <<-HTML
-      <input type="checkbox" id="bucket_names_0" name="bucket:names[]" value="Sky Blue" class="inline" required checked>
-      HTML
+        <input type="checkbox" id="bucket_names_0" name="bucket:names[]" value="Sky Blue" class="inline" required checked>
+        HTML
     end
   end
 
@@ -136,214 +136,215 @@ describe Lucky::InputHelpers do
     it "renders radio inputs" do
       radio_field = form.status("approved")
 
-      rendered = view { |page|
+      rendered = view do |page|
         page.radio(radio_field, "approved")
         page.radio(radio_field, "unapproved")
-      }
+      end
       rendered.should contain <<-HTML
-      <input type="radio" id="user_status_approved" name="user:status" value="approved" checked>
-      HTML
+        <input type="radio" id="user_status_approved" name="user:status" value="approved" checked>
+        HTML
 
       rendered.should contain <<-HTML
-      <input type="radio" id="user_status_unapproved" name="user:status" value="unapproved">
-      HTML
+        <input type="radio" id="user_status_unapproved" name="user:status" value="unapproved">
+        HTML
     end
 
     it "renders radio inputs with boolean attrs" do
       radio_field = form.status("approved")
 
       view(&.radio(radio_field, "approved", attrs: [:required])).should contain <<-HTML
-      <input type="radio" id="user_status_approved" name="user:status" value="approved" required checked>
-      HTML
+        <input type="radio" id="user_status_approved" name="user:status" value="approved" required checked>
+        HTML
     end
   end
 
   it "renders text inputs" do
     view(&.text_input(form.first_name)).should contain <<-HTML
-    <input type="text" id="user_first_name" name="user:first_name" value="My name">
-    HTML
+      <input type="text" id="user_first_name" name="user:first_name" value="My name">
+      HTML
 
     view(&.text_input(form.first_name, class: "cool")).should contain <<-HTML
-    <input type="text" id="user_first_name" name="user:first_name" value="My name" class="cool">
-    HTML
+      <input type="text" id="user_first_name" name="user:first_name" value="My name" class="cool">
+      HTML
 
     view(&.text_input(form.first_name, attrs: [:required])).should contain <<-HTML
-    <input type="text" id="user_first_name" name="user:first_name" value="My name" required>
-    HTML
+      <input type="text" id="user_first_name" name="user:first_name" value="My name" required>
+      HTML
   end
 
   it "renders email inputs" do
     view(&.email_input(form.first_name)).should contain <<-HTML
-    <input type="email" id="user_first_name" name="user:first_name" value="My name">
-    HTML
+      <input type="email" id="user_first_name" name="user:first_name" value="My name">
+      HTML
 
     view(&.email_input(form.first_name, class: "cool")).should contain <<-HTML
-    <input type="email" id="user_first_name" name="user:first_name" value="My name" class="cool">
-    HTML
+      <input type="email" id="user_first_name" name="user:first_name" value="My name" class="cool">
+      HTML
   end
 
   it "renders file inputs" do
     view(&.file_input(form.first_name)).should contain <<-HTML
-    <input type="file" id="user_first_name" name="user:first_name" value="My name">
-    HTML
+      <input type="file" id="user_first_name" name="user:first_name" value="My name">
+      HTML
 
     view(&.file_input(form.first_name, class: "cool")).should contain <<-HTML
-    <input type="file" id="user_first_name" name="user:first_name" value="My name" class="cool">
-    HTML
+      <input type="file" id="user_first_name" name="user:first_name" value="My name" class="cool">
+      HTML
   end
 
   it "renders color inputs" do
     view(&.color_input(form.first_name)).should contain <<-HTML
-    <input type="color" id="user_first_name" name="user:first_name" value="My name">
-    HTML
+      <input type="color" id="user_first_name" name="user:first_name" value="My name">
+      HTML
 
     view(&.color_input(form.first_name, class: "cool")).should contain <<-HTML
-    <input type="color" id="user_first_name" name="user:first_name" value="My name" class="cool">
-    HTML
+      <input type="color" id="user_first_name" name="user:first_name" value="My name" class="cool">
+      HTML
   end
 
   it "renders hidden inputs" do
     view(&.hidden_input(form.first_name)).should contain <<-HTML
-    <input type="hidden" id="user_first_name" name="user:first_name" value="My name">
-    HTML
+      <input type="hidden" id="user_first_name" name="user:first_name" value="My name">
+      HTML
 
     view(&.hidden_input(form.first_name, class: "cool")).should contain <<-HTML
-    <input type="hidden" id="user_first_name" name="user:first_name" value="My name" class="cool">
-    HTML
+      <input type="hidden" id="user_first_name" name="user:first_name" value="My name" class="cool">
+      HTML
   end
 
   it "renders number inputs" do
     view(&.number_input(form.first_name)).should contain <<-HTML
-    <input type="number" id="user_first_name" name="user:first_name" value="My name">
-    HTML
+      <input type="number" id="user_first_name" name="user:first_name" value="My name">
+      HTML
 
     view(&.number_input(form.first_name, class: "cool")).should contain <<-HTML
-    <input type="number" id="user_first_name" name="user:first_name" value="My name" class="cool">
-    HTML
+      <input type="number" id="user_first_name" name="user:first_name" value="My name" class="cool">
+      HTML
   end
 
   it "renders telephone inputs" do
     view(&.telephone_input(form.first_name)).should contain <<-HTML
-    <input type="tel" id="user_first_name" name="user:first_name" value="My name">
-    HTML
+      <input type="tel" id="user_first_name" name="user:first_name" value="My name">
+      HTML
 
     view(&.telephone_input(form.first_name, class: "cool")).should contain <<-HTML
-    <input type="tel" id="user_first_name" name="user:first_name" value="My name" class="cool">
-    HTML
+      <input type="tel" id="user_first_name" name="user:first_name" value="My name" class="cool">
+      HTML
   end
 
   it "renders url inputs" do
     view(&.url_input(form.first_name)).should contain <<-HTML
-    <input type="url" id="user_first_name" name="user:first_name" value="My name">
-    HTML
+      <input type="url" id="user_first_name" name="user:first_name" value="My name">
+      HTML
 
     view(&.url_input(form.first_name, class: "cool")).should contain <<-HTML
-    <input type="url" id="user_first_name" name="user:first_name" value="My name" class="cool">
-    HTML
+      <input type="url" id="user_first_name" name="user:first_name" value="My name" class="cool">
+      HTML
   end
 
   it "renders search inputs" do
     view(&.search_input(form.first_name)).should contain <<-HTML
-    <input type="search" id="user_first_name" name="user:first_name" value="My name">
-    HTML
+      <input type="search" id="user_first_name" name="user:first_name" value="My name">
+      HTML
 
     view(&.search_input(form.first_name, class: "cool")).should contain <<-HTML
-    <input type="search" id="user_first_name" name="user:first_name" value="My name" class="cool">
-    HTML
+      <input type="search" id="user_first_name" name="user:first_name" value="My name" class="cool">
+      HTML
 
     view(&.search_input(form.first_name, autofocus: true)).should contain <<-HTML
-    <input type="search" id="user_first_name" name="user:first_name" value="My name" autofocus="true">
-    HTML
+      <input type="search" id="user_first_name" name="user:first_name" value="My name" autofocus="true">
+      HTML
   end
 
   it "renders password inputs" do
     view(&.password_input(form.first_name)).should contain <<-HTML
-    <input type="password" id="user_first_name" name="user:first_name" value="">
-    HTML
+      <input type="password" id="user_first_name" name="user:first_name" value="">
+      HTML
 
     view(&.password_input(form.first_name, class: "cool")).should contain <<-HTML
-    <input type="password" id="user_first_name" name="user:first_name" value="" class="cool">
-    HTML
+      <input type="password" id="user_first_name" name="user:first_name" value="" class="cool">
+      HTML
   end
 
   it "renders range inputs" do
     view(&.range_input(form.first_name)).should contain <<-HTML
-    <input type="range" id="user_first_name" name="user:first_name" value="My name">
-    HTML
+      <input type="range" id="user_first_name" name="user:first_name" value="My name">
+      HTML
 
     view(&.range_input(form.first_name, class: "cool")).should contain <<-HTML
-    <input type="range" id="user_first_name" name="user:first_name" value="My name" class="cool">
-    HTML
+      <input type="range" id="user_first_name" name="user:first_name" value="My name" class="cool">
+      HTML
   end
 
   it "renders textareas" do
     view(&.textarea(form.first_name)).should contain <<-HTML
-    <textarea id="user_first_name" name="user:first_name">My name</textarea>
-    HTML
+      <textarea id="user_first_name" name="user:first_name">My name</textarea>
+      HTML
 
     view(&.textarea(form.first_name, class: "cool")).should contain <<-HTML
-    <textarea id="user_first_name" name="user:first_name" class="cool">My name</textarea>
-    HTML
+      <textarea id="user_first_name" name="user:first_name" class="cool">My name</textarea>
+      HTML
 
     view(&.textarea(form.first_name, rows: 5, cols: 15)).should contain <<-HTML
-    <textarea id="user_first_name" name="user:first_name" rows="5" cols="15">My name</textarea>
-    HTML
+      <textarea id="user_first_name" name="user:first_name" rows="5" cols="15">My name</textarea>
+      HTML
 
     view(&.textarea(form.first_name, attrs: [:required])).should contain <<-HTML
-    <textarea id="user_first_name" name="user:first_name" required>My name</textarea>
-    HTML
+      <textarea id="user_first_name" name="user:first_name" required>My name</textarea>
+      HTML
   end
 
   it "renders time inputs" do
     view(&.time_input(form.joined_at)).should contain <<-HTML
-    <input type="time" id="user_joined_at" name="user:joined_at" value="10:20:30">
-    HTML
+      <input type="time" id="user_joined_at" name="user:joined_at" value="10:20:30">
+      HTML
 
     view(&.time_input(form.joined_at, min: "09:00", max: "18:00")).should contain <<-HTML
-    <input type="time" id="user_joined_at" name="user:joined_at" value="10:20:30" min="09:00" max="18:00">
-    HTML
+      <input type="time" id="user_joined_at" name="user:joined_at" value="10:20:30" min="09:00" max="18:00">
+      HTML
 
     view(&.time_input(form.joined_at, attrs: [:required], min: "09:00", max: "18:00")).should contain <<-HTML
-    <input type="time" id="user_joined_at" name="user:joined_at" value="10:20:30" min="09:00" max="18:00" required>
-    HTML
+      <input type="time" id="user_joined_at" name="user:joined_at" value="10:20:30" min="09:00" max="18:00" required>
+      HTML
   end
 
   it "renders date inputs" do
     view(&.date_input(form.joined_at)).should contain <<-HTML
-    <input type="date" id="user_joined_at" name="user:joined_at" value="2016-02-15">
-    HTML
+      <input type="date" id="user_joined_at" name="user:joined_at" value="2016-02-15">
+      HTML
 
     view(&.date_input(form.joined_at, min: "2019-01-01", max: "2019-12-31")).should contain <<-HTML
-    <input type="date" id="user_joined_at" name="user:joined_at" value="2016-02-15" min="2019-01-01" max="2019-12-31">
-    HTML
+      <input type="date" id="user_joined_at" name="user:joined_at" value="2016-02-15" min="2019-01-01" max="2019-12-31">
+      HTML
 
     view(&.date_input(form.joined_at, attrs: [:required], min: "2019-01-01", max: "2019-12-31")).should contain <<-HTML
-    <input type="date" id="user_joined_at" name="user:joined_at" value="2016-02-15" min="2019-01-01" max="2019-12-31" required>
-    HTML
+      <input type="date" id="user_joined_at" name="user:joined_at" value="2016-02-15" min="2019-01-01" max="2019-12-31" required>
+      HTML
   end
 
   it "renders datetime-local inputs" do
     view(&.datetime_input(form.joined_at)).should contain <<-HTML
-    <input type="datetime-local" id="user_joined_at" name="user:joined_at" value="2016-02-15T10:20:30">
-    HTML
+      <input type="datetime-local" id="user_joined_at" name="user:joined_at" value="2016-02-15T10:20:30">
+      HTML
 
     view(&.datetime_input(form.joined_at, min: "2019-01-01T00:00:00", max: "2019-12-31T23:59:59")).should contain <<-HTML
-    <input type="datetime-local" id="user_joined_at" name="user:joined_at" value="2016-02-15T10:20:30" min="2019-01-01T00:00:00" max="2019-12-31T23:59:59">
-    HTML
+      <input type="datetime-local" id="user_joined_at" name="user:joined_at" value="2016-02-15T10:20:30" min="2019-01-01T00:00:00" max="2019-12-31T23:59:59">
+      HTML
 
     view(&.datetime_input(form.joined_at, attrs: [:required], min: "2019-01-01T00:00:00", max: "2019-12-31T23:59:59")).should contain <<-HTML
-    <input type="datetime-local" id="user_joined_at" name="user:joined_at" value="2016-02-15T10:20:30" min="2019-01-01T00:00:00" max="2019-12-31T23:59:59" required>
-    HTML
+      <input type="datetime-local" id="user_joined_at" name="user:joined_at" value="2016-02-15T10:20:30" min="2019-01-01T00:00:00" max="2019-12-31T23:59:59" required>
+      HTML
   end
 
   it "generates the proper name for array attributes" do
-    view { |page|
+    rendered = view do |page|
       page.text_input(array_attribute)
       page.text_input(array_attribute)
       page.text_input(array_attribute)
-    }.should contain <<-HTML
-    <input type="text" id="key_group_0" name="key:group[]" value="one"><input type="text" id="key_group_1" name="key:group[]" value="two"><input type="text" id="key_group_2" name="key:group[]" value="">
-    HTML
+    end
+    rendered.should contain <<-HTML
+      <input type="text" id="key_group_0" name="key:group[]" value="one"><input type="text" id="key_group_1" name="key:group[]" value="two"><input type="text" id="key_group_2" name="key:group[]" value="">
+      HTML
   end
 end
 
@@ -367,6 +368,6 @@ end
 
 private def have_unchecked_value(value)
   contain <<-HTML
-  <input type="hidden" id="" name="user:first_name" value="#{value}">
-  HTML
+    <input type="hidden" id="" name="user:first_name" value="#{value}">
+    HTML
 end

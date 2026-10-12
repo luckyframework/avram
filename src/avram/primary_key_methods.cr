@@ -82,7 +82,7 @@ module Avram::PrimaryKeyMethods
   # user.reload?
   # # => Nil
   # ```
-  def reload? : self | Nil
+  def reload? : self?
     base_query_class.new.id(id).first?
   end
 
@@ -100,7 +100,7 @@ module Avram::PrimaryKeyMethods
   # user = user.reload?(&.preload_comments(CommentQuery.new.preload_article))
   # # => Nil
   # ```
-  def reload?(&) : self | Nil
+  def reload?(&) : self?
     query = yield base_query_class.new
     query.id(id).first?
   end

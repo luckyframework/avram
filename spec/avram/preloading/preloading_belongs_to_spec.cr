@@ -17,7 +17,7 @@ describe "Preloading belongs_to associations" do
       comment = comments.first.as(Comment)
 
       comment.post.should eq(post)
-      comment.post_preloaded?.should eq(true)
+      comment.post_preloaded?.should be_true
       Post::BaseQuery.times_called.should eq 1
     end
   end
@@ -32,7 +32,7 @@ describe "Preloading belongs_to associations" do
       employee.manager.should be_nil
       # This is a strange edge case when the object went through
       # preloading, but no association exists
-      employee.manager_preloaded?.should eq(true)
+      employee.manager_preloaded?.should be_true
 
       Employee::SaveOperation.new(employee).tap do |operation|
         operation.manager_id.value = manager.id
@@ -41,7 +41,7 @@ describe "Preloading belongs_to associations" do
       employees = Employee::BaseQuery.new.preload_manager
       employee = employees.first.as(Employee)
       employee.manager.should eq(manager)
-      employee.manager_preloaded?.should eq(true)
+      employee.manager_preloaded?.should be_true
     end
   end
 
@@ -51,7 +51,7 @@ describe "Preloading belongs_to associations" do
       comment = CommentFactory.create &.post_id(post.id)
 
       comment = Comment::BaseQuery.find(comment.id)
-      comment.post_preloaded?.should eq(false)
+      comment.post_preloaded?.should be_false
 
       expect_raises Avram::LazyLoadError do
         comment.post
@@ -68,8 +68,8 @@ describe "Preloading belongs_to associations" do
       comment = Comment::BaseQuery.new.preload_post(Post::BaseQuery.new.preload_comments).find(comment.id)
 
       comment.post.comments.should eq([comment, comment2])
-      comment.post_preloaded?.should eq(true)
-      comment.post.comments_preloaded?.should eq(true)
+      comment.post_preloaded?.should be_true
+      comment.post.comments_preloaded?.should be_true
     end
   end
 
@@ -81,7 +81,7 @@ describe "Preloading belongs_to associations" do
 
     2.times { query.results }
     comment = query.results.first.as(Comment)
-    comment.post_preloaded?.should eq(true)
+    comment.post_preloaded?.should be_true
   end
 
   it "works with uuid foreign keys" do

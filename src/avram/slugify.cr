@@ -70,9 +70,9 @@ module Avram::Slugify
                query : Avram::Queryable) : String?
     slug_candidates = format_candidates(slug_candidates)
 
-    result = slug_candidates.find { |candidate|
+    result = slug_candidates.find do |candidate|
       query.where(slug.name, candidate).none?
-    }
+    end
 
     if result
       result

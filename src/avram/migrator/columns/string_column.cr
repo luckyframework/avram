@@ -2,7 +2,7 @@ require "./base"
 
 module Avram::Migrator::Columns
   class StringColumn(T) < Base
-    @default : T | Nil = nil
+    @default : T? = nil
     private getter? case_sensitive : Bool
 
     def initialize(@name, @nilable, @default, @case_sensitive = true)

@@ -46,8 +46,8 @@ describe "OperationParams" do
     params = Lucky::Params.new(req)
     operation = SaveTaskFromJson.new(params)
     operation.title.value.should eq("Good")
-    operation.body.value.should eq(nil)
-    operation.valid?.should eq(true)
+    operation.body.value.should be_nil
+    operation.valid?.should be_true
   end
 
   it "passes permitted params as JSON" do
@@ -56,7 +56,7 @@ describe "OperationParams" do
     operation = SaveTaskFromJson.new(params)
     operation.title.value.should eq("Good")
     operation.body.value.should eq("food")
-    operation.valid?.should eq(true)
+    operation.valid?.should be_true
   end
 
   it "passes permitted params to the save operation with only arrays" do

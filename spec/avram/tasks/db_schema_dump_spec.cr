@@ -7,7 +7,7 @@ describe Db::Schema::Dump do
       Db::Schema::Dump.new(quiet: true).print_help_or_call(args: ["structure.sql"])
 
       filename = "structure.sql"
-      File.exists?(filename).should eq true
+      File.exists?(filename).should be_true
       File.read(filename).should contain "PostgreSQL database dump"
     end
   end

@@ -14,7 +14,7 @@ abstract class Avram::Migrator::Migration::V1
     end
 
     macro get_version_from_filename
-      {{@type.name.split("::").last.gsub(/V/, "")}}
+      {{ @type.name.split("::").last.gsub(/V/, "") }}
     end
   end
 

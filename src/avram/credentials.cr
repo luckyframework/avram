@@ -42,7 +42,7 @@ class Avram::Credentials
   # Avram::Credentials.parse?(ENV["DB_URL"]?)
   # ```
   def self.parse?(connection_url : String?) : Credentials?
-    return nil if connection_url.nil?
+    return if connection_url.nil?
     parse(connection_url.as(String))
   end
 

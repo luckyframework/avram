@@ -40,7 +40,7 @@ end
 describe "polymorphic belongs to" do
   it "allows you to set the association before save" do
     TestPolymorphicSave.create do |operation, poly|
-      operation.valid?.should eq(true)
+      operation.valid?.should be_true
       poly.should_not be_nil
     end
   end

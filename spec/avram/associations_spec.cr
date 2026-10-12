@@ -29,7 +29,7 @@ describe Avram::Model do
 
     it "returns nil for nilable association that doesn't exist" do
       employee = EmployeeFactory.create
-      employee.manager.should eq nil
+      employee.manager.should be_nil
     end
 
     it "accepts a foreign_key" do

@@ -37,11 +37,11 @@ module Avram::AddColumnAttributes
 
       def {{ attribute[:name] }}=(_value)
         \{% raise <<-ERROR
-          Can't set an attribute value with '{{attribute[:name]}} = '
+          Can't set an attribute value with '{{ attribute[:name] }} = '
 
           Try this...
 
-            ▸ Use '.value' to set the value: '{{attribute[:name]}}.value = '
+            ▸ Use '.value' to set the value: '{{ attribute[:name] }}.value = '
 
           ERROR
           %}

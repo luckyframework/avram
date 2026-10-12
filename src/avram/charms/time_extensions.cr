@@ -41,11 +41,9 @@ struct Time
 
     def self.try_parsing_with_default_formatters(value : String)
       TIME_FORMATS.find do |format|
-        begin
-          format.parse(value)
-        rescue e : Time::Format::Error
-          nil
-        end
+        format.parse(value)
+      rescue Time::Format::Error
+        nil
       end.try do |format|
         SuccessfulCast.new format.parse(value).to_utc
       end
@@ -53,11 +51,9 @@ struct Time
 
     def self.try_parsing_with_string_formats(value)
       Avram.settings.time_formats.find do |format|
-        begin
-          Time.parse(value, format, Time::Location.load("UTC"))
-        rescue e : Time::Format::Error
-          nil
-        end
+        Time.parse(value, format, Time::Location.load("UTC"))
+      rescue Time::Format::Error
+        nil
       end.try do |format|
         SuccessfulCast.new Time.parse(value, format, Time::Location.load("UTC")).to_utc
       end

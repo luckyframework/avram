@@ -30,7 +30,7 @@ module Avram::DatabaseValidations(T)
   ) : Bool
     no_errors = true
     attribute.value.try do |value|
-      if limit_query(query.eq(value)).any? # ameba:disable Performance/AnyInsteadOfEmpty
+      if limit_query(query.eq(value)).any?
         attribute.add_error(message)
         no_errors = false
       end
@@ -69,7 +69,7 @@ module Avram::DatabaseValidations(T)
   ) : Bool
     no_errors = true
     attribute.value.try do |value|
-      if limit_query(query).where(attribute.name, value).any? # ameba:disable Performance/AnyInsteadOfEmpty
+      if limit_query(query).where(attribute.name, value).any?
         attribute.add_error(message)
         no_errors = false
       end

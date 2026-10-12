@@ -280,7 +280,7 @@ abstract class Avram::Database
       yield
     end
     true
-  rescue e : Avram::Rollback
+  rescue Avram::Rollback
     false
   end
 

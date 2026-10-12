@@ -22,7 +22,7 @@ abstract class Avram::Model
   # TODO: Ideally this should be a compile-time raise, but something is calling this when it shouldn't
   def self.database
     raise <<-ERROR
-    The class method `database` must be defined on #{self.name}, the BaseModel,
+    The class method `database` must be defined on #{name}, the BaseModel,
     or defined as separate `read_database` and `write_database` class methods.
 
     Example:
@@ -134,30 +134,30 @@ abstract class Avram::Model
 
       {% if !value_generator || value_generator && !(value_generator.is_a?(ProcLiteral) || value_generator.is_a?(ProcPointer) || value_generator.is_a?(Call)) %}
           {% type_declaration.type.raise <<-ERROR
-              When using a String primary_key, you must also specify a way to generate the value.
-              You can provide a class method, a proc or a proc pointer.
-              Your value generator must return a non-nullable String.
+            When using a String primary_key, you must also specify a way to generate the value.
+            You can provide a class method, a proc or a proc pointer.
+            Your value generator must return a non-nullable String.
 
-              Example:
-                table do
-                  primary_key id : String = Random::Secure.hex
-                  ...
-                end
+            Example:
+              table do
+                primary_key id : String = Random::Secure.hex
+                ...
+              end
 
-              Or with a proc:
-                table do
-                  primary_key id : String = -> { Random::Secure.hex }
-                  ...
-                end
-              ERROR
+            Or with a proc:
+              table do
+                primary_key id : String = -> { Random::Secure.hex }
+                ...
+              end
+            ERROR
           %}
       {% end %}
 
       def self.primary_key_value_generator : String
         {% if value_generator.is_a?(ProcLiteral) || value_generator.is_a?(ProcPointer) %}
-          {{value_generator}}.call
+          {{ value_generator }}.call
         {% else %}
-          {{value_generator}}
+          {{ value_generator }}
         {% end %}
       end
     {% end %}
@@ -232,7 +232,7 @@ abstract class Avram::Model
   macro setup_initialize(columns, *args, **named_args)
     def initialize(
         {% for column in columns %}
-          @{{column[:name]}},
+          @{{ column[:name] }},
         {% end %}
       )
     end
@@ -264,12 +264,12 @@ abstract class Avram::Model
 
   macro setup_getters(columns, *args, **named_args)
     {% for column in columns %}
-      def {{column[:name]}} : {{column[:type]}}{{(column[:nilable] ? "?" : "").id}}
-        {{ column[:type] }}.adapter.from_db!(@{{column[:name]}})
+      def {{ column[:name] }} : {{ column[:type] }}{{ (column[:nilable] ? "?" : "").id }}
+        {{ column[:type] }}.adapter.from_db!(@{{ column[:name] }})
       end
       {% if column[:type].id == Bool.id %}
-      def {{column[:name]}}? : Bool
-        !!{{column[:name]}}
+      def {{ column[:name] }}? : Bool
+        !!{{ column[:name] }}
       end
       {% end %}
     {% end %}

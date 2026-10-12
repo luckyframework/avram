@@ -18,7 +18,7 @@ describe "Preloading has_many through associations" do
         TaggingFactory.create &.tag_id(tag.id).post_id(other_post.id)
 
         post = Post::BaseQuery.new.preload_tags.results.first
-        post.tags_preloaded?.should eq(true)
+        post.tags_preloaded?.should be_true
 
         post.tags.size.should eq(1)
         post.tags.should eq([tag])
@@ -47,7 +47,7 @@ describe "Preloading has_many through associations" do
       posts = Post::BaseQuery.new.preload_tags
 
       2.times { posts.results }
-      posts.results.first.tags_preloaded?.should eq(true)
+      posts.results.first.tags_preloaded?.should be_true
     end
   end
 
@@ -131,7 +131,7 @@ describe "Preloading has_many through associations" do
         tag = TagFactory.create
         original_post = PostFactory.create
         TaggingFactory.create &.tag_id(tag.id).post_id(original_post.id)
-        original_post.tags_preloaded?.should eq(false)
+        original_post.tags_preloaded?.should be_false
 
         Post::BaseQuery.preload_tags(original_post)
 

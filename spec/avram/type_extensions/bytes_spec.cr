@@ -15,12 +15,12 @@ describe "Bytes" do
   describe "blank?" do
     it "returns true" do
       result = Bytes.adapter.parse(Bytes.empty)
-      result.value.blank?.should eq(true)
+      result.value.blank?.should be_true
     end
 
     it "returns false" do
       result = Bytes.adapter.parse("100".to_slice)
-      result.value.blank?.should eq(false)
+      result.value.blank?.should be_false
     end
   end
 end

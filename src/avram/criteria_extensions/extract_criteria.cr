@@ -16,14 +16,14 @@ module Avram::ExtractCriteria
     end
 
     def extract(symbol : Symbol)
-        raise ArgumentError.new("Illegal value #{symbol} as a chrono unit. Allowed values are {{chrono_units_as_names}}") unless {{chrono_units_as_names.stringify}}.includes?(symbol.to_s)
+        raise ArgumentError.new("Illegal value #{symbol} as a chrono unit. Allowed values are {{ chrono_units_as_names }}") unless {{ chrono_units_as_names.stringify }}.includes?(symbol.to_s)
         chrono_unit_enum_member = symbol.to_s.camelcase
         extract(Avram::ChronoUnits.parse(chrono_unit_enum_member))
     end
 
     {% for chrono_unit in chrono_units_as_names %}
-        def extract_{{chrono_unit}}
-            extract(:{{chrono_unit}})
+        def extract_{{ chrono_unit }}
+            extract(:{{ chrono_unit }})
         end
     {% end %}
 

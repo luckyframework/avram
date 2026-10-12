@@ -47,8 +47,8 @@ describe "models using enums" do
     issue = IssueQuery.new.first
     issue.role.should eq(Issue::Role::Critical)
     issue.status.should eq(Issue::Status::Opened)
-    issue.permissions.includes?(Issue::Permissions::Read).should eq(false)
-    issue.permissions.includes?(Issue::Permissions::Write).should eq(true)
+    issue.permissions.includes?(Issue::Permissions::Read).should be_false
+    issue.permissions.includes?(Issue::Permissions::Write).should be_true
   end
 
   it "can use String values from params" do

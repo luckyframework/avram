@@ -54,6 +54,6 @@ describe "TypeExtensions" do
     # Any Int32 value above Int16::MAX will cause a FailedCase
     # that will fail in Avram::Type#parse!
     opt = MenuOptionQuery.new.option_value(32767).first?
-    opt.should eq nil
+    opt.should be_nil
   end
 end

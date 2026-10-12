@@ -2,15 +2,15 @@ require "../spec_helper"
 
 macro should_negate(original_where, expected_negated_where)
   {% if original_where.resolve < Avram::Where::NullSqlClause %}
-    clause = {{original_where}}.new("column").negated
+    clause = {{ original_where }}.new("column").negated
   {% else %}
-    clause = {{original_where}}.new("column", "value").negated
+    clause = {{ original_where }}.new("column", "value").negated
   {% end %}
   clause.column.should eq "column"
   {% unless original_where.resolve < Avram::Where::NullSqlClause %}
     clause.value.should eq "value"
   {% end %}
-  clause.should be_a({{expected_negated_where}})
+  clause.should be_a({{ expected_negated_where }})
 end
 
 describe Avram::Where do

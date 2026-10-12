@@ -50,7 +50,7 @@ abstract class Avram::Operation
   # end
   # ```
   def self.run(params : Avram::Paramable, *args, **named_args, &)
-    operation = self.new(params, *args, **named_args)
+    operation = new(params, *args, **named_args)
     value = nil
 
     operation.before_run

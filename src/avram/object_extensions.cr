@@ -1,7 +1,7 @@
 class Object
   def blank? : Bool
     if self.responds_to?(:empty?)
-      self.empty?
+      empty?
     else
       false
     end

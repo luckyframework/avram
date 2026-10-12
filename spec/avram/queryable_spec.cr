@@ -320,20 +320,20 @@ describe Avram::Queryable do
     it "is true if there is a record in the database" do
       UserFactory.new.name("First").create
 
-      UserQuery.new.name("First").any?.should be_true # ameba:disable Performance/AnyInsteadOfEmpty
+      UserQuery.new.name("First").any?.should be_true
     end
 
     it "is false if there is not a record in the database" do
       UserFactory.new.name("First").create
 
-      UserQuery.new.name("Second").any?.should be_false # ameba:disable Performance/AnyInsteadOfEmpty
+      UserQuery.new.name("Second").any?.should be_false
     end
 
     it "does not mutate the query" do
       query = UserQuery.new.name("name")
       original_query_sql = query.to_sql
 
-      query.any? # ameba:disable Performance/AnyInsteadOfEmpty
+      query.any?
 
       query.to_sql.should eq original_query_sql
     end
@@ -483,15 +483,15 @@ describe Avram::Queryable do
     end
 
     it "wraps complex queries" do
-      query = UserQuery.new.where { |user_q|
-        user_q.where { |scope|
+      query = UserQuery.new.where do |user_q|
+        user_q.where do |scope|
           scope.age(25).or(&.age(26))
-        }.where { |scope|
+        end.where do |scope|
           scope.name("Billy").or(&.name("Tommy"))
-        }
-      }.or { |scope|
+        end
+      end.or do |scope|
         scope.nickname("Strange")
-      }.query
+      end.query
 
       query.statement.should eq %(SELECT #{User::COLUMN_SQL} FROM users WHERE ( ( "users"."age" = $1 OR "users"."age" = $2 ) AND ( "users"."name" = $3 OR "users"."name" = $4 ) ) OR "users"."nickname" = $5)
       query.args.should eq ["25", "26", "Billy", "Tommy", "Strange"]
@@ -1518,7 +1518,7 @@ describe Avram::Queryable do
       original_query = Post::BaseQuery.new.join_comments(Comment::BaseQuery.new.created_at.asc_order)
       new_query = original_query.clone.select_count
 
-      original_query.first.should_not eq nil
+      original_query.first.should_not be_nil
       new_query.should eq 1
     end
 
@@ -1650,16 +1650,16 @@ describe Avram::Queryable do
   describe "#to_prepared_sql" do
     it "returns the full SQL with args combined" do
       query = Post::BaseQuery.new.title("The Short Post")
-      query.to_prepared_sql.should eq(%{SELECT #{Post::COLUMN_SQL} FROM posts WHERE "posts"."title" = 'The Short Post'})
+      query.to_prepared_sql.should eq(%(SELECT #{Post::COLUMN_SQL} FROM posts WHERE "posts"."title" = 'The Short Post'))
 
       query = Bucket::BaseQuery.new.names(["Larry", "Moe", "Curly"]).numbers([1, 2, 3])
-      query.to_prepared_sql.should eq(%{SELECT #{Bucket::COLUMN_SQL} FROM buckets WHERE "buckets"."names" = '{"Larry","Moe","Curly"}' AND "buckets"."numbers" = '{1,2,3}'})
+      query.to_prepared_sql.should eq(%(SELECT #{Bucket::COLUMN_SQL} FROM buckets WHERE "buckets"."names" = '{"Larry","Moe","Curly"}' AND "buckets"."numbers" = '{1,2,3}'))
 
       query = Blob::BaseQuery.new.doc(JSON::Any.new({"properties" => JSON::Any.new("sold")}))
-      query.to_prepared_sql.should eq(%{SELECT #{Blob::COLUMN_SQL} FROM blobs WHERE "blobs"."doc" = '{"properties":"sold"}'})
+      query.to_prepared_sql.should eq(%(SELECT #{Blob::COLUMN_SQL} FROM blobs WHERE "blobs"."doc" = '{"properties":"sold"}'))
 
       query = UserQuery.new.name.in(["Don", "Juan"]).age.gt(30)
-      query.to_prepared_sql.should eq(%{SELECT #{User::COLUMN_SQL} FROM users WHERE "users"."name" = ANY ('{"Don","Juan"}') AND "users"."age" > '30'})
+      query.to_prepared_sql.should eq(%(SELECT #{User::COLUMN_SQL} FROM users WHERE "users"."name" = ANY ('{"Don","Juan"}') AND "users"."age" > '30'))
     end
 
     it "returns the full SQL with a lot of args" do
@@ -1680,7 +1680,7 @@ describe Avram::Queryable do
         .available_for_hire(true)
         .created_at(a_day)
 
-      query.to_prepared_sql.should eq(%{SELECT #{User::COLUMN_SQL} FROM users WHERE "users"."name" = 'Don' AND "users"."age" > '21' AND "users"."age" < '99' AND "users"."nickname" ILIKE 'j%' AND "users"."nickname" ILIKE '%y' AND "users"."joined_at" > '#{a_week.to_s("%F %X.%6N %z")}' AND "users"."joined_at" < '#{an_hour.to_s("%F %X.%6N %z")}' AND "users"."average_score" > '1.2' AND "users"."average_score" < '4.9' AND "users"."available_for_hire" = 'true' AND "users"."created_at" = '#{a_day.to_s("%F %X.%6N %z")}'})
+      query.to_prepared_sql.should eq(%(SELECT #{User::COLUMN_SQL} FROM users WHERE "users"."name" = 'Don' AND "users"."age" > '21' AND "users"."age" < '99' AND "users"."nickname" ILIKE 'j%' AND "users"."nickname" ILIKE '%y' AND "users"."joined_at" > '#{a_week.to_s("%F %X.%6N %z")}' AND "users"."joined_at" < '#{an_hour.to_s("%F %X.%6N %z")}' AND "users"."average_score" > '1.2' AND "users"."average_score" < '4.9' AND "users"."available_for_hire" = 'true' AND "users"."created_at" = '#{a_day.to_s("%F %X.%6N %z")}'))
     end
   end
 
@@ -1701,7 +1701,7 @@ describe Avram::Queryable do
     it "resets the limit to nil" do
       users = UserQuery.new.limit(10)
       users.query.limit.should eq 10
-      users.reset_limit.query.limit.should eq nil
+      users.reset_limit.query.limit.should be_nil
     end
 
     it "doesn't mutate the query" do
@@ -1718,7 +1718,7 @@ describe Avram::Queryable do
     it "resets the offset to nil" do
       users = UserQuery.new.offset(10)
       users.query.offset.should eq 10
-      users.reset_offset.query.offset.should eq nil
+      users.reset_offset.query.offset.should be_nil
     end
 
     it "doesn't mutate the query" do
@@ -1757,9 +1757,9 @@ describe Avram::Queryable do
         store = query.cache_store.as(LuckyCache::MemoryStore)
         # TODO: https://github.com/luckyframework/lucky_cache/issues/7
         store.@cache.size.should eq(0)
-        query.any?.should eq(true) # ameba:disable Performance/AnyInsteadOfEmpty
+        query.any?.should be_true
         query.results.size.should eq(1)
-        query.any?.should eq(true) # ameba:disable Performance/AnyInsteadOfEmpty
+        query.any?.should be_true
 
         store.@cache.size.should eq(2)
       end

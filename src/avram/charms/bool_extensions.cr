@@ -12,9 +12,9 @@ struct Bool
     end
 
     def parse(value : String) : SuccessfulCast(Bool) | FailedCast
-      if %w(true 1).includes? value
+      if %w[true 1].includes? value
         SuccessfulCast(Bool).new true
-      elsif %w(false 0).includes? value
+      elsif %w[false 0].includes? value
         SuccessfulCast(Bool).new false
       else
         FailedCast.new

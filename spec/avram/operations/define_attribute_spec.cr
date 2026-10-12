@@ -103,7 +103,7 @@ describe "attribute in operations" do
   end
 
   it "assigns the default value to an attribute if one is set and no param is given" do
-    operation.checked.value.should eq false
+    operation.checked.value.should be_false
     operation.thing.value.should eq "taco"
     save_operation.best_kind_of_bear.value.should eq "black bear"
     save_operation.default_is_false.value.should be_false
@@ -113,7 +113,7 @@ describe "attribute in operations" do
   it "overrides the default value with a param if one is given" do
     operation("data:title=Random+Food").title.value.should eq "Random Food"
     operation("data:count=4").count.value.should eq 4
-    operation("data:checked=true").checked.value.should eq true
+    operation("data:checked=true").checked.value.should be_true
     save_operation("post:best_kind_of_bear=brown+bear").best_kind_of_bear.value.should eq "brown bear"
     save_operation("post:best_kind_of_bear=").best_kind_of_bear.value.should be_nil
     delete_operation("post:accept_delete=true").accept_delete.value.should be_true
@@ -166,7 +166,7 @@ describe "attribute in operations" do
     params = Avram::Params.new({"password_confirmation" => "password", "terms_of_service" => "1"})
     operation = SaveOperationWithAttributes.new(params)
     operation.setup_required_database_columns
-    operation.save.should eq true
+    operation.save.should be_true
   end
 
   it "sets named args for attributes, leaves other empty" do
@@ -231,7 +231,7 @@ describe "file_attribute in operation" do
     params = {"thumb" => Avram::UploadedFile.new("thumb.png")}
     operation = upload_save_operation(params)
     operation.setup_required_database_columns
-    operation.save.should eq true
+    operation.save.should be_true
   end
 end
 

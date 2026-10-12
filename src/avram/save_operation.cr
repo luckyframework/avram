@@ -293,8 +293,8 @@ abstract class Avram::SaveOperation(T)
       {{ T.constant(:PRIMARY_KEY_NAME).id }}.value = t.primary_key_value_generator
     end
 
-    self.created_at.value ||= Time.utc if responds_to?(:created_at)
-    self.updated_at.value ||= Time.utc if responds_to?(:updated_at)
+    self.created_at.value ||= Time.utc if responds_to?(:created_at) # ameba:disable Style/RedundantSelf
+    self.updated_at.value ||= Time.utc if responds_to?(:updated_at) # ameba:disable Style/RedundantSelf
     sql = insert_sql
     @record = write_database.query sql.statement, args: sql.args do |result_set|
       @record = T.from_rs(result_set).first
@@ -302,7 +302,7 @@ abstract class Avram::SaveOperation(T)
   end
 
   private def update(id) : T
-    self.updated_at.value = Time.utc if responds_to?(:updated_at)
+    self.updated_at.value = Time.utc if responds_to?(:updated_at) # ameba:disable Style/RedundantSelf
     query = update_query(id)
     @record = write_database.query query.statement_for_update(changes), args: query.args_for_update(changes) do |result_set|
       @record = T.from_rs(result_set).first

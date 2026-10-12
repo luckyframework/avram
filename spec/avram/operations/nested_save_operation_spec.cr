@@ -201,7 +201,7 @@ describe "Avram::SaveOperation with nested operation" do
       business = operation.record.as(Business)
       business.name.should eq "Fubar"
       business.email_address!.address.should eq "foo@bar.com"
-      business.email_address!.default.should eq false
+      business.email_address!.default.should be_false
       business.tax_id!.number.should eq 123
     end
 
