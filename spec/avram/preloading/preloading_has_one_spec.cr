@@ -14,7 +14,7 @@ describe "Preloading has_one associations" do
 
       admin = Admin::BaseQuery.new.preload_sign_in_credential
 
-      admin.first.sign_in_credential_preloaded?.should eq(true)
+      admin.first.sign_in_credential_preloaded?.should be_true
       admin.first.sign_in_credential.should eq sign_in_credential
     end
   end
@@ -41,7 +41,7 @@ describe "Preloading has_one associations" do
 
       admin = Admin::BaseQuery.new.preload_sign_in_credential(&.user_id(admin.id))
 
-      admin.first.sign_in_credential_preloaded?.should eq(true)
+      admin.first.sign_in_credential_preloaded?.should be_true
       admin.first.sign_in_credential.should eq sign_in_credential
     end
   end
@@ -62,7 +62,7 @@ describe "Preloading has_one associations" do
     with_lazy_load(enabled: false) do
       admin = AdminFactory.create
       SignInCredentialFactory.create &.user_id(admin.id)
-      admin.sign_in_credential_preloaded?.should eq(false)
+      admin.sign_in_credential_preloaded?.should be_false
 
       expect_raises Avram::LazyLoadError do
         admin.sign_in_credential
@@ -108,7 +108,7 @@ describe "Preloading has_one associations" do
 
       customers = Customer::BaseQuery.new.preload_manager
 
-      customers.first.manager_preloaded?.should eq(true)
+      customers.first.manager_preloaded?.should be_true
       customers.first.manager.should eq manager
     end
   end
@@ -120,7 +120,7 @@ describe "Preloading has_one associations" do
 
       customers = Customer::BaseQuery.new.preload_manager
 
-      customers.first.manager_preloaded?.should eq(true)
+      customers.first.manager_preloaded?.should be_true
       customers.first.manager.should be_nil
     end
   end
@@ -133,7 +133,7 @@ describe "Preloading has_one associations" do
 
       tax_ids = TaxId::BaseQuery.new.preload_email_address
 
-      tax_ids.first.email_address_preloaded?.should eq(true)
+      tax_ids.first.email_address_preloaded?.should be_true
       tax_ids.first.email_address.should eq email_address
     end
   end
@@ -147,7 +147,7 @@ describe "Preloading has_one associations" do
         admin = Admin::BaseQuery.preload_sign_in_credential(admin)
 
         admin.sign_in_credential.should eq sign_in_credential
-        admin.sign_in_credential_preloaded?.should eq(true)
+        admin.sign_in_credential_preloaded?.should be_true
       end
     end
 
