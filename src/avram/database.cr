@@ -210,13 +210,21 @@ abstract class Avram::Database
   # singular place to retrieve a DB::Connection
   # must be passed a block and we
   # try to release the connection back to the pool
-  # once the block is finished
+  # once the block is finished.
+  #
+  # A nested call in the same fiber reuses the connection it already holds
+  # and leaves it alone: only the call that checked it out releases it.
+  # Otherwise the nested call would hand the connection back to the pool
+  # while the outer block is still using it.
   private def with_connection(&)
     key = object_id
 
+    if connection = connections[key]?
+      return yield connection
+    end
+
     db.retry do
-      connections[key] ||= db.checkout
-      connection = connections[key]
+      connection = connections[key] = db.checkout
 
       begin
         yield connection
