@@ -71,6 +71,13 @@ private class ParamKeySaveOperation < ValueColumnModel::SaveOperation
 end
 
 private class UpsertUserOperation < User::SaveOperation
+  include QuerySpy
+
+  upsert_lookup_columns :name, :nickname
+  upsert_unique_on :name, :nickname
+end
+
+private class UpsertWithoutUniqueKeys < User::SaveOperation
   upsert_lookup_columns :name, :nickname
 end
 
@@ -344,6 +351,147 @@ describe "Avram::SaveOperation" do
         expect_raises(Avram::InvalidOperationError) do
           UpsertUserOperation.upsert!(name: "")
         end
+      end
+    end
+  end
+
+  describe ".upsert" do
+    it "should only proc one query" do
+      UpsertUserOperation.times_called = 0
+      some_time = Time.utc(2016, 2, 15, 10, 20, 30)
+
+      updates = [
+        {
+          name:       "Name 1",
+          nickname:   "Nickname 1",
+          age:        42,
+          joined_at:  some_time,
+          created_at: some_time,
+          updated_at: some_time,
+        },
+        {
+          name:       "Name 2",
+          nickname:   "Nickname 2",
+          age:        42,
+          joined_at:  some_time,
+          created_at: some_time,
+          updated_at: some_time,
+        },
+      ]
+
+      UpsertUserOperation.upsert(updates)
+      UpsertUserOperation.times_called.should eq 1
+    end
+
+    context "when a record already exists" do
+      before_each do
+        UserFactory.create do |u|
+          u.name("Name 1")
+          u.nickname("Nickname 1")
+          u.age(42)
+          u.year_born(1960)
+          u.joined_at(Time.utc)
+        end
+      end
+
+      it "allows manual passing of updated_at, but ignores created_at" do
+        some_time = Time.utc(2016, 2, 15, 10, 20, 30)
+
+        update = {
+          name:       "Name 1",
+          nickname:   "Nickname 1",
+          age:        42,
+          joined_at:  some_time,
+          created_at: some_time,
+          updated_at: some_time,
+        }
+
+        records = UpsertUserOperation.upsert([update])
+        records.first.created_at.should_not eq some_time
+        records.first.updated_at.should eq some_time
+      end
+
+      it "should create one, and update the other record" do
+        update = {
+          name:      "Name 1",
+          nickname:  "Nickname 1",
+          year_born: nil,
+          age:       42,
+          joined_at: Time.utc,
+        }
+
+        insert = {
+          name:      "Name 2",
+          nickname:  "Nickname 2",
+          year_born: 1980_i16,
+          age:       64,
+          joined_at: Time.utc,
+        }
+
+        records = UpsertUserOperation.upsert([update, insert])
+
+        records.first.id.should_not eq nil
+        records.last.id.should_not eq nil
+        records.first.year_born.should eq nil
+        records.last.year_born.should eq 1980_i16
+      end
+    end
+
+    context "when no records exist" do
+      it "allows manual passing of id" do
+        insert = {
+          id:        42_i64,
+          name:      "Name 1",
+          nickname:  "Nickname 1",
+          age:       42,
+          joined_at: Time.utc,
+        }
+
+        records = UpsertUserOperation.upsert([insert])
+        records.first.id.should eq 42_i64
+      end
+
+      it "allows manual passing of updated_at and created_at" do
+        some_time = Time.utc(2016, 2, 15, 10, 20, 30)
+
+        insert = {
+          name:       "Name 1",
+          nickname:   "Nickname 1",
+          age:        42,
+          joined_at:  some_time,
+          created_at: some_time,
+          updated_at: some_time,
+        }
+
+        records = UpsertUserOperation.upsert([insert])
+        records.first.id.should_not eq nil
+        records.first.created_at.should eq some_time
+        records.first.updated_at.should eq some_time
+      end
+    end
+
+    context "when the tuple values are passed in different orders" do
+      it "should upsert records" do
+        record_args = [
+          {
+            name:      "Name 1",
+            nickname:  "Nickname 1",
+            year_born: nil,
+            age:       42,
+            joined_at: Time.utc,
+          },
+          {
+            nickname:  "Nickname 2",
+            name:      "Name 2",
+            age:       42,
+            joined_at: Time.utc,
+            year_born: nil,
+          },
+        ]
+
+        records = UpsertUserOperation.upsert(record_args)
+        records.last.nickname.should eq "Nickname 2"
+        records.last.name.should eq "Name 2"
       end
     end
   end
