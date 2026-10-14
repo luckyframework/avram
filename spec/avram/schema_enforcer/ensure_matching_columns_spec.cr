@@ -6,6 +6,18 @@ private class ModelWithMissingButSimilarlyNamedColumn < BaseModel
   end
 end
 
+private class ModelWithMissingColumn < BaseModel
+  table :users do
+    column first_name : String
+  end
+end
+
+private class ModelWithMissingEnumColumn < BaseModel
+  table :users do
+    column gender : Enum
+  end
+end
+
 private class ModelWithOptionalAttributeOnRequiredColumn < BaseModel
   table :users do
     column name : String?
@@ -24,6 +36,16 @@ describe Avram::SchemaEnforcer::EnsureMatchingColumns do
   it "raises on tables with missing columns" do
     expect_schema_mismatch "wants to use the column 'mickname' but it does not exist. Did you mean 'nickname'?" do
       ModelWithMissingButSimilarlyNamedColumn.ensure_correct_column_mappings!
+    end
+
+    # Partial message assertion for brevity
+    expect_schema_mismatch "wants to use the column 'first_name' but it does not exist." do
+      ModelWithMissingColumn.ensure_correct_column_mappings!
+    end
+
+    # Partial message assertion for brevity
+    expect_schema_mismatch "add gender : Int32" do
+      ModelWithMissingEnumColumn.ensure_correct_column_mappings!
     end
   end
 
