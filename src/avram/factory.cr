@@ -17,6 +17,37 @@ abstract class Avram::Factory
     {% end %}
   end
 
+  # Creates a method named from the TypeDeclaration for assigning the foreign key value
+  # from the object passed in. And a second method for creating the association on saves.
+  # ```
+  # class CommentFactory < Avram::Factory
+  #   belongs_to post : PostFactory
+  #
+  #   def initialize
+  #     create_post
+  #   end
+  # end
+  # ```
+  macro belongs_to(type_declaration)
+    {% unless type_declaration.is_a?(TypeDeclaration) %}
+      {% raise "belongs_to expected a type declaration like 'user : UserFactory', instead got: '#{type_declaration}'" %}
+    {% end %}
+    def {{ type_declaration.var }}(%m : {{ type_declaration.type.stringify.gsub(/Factory$/, "").id }})
+      {{ type_declaration.var }}_id(%m.id)
+    end
+    def create_{{ type_declaration.var }}(&blk : {{ type_declaration.type }} ->)
+      before_save do
+        if operation.{{ type_declaration.var }}_id.value.nil?
+          %m = {{ type_declaration.type.resolve }}.create do |inst|
+            blk.call(inst)
+            inst
+          end
+          {{ type_declaration.var }}(%m)
+        end
+      end
+    end
+  end
+
   macro setup_attribute_shortcuts(operation)
     {% for attribute in operation.resolve.constant(:COLUMN_ATTRIBUTES) %}
       def {{ attribute[:name] }}(value : {{ attribute[:type] }}{% if attribute[:nilable] %}?{% end %})
