@@ -3,7 +3,7 @@
 # ### Usage
 #
 # ```
-# ChangeNullStatement.new(:users, :email, make: :optional).build
+# ChangeNullStatement.new(:users, :email, required: false).build
 # # => "ALTER TABLE users ALTER COLUMN email DROP NOT NULL;"
 # ```
 class Avram::Migrator::ChangeNullStatement
@@ -17,9 +17,11 @@ class Avram::Migrator::ChangeNullStatement
       change = "DROP"
     end
 
+    column = PG::EscapeHelper.escape_identifier(@column.to_s)
+
     String.build do |index|
       index << "ALTER TABLE " << @table
-      index << " ALTER COLUMN " << @column
+      index << " ALTER COLUMN " << column
       index << ' ' << change << " NOT NULL;"
     end
   end
