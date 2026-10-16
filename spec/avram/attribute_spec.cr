@@ -8,7 +8,63 @@ private class CallableMessage
   end
 end
 
+private struct AttributeI18nBackend < Avram::I18nBackend
+  def get(key : String | Symbol) : String
+    case key
+    when :validate_format_of
+      "has an invalid format"
+    else
+      raise "Unexpected translation key: #{key}"
+    end
+  end
+end
+
 describe "Avram::Attribute" do
+  describe "#add_error" do
+    it "localizes default errors without changing explicitly supplied messages" do
+      attribute = Avram::Attribute(String).new(name: :name, value: nil, param_key: "user")
+
+      Avram.temp_config(i18n_backend: AttributeI18nBackend.new) do
+        attribute.add_error
+        attribute.add_error "is invalid"
+      end
+
+      attribute.errors.should eq(["has an invalid format", "is invalid"])
+    end
+  end
+
+  describe "#extract" do
+    it "localizes invalid scalar parameters" do
+      attribute = Avram::Attribute(Int32).new(name: :age, value: nil, param_key: "user")
+
+      Avram.temp_config(i18n_backend: AttributeI18nBackend.new) do
+        attribute.extract(Avram::Params.new({"age" => "not-a-number"}))
+      end
+
+      attribute.errors.should eq(["has an invalid format"])
+    end
+
+    it "localizes invalid array parameters" do
+      attribute = Avram::Attribute(Array(Int32)).new(name: :scores, value: nil, param_key: "user")
+
+      Avram.temp_config(i18n_backend: AttributeI18nBackend.new) do
+        attribute.extract(Avram::Params.new({"scores" => ["not-a-number"]}))
+      end
+
+      attribute.errors.should eq(["has an invalid format"])
+    end
+
+    it "localizes invalid upload parameters" do
+      attribute = Avram::Attribute(Avram::Uploadable).new(name: :avatar, value: nil, param_key: "user")
+
+      Avram.temp_config(i18n_backend: AttributeI18nBackend.new) do
+        attribute.extract(Avram::Params.new({"avatar" => "not-an-upload"}))
+      end
+
+      attribute.errors.should eq(["has an invalid format"])
+    end
+  end
+
   describe "#value" do
     it "returns nil on empty strings" do
       empty_string = Avram::Attribute.new(name: :blank, param: nil, value: " ", param_key: "test_form")
