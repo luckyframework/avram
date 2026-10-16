@@ -31,7 +31,7 @@ class Avram::Attribute(T)
     @param || value.to_s
   end
 
-  def add_error(message : String = "is invalid")
+  def add_error(message : String = Avram.settings.i18n_backend.get(:validate_format_of))
     @errors << message
   end
 
@@ -96,7 +96,7 @@ class Avram::Attribute(T)
     if parse_result.is_a? Avram::Type::SuccessfulCast
       self.value = parse_result.value
     else
-      add_error("is invalid")
+      add_error
     end
   end
 
@@ -109,7 +109,7 @@ class Avram::Attribute(T)
     if parse_result.is_a? Avram::Type::SuccessfulCast
       self.value = parse_result.value
     else
-      add_error("is invalid")
+      add_error
     end
   end
 
@@ -122,7 +122,7 @@ class Avram::Attribute(T)
     if parse_result.is_a? Avram::Type::SuccessfulCast
       self.value = parse_result.value
     else
-      add_error("is invalid")
+      add_error
     end
   end
 
