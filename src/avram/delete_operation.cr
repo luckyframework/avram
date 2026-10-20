@@ -5,6 +5,7 @@ require "./operation_errors"
 require "./param_key_override"
 require "./inherit_column_attributes"
 require "./needy_initializer_and_delete_methods"
+require "./mark_as_failed"
 
 abstract class Avram::DeleteOperation(T)
   include Avram::NeedyInitializerAndDeleteMethods
@@ -15,6 +16,10 @@ abstract class Avram::DeleteOperation(T)
   include Avram::DeleteCallbacks
   include Avram::InheritColumnAttributes
   include Avram::AddColumnAttributes
+  # Included so a `DeleteOperation` can be tracked alongside nested
+  # `SaveOperation`s (see `Avram::NestedSaveOperation#has_many` with
+  # `allow_destroy: true`). `#mark_as_failed` below still takes precedence.
+  include Avram::MarkAsFailed
 
   enum OperationStatus
     Deleted
