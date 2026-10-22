@@ -73,40 +73,27 @@ class Avram::BaseQueryTemplate
         {% for join_type in ["Inner", "Left", "Right", "Full"] %}
           # `on:` accepts WHERE predicates only; the positional query still merges clauses into WHERE.
           def {{ join_type.downcase.id }}_join_{{ assoc[:assoc_name] }}(*, on : {{ assoc[:type] }}::BaseQuery? = nil)
-            on_conditions = on.try(&.query.conditions_for_join) || [] of Avram::Where::Condition
-
-            {% if assoc[:relationship_type] == :belongs_to %}
-              join(
-                Avram::Join::{{ join_type.id }}.new(
-                  from: table_name,
-                  to: {{ assoc[:type] }}.table_name,
-                  primary_key: {{ assoc[:foreign_key].id.symbolize }},
-                  foreign_key: {{ assoc[:type] }}::PRIMARY_KEY_NAME,
-                  on: on_conditions
-                )
-              )
-            {% elsif assoc[:relationship_type] == :has_one %}
-              join(
-                Avram::Join::{{ join_type.id }}.new(
-                  from: table_name,
-                  to: {{ assoc[:type] }}.table_name,
-                  foreign_key: {{ assoc[:foreign_key].id.symbolize }},
-                  primary_key: primary_key_name,
-                  on: on_conditions
-                )
-              )
-            {% elsif assoc[:through] %}
+            {% if assoc[:through] %}
               {{ join_type.downcase.id }}_join_{{ assoc[:through].first.id }}
                 .__yield_where_{{ assoc[:through].first.id }} do |join_query|
                   join_query.{{ join_type.downcase.id }}_join_{{ assoc[:through][1].id }}(on: on)
                 end
             {% else %}
+              {% if assoc[:relationship_type] == :belongs_to %}
+                from_key = {{ assoc[:foreign_key].id.symbolize }}
+                to_key = {{ assoc[:type] }}::PRIMARY_KEY_NAME
+              {% else %}
+                from_key = primary_key_name
+                to_key = {{ assoc[:foreign_key].id.symbolize }}
+              {% end %}
+              on_conditions = on.try(&.query.conditions_for_join) || [] of Avram::Where::Condition
+
               join(
                 Avram::Join::{{ join_type.id }}.new(
                   from: table_name,
                   to: {{ assoc[:type] }}.table_name,
-                  foreign_key: {{ assoc[:foreign_key] }},
-                  primary_key: primary_key_name,
+                  primary_key: from_key,
+                  foreign_key: to_key,
                   on: on_conditions
                 )
               )
