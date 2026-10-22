@@ -1285,6 +1285,44 @@ describe Avram::Queryable do
       query.query.statement.should contain %(LEFT JOIN tags ON "taggings"."tag_id" = "tags"."custom_id" AND ("tags"."name" = $1))
       query.query.args.should eq ["Crystal"]
     end
+
+    {% for join_type in ["Inner", "Left", "Right", "Full"] %}
+      it "follows has_one through associations with {{ join_type.upcase.id }} JOIN conditions" do
+        manager = ManagerFactory.create &.name("Matching")
+        other_manager = ManagerFactory.create &.name("Other")
+        employee = EmployeeFactory.create &.manager_id(manager.id)
+        other_employee = EmployeeFactory.create &.manager_id(other_manager.id)
+        customer = CustomerFactory.create &.employee_id(employee.id)
+        other_customer = CustomerFactory.create &.employee_id(other_employee.id)
+        query = Customer::BaseQuery.new.{{ join_type.downcase.id }}_join_manager(on: Manager::BaseQuery.new.name("Matching"))
+        builder = query.query.clone.select_direct(["customers.id", "managers.id"])
+        rows = TestDatabase.query_all(builder.statement, args: builder.args, as: {Int64?, Int64?})
+        expected = [{customer.id, manager.id}] of Tuple(Int64?, Int64?)
+
+        {% if join_type == "Left" || join_type == "Full" %}
+          expected << {other_customer.id, nil}
+        {% end %}
+        {% if join_type == "Right" || join_type == "Full" %}
+          expected << {nil, other_manager.id}
+        {% end %}
+
+        rows.to_set.should eq expected.to_set
+        rows.size.should eq expected.size
+        builder.args.should eq ["Matching"]
+      end
+    {% end %}
+
+    it "supports has_one through joins without ON conditions and with positional filters" do
+      manager = ManagerFactory.create
+      employee = EmployeeFactory.create &.manager_id(manager.id)
+      customer = CustomerFactory.create &.employee_id(employee.id)
+      query = Customer::BaseQuery.new
+
+      query.join_manager.first.id.should eq customer.id
+      query.left_join_manager(Manager::BaseQuery.new.name(manager.name)).first.id.should eq customer.id
+      query.left_join_manager(Manager::BaseQuery.new.name("Missing")).any?.should be_false
+      query.query.joins.should be_empty
+    end
   end
 
   context "when querying jsonb" do
