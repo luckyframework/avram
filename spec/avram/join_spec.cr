@@ -42,4 +42,33 @@ describe Avram::Join do
       .to_sql
       .should eq %(INNER JOIN users AS sellers ON "purchases"."seller_id" = "sellers"."id")
   end
+
+  describe "additional ON conditions" do
+    {
+      {Avram::Join::Inner, "INNER"},
+      {Avram::Join::Left, "LEFT"},
+      {Avram::Join::Right, "RIGHT"},
+      {Avram::Join::Full, "FULL"},
+    }.each do |join_type, keyword|
+      it "binds conditions and groups OR predicates for #{keyword} JOIN" do
+        conditions = Avram::QueryBuilder.new(:posts)
+          .where(Avram::Where::Equal.new("posts.title", "Crystal"))
+          .or(&.where(Avram::Where::Equal.new("posts.title", "Ruby")))
+        join = join_type.new(:users, :posts, on: conditions.wheres)
+
+        join.to_sql.should eq %(#{keyword} JOIN posts ON "users"."id" = "posts"."user_id" AND (posts.title = $1 OR posts.title = $2))
+        join.args.should eq ["Crystal", "Ruby"]
+      end
+    end
+
+    it "supports aliases and rejects additional ON conditions with USING" do
+      conditions = Avram::QueryBuilder.new(:sellers).where(Avram::Where::Equal.new("sellers.name", "Mary"))
+      join = Avram::Join::Left.new(:purchases, :users, primary_key: :seller_id, foreign_key: :id, alias_to: :sellers, on: conditions.wheres)
+
+      join.to_sql.should eq %(LEFT JOIN users AS sellers ON "purchases"."seller_id" = "sellers"."id" AND (sellers.name = $1))
+      expect_raises(Avram::InvalidQueryError, "Cannot combine USING with additional ON conditions") do
+        Avram::Join::Left.new(:purchases, :users, using: [:id], on: conditions.wheres)
+      end
+    end
+  end
 end

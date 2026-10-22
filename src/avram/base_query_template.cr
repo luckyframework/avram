@@ -62,8 +62,8 @@ class Avram::BaseQueryTemplate
       {% end %}
 
       {% for assoc in associations %}
-        def join_{{ assoc[:assoc_name] }}
-          inner_join_{{ assoc[:assoc_name] }}
+        def join_{{ assoc[:assoc_name] }}(*, on : {{ assoc[:type] }}::BaseQuery? = nil)
+          inner_join_{{ assoc[:assoc_name] }}(on: on)
         end
 
         def join_{{ assoc[:assoc_name] }}(where_{{ assoc[:assoc_name] }} : {{ assoc[:type] }}::BaseQuery)
@@ -71,14 +71,18 @@ class Avram::BaseQueryTemplate
         end
 
         {% for join_type in ["Inner", "Left", "Right", "Full"] %}
-          def {{ join_type.downcase.id }}_join_{{ assoc[:assoc_name] }}
+          # `on:` adds predicates to ON; the positional query keeps its WHERE behavior.
+          def {{ join_type.downcase.id }}_join_{{ assoc[:assoc_name] }}(*, on : {{ assoc[:type] }}::BaseQuery? = nil)
+            on_conditions = on.try(&.query.wheres) || [] of Avram::Where::Condition
+
             {% if assoc[:relationship_type] == :belongs_to %}
               join(
                 Avram::Join::{{ join_type.id }}.new(
                   from: table_name,
                   to: {{ assoc[:type] }}.table_name,
                   primary_key: {{ assoc[:foreign_key].id.symbolize }},
-                  foreign_key: {{ assoc[:type] }}::PRIMARY_KEY_NAME
+                  foreign_key: {{ assoc[:type] }}::PRIMARY_KEY_NAME,
+                  on: on_conditions
                 )
               )
             {% elsif assoc[:relationship_type] == :has_one %}
@@ -87,13 +91,14 @@ class Avram::BaseQueryTemplate
                   from: table_name,
                   to: {{ assoc[:type] }}.table_name,
                   foreign_key: {{ assoc[:foreign_key].id.symbolize }},
-                  primary_key: primary_key_name
+                  primary_key: primary_key_name,
+                  on: on_conditions
                 )
               )
             {% elsif assoc[:through] %}
               {{ join_type.downcase.id }}_join_{{ assoc[:through].first.id }}
                 .__yield_where_{{ assoc[:through].first.id }} do |join_query|
-                  join_query.{{ join_type.downcase.id }}_join_{{ assoc[:through][1].id }}
+                  join_query.{{ join_type.downcase.id }}_join_{{ assoc[:through][1].id }}(on: on)
                 end
             {% else %}
               join(
@@ -101,7 +106,8 @@ class Avram::BaseQueryTemplate
                   from: table_name,
                   to: {{ assoc[:type] }}.table_name,
                   foreign_key: {{ assoc[:foreign_key] }},
-                  primary_key: primary_key_name
+                  primary_key: primary_key_name,
+                  on: on_conditions
                 )
               )
             {% end %}
