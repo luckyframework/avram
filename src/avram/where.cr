@@ -1,4 +1,22 @@
 module Avram::Where
+  def self.prepare(conditions : Array(Condition), placeholder_supplier : Proc(String)) : String?
+    return if conditions.empty?
+
+    statements = conditions.flat_map do |condition|
+      [condition.prepare(placeholder_supplier), condition.conjunction.to_s]
+    end
+    statements.reject!(&.blank?)
+    # The final conjunction belongs between conditions, not after the last one.
+    statements.pop
+    statements.join(" ")
+  end
+
+  def self.values(conditions : Array(Condition)) : Array(String | Array(String) | Array(Int32))
+    conditions.compact_map do |condition|
+      condition.value if condition.is_a?(ValueHoldingSqlClause)
+    end
+  end
+
   enum Conjunction
     And
     Or

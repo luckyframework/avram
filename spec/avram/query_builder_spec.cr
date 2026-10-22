@@ -1,5 +1,14 @@
 require "../spec_helper"
 
+class JoinWithSqlCounter < Avram::Join::Left
+  getter sql_calls : Int32 = 0
+
+  def to_sql : String
+    @sql_calls += 1
+    super
+  end
+end
+
 describe Avram::QueryBuilder do
   it "ensures uniqueness for orders, and joins" do
     query = new_query
@@ -364,6 +373,63 @@ describe Avram::QueryBuilder do
         .limit(10)
       query.statement.should eq "SELECT * FROM users WHERE name = $1 GROUP BY age, average_score ORDER BY name DESC LIMIT 10"
       query.args.should eq ["Paul"]
+    end
+  end
+
+  describe "JOIN ON conditions" do
+    it "does not render JOINs to check whether an UPDATE needs them" do
+      join = JoinWithSqlCounter.new(:users, :posts)
+      query = new_query
+        .join(join)
+        .join(Avram::Join::Inner.new(:posts, :comments))
+
+      query.statement_for_update({:name => "Mary"})
+
+      # The actual SQL generation calls joins once to deduplicate the two JOINs.
+      join.sql_calls.should eq 1
+    end
+
+    it "numbers JOIN bindings before WHERE bindings regardless of call order" do
+      post_conditions = Avram::QueryBuilder.new(:posts).where(Avram::Where::Equal.new("posts.title", "O'Reilly"))
+      comment_conditions = Avram::QueryBuilder.new(:comments).where(Avram::Where::Equal.new("comments.body", "Hello"))
+      query = new_query
+        .where(Avram::Where::GreaterThan.new("users.age", "18"))
+        .join(Avram::Join::Left.new(:users, :posts, on: post_conditions.wheres))
+        .join(Avram::Join::Inner.new(:posts, :tags))
+        .join(Avram::Join::Left.new(:posts, :comments, on: comment_conditions.wheres))
+      expected = %(SELECT * FROM users LEFT JOIN posts ON "users"."id" = "posts"."user_id" AND (posts.title = $1) INNER JOIN tags ON "posts"."id" = "tags"."post_id" LEFT JOIN comments ON "posts"."id" = "comments"."post_id" AND (comments.body = $2) WHERE users.age > $3)
+
+      2.times { query.statement.should eq(expected) }
+      query.args.should eq ["O'Reilly", "Hello", "18"]
+      query.to_prepared_sql.should contain("comments.body = 'Hello'")
+      query.to_prepared_where_sql.should eq "users.age > '18'"
+      query.statement.should eq expected
+    end
+
+    it "preserves JOIN conditions and argument order when cloning and merging" do
+      conditions = Avram::QueryBuilder.new(:posts).where(Avram::Where::Equal.new("posts.title", "Crystal"))
+      base = new_query.where(Avram::Where::Equal.new("users.name", "Mary"))
+      joined = base.clone.join(Avram::Join::Left.new(:users, :posts, on: conditions.wheres))
+      merged = new_query.where(Avram::Where::GreaterThan.new("users.age", "18"))
+      merged.merge(joined)
+
+      base.joins.should be_empty
+      base.args.should eq ["Mary"]
+      merged.statement.should eq %(SELECT * FROM users LEFT JOIN posts ON "users"."id" = "posts"."user_id" AND (posts.title = $1) WHERE users.age > $2 AND users.name = $3)
+      merged.args.should eq ["Crystal", "18", "Mary"]
+    end
+
+    it "numbers UPDATE, JOIN and WHERE bindings without rendering JOINs twice" do
+      conditions = Avram::QueryBuilder.new(:posts).where(Avram::Where::Equal.new("posts.title", "Crystal"))
+      query = new_query
+        .join(Avram::Join::Left.new(:users, :posts, on: conditions.wheres))
+        .where(Avram::Where::Equal.new("users.id", "1"))
+      params = {:name => "Mary"}
+      expected = %(UPDATE users SET "name" = $1 WHERE EXISTS ( SELECT * FROM users LEFT JOIN posts ON "users"."id" = "posts"."user_id" AND (posts.title = $2) WHERE users.id = $3 ) RETURNING *)
+
+      2.times { query.statement_for_update(params).should eq(expected) }
+      query.args_for_update(params).should eq ["Mary", "Crystal", "1"]
+      query.args.should eq ["Crystal", "1"]
     end
   end
 

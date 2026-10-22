@@ -1190,6 +1190,141 @@ describe Avram::Queryable do
     end
   end
 
+  describe "association JOIN ON conditions" do
+    it "rejects query clauses that cannot be applied inside ON instead of silently ignoring them" do
+      queries = [
+        TransactionQuery.new.join_user,
+        TransactionQuery.new.created_at.desc_order,
+        TransactionQuery.new.group(&.user_id),
+        TransactionQuery.new.distinct,
+        TransactionQuery.new.distinct_on(&.user_id),
+        TransactionQuery.new.limit(1),
+        TransactionQuery.new.offset(1),
+        TransactionQuery.new.for_update,
+      ]
+
+      queries.each do |query|
+        expect_raises(Avram::InvalidQueryError, "JOIN ON queries only support WHERE conditions") do
+          UserQuery.new.left_join_transactions(on: query)
+        end
+      end
+    end
+
+    {% for join_type in ["Inner", "Left", "Right", "Full"] %}
+      it "preserves the correct matching and unmatched rows for {{ join_type.upcase.id }} JOIN" do
+        matching = UserFactory.create
+        missing = UserFactory.create
+        nonmatching = UserFactory.create
+        matched_transaction = TransactionFactory.create &.user(matching).type(Transaction::Type::Special)
+        unmatched_transaction = TransactionFactory.create &.user(nonmatching)
+        query = UserQuery.new.{{ join_type.downcase.id }}_join_transactions(on: TransactionQuery.new.special)
+        builder = query.query.clone.select_direct(["users.id", "transactions.id"])
+        # Outer joins can return NULL for either side; read nullable IDs rather than models.
+        rows = TestDatabase.query_all(builder.statement, args: builder.args, as: {Int64?, Int64?})
+        expected = [{matching.id, matched_transaction.id}] of Tuple(Int64?, Int64?)
+
+        {% if join_type == "Left" || join_type == "Full" %}
+          expected << {missing.id, nil} << {nonmatching.id, nil}
+        {% end %}
+        {% if join_type == "Right" || join_type == "Full" %}
+          expected << {nil, unmatched_transaction.id}
+        {% end %}
+
+        rows.to_set.should eq expected.to_set
+        rows.size.should eq expected.size
+        query.select_count.should eq expected.size
+      end
+    {% end %}
+
+    it "keeps left-side records with absent or nonmatching associations and supports pagination" do
+      matching = UserFactory.create
+      missing = UserFactory.create
+      nonmatching = UserFactory.create
+      TransactionFactory.create &.user(matching).type(Transaction::Type::Special)
+      TransactionFactory.create &.user(nonmatching)
+      query = UserQuery.new.left_join_transactions(on: TransactionQuery.new.special).id.asc_order
+
+      query.map(&.id).should eq [matching.id, missing.id, nonmatching.id]
+      query.select_count.should eq 3
+      query.limit(1).offset(1).first.id.should eq missing.id
+      query.where("transactions.id IS NULL").map(&.id).should eq [missing.id, nonmatching.id]
+      query.where("transactions.id IS NOT NULL").first.id.should eq matching.id
+      # The existing positional query still filters the final result through WHERE.
+      UserQuery.new.left_join_transactions(TransactionQuery.new.special).map(&.id).should eq [matching.id]
+    end
+
+    it "keeps default scopes in ON and leaves the original query unchanged" do
+      user = UserFactory.create
+      TransactionFactory.create &.user(user).type(Transaction::Type::Special).soft_deleted_at(Time.utc)
+      base = UserQuery.new.age(18)
+      query = base.left_join_transactions(on: TransactionQuery.new.special)
+
+      base.query.joins.should be_empty
+      query.where("transactions.id IS NULL").first.id.should eq user.id
+      base.left_join_transactions(on: TransactionQuery.new.with_soft_deleted.special)
+        .where("transactions.id IS NOT NULL").first.id.should eq user.id
+    end
+
+    it "supports belongs_to, has_one and the inner-join shorthand" do
+      item = LineItemFactory.create
+      PriceFactory.create &.line_item_id(item.id).in_cents(100)
+
+      PriceQuery.new.left_join_line_item(on: LineItemQuery.new.name(item.name)).first.line_item_id.should eq item.id
+      LineItemQuery.new.left_join_price(on: PriceQuery.new.in_cents(100)).first.id.should eq item.id
+      LineItemQuery.new.join_price(on: PriceQuery.new.in_cents(100)).first.id.should eq item.id
+      LineItemQuery.new.join_price(on: PriceQuery.new.in_cents(200)).any?.should be_false
+    end
+
+    it "adds conditions to the final association in a has_many through join" do
+      post = PostFactory.create
+      tag = TagFactory.create &.name("Crystal")
+      TaggingFactory.create &.post_id(post.custom_id).tag_id(tag.custom_id)
+      query = Post::BaseQuery.new.left_join_tags(on: Tag::BaseQuery.new.name("Crystal"))
+
+      query.first.custom_id.should eq post.custom_id
+      query.query.statement.should contain %(LEFT JOIN tags ON "taggings"."tag_id" = "tags"."custom_id" AND ("tags"."name" = $1))
+      query.query.args.should eq ["Crystal"]
+    end
+
+    {% for join_type in ["Inner", "Left", "Right", "Full"] %}
+      it "follows has_one through associations with {{ join_type.upcase.id }} JOIN conditions" do
+        manager = ManagerFactory.create &.name("Matching")
+        other_manager = ManagerFactory.create &.name("Other")
+        employee = EmployeeFactory.create &.manager_id(manager.id)
+        other_employee = EmployeeFactory.create &.manager_id(other_manager.id)
+        customer = CustomerFactory.create &.employee_id(employee.id)
+        other_customer = CustomerFactory.create &.employee_id(other_employee.id)
+        query = Customer::BaseQuery.new.{{ join_type.downcase.id }}_join_manager(on: Manager::BaseQuery.new.name("Matching"))
+        builder = query.query.clone.select_direct(["customers.id", "managers.id"])
+        rows = TestDatabase.query_all(builder.statement, args: builder.args, as: {Int64?, Int64?})
+        expected = [{customer.id, manager.id}] of Tuple(Int64?, Int64?)
+
+        {% if join_type == "Left" || join_type == "Full" %}
+          expected << {other_customer.id, nil}
+        {% end %}
+        {% if join_type == "Right" || join_type == "Full" %}
+          expected << {nil, other_manager.id}
+        {% end %}
+
+        rows.to_set.should eq expected.to_set
+        rows.size.should eq expected.size
+        builder.args.should eq ["Matching"]
+      end
+    {% end %}
+
+    it "supports has_one through joins without ON conditions and with positional filters" do
+      manager = ManagerFactory.create
+      employee = EmployeeFactory.create &.manager_id(manager.id)
+      customer = CustomerFactory.create &.employee_id(employee.id)
+      query = Customer::BaseQuery.new
+
+      query.join_manager.first.id.should eq customer.id
+      query.left_join_manager(Manager::BaseQuery.new.name(manager.name)).first.id.should eq customer.id
+      query.left_join_manager(Manager::BaseQuery.new.name("Missing")).any?.should be_false
+      query.query.joins.should be_empty
+    end
+  end
+
   context "when querying jsonb" do
     describe "simple where query" do
       it "returns 1 result" do

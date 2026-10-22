@@ -5,6 +5,7 @@ module Avram::Join
     getter from : TableName
 
     @using : String
+    @on : Array(Avram::Where::Condition)
 
     def initialize(
       @from : TableName,
@@ -14,13 +15,24 @@ module Avram::Join
       @comparison : String? = "=",
       using : Array(Symbol) = [] of Symbol,
       @alias_to : TableName? = nil,
+      on : Array(Avram::Where::Condition) = [] of Avram::Where::Condition,
     )
       @using = using.join(", ") { |col| %("#{col}") }
+      @on = on.dup
+
+      if @using.presence && !@on.empty?
+        raise Avram::InvalidQueryError.new("Cannot combine USING with additional ON conditions")
+      end
     end
 
     abstract def join_type : String
 
     def to_sql : String
+      placeholder = 0
+      prepare(-> { "$#{placeholder += 1}" })
+    end
+
+    def prepare(placeholder_supplier : Proc(String)) : String
       String.build do |io|
         io << join_type << " JOIN "
         @to.to_s(io)
@@ -31,8 +43,15 @@ module Avram::Join
           io << " USING (" << @using << ')'
         else
           io << " ON " << from_column << ' ' << @comparison << ' ' << to_column
+          if predicate = Avram::Where.prepare(@on, placeholder_supplier)
+            io << " AND (" << predicate << ')'
+          end
         end
       end
+    end
+
+    def args : Array(String | Array(String) | Array(Int32))
+      Avram::Where.values(@on)
     end
 
     def to : TableName

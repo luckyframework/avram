@@ -34,11 +34,11 @@ class Avram::QueryBuilder
   def to_prepared_where_sql : String
     predicate = clone.where_predicate_sql!
     raise Avram::InvalidQueryError.new("Cannot build a partial index predicate: the query has no `where` conditions") unless predicate
-    inline_prepared_args(predicate)
+    inline_prepared_args(predicate, Avram::Where.values(wheres))
   end
 
-  private def inline_prepared_args(sql : String) : String
-    params = args.map { |arg| "'#{String.new(PQ::Param.encode(arg).slice)}'" }
+  private def inline_prepared_args(sql : String, values = args) : String
+    params = values.map { |arg| "'#{String.new(PQ::Param.encode(arg).slice)}'" }
     sql.gsub(/\$\d+/) { |placeholder| params[placeholder.lchop('$').to_i - 1] }
   end
 
@@ -80,7 +80,7 @@ class Avram::QueryBuilder
 
     sql << "UPDATE #{table}" << set_sql_clause(params)
 
-    if joins_sql.presence
+    if @joins.any?
       sql << "WHERE EXISTS" << "(" << select_sql
       sql.concat(sql_condition_clauses)
       sql << ")"
@@ -338,7 +338,7 @@ class Avram::QueryBuilder
   end
 
   private def joins_sql : String
-    joins.join(" ", &.to_sql)
+    joins.join(" ", &.prepare(->next_prepared_statement_placeholder))
   end
 
   def where(where_clause : Avram::Where::Condition) : self
@@ -374,30 +374,24 @@ class Avram::QueryBuilder
 
   # Mutates the placeholder counter (like `statement!`) — call it on a clone.
   protected def where_predicate_sql! : String?
-    return if wheres.empty?
-
-    statements = wheres.flat_map do |sql_clause|
-      clause = sql_clause.prepare(->next_prepared_statement_placeholder)
-
-      [clause, sql_clause.conjunction.to_s]
-    end
-
-    statements.reject!(&.blank?)
-
-    # Last element is a dangling conjunction the flat_map appends after each clause
-    statements.pop
-
-    statements.join(" ")
+    Avram::Where.prepare(wheres, ->next_prepared_statement_placeholder)
   end
 
   def wheres : Array(Avram::Where::Condition)
     @wheres
   end
 
-  private def prepared_statement_values : Array(String | Array(String) | Array(Int32))
-    wheres.compact_map do |sql_clause|
-      sql_clause.value if sql_clause.is_a?(Avram::Where::ValueHoldingSqlClause)
+  # ON accepts the query's WHERE predicates, not a subquery with its own clauses.
+  def conditions_for_join : Array(Avram::Where::Condition)
+    if @joins.any? || ordered? || grouped? || distinct? || @limit || @offset || @for_update
+      raise Avram::InvalidQueryError.new("JOIN ON queries only support WHERE conditions")
     end
+
+    wheres
+  end
+
+  private def prepared_statement_values : Array(String | Array(String) | Array(Int32))
+    joins.flat_map(&.args).concat(Avram::Where.values(wheres))
   end
 
   private def next_prepared_statement_placeholder : String
