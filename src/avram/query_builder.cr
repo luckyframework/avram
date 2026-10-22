@@ -80,7 +80,7 @@ class Avram::QueryBuilder
 
     sql << "UPDATE #{table}" << set_sql_clause(params)
 
-    if joins.any?
+    if @joins.any?
       sql << "WHERE EXISTS" << "(" << select_sql
       sql.concat(sql_condition_clauses)
       sql << ")"

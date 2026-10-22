@@ -1,5 +1,14 @@
 require "../spec_helper"
 
+class JoinWithSqlCounter < Avram::Join::Left
+  getter sql_calls : Int32 = 0
+
+  def to_sql : String
+    @sql_calls += 1
+    super
+  end
+end
+
 describe Avram::QueryBuilder do
   it "ensures uniqueness for orders, and joins" do
     query = new_query
@@ -368,6 +377,18 @@ describe Avram::QueryBuilder do
   end
 
   describe "JOIN ON conditions" do
+    it "does not render JOINs to check whether an UPDATE needs them" do
+      join = JoinWithSqlCounter.new(:users, :posts)
+      query = new_query
+        .join(join)
+        .join(Avram::Join::Inner.new(:posts, :comments))
+
+      query.statement_for_update({:name => "Mary"})
+
+      # The actual SQL generation calls joins once to deduplicate the two JOINs.
+      join.sql_calls.should eq 1
+    end
+
     it "numbers JOIN bindings before WHERE bindings regardless of call order" do
       post_conditions = Avram::QueryBuilder.new(:posts).where(Avram::Where::Equal.new("posts.title", "O'Reilly"))
       comment_conditions = Avram::QueryBuilder.new(:comments).where(Avram::Where::Equal.new("comments.body", "Hello"))
