@@ -71,9 +71,9 @@ class Avram::BaseQueryTemplate
         end
 
         {% for join_type in ["Inner", "Left", "Right", "Full"] %}
-          # `on:` adds predicates to ON; the positional query keeps its WHERE behavior.
+          # `on:` accepts WHERE predicates only; the positional query still merges clauses into WHERE.
           def {{ join_type.downcase.id }}_join_{{ assoc[:assoc_name] }}(*, on : {{ assoc[:type] }}::BaseQuery? = nil)
-            on_conditions = on.try(&.query.wheres) || [] of Avram::Where::Condition
+            on_conditions = on.try(&.query.conditions_for_join) || [] of Avram::Where::Condition
 
             {% if assoc[:relationship_type] == :belongs_to %}
               join(

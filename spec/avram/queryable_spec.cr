@@ -1191,6 +1191,25 @@ describe Avram::Queryable do
   end
 
   describe "association JOIN ON conditions" do
+    it "rejects query clauses that cannot be applied inside ON instead of silently ignoring them" do
+      queries = [
+        TransactionQuery.new.join_user,
+        TransactionQuery.new.created_at.desc_order,
+        TransactionQuery.new.group(&.user_id),
+        TransactionQuery.new.distinct,
+        TransactionQuery.new.distinct_on(&.user_id),
+        TransactionQuery.new.limit(1),
+        TransactionQuery.new.offset(1),
+        TransactionQuery.new.for_update,
+      ]
+
+      queries.each do |query|
+        expect_raises(Avram::InvalidQueryError, "JOIN ON queries only support WHERE conditions") do
+          UserQuery.new.left_join_transactions(on: query)
+        end
+      end
+    end
+
     {% for join_type in ["Inner", "Left", "Right", "Full"] %}
       it "preserves the correct matching and unmatched rows for {{ join_type.upcase.id }} JOIN" do
         matching = UserFactory.create

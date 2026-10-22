@@ -381,6 +381,15 @@ class Avram::QueryBuilder
     @wheres
   end
 
+  # ON accepts the query's WHERE predicates, not a subquery with its own clauses.
+  def conditions_for_join : Array(Avram::Where::Condition)
+    if @joins.any? || ordered? || grouped? || distinct? || @limit || @offset || @for_update
+      raise Avram::InvalidQueryError.new("JOIN ON queries only support WHERE conditions")
+    end
+
+    wheres
+  end
+
   private def prepared_statement_values : Array(String | Array(String) | Array(Int32))
     joins.flat_map(&.args).concat(Avram::Where.values(wheres))
   end
