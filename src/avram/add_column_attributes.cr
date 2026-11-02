@@ -80,14 +80,14 @@ module Avram::AddColumnAttributes
         if parse_result.is_a? Avram::Type::SuccessfulCast
           {{ attribute[:name] }}.value = parse_result.value.as({{ attribute[:type] }})
         else
-          {{ attribute[:name] }}.add_error "is invalid"
+          {{ attribute[:name] }}.add_error
         end
       end
       {% elsif attribute[:serialized] %}
       def set_{{ attribute[:name] }}_from_param(_value : String)
         {{ attribute[:name] }}.value = {{ attribute[:type] }}.from_json(_value)
       rescue e : JSON::ParseException
-        {{ attribute[:name] }}.add_error "is invalid"
+        {{ attribute[:name] }}.add_error
       end
 
       def set_{{ attribute[:name] }}_from_param(_value : {{ attribute[:type] }})
@@ -107,7 +107,7 @@ module Avram::AddColumnAttributes
         if parse_result.is_a? Avram::Type::SuccessfulCast
           {{ attribute[:name] }}.value = parse_result.value.as({{ attribute[:type] }})
         else
-          {{ attribute[:name] }}.add_error "is invalid"
+          {{ attribute[:name] }}.add_error
         end
       end
       {% end %}

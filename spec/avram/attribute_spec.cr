@@ -65,6 +65,24 @@ describe "Avram::Attribute" do
     end
   end
 
+  describe "column parameter casting" do
+    it "localizes invalid scalar, array, and serialized column parameters" do
+      user = User::SaveOperation.new
+      bucket = Bucket::SaveOperation.new
+      blob = Blob::SaveOperation.new
+
+      Avram.temp_config(i18n_backend: AttributeI18nBackend.new) do
+        user.set_age_from_param("not-a-number")
+        bucket.set_numbers_from_param(["not-a-number"])
+        blob.set_metadata_from_param("{")
+      end
+
+      user.age.errors.should eq(["has an invalid format"])
+      bucket.numbers.errors.should eq(["has an invalid format"])
+      blob.metadata.errors.should eq(["has an invalid format"])
+    end
+  end
+
   describe "#value" do
     it "returns nil on empty strings" do
       empty_string = Avram::Attribute.new(name: :blank, param: nil, value: " ", param_key: "test_form")
