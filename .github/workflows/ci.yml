@@ -28,7 +28,8 @@ jobs:
       fail-fast: false
       matrix:
         os:
-          - ubuntu-latest
+          # setup-postgres@v8 uses apt-key, which Ubuntu 26.04 no longer provides.
+          - ubuntu-24.04
           - macos-latest
           - windows-latest
         shard_file:
@@ -46,12 +47,12 @@ jobs:
             crystal_version: latest
             postgres_version: 18
             experimental: true
-            os: ubuntu-latest
+            os: ubuntu-24.04
           - shard_file: shard.override.yml
             crystal_version: nightly
             postgres_version: 18
             experimental: true
-            os: ubuntu-latest
+            os: ubuntu-24.04
     runs-on: ${{ matrix.os }}
     continue-on-error: ${{ matrix.experimental }}
     steps:
@@ -73,7 +74,7 @@ jobs:
           SHARDS_OVERRIDE: ${{ matrix.shard_file }}
       - name: Run integration test (Linux)
         run: ./script/integration_test
-        if: matrix.os == 'ubuntu-latest'
+        if: runner.os == 'Linux'
         env:
           DATABASE_URL: postgres://lucky:developer@localhost:5432/avram_dev
       - name: Run integration test (Windows)
