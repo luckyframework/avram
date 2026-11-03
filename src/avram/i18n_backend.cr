@@ -5,6 +5,7 @@ end
 struct Avram::I18n < Avram::I18nBackend
   def get(key : String | Symbol) : String
     {
+      default_error_message:       "is invalid",
       validate_acceptance_of:      "must be accepted",
       validate_at_most_one_filled: "must be blank",
       validate_confirmation_of:    "must match",
