@@ -21,7 +21,9 @@ jobs:
       - name: Format
         run: crystal tool format --check
       - name: Run Ameba Linter
-        uses: crystal-ameba/github-action@master
+        uses: docker://ghcr.io/crystal-ameba/ameba:1.7.0
+        with:
+          args: --format github-actions
 
   specs:
     strategy:
