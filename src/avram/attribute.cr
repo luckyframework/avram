@@ -31,7 +31,7 @@ class Avram::Attribute(T)
     @param || value.to_s
   end
 
-  def add_error(message : String = Avram.settings.i18n_backend.get(:validate_format_of))
+  def add_error(message : String = Avram.settings.i18n_backend.get(:default_error_message))
     @errors << message
   end
 

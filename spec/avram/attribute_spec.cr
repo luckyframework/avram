@@ -11,6 +11,8 @@ end
 private struct AttributeI18nBackend < Avram::I18nBackend
   def get(key : String | Symbol) : String
     case key
+    when :default_error_message
+      "has an invalid value"
     when :validate_format_of
       "has an invalid format"
     else
@@ -21,15 +23,16 @@ end
 
 describe "Avram::Attribute" do
   describe "#add_error" do
-    it "localizes default errors without changing explicitly supplied messages" do
+    it "localizes default and format errors separately without changing custom messages" do
       attribute = Avram::Attribute(String).new(name: :name, value: nil, param_key: "user")
 
       Avram.temp_config(i18n_backend: AttributeI18nBackend.new) do
         attribute.add_error
         attribute.add_error "is invalid"
+        Avram::Validations.validate_format_of(attribute, with: /valid/)
       end
 
-      attribute.errors.should eq(["has an invalid format", "is invalid"])
+      attribute.errors.should eq(["has an invalid value", "is invalid", "has an invalid format"])
     end
   end
 
@@ -41,7 +44,7 @@ describe "Avram::Attribute" do
         attribute.extract(Avram::Params.new({"age" => "not-a-number"}))
       end
 
-      attribute.errors.should eq(["has an invalid format"])
+      attribute.errors.should eq(["has an invalid value"])
     end
 
     it "localizes invalid array parameters" do
@@ -51,7 +54,7 @@ describe "Avram::Attribute" do
         attribute.extract(Avram::Params.new({"scores" => ["not-a-number"]}))
       end
 
-      attribute.errors.should eq(["has an invalid format"])
+      attribute.errors.should eq(["has an invalid value"])
     end
 
     it "localizes invalid upload parameters" do
@@ -61,7 +64,7 @@ describe "Avram::Attribute" do
         attribute.extract(Avram::Params.new({"avatar" => "not-an-upload"}))
       end
 
-      attribute.errors.should eq(["has an invalid format"])
+      attribute.errors.should eq(["has an invalid value"])
     end
   end
 
@@ -77,9 +80,9 @@ describe "Avram::Attribute" do
         blob.set_metadata_from_param("{")
       end
 
-      user.age.errors.should eq(["has an invalid format"])
-      bucket.numbers.errors.should eq(["has an invalid format"])
-      blob.metadata.errors.should eq(["has an invalid format"])
+      user.age.errors.should eq(["has an invalid value"])
+      bucket.numbers.errors.should eq(["has an invalid value"])
+      blob.metadata.errors.should eq(["has an invalid value"])
     end
   end
 
