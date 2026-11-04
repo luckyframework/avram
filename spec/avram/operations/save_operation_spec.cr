@@ -407,8 +407,8 @@ describe "Avram::SaveOperation" do
 
   describe "parsing" do
     it "parse integers, time objects, etc." do
-      time = 1.day.ago.at_beginning_of_minute
-      params = build_params("user:joined_at=#{time.to_s("%FT%X%z")}")
+      time = Time.utc(2020, 1, 2, 3, 4).in(Time::Location.fixed(8 * 60 * 60))
+      params = build_params("user:joined_at=#{URI.encode_www_form(time.to_s("%FT%X%z"))}")
       operation = SaveUser.new(params)
 
       operation.joined_at.value.should eq time
