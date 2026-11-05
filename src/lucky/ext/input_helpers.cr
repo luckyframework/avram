@@ -1,4 +1,8 @@
+require "./field_key_helpers"
+
 module Lucky::InputHelpers
+  include Lucky::FieldKeyHelpers
+
   EMPTY_BOOLEAN_ATTRIBUTES = [] of Symbol
 
   macro error_message_for_unallowed_field
@@ -211,6 +215,22 @@ module Lucky::InputHelpers
     generate_input(field, "datetime-local", html_options, input_overrides: {"value" => value}, attrs: attrs)
   end
 
+  # Renders a hidden input holding the `id` of an existing (persisted)
+  # nested `has_many` record so, on resubmission, that record is updated
+  # instead of a new one being duplicated.
+  #
+  # ```
+  # op.comments.each do |comment|
+  #   nested_id_input(comment)
+  #   text_input(comment.body)
+  # end
+  # ```
+  def nested_id_input(operation : Avram::SaveOperation) : Nil
+    input type: "hidden",
+      name: "#{operation.param_key}:id",
+      value: operation.record.try(&.id).to_s
+  end
+
   private def generate_input(field,
                              type,
                              html_options,
@@ -227,10 +247,6 @@ module Lucky::InputHelpers
     input attrs, merge_options(html_options, input_options)
   end
 
-  private property array_id_counter : Hash(Symbol, Int32) do
-    Hash(Symbol, Int32).new { |hash, key| hash[key] = 0 }
-  end
-
   private def update_array_id_counter!(field) : Nil
     nil
   end
@@ -245,21 +261,5 @@ module Lucky::InputHelpers
 
   private def input_value(field : Avram::PermittedAttribute(Array)) : String
     field.value.try(&.[array_id_counter[field.name]]?).to_s
-  end
-
-  private def input_name(field)
-    "#{field.param_key}:#{field.name}"
-  end
-
-  private def input_name(field : Avram::PermittedAttribute(Array))
-    "#{field.param_key}:#{field.name}[]"
-  end
-
-  private def input_id(field)
-    "#{field.param_key}_#{field.name}"
-  end
-
-  private def input_id(field : Avram::PermittedAttribute(Array))
-    "#{field.param_key}_#{field.name}_#{array_id_counter[field.name]}"
   end
 end

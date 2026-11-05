@@ -125,4 +125,110 @@ describe Avram::Params do
       end
     end
   end
+
+  describe "#nested" do
+    it "decodes a JSON object string value for the given key" do
+      params = Avram::Params.new({"reaction" => %({"emoji":"👍"})})
+
+      params.nested("reaction").should eq({"emoji" => "👍"})
+    end
+
+    it "falls back to returning all flat string values when the key is missing" do
+      params = Avram::Params.new({"body" => "Hello"})
+
+      params.nested("reaction").should eq({"body" => "Hello"})
+    end
+
+    it "falls back to returning all flat string values when the value isn't JSON" do
+      params = Avram::Params.new({"body" => "Hello", "reaction" => "not json"})
+
+      params.nested("reaction").should eq({"body" => "Hello", "reaction" => "not json"})
+    end
+
+    it "extracts values from keys prefixed with 'key:', as submitted by a URL-encoded/multipart HTML form" do
+      params = Avram::Params.new({"body" => "Hello", "reaction:emoji" => "👍"})
+
+      params.nested("reaction").should eq({"emoji" => "👍"})
+    end
+
+    it "prefers a JSON object string value over form-encoded 'key:' keys" do
+      params = Avram::Params.new({"reaction" => %({"emoji":"👍"}), "reaction:emoji" => "😂"})
+
+      params.nested("reaction").should eq({"emoji" => "👍"})
+    end
+  end
+
+  describe "#many_nested" do
+    it "decodes a JSON array of objects string value for the given key" do
+      params = Avram::Params.new({"customers" => [{"name" => "Customer One"}, {"name" => "Customer Two"}].to_json})
+
+      params.many_nested("customers").should eq([{"name" => "Customer One"}, {"name" => "Customer Two"}])
+    end
+
+    it "decodes a JSON empty array string value into an empty Array" do
+      params = Avram::Params.new({"customers" => "[]"})
+
+      params.many_nested("customers").should eq([] of Hash(String, String))
+    end
+
+    it "falls back to wrapping all flat string values in a single item when the key is missing" do
+      params = Avram::Params.new({"name" => "Customer One"})
+
+      params.many_nested("customers").should eq([{"name" => "Customer One"}])
+    end
+
+    it "falls back to wrapping all flat string values in a single item when the array contains a non-object element" do
+      params = Avram::Params.new({"name" => "Customer One", "customers" => %(["not an object"])})
+
+      params.many_nested("customers").should eq([{"name" => "Customer One", "customers" => %(["not an object"])}])
+    end
+
+    it "groups keys matching 'key[index]:rest', as submitted by a URL-encoded/multipart HTML form" do
+      params = Avram::Params.new({
+        "name"              => "Employee One",
+        "customers[0]:name" => "Customer One",
+        "customers[0]:id"   => "1",
+        "customers[1]:name" => "Customer Two",
+      })
+
+      params.many_nested("customers").should eq([
+        {"name" => "Customer One", "id" => "1"},
+        {"name" => "Customer Two"},
+      ])
+    end
+
+    it "orders grouped items numerically by index regardless of submission order" do
+      params = Avram::Params.new({
+        "customers[10]:name" => "Customer Eleven",
+        "customers[2]:name"  => "Customer Three",
+        "customers[1]:name"  => "Customer Two",
+      })
+
+      params.many_nested("customers").should eq([
+        {"name" => "Customer Two"},
+        {"name" => "Customer Three"},
+        {"name" => "Customer Eleven"},
+      ])
+    end
+
+    it "keeps further nested form-encoded keys intact within each grouped item" do
+      params = Avram::Params.new({
+        "customers[0]:name"          => "Customer One",
+        "customers[0]:orders[0]:sku" => "ABC",
+      })
+
+      params.many_nested("customers").should eq([
+        {"name" => "Customer One", "orders[0]:sku" => "ABC"},
+      ])
+    end
+
+    it "prefers a JSON array string value over form-encoded 'key[index]:' keys" do
+      params = Avram::Params.new({
+        "customers"         => [{"name" => "Customer One"}].to_json,
+        "customers[0]:name" => "Customer Two",
+      })
+
+      params.many_nested("customers").should eq([{"name" => "Customer One"}])
+    end
+  end
 end
