@@ -450,6 +450,24 @@ describe Avram::Queryable do
       line_items.results.should eq [line_item]
     end
 
+    it "keeps raw sql bindings in place when a value contains a placeholder" do
+      user = UserFactory.new.name("?").nickname("miki").create
+      UserFactory.new.name("Other").nickname("other").create
+
+      UserQuery.new.where("name = ? AND nickname = ?", "?", "miki").results.should eq [user]
+      UserQuery.new.where("name = ? AND nickname = ?", "?", " OR 1=1 --").results.should be_empty
+    end
+
+    it "accepts raw sql with array bindings containing quotes and backslashes" do
+      user = UserFactory.new.name("O'Brien").create
+      backslash_user = UserFactory.new.name("back\\slash \"quoted\"").create
+      UserFactory.new.name("Other").create
+
+      UserQuery.new.where("name = ANY(?)", ["O'Brien", "Smith"]).results.should eq [user]
+      UserQuery.new.where("name = ANY(?)", ["back\\slash \"quoted\""]).results.should eq [backslash_user]
+      UserQuery.new.where("name = ANY(?)", ["x'}) OR 1=1 --"]).results.should be_empty
+    end
+
     it "raises when number of bind variables don't match bindings" do
       expect_raises Exception, "wrong number of bind variables (2 for 1)" do
         UserQuery.new.where("name = ?", "bound", "extra")

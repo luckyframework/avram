@@ -123,6 +123,30 @@ describe Avram::QueryBuilder do
       query.statement.should eq expected
     end
 
+    it "prevents sql injections when a bound value contains a placeholder" do
+      expected = <<-SQL
+      SELECT * FROM users WHERE name = '?' AND nickname = ' OR 1=1 --'
+      SQL
+      query = new_query.where(Avram::Where::Raw.new("name = ? AND nickname = ?", "?", " OR 1=1 --"))
+      query.statement.should eq expected
+    end
+
+    it "prevents sql injections when an array value contains a placeholder" do
+      expected = <<-SQL
+      SELECT * FROM users WHERE tags && '{"?"}' AND name = ' OR 1=1 --'
+      SQL
+      query = new_query.where(Avram::Where::Raw.new("tags && ? AND name = ?", ["?"], " OR 1=1 --"))
+      query.statement.should eq expected
+    end
+
+    it "keeps bound values in order when they contain placeholders" do
+      expected = <<-SQL
+      SELECT * FROM users WHERE name = 'really?' AND age > 26 AND nickname = 'who? me?'
+      SQL
+      query = new_query.where(Avram::Where::Raw.new("name = ? AND age > ? AND nickname = ?", "really?", 26, "who? me?"))
+      query.statement.should eq expected
+    end
+
     it "correctly managing input arrays" do
       expected = <<-SQL
       SELECT * FROM users WHERE tags && '{"ruby","crystal"}'
@@ -131,9 +155,17 @@ describe Avram::QueryBuilder do
       query.statement.should eq expected
     end
 
+    it "escapes single quotes in array elements" do
+      expected = <<-SQL
+      SELECT * FROM users WHERE name = ANY('{"O''Brien","Smith"}')
+      SQL
+      query = new_query.where(Avram::Where::Raw.new("name = ANY(?)", ["O'Brien", "Smith"]))
+      query.statement.should eq expected
+    end
+
     it "preventing sql injections with arrays (1)" do
       expected = <<-SQL
-      SELECT * FROM users WHERE tags && '{"ruby","crystal';--"}'
+      SELECT * FROM users WHERE tags && '{"ruby","crystal'';--"}'
       SQL
       query = new_query.where(Avram::Where::Raw.new("tags && ?", ["ruby", "crystal';--"]))
       query.statement.should eq expected
@@ -141,7 +173,7 @@ describe Avram::QueryBuilder do
 
     it "preventing sql injections with arrays (2)" do
       expected = <<-SQL
-      SELECT * FROM users WHERE tags && '{"ruby","crystal\\"}';--"}'
+      SELECT * FROM users WHERE tags &&  E'{"ruby","crystal\\\\"}'';--"}'
       SQL
       query = new_query.where(Avram::Where::Raw.new("tags && ?", ["ruby", "crystal\"}';--"]))
       query.statement.should eq expected

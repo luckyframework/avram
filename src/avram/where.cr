@@ -463,16 +463,16 @@ module Avram::Where
     end
 
     private def build_clause(statement, bind_vars)
-      bind_vars.each do |arg|
-        encoded_arg = prepare_for_execution(arg)
-        statement = statement.sub('?', encoded_arg)
+      index = -1
+      statement.gsub("?") do
+        index += 1
+        prepare_for_execution(bind_vars[index]).to_s
       end
-      statement
     end
 
     private def prepare_for_execution(value)
       if value.is_a?(Array)
-        "'#{PQ::Param.encode_array(value)}'"
+        PG::EscapeHelper.escape_literal(PQ::Param.encode_array(value))
       else
         escape_if_needed(value)
       end
