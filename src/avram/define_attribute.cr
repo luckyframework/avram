@@ -81,7 +81,8 @@ module Avram::DefineAttribute
       @_{{ name }} ||= Avram::Attribute({{ type }}).new(
         name: {{ name.id.symbolize }},
         value: {{ default_value }},
-        param_key: self.class.param_key
+        param_key: self.class.param_key,
+        render_param_key: param_key
       ).tap do |attribute|
         attribute.extract(params)
       end
